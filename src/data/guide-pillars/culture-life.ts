@@ -183,7 +183,7 @@ export const KUHNYA_PILLAR: GuidePillarContent = {
     { id: "kukhnya-2", title: "Empanadas и street food", content: "Choripán, empanadas tucumanas, helado." },
     { id: "kukhnya-3", title: "Вино и bodega", content: "Mendoza, Salta — туры с дегустацией. Винные бары Palermo." },
     { id: "kukhnya-4", title: "Рынки и mercado", content: "Mercado de San Telmo, Mercado de Sur — локальные продукты." },
-    { id: "kukhnya-5", title: "Бюджет и чаевые", content: "Обед от $15 USD, parrilla $30–60. Чаевые 10%." },
+    { id: "kukhnya-5", title: "Бюджет и чаевые", content: "Цены заметно различаются по городу и формату заведения: перед заказом смотрите актуальное меню и уточняйте, включено ли обслуживание. Чаевые добровольны; ориентируйтесь на качество сервиса и местную практику конкретного места." },
   ],
   faq: KUHNYA_FAQ,
   blogLinks: [

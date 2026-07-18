@@ -280,10 +280,14 @@ async function resolveExcursionSamplePath() {
 async function resolveTourSamplePath() {
   const { text, status } = await fetchText("/tours");
   if (status === 200) {
-    const slugMatch = text.match(/href=["']\/tours\/([^"'/?#]+)["']/i);
-    if (slugMatch) return `/tours/${slugMatch[1]}`;
+    const detailMatch = text.match(/href=["'](\/tours\/[^"'/?#]+)["']/i);
+    if (detailMatch) return detailMatch[1];
   }
-  return resolveSamplePathFromSitemap("tours");
+  const { text: sitemapText, status: sitemapStatus } = await fetchText("/sitemap.xml");
+  if (sitemapStatus !== 200) return null;
+  return parseSitemapXml(sitemapText)
+    .map(pathFromSitemapUrl)
+    .find((pagePath) => /^\/tours\/[^/]+$/.test(pagePath)) ?? null;
 }
 
 async function resolveSamplePathFromSitemap(kind) {

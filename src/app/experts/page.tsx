@@ -2,17 +2,28 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ExpertsCatalog from "@/components/experts/ExpertsCatalog";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import CommercialSeoSection from "@/components/seo/CommercialSeoSection";
 import { fetchPublishedExperts } from "@/lib/local-experts-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { createSupabaseServerClientIfConfigured } from "@/lib/supabase/server";
 import { siteContainerClass } from "@/lib/site-container";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import {
+  EXPERTS_CATALOG_SEO,
+  hasCommercialFilterParams,
+} from "@/lib/commercial-catalog-seo";
 
-export async function generateMetadata(): Promise<Metadata> {
+type ExpertsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export async function generateMetadata({ searchParams }: ExpertsPageProps): Promise<Metadata> {
+  const query = await searchParams;
   const metadata = buildPublicPageMetadata({
-    title: "Локальные эксперты — гиды и консультанты в Аргентине",
+    title: "Русскоязычные гиды и эксперты в Аргентине",
     description:
-      "Каталог локальных экспертов: гиды, консультанты по переезду, фотографы. Фильтры по городу, категории и языку.",
+      "Русскоязычные гиды и местные эксперты в Аргентине: выбирайте город, язык и специализацию, изучайте профиль и отправляйте запрос напрямую.",
     path: "/experts",
   });
   return {
@@ -21,6 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ...buildHreflangAlternates("/experts"),
       ...metadata.alternates,
     },
+    ...(hasCommercialFilterParams(query) ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -31,9 +43,15 @@ export default async function ExpertsPage() {
   return (
     <>
       <WebPageJsonLd
-        name="Локальные эксперты"
-        description="Каталог гидов и консультантов в Аргентине"
+        name="Русскоязычные гиды и эксперты в Аргентине"
+        description="Каталог местных гидов и специалистов с фильтрами по городу, языку и направлению помощи"
         path="/experts"
+      />
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Главная", path: "/" },
+          { name: "Гиды и эксперты", path: "/experts" },
+        ]}
       />
       <Suspense
         fallback={
@@ -44,6 +62,7 @@ export default async function ExpertsPage() {
       >
         <ExpertsCatalog experts={experts} />
       </Suspense>
+      <CommercialSeoSection copy={EXPERTS_CATALOG_SEO} />
     </>
   );
 }

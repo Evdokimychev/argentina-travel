@@ -1,7 +1,40 @@
 import { describe, expect, it } from "vitest";
-import { knowledgeEntryFromCms, mergeKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
+import {
+  getCmsKnowledgePublicationIssues,
+  isCmsKnowledgePublicDocument,
+  knowledgeEntryFromCms,
+  mergeKnowledgeCatalog,
+} from "@/lib/cms/knowledge-resolver";
 import type { KbEntry } from "@/lib/knowledge-base/types";
-import type { CmsDocument } from "@/types/cms-content";
+import type { CmsBlogBody, CmsDocument } from "@/types/cms-content";
+
+const longBody = `Начните с центра города. ${Array.from(
+  { length: 125 },
+  (_, index) => `рекомендация${index + 1}`,
+).join(" ")}`;
+
+const knowledgeBody: CmsBlogBody = {
+  kind: "blog",
+  excerpt: "Практический материал.",
+  content: longBody,
+  sections: [{ title: "Маршрут", body: longBody }],
+  collector: {
+    schemaVersion: 2,
+    identity: "mendoza-guide",
+    source: "collector",
+    sourceId: "mendoza",
+    sourceItemId: 1,
+    sourceUrl: "https://example.com/mendoza",
+    fingerprint: "abc",
+    qualityScore: 86,
+    scoreBreakdown: {},
+    flags: [],
+    category: "puteshestviya",
+    province: "Mendoza",
+    tags: ["вино"],
+    media: [],
+  },
+};
 
 const document: CmsDocument = {
   id: "knowledge:mendoza-guide:ru",
@@ -10,27 +43,7 @@ const document: CmsDocument = {
   locale: "ru",
   title: "Гид по Мендосе",
   status: "published",
-  body: {
-    kind: "blog",
-    excerpt: "Практический материал.",
-    sections: [{ title: "Маршрут", body: "Начните с центра города." }],
-    collector: {
-      schemaVersion: 2,
-      identity: "mendoza-guide",
-      source: "collector",
-      sourceId: "mendoza",
-      sourceItemId: 1,
-      sourceUrl: "https://example.com/mendoza",
-      fingerprint: "abc",
-      qualityScore: 86,
-      scoreBreakdown: {},
-      flags: [],
-      category: "puteshestviya",
-      province: "Mendoza",
-      tags: ["вино"],
-      media: [],
-    },
-  },
+  body: knowledgeBody,
   seo: { description: "SEO description" },
   publishedAt: "2026-07-17T00:00:00.000Z",
   scheduledPublishAt: null,
@@ -43,7 +56,8 @@ const document: CmsDocument = {
 
 describe("knowledgeEntryFromCms", () => {
   it("maps a dedicated knowledge document to the public KB contract", () => {
-    expect(knowledgeEntryFromCms(document)).toMatchObject({
+    const entry = knowledgeEntryFromCms(document);
+    expect(entry).toMatchObject({
       id: "mendoza-guide",
       type: "guide",
       title: "Гид по Мендосе",
@@ -51,7 +65,8 @@ describe("knowledgeEntryFromCms", () => {
       site_sections: ["puteshestviya-po-argentine"],
       province: "Mendoza",
       confidence: "high",
-      body: "## Маршрут\n\nНачните с центра города.",
+      body: longBody,
+      editorial: { word_count: 129, source_count: 1 },
     });
   });
 
@@ -78,5 +93,73 @@ describe("knowledgeEntryFromCms", () => {
     expect(mergeKnowledgeCatalog([fallback], [document, noIndexOverride])).toEqual([
       expect.objectContaining({ id: "mendoza-guide", title: "Гид по Мендосе" }),
     ]);
+  });
+
+  it("keeps thin or source-less CMS knowledge drafts out of the public catalog", () => {
+    const thin = {
+      ...document,
+      slug: "thin-guide",
+      id: "knowledge:thin-guide:ru",
+      body: {
+        ...knowledgeBody,
+        content: "Слишком короткий текст.",
+        sections: [{ title: "Коротко", body: "Слишком короткий текст." }],
+      },
+    } satisfies CmsDocument;
+    const sourceLess = {
+      ...document,
+      slug: "source-less-guide",
+      id: "knowledge:source-less-guide:ru",
+      body: {
+        ...knowledgeBody,
+        collector: { ...knowledgeBody.collector!, sourceUrl: undefined },
+      },
+    } satisfies CmsDocument;
+
+    expect(getCmsKnowledgePublicationIssues(thin)).toContain("thin_content");
+    expect(getCmsKnowledgePublicationIssues(sourceLess)).toContain("missing_source_provenance");
+    expect(mergeKnowledgeCatalog([], [thin, sourceLess])).toEqual([]);
+  });
+
+  it("requires a new fact-check before a sensitive fallback body can be changed", () => {
+    const sensitiveFallback: KbEntry = {
+      id: document.slug,
+      type: "guide",
+      title: document.title,
+      body: longBody,
+      status: "published",
+      site_ready: true,
+      sources: [{ id: "official", title: "Официальный источник", url: "https://example.com" }],
+      editorial: {
+        sensitive: true,
+        provenance: {
+          schema_version: 1,
+          applicable: true,
+          declared: true,
+          mode: "strict",
+          strict_ready: true,
+          issue_count: 0,
+          issue_codes: [],
+          source_count: 1,
+          identified_source_count: 1,
+          claim_count: 1,
+          sensitive_claim_count: 1,
+          stale_after_days: 45,
+        },
+      },
+    };
+    const changed = {
+      ...document,
+      body: { ...knowledgeBody, content: `${longBody} Изменённый факт.` },
+    } satisfies CmsDocument;
+
+    expect(getCmsKnowledgePublicationIssues(changed, sensitiveFallback)).toContain(
+      "sensitive_claim_review_required",
+    );
+    expect(isCmsKnowledgePublicDocument(changed, sensitiveFallback)).toBe(false);
+  });
+
+  it("never exposes an explicitly noindex CMS knowledge document", () => {
+    expect(isCmsKnowledgePublicDocument({ ...document, seo: { noIndex: true } })).toBe(false);
   });
 });

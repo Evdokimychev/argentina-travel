@@ -6,6 +6,10 @@ import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbCallout from "@/components/knowledge-base/KbCallout";
 import KbEditorialNotice from "@/components/knowledge-base/KbEditorialNotice";
 import KbFactPanel from "@/components/knowledge-base/KbFactPanel";
+import KbProvenance, {
+  buildKbPublicProvenance,
+  isKbSensitiveEntryStrictlyVerified,
+} from "@/components/knowledge-base/KbProvenance";
 import KbRelated from "@/components/knowledge-base/KbRelated";
 import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import KbSources from "@/components/knowledge-base/KbSources";
@@ -100,6 +104,11 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
   const { prev, next } = getSectionNeighbours(entry);
   const section = getEntrySection(entry);
   const hero = entry.media?.hero;
+  const publicProvenance = buildKbPublicProvenance(entry);
+  const maySayVerified = isKbSensitiveEntryStrictlyVerified(entry);
+  const editorialNoticeEntry = maySayVerified
+    ? entry
+    : { ...entry, last_verified: null };
 
   return (
     <>
@@ -130,11 +139,15 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               {entry.confidence && (
                 <span
                   className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-medium ${
-                    CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
+                    entry.confidence === "high" && !maySayVerified
+                      ? CONFIDENCE_STYLE.medium
+                      : CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
                   }`}
                 >
                   {entry.confidence === "high"
-                    ? "Проверено"
+                    ? maySayVerified
+                      ? "Проверено"
+                      : "Проверьте актуальность"
                     : entry.confidence === "medium"
                       ? "Проверяйте актуальность"
                       : "Ориентировочно"}
@@ -142,7 +155,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               )}
               {entry.last_verified && (
                 <span className="text-2xs text-slate">
-                  Обновлено: {entry.last_verified}
+                  Материал обновлён: {entry.last_verified}
                 </span>
               )}
               {entry.status === "stub" && (
@@ -161,7 +174,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               </p>
             )}
 
-            <KbEditorialNotice entry={entry} />
+            <KbEditorialNotice entry={editorialNoticeEntry} />
 
             {hero && (
               <figure className="mt-6">
@@ -193,9 +206,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
             <KbCallout variant="recommendation" items={entry.recommendations} />
 
             <div className="mt-4 text-base">
-              {renderMarkdown(entry.body, { validIds })}
+              {renderMarkdown(entry.body, { validIds, provenance: publicProvenance })}
             </div>
 
+            <KbProvenance data={publicProvenance} />
             <KbSources sources={entry.sources} />
 
             {/* Пред/след внутри раздела */}

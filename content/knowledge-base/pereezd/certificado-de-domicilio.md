@@ -2,86 +2,71 @@
 id: certificado-de-domicilio
 type: guide
 subtype: immigration
-title: "Как подтвердить адрес в Аргентине: certificado de domicilio"
-summary: "Многие процедуры в Аргентине требуют подтверждения адреса. Резидент с DNI получает certificado de domicilio в RENAPER или полиции; иностранцу без DNI в Буэнос-Айресе оформляют его через систему TAD с двумя свидетелями. Разбираем, зачем он нужен, кто и как его выдаёт и чем отличается декларация о месте жительства."
+title: "Как подтвердить адрес в Аргентине"
+summary: "В Аргентине нет одной справки об адресе для всех случаев: сначала уточните, какой документ принимает конкретное ведомство."
 status: published
-site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu, zhizn-v-strane]
+site_ready: true
+site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
-tags: [документы, легализация, адрес, DNI, бюрократия]
-related: [dni-cuil, vnzh-argentina, bankovskij-schet, apostil-i-perevod-dokumentov, kak-snyat-kvartiru-bez-garanta]
+tags: [документы, адрес, DNI, миграция]
+related: [dni-cuil, vnzh-argentina]
 warnings:
-  - "Порядок и стоимость certificado de domicilio задаёт не федерация, а провинция/муниципалитет — в Буэнос-Айресе (CABA), провинции Буэнос-Айрес и других провинциях процедура, орган и цена отличаются. Уточняйте порядок именно по вашему адресу."
-  - "Стоимость и точный набор документов меняются — конкретную сумму (в CABA для иностранцев это была фиксированная пошлина порядка тысячи песо) проверяйте на официальном сайте вашего города перед подачей. 🚩 Волатильно: пошлины индексируются вслед за инфляцией."
+  - "Certificación de Domicilio RENAPER подтверждает адрес, заявленный при оформлении последнего DNI; она не заменяет любую справку, которую может потребовать другое ведомство."
 recommendations:
-  - "Иностранцу без DNI в CABA заранее найдите двух совершеннолетних свидетелей с действующим аргентинским DNI и адресом в Аргентине — без них подтверждение адреса не оформят."
-  - "Если у вас уже есть DNI, самый быстрый путь — RENAPER или ближайший полицейский участок (comisaría) с самим DNI; отдельные свидетели обычно не нужны."
-  - "Для смены адреса в базе используйте раздел «Mi Domicilio» в приложении Mi Argentina или обращение в ANSES — это не то же самое, что разовый certificado, но часто именно этого достаточно для обновления данных."
-last_verified: "2026-07-12"
-confidence: medium
-seo_slug: "certificado-de-domicilio-kak-podtverdit-adres-v-argentine"
+  - "Скопируйте точное испанское название документа из официального перечня вашей процедуры."
+  - "Проверьте, чтобы адрес был записан одинаково во всех формах и подтверждениях."
+last_verified: "2026-07-17"
+confidence: high
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "Buenos Aires Ciudad — Solicitud de Certificado de Domicilio para extranjeros sin DNI"
-    url: "https://buenosaires.gob.ar/tramites/solicitud-de-certificado-de-domicilio-para-extranjeros-sin-dni"
-    lang: es
-    type: official
-    note: "процедура для иностранца без DNI в CABA: TAD + miBA, запись, документ страны происхождения, два свидетеля с аргентинским DNI"
-  - title: "Argentina.gob.ar (RENAPER) — Certificaciones digitales"
+  - id: renaper-digital-certifications
+    title: "RENAPER — Certificaciones digitales"
     url: "https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales"
     lang: es
     type: official
-    note: "цифровые сертификации RENAPER, в том числе подтверждение места жительства для держателей DNI"
-  - title: "Trámites a Distancia (TAD) — Certificación de Domicilio"
-    url: "https://tramitesadistancia.gob.ar/tramitesadistancia/detalle-tipo?id=5670"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+  - id: renaper-certifications-service
+    title: "Argentina.gob.ar — Solicitar certificaciones de RENAPER"
+    url: "https://www.argentina.gob.ar/servicio/certificaciones"
     lang: es
     type: official
-    note: "электронная подача заявления на подтверждение адреса"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+claims:
+  - id: renaper-certifies-last-dni-address
+    text: "Certificación de Domicilio RENAPER подтверждает адрес, указанный при оформлении последнего DNI."
+    sensitive: true
+    source_ids: [renaper-digital-certifications, renaper-certifications-service]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
-## Описание
+## Как понять, что именно нужно
 
-Подтверждение адреса — одна из самых частых бытовых бюрократических задач в Аргентине, о которой мало кто задумывается заранее. **Certificado de domicilio** — документ, который официально подтверждает, где вы живёте. Он нужен для множества процедур: открытия и обновления банковского счёта, записи ребёнка в школу, продолжения оформления резиденции ([[vnzh-argentina|радикации]]), привязки к избирательному участку и многого другого. Проблема в том, что единого федерального порядка нет: сертификат выдают провинции и муниципалитеты, поэтому и орган, и набор документов, и стоимость различаются от города к городу.
+Фраза «подтверждение адреса» может означать разные документы. Для обладателя DNI RENAPER выдаёт цифровую Certificación de Domicilio: она подтверждает адрес, который был заявлен при оформлении последнего документа. Но Migraciones, банк, местный орган или учебное заведение могут принять иной документ либо потребовать собственную форму.
 
-Ключевая развилка — есть ли у вас уже [[dni-cuil|DNI]]. Резиденту с DNI сертификат оформляют быстро; иностранцу, который ещё в процессе легализации и DNI не имеет, порядок сложнее и требует свидетелей.
+Перед оформлением уточните три вещи:
 
-## Если у вас есть DNI
+- точное название справки в официальном перечне;
+- кто должен её выдать;
+- насколько свежим должен быть документ.
 
-Держатель DNI обычно получает подтверждение адреса одним из двух способов:
+## Практический порядок
 
-- **RENAPER** — через цифровые сертификации (в том числе онлайн);
-- **полицейский участок (comisaría)** по месту жительства — с самим DNI на руках.
+1. Откройте требования принимающего ведомства.
+2. Если указан RENAPER, используйте официальный сервис certificaciones.
+3. Если указана справка местной полиции, registro civil или иной документ, следуйте правилам своей провинции или города.
+4. Сверьте адрес до отправки: улицу, номер дома, этаж, квартиру, населённый пункт и провинцию.
 
-Отдельные свидетели в этом случае, как правило, не нужны — адрес берётся из вашего документа и базы.
-
-## Если DNI ещё нет (иностранец в процессе легализации)
-
-В Автономном городе Буэнос-Айрес (CABA) для иностранца без DNI действует отдельная процедура «Certificado de domicilio para extranjeros sin DNI», чтобы можно было продолжать оформление радикации:
-
-- заявление подаётся через систему **Trámites a Distancia (TAD)** с учётной записью **miBA**;
-- в назначенный день нужно прийти лично с **документом, удостоверяющим личность, страны происхождения**;
-- обязательны **двое свидетелей старше 18 лет, не родственники**, с действующим аргентинским DNI и адресом на территории Аргентины;
-- процедура платная (в CABA — фиксированная пошлина; конкретную сумму проверяйте на сайте города 🚩).
-
-В провинции Буэнос-Айрес и других провинциях порядок свой — например, встречается **declaración jurada de domicilio** (заявление под присягой о месте жительства) через провинциальный Registro de las Personas.
-
-## Обновление адреса в базе
-
-Если задача не «получить бумажный сертификат», а «обновить свой адрес в государственных базах», часто достаточно раздела **«Mi Domicilio» в приложении Mi Argentina** или обращения в **ANSES**. Для банков и части процедур этого бывает достаточно вместо разового certificado.
-
-## Факты
-
-- Certificado de domicilio подтверждает адрес и требуется для банковских, учебных, миграционных и избирательных процедур.
-- Держатель DNI получает его в RENAPER или полиции; иностранцу без DNI в CABA — через TAD с двумя свидетелями, имеющими аргентинский DNI.
-- Порядок, орган и стоимость зависят от юрисдикции (CABA ≠ провинция Буэнос-Айрес ≠ другие провинции).
-- Обновить адрес в базах можно через «Mi Domicilio» в Mi Argentina или в ANSES.
-
-## Связанные объекты
-
-- [[dni-cuil|DNI и CUIL/CUIT в Аргентине: пошагово для иностранца]] — центральный документ, после которого подтверждение адреса упрощается.
-- [[vnzh-argentina|ВНЖ Аргентины: все легальные пути резиденции]] — подтверждение адреса нужно на разных этапах радикации.
-- [[bankovskij-schet|Банковский счёт в Аргентине]] — один из главных сценариев, где просят certificado de domicilio.
+Не заказывайте «универсальную справку» по совету из чата: документ может быть действительным, но не подходить для вашей процедуры. Стоимость и срок также проверяйте в официальном сервисе в день оформления.
 
 ## Источники
 
-- [Buenos Aires Ciudad — Certificado de Domicilio para extranjeros sin DNI](https://buenosaires.gob.ar/tramites/solicitud-de-certificado-de-domicilio-para-extranjeros-sin-dni)
-- [RENAPER — Certificaciones digitales](https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales)
-- [Trámites a Distancia — Certificación de Domicilio](https://tramitesadistancia.gob.ar/tramitesadistancia/detalle-tipo?id=5670)
+- [RENAPER — цифровые сертификаты](https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales)
+- [Argentina.gob.ar — оформление certificaciones RENAPER](https://www.argentina.gob.ar/servicio/certificaciones)

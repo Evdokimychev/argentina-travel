@@ -23,7 +23,9 @@ import csv
 import os
 import re
 import sys
-from datetime import datetime, timedelta
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXCLUDE_NAMES = {"README.md", "SCHEMA.md", "TAXONOMY.md", "BACKLOG.md", "AUDIT.md", "ARCHITECTURE.md"}
@@ -36,6 +38,39 @@ DEFAULT_TYPE_REQUIRED = ["title", "summary"]
 SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")  # чистый kebab-case id, без кириллицы/пробелов
 WIKILINK_RE = re.compile(r"\[\[([^\]]+)\]\]")
 WORD_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9]+")
+SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+CLAIM_ID_RE = SOURCE_ID_RE
+PROVENANCE_SCHEMA_VERSION = 1
+PROVENANCE_MODES = {"diagnostic", "strict"}
+SOURCE_AUTHORITIES = {"primary", "secondary", "community"}
+SOURCE_URL_STATUSES = {"verified", "redirected", "unreachable", "unchecked"}
+EDITORIAL_TYPES = {"city", "national_park", "attraction", "region", "route", "guide", "transport"}
+
+
+def resolve_generated_at(entities, environ=None):
+    """Return a reproducible timestamp for tracked generated indexes.
+
+    CI/release tooling may pin the value with SOURCE_DATE_EPOCH. Local runs fall
+    back to the newest editorial verification date, so rebuilding unchanged
+    content never dirties the candidate solely because wall-clock time passed.
+    """
+    environ = os.environ if environ is None else environ
+    source_date_epoch = environ.get("SOURCE_DATE_EPOCH")
+    if source_date_epoch:
+        try:
+            timestamp = int(source_date_epoch)
+        except (TypeError, ValueError) as error:
+            raise SystemExit("SOURCE_DATE_EPOCH должен быть целым числом секунд Unix") from error
+        return datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+
+    verified_dates = [
+        parsed
+        for data in entities.values()
+        if (parsed := parse_iso_date(data.get("last_verified"))) is not None
+    ]
+    if verified_dates:
+        return f"{max(verified_dates).isoformat()} 00:00"
+    return "1970-01-01 00:00"
 
 # Навигационные хабы (точки входа) — исключаются из проверки на «осиротевшие»: сами являются входами
 HUBS = {
@@ -212,16 +247,314 @@ def is_sensitive_entry(data):
     return bool(SENSITIVE_TEXT_RE.search(text))
 
 
-def build_editorial_meta(data, word_count=None):
+def source_output(source):
+    if not isinstance(source, dict):
+        return source
+    result = dict(source)
+    for key in ("checked_at", "expires_at"):
+        if result.get(key) is not None:
+            result[key] = str(result[key])
+    return result
+
+
+def claim_output(claim):
+    if not isinstance(claim, dict):
+        return claim
+    result = dict(claim)
+    if result.get("verified_at") is not None:
+        result["verified_at"] = str(result["verified_at"])
+    return result
+
+
+def editorial_output(editorial):
+    """Не отдаёт внутренние диагностические сообщения в публичный индекс."""
+    result = dict(editorial)
+    provenance = dict(result.get("provenance") or {})
+    provenance.pop("details", None)
+    if provenance.get("applicable") or provenance.get("declared"):
+        result["provenance"] = provenance
+    else:
+        result.pop("provenance", None)
+    return result
+
+
+def provenance_config_output(data):
+    config = data.get("provenance")
+    if not isinstance(config, dict):
+        return None
+    return {
+        "schema_version": config.get("schema_version"),
+        "mode": config.get("mode"),
+        "stale_after_days": config.get("stale_after_days"),
+    }
+
+
+def reviewer_is_present(value):
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, dict):
+        return bool(str(value.get("id") or "").strip())
+    return False
+
+
+def add_provenance_issue(issues, details, code, message):
+    issues.add(code)
+    details.append({"code": code, "message": message})
+
+
+def build_provenance_meta(data, sensitive, policy_days, today=None):
+    """Проверяет claim-level provenance без сетевых запросов.
+
+    URL health является редакционным свидетельством: генератор проверяет формат,
+    дату и заявленный результат последней внешней проверки, но не подменяет её.
+    """
+    today = today or datetime.now().date()
+    config = data.get("provenance")
+    declared = isinstance(config, dict)
+    schema_version = config.get("schema_version") if declared else PROVENANCE_SCHEMA_VERSION
+    mode = config.get("mode") if declared else "diagnostic"
+    stale_after_days = config.get("stale_after_days") if declared else policy_days
+    issues = set()
+    details = []
+
+    if schema_version != PROVENANCE_SCHEMA_VERSION:
+        add_provenance_issue(
+            issues,
+            details,
+            "unsupported_provenance_schema",
+            f"ожидалась версия {PROVENANCE_SCHEMA_VERSION}, получено {schema_version!r}",
+        )
+    if mode not in PROVENANCE_MODES:
+        add_provenance_issue(
+            issues,
+            details,
+            "invalid_provenance_mode",
+            f"режим {mode!r} не поддерживается",
+        )
+        mode = "diagnostic"
+    if not isinstance(stale_after_days, int) or isinstance(stale_after_days, bool) or stale_after_days < 1:
+        add_provenance_issue(
+            issues,
+            details,
+            "invalid_stale_after_days",
+            "stale_after_days должен быть положительным целым числом",
+        )
+        stale_after_days = policy_days
+
+    sources = data.get("sources") or []
+    source_by_id = {}
+    for index, source in enumerate(sources):
+        if not isinstance(source, dict):
+            add_provenance_issue(
+                issues, details, "invalid_source", f"sources[{index}] должен быть объектом"
+            )
+            continue
+        source_id = str(source.get("id") or "").strip()
+        label = source_id or f"sources[{index}]"
+        if not source_id:
+            add_provenance_issue(
+                issues, details, "missing_source_id", f"{label}: нет стабильного id источника"
+            )
+        elif not SOURCE_ID_RE.match(source_id):
+            add_provenance_issue(
+                issues, details, "invalid_source_id", f"{label}: id должен быть kebab-case"
+            )
+        elif source_id in source_by_id:
+            add_provenance_issue(
+                issues, details, "duplicate_source_id", f"{label}: id источника повторяется"
+            )
+        else:
+            source_by_id[source_id] = source
+
+        url = str(source.get("url") or "").strip()
+        parsed_url = urlparse(url)
+        if parsed_url.scheme not in {"http", "https"} or not parsed_url.netloc:
+            add_provenance_issue(
+                issues, details, "invalid_source_url", f"{label}: нужен абсолютный http(s) URL"
+            )
+        authority = source.get("authority")
+        if authority not in SOURCE_AUTHORITIES:
+            add_provenance_issue(
+                issues,
+                details,
+                "missing_source_authority",
+                f"{label}: authority должен быть primary, secondary или community",
+            )
+        url_status = source.get("url_status")
+        if url_status not in SOURCE_URL_STATUSES:
+            add_provenance_issue(
+                issues,
+                details,
+                "missing_source_url_health",
+                f"{label}: нет допустимого url_status",
+            )
+        elif url_status != "verified":
+            add_provenance_issue(
+                issues,
+                details,
+                "unhealthy_source_url",
+                f"{label}: url_status={url_status}",
+            )
+        checked_at = parse_iso_date(source.get("checked_at"))
+        if checked_at is None:
+            add_provenance_issue(
+                issues, details, "missing_source_checked_at", f"{label}: нет корректной checked_at"
+            )
+        elif checked_at + timedelta(days=stale_after_days) < today:
+            add_provenance_issue(
+                issues, details, "stale_source_url_check", f"{label}: URL давно не проверялся"
+            )
+        expires_at_value = source.get("expires_at")
+        if expires_at_value:
+            expires_at = parse_iso_date(expires_at_value)
+            if expires_at is None:
+                add_provenance_issue(
+                    issues, details, "invalid_source_expiry", f"{label}: некорректная expires_at"
+                )
+            elif expires_at < today:
+                add_provenance_issue(
+                    issues, details, "expired_source", f"{label}: срок пригодности источника истёк"
+                )
+
+    claims = data.get("claims") or []
+    if not isinstance(claims, list):
+        add_provenance_issue(
+            issues, details, "invalid_claim_registry", "claims должен быть списком"
+        )
+        claims = []
+    if sensitive and not claims:
+        add_provenance_issue(
+            issues,
+            details,
+            "missing_sensitive_claim_mapping",
+            "для чувствительного материала не описаны проверяемые утверждения",
+        )
+
+    claim_ids = set()
+    sensitive_claim_count = 0
+    for index, claim in enumerate(claims):
+        if not isinstance(claim, dict):
+            add_provenance_issue(
+                issues, details, "invalid_claim", f"claims[{index}] должен быть объектом"
+            )
+            continue
+        claim_id = str(claim.get("id") or "").strip()
+        label = claim_id or f"claims[{index}]"
+        if not claim_id:
+            add_provenance_issue(
+                issues, details, "missing_claim_id", f"{label}: нет стабильного id утверждения"
+            )
+        elif not CLAIM_ID_RE.match(claim_id):
+            add_provenance_issue(
+                issues, details, "invalid_claim_id", f"{label}: id должен быть kebab-case"
+            )
+        elif claim_id in claim_ids:
+            add_provenance_issue(
+                issues, details, "duplicate_claim_id", f"{label}: id утверждения повторяется"
+            )
+        else:
+            claim_ids.add(claim_id)
+
+        if not str(claim.get("text") or "").strip():
+            add_provenance_issue(
+                issues,
+                details,
+                "missing_claim_text",
+                f"{label}: нет краткой формулировки проверяемого утверждения",
+            )
+
+        source_ids = claim.get("source_ids") or []
+        if not isinstance(source_ids, list) or not source_ids:
+            add_provenance_issue(
+                issues,
+                details,
+                "claim_without_sources",
+                f"{label}: нет списка source_ids",
+            )
+            source_ids = []
+        mapped_sources = []
+        for source_id in source_ids:
+            source_id = str(source_id)
+            source = source_by_id.get(source_id)
+            if source is None:
+                add_provenance_issue(
+                    issues,
+                    details,
+                    "broken_claim_source_ref",
+                    f"{label}: source_id {source_id!r} не найден",
+                )
+            else:
+                mapped_sources.append(source)
+
+        claim_sensitive = claim.get("sensitive")
+        if claim_sensitive is None:
+            claim_sensitive = sensitive
+        if bool(claim_sensitive):
+            sensitive_claim_count += 1
+            if not any(source.get("authority") == "primary" for source in mapped_sources):
+                add_provenance_issue(
+                    issues,
+                    details,
+                    "sensitive_claim_without_primary_source",
+                    f"{label}: нет связанного primary-источника",
+                )
+            verified_at = parse_iso_date(claim.get("verified_at"))
+            if verified_at is None:
+                add_provenance_issue(
+                    issues,
+                    details,
+                    "sensitive_claim_missing_verified_at",
+                    f"{label}: нет корректной verified_at",
+                )
+            elif verified_at + timedelta(days=stale_after_days) < today:
+                add_provenance_issue(
+                    issues, details, "stale_sensitive_claim", f"{label}: проверка устарела"
+                )
+            if not reviewer_is_present(claim.get("reviewer")):
+                add_provenance_issue(
+                    issues,
+                    details,
+                    "sensitive_claim_missing_reviewer",
+                    f"{label}: не указан ответственный проверяющий",
+                )
+
+    if sensitive and claims and sensitive_claim_count == 0:
+        add_provenance_issue(
+            issues,
+            details,
+            "missing_sensitive_claim_mapping",
+            "в чувствительном материале ни одно утверждение не помечено sensitive",
+        )
+
+    issue_codes = sorted(issues)
+    return {
+        "schema_version": PROVENANCE_SCHEMA_VERSION,
+        "applicable": sensitive,
+        "declared": declared,
+        "mode": mode,
+        "strict_ready": sensitive and declared and not issue_codes,
+        "issue_count": len(details),
+        "issue_codes": issue_codes,
+        "source_count": len(sources),
+        "identified_source_count": len(source_by_id),
+        "claim_count": len(claims),
+        "sensitive_claim_count": sensitive_claim_count,
+        "stale_after_days": stale_after_days,
+        "details": details,
+    }
+
+
+def build_editorial_meta(data, word_count=None, today=None):
     sensitive = is_sensitive_entry(data)
     confidence = data.get("confidence")
     policy_days = 45 if sensitive else 30 if confidence == "low" else 90 if confidence == "medium" else 180
     last_verified = parse_iso_date(data.get("last_verified"))
     review_due_at = last_verified + timedelta(days=policy_days) if last_verified else None
-    today = datetime.now().date()
+    today = today or datetime.now().date()
     source_count = len(data.get("sources") or [])
     missing_sources = sensitive and source_count == 0
     review_due = review_due_at is None or review_due_at < today
+    provenance = build_provenance_meta(data, sensitive, policy_days, today=today)
     return {
         "sensitive": sensitive,
         "policy_days": policy_days,
@@ -230,11 +563,34 @@ def build_editorial_meta(data, word_count=None):
         "missing_sources": missing_sources,
         "source_count": source_count,
         "word_count": word_count,
-        "needs_attention": review_due or missing_sources or confidence == "low",
+        "needs_attention": review_due or missing_sources or confidence == "low" or (
+            sensitive and not provenance["strict_ready"]
+        ),
+        "provenance": provenance,
     }
 
 
+def is_release_candidate_sensitive(data, editorial_meta):
+    """Совпадает с базовой областью публичного gate, исключая карантин."""
+    return (
+        data.get("status") == "published"
+        and editorial_meta.get("sensitive") is True
+        and data.get("site_ready") is not False
+        and not editorial_meta.get("missing_sources")
+        and (
+            data.get("type") not in EDITORIAL_TYPES
+            or (editorial_meta.get("word_count") or 0) >= 120
+        )
+    )
+
+
 def main():
+    supported_args = {"--diagnostic", "--strict-provenance"}
+    unknown_args = [arg for arg in sys.argv[1:] if arg not in supported_args]
+    if unknown_args:
+        raise SystemExit(f"Неизвестные аргументы: {', '.join(unknown_args)}")
+    strict_provenance_gate = "--strict-provenance" in sys.argv[1:]
+
     files = find_entity_files()
     entities = {}
     problems = []
@@ -301,19 +657,49 @@ def main():
     unlocalized_titles = []
     template_import_bodies = []
     editorial_meta_by_id = {}
-    editorial_types = {"city", "national_park", "attraction", "region", "route", "guide", "transport"}
     geo_title_types = {"city", "national_park", "attraction", "region", "route"}
     for eid, data in sorted(entities.items()):
         body = read_body(os.path.join(BASE_DIR, data["_path"]))
         word_count = len(WORD_RE.findall(body))
         editorial_meta_by_id[eid] = build_editorial_meta(data, word_count=word_count)
         title = data.get("title") or data.get("question") or ""
-        if data.get("status") == "published" and data.get("type") in editorial_types and word_count < 120:
+        if data.get("status") == "published" and data.get("type") in EDITORIAL_TYPES and word_count < 120:
             short_published.append((eid, word_count))
         if data.get("type") in geo_title_types and title and not re.search(r"[А-Яа-яЁё]", str(title)):
             unlocalized_titles.append(eid)
         if "Материал подготовлен на основе официального портала INPROTUR" in body:
             template_import_bodies.append(eid)
+
+    published_sensitive_ids = [
+        eid for eid, data in sorted(entities.items())
+        if data.get("status") == "published"
+        and editorial_meta_by_id[eid]["sensitive"]
+    ]
+    release_candidate_sensitive_ids = [
+        eid for eid in published_sensitive_ids
+        if is_release_candidate_sensitive(entities[eid], editorial_meta_by_id[eid])
+    ]
+    strict_ready_release_candidate_ids = [
+        eid for eid in release_candidate_sensitive_ids
+        if editorial_meta_by_id[eid]["provenance"]["strict_ready"]
+    ]
+    provenance_issue_counts = Counter(
+        code
+        for eid in release_candidate_sensitive_ids
+        for code in editorial_meta_by_id[eid]["provenance"]["issue_codes"]
+    )
+    editorial_readiness = {
+        "provenance_schema_version": PROVENANCE_SCHEMA_VERSION,
+        "validation_mode": "strict" if strict_provenance_gate else "diagnostic",
+        "published_sensitive_count": len(published_sensitive_ids),
+        "release_candidate_sensitive_count": len(release_candidate_sensitive_ids),
+        "strict_ready_release_candidate_count": len(strict_ready_release_candidate_ids),
+        "strict_ready": (
+            len(strict_ready_release_candidate_ids) == len(release_candidate_sensitive_ids)
+        ),
+        "issue_counts": dict(sorted(provenance_issue_counts.items())),
+    }
+    generated_at = resolve_generated_at(entities)
 
     # Манифест
     manifest = []
@@ -340,7 +726,7 @@ def main():
             "long_form_source": data.get("long_form_source"),
             "site_id_map": data.get("site_id_map"),
             "site_ready": data.get("site_ready"),
-            "editorial": editorial_meta,
+            "editorial": editorial_output(editorial_meta),
             "path": data.get("_path"),
         })
 
@@ -349,8 +735,9 @@ def main():
 
     with open(os.path.join(out_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump({
-            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "generated_at": generated_at,
             "total_entities": len(manifest),
+            "editorial_readiness": editorial_readiness,
             "entities": manifest,
         }, f, ensure_ascii=False, indent=2)
 
@@ -359,17 +746,20 @@ def main():
         w = csv.writer(f, lineterminator="\n")
         w.writerow([
             "id", "type", "subtype", "title", "status", "region_id", "confidence",
-            "last_verified", "sensitive", "review_due_at", "needs_attention", "word_count", "path",
+            "last_verified", "sensitive", "review_due_at", "needs_attention", "word_count",
+            "strict_provenance_ready", "provenance_issue_count", "path",
         ])
         for e in manifest:
             w.writerow([e["id"], e["type"], e.get("subtype") or "", e["title"], e["status"],
                         e.get("region_id") or "", e["confidence"], e["last_verified"],
                         e["editorial"]["sensitive"], e["editorial"]["review_due_at"],
-                        e["editorial"]["needs_attention"], e["editorial"]["word_count"], e["path"]])
+                        e["editorial"]["needs_attention"], e["editorial"]["word_count"],
+                        (e["editorial"].get("provenance") or {}).get("strict_ready", ""),
+                        (e["editorial"].get("provenance") or {}).get("issue_count", ""), e["path"]])
 
     # Навигационное дерево для сайта: раздел (site_section) → записи, плюс список хабов.
     # Сайт использует его для меню, хлебных крошек, категорий блога, FAQ-раздела и путеводителя.
-    navigation = {"generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+    navigation = {"generated_at": generated_at,
                   "hubs": sorted(h for h in HUBS if h in entities),
                   "sections": {}}
     for eid, data in sorted(entities.items()):
@@ -391,6 +781,11 @@ def main():
         parts = text.split("---", 2)
         body = parts[2].strip() if len(parts) >= 3 else ""
         lv = data.get("last_verified")
+        provenance_fields = {}
+        if data.get("claims"):
+            provenance_fields["claims"] = [claim_output(claim) for claim in data["claims"]]
+        if isinstance(data.get("provenance"), dict):
+            provenance_fields["provenance"] = provenance_config_output(data)
         content_entries.append({
             "id": eid,
             "type": data.get("type"),
@@ -406,14 +801,15 @@ def main():
             "related": data.get("related", []),
             "warnings": data.get("warnings", []),
             "recommendations": data.get("recommendations", []),
-            "sources": data.get("sources", []),
+            "sources": [source_output(source) for source in (data.get("sources") or [])],
+            **provenance_fields,
             "media": data.get("media"),
             "status": data.get("status"),
             "confidence": data.get("confidence"),
             "last_verified": str(lv) if lv else None,
             "seo_slug": data.get("seo_slug"),
             "site_ready": data.get("site_ready"),
-            "editorial": editorial_meta,
+            "editorial": editorial_output(editorial_meta),
             "coordinates": data.get("coordinates"),
             "region_id": data.get("region_id"),
             "province": data.get("province"),
@@ -424,8 +820,9 @@ def main():
             "body": body,
         })
     with open(os.path.join(out_dir, "content.json"), "w", encoding="utf-8") as f:
-        json.dump({"generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        json.dump({"generated_at": generated_at,
                    "total_entities": len(content_entries),
+                   "editorial_readiness": editorial_readiness,
                    "entities": content_entries}, f, ensure_ascii=False, indent=2)
 
     # Отчёт
@@ -456,7 +853,7 @@ def main():
     report_lines = [
         f"# Отчёт валидации базы знаний",
         f"",
-        f"Сгенерировано: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        f"Сгенерировано: {generated_at}",
         f"",
         f"Всего валидных записей: **{len(entities)}**",
         f"Проблемных файлов: **{len(problems)}**",
@@ -470,6 +867,9 @@ def main():
         f"Шаблонных импортных текстов INPROTUR: **{len(template_import_bodies)}**",
         f"Чувствительных опубликованных материалов: **{len(sensitive_entries)}**",
         f"Чувствительных материалов без источников: **{len(sensitive_without_sources)}**",
+        f"Чувствительных кандидатов публичного gate: **{len(release_candidate_sensitive_ids)}**",
+        f"Кандидатов, готовых по строгой claim-level проверке: **{len(strict_ready_release_candidate_ids)}/{len(release_candidate_sensitive_ids)}**",
+        f"Строгий сигнал редакционной готовности: **{'PASS' if editorial_readiness['strict_ready'] else 'FAIL'}**",
         f"Материалов с наступившей плановой перепроверкой: **{len(review_due_entries)}**",
         f"Материалов с низкой уверенностью: **{len(low_confidence_entries)}**",
         f"Материалов, требующих редакционного внимания: **{len(attention_entries)}**",
@@ -482,6 +882,34 @@ def main():
     for t, n in sorted(by_type.items()):
         report_lines.append(f"- `{t}`: {n}")
     report_lines.append("")
+
+    report_lines.append("## Claim-level происхождение фактов\n")
+    report_lines.append(
+        "Генератор работает в режиме `strict` и завершится ошибкой при редакционном долге."
+        if strict_provenance_gate
+        else "Текущий запуск диагностический: публичный корпус не снимается с публикации автоматически. "
+             "Для обязательной проверки используйте `--strict-provenance`."
+    )
+    report_lines.append("")
+    if provenance_issue_counts:
+        for code, count in sorted(provenance_issue_counts.items()):
+            report_lines.append(f"- `{code}`: {count}")
+    else:
+        report_lines.append("- Нарушений нет.")
+    report_lines.append("")
+
+    provenance_not_ready = [
+        eid for eid in release_candidate_sensitive_ids
+        if not editorial_meta_by_id[eid]["provenance"]["strict_ready"]
+    ]
+    if provenance_not_ready:
+        report_lines.append("### Чувствительные материалы, не готовые к строгой публикации\n")
+        for eid in provenance_not_ready[:80]:
+            codes = ", ".join(editorial_meta_by_id[eid]["provenance"]["issue_codes"])
+            report_lines.append(f"- `{eid}` — {codes}")
+        if len(provenance_not_ready) > 80:
+            report_lines.append(f"- …и ещё {len(provenance_not_ready) - 80}")
+        report_lines.append("")
 
     if problems:
         report_lines.append("## Проблемы файлов\n")
@@ -573,6 +1001,12 @@ def main():
 
     print(report)
     print(f"\nmanifest.json и manifest.csv сохранены в {out_dir}")
+    if strict_provenance_gate and not editorial_readiness["strict_ready"]:
+        raise SystemExit(
+            "Строгая claim-level проверка не пройдена: "
+            f"готово {len(strict_ready_release_candidate_ids)}/"
+            f"{len(release_candidate_sensitive_ids)} чувствительных кандидатов публикации"
+        )
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { getAllEntries, getAllEntryIds, getHubs } from "./content";
+import { getAllEntries, getAllEntryIds, getHubs, KB_HUB_ORDER } from "./content";
 
 const STATIC_KB_PATH_RE = /(["'`])(\/baza-znaniy\/[a-z0-9/-]+)\1/g;
 const KB_ROUTE_PREFIXES = new Set(["poisk", "razdel"]);
@@ -38,12 +38,16 @@ describe("public KB link contract", () => {
     expect(broken).toEqual([]);
   });
 
-  it("shows eight reviewed public entry points on the KB home page", () => {
+  it("shows only reviewed public entry points on the KB home page", () => {
     const publicIds = new Set(getAllEntryIds());
     const hubs = getHubs();
+    const expectedPublicHubs = KB_HUB_ORDER.filter((id) => publicIds.has(id));
 
-    expect(hubs).toHaveLength(8);
+    expect(hubs.map((hub) => hub.id)).toEqual(expectedPublicHubs);
+    expect(hubs).toHaveLength(6);
     expect(hubs.every((hub) => publicIds.has(hub.id))).toBe(true);
+    expect(hubs.map((hub) => hub.id)).not.toContain("byudzhet-poezdki");
+    expect(hubs.map((hub) => hub.id)).not.toContain("medicina-i-strahovka");
   });
 
   it("does not expose translation or internal editorial markers", () => {

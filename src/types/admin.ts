@@ -86,6 +86,7 @@ export type AdminNavItemId =
   | "users-list"
   | "analytics-overview"
   | "analytics-funnels"
+  | "marketing-search-visibility"
   | "marketing-email-templates"
   | "system-redirects"
   | "system-settings"

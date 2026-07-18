@@ -1,5 +1,6 @@
 import type { DestinationPage } from "@/data/destination-pages";
 import type { TourListing } from "@/types";
+import type { ExcursionListing } from "@/types/excursion";
 import type { PlaceListing } from "@/types/place";
 import { destinationHref } from "@/lib/destinations";
 import type { I18nLocale } from "@/lib/i18n/config";
@@ -21,20 +22,20 @@ function resolveCatalogListName(
 
 export function buildToursCatalogItemListJsonLd(
   tours: TourListing[],
-  locale?: I18nLocale
+  locale?: I18nLocale,
+  options: { name?: string; path?: string } = {},
 ) {
   const capped = tours.slice(0, MAX_CATALOG_ITEM_LIST);
-  const name = resolveCatalogListName(
-    locale,
-    "tours.catalog.title",
-    "Каталог туров по Аргентине"
-  );
+  const name =
+    options.name ??
+    resolveCatalogListName(locale, "tours.catalog.title", "Каталог туров по Аргентине");
+  const path = options.path ?? "/tours";
 
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name,
-    url: absoluteUrl("/tours"),
+    url: absoluteUrl(path),
     numberOfItems: tours.length,
     itemListElement: capped.map((tour, index) => ({
       "@type": "ListItem",
@@ -45,6 +46,34 @@ export function buildToursCatalogItemListJsonLd(
         description: tour.shortDescription,
         url: absoluteUrl(`/tours/${tour.slug}`),
         ...(tour.image ? { image: resolvePublicUrl(tour.image) } : {}),
+      },
+    })),
+  };
+}
+
+export function buildExcursionsCatalogItemListJsonLd(
+  excursions: ExcursionListing[],
+  options: { name?: string; path?: string } = {},
+) {
+  const capped = excursions.slice(0, MAX_CATALOG_ITEM_LIST);
+  const name = options.name ?? "Экскурсии по Аргентине";
+  const path = options.path ?? "/excursions";
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    url: absoluteUrl(path),
+    numberOfItems: excursions.length,
+    itemListElement: capped.map((excursion, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: excursion.title,
+        url: absoluteUrl(`/excursions/${excursion.slug}`),
+        ...(excursion.tagline ? { description: excursion.tagline } : {}),
+        ...(excursion.coverImage ? { image: resolvePublicUrl(excursion.coverImage) } : {}),
       },
     })),
   };

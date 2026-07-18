@@ -117,6 +117,12 @@
     "kb:integrate-argentina-travel": "node scripts/integrate-argentina-travel.mjs --all --rebuild-index",
     "kb:integrate-argentina-travel:editorial": "node scripts/integrate-argentina-travel.mjs --editorial --retranslate --rebuild-index",
     "kb:integrate-argentina-travel:media": "node scripts/integrate-argentina-travel.mjs --sync-media --expand-place-map",
+    "kb:source-health": "node scripts/kb-source-health.mjs",
+    "kb:source-health:check": "node scripts/kb-source-health.mjs --check",
+    "blog:editorial-readiness": "tsx scripts/blog-editorial-readiness.ts",
+    "blog:editorial-readiness:check": "tsx scripts/blog-editorial-readiness.ts --strict",
+    "guide:editorial-readiness": "tsx scripts/guide-editorial-readiness.ts",
+    "guide:editorial-readiness:check": "tsx scripts/guide-editorial-readiness.ts --strict",
     "content:crawl": "node scripts/content-audit.mjs",
     "content:audit": "node scripts/content-audit.mjs",
     "content:lint": "node scripts/content-audit.mjs --strict",
@@ -141,7 +147,9 @@
     "seed": "tsx prisma/seed.ts"
   },
   "overrides": {
-    "@xmldom/xmldom": "0.8.13"
+    "@xmldom/xmldom": "0.8.13",
+    "esbuild": "^0.28.1",
+    "postcss": "^8.5.10"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -176,7 +184,7 @@
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.1.0",
     "schema-dts": "^2.0.0",
-    "sharp": "^0.35.2",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.6.0",
     "web-push": "^3.6.7"
   },

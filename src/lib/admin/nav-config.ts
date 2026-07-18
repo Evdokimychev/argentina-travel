@@ -243,6 +243,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "analytics.view",
   },
   {
+    id: "marketing-search-visibility",
+    section: "marketing",
+    href: "/admin/marketing/search-visibility",
+    label: "Поиск и SEO",
+    description: "Запросы, позиции и точки роста",
+    capability: "analytics.view",
+  },
+  {
     id: "marketing-email-templates",
     section: "marketing",
     href: "/admin/marketing/email-templates",

@@ -1,103 +1,28 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-17T04:57:46.197Z",
+  "generatedAt": "2026-07-17T11:59:18.195Z",
   "scope": "publicly-referenced-local-media",
   "manifestVersion": 7,
   "summary": {
     "manifestAssets": 2212,
-    "publicReferences": 619,
-    "auditedAssets": 617,
-    "unmanagedPaths": 2,
-    "fallbackContexts": 1,
-    "duplicateGroups": 85,
+    "publicReferences": 607,
+    "auditedAssets": 607,
+    "unmanagedPaths": 0,
+    "fallbackContexts": 0,
+    "duplicateGroups": 80,
     "conflictingRightsGroups": 0,
     "highRiskAssets": 0,
     "countsBySeverity": {
       "high": 0,
-      "medium": 30,
+      "medium": 10,
       "low": 0
     },
     "countsByCode": {
-      "hero_resolution": 11,
-      "unmanaged_asset": 2,
-      "duplicate_within_entity": 17
+      "hero_resolution": 10
     }
   },
-  "fallbackContexts": [
-    "blog:ischigualasto-valle-de-la-luna:rich-gallery"
-  ],
+  "fallbackContexts": [],
   "issues": [
-    {
-      "key": "at-federacion-gallery-4:duplicate_within_entity:media/argentina-travel/federacion/1640033277915-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-federacion-gallery-4",
-      "localPath": "media/argentina-travel/federacion/1640033277915-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-      "message": "Одинаковый файл повторяется внутри place:federacion.",
-      "contexts": [
-        "place:federacion:gallery"
-      ]
-    },
-    {
-      "key": "at-federacion-hero:duplicate_within_entity:media/argentina-travel/federacion/1640033244460-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-federacion-hero",
-      "localPath": "media/argentina-travel/federacion/1640033244460-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-      "message": "Одинаковый файл повторяется внутри place:federacion.",
-      "contexts": [
-        "place:federacion:cover",
-        "place:federacion:gallery"
-      ]
-    },
-    {
-      "key": "at-gualeguaychu-gallery-4:duplicate_within_entity:media/argentina-travel/gualeguaychu/1638475502902-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-gualeguaychu-gallery-4",
-      "localPath": "media/argentina-travel/gualeguaychu/1638475502902-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-      "message": "Одинаковый файл повторяется внутри place:gualeguaychu.",
-      "contexts": [
-        "place:gualeguaychu:gallery"
-      ]
-    },
-    {
-      "key": "at-gualeguaychu-hero:duplicate_within_entity:media/argentina-travel/gualeguaychu/1638475468881-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-gualeguaychu-hero",
-      "localPath": "media/argentina-travel/gualeguaychu/1638475468881-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-      "message": "Одинаковый файл повторяется внутри place:gualeguaychu.",
-      "contexts": [
-        "place:gualeguaychu:cover",
-        "place:gualeguaychu:gallery"
-      ]
-    },
-    {
-      "key": "at-parana-gallery-4:duplicate_within_entity:media/argentina-travel/parana/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-parana-gallery-4",
-      "localPath": "media/argentina-travel/parana/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg",
-      "message": "Одинаковый файл повторяется внутри kb:parana, place:parana.",
-      "contexts": [
-        "kb:parana:gallery",
-        "place:parana:gallery"
-      ]
-    },
-    {
-      "key": "at-parana-hero:duplicate_within_entity:media/argentina-travel/parana/1640025681712-3_parana_rio_kite_horizontal__6__alta.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "at-parana-hero",
-      "localPath": "media/argentina-travel/parana/1640025681712-3_parana_rio_kite_horizontal__6__alta.jpg",
-      "message": "Одинаковый файл повторяется внутри kb:parana, place:parana.",
-      "contexts": [
-        "kb:parana:hero",
-        "place:parana:cover",
-        "place:parana:gallery"
-      ]
-    },
     {
       "key": "at-parque-nacional-islas-de-santa-fe-hero:hero_resolution:media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388804931-caminatas_y_corrida__1_.jpg",
       "code": "hero_resolution",
@@ -133,95 +58,6 @@
       ]
     },
     {
-      "key": "blog-banado-la-estrella:duplicate_within_entity:media/blog/banado-la-estrella/hero.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-banado-la-estrella",
-      "localPath": "media/blog/banado-la-estrella/hero.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:banado-la-estrella.",
-      "contexts": [
-        "blog:banado-la-estrella:hero",
-        "blog:natsionalnyy-park-los-glasiares:hero",
-        "blog:natsionalnyy-park-nauel-uapi:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ]
-    },
-    {
-      "key": "blog-natsionalnye-parki-argentiny:duplicate_within_entity:media/blog/natsionalnye-parki-argentiny/hero.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-natsionalnye-parki-argentiny",
-      "localPath": "media/blog/natsionalnye-parki-argentiny/hero.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:natsionalnye-parki-argentiny.",
-      "contexts": [
-        "blog:ischigualasto-valle-de-la-luna:card",
-        "blog:ischigualasto-valle-de-la-luna:hero",
-        "blog:natsionalnye-parki-argentiny:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ]
-    },
-    {
-      "key": "blog-natsionalnyy-park-iguasu-hero:duplicate_within_entity:media/blog/natsionalnyy-park-iguasu/hero.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-natsionalnyy-park-iguasu-hero",
-      "localPath": "media/blog/natsionalnyy-park-iguasu/hero.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:natsionalnyy-park-iguasu.",
-      "contexts": [
-        "blog:natsionalnyy-park-iguasu:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ]
-    },
-    {
-      "key": "blog-rich-all-argentina-national-parks-gallery-1:duplicate_within_entity:media/blog/rich/all-argentina-national-parks/gallery-1.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-rich-all-argentina-national-parks-gallery-1",
-      "localPath": "media/blog/rich/all-argentina-national-parks/gallery-1.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:natsionalnye-parki-argentiny.",
-      "contexts": [
-        "blog:natsionalnye-parki-argentiny:card",
-        "blog:natsionalnye-parki-argentiny:rich-gallery"
-      ]
-    },
-    {
-      "key": "blog-rich-banado-la-estrella-gallery-1:duplicate_within_entity:media/blog/rich/banado-la-estrella/gallery-1.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-rich-banado-la-estrella-gallery-1",
-      "localPath": "media/blog/rich/banado-la-estrella/gallery-1.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:banado-la-estrella.",
-      "contexts": [
-        "blog:banado-la-estrella:card",
-        "blog:banado-la-estrella:rich-gallery"
-      ]
-    },
-    {
-      "key": "blog-rich-iguazu-national-park-gallery-1:duplicate_within_entity:media/blog/rich/iguazu-national-park/gallery-1.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-rich-iguazu-national-park-gallery-1",
-      "localPath": "media/blog/rich/iguazu-national-park/gallery-1.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:natsionalnyy-park-iguasu.",
-      "contexts": [
-        "blog:natsionalnyy-park-iguasu:card",
-        "blog:natsionalnyy-park-iguasu:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ]
-    },
-    {
-      "key": "blog-rich-iguazu-national-park-gallery-3:duplicate_within_entity:media/blog/rich/iguazu-national-park/gallery-3.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "blog-rich-iguazu-national-park-gallery-3",
-      "localPath": "media/blog/rich/iguazu-national-park/gallery-3.jpg",
-      "message": "Одинаковый файл повторяется внутри blog:natsionalnye-parki-argentiny.",
-      "contexts": [
-        "blog:natsionalnyy-park-iguasu:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ]
-    },
-    {
       "key": "blog-wildlife-с-гидом:hero_resolution:media/places/valdes-peninsula/hero.jpg",
       "code": "hero_resolution",
       "severity": "medium",
@@ -229,6 +65,9 @@
       "localPath": "media/places/valdes-peninsula/hero.jpg",
       "message": "Hero 683×1024: ширина меньше 1200 px.",
       "contexts": [
+        "blog:patagonia-с-ребёнком:card",
+        "blog:patagonia-с-ребёнком:hero",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:valdes-peninsula:cover",
         "place:valdes-peninsula:gallery"
@@ -247,30 +86,6 @@
       ]
     },
     {
-      "key": "dest-mendoza-gallery-2:duplicate_within_entity:media/destinations/mendoza/gallery-2.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "dest-mendoza-gallery-2",
-      "localPath": "media/destinations/mendoza/gallery-2.jpg",
-      "message": "Одинаковый файл повторяется внутри destination:mendoza.",
-      "contexts": [
-        "destination:mendoza:gallery"
-      ]
-    },
-    {
-      "key": "destination-mendoza-section:duplicate_within_entity:media/destinations/mendoza/section.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "destination-mendoza-section",
-      "localPath": "media/destinations/mendoza/section.jpg",
-      "message": "Одинаковый файл повторяется внутри destination:mendoza.",
-      "contexts": [
-        "destination:mendoza:gallery",
-        "destination:mendoza:hero",
-        "literal:src/data/media-library/stock-cache.json"
-      ]
-    },
-    {
       "key": "place-bariloche-hero:hero_resolution:media/places/bariloche/hero.jpg",
       "code": "hero_resolution",
       "severity": "medium",
@@ -278,12 +93,8 @@
       "localPath": "media/places/bariloche/hero.jpg",
       "message": "Hero 1190×803: ширина меньше 1200 px.",
       "contexts": [
-        "blog:patagonia-за-3-дня:card",
-        "blog:patagonia-за-3-дня:hero",
-        "blog:patagonia-зимой:card",
-        "blog:patagonia-зимой:hero",
-        "blog:patagonia-летом:card",
-        "blog:patagonia-летом:hero",
+        "blog:patagonia-фото:card",
+        "blog:patagonia-фото:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:bariloche:cover",
         "place:bariloche:gallery",
@@ -301,17 +112,6 @@
         "place:cueva-de-las-manos:cover",
         "place:cueva-de-las-manos:gallery",
         "place:patagonia-park:cover"
-      ]
-    },
-    {
-      "key": "place-mendoza-gallery-2:duplicate_within_entity:media/places/mendoza/gallery-2.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "place-mendoza-gallery-2",
-      "localPath": "media/places/mendoza/gallery-2.jpg",
-      "message": "Одинаковый файл повторяется внутри destination:mendoza.",
-      "contexts": [
-        "place:mendoza:gallery"
       ]
     },
     {
@@ -339,18 +139,6 @@
       ]
     },
     {
-      "key": "service-home-hero-mobile:hero_resolution:media/home/hero-mobile.webp",
-      "code": "hero_resolution",
-      "severity": "medium",
-      "assetId": "service-home-hero-mobile",
-      "localPath": "media/home/hero-mobile.webp",
-      "message": "Hero 640×1231: ширина меньше 1200 px.",
-      "contexts": [
-        "literal:src/components/marketplace/MarketplaceHomeHero.tsx",
-        "literal:src/lib/organizer-waitlist-server.ts"
-      ]
-    },
-    {
       "key": "tour-bariloche-lakes-hero:hero_resolution:media/tours/bariloche-lakes/hero.jpg",
       "code": "hero_resolution",
       "severity": "medium",
@@ -362,44 +150,6 @@
         "literal:src/lib/tour-card-fallback-image.ts",
         "tour:bariloche-lakes:gallery",
         "tour:bariloche-lakes:hero"
-      ]
-    },
-    {
-      "key": "tour-mendoza-wine-gallery-2:duplicate_within_entity:media/tours/mendoza-wine/gallery-2.jpg",
-      "code": "duplicate_within_entity",
-      "severity": "medium",
-      "assetId": "tour-mendoza-wine-gallery-2",
-      "localPath": "media/tours/mendoza-wine/gallery-2.jpg",
-      "message": "Одинаковый файл повторяется внутри destination:mendoza.",
-      "contexts": [
-        "gallery:mendoza-wine-1",
-        "tour:mendoza-wine:gallery"
-      ]
-    },
-    {
-      "key": "unmanaged:unmanaged_asset:media/placeholders/tour-card.jpg",
-      "code": "unmanaged_asset",
-      "severity": "medium",
-      "localPath": "media/placeholders/tour-card.jpg",
-      "message": "Публичный локальный файл не имеет manifest-записи с правами и атрибуцией.",
-      "contexts": [
-        "literal:src/lib/youtravel/partner-tour-repository.ts"
-      ]
-    },
-    {
-      "key": "unmanaged:unmanaged_asset:media/places/el-chalten/gallery-2.jpg",
-      "code": "unmanaged_asset",
-      "severity": "medium",
-      "localPath": "media/places/el-chalten/gallery-2.jpg",
-      "message": "Публичный локальный файл не имеет manifest-записи с правами и атрибуцией.",
-      "contexts": [
-        "blog:patagonia-whale-watching:card",
-        "blog:patagonia-whale-watching:hero",
-        "blog:patagonia-за-5-дней:card",
-        "blog:patagonia-за-5-дней:hero",
-        "blog:patagonia-за-7-дней:card",
-        "blog:patagonia-за-7-дней:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
       ]
     }
   ],
@@ -416,6 +166,7 @@
       ],
       "contexts": [
         "literal:src/data/media-library/stock-cache.json",
+        "literal:src/lib/shop-products-server.ts",
         "page:shop:shop-patagonia-guide:hero",
         "podbor:theme:expedition"
       ],
@@ -445,6 +196,7 @@
         "blog:buenos-aires-советы-новичкам:hero",
         "destination:ba:gallery",
         "gallery:buenos-aires-tango-1",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:buenos-aires:gallery",
         "social:post-iv-ba-3",
@@ -574,11 +326,13 @@
     {
       "sha256": "0bf942ab6f2b46e550ff88c0a2b19339b408790557a9c030dfe8bf02c75fb1a6",
       "assetIds": [
+        "blog-transport",
         "dest-ba-cover",
         "place-buenos-aires-hero",
         "tour-buenos-aires-tango-hero"
       ],
       "localPaths": [
+        "media/blog/transport.jpg",
         "media/destinations/ba/cover.jpg",
         "media/places/buenos-aires/hero.jpg",
         "media/tours/buenos-aires-tango/hero.jpg"
@@ -587,6 +341,7 @@
         "destination:ba:gallery",
         "gallery:buenos-aires-tango-4",
         "literal:src/components/seo/SiteJsonLd.tsx",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
         "page:destination:ba:hero",
@@ -707,19 +462,17 @@
       "sha256": "1d556489ada8e11acc61ab6a4d8ba0b75033eec77d64609b40b05dd7f11f43d6",
       "assetIds": [
         "blog-natsionalnyy-park-talampaya",
-        "blog-rich-all-argentina-national-parks-gallery-4",
-        "blog-rich-talampaya-national-park-gallery-1"
+        "blog-rich-all-argentina-national-parks-gallery-4"
       ],
       "localPaths": [
         "media/blog/natsionalnyy-park-talampaya/hero.jpg",
-        "media/blog/rich/all-argentina-national-parks/gallery-4.jpg",
-        "media/blog/rich/talampaya-national-park/gallery-1.jpg"
+        "media/blog/rich/all-argentina-national-parks/gallery-4.jpg"
       ],
       "contexts": [
         "blog:natsionalnye-parki-argentiny:rich-gallery",
+        "blog:natsionalnyy-park-los-cardones:card",
         "blog:natsionalnyy-park-los-cardones:hero",
-        "blog:natsionalnyy-park-talampaya:card",
-        "blog:natsionalnyy-park-talampaya:rich-gallery",
+        "blog:natsionalnyy-park-tierra-del-fuego:card",
         "blog:natsionalnyy-park-tierra-del-fuego:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -774,12 +527,8 @@
         "media/tours/bariloche-lakes/hero.jpg"
       ],
       "contexts": [
-        "blog:patagonia-за-3-дня:card",
-        "blog:patagonia-за-3-дня:hero",
-        "blog:patagonia-зимой:card",
-        "blog:patagonia-зимой:hero",
-        "blog:patagonia-летом:card",
-        "blog:patagonia-летом:hero",
+        "blog:patagonia-фото:card",
+        "blog:patagonia-фото:hero",
         "destination:bariloche:gallery",
         "destination:patagonia:gallery",
         "gallery:bariloche-lakes-4",
@@ -802,11 +551,13 @@
     {
       "sha256": "23cbabff39919f68eed4ba63d8ced742dad727299f13e7b7cf648b5641adc2bb",
       "assetIds": [
+        "blog-wineries",
         "dest-mendoza-gallery-1",
         "place-mendoza-gallery-1",
         "tour-mendoza-wine-gallery-1"
       ],
       "localPaths": [
+        "media/blog/wineries.jpg",
         "media/destinations/mendoza/gallery-1.jpg",
         "media/places/mendoza/gallery-1.jpg",
         "media/tours/mendoza-wine/gallery-1.jpg"
@@ -814,6 +565,7 @@
       "contexts": [
         "destination:mendoza:gallery",
         "gallery:mendoza-wine-0",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:mendoza:gallery",
         "tour:mendoza-wine:gallery"
@@ -884,63 +636,11 @@
       "contexts": [
         "blog:natsionalnyy-park-iguasu:card",
         "blog:natsionalnyy-park-iguasu:hero",
-        "blog:natsionalnyy-park-iguasu:rich-gallery",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "rightsSignatures": [
         "pexels|https://www.pexels.com/photo/massive-water-cascades-and-waterfalls-in-iguazu-national-park-argentina-8242973/|Pexels License|Ana Benet"
-      ],
-      "sameEntityKeys": [
-        "blog:natsionalnyy-park-iguasu"
-      ],
-      "conflictingRights": false,
-      "repeatedWithinEntity": true
-    },
-    {
-      "sha256": "2ab4043da94b46e0a1784c095c7284a9c6fc2110a108fef22fc381b0d70ebf81",
-      "assetIds": [
-        "blog-banado-la-estrella",
-        "blog-rich-banado-la-estrella-gallery-1"
-      ],
-      "localPaths": [
-        "media/blog/banado-la-estrella/hero.jpg",
-        "media/blog/rich/banado-la-estrella/gallery-1.jpg"
-      ],
-      "contexts": [
-        "blog:banado-la-estrella:card",
-        "blog:banado-la-estrella:hero",
-        "blog:banado-la-estrella:rich-gallery",
-        "blog:natsionalnyy-park-los-glasiares:hero",
-        "blog:natsionalnyy-park-nauel-uapi:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "rightsSignatures": [
-        "pexels|https://www.pexels.com/photo/serene-flooded-forest-in-samsun-turkey-34204571/|Pexels License|Rıdvan ALTUNTAŞ"
-      ],
-      "sameEntityKeys": [
-        "blog:banado-la-estrella"
-      ],
-      "conflictingRights": false,
-      "repeatedWithinEntity": true
-    },
-    {
-      "sha256": "2c5ff9e642c8bccbee62a40f5c835fafce173312da31fa1f9643a8e814a64c0a",
-      "assetIds": [
-        "blog-natsionalnyy-park-lanin",
-        "blog-rich-lanin-national-park-gallery-1"
-      ],
-      "localPaths": [
-        "media/blog/natsionalnyy-park-lanin/hero.jpg",
-        "media/blog/rich/lanin-national-park/gallery-1.jpg"
-      ],
-      "contexts": [
-        "blog:natsionalnyy-park-lanin:card",
-        "blog:natsionalnyy-park-lanin:rich-gallery",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "rightsSignatures": [
-        "unsplash|https://unsplash.com/photos/calm-body-of-water-oCq2H8_Mguo|Unsplash License|Hector Ramon Perez"
       ],
       "sameEntityKeys": [],
       "conflictingRights": false,
@@ -1016,24 +716,28 @@
         "media/tours/patagonia-glaciers/hero.jpg"
       ],
       "contexts": [
-        "blog:patagonia-camping:card",
-        "blog:patagonia-camping:hero",
-        "blog:patagonia-mini-trekking:card",
-        "blog:patagonia-mini-trekking:hero",
-        "blog:patagonia-penguins:card",
-        "blog:patagonia-penguins:hero",
-        "blog:patagonia-бюджет:card",
-        "blog:patagonia-бюджет:hero",
-        "blog:patagonia-весной:card",
-        "blog:patagonia-весной:hero",
+        "blog:patagonia-whale-watching:card",
+        "blog:patagonia-whale-watching:hero",
+        "blog:patagonia-авиабилеты:card",
+        "blog:patagonia-авиабилеты:hero",
+        "blog:patagonia-за-10-дней:card",
+        "blog:patagonia-за-10-дней:hero",
+        "blog:patagonia-за-14-дней:card",
+        "blog:patagonia-за-14-дней:hero",
+        "blog:patagonia-самостоятельно:card",
+        "blog:patagonia-самостоятельно:hero",
+        "blog:patagonia-чек-лист:card",
+        "blog:patagonia-чек-лист:hero",
         "destination:calafate:gallery",
         "destination:patagonia:gallery",
         "gallery:fitz-roy-trek-1",
         "gallery:patagonia-glaciers-4",
         "literal:src/components/about/DesignSystemShowcase.tsx",
         "literal:src/components/marketplace/ToursCatalog.tsx",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/destinations-catalog-seo.ts",
+        "literal:src/lib/media/media-placeholders.ts",
         "literal:src/lib/page-metadata.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
         "page:destination:patagonia:hero",
@@ -1071,18 +775,12 @@
       "contexts": [
         "blog:bankovskij-schet-argentina:card",
         "blog:bankovskij-schet-argentina:hero",
-        "blog:blue-dollar-argentina-2026:card",
-        "blog:blue-dollar-argentina-2026:hero",
         "blog:byudzhet-poezdki-argentina:card",
         "blog:byudzhet-poezdki-argentina:hero",
         "blog:kak-menyat-dengi-argentina:card",
         "blog:kak-menyat-dengi-argentina:hero",
-        "blog:money-90-дней:card",
-        "blog:money-90-дней:hero",
         "blog:money-бюджет:card",
         "blog:money-бюджет:hero",
-        "blog:money-карты:card",
-        "blog:money-карты:hero",
         "blog:stoimost-zhizni-buenos-aires:card",
         "blog:stoimost-zhizni-buenos-aires:hero",
         "blog:viza-cifrovogo-kochevnika-argentina:card",
@@ -1109,13 +807,10 @@
         "media/blog/patagonia-packing-list/hero.jpg"
       ],
       "contexts": [
+        "blog:patagonia-camping:card",
+        "blog:patagonia-camping:hero",
         "blog:patagonia-packing-list:card",
         "blog:patagonia-packing-list:hero",
-        "blog:patagonia-ветер:card",
-        "blog:patagonia-ветер:hero",
-        "blog:patagonia-отели:card",
-        "blog:patagonia-отели:hero",
-        "literal:src/data/blog-editorial/patagonia.ts",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -1196,30 +891,6 @@
       "repeatedWithinEntity": false
     },
     {
-      "sha256": "4e747311204ae26621613bf5a8f64429937cfda7e0bbc8392c46c1ed8fa93bd1",
-      "assetIds": [
-        "at-gualeguaychu-gallery-4",
-        "at-gualeguaychu-hero"
-      ],
-      "localPaths": [
-        "media/argentina-travel/gualeguaychu/1638475468881-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-        "media/argentina-travel/gualeguaychu/1638475502902-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg"
-      ],
-      "contexts": [
-        "place:gualeguaychu:cover",
-        "place:gualeguaychu:gallery"
-      ],
-      "rightsSignatures": [
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1638475468881-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina",
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1638475502902-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina"
-      ],
-      "sameEntityKeys": [
-        "place:gualeguaychu"
-      ],
-      "conflictingRights": false,
-      "repeatedWithinEntity": true
-    },
-    {
       "sha256": "506084d1de1b2d297f79c689e91c811817764abde24bba9bfc39de095f685714",
       "assetIds": [
         "destination-patagonia-section",
@@ -1232,7 +903,6 @@
         "media/guide/pogoda-i-sezonnost/hero.jpg"
       ],
       "contexts": [
-        "destination:patagonia:gallery",
         "destination:patagonia:hero",
         "literal:src/data/media-library/stock-cache.json",
         "page:guide:pogoda-i-sezonnost:hero"
@@ -1267,30 +937,6 @@
       "repeatedWithinEntity": false
     },
     {
-      "sha256": "5270dc443c17b71d17627d616e771b15f8bcb36d24d4c5bc6d9836588cae6546",
-      "assetIds": [
-        "at-federacion-gallery-4",
-        "at-federacion-hero"
-      ],
-      "localPaths": [
-        "media/argentina-travel/federacion/1640033244460-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-        "media/argentina-travel/federacion/1640033277915-6_federacion_parque_acuatico_horizontal__11__alta.jpg"
-      ],
-      "contexts": [
-        "place:federacion:cover",
-        "place:federacion:gallery"
-      ],
-      "rightsSignatures": [
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1640033244460-6_federacion_parque_acuatico_horizontal__11__alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina",
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1640033277915-6_federacion_parque_acuatico_horizontal__11__alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina"
-      ],
-      "sameEntityKeys": [
-        "place:federacion"
-      ],
-      "conflictingRights": false,
-      "repeatedWithinEntity": true
-    },
-    {
       "sha256": "5402fbdde0039c3e8dee7b7af6adaf9f10eb4cf1626febec8ad55175f98f0ca3",
       "assetIds": [
         "dest-salta-cover",
@@ -1305,6 +951,7 @@
       "contexts": [
         "destination:salta:gallery",
         "gallery:salta-northwest-4",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
         "page:destination:salta:hero",
@@ -1347,11 +994,13 @@
     {
       "sha256": "5bb7b7f58b24ce0ee9b74283821c722989a3b9a79b9183676539e33e917cdbc4",
       "assetIds": [
+        "blog-money",
         "dest-mendoza-cover",
         "place-mendoza-hero",
         "tour-mendoza-wine-hero"
       ],
       "localPaths": [
+        "media/blog/money.jpg",
         "media/destinations/mendoza/cover.jpg",
         "media/places/mendoza/hero.jpg",
         "media/tours/mendoza-wine/hero.jpg"
@@ -1359,6 +1008,7 @@
       "contexts": [
         "destination:mendoza:gallery",
         "gallery:mendoza-wine-4",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
         "page:destination:mendoza:hero",
@@ -1411,6 +1061,10 @@
         "media/tours/fitz-roy-trek/gallery-3.jpg"
       ],
       "contexts": [
+        "blog:patagonia-автобусы:card",
+        "blog:patagonia-автобусы:hero",
+        "blog:patagonia-летом:card",
+        "blog:patagonia-летом:hero",
         "destination:bariloche:gallery",
         "gallery:bariloche-lakes-0",
         "gallery:fitz-roy-trek-2",
@@ -1443,31 +1097,12 @@
       "contexts": [
         "blog:kak-dobratsya-v-argentinu:card",
         "blog:kak-dobratsya-v-argentinu:hero",
-        "blog:patagonia-авиабилеты:card",
-        "blog:patagonia-авиабилеты:hero",
-        "blog:patagonia-автобусы:card",
-        "blog:patagonia-автобусы:hero",
-        "blog:patagonia-аренда-авто:card",
-        "blog:patagonia-аренда-авто:hero",
-        "blog:patagonia-за-10-дней:card",
-        "blog:patagonia-за-10-дней:hero",
-        "blog:patagonia-за-14-дней:card",
-        "blog:patagonia-за-14-дней:hero",
-        "blog:patagonia-осенью:card",
-        "blog:patagonia-осенью:hero",
+        "blog:patagonia-penguins:card",
+        "blog:patagonia-penguins:hero",
         "blog:patagonia-с-гидом:card",
         "blog:patagonia-с-гидом:hero",
-        "blog:patagonia-с-ребёнком:card",
-        "blog:patagonia-с-ребёнком:hero",
-        "blog:patagonia-с-чем-совмещать:card",
-        "blog:patagonia-с-чем-совмещать:hero",
-        "blog:patagonia-самостоятельно:card",
-        "blog:patagonia-самостоятельно:hero",
         "blog:patagonia-советы-новичкам:card",
         "blog:patagonia-советы-новичкам:hero",
-        "blog:patagonia-чек-лист:card",
-        "blog:patagonia-чек-лист:hero",
-        "literal:src/data/blog-editorial/patagonia.ts",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "rightsSignatures": [
@@ -1551,11 +1186,13 @@
     {
       "sha256": "79012c9dc0a17dd1cc401e40a7d706a84e6b6d42305f423589ccaa28ab534960",
       "assetIds": [
+        "blog-safety",
         "dest-ba-gallery-3",
         "place-buenos-aires-gallery-3",
         "tour-buenos-aires-tango-gallery-3"
       ],
       "localPaths": [
+        "media/blog/safety.jpg",
         "media/destinations/ba/gallery-3.jpg",
         "media/places/buenos-aires/gallery-3.jpg",
         "media/tours/buenos-aires-tango/gallery-3.jpg"
@@ -1563,6 +1200,7 @@
       "contexts": [
         "destination:ba:gallery",
         "gallery:buenos-aires-tango-2",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:buenos-aires:gallery",
         "tour:buenos-aires-tango:gallery"
@@ -1632,10 +1270,12 @@
         "media/tours/fitz-roy-trek/hero.jpg"
       ],
       "contexts": [
-        "blog:patagonia-фото:card",
-        "blog:patagonia-фото:hero",
-        "blog:patagonia-холод:card",
-        "blog:patagonia-холод:hero",
+        "blog:patagonia-ветер:card",
+        "blog:patagonia-ветер:hero",
+        "blog:patagonia-за-3-дня:card",
+        "blog:patagonia-за-3-дня:hero",
+        "blog:patagonia-ошибки:card",
+        "blog:patagonia-ошибки:hero",
         "destination:patagonia:gallery",
         "gallery:fitz-roy-trek-4",
         "literal:src/lib/blog-post-image-bindings.ts",
@@ -1670,6 +1310,8 @@
         "media/tours/salta-northwest/gallery-1.jpg"
       ],
       "contexts": [
+        "blog:natsionalnyy-park-los-cardones:rich-gallery",
+        "blog:natsionalnyy-park-talampaya:rich-gallery",
         "destination:mendoza:gallery",
         "destination:salta:gallery",
         "gallery:mendoza-wine-2",
@@ -1722,9 +1364,9 @@
       ],
       "contexts": [
         "blog:natsionalnye-parki-argentiny:rich-gallery",
-        "blog:natsionalnyy-park-los-glasiares:card",
-        "blog:natsionalnyy-park-los-glasiares:rich-gallery",
+        "blog:natsionalnyy-park-poluostrov-valdes:card",
         "blog:natsionalnyy-park-poluostrov-valdes:hero",
+        "blog:natsionalnyy-park-talampaya:card",
         "blog:natsionalnyy-park-talampaya:hero",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts",
@@ -1776,8 +1418,6 @@
         "media/tours/ushuaia-end-of-world/gallery-1.jpg"
       ],
       "contexts": [
-        "blog:patagonia-ошибки:card",
-        "blog:patagonia-ошибки:hero",
         "destination:ushuaia:gallery",
         "gallery:ushuaia-end-of-world-0",
         "literal:src/lib/blog-post-image-bindings.ts",
@@ -1802,7 +1442,10 @@
         "media/tours/fitz-roy-trek/gallery-1.jpg"
       ],
       "contexts": [
+        "blog:patagonia-mini-trekking:card",
+        "blog:patagonia-mini-trekking:hero",
         "gallery:fitz-roy-trek-0",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-chalten:cover",
         "place:el-chalten:gallery",
@@ -1962,12 +1605,10 @@
       "sha256": "ae6eba5c16759fe980553ac748d7f5f8a2128cc3ed6f8ca3f901d38653ca6b07",
       "assetIds": [
         "blog-natsionalnye-parki-argentiny",
-        "blog-rich-all-argentina-national-parks-gallery-1",
         "blog-rich-iguazu-national-park-gallery-3"
       ],
       "localPaths": [
         "media/blog/natsionalnye-parki-argentiny/hero.jpg",
-        "media/blog/rich/all-argentina-national-parks/gallery-1.jpg",
         "media/blog/rich/iguazu-national-park/gallery-3.jpg"
       ],
       "contexts": [
@@ -1975,7 +1616,6 @@
         "blog:ischigualasto-valle-de-la-luna:hero",
         "blog:natsionalnye-parki-argentiny:card",
         "blog:natsionalnye-parki-argentiny:hero",
-        "blog:natsionalnye-parki-argentiny:rich-gallery",
         "blog:natsionalnyy-park-iguasu:rich-gallery",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
@@ -1983,11 +1623,9 @@
       "rightsSignatures": [
         "pexels|https://www.pexels.com/photo/rainbow-over-iguazu-falls-in-brazil-19240301/|Pexels License|Saplak"
       ],
-      "sameEntityKeys": [
-        "blog:natsionalnye-parki-argentiny"
-      ],
+      "sameEntityKeys": [],
       "conflictingRights": false,
-      "repeatedWithinEntity": true
+      "repeatedWithinEntity": false
     },
     {
       "sha256": "b08240c0165b30b49f4bc488e3cffc4f6831c2069a35bcea8ae47f6d312babaa",
@@ -2030,6 +1668,10 @@
         "media/tours/ushuaia-end-of-world/hero.jpg"
       ],
       "contexts": [
+        "blog:patagonia-за-5-дней:card",
+        "blog:patagonia-за-5-дней:hero",
+        "blog:patagonia-за-7-дней:card",
+        "blog:patagonia-за-7-дней:hero",
         "destination:patagonia:gallery",
         "destination:ushuaia:gallery",
         "gallery:fitz-roy-trek-3",
@@ -2061,6 +1703,10 @@
         "media/places/el-calafate/gallery-1.jpg"
       ],
       "contexts": [
+        "blog:patagonia-весной:card",
+        "blog:patagonia-весной:hero",
+        "blog:patagonia-с-чем-совмещать:card",
+        "blog:patagonia-с-чем-совмещать:hero",
         "destination:calafate:gallery",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-calafate:gallery"
@@ -2075,15 +1721,18 @@
     {
       "sha256": "b7846951df73ed329a3d928b5997c09e7611b79b23175f9d51cbe15c34951ac2",
       "assetIds": [
+        "blog-relocation",
         "place-buenos-aires-gallery-4",
         "tour-buenos-aires-tango-gallery-4"
       ],
       "localPaths": [
+        "media/blog/relocation.jpg",
         "media/places/buenos-aires/gallery-4.jpg",
         "media/tours/buenos-aires-tango/gallery-4.jpg"
       ],
       "contexts": [
         "gallery:buenos-aires-tango-3",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:buenos-aires:gallery",
         "tour:buenos-aires-tango:gallery"
@@ -2094,33 +1743,6 @@
       "sameEntityKeys": [],
       "conflictingRights": false,
       "repeatedWithinEntity": false
-    },
-    {
-      "sha256": "b7f611b0a4043418a282b524007dc039954d3de54af52c73e37df2639beedd2d",
-      "assetIds": [
-        "at-parana-gallery-4",
-        "at-parana-hero"
-      ],
-      "localPaths": [
-        "media/argentina-travel/parana/1640025681712-3_parana_rio_kite_horizontal__6__alta.jpg",
-        "media/argentina-travel/parana/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg"
-      ],
-      "contexts": [
-        "kb:parana:gallery",
-        "kb:parana:hero",
-        "place:parana:cover",
-        "place:parana:gallery"
-      ],
-      "rightsSignatures": [
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1640025681712-3_parana_rio_kite_horizontal__6__alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina",
-        "argentina.travel|https://api-inprotur-hom.turismo.gob.ar/files/uploads/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg|Argentina.travel / INPROTUR — указать источник на сайте|INPROTUR / Visit Argentina"
-      ],
-      "sameEntityKeys": [
-        "kb:parana",
-        "place:parana"
-      ],
-      "conflictingRights": false,
-      "repeatedWithinEntity": true
     },
     {
       "sha256": "bc670e1aa84c8508a58fb603fcefa63c3fbdacc016d9c3921d90390dab946753",
@@ -2182,6 +1804,7 @@
         "media/tours/bariloche-lakes/gallery-2.jpg"
       ],
       "contexts": [
+        "blog:natsionalnyy-park-lanin:card",
         "blog:natsionalnyy-park-lanin:hero",
         "destination:bariloche:gallery",
         "gallery:bariloche-lakes-1",
@@ -2255,6 +1878,12 @@
         "media/places/el-calafate/hero.jpg"
       ],
       "contexts": [
+        "blog:patagonia-зимой:card",
+        "blog:patagonia-зимой:hero",
+        "blog:patagonia-осенью:card",
+        "blog:patagonia-осенью:hero",
+        "blog:patagonia-холод:card",
+        "blog:patagonia-холод:hero",
         "destination:calafate:gallery",
         "literal:src/lib/blog-post-image-bindings.ts",
         "page:destination:calafate:hero",
@@ -2304,6 +1933,7 @@
       "contexts": [
         "destination:iguazu:gallery",
         "gallery:iguazu-falls-4",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/data/blog.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
@@ -2398,19 +2028,16 @@
     {
       "sha256": "d550fc8de2d1adbd06c50b1a8e6f6d74b678234b5c7530e854bda65e2e8ae3b8",
       "assetIds": [
-        "dest-mendoza-gallery-2",
         "destination-mendoza-section",
         "place-mendoza-gallery-2",
         "tour-mendoza-wine-gallery-2"
       ],
       "localPaths": [
-        "media/destinations/mendoza/gallery-2.jpg",
         "media/destinations/mendoza/section.jpg",
         "media/places/mendoza/gallery-2.jpg",
         "media/tours/mendoza-wine/gallery-2.jpg"
       ],
       "contexts": [
-        "destination:mendoza:gallery",
         "destination:mendoza:hero",
         "gallery:mendoza-wine-1",
         "literal:src/data/media-library/stock-cache.json",
@@ -2421,11 +2048,9 @@
         "wikimedia|https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors",
         "wikimedia|https://commons.wikimedia.org/wiki/File:Vignoble_Mendoza_Argentine.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors"
       ],
-      "sameEntityKeys": [
-        "destination:mendoza"
-      ],
+      "sameEntityKeys": [],
       "conflictingRights": false,
-      "repeatedWithinEntity": true
+      "repeatedWithinEntity": false
     },
     {
       "sha256": "dea65700171196f4918b9e2f0b1d35b833929c71c333502951aa31f37b9f0fc1",
@@ -2681,6 +2306,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "page:excursions:index:hero",
         "page:guide:ob-argentine:hero",
@@ -2808,6 +2434,10 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-за-5-дней:card",
+        "blog:patagonia-за-5-дней:hero",
+        "blog:patagonia-за-7-дней:card",
+        "blog:patagonia-за-7-дней:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:ushuaia:cover",
         "place:ushuaia:gallery"
@@ -2832,8 +2462,6 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
-        "blog:patagonia-ошибки:card",
-        "blog:patagonia-ошибки:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:ushuaia:gallery"
       ],
@@ -2993,6 +2621,12 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-зимой:card",
+        "blog:patagonia-зимой:hero",
+        "blog:patagonia-осенью:card",
+        "blog:patagonia-осенью:hero",
+        "blog:patagonia-холод:card",
+        "blog:patagonia-холод:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-calafate:cover",
         "place:el-calafate:gallery"
@@ -3017,6 +2651,10 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
+        "blog:patagonia-весной:card",
+        "blog:patagonia-весной:hero",
+        "blog:patagonia-с-чем-совмещать:card",
+        "blog:patagonia-с-чем-совмещать:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-calafate:gallery"
       ],
@@ -3062,6 +2700,7 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnyy-park-patagonia:rich-gallery",
         "kb:el-calafate:gallery",
         "place:el-calafate:gallery"
       ],
@@ -3154,6 +2793,9 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-mini-trekking:card",
+        "blog:patagonia-mini-trekking:hero",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-chalten:cover",
         "place:el-chalten:gallery"
@@ -3178,6 +2820,10 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-за-3-дня:card",
+        "blog:patagonia-за-3-дня:hero",
+        "blog:patagonia-ошибки:card",
+        "blog:patagonia-ошибки:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:el-chalten:gallery"
       ],
@@ -3294,12 +2940,8 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "blog:patagonia-за-3-дня:card",
-        "blog:patagonia-за-3-дня:hero",
-        "blog:patagonia-зимой:card",
-        "blog:patagonia-зимой:hero",
-        "blog:patagonia-летом:card",
-        "blog:patagonia-летом:hero",
+        "blog:patagonia-фото:card",
+        "blog:patagonia-фото:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:bariloche:cover",
         "place:bariloche:gallery",
@@ -3325,6 +2967,10 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
+        "blog:patagonia-автобусы:card",
+        "blog:patagonia-автобусы:hero",
+        "blog:patagonia-летом:card",
+        "blog:patagonia-летом:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:bariloche:gallery"
       ],
@@ -3392,6 +3038,8 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnyy-park-lanin:rich-gallery",
+        "blog:natsionalnyy-park-los-alerses:rich-gallery",
         "kb:bariloche:gallery",
         "place:bariloche:gallery"
       ],
@@ -3484,6 +3132,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:mendoza:cover",
         "place:mendoza:gallery"
@@ -3782,6 +3431,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:salta:cover",
         "place:salta:gallery"
@@ -3806,6 +3456,8 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnyy-park-los-cardones:rich-gallery",
+        "blog:natsionalnyy-park-talampaya:rich-gallery",
         "place:salta:gallery"
       ],
       "exists": true,
@@ -4030,6 +3682,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/data/blog.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:iguazu-falls:cover",
@@ -4143,6 +3796,9 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "blog:banado-la-estrella:rich-gallery",
+        "blog:natsionalnyy-park-ibera:rich-gallery",
+        "blog:natsionalnyy-park-iguasu:rich-gallery",
         "place:iguazu-falls:gallery"
       ],
       "exists": true,
@@ -4232,17 +3888,11 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "blog:patagonia-camping:card",
-        "blog:patagonia-camping:hero",
-        "blog:patagonia-mini-trekking:card",
-        "blog:patagonia-mini-trekking:hero",
-        "blog:patagonia-penguins:card",
-        "blog:patagonia-penguins:hero",
-        "blog:patagonia-бюджет:card",
-        "blog:patagonia-бюджет:hero",
-        "blog:patagonia-весной:card",
-        "blog:patagonia-весной:hero",
+        "blog:patagonia-чек-лист:card",
+        "blog:patagonia-чек-лист:hero",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
+        "literal:src/lib/media/media-placeholders.ts",
         "place:perito-moreno-glacier:cover",
         "place:perito-moreno-glacier:gallery"
       ],
@@ -4447,10 +4097,8 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "blog:patagonia-фото:card",
-        "blog:patagonia-фото:hero",
-        "blog:patagonia-холод:card",
-        "blog:patagonia-холод:hero",
+        "blog:patagonia-ветер:card",
+        "blog:patagonia-ветер:hero",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:fitz-roy:cover",
         "place:fitz-roy:gallery"
@@ -4475,9 +4123,13 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:natsionalnyy-park-ibera:card",
         "blog:natsionalnyy-park-ibera:hero",
+        "blog:natsionalnyy-park-los-alerses:card",
         "blog:natsionalnyy-park-los-alerses:hero",
+        "blog:natsionalnyy-park-patagonia:card",
         "blog:natsionalnyy-park-patagonia:hero",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/data/blog.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:los-glaciares-national-park:cover",
@@ -4503,6 +4155,8 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnye-parki-argentiny:rich-gallery",
+        "blog:natsionalnyy-park-los-glasiares:rich-gallery",
         "kb:los-glasiares:gallery",
         "place:los-glaciares-national-park:gallery"
       ],
@@ -4595,6 +4249,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:natsionalnyy-park-lanin:card",
         "blog:natsionalnyy-park-lanin:hero",
         "literal:src/data/blog.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
@@ -4621,6 +4276,9 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-с-ребёнком:card",
+        "blog:patagonia-с-ребёнком:hero",
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
         "place:valdes-peninsula:cover",
         "place:valdes-peninsula:gallery"
@@ -4645,8 +4303,6 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
-        "blog:natsionalnyy-park-poluostrov-valdes:card",
-        "blog:natsionalnyy-park-poluostrov-valdes:rich-gallery",
         "place:valdes-peninsula:gallery"
       ],
       "exists": true,
@@ -4669,6 +4325,7 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnyy-park-poluostrov-valdes:rich-gallery",
         "kb:peninsula-valdes:gallery",
         "place:valdes-peninsula:gallery"
       ],
@@ -5099,6 +4756,7 @@
       "source": "wikimedia",
       "role": "gallery",
       "contexts": [
+        "blog:natsionalnyy-park-tierra-del-fuego:rich-gallery",
         "place:tierra-del-fuego-national-park:gallery"
       ],
       "exists": true,
@@ -7434,28 +7092,6 @@
       "format": "webp"
     },
     {
-      "id": "at-federacion-gallery-4",
-      "localPath": "media/argentina-travel/federacion/1640033277915-6_federacion_parque_acuatico_horizontal__11__alta.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "place:federacion:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 305842,
-      "sha256": "5270dc443c17b71d17627d616e771b15f8bcb36d24d4c5bc6d9836588cae6546",
-      "width": 2299,
-      "height": 1534,
-      "format": "webp"
-    },
-    {
       "id": "place-formosa-hero",
       "localPath": "media/places/formosa/hero.jpg",
       "source": "wikimedia",
@@ -7565,28 +7201,6 @@
       "sha256": "f9e7d69d3c5c257a80de6c80923c304b0694c0586cb6affd3598e302b5c8636b",
       "width": 3564,
       "height": 2006,
-      "format": "webp"
-    },
-    {
-      "id": "at-gualeguaychu-gallery-4",
-      "localPath": "media/argentina-travel/gualeguaychu/1638475502902-7_gualeguaychu_playa__andubaysal_horizontal_2_alta.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "place:gualeguaychu:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 289964,
-      "sha256": "4e747311204ae26621613bf5a8f64429937cfda7e0bbc8392c46c1ed8fa93bd1",
-      "width": 2259,
-      "height": 1271,
       "format": "webp"
     },
     {
@@ -7706,29 +7320,6 @@
       "format": "webp"
     },
     {
-      "id": "at-parana-gallery-4",
-      "localPath": "media/argentina-travel/parana/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parana:gallery",
-        "place:parana:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 344086,
-      "sha256": "b7f611b0a4043418a282b524007dc039954d3de54af52c73e37df2639beedd2d",
-      "width": 1915,
-      "height": 1278,
-      "format": "webp"
-    },
-    {
       "id": "place-parque-nacional-chaco-hero",
       "localPath": "media/places/parque-nacional-chaco/hero.jpg",
       "source": "wikimedia",
@@ -7804,7 +7395,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-rio-pilcomayo:gallery",
         "place:parque-nacional-rio-pilcomayo:gallery"
       ],
       "exists": true,
@@ -7827,7 +7417,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-rio-pilcomayo:gallery",
         "place:parque-nacional-rio-pilcomayo:gallery"
       ],
       "exists": true,
@@ -7850,7 +7439,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-rio-pilcomayo:gallery",
         "place:parque-nacional-rio-pilcomayo:gallery"
       ],
       "exists": true,
@@ -8993,7 +8581,6 @@
       "source": "wikimedia",
       "role": "section",
       "contexts": [
-        "destination:ba:gallery",
         "destination:ba:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9107,7 +8694,6 @@
       "source": "unsplash",
       "role": "section",
       "contexts": [
-        "destination:bariloche:gallery",
         "destination:bariloche:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9220,7 +8806,6 @@
       "source": "unsplash",
       "role": "section",
       "contexts": [
-        "destination:calafate:gallery",
         "destination:calafate:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9333,7 +8918,6 @@
       "source": "unsplash",
       "role": "section",
       "contexts": [
-        "destination:ushuaia:gallery",
         "destination:ushuaia:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9446,7 +9030,6 @@
       "source": "unsplash",
       "role": "section",
       "contexts": [
-        "destination:iguazu:gallery",
         "destination:iguazu:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9559,7 +9142,6 @@
       "source": "wikimedia",
       "role": "section",
       "contexts": [
-        "destination:mendoza:gallery",
         "destination:mendoza:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9623,28 +9205,6 @@
       "format": "jpeg"
     },
     {
-      "id": "dest-mendoza-gallery-2",
-      "localPath": "media/destinations/mendoza/gallery-2.jpg",
-      "source": "wikimedia",
-      "role": "gallery",
-      "contexts": [
-        "destination:mendoza:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 930777,
-      "sha256": "d550fc8de2d1adbd06c50b1a8e6f6d74b678234b5c7530e854bda65e2e8ae3b8",
-      "width": 2560,
-      "height": 805,
-      "format": "jpeg"
-    },
-    {
       "id": "dest-mendoza-gallery-3",
       "localPath": "media/destinations/mendoza/gallery-3.jpg",
       "source": "wikimedia",
@@ -9672,7 +9232,6 @@
       "source": "pexels",
       "role": "section",
       "contexts": [
-        "destination:salta:gallery",
         "destination:salta:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -9785,7 +9344,6 @@
       "source": "pexels",
       "role": "section",
       "contexts": [
-        "destination:patagonia:gallery",
         "destination:patagonia:hero",
         "literal:src/data/media-library/stock-cache.json"
       ],
@@ -10917,12 +10475,10 @@
       "source": "pexels",
       "role": "hero",
       "contexts": [
+        "blog:patagonia-camping:card",
+        "blog:patagonia-camping:hero",
         "blog:patagonia-packing-list:card",
         "blog:patagonia-packing-list:hero",
-        "blog:patagonia-ветер:card",
-        "blog:patagonia-ветер:hero",
-        "blog:patagonia-отели:card",
-        "blog:patagonia-отели:hero",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -10941,31 +10497,45 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-aviabilety",
-      "localPath": "media/blog/patagonia-aviabilety/hero.jpg",
-      "source": "pexels",
+      "id": "blog-patagonia-whale-watching",
+      "localPath": "media/blog/patagonia-whale-watching/hero.jpg",
+      "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "blog:kak-dobratsya-v-argentinu:card",
-        "blog:kak-dobratsya-v-argentinu:hero",
+        "blog:patagonia-whale-watching:card",
+        "blog:patagonia-whale-watching:hero",
         "blog:patagonia-авиабилеты:card",
         "blog:patagonia-авиабилеты:hero",
-        "blog:patagonia-автобусы:card",
-        "blog:patagonia-автобусы:hero",
-        "blog:patagonia-аренда-авто:card",
-        "blog:patagonia-аренда-авто:hero",
         "blog:patagonia-за-10-дней:card",
         "blog:patagonia-за-10-дней:hero",
         "blog:patagonia-за-14-дней:card",
         "blog:patagonia-за-14-дней:hero",
-        "blog:patagonia-осенью:card",
-        "blog:patagonia-осенью:hero",
-        "blog:patagonia-с-гидом:card",
-        "blog:patagonia-с-гидом:hero",
-        "blog:patagonia-с-ребёнком:card",
-        "blog:patagonia-с-ребёнком:hero",
-        "blog:patagonia-чек-лист:card",
-        "blog:patagonia-чек-лист:hero",
+        "blog:patagonia-самостоятельно:card",
+        "blog:patagonia-самостоятельно:hero",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 785630,
+      "sha256": "2fc2cbe0ed567ba8f970f8c345babce290d7b1beeb214a3e48bb5d9645a2f5fe",
+      "width": 2560,
+      "height": 1097,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-patagonia-avtobusy",
+      "localPath": "media/blog/patagonia-avtobusy/hero.jpg",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "blog:patagonia-penguins:card",
+        "blog:patagonia-penguins:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "exists": true,
@@ -11008,35 +10578,6 @@
       "sha256": "ed60be8450abaafaaa68a1ec2d5bf24025834882180e0b850ade7af1064edd0e",
       "width": 2685,
       "height": 2018,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-blue-dollar-argentina-2026",
-      "localPath": "media/blog/blue-dollar-argentina-2026/hero.jpg",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "blog:blue-dollar-argentina-2026:card",
-        "blog:blue-dollar-argentina-2026:hero",
-        "blog:money-карты:card",
-        "blog:money-карты:hero",
-        "blog:stoimost-zhizni-buenos-aires:card",
-        "blog:stoimost-zhizni-buenos-aires:hero",
-        "literal:src/data/media-library/stock-cache.json",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 3616512,
-      "sha256": "38447b48bf26ae75984f5ae164b0eaf13fae8ef7e064eb8664947301e7007076",
-      "width": 6016,
-      "height": 4016,
       "format": "jpeg"
     },
     {
@@ -11192,36 +10733,14 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-tierra-del-fuego-national-park-gallery-1",
-      "localPath": "media/blog/rich/tierra-del-fuego-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-tierra-del-fuego:card",
-        "blog:natsionalnyy-park-tierra-del-fuego:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1846504,
-      "sha256": "457fdc5c2444ed3cdb907cf7b7b3d77446ab8f9638578d397d6755607b8c27e2",
-      "width": 4595,
-      "height": 3043,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-natsionalnyy-park-talampaya",
       "localPath": "media/blog/natsionalnyy-park-talampaya/hero.jpg",
       "source": "pexels",
       "role": "hero",
       "contexts": [
+        "blog:natsionalnyy-park-los-cardones:card",
         "blog:natsionalnyy-park-los-cardones:hero",
+        "blog:natsionalnyy-park-tierra-del-fuego:card",
         "blog:natsionalnyy-park-tierra-del-fuego:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -11332,37 +10851,16 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-nahuel-huapi-national-park-gallery-1",
-      "localPath": "media/blog/rich/nahuel-huapi-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-nauel-uapi:card",
-        "blog:natsionalnyy-park-nauel-uapi:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 2554267,
-      "sha256": "ca0ed680992b80dd79a396b4e3cab4d71752055ad873ad9fcff1f8498e506800",
-      "width": 5087,
-      "height": 3389,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-banado-la-estrella",
       "localPath": "media/blog/banado-la-estrella/hero.jpg",
       "source": "pexels",
       "role": "hero",
       "contexts": [
+        "blog:banado-la-estrella:card",
         "blog:banado-la-estrella:hero",
+        "blog:natsionalnyy-park-los-glasiares:card",
         "blog:natsionalnyy-park-los-glasiares:hero",
+        "blog:natsionalnyy-park-nauel-uapi:card",
         "blog:natsionalnyy-park-nauel-uapi:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -11473,30 +10971,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-los-glaciares-national-park-gallery-1",
-      "localPath": "media/blog/rich/los-glaciares-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-los-glasiares:card",
-        "blog:natsionalnyy-park-los-glasiares:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1896889,
-      "sha256": "912977fc78a0ec95e06342bf5b170f8ad72d900155d6563ad5f0eac2cf60e669",
-      "width": 4032,
-      "height": 2268,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-rich-los-glaciares-national-park-gallery-2",
       "localPath": "media/blog/rich/los-glaciares-national-park/gallery-2.jpg",
       "source": "pexels",
@@ -11589,35 +11063,12 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-iguazu-national-park-gallery-1",
-      "localPath": "media/blog/rich/iguazu-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-iguasu:card",
-        "blog:natsionalnyy-park-iguasu:rich-gallery",
-        "literal:src/data/media-library/stock-cache.json"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1342333,
-      "sha256": "293e316c06220912332ce95af679a053bebdf4d335d1cb5946b8b495229a26a4",
-      "width": 4516,
-      "height": 3387,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-natsionalnyy-park-iguasu-hero",
       "localPath": "media/blog/natsionalnyy-park-iguasu/hero.jpg",
       "source": "pexels",
       "role": "hero",
       "contexts": [
+        "blog:natsionalnyy-park-iguasu:card",
         "blog:natsionalnyy-park-iguasu:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -11733,7 +11184,9 @@
       "source": "pexels",
       "role": "hero",
       "contexts": [
+        "blog:natsionalnyy-park-poluostrov-valdes:card",
         "blog:natsionalnyy-park-poluostrov-valdes:hero",
+        "blog:natsionalnyy-park-talampaya:card",
         "blog:natsionalnyy-park-talampaya:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -11843,29 +11296,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-all-argentina-national-parks-gallery-1",
-      "localPath": "media/blog/rich/all-argentina-national-parks/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnye-parki-argentiny:card",
-        "blog:natsionalnye-parki-argentiny:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 2732673,
-      "sha256": "ae6eba5c16759fe980553ac748d7f5f8a2128cc3ed6f8ca3f901d38653ca6b07",
-      "width": 5960,
-      "height": 3975,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-natsionalnye-parki-argentiny",
       "localPath": "media/blog/natsionalnye-parki-argentiny/hero.jpg",
       "source": "pexels",
@@ -11873,6 +11303,7 @@
       "contexts": [
         "blog:ischigualasto-valle-de-la-luna:card",
         "blog:ischigualasto-valle-de-la-luna:hero",
+        "blog:natsionalnye-parki-argentiny:card",
         "blog:natsionalnye-parki-argentiny:hero",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -11979,29 +11410,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-ibera-national-park-gallery-1",
-      "localPath": "media/blog/rich/ibera-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-ibera:card",
-        "blog:natsionalnyy-park-ibera:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1606244,
-      "sha256": "c98d12e871b97df142a946f0ec5ceb9c76a241a36de1c287abeabcb095255252",
-      "width": 4266,
-      "height": 2826,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-rich-ibera-national-park-gallery-2",
       "localPath": "media/blog/rich/ibera-national-park/gallery-2.jpg",
       "source": "unsplash",
@@ -12087,29 +11495,6 @@
       "sha256": "76f3f6464053d99117435c64061d45135a09cbdcc294e56bffcbfec0fe9ca0db",
       "width": 5937,
       "height": 3958,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-rich-lanin-national-park-gallery-1",
-      "localPath": "media/blog/rich/lanin-national-park/gallery-1.jpg",
-      "source": "unsplash",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-lanin:card",
-        "blog:natsionalnyy-park-lanin:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 845342,
-      "sha256": "2c5ff9e642c8bccbee62a40f5c835fafce173312da31fa1f9643a8e814a64c0a",
-      "width": 1920,
-      "height": 1664,
       "format": "jpeg"
     },
     {
@@ -12201,29 +11586,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-los-alerces-national-park-gallery-1",
-      "localPath": "media/blog/rich/los-alerces-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-los-alerses:card",
-        "blog:natsionalnyy-park-los-alerses:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 5159336,
-      "sha256": "00e267657964050ee628089787818a855b55410897f2693af41ddca37ea98e82",
-      "width": 6000,
-      "height": 4000,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-rich-los-alerces-national-park-gallery-2",
       "localPath": "media/blog/rich/los-alerces-national-park/gallery-2.jpg",
       "source": "unsplash",
@@ -12307,29 +11669,6 @@
       },
       "bytes": 523926,
       "sha256": "bd0c3651f08403be70cfa1d51ef838bcce5e05991f9026e97e9e213c99d072c2",
-      "width": 1920,
-      "height": 1280,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-rich-los-cardones-national-park-gallery-1",
-      "localPath": "media/blog/rich/los-cardones-national-park/gallery-1.jpg",
-      "source": "unsplash",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-los-cardones:card",
-        "blog:natsionalnyy-park-los-cardones:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 858117,
-      "sha256": "58940f39a4c621c662dfd5c34ae05eee40cbccd175632bfd36a0fd77c1d01ae4",
       "width": 1920,
       "height": 1280,
       "format": "jpeg"
@@ -12423,29 +11762,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-patagonia-national-park-gallery-1",
-      "localPath": "media/blog/rich/patagonia-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-patagonia:card",
-        "blog:natsionalnyy-park-patagonia:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1280026,
-      "sha256": "1fa1df6d5835ff2fbe50c58c8d618c5726d31d5edc817bfdfe2f9bf8902e8c9a",
-      "width": 5130,
-      "height": 3420,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-rich-patagonia-national-park-gallery-2",
       "localPath": "media/blog/rich/patagonia-national-park/gallery-2.jpg",
       "source": "pexels",
@@ -12534,29 +11850,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-rich-talampaya-national-park-gallery-1",
-      "localPath": "media/blog/rich/talampaya-national-park/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:natsionalnyy-park-talampaya:card",
-        "blog:natsionalnyy-park-talampaya:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1728619,
-      "sha256": "1d556489ada8e11acc61ab6a4d8ba0b75033eec77d64609b40b05dd7f11f43d6",
-      "width": 3780,
-      "height": 2761,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-rich-talampaya-national-park-gallery-2",
       "localPath": "media/blog/rich/talampaya-national-park/gallery-2.jpg",
       "source": "pexels",
@@ -12642,29 +11935,6 @@
       "sha256": "200bcb14ffa71a6aabd5b0c6fd18cdf7ae07d0022f8787eb1104e59272532ba2",
       "width": 3874,
       "height": 3469,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-rich-banado-la-estrella-gallery-1",
-      "localPath": "media/blog/rich/banado-la-estrella/gallery-1.jpg",
-      "source": "pexels",
-      "role": "gallery",
-      "contexts": [
-        "blog:banado-la-estrella:card",
-        "blog:banado-la-estrella:rich-gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 3978974,
-      "sha256": "2ab4043da94b46e0a1784c095c7284a9c6fc2110a108fef22fc381b0d70ebf81",
-      "width": 4096,
-      "height": 3072,
       "format": "jpeg"
     },
     {
@@ -12810,6 +12080,30 @@
       "format": "jpeg"
     },
     {
+      "id": "blog-patagonia-aviabilety",
+      "localPath": "media/blog/patagonia-aviabilety/hero.jpg",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "blog:kak-dobratsya-v-argentinu:card",
+        "blog:kak-dobratsya-v-argentinu:hero",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 2242267,
+      "sha256": "6bb2d332fc7dc2d76685152a73c83dc50f776dab662a9b42eaa9796e6bbbb7b8",
+      "width": 4800,
+      "height": 3200,
+      "format": "jpeg"
+    },
+    {
       "id": "blog-byudzhet-poezdki-argentina",
       "localPath": "media/blog/byudzhet-poezdki-argentina/hero.jpg",
       "source": "pexels",
@@ -12817,6 +12111,31 @@
       "contexts": [
         "blog:byudzhet-poezdki-argentina:card",
         "blog:byudzhet-poezdki-argentina:hero",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 3616512,
+      "sha256": "38447b48bf26ae75984f5ae164b0eaf13fae8ef7e064eb8664947301e7007076",
+      "width": 6016,
+      "height": 4016,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-blue-dollar-argentina-2026",
+      "localPath": "media/blog/blue-dollar-argentina-2026/hero.jpg",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "blog:stoimost-zhizni-buenos-aires:card",
+        "blog:stoimost-zhizni-buenos-aires:hero",
+        "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "exists": true,
@@ -13010,18 +12329,15 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-avtobusy",
-      "localPath": "media/blog/patagonia-avtobusy/hero.jpg",
+      "id": "blog-patagonia-аренда-авто-section-2",
+      "localPath": "media/blog/patagonia-arenda-avto/hero.jpg",
       "source": "pexels",
-      "role": "hero",
+      "role": "section",
       "contexts": [
-        "blog:patagonia-с-чем-совмещать:card",
-        "blog:patagonia-с-чем-совмещать:hero",
-        "blog:patagonia-самостоятельно:card",
-        "blog:patagonia-самостоятельно:hero",
+        "blog:patagonia-с-гидом:card",
+        "blog:patagonia-с-гидом:hero",
         "blog:patagonia-советы-новичкам:card",
         "blog:patagonia-советы-новичкам:hero",
-        "literal:src/data/blog-editorial/patagonia.ts",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "exists": true,
@@ -13036,57 +12352,6 @@
       "sha256": "6bb2d332fc7dc2d76685152a73c83dc50f776dab662a9b42eaa9796e6bbbb7b8",
       "width": 4800,
       "height": 3200,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-money-karty-section-1",
-      "localPath": "media/blog/money-karty/section-1.jpg",
-      "source": "unsplash",
-      "role": "section",
-      "contexts": [
-        "blog:money-наличные:card",
-        "blog:money-наличные:hero",
-        "blog:money-советы-новичкам:card",
-        "blog:money-советы-новичкам:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 712572,
-      "sha256": "f67696ff34cba7559ee8101dcad7fac90f4fe9f047306cef808b173c8bb5bfcb",
-      "width": 1920,
-      "height": 1440,
-      "format": "jpeg"
-    },
-    {
-      "id": "blog-money-karty",
-      "localPath": "media/blog/money-karty/hero.jpg",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "blog:money-90-дней:card",
-        "blog:money-90-дней:hero",
-        "literal:src/data/blog-editorial/money-karty.ts",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 3616512,
-      "sha256": "38447b48bf26ae75984f5ae164b0eaf13fae8ef7e064eb8664947301e7007076",
-      "width": 6016,
-      "height": 4016,
       "format": "jpeg"
     },
     {
@@ -13706,94 +12971,6 @@
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-tierra-del-fuego-hero",
-      "localPath": "media/argentina-travel/parque-nacional-tierra-del-fuego/1625153502690-lago_yakush_h.jpg",
-      "source": "argentina.travel",
-      "role": "hero",
-      "contexts": [
-        "kb:parque-nacional-tierra-del-fuego:hero"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 266718,
-      "sha256": "9595a317aef03c6f88d4f3d9088926d8ace9a02e2e937f695ffcb17b754268f5",
-      "width": 1424,
-      "height": 949,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-tierra-del-fuego-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-tierra-del-fuego/1625153511810-mirador_lapataia_h.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-tierra-del-fuego:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 295466,
-      "sha256": "5abd5a43aa7a5578bc83335f123e52c79586ee4a20c8b9d01dadacfe92ec41e7",
-      "width": 1378,
-      "height": 918,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-tierra-del-fuego-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-tierra-del-fuego/1625153517047-ushuaia__6_.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-tierra-del-fuego:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 341074,
-      "sha256": "0cfc105283671c1262d9ba5af5eb0e36f3899423fdd004d2bb5388a34425036d",
-      "width": 1747,
-      "height": 1165,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-tierra-del-fuego-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-tierra-del-fuego/1630679662393-bosque_n_ires_h__1_.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-tierra-del-fuego:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 303846,
-      "sha256": "6a156463596f5e397b22d4cce9df5575bc98fc7b4477151ea5842801a1884ee8",
-      "width": 1123,
-      "height": 749,
-      "format": "webp"
-    },
-    {
       "id": "at-parque-provincial-ischigualasto-hero",
       "localPath": "media/argentina-travel/parque-provincial-ischigualasto/1621515012324-sjischigualastomq_06719.jpg",
       "source": "argentina.travel",
@@ -14353,6 +13530,7 @@
       "role": "hero",
       "contexts": [
         "literal:src/data/media-library/stock-cache.json",
+        "literal:src/lib/shop-products-server.ts",
         "page:shop:shop-patagonia-guide:hero"
       ],
       "exists": true,
@@ -15362,29 +14540,6 @@
       "format": "jpeg"
     },
     {
-      "id": "service-home-hero-mobile",
-      "localPath": "media/home/hero-mobile.webp",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "literal:src/components/marketplace/MarketplaceHomeHero.tsx",
-        "literal:src/lib/organizer-waitlist-server.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 119228,
-      "sha256": "82ddf803f02334d21cedf2209db892efd05915df1f295cf28444500835d440cb",
-      "width": 640,
-      "height": 1231,
-      "format": "webp"
-    },
-    {
       "id": "blog-grazhdanstvo-argentiny",
       "localPath": "media/blog/grazhdanstvo-argentiny/hero.jpg",
       "source": "pexels",
@@ -15408,13 +14563,12 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-аренда-авто-section-2",
-      "localPath": "media/blog/patagonia-arenda-avto/hero.jpg",
-      "source": "pexels",
-      "role": "section",
+      "id": "blog-wineries",
+      "localPath": "media/blog/wineries.jpg",
+      "source": "wikimedia",
+      "role": "hero",
       "contexts": [
-        "literal:src/data/blog-editorial/patagonia.ts",
-        "literal:src/lib/blog-post-image-bindings.ts"
+        "literal:src/data/blog-category-meta.ts"
       ],
       "exists": true,
       "metadata": {
@@ -15424,19 +14578,107 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 2242267,
-      "sha256": "6bb2d332fc7dc2d76685152a73c83dc50f776dab662a9b42eaa9796e6bbbb7b8",
-      "width": 4800,
-      "height": 3200,
+      "bytes": 989164,
+      "sha256": "23cbabff39919f68eed4ba63d8ced742dad727299f13e7b7cf648b5641adc2bb",
+      "width": 3264,
+      "height": 2448,
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-oteli",
-      "localPath": "media/blog/patagonia-oteli/hero.jpg",
-      "source": "pexels",
+      "id": "blog-food",
+      "localPath": "media/blog/food.jpg",
+      "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "literal:src/data/blog-editorial/patagonia.ts",
+        "literal:src/data/blog-category-meta.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 364428,
+      "sha256": "a912fe3eb2f58a2961fd448c27af2742a36fa416a9fffd3ce9ae00f098679c15",
+      "width": 1570,
+      "height": 1235,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-transport",
+      "localPath": "media/blog/transport.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-category-meta.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1437578,
+      "sha256": "0bf942ab6f2b46e550ff88c0a2b19339b408790557a9c030dfe8bf02c75fb1a6",
+      "width": 2340,
+      "height": 4160,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-money",
+      "localPath": "media/blog/money.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-category-meta.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1314736,
+      "sha256": "5bb7b7f58b24ce0ee9b74283821c722989a3b9a79b9183676539e33e917cdbc4",
+      "width": 2560,
+      "height": 1706,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-safety",
+      "localPath": "media/blog/safety.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-category-meta.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1003044,
+      "sha256": "79012c9dc0a17dd1cc401e40a7d706a84e6b6d42305f423589ccaa28ab534960",
+      "width": 2560,
+      "height": 1047,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-internet",
+      "localPath": "media/blog/internet.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "exists": true,
@@ -15447,10 +14689,143 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 2075690,
-      "sha256": "38da7df636ad5ee91f7bfeda08a09e2ddbe0ea6af2ddb10709327e911f96c5c6",
+      "bytes": 1010723,
+      "sha256": "02e05fe7ec7ae5dc993246e4d1f535cf1dd8282ebf7dd4084369df34f7f2b00a",
+      "width": 1920,
+      "height": 2560,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-relocation",
+      "localPath": "media/blog/relocation.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-category-meta.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1169347,
+      "sha256": "b7846951df73ed329a3d928b5997c09e7611b79b23175f9d51cbe15c34951ac2",
+      "width": 958,
+      "height": 1434,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-money-karty",
+      "localPath": "media/blog/money-karty/hero.jpg",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog-editorial/money-karty.ts",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 3616512,
+      "sha256": "38447b48bf26ae75984f5ae164b0eaf13fae8ef7e064eb8664947301e7007076",
+      "width": 6016,
+      "height": 4016,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-rich-iguazu-national-park-gallery-1",
+      "localPath": "media/blog/rich/iguazu-national-park/gallery-1.jpg",
+      "source": "pexels",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/media-library/stock-cache.json"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1342333,
+      "sha256": "293e316c06220912332ce95af679a053bebdf4d335d1cb5946b8b495229a26a4",
+      "width": 4516,
+      "height": 3387,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-rich-nahuel-huapi-national-park-gallery-1",
+      "localPath": "media/blog/rich/nahuel-huapi-national-park/gallery-1.jpg",
+      "source": "pexels",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/media-library/stock-cache.json"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 2554267,
+      "sha256": "ca0ed680992b80dd79a396b4e3cab4d71752055ad873ad9fcff1f8498e506800",
+      "width": 5087,
+      "height": 3389,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-rich-los-glaciares-national-park-gallery-1",
+      "localPath": "media/blog/rich/los-glaciares-national-park/gallery-1.jpg",
+      "source": "pexels",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/media-library/stock-cache.json"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1896889,
+      "sha256": "912977fc78a0ec95e06342bf5b170f8ad72d900155d6563ad5f0eac2cf60e669",
       "width": 4032,
-      "height": 3024,
+      "height": 2268,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-rich-tierra-del-fuego-national-park-gallery-1",
+      "localPath": "media/blog/rich/tierra-del-fuego-national-park/gallery-1.jpg",
+      "source": "pexels",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/media-library/stock-cache.json"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1846504,
+      "sha256": "457fdc5c2444ed3cdb907cf7b7b3d77446ab8f9638578d397d6755607b8c27e2",
+      "width": 4595,
+      "height": 3043,
       "format": "jpeg"
     },
     {
@@ -16407,7 +15782,7 @@
       "role": "card",
       "contexts": [
         "literal:src/data/media-library/stock-cache.json",
-        "literal:src/lib/seed-media.ts"
+        "literal:src/lib/media/media-placeholders.ts"
       ],
       "exists": true,
       "metadata": {
@@ -16535,6 +15910,28 @@
       "format": "jpeg"
     },
     {
+      "id": "blog-money-karty-section-1",
+      "localPath": "media/blog/money-karty/section-1.jpg",
+      "source": "unsplash",
+      "role": "section",
+      "contexts": [
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 712572,
+      "sha256": "f67696ff34cba7559ee8101dcad7fac90f4fe9f047306cef808b173c8bb5bfcb",
+      "width": 1920,
+      "height": 1440,
+      "format": "jpeg"
+    },
+    {
       "id": "blog-kak-menyat-dengi-argentina",
       "localPath": "media/blog/kak-menyat-dengi-argentina/hero.jpg",
       "source": "pexels",
@@ -16601,28 +15998,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-internet",
-      "localPath": "media/blog/internet.jpg",
-      "source": "wikimedia",
-      "role": "hero",
-      "contexts": [
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1010723,
-      "sha256": "02e05fe7ec7ae5dc993246e4d1f535cf1dd8282ebf7dd4084369df34f7f2b00a",
-      "width": 1920,
-      "height": 2560,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-kak-dobratsya-v-argentinu",
       "localPath": "media/blog/kak-dobratsya-v-argentinu/hero.jpg",
       "source": "pexels",
@@ -16667,8 +16042,8 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-whale-watching",
-      "localPath": "media/blog/patagonia-whale-watching/hero.jpg",
+      "id": "blog-patagonia-penguins",
+      "localPath": "media/blog/patagonia-penguins/hero.jpg",
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
@@ -16689,9 +16064,9 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-penguins",
-      "localPath": "media/blog/patagonia-penguins/hero.jpg",
-      "source": "wikimedia",
+      "id": "blog-patagonia-oteli",
+      "localPath": "media/blog/patagonia-oteli/hero.jpg",
+      "source": "pexels",
       "role": "hero",
       "contexts": [
         "literal:src/lib/blog-post-image-bindings.ts"
@@ -16704,10 +16079,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 785630,
-      "sha256": "2fc2cbe0ed567ba8f970f8c345babce290d7b1beeb214a3e48bb5d9645a2f5fe",
-      "width": 2560,
-      "height": 1097,
+      "bytes": 2075690,
+      "sha256": "38da7df636ad5ee91f7bfeda08a09e2ddbe0ea6af2ddb10709327e911f96c5c6",
+      "width": 4032,
+      "height": 3024,
       "format": "jpeg"
     },
     {
@@ -16841,6 +16216,28 @@
       "width": 4928,
       "height": 3264,
       "format": "jpeg"
+    },
+    {
+      "id": "service-home-hero-mobile",
+      "localPath": "media/home/hero-mobile.webp",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/lib/organizer-waitlist-server.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 119228,
+      "sha256": "82ddf803f02334d21cedf2209db892efd05915df1f295cf28444500835d440cb",
+      "width": 640,
+      "height": 1231,
+      "format": "webp"
     }
   ]
 }

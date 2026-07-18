@@ -280,6 +280,7 @@ export const POPULAR_DESTINATIONS = POPULAR_DESTINATIONS_BASE.map((dest) => ({
     "gallery-1.jpg",
     "gallery-2.jpg",
     "gallery-3.jpg",
-    "section.jpg",
-  ].map((filename) => destinationMediaPath(dest.id, filename)),
+  ]
+    .filter((filename) => !(dest.id === "mendoza" && filename === "gallery-2.jpg"))
+    .map((filename) => destinationMediaPath(dest.id, filename)),
 }));

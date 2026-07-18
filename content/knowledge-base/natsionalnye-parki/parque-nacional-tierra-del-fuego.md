@@ -15,7 +15,7 @@ tags:
 - огненная земля
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -54.841904762215165
   lng: -68.55441815467337

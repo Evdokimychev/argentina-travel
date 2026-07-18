@@ -30,8 +30,8 @@ import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
-import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
-import { filterPublicPaths, isTravelModulePathEnabled } from "@/lib/public-module-visibility";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
+import { filterPublicPaths } from "@/lib/public-module-visibility";
 import { KB_SECTIONS } from "@/lib/knowledge-base/content";
 import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
@@ -90,13 +90,18 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   }
 }
 
+export const STABLE_TOUR_LANDING_PATHS = ["/tours/region/patagonia"] as const;
+
 export async function collectTourSitemapPaths(): Promise<string[]> {
   try {
     const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
     const slugs = await fetchCutoverPublishedTourSlugs();
-    return uniquePaths(slugs.map((slug) => `/tours/${slug}`));
+    return uniquePaths([...STABLE_TOUR_LANDING_PATHS, ...slugs.map((slug) => `/tours/${slug}`)]);
   } catch {
-    return marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+    return uniquePaths([
+      ...STABLE_TOUR_LANDING_PATHS,
+      ...marketplaceTours.map((tour) => `/tours/${tour.slug}`),
+    ]);
   }
 }
 
@@ -282,6 +287,23 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   ]).filter(isIndexableInternalPath);
 }
 
+/**
+ * Final public-availability gate shared with middleware. Keeping it after all
+ * collectors prevents a disabled, 404 or noindex route from being reintroduced
+ * by navigation, footer or a future catalog source.
+ */
+export function filterSitemapPathsByPublicSettings(
+  paths: string[],
+  navigation: Parameters<typeof filterPublicPaths>[1],
+  modules: NonNullable<Parameters<typeof filterPublicPaths>[2]>,
+): string[] {
+  return filterPublicPaths(
+    filterRuSitemapPaths(paths).filter(isIndexableInternalPath),
+    navigation,
+    modules,
+  );
+}
+
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const contentUpdatedAt = new Map(
     getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt])
@@ -293,17 +315,13 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const [navigation, modules] = await Promise.all([
-    fetchSiteNavigation(),
-    fetchSiteModules(),
-  ]);
-  const visiblePaths = filterPublicPaths(
+  const controlPlane = await fetchSiteControlPlaneEdge();
+  const visiblePaths = filterSitemapPathsByPublicSettings(
     await collectSitemapPaths({ blogCatalog }),
-    navigation,
+    controlPlane.navigation,
+    controlPlane.modules,
   );
-  const paths = expandI18nSitemapPaths(
-    visiblePaths.filter((path) => isTravelModulePathEnabled(path, modules)),
-  );
+  const paths = expandI18nSitemapPaths(visiblePaths);
 
   return paths.map((path) => {
     const lastModified =

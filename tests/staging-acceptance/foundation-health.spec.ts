@@ -4,9 +4,15 @@ test("read-only staging health identifies the deployed revision", async ({ reque
   const response = await request.get("/api/health");
   expect(response.ok()).toBe(true);
 
-  const body = (await response.json()) as { gitSha?: unknown };
+  const body = (await response.json()) as {
+    gitSha?: unknown;
+    migrationVersion?: unknown;
+    environment?: { deployEnv?: unknown };
+  };
   expect(typeof body.gitSha).toBe("string");
   if (process.env.GIT_SHA) expect(body.gitSha).toBe(process.env.GIT_SHA);
+  expect(body.environment?.deployEnv).toBe("staging");
+  expect(body.migrationVersion).toBe(process.env.STAGING_ACCEPTANCE_MIGRATION_ID);
 });
 
 test("remote app confirms the same isolated Supabase and sandbox modes", async ({ request }) => {

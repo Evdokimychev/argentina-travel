@@ -22,7 +22,7 @@ const evidence = ACCEPTANCE_EVIDENCE_BOUNDARIES;
 export const ACCEPTANCE_JOURNEYS = [
   { id: "J01", matrixId: 1, title: "Гость: главная → каталог → фильтры → карточка", roles: ["guest"], sprint: ["0A", "3", "10"], requiredEvidence: evidence },
   { id: "J02", matrixId: 2, title: "Гость: тур/экскурсия → дата → CTA", roles: ["guest"], sprint: ["0A", "6"], requiredEvidence: evidence },
-  { id: "J03", matrixId: 3, title: "Партнёрский checkout без создания реального заказа", roles: ["guest"], sprint: ["6"], requiredEvidence: evidence },
+  { id: "J03", matrixId: 3, title: "Партнёрский checkout без создания реального заказа", roles: ["guest"], sprint: ["0A", "6"], requiredEvidence: evidence },
   { id: "J04", matrixId: 4, title: "Регистрация туриста и подтверждение email", roles: ["tourist"], sprint: ["0A", "1"], requiredEvidence: evidence },
   { id: "J05", matrixId: 5, title: "Вход, выход и неверный пароль", roles: ["tourist"], sprint: ["0A", "10"], requiredEvidence: evidence },
   { id: "J06", matrixId: 6, title: "Сброс пароля, ссылка и новый пароль", roles: ["tourist"], sprint: ["0A", "1"], requiredEvidence: evidence },

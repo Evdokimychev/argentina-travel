@@ -176,4 +176,31 @@ describe("public media client boundary", () => {
 
     expect(chains).toEqual([]);
   });
+
+  it("keeps full blog and media datasets outside public blog client graphs", () => {
+    const publicBlogEntries = [
+      "components/blog/BlogCard.tsx",
+      "components/blog/BlogEditorialHubs.tsx",
+      "components/blog/BlogIndexView.tsx",
+      "components/blog/BlogLinkifiedText.tsx",
+      "components/blog/BlogReadingHistoryPanel.tsx",
+      "components/blog/BlogSidebar.tsx",
+    ];
+    const forbiddenTargets = [
+      "data/blog.ts",
+      "data/blog-editorial/patagonia.ts",
+      "lib/media-resolver.ts",
+      "data/media-library/manifest.json",
+      "data/media-library/stock-cache.json",
+    ];
+
+    const chains = publicBlogEntries.flatMap((entry) =>
+      forbiddenTargets.flatMap((target) => {
+        const chain = findImportChain(join(srcRoot, entry), join(srcRoot, target));
+        return chain ? [{ entry, target, chain }] : [];
+      }),
+    );
+
+    expect(chains).toEqual([]);
+  });
 });

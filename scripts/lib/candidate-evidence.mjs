@@ -16,6 +16,19 @@ const RUNTIME_PATHS = new Set([
   "src/lib/ops/migration-meta.generated.json",
 ]);
 
+// Vercel creates its build workspace from the deployment bundle, not from a
+// byte-for-byte working-tree checkout. Our .vercelignore intentionally omits
+// agent instructions and local evidence/cache artifacts that are tracked only
+// for repository traceability. Treat only an unstaged deletion of those paths
+// as a packaging omission, and only when Vercel explicitly identifies itself.
+// Modifications, untracked files, and every application/configuration path must
+// remain visible to the candidate-integrity guard.
+const VERCEL_PACKAGING_OMISSION_PREFIXES = Object.freeze([
+  ".claude/",
+  ".cursor/",
+  "var/",
+]);
+
 function normalizeStatusPath(value) {
   const renamedPath = value.includes(" -> ") ? value.split(" -> ").at(-1) : value;
   return renamedPath?.replace(/^"|"$/g, "") ?? "";
@@ -28,7 +41,17 @@ export function isRuntimeEvidencePath(filePath) {
   );
 }
 
-export function parseCandidateDirtyPaths(output) {
+function isVercelPackagingOmission(filePath, indexStatus, worktreeStatus, env) {
+  return (
+    env?.VERCEL === "1" &&
+    indexStatus === " " &&
+    worktreeStatus === "D" &&
+    VERCEL_PACKAGING_OMISSION_PREFIXES.some((prefix) => filePath.startsWith(prefix))
+  );
+}
+
+export function parseCandidateDirtyPaths(output, options = {}) {
+  const env = options.env ?? process.env;
   return String(output ?? "")
     .split(/\r?\n/)
     .filter(Boolean)
@@ -38,7 +61,17 @@ export function parseCandidateDirtyPaths(output) {
       const filePath = normalizeStatusPath(line.slice(3));
       const untracked = indexStatus === "?" && worktreeStatus === "?";
       const unstaged = worktreeStatus !== " " && worktreeStatus !== "?";
-      return (untracked || unstaged) && !isRuntimeEvidencePath(filePath) ? [filePath] : [];
+      const packagingOmission = isVercelPackagingOmission(
+        filePath,
+        indexStatus,
+        worktreeStatus,
+        env,
+      );
+      return (untracked || unstaged) &&
+        !isRuntimeEvidencePath(filePath) &&
+        !packagingOmission
+        ? [filePath]
+        : [];
     });
 }
 
@@ -51,13 +84,13 @@ export function readGitCandidateTree(root, spawn = spawnSync) {
   return result.stdout.trim() || null;
 }
 
-export function listCandidateDirtyPaths(root, spawn = spawnSync) {
+export function listCandidateDirtyPaths(root, spawn = spawnSync, options = {}) {
   const result = spawn("git", ["status", "--porcelain=v1", "--untracked-files=all"], {
     cwd: root,
     encoding: "utf8",
   });
   if (result.status !== 0) return ["git-status-unavailable"];
-  return parseCandidateDirtyPaths(result.stdout);
+  return parseCandidateDirtyPaths(result.stdout, options);
 }
 
 export function captureCandidateContext(root, options = {}) {
@@ -66,14 +99,14 @@ export function captureCandidateContext(root, options = {}) {
     candidateTree: readGitCandidateTree(root, options.spawn),
     evidenceRunId: options.runId ?? randomUUID(),
     evidenceStartedAt: now().toISOString(),
-    initialDirtyPaths: listCandidateDirtyPaths(root, options.spawn),
+    initialDirtyPaths: listCandidateDirtyPaths(root, options.spawn, { env: options.env }),
   };
 }
 
 export function finalizeCandidateEvidence(root, context, options = {}) {
   const now = options.now ?? (() => new Date());
   const finalTree = readGitCandidateTree(root, options.spawn);
-  const finalDirtyPaths = listCandidateDirtyPaths(root, options.spawn);
+  const finalDirtyPaths = listCandidateDirtyPaths(root, options.spawn, { env: options.env });
   const reasons = [];
 
   if (!context?.candidateTree || !finalTree) reasons.push("missing-candidate-tree");

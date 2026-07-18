@@ -5,10 +5,16 @@
 ## 1. Миграции
 
 ```bash
+MIGRATION_TARGET_ENVIRONMENT=staging \
+DATABASE_URL="$STAGING_DATABASE_URL" \
 npm run supabase:migrate
-# или Prisma (places):
-npm run db:push
 ```
+
+Команда ведёт собственный журнал с SHA-256 каждого SQL-файла: на чистой базе
+применяет 95 миграций, повторный запуск пропускает уже применённые.
+Если в `public` уже есть таблицы, но нет канонического журнала, команда
+останавливается до любого SQL. Сначала нужно создать и доказать production-like
+baseline. Прямой replay поверх production запрещён.
 
 Проверка Supabase:
 
@@ -16,13 +22,15 @@ npm run db:push
 npm run supabase:verify
 ```
 
-Перед крупными изменениями схемы — резервная копия:
+Перед изменением production обязательна полная зашифрованная копия с данными:
 
 ```bash
-npm run backup:schema
+npm run backup:full
 ```
 
-Дамп сохраняется в `var/backups/` (схема public/auth/storage, без данных). Храните копии вне репозитория.
+`backup:schema` полезен только для диагностики и не заменяет backup живых данных.
+После копии обязательны расшифровка/восстановление в disposable target и
+`npm run backup:restore:verify`; см. [`docs/ops/backup-restore.md`](./ops/backup-restore.md).
 
 ## 2. Переменные окружения
 
@@ -50,8 +58,9 @@ npm run backup:schema
 Чек-лист staging-проекта:
 
 - [ ] Создан отдельный проект в [Supabase Dashboard](https://supabase.com/dashboard)
-- [ ] Применены миграции: `DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
+- [ ] Применены 95 миграций с журналом: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
 - [ ] RLS-аудит пройден: `npm run rls-audit`
+- [ ] Data API grants проверены: 121/121 таблиц доступны `service_role`, у `anon` нет DML
 - [ ] `NEXT_PUBLIC_ENABLE_DEMO_SEED=false`
 - [ ] `NEXT_PUBLIC_APP_MODE=production` (локальная авторизация и демо-данные исключены из сборки)
 
@@ -59,8 +68,9 @@ npm run backup:schema
 `NEXT_PUBLIC_APP_MODE=demo` и `DEMO_DEPLOYMENT=true`. Эти переменные нельзя задавать
 production-проекту Vercel.
 - [ ] Cron/sync secrets (`CRON_SECRET`, Tripster/Sputnik8) — отдельные или отключены
-- [ ] Mercado Pago — sandbox-токены, не production
+- [ ] Оплата — только sandbox/test terminal (для первого запуска приоритет Т‑Банк), не production credentials
 - [ ] Smoke после деплоя: `SMOKE_BASE_URL=$STAGING_NEXT_PUBLIC_SITE_URL node scripts/smoke-public.mjs`
+- [ ] Staging acceptance: все 25 journeys прошли в Chromium и WebKit, нет skip/not_implemented/orphan fixtures
 
 На хостинге (Vercel preview / staging env) подставьте значения `STAGING_*` в соответствующие production-имена (`NEXT_PUBLIC_SUPABASE_URL` и т.д.) для preview-ветки.
 

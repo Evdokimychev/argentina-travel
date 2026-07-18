@@ -4,6 +4,7 @@ import type { SearchDocumentRow } from "@/lib/search/types";
 import type { SearchIndexItem } from "@/lib/site-search-index";
 import type { Database } from "@/types/database";
 import type { CmsDocument } from "@/types/cms-content";
+import { isCmsKnowledgePublicDocument } from "@/lib/cms/knowledge-resolver";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -52,7 +53,8 @@ export function cmsDocumentSearchId(doc: Pick<CmsDocument, "docType" | "slug">):
 }
 
 export function cmsDocumentToSearchIndexItem(doc: CmsDocument): SearchIndexItem | null {
-  if (doc.status !== "published") return null;
+  if (doc.status !== "published" || doc.seo.noIndex === true) return null;
+  if (doc.docType === "knowledge" && !isCmsKnowledgePublicDocument(doc)) return null;
 
   const keywords = [doc.slug.replace(/-/g, " ")];
 
@@ -125,16 +127,14 @@ export async function syncCmsDocumentToSearchIndex(
   const searchId = cmsDocumentSearchId(doc);
   if (!searchId) return { ok: true, action: "skipped" };
 
-  if (doc.status !== "published") {
+  const item = cmsDocumentToSearchIndexItem(doc);
+  if (!item) {
     const { error } = await supabase.from("search_documents").delete().eq("id", searchId);
     if (error) return { ok: false, action: "skipped", searchId, error: error.message };
 
     await syncSearchDocumentsToMeilisearch([], [searchId]);
     return { ok: true, action: "removed", searchId };
   }
-
-  const item = cmsDocumentToSearchIndexItem(doc);
-  if (!item) return { ok: true, action: "skipped", searchId };
 
   const row = itemToSearchRow(item, doc.publishedAt);
 

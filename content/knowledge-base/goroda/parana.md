@@ -65,11 +65,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parana
-  - url: /media/argentina-travel/parana/1640025711886-3_parana_rio_kite_horizontal__6__alta.jpg
-    alt: Paraná
-    author: INPROTUR / Visit Argentina
-    license: argentina.travel
-    source_page: https://www.argentina.travel/actividades/parana
 site_ready: true
 last_verified: '2026-07-07'
 confidence: high

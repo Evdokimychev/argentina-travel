@@ -35,6 +35,7 @@ export type PublicationIssue =
   | "internal_editorial_marker"
   | "malformed_markdown_heading"
   | "missing_sensitive_source"
+  | "sensitive_provenance_not_ready"
   | "thin_content"
   | "missing_hero";
 
@@ -65,6 +66,14 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   if (entry.editorial?.sensitive && entry.editorial.missing_sources) {
     issues.push("missing_sensitive_source");
   }
+  const provenanceMode = entry.provenance?.mode ?? entry.editorial?.provenance?.mode;
+  if (
+    entry.editorial?.sensitive &&
+    provenanceMode === "strict" &&
+    entry.editorial?.provenance?.strict_ready !== true
+  ) {
+    issues.push("sensitive_provenance_not_ready");
+  }
   if (
     entry.status === "published" &&
     typeof entry.editorial?.word_count === "number" &&
@@ -86,4 +95,25 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
 export function isPublicKbEntry(entry: KbEntry): boolean {
   if (entry.status !== "published") return false;
   return getPublicationIssues(entry).length === 0;
+}
+
+/**
+ * Отдельный fail-closed сигнал для release readiness. В диагностическом режиме
+ * он не меняет текущую выдачу, но чувствительный материал без claim-level
+ * доказательств никогда не получает строгий статус готовности.
+ */
+export function getStrictPublicationIssues(entry: KbEntry): PublicationIssue[] {
+  const issues = getPublicationIssues(entry);
+  if (
+    entry.editorial?.sensitive &&
+    entry.editorial?.provenance?.strict_ready !== true
+  ) {
+    issues.push("sensitive_provenance_not_ready");
+  }
+  return [...new Set(issues)];
+}
+
+export function isStrictPublicationReady(entry: KbEntry): boolean {
+  if (entry.status !== "published") return false;
+  return getStrictPublicationIssues(entry).length === 0;
 }

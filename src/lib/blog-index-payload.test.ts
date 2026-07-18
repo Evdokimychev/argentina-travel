@@ -7,6 +7,8 @@ import {
   toBlogIndexPost,
 } from "@/lib/blog-index-payload";
 import { filterBlogPosts } from "@/lib/blog-utils";
+import { BLOG_CATEGORY_META, BLOG_DEFAULT_CATEGORY_META } from "@/data/blog-category-meta";
+import { getBlogHubImage } from "@/lib/media-resolver";
 import type { BlogPost } from "@/types";
 
 function post(overrides: Partial<BlogPost> = {}): BlogPost {
@@ -118,5 +120,24 @@ describe("blog index client payload", () => {
     expect(page).not.toContain("initialTours={");
     expect(tours).not.toContain("pickBlogIndexFeaturedTours");
     expect(tours).toContain("featuredTours.slice(0, 4)");
+  });
+
+  it("keeps blog client helpers independent from full editorial and media datasets", () => {
+    const root = join(process.cwd(), "src");
+    const categoryMeta = readFileSync(join(root, "data/blog-category-meta.ts"), "utf8");
+    const internalLinks = readFileSync(join(root, "lib/blog-internal-links.ts"), "utf8");
+    const slugResolver = readFileSync(join(root, "lib/blog-slug-resolve.ts"), "utf8");
+
+    expect(categoryMeta).not.toContain("@/lib/media-resolver");
+    expect(categoryMeta).not.toContain("manifest.json");
+    expect(internalLinks).not.toContain('from "@/data/blog"');
+    expect(slugResolver).not.toContain('from "@/data/blog"');
+  });
+
+  it("keeps the compact category media projection in sync with server bindings", () => {
+    for (const [label, meta] of Object.entries(BLOG_CATEGORY_META)) {
+      expect(meta.image, label).toBe(getBlogHubImage(label));
+    }
+    expect(BLOG_DEFAULT_CATEGORY_META.image).toBe(getBlogHubImage("Путешествия"));
   });
 });

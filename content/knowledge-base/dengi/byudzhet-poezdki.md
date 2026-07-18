@@ -3,15 +3,20 @@ id: byudzhet-poezdki
 type: guide
 subtype: finance
 title: "Бюджет поездки по Аргентине"
-summary: "Дневные нормы по уровням (бэкпекер ~$30-40, средний ~$70-120, комфорт от $150) и пример сметы на классические 2 недели — внутренние перелёты и Патагония определяют итоговую сумму."
+summary: "Методика расчёта бюджета поездки с отдельной проверкой жилья, транспорта, парков и экскурсий на даты путешествия."
 status: published
-site_ready: true
+site_ready: false
+publication_block_reason: "Fixed USD budgets and provider prices require a dated reproducible price snapshot before publication."
+provenance:
+  schema_version: 1
+  mode: diagnostic
+  stale_after_days: 45
 seo_slug: "byudzhet-poezdki-argentina"
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 applies_to: both
 tags: [бюджетно, треккинг, патагония]
 related: [stoit-li-ehat-v-argentinu, chto-stoit-deneg-prioritety, pokupki-i-tax-free]
-cost: { level: "$$", details: "2 недели по маршруту БА + Игуасу + Патагония: от ~$1300 (эконом) до $2700-4000+ (комфорт) на человека без межконтинентального перелёта" }
+cost: { level: "$$", details: "Требуется расчёт по датам маршрута: жильё, перевозчики, парки и экскурсии меняют цены независимо друг от друга" }
 warnings:
   - "Цены даны в долларах как более стабильный ориентир — Аргентина страна с высокой инфляцией, перед поездкой проверяйте актуальные цифры."
   - "Внутренние перелёты и доля Патагонии в маршруте — главные факторы, удорожающие поездку; их легко недооценить при планировании."
@@ -20,18 +25,46 @@ recommendations:
   - "Бронируйте внутренние перелёты заранее и сравнивайте лоукостеров (Aerolíneas, Flybondi, JetSMART) — крупнейшая статья экономии."
   - "Чередуйте дорогие регионы (Патагония) с дешёвыми (северо-запад, Месопотамия) для баланса сметы."
   - "В Эль-Калафате, Эль-Чальтене и Ушуайе бронируйте жильё заранее — мест мало, цены в сезон выше."
-last_verified: "2026-07-02"
+last_verified: "2026-07-17"
 confidence: medium
 long_form_merged: true
 sources:
-  - title: "Budget Your Trip — Argentina travel costs"
-    url: "https://www.budgetyourtrip.com/argentina"
+  - id: argentina-national-parks-tariffs-2026
+    title: "Administración de Parques Nacionales — тарифы с 1 июня 2026 года"
+    url: "https://www.argentina.gob.ar/node/131189"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Официальные тарифы национальных парков в ARS; прежние фиксированные цены в USD требуют пересчёта."
+  - id: sube-amba-tariffs-july-2026
+    title: "SUBE — тарифы общественного транспорта AMBA с июля 2026 года"
+    url: "https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Официальные текущие тарифы автобусов, поездов и метро в ARS."
+  - id: visa-russia-operations-suspension
+    title: "Visa — приостановка операций в России"
+    url: "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html"
     lang: en
-    type: aggregator
-  - title: "Numbeo — цены в Аргентине"
-    url: "https://www.numbeo.com/cost-of-living/in/Buenos-Aires"
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает, что карты Visa, выпущенные российскими банками, не работают за пределами России."
+  - id: bank-of-russia-cross-border-card-operations
+    title: "Банк России — трансграничные операции по Visa и Mastercard"
+    url: "https://www.cbr.ru/press/event/?id=12735"
     lang: en
-    type: aggregator
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает отсутствие поддержки российских карт Mastercard за пределами России."
 ---
 
 ## Описание

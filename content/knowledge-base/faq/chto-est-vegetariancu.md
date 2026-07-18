@@ -5,6 +5,8 @@ type: faq
 short_answer: "Проще, чем кажется: сильное итальянское влияние даёт пиццу, пасту и овощные блюда, в городах много вегетарианских кафе; но следите за словами — «sin carne» и «sin jamón», ветчину и бульон кладут незаметно."
 topic: kuhnya
 status: published
+site_ready: false
+publication_block_reason: "Нужно развести вегетарианские и веганские варианты и проверить состав блюд и формулировки заказа по надёжным источникам."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [еда, вегетарианцу, вегану, рестораны, гастрономия]
 related: [restorany-i-kak-est, kuhnya, empanadas, byudzhet-poezdki]

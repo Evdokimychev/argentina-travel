@@ -5,6 +5,8 @@ question: "Что делать в Буэнос-Айресе / Мендосе / �
 short_answer: "Живой опыт — это ритм и места с характером: милонги и парильи в Буэнос-Айресе, бодеги и велосипед по виноградникам в Мендосе, треккинг и озёра в Патагонии. Ниже — куда копать по каждому региону."
 topic: marshruty
 status: published
+site_ready: false
+publication_block_reason: "Нужна редактура рекламных формулировок и проверка доступности упомянутых занятий по официальным источникам регионов."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [что делать, атмосфера, гастрономия, культура, регионы]
 related: [buenos-aires, mendoza, restorany-i-kak-est, razvlecheniya-i-nochnaya-zhizn, chto-stoit-deneg-prioritety]

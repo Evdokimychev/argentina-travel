@@ -1,7 +1,5 @@
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { GUIDE_TOPICS } from "@/data/guide-topics";
-import { blogPosts } from "@/data/blog";
-import { buildPublishedBlogSlugSet } from "@/lib/blog-slug-resolve";
 
 export type BlogInternalLinkRule = {
   id: string;
@@ -25,28 +23,20 @@ const VISA_TERMS = [
 ] as const;
 
 function blogSlugRules(): BlogInternalLinkRule[] {
-  const slugs = buildPublishedBlogSlugSet(blogPosts.map((p) => p.slug));
-  const rules: BlogInternalLinkRule[] = [];
-
-  if (slugs.has("argentina-tourist-visa-2026")) {
-    rules.push({
+  return [
+    {
       id: "visa-entry",
       terms: VISA_TERMS,
       href: "/blog/argentina-tourist-visa-2026",
       minLength: 4,
-    });
-  }
-
-  if (slugs.has("itinerary-чек-лист")) {
-    rules.push({
+    },
+    {
       id: "checklist",
       terms: ["чек-лист", "чеклист", "контрольный список"],
       href: "/blog/itinerary-чек-лист",
       minLength: 5,
-    });
-  }
-
-  return rules;
+    },
+  ];
 }
 
 function destinationRules(): BlogInternalLinkRule[] {

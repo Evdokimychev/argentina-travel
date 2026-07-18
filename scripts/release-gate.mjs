@@ -30,6 +30,10 @@ const groups = {
       [
         "--test",
         "scripts/lib/candidate-evidence.test.mjs",
+        "scripts/lib/data-api-grants.test.mjs",
+        "scripts/lib/migration-journal.test.mjs",
+        "scripts/kb-source-health.test.mjs",
+        "scripts/lib/release-gate-content-contract.test.mjs",
         "scripts/lib/release-gate-env.test.mjs",
         "scripts/lib/seo-schema-contract.test.mjs",
       ],
@@ -45,6 +49,14 @@ const groups = {
     ["redirect-contracts", "npm", ["run", "sync-content-plan-redirects:check"], true],
   ],
   content: [
+    [
+      "knowledge-provenance",
+      "python3",
+      ["content/knowledge-base/_index/build_manifest.py", "--strict-provenance"],
+      true,
+    ],
+    ["blog-editorial-readiness", "npm", ["run", "blog:editorial-readiness:check"], true],
+    ["guide-editorial-readiness", "npm", ["run", "guide:editorial-readiness:check"], true],
     ["content-lint", "npm", ["run", "content:audit"], true],
     ["seo-live-baseline", "npm", ["run", "seo-audit"], false],
     ["media", "npm", ["run", "media:integrity"], true],

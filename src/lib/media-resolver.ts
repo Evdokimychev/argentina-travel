@@ -71,6 +71,55 @@ function assetUrl(asset: MediaAsset | undefined): string {
   return asset ? manifestMediaUrl(asset.localPath) : FALLBACK;
 }
 
+function sourceAssetIdentity(asset: MediaAsset): string {
+  const rawSource = asset.sourceUrl?.trim();
+  if (!rawSource) {
+    return asset.contentHash ? `hash:${asset.contentHash}` : `path:${asset.localPath}`;
+  }
+
+  let decodedSource = rawSource;
+  try {
+    decodedSource = decodeURIComponent(rawSource);
+  } catch {
+    // Keep the original URL when a provider returns malformed percent encoding.
+  }
+
+  const sourceFile = decodedSource
+    .split(/[?#]/, 1)[0]
+    ?.split("/")
+    .pop()
+    ?.replace(/^File:/i, "")
+    .replace(/^\d{10,}-/, "")
+    .toLocaleLowerCase("en-US");
+
+  return sourceFile
+    ? `source:${asset.source}:${sourceFile}`
+    : `source-url:${asset.source}:${rawSource}`;
+}
+
+function uniqueGalleryAssets(assets: MediaAsset[]): MediaAsset[] {
+  const rolePriority: Partial<Record<MediaAsset["role"], number>> = {
+    hero: 0,
+    gallery: 1,
+    section: 2,
+  };
+  const selected = new Map<string, MediaAsset>();
+
+  for (const asset of assets) {
+    const identity = sourceAssetIdentity(asset);
+    const current = selected.get(identity);
+    if (
+      !current ||
+      (rolePriority[asset.role] ?? 3) < (rolePriority[current.role] ?? 3)
+    ) {
+      selected.set(identity, asset);
+    }
+  }
+
+  const selectedAssets = new Set(selected.values());
+  return assets.filter((asset) => selectedAssets.has(asset));
+}
+
 export function getMediaAsset(id: string): MediaAsset | undefined {
   return assetsById.get(id);
 }
@@ -105,12 +154,13 @@ export function getPlaceCoverAlt(slug: string): string {
 }
 
 export function getPlaceGallery(slug: string): string[] {
-  const paths = assetsForPlace(slug).map((a) => manifestMediaUrl(a.localPath));
-  return [...new Set(paths)];
+  return uniqueGalleryAssets(assetsForPlace(slug)).map((asset) =>
+    manifestMediaUrl(asset.localPath),
+  );
 }
 
 export function getPlaceGalleryAlts(slug: string): string[] {
-  return assetsForPlace(slug).map((a) => a.alt);
+  return uniqueGalleryAssets(assetsForPlace(slug)).map((asset) => asset.alt);
 }
 
 export function getDestinationImage(destinationId: string): string {
@@ -124,8 +174,15 @@ export function getDestinationImage(destinationId: string): string {
 }
 
 export function getDestinationGallery(destinationId: string): string[] {
-  const fromManifest = assetsForDestination(destinationId).map((a) => manifestMediaUrl(a.localPath));
-  if (fromManifest.length > 0) return [...new Set(fromManifest)];
+  const heroSrc = getDestinationImage(destinationId);
+  const heroAsset = manifest.assets.find(
+    (asset) => manifestMediaUrl(asset.localPath) === heroSrc || mediaUrl(asset.localPath) === heroSrc,
+  );
+  const heroIdentity = heroAsset ? sourceAssetIdentity(heroAsset) : null;
+  const fromManifest = uniqueGalleryAssets(assetsForDestination(destinationId))
+    .filter((asset) => sourceAssetIdentity(asset) !== heroIdentity)
+    .map((asset) => manifestMediaUrl(asset.localPath));
+  if (fromManifest.length > 0) return fromManifest;
 
   const placeSlug = DESTINATION_PLACE_MAP[destinationId];
   if (!placeSlug) return [];
@@ -232,8 +289,10 @@ export function getTourCoverImage(tourSlug: string): string {
 }
 
 export function getTourGallery(tourSlug: string): string[] {
-  const fromManifest = assetsForTour(tourSlug).map((a) => manifestMediaUrl(a.localPath));
-  if (fromManifest.length > 0) return [...new Set(fromManifest)];
+  const fromManifest = uniqueGalleryAssets(assetsForTour(tourSlug)).map((asset) =>
+    manifestMediaUrl(asset.localPath),
+  );
+  if (fromManifest.length > 0) return fromManifest;
   const placeSlug = TOUR_PLACE_MAP[tourSlug];
   if (placeSlug) return getPlaceGallery(placeSlug);
   return [getTourCoverImage(tourSlug)];
@@ -343,7 +402,7 @@ export function isMediaLogoFallback(src: string): boolean {
   return src === MEDIA_LOGO_FALLBACK;
 }
 
-/** Card/listing cover: semantic topic pool → rich → legacy fallbacks. */
+/** Card/listing cover: semantic post image → rich → legacy fallbacks. */
 export function resolveBlogPostCardImage(post: {
   slug: string;
   image?: string;
@@ -351,17 +410,17 @@ export function resolveBlogPostCardImage(post: {
   richArticleId?: string;
   tags?: string[];
 }): string {
-  if (post.richArticleId) {
-    const rich = getRichArticleHeroImage(post.richArticleId);
-    if (!isMediaLogoFallback(rich)) return rich;
-  }
-
   const semantic = resolveBlogSemanticHeroImage({
     slug: post.slug,
     category: post.category,
     tags: post.tags ?? [],
   });
   if (!isMediaLogoFallback(semantic)) return semantic;
+
+  if (post.richArticleId) {
+    const rich = getRichArticleHeroImage(post.richArticleId);
+    if (!isMediaLogoFallback(rich)) return rich;
+  }
 
   const manifestHero = manifestBlogHero(post.slug);
   if (manifestHero) return manifestMediaUrl(manifestHero.localPath);
@@ -467,7 +526,10 @@ export function getBlogPostHeroResolved(post: {
   return { ...blogHero, alt: getBlogPostCoverAlt(post.slug) || post.title };
 }
 
-export function getRichArticleGallery(articleId: string): Array<{
+export function getRichArticleGallery(
+  articleId: string,
+  options: { excludeSources?: readonly string[] } = {},
+): Array<{
   src: string;
   alt: string;
   caption?: string;
@@ -484,6 +546,25 @@ export function getRichArticleGallery(articleId: string): Array<{
     thumbSrc?: string;
   }> = [];
 
+  const excludedSources = [
+    getRichArticleHeroImage(articleId),
+    ...(options.excludeSources ?? []),
+  ];
+  for (const src of excludedSources) {
+    if (!src) continue;
+    seenSrc.add(src);
+    const normalized = src.replace(/^\/+/, "");
+    const asset = manifest.assets.find((candidate) => {
+      const candidatePath = candidate.localPath.replace(/^\/+/, "");
+      return (
+        candidatePath === normalized ||
+        manifestMediaUrl(candidate.localPath) === src ||
+        mediaUrl(candidate.localPath) === src
+      );
+    });
+    if (asset?.contentHash) seenHash.add(asset.contentHash);
+  }
+
   const addImage = (
     src: string,
     alt: string,
@@ -491,6 +572,9 @@ export function getRichArticleGallery(articleId: string): Array<{
     caption?: string,
     attributionHtml?: string,
   ) => {
+    if (!src || isMediaLogoFallback(src) || /(?:^|\/)(?:no[-_ ]?photo|placeholder)(?:[./_-]|$)/i.test(src)) {
+      return;
+    }
     if (seenSrc.has(src)) return;
     if (contentHash && seenHash.has(contentHash)) return;
     seenSrc.add(src);

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { auditReferencedMedia, normalizeMediaPath } from "../../scripts/media-rights-readiness";
+import {
+  auditReferencedMedia,
+  normalizeMediaPath,
+  requiresDesktopHeroResolution,
+} from "../../scripts/media-rights-readiness";
 import type { MediaAsset } from "@/types/media-asset";
 
 function asset(overrides: Partial<MediaAsset> = {}): MediaAsset {
@@ -53,5 +57,24 @@ describe("media rights readiness", () => {
       publicRoot: process.cwd(),
     });
     expect(result.countsByCode.unmanaged_missing_file).toBe(1);
+  });
+
+  it("does not apply desktop hero width to mobile or category-card assets", () => {
+    expect(
+      requiresDesktopHeroResolution(
+        asset({ localPath: "media/home/hero-mobile.webp" }),
+        ["literal:src/lib/organizer-waitlist-server.ts"],
+      ),
+    ).toBe(false);
+    expect(
+      requiresDesktopHeroResolution(asset({ localPath: "media/blog/relocation.jpg" }), [
+        "literal:src/data/blog-category-meta.ts",
+      ]),
+    ).toBe(false);
+    expect(
+      requiresDesktopHeroResolution(asset({ localPath: "media/places/bariloche/hero.jpg" }), [
+        "place:bariloche:cover",
+      ]),
+    ).toBe(true);
   });
 });

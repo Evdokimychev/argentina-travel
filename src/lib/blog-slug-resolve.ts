@@ -1,4 +1,3 @@
-import { getBlogPostBySlug } from "@/data/blog";
 import { BLOG_SLUG_MEDIA_FOLDER } from "@/lib/blog-media-path";
 
 const LATIN_ALIAS_TO_CANONICAL = Object.fromEntries(
@@ -21,10 +20,8 @@ export function blogSlugLookupCandidates(rawSlug: string): string[] {
 
 /** Canonical editorial slug from TS data when available. */
 export function canonicalBlogSlug(rawSlug: string): string {
-  for (const candidate of blogSlugLookupCandidates(rawSlug)) {
-    if (getBlogPostBySlug(candidate)) return candidate;
-  }
-  return decodeURIComponent(rawSlug).normalize("NFC");
+  const decoded = decodeURIComponent(rawSlug).normalize("NFC");
+  return LATIN_ALIAS_TO_CANONICAL[decoded] ?? decoded;
 }
 
 export function isBlogSlugPublished(slug: string, publishedSlugs: ReadonlySet<string>): boolean {

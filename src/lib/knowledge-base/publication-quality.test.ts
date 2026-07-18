@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { getPublicationIssues, isPublicKbEntry } from "./publication-quality";
+import {
+  getPublicationIssues,
+  getStrictPublicationIssues,
+  isPublicKbEntry,
+  isStrictPublicationReady,
+} from "./publication-quality";
 import type { KbEntry } from "./types";
 
 const validEntry: KbEntry = {
@@ -51,5 +56,89 @@ describe("KB publication quarantine", () => {
     const entry = { ...validEntry, ...overrides } as KbEntry;
     expect(getPublicationIssues(entry)).toContain(issue);
     expect(isPublicKbEntry(entry)).toBe(false);
+  });
+
+  it("keeps the existing corpus public in diagnostic provenance mode", () => {
+    const entry: KbEntry = {
+      ...validEntry,
+      editorial: {
+        sensitive: true,
+        word_count: 180,
+        provenance: {
+          schema_version: 1,
+          applicable: true,
+          declared: false,
+          mode: "diagnostic",
+          strict_ready: false,
+          issue_count: 1,
+          issue_codes: ["missing_sensitive_claim_mapping"],
+          source_count: 1,
+          identified_source_count: 0,
+          claim_count: 0,
+          sensitive_claim_count: 0,
+          stale_after_days: 45,
+        },
+      },
+    };
+
+    expect(isPublicKbEntry(entry)).toBe(true);
+    expect(getStrictPublicationIssues(entry)).toContain("sensitive_provenance_not_ready");
+    expect(isStrictPublicationReady(entry)).toBe(false);
+  });
+
+  it("fails closed when a sensitive entry opts into strict provenance", () => {
+    const entry: KbEntry = {
+      ...validEntry,
+      provenance: { schema_version: 1, mode: "strict", stale_after_days: 45 },
+      editorial: {
+        sensitive: true,
+        word_count: 180,
+        provenance: {
+          schema_version: 1,
+          applicable: true,
+          declared: true,
+          mode: "strict",
+          strict_ready: false,
+          issue_count: 1,
+          issue_codes: ["sensitive_claim_without_primary_source"],
+          source_count: 1,
+          identified_source_count: 1,
+          claim_count: 1,
+          sensitive_claim_count: 1,
+          stale_after_days: 45,
+        },
+      },
+    };
+
+    expect(getPublicationIssues(entry)).toContain("sensitive_provenance_not_ready");
+    expect(isPublicKbEntry(entry)).toBe(false);
+  });
+
+  it("accepts a sensitive entry with complete strict provenance", () => {
+    const entry: KbEntry = {
+      ...validEntry,
+      provenance: { schema_version: 1, mode: "strict", stale_after_days: 45 },
+      editorial: {
+        sensitive: true,
+        word_count: 180,
+        provenance: {
+          schema_version: 1,
+          applicable: true,
+          declared: true,
+          mode: "strict",
+          strict_ready: true,
+          issue_count: 0,
+          issue_codes: [],
+          source_count: 1,
+          identified_source_count: 1,
+          claim_count: 1,
+          sensitive_claim_count: 1,
+          stale_after_days: 45,
+        },
+      },
+    };
+
+    expect(isPublicKbEntry(entry)).toBe(true);
+    expect(isStrictPublicationReady(entry)).toBe(true);
   });
 });

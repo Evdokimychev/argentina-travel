@@ -1,23 +1,23 @@
 # Контент-аудит — 14 июля 2026
 
-Сформирован: 2026-07-17T08:41:56.095Z
+Сформирован: 2026-07-17T11:59:32.030Z
 
 ## Исходное состояние
 
 - Проверено сущностей базы знаний: **689**.
-- Критических: **367**; высокий приоритет: **65**; средний: **2**.
-- Не допускаются в публичные индексы: **434**.
+- Критических: **396**; высокий приоритет: **67**; средний: **2**.
+- Не допускаются в публичные индексы: **465**.
 - Исходные Markdown-файлы не удаляются; карантин обратим и описан в `var/ops/content-fix-manifest.json`.
 
 ## Классы проблем
 
 - `non_russian_summary`: 226
 - `non_russian_title`: 202
-- `thin_content`: 163
-- `not_publication_ready`: 107
+- `thin_content`: 165
+- `not_publication_ready`: 138
 - `missing_sensitive_source`: 28
 - `missing_hero`: 20
-- `mixed_script_word`: 9
+- `mixed_script_word`: 8
 - `verification_due`: 3
 - `placeholder_content`: 2
 
@@ -39,6 +39,7 @@
 - `aventura-submarina-en-puerto-madryn` — Submarine adventure in Puerto Madryn; non_russian_title, non_russian_summary
 - `aves-del-chaco` — Birds from Chaco; non_russian_title, non_russian_summary, placeholder_content
 - `avistaje-de-aves-en-formosa` — Bird watching in Formosa; non_russian_title, non_russian_summary, placeholder_content
+- `banki-i-perevody` — Перевод денег в Аргентину: безопасная проверка каналов; not_publication_ready, mixed_script_word
 - `bebidas-y-gastronomia-en-cordoba` — Food and Drink in Córdoba; non_russian_title, non_russian_summary
 - `belen` — Belén; non_russian_title, non_russian_summary
 - `bezopasno-li-odnoj-zhenshchine` — null; missing_sensitive_source, thin_content
@@ -47,6 +48,7 @@
 - `bodega-submarina-en-las-grutas` — An underwater winery in Las Grutas; non_russian_title, non_russian_summary
 - `bosque-petrificado` — Национальный парк Окаменевшие леса Харамільо; not_publication_ready
 - `buceo-en-el-golfo-san-matias` — Scuba diving at the San Matías Gulf; non_russian_title, non_russian_summary
+- `byudzhet-poezdki` — Бюджет поездки по Аргентине; not_publication_ready
 - `cabalgata-en-el-lago-roca` — Horseback riding in the Roca lake; non_russian_title, non_russian_summary
 - `cabalgata-en-los-molles` — Horseback riding in Los Molles; non_russian_title, non_russian_summary
 - `cabalgatas-en-tafi-del-valle` — Horseback riding in Tafí del Valle; non_russian_title, non_russian_summary
@@ -74,6 +76,9 @@
 - `cerro-mercedario-y-grandes-cumbres-de-san-juan` — Серро-Меркедарио и большие вершины Сан-Хуана; not_publication_ready, thin_content
 - `cerro-tronador` — Серро-Тронадор; not_publication_ready, thin_content
 - `cholila` — Cholila; non_russian_title, non_russian_summary
+- `chto-delat-krome-dostoprimechatelnostej` — null; not_publication_ready
+- `chto-est-vegetariancu` — null; not_publication_ready
+- `chto-stoit-deneg-prioritety` — Что реально стоит ваших денег и дней: приоритеты по Аргентине; not_publication_ready
 - `chto-takoe-dni-i-cuil` — null; missing_sensitive_source, thin_content
 - `chto-takoe-mep` — null; missing_sensitive_source, thin_content
 - `circuito-callejero-de-potrero-de-los-funes` — Street circuit in Potrero de los Funes; non_russian_title, non_russian_summary
@@ -118,10 +123,5 @@
 - `el-obelisco-de-cafayate` — Обелиск Кафайяте; not_publication_ready, thin_content
 - `el-rodeo` — Эль-Родео; not_publication_ready, thin_content
 - `el-salitral-encantado` — Эль-Салитраль-Энкантадо; not_publication_ready, thin_content
-- `el-sauzalito` — Эль-Саусалито; not_publication_ready, thin_content
-- `el-sosneado` — Эль-Соснеадо; not_publication_ready, thin_content
-- `el-trapiche` — Эль-Трапиче; not_publication_ready, thin_content
-- `el-vino-malbec` — Вино мальбек; not_publication_ready, thin_content
-- `eldorado` — Eldorado; non_russian_title, non_russian_summary
 
 Полный реестр по каждой сущности находится в `var/ops/content-audit.json`.

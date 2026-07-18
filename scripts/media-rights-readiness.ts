@@ -97,6 +97,21 @@ export function normalizeMediaPath(value: string): string | null {
   return normalized.startsWith("media/") ? normalized : null;
 }
 
+export function requiresDesktopHeroResolution(
+  asset: Pick<MediaAsset, "role" | "localPath">,
+  contexts: readonly string[],
+): boolean {
+  if (!asset.role || !["hero", "background"].includes(asset.role)) return false;
+  if (/(?:^|[-_/])mobile(?:[-_.\/]|$)/i.test(asset.localPath)) return false;
+  if (
+    contexts.length > 0 &&
+    contexts.every((context) => context === "literal:src/data/blog-category-meta.ts")
+  ) {
+    return false;
+  }
+  return true;
+}
+
 function addReference(
   references: Map<string, Set<string>>,
   value: string | undefined,
@@ -365,10 +380,7 @@ export async function auditReferencedMedia(options: {
           const maxSide = Math.max(imageMetadata.width, imageMetadata.height);
           if (minSide < 180 || maxSide < 320) {
             issue(issues, asset, localPath, contexts, "too_small", "high", `Размер ${imageMetadata.width}×${imageMetadata.height} ниже безопасного минимума 320×180.`);
-          } else if (
-            ["hero", "background"].includes(asset.role) &&
-            imageMetadata.width < 1200
-          ) {
+          } else if (requiresDesktopHeroResolution(asset, contexts) && imageMetadata.width < 1200) {
             issue(issues, asset, localPath, contexts, "hero_resolution", "medium", `Hero ${imageMetadata.width}×${imageMetadata.height}: ширина меньше 1200 px.`);
           }
         }

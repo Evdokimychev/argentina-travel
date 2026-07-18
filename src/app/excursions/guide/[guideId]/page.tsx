@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import ExcursionGuideProfileView from "@/components/excursions/ExcursionGuideProfileView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import {
   fetchGuideIdsServer,
   fetchGuidePageServer,
@@ -50,5 +51,18 @@ export default async function ExcursionGuidePage({ params }: GuidePageProps) {
   const page = await fetchGuidePageServer(id);
   if (!page) notFound();
 
-  return <ExcursionGuideProfileView profile={page.profile} excursions={page.excursions} />;
+  const path = `/excursions/guide/${guideId}`;
+
+  return (
+    <>
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Главная", path: "/" },
+          { name: "Экскурсии", path: "/excursions" },
+          { name: page.profile.name, path },
+        ]}
+      />
+      <ExcursionGuideProfileView profile={page.profile} excursions={page.excursions} />
+    </>
+  );
 }

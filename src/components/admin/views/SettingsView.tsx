@@ -220,6 +220,7 @@ const MODULE_LINKS: Partial<Record<SettingsTab, ModuleLink[]>> = {
     { href: "/admin/operations/payments", label: "Платежи", description: "Состояния оплат и сверка операций." },
   ],
   marketing: [
+    { href: "/admin/marketing/search-visibility", label: "Поиск и SEO", description: "Запросы из Google и Яндекса, позиции и точки роста." },
     { href: "/admin/analytics", label: "Аналитика", description: "Ключевые показатели и качество данных." },
     { href: "/admin/analytics/funnels", label: "Воронки", description: "Путь от просмотра до заявки или перехода партнёру." },
     { href: "/admin/content/social-feed", label: "Социальные медиа", description: "Публичная лента и источники материалов." },

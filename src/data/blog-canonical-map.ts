@@ -63,19 +63,19 @@ export function resolveBlogCanonicalTarget(slug: string): BlogCanonicalTarget | 
 
 export function buildCanonicalCtaParagraph(target: BlogCanonicalTarget): string {
   return (
-    `Этот материал — черновик из контент-плана и не предназначен для самостоятельного чтения. ` +
-    `Актуальный разбор темы — в статье «${target.canonicalTitle}»: /blog/${target.canonicalSlug}.`
+    `Эта тема подробно разобрана в основной статье ` +
+    `«${target.canonicalTitle}»: /blog/${target.canonicalSlug}.`
   );
 }
 
 /** 8 секционных pillar-slug для блока «С чего начать» (без rich-нацпарков). */
 export const BLOG_START_HERE_SLUGS: readonly string[] = [
   "best-time-to-visit-argentina",
-  "blue-dollar-argentina-2026",
-  "argentina-tourist-visa-2026",
   "buenos-aires-rajony",
   "patagonia-packing-list",
   "argentinian-steak-guide",
   "mendoza-vinnyj-gid",
   "tango-beginners-guide",
+  "salta-i-severo-zapad-marshrut",
+  "el-chalten-i-fitts-roy",
 ] as const;

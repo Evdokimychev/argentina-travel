@@ -22,6 +22,7 @@ import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
 import { getRecommendedListings } from "@/lib/tour-listing-ranking";
+import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
 import type { Testimonial, TourListing } from "@/types";
 import type { InteractionActor } from "@/lib/personalization/interactions-server";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
@@ -114,7 +115,7 @@ export default function HomePage() {
       <MarketplaceHome
         catalogData={catalogData}
         navigation={navigation}
-        blogPosts={blogPosts.slice(0, 3)}
+        blogPosts={toBlogIndexCatalog(blogPosts.slice(0, 3))}
         testimonials={testimonials}
         excursionCities={excursionCities}
         travelPrepStrip={

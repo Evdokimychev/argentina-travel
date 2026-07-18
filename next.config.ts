@@ -144,6 +144,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/baza-znaniy/parque-nacional-tierra-del-fuego",
+        destination: "/baza-znaniy/ognennaya-zemlya",
+        permanent: true,
+      },
+      {
         source: "/excursions/city/city-151",
         destination: "/excursions/city/Buenos_Aires",
         permanent: true,
@@ -171,6 +176,9 @@ const nextConfig: NextConfig = {
     localPatterns: [
       {
         pathname: "/media/**",
+      },
+      {
+        pathname: "/airlines/**",
       },
       {
         pathname: "/logo-light.svg",

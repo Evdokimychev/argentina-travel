@@ -3,62 +3,112 @@ id: certificado-de-legalidad-prav
 type: guide
 subtype: transport
 title: "Certificado de legalidad водительских прав: что это и зачем"
-summary: "У «certificado de legalidad» водительских прав два разных смысла. Аргентинец берёт certificado de legalidad своей licencia nacional (бесплатно, онлайн), чтобы использовать её за границей или оформить процедуру в другой юрисдикции. Иностранцу, наоборот, нужна легальность его зарубежных прав (через консульство страны выдачи, с апостилем и переводом), чтобы подтвердить стаж при получении аргентинских прав."
+summary: "Как не перепутать подтверждение аргентинской лицензии для другой страны с подтверждением иностранных прав для аргентинской процедуры."
 status: published
+site_ready: true
 site_sections: [dokumenty-i-legalizatsiya, puteshestviya-po-argentine, pereezd-v-argentinu]
 applies_to: both
 tags: [транспорт, авто, документы, легализация]
 related: [voditelskie-prava, kak-poluchit-prava-v-argentine, apostil-i-perevod-dokumentov, mozhno-li-ezdit-po-inostrannym-pravam]
 warnings:
-  - "Не путайте два документа. «Certificado de legalidad de la licencia» в аргентинском портале — это про АРГЕНТИНСКИЕ права (чтобы использовать их за рубежом). Иностранцу для оформления местных прав нужна легальность ЕГО прав — а это делается через консульство страны выдачи и перевод, а не через этот онлайн-сервис."
-  - "Аргентинский certificado de legalidad не выдаётся на права, оформленные по муниципальному/провинциальному законодательству, и на права, выданные до 2010 года. Для международного использования в странах Гаагской конвенции его нужно апостилировать."
+  - "Национальный онлайн-сервис выдаёт подтверждение аргентинской Licencia Nacional de Conducir. Он не подтверждает иностранное удостоверение."
+  - "Требования к иностранному документу устанавливает орган, который принимает заявление. До апостиля и перевода запросите его актуальный список документов."
 recommendations:
-  - "Иностранцу-резиденту: чтобы при получении аргентинских прав вам зачли водительский стаж (и не считали «начинающим»), заранее готовьте легализованное подтверждение своих прав — уточните в municipio точный формат (обычно нужен документ от консульства/страны выдачи + апостиль + присяжный перевод)."
-  - "Аргентинцу или резиденту с местными правами: certificado de legalidad internacional оформляется бесплатно онлайн — приложите скан прав с двух сторон; для заграницы (страны Гааги) добавьте апостиль."
-last_verified: "2026-07-12"
-confidence: medium
+  - "Если аргентинские права нужны за рубежом, сначала проверьте требования принимающей страны, затем получите национальный сертификат через TAD и при необходимости оформите апостиль."
+  - "Если иностранные права предъявляются в CABA, подготовьте подтверждение органа выдачи; городская процедура использует его, в частности, для оценки статуса начинающего водителя."
+last_verified: "2026-07-17"
+confidence: high
 seo_slug: "certificado-de-legalidad-voditelskih-prav-argentina"
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "Argentina.gob.ar — Obtener el Certificado de Legalidad Internacional de la licencia de conducir"
+  - id: ansv-international-legality-certificate
+    title: "ANSV — Certificado de Legalidad Internacional de la licencia"
     url: "https://www.argentina.gob.ar/servicio/obtener-el-certificado-de-legalidad-internacional-de-la-licencia-de-conducir"
     lang: es
     type: official
-    note: "бесплатный онлайн-сертификат легальности аргентинских прав; не для муниципальных/до-2010 прав; апостиль для стран Гааги"
-  - title: "Buenos Aires Ciudad — Certificado de legalidad"
-    url: "https://buenosaires.gob.ar/gcaba_historico/licenciasdeconducir/requisitos/certificadolegalidad"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Официальный сервис подтверждения действующей аргентинской Licencia Nacional de Conducir."
+  - id: caba-foreign-driver-licence-procedure
+    title: "Buenos Aires Ciudad — получение водительской лицензии иностранцами"
+    url: "https://buenosaires.gob.ar/tramites/otorgamiento-de-licencia-de-conducir"
     lang: es
     type: official
-    note: "требования certificado de legalidad в CABA"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Городская процедура указывает certificado de legalidad для иностранной лицензии, чтобы подтвердить предыдущую habilitación и избежать автоматического статуса новичка."
+  - id: cancilleria-apostille-tad
+    title: "Cancillería — апостиль и международная легализация через TAD"
+    url: "https://www.argentina.gob.ar/servicio/legalizar-o-apostillar-un-documento-traves-de-tad"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Официальная процедура апостилирования аргентинских публичных документов, включая сертификаты водительских лицензий."
+claims:
+  - id: national-certificate-confirms-argentine-license
+    text: "Национальный Certificado de Legalidad Internacional подтверждает подлинность и действительность аргентинской Licencia Nacional de Conducir."
+    sensitive: true
+    source_ids: [ansv-international-legality-certificate]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: certificate-service-is-online-and-limited
+    text: "Сервис бесплатный и проходит через TAD; он не охватывает лицензии, выданные до 2010 года или только по муниципальному либо провинциальному режиму."
+    sensitive: true
+    source_ids: [ansv-international-legality-certificate]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: caba-requests-foreign-license-legality
+    text: "В CABA подтверждение иностранной лицензии используется в процедуре выдачи местных прав для оценки предыдущего водительского стажа и статуса новичка."
+    sensitive: true
+    source_ids: [caba-foreign-driver-licence-procedure]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: argentine-certificate-can-be-apostilled
+    text: "Аргентинский сертификат водительской лицензии входит в перечень документов, которые можно апостилировать через TAD."
+    sensitive: true
+    source_ids: [cancilleria-apostille-tad]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
-## Описание
+## Два разных сценария
 
-Формулировка «certificado de legalidad водительских прав» сбивает с толку, потому что за ней стоят **два разных документа** — и приезжему важно не перепутать, какой нужен именно ему.
+Название `certificado de legalidad` встречается в двух направлениях. В первом случае человек подтверждает аргентинскую лицензию для процедуры за рубежом. Во втором — предъявляет подтверждение иностранного удостоверения аргентинскому органу. Это не один универсальный документ.
 
-## Смысл 1: легальность аргентинских прав (для заграницы)
+## Если у вас аргентинские права
 
-Если у вас уже есть аргентинская `licencia nacional de conducir`, вы можете получить её **certificado de legalidad (internacional)** — официальное подтверждение, что права подлинные, действующие, с историей категорий. Он нужен, чтобы использовать аргентинские права за рубежом (например, обменять на местные) или сделать процедуру (renovación, ampliación) в другой юрисдикции внутри страны.
+Национальный сервис ANSV подтверждает, что `Licencia Nacional de Conducir` подлинная и действующая. Заявление подаётся через TAD, к нему прикладывают изображение обеих сторон лицензии. Сервис бесплатный.
 
-Порядок: сервис **бесплатный и онлайн** (через Trámites a Distancia), прикладываете скан прав с двух сторон. Важные ограничения: не выдаётся на права по муниципальному/провинциальному законодательству и на права, выданные **до 2010 года**; для международного использования в странах Гаагской конвенции сертификат **апостилируют**.
+ANSV отдельно предупреждает: национальный сертификат не охватывает права, выданные до 2010 года, и документы, оформленные только по муниципальному или провинциальному режиму. В таком случае обращайтесь в орган, выдавший лицензию.
 
-## Смысл 2: легальность ваших иностранных прав (для Аргентины)
+Для предъявления документа за границей заранее спросите принимающий орган, нужен ли апостиль. Аргентинская Cancillería допускает апостилирование сертификатов водительских лицензий через TAD.
 
-Иностранцу чаще нужен обратный документ — подтверждение, что **его зарубежные права легальны**. При получении аргентинских прав это помогает **подтвердить водительский стаж** и не попасть в статус «начинающего водителя» (см. [[kak-poluchit-prava-v-argentine|получение прав]]). Такое подтверждение обычно готовят через **консульство страны выдачи** с последующими апостилем и присяжным переводом (см. [[apostil-i-perevod-dokumentov|апостиль и перевод]]). Онлайн-сервис для аргентинских прав здесь не подходит.
+## Если у вас иностранные права
 
-## Факты
+Национальный сервис ANSV не подтверждает иностранное удостоверение. Документ о его подлинности должен исходить от компетентного органа страны выдачи либо пройти форму подтверждения, которую принимает конкретная аргентинская юрисдикция.
 
-- Аргентинский certificado de legalidad — про местные права (для использования за границей); бесплатно, онлайн.
-- Не выдаётся на муниципальные/провинциальные права и на права до 2010 года; для Гааги — апостиль.
-- Иностранцу для получения аргентинских прав нужна легальность ЕГО прав — через консульство страны выдачи + апостиль + перевод.
-- Документ важен для зачёта стажа и оценки статуса начинающего водителя.
+В CABA certificado de legalidad иностранной лицензии указывается в процедуре получения местных прав. Он помогает подтвердить прежнюю habilitación и не получить статус начинающего водителя автоматически. Требования к апостилю, консульскому подтверждению, переводу и формату документа проверяйте непосредственно перед подачей.
 
-## Связанные объекты
+## Практический порядок
 
-- [[kak-poluchit-prava-v-argentine|Как получить водительские права в Аргентине]] — где легальность прав влияет на стаж и статус начинающего.
-- [[apostil-i-perevod-dokumentov|Апостиль и присяжный перевод документов]] — как легализуют иностранные документы для Аргентины.
-- [[voditelskie-prava|Вождение и водительские права: туристу и релоканту]] — общий разбор по статусам.
+1. Определите, какой орган будет принимать документ.
+2. Получите у него письменный актуальный список требований.
+3. Закажите подтверждение у компетентного органа выдачи лицензии.
+4. Только после этого оформляйте апостиль или консульскую легализацию и перевод, если они нужны.
+5. Проверьте совпадение имени, номера, категорий и сроков во всех документах.
 
 ## Источники
 
-- [Argentina.gob.ar — Certificado de Legalidad Internacional de la licencia](https://www.argentina.gob.ar/servicio/obtener-el-certificado-de-legalidad-internacional-de-la-licencia-de-conducir)
-- [Buenos Aires Ciudad — Certificado de legalidad](https://buenosaires.gob.ar/gcaba_historico/licenciasdeconducir/requisitos/certificadolegalidad)
+- [ANSV — Certificado de Legalidad Internacional](https://www.argentina.gob.ar/servicio/obtener-el-certificado-de-legalidad-internacional-de-la-licencia-de-conducir)
+- [Buenos Aires Ciudad — получение водительской лицензии](https://buenosaires.gob.ar/tramites/otorgamiento-de-licencia-de-conducir)
+- [Cancillería — апостиль через TAD](https://www.argentina.gob.ar/servicio/legalizar-o-apostillar-un-documento-traves-de-tad)

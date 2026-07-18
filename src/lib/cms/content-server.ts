@@ -13,6 +13,10 @@ import type {
 } from "@/types/cms-content";
 import { cmsDocumentId } from "@/types/cms-content";
 import { validateScheduledPublishAt } from "@/lib/cms/cms-scheduled-publish";
+import {
+  describeCmsKnowledgePublicationIssues,
+  getCmsKnowledgePublicationIssues,
+} from "@/lib/cms/knowledge-resolver";
 import { syncCmsDocumentToSearchIndex } from "@/lib/search/cms-search-sync";
 
 type DbClient = SupabaseClient<Database>;
@@ -70,6 +74,39 @@ function cmsFailure(error: { code?: string; message?: string } | null): CmsMutat
     return { error: ownerMessage, code: "INVALID" };
   }
   return { error: "Не удалось сохранить материал. Повторите попытку.", code: "FAILED" };
+}
+
+function isCmsPublicStatus(status: CmsDocumentStatus): boolean {
+  return status === "published" || status === "scheduled";
+}
+
+function cmsKnowledgePublicationFailure(document: CmsDocument): CmsMutationFailure | null {
+  if (document.docType !== "knowledge" || !isCmsPublicStatus(document.status)) return null;
+  const issues = getCmsKnowledgePublicationIssues(document);
+  if (issues.length === 0) return null;
+  return {
+    error: `Материал базы знаний пока нельзя опубликовать: ${describeCmsKnowledgePublicationIssues(issues)}. Исправьте эти пункты и повторите публикацию.`,
+    code: "INVALID",
+  };
+}
+
+async function validateExistingKnowledgePublicMutation(
+  supabase: DbClient,
+  id: string,
+  expectedVersion: number,
+  patch: Partial<Pick<CmsDocument, "title" | "body" | "seo" | "status">>,
+): Promise<CmsMutationFailure | null> {
+  const current = await getCmsDocumentById(supabase, id);
+  if (!current) return { error: "Документ не найден", code: "NOT_FOUND" };
+  if (current.rowVersion !== expectedVersion) {
+    return {
+      error: "Материал уже изменён в другой вкладке. Обновите страницу и повторите действие.",
+      code: "STALE_VERSION",
+    };
+  }
+  if (current.docType !== "knowledge") return null;
+  const candidate: CmsDocument = { ...current, ...patch };
+  return cmsKnowledgePublicationFailure(candidate);
 }
 
 function documentFromRpc(value: Json | undefined): CmsDocument | null {
@@ -218,6 +255,28 @@ export async function createCmsDocument(
 ): Promise<{ document: CmsDocument } | CmsMutationFailure> {
   const locale = input.locale ?? "ru";
   const id = cmsDocumentId(input.docType, input.slug, locale);
+  const status = input.status ?? "draft";
+  if (isCmsPublicStatus(status)) {
+    const now = new Date().toISOString();
+    const validation = cmsKnowledgePublicationFailure({
+      id,
+      docType: input.docType,
+      slug: input.slug,
+      locale,
+      title: input.title,
+      status,
+      body: input.body,
+      seo: input.seo ?? {},
+      publishedAt: status === "published" ? now : null,
+      scheduledPublishAt: null,
+      createdBy: input.actorId,
+      updatedBy: input.actorId,
+      rowVersion: 0,
+      createdAt: now,
+      updatedAt: now,
+    });
+    if (validation) return validation;
+  }
 
   const { data, error } = await supabase.rpc("cms_create_document_atomic", {
     p_document_id: id,
@@ -227,7 +286,7 @@ export async function createCmsDocument(
     p_title: input.title,
     p_body: input.body as Json,
     p_seo: (input.seo ?? {}) as Json,
-    p_status: input.status ?? "draft",
+    p_status: status,
     p_actor_id: actorUuid(input.actorId),
     p_allow_publish: input.allowPublish === true,
     p_ip_address: input.ipAddress ?? null,
@@ -253,6 +312,19 @@ export async function updateCmsDocument(
     ipAddress?: string | null;
   }
 ): Promise<{ document: CmsDocument } | CmsMutationFailure> {
+  const validation = await validateExistingKnowledgePublicMutation(
+    supabase,
+    id,
+    input.expectedVersion,
+    {
+      ...(input.title === undefined ? {} : { title: input.title }),
+      ...(input.body === undefined ? {} : { body: input.body }),
+      ...(input.seo === undefined ? {} : { seo: input.seo }),
+      ...(input.status === undefined ? {} : { status: input.status }),
+    },
+  );
+  if (validation) return validation;
+
   const { data, error } = await supabase.rpc("cms_mutate_document_atomic", {
     p_document_id: id,
     p_expected_version: input.expectedVersion,
@@ -279,6 +351,14 @@ export async function publishCmsDocument(
   id: string,
   input: { actorId: string; expectedVersion: number; ipAddress?: string | null }
 ): Promise<{ document: CmsDocument } | CmsMutationFailure> {
+  const validation = await validateExistingKnowledgePublicMutation(
+    supabase,
+    id,
+    input.expectedVersion,
+    { status: "published" },
+  );
+  if (validation) return validation;
+
   const { data, error } = await supabase.rpc("cms_mutate_document_atomic", {
     p_document_id: id,
     p_expected_version: input.expectedVersion,
@@ -309,6 +389,18 @@ export async function scheduleCmsDocument(
 ): Promise<{ document: CmsDocument } | CmsMutationFailure> {
   const validated = validateScheduledPublishAt(input.scheduledPublishAt);
   if (!validated.ok) return { error: validated.error, code: "INVALID" };
+  const publicationValidation = await validateExistingKnowledgePublicMutation(
+    supabase,
+    id,
+    input.expectedVersion,
+    {
+      status: "scheduled",
+      ...(input.title === undefined ? {} : { title: input.title }),
+      ...(input.body === undefined ? {} : { body: input.body }),
+      ...(input.seo === undefined ? {} : { seo: input.seo }),
+    },
+  );
+  if (publicationValidation) return publicationValidation;
 
   const { data, error } = await supabase.rpc("cms_mutate_document_atomic", {
     p_document_id: id,
@@ -358,21 +450,51 @@ export async function publishDueScheduledCmsDocuments(
   supabase: DbClient,
   actorId: string | null = null
 ): Promise<PublishScheduledCmsResult> {
-  void actorId;
-  const { data, error } = await supabase.rpc("cms_publish_due_scheduled_atomic", { p_limit: 100 });
-  if (error || !data || typeof data !== "object" || Array.isArray(data)) {
+  const { data, error } = await supabase
+    .from("content_documents")
+    .select("*")
+    .eq("status", "scheduled")
+    .lte("scheduled_publish_at", new Date().toISOString())
+    .order("scheduled_publish_at", { ascending: true })
+    .limit(100);
+  if (error) {
     return { publishedIds: [], failed: [{ id: "*", error: cmsFailure(error).error }] };
   }
-  const rawIds = (data as Record<string, Json | undefined>).publishedIds;
-  const publishedIds = Array.isArray(rawIds)
-    ? rawIds.filter((id): id is string => typeof id === "string")
-    : [];
-  for (const id of publishedIds) {
-    const document = await getCmsDocumentById(supabase, id);
-    if (document) await settleCmsSearchIntent(supabase, document);
+
+  const publishedIds: string[] = [];
+  const failed: Array<{ id: string; error: string }> = [];
+  for (const row of data ?? []) {
+    const scheduled = rowToCmsDocument(row);
+    const validation = cmsKnowledgePublicationFailure(scheduled);
+    if (validation) {
+      failed.push({ id: scheduled.id, error: validation.error });
+      continue;
+    }
+
+    const { data: mutationData, error: mutationError } = await supabase.rpc(
+      "cms_mutate_document_atomic",
+      {
+        p_document_id: scheduled.id,
+        p_expected_version: scheduled.rowVersion,
+        p_actor_id: actorUuid(actorId),
+        p_operation: "publish_scheduled",
+        p_allow_publish: true,
+      },
+    );
+    if (mutationError) {
+      failed.push({ id: scheduled.id, error: cmsFailure(mutationError).error });
+      continue;
+    }
+    const document = documentFromRpc(mutationData);
+    if (!document) {
+      failed.push({ id: scheduled.id, error: "Не удалось прочитать опубликованный документ" });
+      continue;
+    }
+    publishedIds.push(document.id);
+    await settleCmsSearchIntent(supabase, document);
   }
   await processPendingCmsSearchIntents(supabase);
-  return { publishedIds, failed: [] };
+  return { publishedIds, failed };
 }
 
 export async function deleteCmsDocument(
@@ -491,6 +613,18 @@ export async function restoreCmsDocumentFromRevision(
 ): Promise<{ document: CmsDocument; restoredRevision: CmsRevision } | CmsMutationFailure> {
   const revision = await getCmsRevisionById(supabase, documentId, revisionId);
   if (!revision) return { error: "Ревизия не найдена", code: "NOT_FOUND" };
+  const publicationValidation = await validateExistingKnowledgePublicMutation(
+    supabase,
+    documentId,
+    input.expectedVersion,
+    {
+      title: revision.title,
+      body: revision.body,
+      seo: revision.seo,
+      status: input.publish ? "published" : "draft",
+    },
+  );
+  if (publicationValidation) return publicationValidation;
 
   const { data, error } = await supabase.rpc("cms_mutate_document_atomic", {
     p_document_id: documentId,

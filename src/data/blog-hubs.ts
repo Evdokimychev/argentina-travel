@@ -1,5 +1,5 @@
 import { BLOG_START_HERE_SLUGS } from "@/data/blog-canonical-map";
-import { getBlogHubImage } from "@/lib/media-resolver";
+import { BLOG_CATEGORY_META, BLOG_DEFAULT_CATEGORY_META } from "@/data/blog-category-meta";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import type { BlogPost } from "@/types";
 
@@ -32,7 +32,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
       "Rich-гиды по паркам APN: билеты, тропы, сезоны и практика посещения — от Игуасу до Огненной Земли.",
     seoDescription:
       "Полные гиды по национальным паркам Аргентины: Игуасу, Лос-Гласьярес, Науэль-Уапи, Огненная Земля и другие — тарифы, маршруты, FAQ.",
-    image: getBlogHubImage("Национальные парки"),
+    image: BLOG_CATEGORY_META["Национальные парки"]?.image ?? BLOG_DEFAULT_CATEGORY_META.image,
     categories: ["Национальные парки"],
     pinnedSlugs: [
       "natsionalnyy-park-iguasu",
@@ -56,7 +56,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
       "Въезд, деньги, сезоны и базовая подготовка — восемь pillar-материалов для первой поездки.",
     seoDescription:
       "Путеводитель по Аргентине для туристов: виза, синий доллар, сезоны, районы Буэнос-Айреса, стейк, танго и винный маршрут.",
-    image: getBlogHubImage("Путеводитель"),
+    image: BLOG_CATEGORY_META["Путеводитель"]?.image ?? BLOG_DEFAULT_CATEGORY_META.image,
     pinnedSlugs: [
       ...BLOG_START_HERE_SLUGS,
       "itinerary-ошибки",
@@ -81,7 +81,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
       "Ледники, треккинг, логистика и маршруты — от Эль-Калафате до Ушуайи, с практическими материалами по региону.",
     seoDescription:
       "Блог о Патагонии: советы новичкам, бюджет, сезоны, перелёты, треккинг, киты и сборы в поездку.",
-    image: getBlogHubImage("Патагония"),
+    image: BLOG_CATEGORY_META.Патагония?.image ?? BLOG_DEFAULT_CATEGORY_META.image,
     categories: ["Патагония"],
     slugPrefixes: ["patagonia-"],
     pinnedSlugs: ["patagonia-packing-list", "patagonia-советы-новичкам", "patagonia-за-7-дней"],
@@ -99,7 +99,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
       "Северо-запад Аргентины: маршруты на 5–7 дней, сезон дождей, самостоятельная поездка и Quebrada de Humahuaca.",
     seoDescription:
       "Сальта и северо-запад Аргентины: маршруты, сезоны, бюджет и советы для самостоятельного путешествия.",
-    image: getBlogHubImage("Север Аргентины"),
+    image: BLOG_CATEGORY_META["Север Аргентины"]?.image ?? BLOG_DEFAULT_CATEGORY_META.image,
     categories: ["Север Аргентины"],
     slugPrefixes: ["northwest-"],
     pinnedSlugs: [

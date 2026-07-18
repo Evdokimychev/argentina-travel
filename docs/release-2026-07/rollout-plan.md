@@ -38,7 +38,7 @@
 ## 3. Staging-репетиция
 
 1. Использовать отдельный staging Supabase и staging Vercel environment.
-2. Сохранить staging backup и применить migration delta. При использовании `npm run supabase:migrate` предварительно подтвердить идемпотентность всех SQL-файлов: runner повторно выполняет весь каталог миграций и не ведёт журнал.
+2. Сохранить staging backup и применить migration delta через журналируемый runner: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=<staging> npm run supabase:migrate`. Повторный запуск обязан дать `pending=0`; checksum drift или существующая схема без канонического журнала блокируют репетицию.
 3. Выполнить `npm run supabase:verify`, `npm run rls-audit`, `npm run auth:readiness` и security negative tests.
 4. Развернуть релизный SHA на staging и прогнать все staging-строки `test-matrix.md`.
 5. Проверить вручную auth, роли, бронирование/оплату в sandbox, consent, CMS, cron endpoints и критичные браузеры.
@@ -56,7 +56,7 @@
 ### T0: база данных
 
 1. Database owner повторно подтверждает, что `DATABASE_URL` относится к production, не выводя значение в журнал.
-2. Применить только проверенный migration delta. `npm run supabase:migrate` допустим лишь после подтверждённой staging-идемпотентности всего каталога.
+2. Применить только проверенный migration delta того же SHA. Production-runner разрешён лишь после backup/restore и staging acceptance; существующая схема без доказанного журнала останавливается до SQL.
 3. Немедленно выполнить `npm run supabase:verify` и `npm run rls-audit`.
 4. Выполнить read-only контроль затронутых таблиц, RLS и ролей. Не продолжать при частичном применении или расхождении.
 

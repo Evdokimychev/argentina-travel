@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
+  captureCandidateContext,
   finalizeCandidateEvidence,
   parseCandidateDirtyPaths,
   validateCandidateEvidence,
@@ -99,6 +100,81 @@ test("dirty path parser ignores staged-only and runtime outputs but rejects live
     ].join("\n")),
     ["src/live.ts", "scripts/new-source.mjs"],
   );
+});
+
+test("local candidate integrity remains strict for packaging-only directories", () => {
+  assert.deepEqual(
+    parseCandidateDirtyPaths(
+      [
+        " D .cursor/rules/editorial-standard.mdc",
+        " D .claude/launch.json",
+        " D var/cache/image-provider/stock-cache.json",
+        " D src/app/page.tsx",
+      ].join("\n"),
+      { env: {} },
+    ),
+    [
+      ".cursor/rules/editorial-standard.mdc",
+      ".claude/launch.json",
+      "var/cache/image-provider/stock-cache.json",
+      "src/app/page.tsx",
+    ],
+  );
+});
+
+test("Vercel ignores only tracked packaging deletions and still blocks source or config drift", () => {
+  assert.deepEqual(
+    parseCandidateDirtyPaths(
+      [
+        " D .cursor/rules/editorial-standard.mdc",
+        " D .claude/launch.json",
+        " D var/cache/image-provider/stock-cache.json",
+        " M .cursor/rules/quality-gates.mdc",
+        "?? var/manual-note.txt",
+        " D src/app/page.tsx",
+        " D vercel.json",
+      ].join("\n"),
+      { env: { VERCEL: "1" } },
+    ),
+    [
+      ".cursor/rules/quality-gates.mdc",
+      "var/manual-note.txt",
+      "src/app/page.tsx",
+      "vercel.json",
+    ],
+  );
+});
+
+test("capture and finalization preserve the Vercel packaging exception", () => {
+  const calls = [
+    { status: 0, stdout: "tree-1\n" },
+    {
+      status: 0,
+      stdout: " D .cursor/rules/editorial-standard.mdc\n D var/guide-economy-mobile.png\n",
+    },
+    { status: 0, stdout: "tree-1\n" },
+    {
+      status: 0,
+      stdout: " D .claude/launch.json\n D var/cache/image-provider/stock-cache.json\n",
+    },
+  ];
+  const options = {
+    env: { VERCEL: "1" },
+    now: () => NOW,
+    runId: "run-12345678",
+    spawn: () => calls.shift(),
+  };
+  const context = captureCandidateContext("/repo", options);
+  const metadata = finalizeCandidateEvidence("/repo", context, options);
+
+  assert.deepEqual(context.initialDirtyPaths, []);
+  assert.equal(metadata.evidenceScope, "candidate");
+  assert.equal(metadata.candidateTree, "tree-1");
+  assert.deepEqual(metadata.evidenceIntegrity, {
+    status: "passed",
+    reasons: [],
+    dirtyPaths: [],
+  });
 });
 
 test("finalization rejects a changed tree or dirty candidate", () => {

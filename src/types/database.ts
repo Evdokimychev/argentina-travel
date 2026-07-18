@@ -4015,6 +4015,100 @@ export interface Database {
         };
         Relationships: [];
       };
+      seo_provider_connections: {
+        Row: {
+          id: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label: string | null;
+          vault_secret_id: string;
+          status: "configured" | "verified" | "error";
+          last_verified_at: string | null;
+          last_synced_at: string | null;
+          last_error_code: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label?: string | null;
+          vault_secret_id: string;
+          status?: "configured" | "verified" | "error";
+          last_verified_at?: string | null;
+          last_synced_at?: string | null;
+          last_error_code?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_provider_connections"]["Insert"]>;
+        Relationships: [];
+      };
+      seo_search_performance_daily: {
+        Row: {
+          id: number;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          metric_date: string;
+          query: string;
+          page: string;
+          country: string;
+          device: string;
+          clicks: number;
+          impressions: number;
+          ctr: number;
+          position: number;
+          fetched_at: string;
+        };
+        Insert: {
+          id?: number;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          metric_date: string;
+          query?: string;
+          page?: string;
+          country?: string;
+          device?: string;
+          clicks?: number;
+          impressions?: number;
+          ctr?: number;
+          position?: number;
+          fetched_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_search_performance_daily"]["Insert"]>;
+        Relationships: [];
+      };
+      seo_search_sync_runs: {
+        Row: {
+          id: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          status: "running" | "succeeded" | "failed";
+          started_at: string;
+          finished_at: string | null;
+          rows_received: number;
+          rows_written: number;
+          error_code: string | null;
+          triggered_by: "admin" | "cron";
+        };
+        Insert: {
+          id?: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          status: "running" | "succeeded" | "failed";
+          started_at?: string;
+          finished_at?: string | null;
+          rows_received?: number;
+          rows_written?: number;
+          error_code?: string | null;
+          triggered_by?: "admin" | "cron";
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_search_sync_runs"]["Insert"]>;
+        Relationships: [];
+      };
       search_documents: {
         Row: {
           id: string;
@@ -4067,6 +4161,36 @@ export interface Database {
       admin_analytics_booking_cohorts: {
         Args: { p_since?: string | null };
         Returns: { month_key: string; bookings: number }[];
+      };
+      seo_upsert_provider_connection: {
+        Args: {
+          p_provider: "google_search_console" | "yandex_webmaster";
+          p_property_url: string;
+          p_secret: string;
+          p_credential_label: string;
+          p_actor_user_id: string | null;
+        };
+        Returns: Json;
+      };
+      seo_delete_provider_connection: {
+        Args: {
+          p_provider: "google_search_console" | "yandex_webmaster";
+          p_actor_user_id: string | null;
+        };
+        Returns: boolean;
+      };
+      seo_get_provider_secret: {
+        Args: { p_provider: "google_search_console" | "yandex_webmaster" };
+        Returns: {
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label: string | null;
+          secret_value: string;
+        }[];
+      };
+      seo_search_performance_summary: {
+        Args: { p_days?: number };
+        Returns: Json;
       };
       cms_create_document_atomic: {
         Args: {

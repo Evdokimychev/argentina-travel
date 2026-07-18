@@ -51,7 +51,11 @@ import { getBlogSectionKind } from "@/lib/blog-section-body";
 import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
 import { mapBlogRelatedResources } from "@/lib/content-related-links";
 import { getBlogKbLinks } from "@/data/blog-kb-links";
-import { getRichArticleGallery } from "@/lib/media-resolver";
+import {
+  getBlogPostHeroResolved,
+  getRichArticleGallery,
+  resolveBlogPostCardImage,
+} from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { BlogPost, TourListing } from "@/types";
@@ -253,7 +257,14 @@ export default function BlogPostView({
                 <BlogRichArticle
                   article={richArticle}
                   galleryImages={
-                    post.richArticleId ? getRichArticleGallery(post.richArticleId) : undefined
+                    post.richArticleId
+                      ? getRichArticleGallery(post.richArticleId, {
+                          excludeSources: [
+                            getBlogPostHeroResolved(post).src,
+                            resolveBlogPostCardImage(post),
+                          ],
+                        })
+                      : undefined
                   }
                   inlineRelatedBySection={inlineRelatedRichBySection}
                   sourceSlug={post.slug}

@@ -182,7 +182,10 @@ describe("destinationsFromCmsDocuments", () => {
 
     expect(page?.image).toContain("/media/destinations/iguazu/");
     expect(page?.image).not.toBe("/logo-light.svg");
-    expect(page?.gallery).toHaveLength(5);
+    const gallery = page?.gallery ?? [];
+    expect(gallery).toHaveLength(4);
+    expect(new Set(gallery).size).toBe(gallery.length);
+    expect(gallery).not.toContain(page?.image);
     expect(page?.imageAlt).toMatch(/Игуасу|водопад/i);
   });
 

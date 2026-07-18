@@ -19,6 +19,7 @@ import {
   resolveYouTravelMinimumAge,
 } from "@/lib/youtravel/partner-tour-content";
 import type { YouTravelTour } from "@/lib/youtravel/types";
+import { PARTNER_TOUR_FALLBACK_IMAGE } from "@/lib/media/media-placeholders";
 import type { ActivityType, DurationBucket, GroupSizeBucket, TourDate } from "@/types";
 import { resolveArgentinaCity } from "@/lib/argentina-cities";
 import { resolvePartnerTourFilterPriceUsd } from "@/lib/partner-tours/filter-price";
@@ -131,7 +132,7 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
   const image =
     resolveYouTravelMediaUrl(row.cover_image) ??
     photos[0] ??
-    "/media/placeholders/tour-card.jpg";
+    PARTNER_TOUR_FALLBACK_IMAGE;
   const destination = row.city?.trim() || row.region?.trim() || row.country?.trim() || "Аргентина";
   const listingId = youtravelTourListingId(row.id);
   const normalizedPrice = normalizeYouTravelPartnerPrice(row.price_value, row.price_currency);

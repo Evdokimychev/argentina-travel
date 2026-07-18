@@ -9,28 +9,28 @@ import type { SiteNavLink } from "@/types/site-nav";
  */
 export const SITE_NAV_RECENT_BLOG_LINKS: SiteNavLink[] = [
   {
-    id: "blog-iguazu-советы-новичкам",
-    label: "Водопады Игуасу: полный гид для новичков — с чего начать",
-    href: "/blog/iguazu-советы-новичкам",
+    id: "blog-best-time-to-visit-argentina",
+    label: "Когда лучше ехать в Аргентину: сезоны и регионы",
+    href: "/blog/best-time-to-visit-argentina",
+    description: "Путеводитель",
+  },
+  {
+    id: "blog-argentina-tourist-visa-2026",
+    label: "Въезд туриста: виза, сроки и документы",
+    href: "/blog/argentina-tourist-visa-2026",
+    description: "Документы для поездки",
+  },
+  {
+    id: "blog-iguazu-за-3-дня",
+    label: "Водопады Игуасу за 3 дня: гибкий маршрут",
+    href: "/blog/iguazu-за-3-дня",
     description: "Водопады Игуасу",
   },
   {
-    id: "blog-money-90-дней",
-    label: "Финансы при поездке до 90 дней: как планировать расходы",
-    href: "/blog/money-90-дней",
-    description: "Деньги и обмен валют",
-  },
-  {
-    id: "blog-money-карты",
-    label: "Деньги в Аргентине: оплата картой — практический гид",
-    href: "/blog/money-карты",
-    description: "Деньги и обмен валют",
-  },
-  {
-    id: "blog-money-наличные",
-    label: "Наличные в Аргентине: доллары, евро и где менять безопасно",
-    href: "/blog/money-наличные",
-    description: "Деньги и обмен валют",
+    id: "blog-patagonia-авиабилеты",
+    label: "Патагония: как выбрать аэропорт и внутренний рейс",
+    href: "/blog/patagonia-авиабилеты",
+    description: "Патагония",
   },
   {
     id: "blog-money-бюджет",
@@ -39,10 +39,10 @@ export const SITE_NAV_RECENT_BLOG_LINKS: SiteNavLink[] = [
     description: "Деньги и обмен валют",
   },
   {
-    id: "blog-money-советы-новичкам",
-    label: "Деньги в Аргентине: полный гид для новичков — с чего начать",
-    href: "/blog/money-советы-новичкам",
-    description: "Деньги и обмен валют",
+    id: "blog-itinerary-чек-лист",
+    label: "Аргентина: чек-лист перед поездкой",
+    href: "/blog/itinerary-чек-лист",
+    description: "Подготовка к поездке",
   },
   {
     id: "blog-salta-i-severo-zapad-marshrut",

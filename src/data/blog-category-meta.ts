@@ -1,5 +1,10 @@
-/** Описания тематических разделов блога для хабов на главной */
-import { getBlogHubImage } from "@/lib/media-resolver";
+/**
+ * Описания тематических разделов блога для публичных клиентских карточек.
+ *
+ * Пути ниже — компактная проекция текущих server-resolved media bindings.
+ * Держим их рядом с описаниями, чтобы BlogCard и фильтры не затягивали в
+ * браузер полный media manifest через media-resolver.
+ */
 
 export type BlogCategoryMeta = {
   description: string;
@@ -76,14 +81,41 @@ const BLOG_CATEGORY_DESCRIPTIONS: Record<string, Omit<BlogCategoryMeta, "image">
   },
 };
 
+const BLOG_CATEGORY_IMAGES: Record<string, string> = {
+  Патагония: "/media/places/perito-moreno-glacier/hero.jpg",
+  "Буэнос-Айрес": "/media/places/buenos-aires/hero.jpg",
+  "Север Аргентины": "/media/places/salta/hero.jpg",
+  "Водопады Игуасу": "/media/places/iguazu-falls/hero.jpg",
+  "Национальные парки": "/media/places/los-glaciares-national-park/hero.jpg",
+  "Горы и треккинг": "/media/places/el-chalten/gallery-1.jpg",
+  Винодельни: "/media/blog/wineries.jpg",
+  "Животные Аргентины": "/media/places/valdes-peninsula/hero.jpg",
+  "Кухня Аргентины": "/media/blog/food.jpg",
+  Транспорт: "/media/blog/transport.jpg",
+  "Деньги и обмен валют": "/media/blog/money.jpg",
+  Безопасность: "/media/blog/safety.jpg",
+  "Интернет и связь": "/media/blog/internet.jpg",
+  "Районы Буэнос-Айреса": "/media/places/buenos-aires/hero.jpg",
+  "Переезд и релокация": "/media/blog/relocation.jpg",
+  Путешествия: "/media/places/iguazu-falls/hero.jpg",
+  Советы: "/media/places/buenos-aires/hero.jpg",
+  Гастрономия: "/media/places/buenos-aires/hero.jpg",
+  Культура: "/media/places/buenos-aires/hero.jpg",
+  Путеводитель: "/media/places/buenos-aires/hero.jpg",
+  Иммиграция: "/media/blog/relocation.jpg",
+  Туры: "/media/places/mendoza/hero.jpg",
+};
+
+const DEFAULT_BLOG_CATEGORY_IMAGE = "/media/places/iguazu-falls/hero.jpg";
+
 export const BLOG_CATEGORY_META: Record<string, BlogCategoryMeta> = Object.fromEntries(
   Object.entries(BLOG_CATEGORY_DESCRIPTIONS).map(([label, meta]) => [
     label,
-    { ...meta, image: getBlogHubImage(label) },
+    { ...meta, image: BLOG_CATEGORY_IMAGES[label] ?? DEFAULT_BLOG_CATEGORY_IMAGE },
   ]),
 );
 
 export const BLOG_DEFAULT_CATEGORY_META: BlogCategoryMeta = {
   description: "Практические материалы для путешественников",
-  image: getBlogHubImage("Путешествия"),
+  image: DEFAULT_BLOG_CATEGORY_IMAGE,
 };

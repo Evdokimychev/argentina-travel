@@ -103,6 +103,14 @@ describe("homepage client bundle boundaries", () => {
     expect(source).not.toContain('from "@/data/blog"');
   });
 
+  it("projects homepage blog cards before crossing the client boundary", () => {
+    const page = readFileSync(join(process.cwd(), "src/app/page.tsx"), "utf8");
+
+    expect(page).toContain('from "@/lib/blog-index-payload"');
+    expect(page).toContain("blogPosts={toBlogIndexCatalog(blogPosts.slice(0, 3))}");
+    expect(page).not.toContain("blogPosts={blogPosts.slice(0, 3)}");
+  });
+
   it("mounts the global search index only after an explicit open request", () => {
     const onDemand = readFileSync(
       join(process.cwd(), "src/components/OnDemandPublicDialogs.tsx"),

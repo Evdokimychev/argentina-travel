@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-17T08:41:56.095Z",
+  "generatedAt": "2026-07-17T11:59:32.030Z",
   "scope": "knowledge-base",
   "counts": {
     "total": 689,
-    "critical": 367,
-    "high": 65,
+    "critical": 396,
+    "high": 67,
     "medium": 2,
     "low": 0,
-    "none": 255,
-    "notIndexable": 434
+    "none": 224,
+    "notIndexable": 465
   },
   "entries": [
     {
@@ -418,8 +418,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/apostil-i-perevod-dokumentov.md",
       "sourceUrl": null,
-      "title": "Апостиль и присяжный перевод документов для Аргентины",
-      "summary": "Пошагово: какие российские документы апостилировать (и почему только в России), как их переводит присяжный переводчик (traductor público) уже в Аргентине и как перевод легализуется в Коллегии переводчиков. Ключевой первый практический шаг любой резиденции, где путают порядок и теряют время.",
+      "title": "Апостиль и перевод документов для Аргентины",
+      "summary": "Как подготовить иностранный документ: проверить требования принимающего ведомства, оформить апостиль или легализацию в стране выдачи и сделать подходящий перевод на испанский.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -432,7 +432,7 @@
       "canonicalEntityId": "apostil-i-perevod-dokumentov",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -587,7 +587,7 @@
       "sourcePath": "content/knowledge-base/pereezd/argentina-vs-drugie-strany.md",
       "sourceUrl": null,
       "title": "Аргентина или другая страна: честное сравнение для переезда",
-      "summary": "Сравнение Аргентины с популярными у русскоязычных направлениями переезда (Грузия, Армения, Казахстан, Сербия, Черногория, Турция, другие страны Латинской Америки) по ключевым осям: въезд, скорость гражданства, стоимость жизни, работа, язык, удалённость, стабильность. Честно, без рекламы: в чём Аргентина реально сильна, в чём проигрывает, и кому она подходит, а кому лучше выбрать другое.",
+      "summary": "Рамка для выбора страны переезда: что в Аргентине подтверждено официально, какие ограничения важно учесть и почему правила других стран нужно проверять отдельно перед решением.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -599,8 +599,8 @@
       "coordinates": null,
       "canonicalEntityId": "argentina-vs-drugie-strany",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -1124,10 +1124,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/banki-i-perevody.md",
       "sourceUrl": null,
-      "title": "Как завести и перевести деньги в Аргентину",
-      "summary": "Практика перевода денег в Аргентину в 2026 году после отмены большинства валютных ограничений: наличные доллары, Western Union, карты, USDT/стейблкоины и Wise — что выгоднее и удобнее туристу и релоканту. Про местные счета и финтех — отдельно в записи о банковском счёте.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Перевод денег в Аргентину: безопасная проверка каналов",
+      "summary": "Как сравнить официальный перевод, карту и банковские реквизиты без рекомендаций неофициального обмена, P2P-схем и неподтверждённых курсов.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1137,10 +1137,22 @@
       "coordinates": null,
       "canonicalEntityId": "banki-i-perevody",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        },
+        {
+          "code": "mixed_script_word",
+          "severity": "critical",
+          "values": [
+            "P-схем"
+          ]
+        }
+      ]
     },
     {
       "id": "bankovskij-schet",
@@ -1150,8 +1162,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/bankovskij-schet.md",
       "sourceUrl": null,
-      "title": "Банковский счёт и финансы релоканта в Аргентине",
-      "summary": "Как открыть счёт и карту в Аргентине: финтех (Ualá, Brubank, Mercado Pago) с первого дня, банковский счёт после DNI и CUIT, покупка долларов по MEP — и отдельная схема для россиян, чьи карты не работают.",
+      "title": "Банковский счёт для мигранта в Аргентине",
+      "summary": "Официальная базовая возможность открыть бесплатную caja de ahorro en pesos с документом личности и действующим миграционным статусом, а также различия CBU, CVU и alias.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -1163,8 +1175,8 @@
       "coordinates": null,
       "canonicalEntityId": "bankovskij-schet",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -1354,8 +1366,8 @@
       "coordinates": null,
       "canonicalEntityId": "besplatna-li-medicina-dlya-turista",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -1438,7 +1450,7 @@
       "sourcePath": "content/knowledge-base/bezopasnost/bezopasnost-argentina.md",
       "sourceUrl": null,
       "title": "Безопасность в Аргентине: реальные риски",
-      "summary": "Аргентина относительно безопасна (Level 1 по Госдепу США) — главный риск не насилие, а мелкие кражи и отвлекающие скамы; в Патагонии и на севере криминала почти нет, но важна осторожность с природой.",
+      "summary": "Практические меры безопасности для города, транспорта и природных маршрутов: как беречь документы и вещи, куда обращаться за помощью и что проверять перед выходом.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -1450,8 +1462,8 @@
       "coordinates": null,
       "canonicalEntityId": "bezopasnost-argentina",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -1733,7 +1745,7 @@
       "sourcePath": "content/knowledge-base/byt/byt-i-zhilyo.md",
       "sourceUrl": null,
       "title": "Быт в Аргентине: квартиры, отопление, коммуналка",
-      "summary": "Чем аргентинский быт отличается от российского: почему в домах нет центрального отопления и как здесь греются (газовая колонка, обогреватели, кондиционер), одинарные окна и холод зимой, дом с консьержем и expensas, коммунальные платежи, розетки, интернет и почта.",
+      "summary": "Что проверять при выборе жилья в Аргентине: тип отопления, состояние газовых приборов, утепление, размер expensas и распределение коммунальных расходов по договору.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -1745,8 +1757,8 @@
       "coordinates": null,
       "canonicalEntityId": "byt-i-zhilyo",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -1759,9 +1771,9 @@
       "sourcePath": "content/knowledge-base/dengi/byudzhet-poezdki.md",
       "sourceUrl": null,
       "title": "Бюджет поездки по Аргентине",
-      "summary": "Дневные нормы по уровням (бэкпекер ~$30-40, средний ~$70-120, комфорт от $150) и пример сметы на классические 2 недели — внутренние перелёты и Патагония определяют итоговую сумму.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "summary": "Методика расчёта бюджета поездки с отдельной проверкой жилья, транспорта, парков и экскурсий на даты путешествия.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1771,10 +1783,15 @@
       "coordinates": null,
       "canonicalEntityId": "byudzhet-poezdki",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "caba",
@@ -3160,12 +3177,12 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/certificado-de-domicilio.md",
       "sourceUrl": null,
-      "title": "Как подтвердить адрес в Аргентине: certificado de domicilio",
-      "summary": "Многие процедуры в Аргентине требуют подтверждения адреса. Резидент с DNI получает certificado de domicilio в RENAPER или полиции; иностранцу без DNI в Буэнос-Айресе оформляют его через систему TAD с двумя свидетелями. Разбираем, зачем он нужен, кто и как его выдаёт и чем отличается декларация о месте жительства.",
+      "title": "Как подтвердить адрес в Аргентине",
+      "summary": "В Аргентине нет одной справки об адресе для всех случаев: сначала уточните, какой документ принимает конкретное ведомство.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": null,
@@ -3173,8 +3190,8 @@
       "coordinates": null,
       "canonicalEntityId": "certificado-de-domicilio",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -3187,7 +3204,7 @@
       "sourcePath": "content/knowledge-base/transport/certificado-de-legalidad-prav.md",
       "sourceUrl": null,
       "title": "Certificado de legalidad водительских прав: что это и зачем",
-      "summary": "У «certificado de legalidad» водительских прав два разных смысла. Аргентинец берёт certificado de legalidad своей licencia nacional (бесплатно, онлайн), чтобы использовать её за границей или оформить процедуру в другой юрисдикции. Иностранцу, наоборот, нужна легальность его зарубежных прав (через консульство страны выдачи, с апостилем и переводом), чтобы подтвердить стаж при получении аргентинских прав.",
+      "summary": "Как не перепутать подтверждение аргентинской лицензии для другой страны с подтверждением иностранных прав для аргентинской процедуры.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -3199,8 +3216,8 @@
       "coordinates": null,
       "canonicalEntityId": "certificado-de-legalidad-prav",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -3225,8 +3242,8 @@
       "coordinates": null,
       "canonicalEntityId": "chek-list-pereezda",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -3278,8 +3295,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -3291,8 +3308,13 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "chto-est-vegetariancu",
@@ -3304,8 +3326,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -3317,8 +3339,13 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "chto-stoit-deneg-prioritety",
@@ -3330,8 +3357,8 @@
       "sourceUrl": null,
       "title": "Что реально стоит ваших денег и дней: приоритеты по Аргентине",
       "summary": "Честный разбор главных направлений Аргентины по критерию «впечатление на вложенные деньги и дни»: Перито-Морено, Игуасу, Ушуайя, Мендоса, Барилоче, Сальта/северо-запад, Буэнос-Айрес. Сколько дней и денег реально нужно, кому зайдёт, а кому нет, сезонность, где настоящее вау, а где переплата за раскрученность. Помогает расставить приоритеты под ваш срок и бюджет.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -3343,8 +3370,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "chto-takoe-dni-i-cuil",
@@ -3438,7 +3470,7 @@
       "canonicalEntityId": "chto-takoe-prekariya",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -3463,8 +3495,8 @@
       "coordinates": null,
       "canonicalEntityId": "chto-takoe-sube",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -4967,12 +4999,12 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/dni-cuil.md",
       "sourceUrl": null,
-      "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца",
-      "summary": "Порядок получения документов после одобрения резиденции: DNI в RENAPER, затем CUIL (найм) или CUIT (самозанятость, счета, бизнес) — с учётом упразднения CDI в 2026 году.",
+      "title": "DNI, CUIL и CUIT: что нужно иностранцу",
+      "summary": "DNI удостоверяет личность, CUIL используется в трудовой и социальной системе, а CUIT — в налоговых процедурах. Важно не создавать дубликаты и вовремя объединить временный и окончательный CUIL.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "ru",
+        "title": "mixed",
         "summary": "ru"
       },
       "regionId": null,
@@ -4981,7 +5013,7 @@
       "canonicalEntityId": "dni-cuil",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-02",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -5006,8 +5038,8 @@
       "coordinates": null,
       "canonicalEntityId": "dni-cuil-cuit-putanitsa",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-06-30",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -5020,7 +5052,7 @@
       "sourcePath": "content/knowledge-base/transport/dokumenty-dlya-poezdki-na-avto.md",
       "sourceUrl": null,
       "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине",
-      "summary": "Обязательный комплект для управления автомобилем: действующие права (или иностранные + МВУ), документ на машину (cédula verde, а на чужую — cédula azul или доверенность), обязательная страховка (seguro), действующий техосмотр VTV и оплаченный налог patente. Отдельно — что нужно, если машина не ваша и если вы выезжаете в Чили.",
+      "summary": "Актуальный комплект документов для автомобиля, правила для иностранного водителя и новый порядок авторизации на чужую машину без обязательной cédula azul.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -5032,8 +5064,8 @@
       "coordinates": null,
       "canonicalEntityId": "dokumenty-dlya-poezdki-na-avto",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -5895,7 +5927,7 @@
       "sourcePath": "content/knowledge-base/svyaz/esim-i-svyaz.md",
       "sourceUrl": null,
       "title": "eSIM и связь в Аргентине",
-      "summary": "Туристу проще eSIM (Airalo, Holafly) — активация за минуту по прилёте; релоканту на долгий срок выгоднее локальная SIM (Claro, Movistar, Personal), особенно после получения DNI.",
+      "summary": "Как выбрать связь в Аргентине: проверить совместимость eSIM, сравнить актуальные предложения операторов и уточнить требования к документам перед подключением.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -5907,8 +5939,8 @@
       "coordinates": null,
       "canonicalEntityId": "esim-i-svyaz",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 6,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -6138,9 +6170,9 @@
       "sourcePath": "content/knowledge-base/lichnyy-opyt/falshivye-policejskie-i-obmenniki.md",
       "sourceUrl": null,
       "title": "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться",
-      "summary": "Уличные обменники с курсом заметно выше рыночного и лже-полицейские, «проверяющие» наличные, — два классических сценария, на которые до сих пор попадаются туристы и новые релоканты.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "summary": "Памятка о безопасном обмене денег и действиях при подозрительном обращении от человека, представляющегося полицейским.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -6150,10 +6182,15 @@
       "coordinates": null,
       "canonicalEntityId": "falshivye-policejskie-i-obmenniki",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-06-30",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "federacion",
@@ -6548,10 +6585,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/futbol-kak-popast-bez-skama.md",
       "sourceUrl": null,
-      "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это меняет весь план",
-      "summary": "Система socios закрывает прямую продажу билетов иностранцам на сайте клуба — практический путь на трибуну идёт через тур-операторов и hospitality-пакеты, а не через прямую покупку.",
-      "publicationStatus": "quarantined",
-      "indexable": false,
+      "title": "Как купить билет на футбол в Аргентине без риска",
+      "summary": "Правила продажи зависят от клуба и матча: сначала проверяйте официальный сайт, а посредника используйте только при прозрачных условиях и подтверждённом происхождении билета.",
+      "publicationStatus": "published",
+      "indexable": true,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -6561,18 +6598,10 @@
       "coordinates": null,
       "canonicalEntityId": "futbol-kak-popast-bez-skama",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-06-30",
-      "severity": "critical",
-      "issues": [
-        {
-          "code": "mixed_script_word",
-          "severity": "critical",
-          "values": [
-            "hospitality-пакеты"
-          ]
-        }
-      ]
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
+      "severity": "none",
+      "issues": []
     },
     {
       "id": "gaiman",
@@ -7461,12 +7490,12 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/svyaz/gosudarstvennye-prilozheniya.md",
       "sourceUrl": null,
-      "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA",
-      "summary": "Цифровая инфраструктура жизни в Аргентине держится на трёх государственных приложениях. Mi Argentina — единый профиль гражданина с документами и цифровыми правами (licencia digital с QR). miBA — городской профиль Буэнос-Айреса для столичных процедур. ARCA (бывшая AFIP) — налоги, clave fiscal и монотрибуто. Все они требуют DNI/CUIL, то есть доступны релоканту, а не туристу.",
+      "title": "Mi Argentina: государственные цифровые документы",
+      "summary": "Что можно увидеть в Mi Argentina, как работает цифровое водительское удостоверение и где искать документы автомобиля.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": null,
@@ -7475,7 +7504,7 @@
       "canonicalEntityId": "gosudarstvennye-prilozheniya",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -7500,8 +7529,8 @@
       "coordinates": null,
       "canonicalEntityId": "govoryat-li-v-argentine-po-anglijski",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -7513,10 +7542,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/grazhdanstvo.md",
       "sourceUrl": null,
-      "title": "Гражданство Аргентины: натурализация и правила 2026",
-      "summary": "После реформы DNU 366/2025 натурализация — административная процедура через Миграционную службу (DNM), а не суд: нужно 2 года легальной непрерывной резиденции без выездов.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Гражданство Аргентины: где проверять действующую процедуру",
+      "summary": "После реформы 2025 года маршрут натурализации изменился. Перед любыми действиями проверяйте актуальные требования и цифровой сервис Dirección Nacional de Migraciones.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7527,9 +7556,14 @@
       "canonicalEntityId": "grazhdanstvo",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-02",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "gualeguaychu",
@@ -7861,8 +7895,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/inflyatsiya-i-ekonomika.md",
       "sourceUrl": null,
-      "title": "Инфляция и экономика Аргентины простыми словами",
-      "summary": "Почему в Аргентине высокая инфляция, зачем местные хранят сбережения в долларах, что изменили реформы 2025 года (отмена cepo и схлопывание курсов) и как всё это влияет на путешественника и релоканта.",
+      "title": "Инфляция в Аргентине: как читать цены и статистику",
+      "summary": "Практичный способ работать с меняющимися ценами: использовать официальный IPC INDEC, фиксировать месяц и не смешивать инфляцию, валютный курс и стоимость конкретной услуги.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -7875,7 +7909,7 @@
       "canonicalEntityId": "inflyatsiya-i-ekonomika",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-03",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8120,8 +8154,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/kultura/istoriya-argentiny.md",
       "sourceUrl": null,
-      "title": "Краткая история Аргентины для путешественника",
-      "summary": "Обзорная хронология страны — от коренных народов и испанской колонизации через независимость 1816 года, великие волны иммиграции, эпоху Перона и Эвиты, военную диктатуру 1976-83 и кризис 2001 года — чтобы понимать контекст мест и культуры, которые видишь в поездке.",
+      "title": "История Аргентины: три опорные темы для путешественника",
+      "summary": "Краткий проверенный контекст: независимость 1816 года, массовая иммиграция 1880–1930 годов и государственный террор последней диктатуры 1976–1983 годов.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -8133,8 +8167,8 @@
       "coordinates": null,
       "canonicalEntityId": "istoriya-argentiny",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-03",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8493,8 +8527,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/transport/kak-dobratsya-iz-rossii.md",
       "sourceUrl": null,
-      "title": "Как добраться из России и СНГ в Аргентину",
-      "summary": "Прямых рейсов нет — путь занимает примерно 26-32 часа с одной-двумя пересадками через Дубай, Стамбул, Доху или Аддис-Абебу; виза для граждан РФ не нужна (безвиз до 90 дней).",
+      "title": "Как добраться из России и стран СНГ в Аргентину",
+      "summary": "Как собрать авиамаршрут до Буэнос-Айреса без устаревших расписаний: единый билет, проверка пересадок, багажа, транзитных правил и условий въезда.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -8506,8 +8540,8 @@
       "coordinates": null,
       "canonicalEntityId": "kak-dobratsya-iz-rossii",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8551,7 +8585,7 @@
       "sourcePath": "content/knowledge-base/dengi/kak-menyat-valyutu.md",
       "sourceUrl": null,
       "title": "Как менять валюту в Аргентине: курс, blue, MEP, карты",
-      "summary": "После отмены валютных ограничений (cepo) в апреле 2025 года разрыв курсов почти исчез — карта стала выгоднее наличных для большинства, кроме россиян, чьи карты РФ не работают за рубежом.",
+      "summary": "Как безопасно обменивать деньги в Аргентине: пользоваться банками и уполномоченными обменными организациями, сравнивать курс и комиссии на дату операции и учитывать правила ввоза наличных.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -8563,8 +8597,8 @@
       "coordinates": null,
       "canonicalEntityId": "kak-menyat-valyutu",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-03",
+      "sourceCount": 6,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8620,8 +8654,8 @@
       "coordinates": null,
       "canonicalEntityId": "kak-perevezti-kota-ili-sobaku",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8703,8 +8737,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/transport/kak-poluchit-prava-v-argentine.md",
       "sourceUrl": null,
-      "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля",
-      "summary": "Полное руководство для иностранцев: можно ли ездить с российскими и другими иностранными правами, кому доступен обмен (canje), как получить аргентинскую лицензию с нуля и какие документы нужны — с пошаговым порядком для Буэнос-Айреса (CABA).",
+      "title": "Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля",
+      "summary": "Какие иностранные права признаются временно, кому доступен обмен и как иностранцу подготовиться к получению местной лицензии на примере CABA.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -8716,8 +8750,8 @@
       "coordinates": null,
       "canonicalEntityId": "kak-poluchit-prava-v-argentine",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8743,7 +8777,7 @@
       "canonicalEntityId": "kak-snyat-kvartiru-bez-garanta",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8768,8 +8802,8 @@
       "coordinates": null,
       "canonicalEntityId": "kakie-dokumenty-vezti-s-soboj",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -8901,8 +8935,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -8914,8 +8948,13 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kakoj-otrub-steika-zakazat",
@@ -8957,7 +8996,7 @@
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/kaminito-la-boka.md",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Colorful_houses_of_La_Boca_01.jpg",
       "title": "Каминито и квартал Ла-Бока",
-      "summary": "Пешеходная разноцветная улица-музей в портовом районе Ла-Бока, где зародился Буэнос-Айрес и танго, в двух шагах от стадиона «Ла Бомбонера» клуба Boca Juniors — самая яркая, но и самая небезопасная за пределами туристической зоны достопримечательность столицы.",
+      "summary": "Короткая пешеходная улица-музей с яркими фасадами и работами художников в районе Ла-Бока; маршрут лучше заранее ограничить обозначенной туристической зоной.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -8973,7 +9012,7 @@
       "canonicalEntityId": "kaminito-la-boka",
       "duplicateGroup": null,
       "sourceCount": 4,
-      "verifiedAt": "2026-07-02",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -9086,8 +9125,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/zhile/kemping-i-palatki.md",
       "sourceUrl": null,
-      "title": "Кемпинг и палатки в Аргентине",
-      "summary": "Как устроен кемпинг в Аргентине: организованные кемпинги с сервисом и «дикий» camping agreste в нацпарках, правила и разрешения APN, специфика Патагонии (ветер, брони, сезон), снаряжение и безопасность. Практичный и недорогой способ путешествовать по природным регионам.",
+      "title": "Кемпинг в национальных парках Аргентины",
+      "summary": "Как различаются кемпинги APN, когда нужна бронь и какие правила действуют для огня, мусора и выбора разрешённой площадки.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -9099,8 +9138,8 @@
       "coordinates": null,
       "canonicalEntityId": "kemping-i-palatki",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-06",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -9237,8 +9276,8 @@
       "coordinates": null,
       "canonicalEntityId": "kogda-uchebnyj-god-v-argentine",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -9308,10 +9347,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/svyaz/kovorkingi-i-rabota-nomada.md",
       "sourceUrl": null,
-      "title": "Коворкинги и удалённая работа в Аргентине",
-      "summary": "Инфраструктура для цифрового кочевника: где искать коворкинги и кафе с Wi-Fi (Палермо, Вилья-Креспо в Буэнос-Айресе), скорость интернета, часовой пояс GMT-3 для работы на Европу/США, розетки и напряжение.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Коворкинги и удалённая работа: безопасная проверка условий",
+      "summary": "Практический чек-лист для удалённой работы и официальная рамка временной резиденции цифрового кочевника.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -9321,10 +9360,15 @@
       "coordinates": null,
       "canonicalEntityId": "kovorkingi-i-rabota-nomada",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-03",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kuhnya",
@@ -10433,7 +10477,7 @@
       "sourcePath": "content/knowledge-base/lichnyy-opyt/lyubimoe-mesto-ne-iz-putevoditelej.md",
       "sourceUrl": null,
       "title": "Мой любимый район Буэнос-Айреса — тихий Parque Chas",
-      "summary": "Личное: любимым районом Ивана стал не туристический Палермо и не Реколета, а тихий Parque Chas — единственный уголок Буэнос-Айреса, где улицы расходятся кругами, а не привычной сеткой квадратов.",
+      "summary": "Личная история Ивана о тихом Parque Chas: круговые улицы, спокойные жилые кварталы и ощущение города, которое оказалось ближе привычных туристических районов.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -10722,10 +10766,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/medicina/medicina-i-strahovka.md",
       "sourceUrl": null,
-      "title": "Медицина и страховка в Аргентине",
-      "summary": "Государственная медицина в Аргентине бесплатна даже для иностранцев, но туристам и релокантам всё равно стоит оформлять страховку — частный сектор быстрее и привычнее по сервису.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Медицина и медицинская страховка в Аргентине",
+      "summary": "Что изменил Decreto 366/2025: страховка при въезде, гарантированная неотложная помощь и разные условия планового лечения для постоянных резидентов и других иностранцев.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -10736,9 +10780,14 @@
       "canonicalEntityId": "medicina-i-strahovka",
       "duplicateGroup": null,
       "sourceCount": 4,
-      "verifiedAt": "2026-06-30",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "mendoza",
@@ -10837,8 +10886,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/kultura/mentalitet-i-etiket.md",
       "sourceUrl": null,
-      "title": "Менталитет и этикет аргентинцев: как здесь принято",
-      "summary": "Как устроено повседневное общение в Аргентине: приветствие поцелуем в щёку (даже между мужчинами), обращение на vos, гибкое отношение ко времени (mañana, tranquilo), теплота и телесность в контакте, культура застолья и асадо, что считается вежливым и что удивляет русских. Практический этикет для тех, кто хочет не выглядеть чужим.",
+      "title": "Повседневный этикет в Аргентине: приветствия, vos, мате и асадо",
+      "summary": "Практичный и бережный разбор распространённых форм общения в Аргентине без стереотипов: как выбрать приветствие, когда звучит vos и как устроены совместные мате и асадо.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -10850,8 +10899,8 @@
       "coordinates": null,
       "canonicalEntityId": "mentalitet-i-etiket",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -10966,8 +11015,8 @@
       "sourceUrl": null,
       "title": "Мифы об Аргентине, в которые пора перестать верить",
       "summary": "Аргентина обросла устойчивыми мифами: тут всегда тепло, жизнь почти даром, танго на каждом углу, вегетарианцу нечего есть, повсюду опасно, а испанский такой же, как в Испании. Разбираем популярные заблуждения и заменяем их тем, как есть на самом деле.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -10979,8 +11028,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "minitrekking-sobre-el-glaciar-perito-moreno",
@@ -11214,8 +11268,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/motochorros-telefon-na-ulitse.md",
       "sourceUrl": null,
-      "title": "Телефон в руке у края тротуара — самая частая ошибка туриста в Буэнос-Айресе",
-      "summary": "Motochorros (воры на мотоциклах, выхватывающие вещи на ходу) — конкретный и предсказуемый риск, а не абстрактная «опасность большого города».",
+      "title": "Как снизить риск кражи телефона и вещей в Буэнос-Айресе",
+      "summary": "Практичные меры предосторожности в большом городе: держать сумку закрытой и в поле зрения, заранее защитить данные телефона и знать экстренный номер.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -11227,8 +11281,8 @@
       "coordinates": null,
       "canonicalEntityId": "motochorros-telefon-na-ulitse",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-06-30",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -11280,8 +11334,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -11291,10 +11345,15 @@
       "coordinates": null,
       "canonicalEntityId": "mozhno-li-delat-vizaran",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
+      "severity": "high",
+      "issues": [
+        {
+          "code": "thin_content",
+          "severity": "high"
+        }
+      ]
     },
     {
       "id": "mozhno-li-doehat-do-ushuaji-na-mashine",
@@ -11343,8 +11402,8 @@
       "coordinates": null,
       "canonicalEntityId": "mozhno-li-ezdit-po-inostrannym-pravam",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -11404,8 +11463,8 @@
       "coordinates": null,
       "canonicalEntityId": "mozhno-li-pit-vodu-iz-krana",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -11431,7 +11490,7 @@
       "canonicalEntityId": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -11471,8 +11530,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -11482,10 +11541,15 @@
       "coordinates": null,
       "canonicalEntityId": "mozhno-li-uchitsya-v-universitete-besplatno",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
+      "severity": "high",
+      "issues": [
+        {
+          "code": "thin_content",
+          "severity": "high"
+        }
+      ]
     },
     {
       "id": "mozhno-li-uvidet-lednik-bez-trekkinga",
@@ -11539,8 +11603,8 @@
       "coordinates": null,
       "canonicalEntityId": "mozhno-li-vodit-po-rossijskim-pravam",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -11730,8 +11794,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/nalogi-i-monotributo.md",
       "sourceUrl": null,
-      "title": "Налоги и монотрибуто в Аргентине для релоканта",
-      "summary": "Монотрибуто — упрощённый режим для самозанятых и мелкого бизнеса, где один месячный платёж покрывает налог, пенсионный взнос и медстраховку; плюс базовая логика подоходного налога, налогового резидентства и двойного налогообложения для тех, кто остаётся надолго.",
+      "title": "Монотрибуто в Аргентине: категории и безопасная проверка",
+      "summary": "Что подтверждает актуальная таблица ARCA: категории A–K, параметры классификации и состав ежемесячного платежа. Без универсального налогового совета для иностранца.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -11743,8 +11807,8 @@
       "coordinates": null,
       "canonicalEntityId": "nalogi-i-monotributo",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-03",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -12582,10 +12646,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/otkrytie-biznesa.md",
       "sourceUrl": null,
-      "title": "Открытие бизнеса и самозанятость в Аргентине",
-      "summary": "Как иностранцу легально работать на себя и открыть дело в Аргентине: налоговый номер CUIT, три пути — монотрибуто (для фрилансеров и малого дела), автономо (общий режим) и компания (SAS/SRL/SA). Что выбрать, сколько стоит и зачем нужен бухгалтер (contador).",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Открытие бизнеса в Аргентине: выбор формы и проверка требований",
+      "summary": "Безопасный порядок выбора между личной деятельностью и компанией, с учётом юрисдикции регистрации, миграционного статуса, налогов и банковской проверки.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -12596,9 +12660,14 @@
       "canonicalEntityId": "otkrytie-biznesa",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "pampa",
@@ -13606,7 +13675,7 @@
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-rio-pilcomayo.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo",
       "title": "Национальный парк Рио-Пилькомайо",
-      "summary": "Официальный нацпарк APN на востоке провинции Формоса, вдоль реки Пилькомайо у границы с Парагваем — пальмовые саванны, водно-болотные угодья Рамсар, кайманы и капибары, менее известный аналог Ибера.",
+      "summary": "Водно-болотный национальный парк в Формосе площадью 51 889 га: Sitio Ramsar, Laguna Blanca, два портала и грунтовые подъезды, состояние которых нужно проверять после дождей.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -13614,15 +13683,15 @@
         "summary": "ru"
       },
       "regionId": "litoral",
-      "province": "Формоса",
+      "province": "Formosa",
       "coordinates": {
-        "lat": -25.0667,
-        "lng": -58.1167
+        "lat": -25.0833,
+        "lng": -58.1333
       },
       "canonicalEntityId": "parque-nacional-rio-pilcomayo",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-07",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -13665,8 +13734,8 @@
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-tierra-del-fuego",
       "title": "национальный парк Огненная Земля",
       "summary": "Самый южный национальный парк Аргентины у Ушуайи: патагонские леса, залив Лапатайя и «поезд на край света».",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -13681,8 +13750,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "parque-natural-valle-fertil",
@@ -14278,10 +14352,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/pereezd-s-minimalnym-byudzhetom.md",
       "sourceUrl": null,
-      "title": "Переезд в Аргентину с минимальным бюджетом ($6-8 тысяч)",
-      "summary": "Честный разбор для того, кто хочет переехать в Аргентину один с $6-8 тысячами, слабым испанским и без удалённой работы: реально ли это, на сколько хватит денег, план выживания первого месяца, где жить дёшево, как быстро начать зарабатывать, какие профессии доступны без языка и какие риски приведут к тому, что деньги кончатся раньше, чем появится доход. Без розовых очков.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Переезд в Аргентину с ограниченным бюджетом: как посчитать запас",
+      "summary": "Методика личного расчёта: жильё, базовые расходы, страховка, стартовые платежи и резерв на выезд. Без обещания, что одной фиксированной суммы хватит каждому.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -14291,10 +14365,15 @@
       "coordinates": null,
       "canonicalEntityId": "pereezd-s-minimalnym-byudzhetom",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "perevoz-veshchey-i-pitomtsev",
@@ -14304,8 +14383,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/perevoz-veshchey-i-pitomtsev.md",
       "sourceUrl": null,
-      "title": "Перевоз личных вещей и домашних животных при переезде в Аргентину",
-      "summary": "Как ввезти личные вещи без пошлины по режиму menaje de casa и провезти собаку или кошку — микрочип, прививки, сертификаты и карантин (точнее, его отсутствие при соблюдении требований). Плюс жизнь с питомцем на месте: ветеринары, где покупать корм, стоимость содержания, выгул и аренда с животными.",
+      "title": "Переезд с вещами и домашними животными",
+      "summary": "Личные вещи и животные проходят по разным правилам: багаж проверяет таможня, а ввоз собак и кошек — SENASA.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -14317,8 +14396,8 @@
       "coordinates": null,
       "canonicalEntityId": "perevoz-veshchey-i-pitomtsev",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -14359,8 +14438,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/pervyj-mesyac-plan.md",
       "sourceUrl": null,
-      "title": "Первый месяц в Аргентине по дням: пошаговый план",
-      "summary": "Дневной план действий на первый месяц после переезда в Буэнос-Айрес: что сделать в день прилёта, в первую неделю (SIM, SUBE, наличные, жильё), во вторую (счёт-финтех, старт документов, быт) и к концу месяца (долгосрочная аренда, испанский, рутина). Практическая последовательность поверх общего чек-листа переезда.",
+      "title": "Первый месяц в Аргентине: практический план",
+      "summary": "Гибкий план первого месяца: связь и транспорт, законный обмен денег, временное жильё, выбор миграционного основания, CUIL и банковский счёт.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -14372,8 +14451,8 @@
       "coordinates": null,
       "canonicalEntityId": "pervyj-mesyac-plan",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 8,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -14816,8 +14895,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/plan-podgotovki-6-mesyacev.md",
       "sourceUrl": null,
-      "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн",
-      "summary": "Помесячный таймлайн подготовки к переезду в Аргентину со стороны России: что делать за 6, 4-5, 2-3 месяца, за месяц и в последнюю неделю. Документы и апостиль, доверенности, финансы и валюта, налоговые и имущественные дела, вещи и питомцы, дети и школа, билеты и жильё на старт. Дополняет чек-лист переезда таймингом «до отъезда».",
+      "title": "Подготовка к переезду в Аргентину за 6 месяцев",
+      "summary": "Гибкий таймлайн подготовки: основание резиденции, индивидуальный комплект документов, апостиль или легализация, перевод в Аргентине, финансы, страховка и первые недели.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -14829,8 +14908,8 @@
       "coordinates": null,
       "canonicalEntityId": "plan-podgotovki-6-mesyacev",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -14902,8 +14981,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/puteshestvie/podgotovka-k-poezdke.md",
       "sourceUrl": null,
-      "title": "Подготовка к поездке в Аргентину: чек-лист",
-      "summary": "Единая точка входа для планирования поездки: виза и документы, деньги, когда ехать по регионам (таблица сезонности), что собрать в чемодан под каждый регион (Патагония, Игуасу, Анды, Буэнос-Айрес), связь, здоровье и бронирования. Со ссылками на подробные записи по каждому пункту.",
+      "title": "Подготовка к поездке в Аргентину: проверенный чек-лист",
+      "summary": "Чек-лист для туриста: условия въезда, страховка, законные способы оплаты, здоровье, сезонность маршрута и документы, которые нужно сохранить офлайн.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -14915,8 +14994,8 @@
       "coordinates": null,
       "canonicalEntityId": "podgotovka-k-poezdke",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 7,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -14955,7 +15034,7 @@
       "sourcePath": "content/knowledge-base/transport/pokupka-avtomobilya.md",
       "sourceUrl": null,
       "title": "Покупка автомобиля в Аргентине",
-      "summary": "Как иностранцу купить и оформить автомобиль в Аргентине: проверка истории (informe de dominio), техосмотр VTV, переход права через форму 08 в Registro del Automotor, документы (título, cédula verde), налоги и расходы на содержание (patente, страховка, топливо, парковки), надёжные марки.",
+      "summary": "Как проверить юридическое состояние автомобиля и оформить переход права через DNRPA; отдельные требования для иностранца без residencia.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -14967,8 +15046,8 @@
       "coordinates": null,
       "canonicalEntityId": "pokupka-avtomobilya",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -14981,9 +15060,9 @@
       "sourcePath": "content/knowledge-base/zhile/pokupka-nedvizhimosti.md",
       "sourceUrl": null,
       "title": "Покупка недвижимости в Аргентине для иностранца",
-      "summary": "Иностранец может купить недвижимость в Аргентине наравне с гражданами — без резиденции и визы. Как устроена сделка (boleto → escritura у нотариуса-эскрибано), почему платят наличными долларами, сколько составляют закрывающие расходы и налоги и на что смотреть, чтобы не потерять деньги.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "summary": "Право иностранца купить недвижимость, роль escribano, CDI, escritura pública и отдельные ограничения для сельской земли. Без универсальных процентов и схемы расчёта наличными.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -14993,10 +15072,15 @@
       "coordinates": null,
       "canonicalEntityId": "pokupka-nedvizhimosti",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 7,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "pokupki-i-tax-free",
@@ -15006,8 +15090,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pokupki/pokupki-i-tax-free.md",
       "sourceUrl": null,
-      "title": "Покупки и tax free в Аргентине",
-      "summary": "Возврат НДС туристам в Аргентине с 2026 года переведён на цифровую систему ARCA, рынки вроде Сан-Тельмо — лучшее место за кожей, мате и сувенирами, а главный риск при покупках — обмен валюты и завышенные цены, не подделки.",
+      "title": "Tax free в Аргентине: как оформить возврат",
+      "summary": "Проверенный порядок ARCA: покупка аргентинских товаров в участвующем магазине, документы и таможенная проверка при выезде.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -15019,8 +15103,8 @@
       "coordinates": null,
       "canonicalEntityId": "pokupki-i-tax-free",
       "duplicateGroup": null,
-      "sourceCount": 5,
-      "verifiedAt": "2026-07-03",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -15097,7 +15181,7 @@
       "sourcePath": "content/knowledge-base/transport/posle-dtp.md",
       "sourceUrl": null,
       "title": "Что делать после ДТП в Аргентине",
-      "summary": "Пошагово после аварии: безопасность и раненые (911), обмен данными (права, страховка, patente, свидетели), фотофиксация места, полицейская denuncia при ущербе или пострадавших и обязательная denuncia в страховую в течение 72 часов — без неё полис не срабатывает.",
+      "summary": "Безопасная последовательность после столкновения: остановиться, вызвать помощь при пострадавших, обменяться данными и уведомить страховую в установленный срок.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -15109,8 +15193,8 @@
       "coordinates": null,
       "canonicalEntityId": "posle-dtp",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -15174,8 +15258,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/priznanie-diploma.md",
       "sourceUrl": null,
-      "title": "Признание иностранного диплома в Аргентине (гомологация)",
-      "summary": "Как признать российский (или иной иностранный) диплом в Аргентине: разница между школьным и вузовским признанием, для каких профессий гомологация обязательна (врачи, юристы, инженеры и др.), а где диплом принимают и так (IT, маркетинг), процедура через Министерство образования и университеты (например, UBA), документы, сроки и где особенно сложно. Дополняет запись про школу для детей.",
+      "title": "Как признать иностранный диплом в Аргентине",
+      "summary": "Маршрут зависит от уровня образования, страны выдачи и цели: университетский диплом, школьный аттестат и профессиональная лицензия оформляются по разным процедурам.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -15187,8 +15271,8 @@
       "coordinates": null,
       "canonicalEntityId": "priznanie-diploma",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -15200,10 +15284,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/medicina/provoz-lekarstv.md",
       "sourceUrl": null,
-      "title": "Провоз лекарств через границу Аргентины",
-      "summary": "Личные лекарства ввозить можно, но на границе могут попросить рецепт и назначение врача, а количество должно быть разумным — по длительности поездки. Для препаратов с психотропными/наркотическими веществами требования строже: легализованный рецепт с активным веществом и дозировкой, иногда разрешение ANMAT. Пересылать такие препараты почтой нельзя.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Ввоз лекарств в Аргентину для личного использования",
+      "summary": "Как подготовить рецепт, упаковку и документы и почему для незарегистрированных, психотропных и контролируемых препаратов требуется отдельная проверка ANMAT и таможни.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -15213,10 +15297,15 @@
       "coordinates": null,
       "canonicalEntityId": "provoz-lekarstv",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "pueblos-de-la-provincia-de-buenos-aires",
@@ -15862,8 +15951,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/rabochaya-viza.md",
       "sourceUrl": null,
-      "title": "Рабочая резиденция в Аргентине: наём местным работодателем",
-      "summary": "Углублённый разбор резиденции по трудоустройству (trabajador migrante): пре-контракт, требование RENURE к работодателю, отличие от визы цифрового кочевника и реальная проблема замкнутого круга «нужна работа для резиденции — нужна резиденция для работы».",
+      "title": "Резиденция по работе в Аргентине",
+      "summary": "Для работы по найму существует residencia temporaria como trabajador migrante: работодатель и предварительный трудовой договор входят в официальный комплект.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -15875,8 +15964,8 @@
       "coordinates": null,
       "canonicalEntityId": "rabochaya-viza",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -15888,10 +15977,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/rabota-i-poisk-raboty.md",
       "sourceUrl": null,
-      "title": "Работа в Аргентине: рынок труда, зарплаты и как искать",
-      "summary": "Как устроен рынок труда в Аргентине для иностранца: какие профессии востребованы, сколько реально зарабатывают, где искать вакансии (LinkedIn, Bumeran, Computrabajo, ZonaJobs, Workana), нужен ли испанский, какие варианты есть без языка, что с удалёнкой и как оформить работу легально.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Работа в Аргентине: статус, CUIL и поиск вакансий",
+      "summary": "Проверяемая основа поиска работы: право работать с residencia precaria и CUIL, отдельный маршрут trabajador migrante с RENURE и корректная проверка зарплаты без выдуманных долларов и рейтингов профессий.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -15901,10 +15990,15 @@
       "coordinates": null,
       "canonicalEntityId": "rabota-i-poisk-raboty",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "rafaela",
@@ -16134,8 +16228,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/raskhozhdeniya-dni-cuit-cuil.md",
       "sourceUrl": null,
-      "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить",
-      "summary": "У иностранца имя, фамилия или дата рождения в DNI, CUIL и CUIT нередко расходятся — из-за транслитерации, двух фамилий или формата даты. Это ломает банковские и налоговые операции. Разбираем принцип «DNI — источник истины» и порядок исправления: сначала DNI (RENAPER/Registro Civil), затем CUIL (ANSES), затем CUIT (ARCA).",
+      "title": "Расхождения в DNI, CUIL и CUIT: куда обращаться",
+      "summary": "Ошибки исправляют в ведомстве, которое ведёт конкретную запись: CUIL и персональные данные — через ANSES, CUIT и налоговые данные — через ARCA.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -16148,7 +16242,7 @@
       "canonicalEntityId": "raskhozhdeniya-dni-cuit-cuil",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -17012,10 +17106,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/medicina/rody-i-beremennost.md",
       "sourceUrl": null,
-      "title": "Роды и беременность в Аргентине: полное руководство",
-      "summary": "Как устроены беременность и роды в Аргентине для иностранцев: государственное (бесплатное) и частное (prepaga) ведение, выбор больницы, стоимость, документы новорождённого, автоматическое гражданство ребёнка по праву почвы и что это (после DNU 366/2025) даёт родителям, плюс типичные ошибки.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Беременность и роды в Аргентине: медицина и документы",
+      "summary": "Проверяемая основа: гражданство ребёнка по месту рождения, регистрация рождения и необходимость отдельно подтвердить медицинское покрытие и миграционный маршрут родителей.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -17025,10 +17119,15 @@
       "coordinates": null,
       "canonicalEntityId": "rody-i-beremennost",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "rody-v-argentine",
@@ -17052,7 +17151,7 @@
       "canonicalEntityId": "rody-v-argentine",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -17131,10 +17230,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/kultura/rossiya-vs-argentina.md",
       "sourceUrl": null,
-      "title": "Россия и Аргентина: чем жизнь здесь отличается",
-      "summary": "Честное сравнение жизни в России и Аргентине по вещам, которые сильнее всего чувствует переехавший: климат и отопление, темп и бюрократия, деньги и инфляция, устройство города, отношение людей, язык и безопасность. Не «где лучше», а «к чему готовиться».",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Россия и Аргентина: как сравнить жизнь без стереотипов",
+      "summary": "Методика личного сравнения двух стран по городу, жилью, доходу, документам, медицине и транспорту — без утверждений о характере народов и выдуманных средних.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -17144,10 +17243,15 @@
       "coordinates": null,
       "canonicalEntityId": "rossiya-vs-argentina",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "ruinas-de-quilmes",
@@ -18595,8 +18699,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/sdacha-nedvizhimosti-v-arendu.md",
       "sourceUrl": null,
-      "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги",
-      "summary": "Как иностранцу-собственнику сдавать недвижимость в Аргентине и что с налогами: важное изменение 2026 — доход от долгосрочной ЖИЛОЙ аренды освобождён от подоходного налога (Ganancias), а вот temporary/Airbnb и коммерческая аренда — нет; плюс налог на имущество (Bienes Personales), монотрибуто-локация, разница резидент/нерезидент, доходность и риски. Дополняет запись о покупке недвижимости.",
+      "title": "Сдача недвижимости в аренду: регистрация и документы",
+      "summary": "Официальные обязанности собственника перед ARCA: регистрация, договор, счета и выбор режима по фактическим параметрам. Без обещания универсальной налоговой льготы.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -18608,8 +18712,8 @@
       "coordinates": null,
       "canonicalEntityId": "sdacha-nedvizhimosti-v-arendu",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -18761,8 +18865,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/shkola-dlya-detey.md",
       "sourceUrl": null,
-      "title": "Школа для детей в Аргентине: система образования для семей релокантов",
-      "summary": "Практический гайд по зачислению ребёнка в аргентинскую школу — структура jardín/primaria/secundaria, разница гос/частных школ, документы для иностранца и почему учебный год с марта влияет на дату переезда.",
+      "title": "Как устроить ребёнка в школу в Аргентине",
+      "summary": "Федеральный закон защищает доступ детей мигрантов к обязательному образованию даже без аргентинского DNI, а запись и пакет документов определяет провинция или CABA.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -18774,8 +18878,8 @@
       "coordinates": null,
       "canonicalEntityId": "shkola-dlya-detey",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -18787,8 +18891,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/transport/shtrafy-i-scoring.md",
       "sourceUrl": null,
-      "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине",
-      "summary": "Как проверить и оплатить дорожные штрафы (infracciones) в Аргентине, как работает балльная система scoring (у водителя есть исходный запас баллов, он уменьшается за серьёзные нарушения) и почему суммы считают не в песо, а в «условных единицах» (UF), привязанных к цене бензина. С 2026 года коды нарушений унифицированы по всей стране.",
+      "title": "Штрафы, баллы и проверка нарушений за рулём в Аргентине",
+      "summary": "Как проверить дорожные нарушения в национальной и местной системе и как устроен Scoring Nacional с исходными 20 баллами.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -18800,8 +18904,8 @@
       "coordinates": null,
       "canonicalEntityId": "shtrafy-i-scoring",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -18995,12 +19099,12 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/medicina/sistema-zdravoohraneniya.md",
       "sourceUrl": null,
-      "title": "Система здравоохранения Аргентины",
-      "summary": "Как устроена медицина в Аргентине и что это значит для путешественника и релоканта: три уровня системы (государственные больницы público, страховки по работе obra social и частные планы prepaga), важное изменение DNU 366/2025 для временных резидентов, экстренная помощь 107, аптеки. Экстренная помощь бесплатна всем, плановая для приезжих — по страховке.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Система здравоохранения Аргентины: público, obra social и prepaga",
+      "summary": "Как различать государственные учреждения, национальные obras sociales и частные prepagas и почему права иностранца на экстренную и плановую помощь нужно проверять отдельно.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "ru",
+        "title": "mixed",
         "summary": "ru"
       },
       "regionId": null,
@@ -19009,9 +19113,14 @@
       "canonicalEntityId": "sistema-zdravoohraneniya",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-04",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "skam-s-falshivoj-policiej",
@@ -19201,8 +19310,8 @@
       "coordinates": null,
       "canonicalEntityId": "skolko-nalichnyh-mozhno-vvezti",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -19306,8 +19415,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/soobshestvo-i-adaptaciya.md",
       "sourceUrl": null,
-      "title": "Где найти своих и как пережить адаптацию в Аргентине",
-      "summary": "Тёплый и честный разбор для первых месяцев: где найти русскоязычное сообщество (чаты, группы, специалисты на русском — юристы, бухгалтеры, врачи, риелторы), русские магазины и продукты; и про саму адаптацию — почему тяжело от языка, бюрократии и оторванности, как найти баланс между «русским пузырём» и интеграцией, и где искать поддержку. Без идеализации, с заботой.",
+      "title": "Где найти своих и как устроить адаптацию в Аргентине",
+      "summary": "Практический план поиска людей и поддержки: сообщества, профессиональные контакты, местные связи и бережное отношение к собственному темпу адаптации.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -19320,7 +19429,7 @@
       "canonicalEntityId": "soobshestvo-i-adaptaciya",
       "duplicateGroup": null,
       "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -19332,12 +19441,12 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/status-expediente-migraciones.md",
       "sourceUrl": null,
-      "title": "Как узнать статус дела (expediente) в Migraciones",
-      "summary": "После подачи на резиденцию через RaDEX заявителя чаще всего тревожит одно: «что с моим делом?». Разбираем, где смотреть статус (Consulta Unificada, портал уведомлений, почта), какие бывают типовые этапы — от подачи до диспозиции, — и почему главное правило простое: регулярно проверять email и вовремя отвечать на замечания (observaciones).",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Как проверить статус дела в Migraciones",
+      "summary": "Статус миграционного дела и официальные запросы нужно смотреть в каналах DNM, связанных с вашей подачей; названия этапов и интерфейсы могут меняться.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": null,
@@ -19345,10 +19454,15 @@
       "coordinates": null,
       "canonicalEntityId": "status-expediente-migraciones",
       "duplicateGroup": null,
-      "sourceCount": 3,
-      "verifiedAt": "2026-07-12",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "stoimost-zhizni-ba",
@@ -19358,10 +19472,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-ba.md",
       "sourceUrl": null,
-      "title": "Сколько стоит жизнь в Буэнос-Айресе",
-      "summary": "Реальный месячный бюджет в Буэнос-Айресе в 2026 году: от экономного ~$1100 до комфортного $2300+, с аренды как главной статьи расходов.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Как рассчитать стоимость жизни в Буэнос-Айресе",
+      "summary": "Методика личного бюджета с официальной базой по аренде и инфляции, без универсальной долларовой суммы.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19371,10 +19485,15 @@
       "coordinates": null,
       "canonicalEntityId": "stoimost-zhizni-ba",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "stoimost-zhizni-semya-i-para",
@@ -19384,10 +19503,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-semya-i-para.md",
       "sourceUrl": null,
-      "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни",
-      "summary": "Месячные бюджеты для пары и для семьи с ребёнком в Буэнос-Айресе в 2026 году, по трём уровням (эконом / комфорт / высокий). Что реально входит в каждую статью, почему пара экономит на человеке, и как частная школа становится главным драйвером семейного бюджета. Дополняет расчёт на одного человека.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Стоимость жизни для пары и семьи: как собрать свой сценарий",
+      "summary": "Методика семейного бюджета: общие и личные расходы, аренда, школа и медицина без неподтверждённых универсальных сумм.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19398,9 +19517,14 @@
       "canonicalEntityId": "stoimost-zhizni-semya-i-para",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "stoit-li-ehat-na-poezde-v-oblaka",
@@ -19437,9 +19561,9 @@
       "sourcePath": "content/knowledge-base/puteshestvie/stoit-li-ehat-v-argentinu.md",
       "sourceUrl": null,
       "title": "Стоит ли ехать в Аргентину: далеко, дорого, опасно?",
-      "summary": "Ободряющий и честный разбор для тех, кто впервые задумался об Аргентине и слышит от близких «далеко, дорого, опасно». Реальный порядок бюджета на двоих на 2 недели (включая межконтинентальный перелёт), честный уровень безопасности, почему это не «дёшево и дико», а очень разнообразно, карта решений (когда, куда, насколько, сколько заложить) и выбор между самостоятельной поездкой и авторским туром с русскоязычным гидом.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "summary": "Спокойная рамка решения для первой поездки: как оценить дорогу, безопасность, маршрут и собственный бюджет без устаревающих ценовых обещаний.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19449,10 +19573,15 @@
       "coordinates": null,
       "canonicalEntityId": "stoit-li-ehat-v-argentinu",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "stoit-li-pereezzhat",
@@ -19462,8 +19591,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/stoit-li-pereezzhat.md",
       "sourceUrl": null,
-      "title": "Стоит ли переезжать в Аргентину: плюсы, минусы и кому подходит",
-      "summary": "Честный разбор без розовых очков: сильные и слабые стороны жизни в Аргентине, для кого страна подходит, а для кого нет, и типичные ошибки переезжающих. Помогает принять решение осознанно, а не по картинке из соцсетей.",
+      "title": "Стоит ли переезжать в Аргентину: рамка честного решения",
+      "summary": "Практическая рамка решения: легальный статус, доход, язык, медицина, расстояние и пробный период без обещания, что одна страна подходит всем.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -19475,8 +19604,8 @@
       "coordinates": null,
       "canonicalEntityId": "stoit-li-pereezzhat",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -19488,10 +19617,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/studencheskaya-zhizn.md",
       "sourceUrl": null,
-      "title": "Учёба и студенческий быт в Аргентине: поступление, язык, жильё",
-      "summary": "Практический быт студента-иностранца поверх студенческой резиденции: как поступить в аргентинский вуз (государственный или частный), зачем нужен экзамен по испанскому CELU, что с бесплатностью госвузов после реформы, где искать студенческое жильё, можно ли подрабатывать, и сколько реально стоит студенческая жизнь. Дополняет запись о резиденции по учёбе бытовой стороной.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Учёба и студенческая жизнь в Аргентине",
+      "summary": "Перед поступлением проверьте признание документов, правила выбранного учебного заведения, миграционное основание и реальный бюджет города.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19501,10 +19630,15 @@
       "coordinates": null,
       "canonicalEntityId": "studencheskaya-zhizn",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "susques",
@@ -20952,10 +21086,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/udalyonnaya-rabota-i-oplata.md",
       "sourceUrl": null,
-      "title": "Удалёнка в Аргентине: как получать оплату и не терять на курсе",
-      "summary": "Практическая связка для тех, кто работает удалённо на зарубежную (или российскую) компанию: как получить оплату из-за границы, когда карты РФ не работают (Payoneer, Deel, Wise, крипта/USDT), как конвертировать выгодно (MEP/blue вместо официального курса), как легально задекларировать (монотрибуто, экспортная Factura E) и как всё это связать, теряя минимум на комиссиях и курсе.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Удалённая работа в Аргентине: оплата, документы и законный маршрут денег",
+      "summary": "Безопасная рамка для получения зарубежного дохода: сначала определить вид договора и налоговый статус, затем выбрать доступного провайдера, оформить счёт и провести валютную операцию через разрешённый канал.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -20965,10 +21099,15 @@
       "coordinates": null,
       "canonicalEntityId": "udalyonnaya-rabota-i-oplata",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "ushuaia",
@@ -22152,8 +22291,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/viza-cifrovogo-kochevnika.md",
       "sourceUrl": null,
-      "title": "Виза цифрового кочевника Аргентины",
-      "summary": "Транзитная резиденция для удалёнщиков на зарубежных клиентов сроком до года — без пути к ПМЖ и без фиксированного порога дохода.",
+      "title": "Статус цифрового кочевника в Аргентине",
+      "summary": "Транзитная резиденция для граждан безвизовых стран, которые удалённо оказывают услуги людям или организациям за пределами Аргентины.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22166,7 +22305,7 @@
       "canonicalEntityId": "viza-cifrovogo-kochevnika",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-02",
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22213,8 +22352,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/puteshestvie/viza-i-granica-dlya-rossiyan.md",
       "sourceUrl": null,
-      "title": "Виза и граница для россиян: пустят ли и что спрашивают",
-      "summary": "Честный разбор для туриста с российским паспортом: визы не нужно, безвизовое пребывание до 90 дней, что реально спрашивают на паспортном контроле (обратный билет, жильё, средства, страховка), как продлить пребывание, что будет при просрочке (overstay) и как на самом деле относятся к россиянам сейчас — без драмы. Правила визового режима подвижны, помечены флажком проверки.",
+      "title": "Въезд в Аргентину для граждан России",
+      "summary": "Проверенная на 17 июля 2026 года памятка: безвизовый туристический въезд, срок пребывания, продление и медицинская страховка.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22226,8 +22365,8 @@
       "coordinates": null,
       "canonicalEntityId": "viza-i-granica-dlya-rossiyan",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-05",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22239,8 +22378,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/viza-kochevnika-ne-vnzh.md",
       "sourceUrl": null,
-      "title": "Виза цифрового кочевника — не первый шаг к переезду навсегда, хотя так часто думают",
-      "summary": "Транзитный статус цифрового кочевника путают с полноценным ВНЖ — а это две разные истории, которые не складываются друг в друга автоматически.",
+      "title": "Статус цифрового кочевника — не автоматический путь к ВНЖ",
+      "summary": "Это временная категория для удалённой работы в пользу заказчиков за пределами Аргентины; смена категории возможна только по отдельному основанию и решению DNM.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22252,8 +22391,8 @@
       "coordinates": null,
       "canonicalEntityId": "viza-kochevnika-ne-vnzh",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-06-30",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22361,10 +22500,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/vnzh-argentina.md",
       "sourceUrl": null,
-      "title": "ВНЖ Аргентины: все легальные пути резиденции",
-      "summary": "Карта легальных путей остаться в Аргентине надолго — рантье, работа, учёба, семья, инвестор — и как устроен процесс через RaDEX после реформы DNU 366/2025.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Резиденция в Аргентине: как выбрать основание",
+      "summary": "Migraciones делит резиденции на транзитные, временные и постоянные, а требования зависят от конкретного основания.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22374,10 +22513,15 @@
       "coordinates": null,
       "canonicalEntityId": "vnzh-argentina",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-01",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "vnzh-po-uchebe",
@@ -22387,8 +22531,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/vnzh-po-uchebe.md",
       "sourceUrl": null,
-      "title": "ВНЖ Аргентины по учёбе (студенческая резиденция)",
-      "summary": "Резиденция по учёбе — популярный «вход» для молодёжи: зачисление в признанное учебное заведение даёт легальное пребывание на время обучения. Что нужно (программа от 3 лет, зачисление, средства, апостилированный аттестат/диплом), к чему ведёт и чем отличается от других оснований.",
+      "title": "Временная резиденция по учёбе",
+      "summary": "Студенческая временная резиденция доступна при обучении в официально признанном учреждении и подтверждении записи в электронной системе Migraciones.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22400,8 +22544,8 @@
       "coordinates": null,
       "canonicalEntityId": "vnzh-po-uchebe",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22413,8 +22557,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/vnzh-rantye.md",
       "sourceUrl": null,
-      "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд",
-      "summary": "Углублённый разбор самого популярного пути ВНЖ для релокантов на пассивном доходе — точный список документов, актуальный порог дохода на 2026 год, реальные сроки и причины отказов.",
+      "title": "Временная резиденция rentista",
+      "summary": "Категория rentista предназначена для человека, который живёт на подтверждаемую зарубежную ренту от собственных активов, а не на оплату личного труда.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22426,8 +22570,8 @@
       "coordinates": null,
       "canonicalEntityId": "vnzh-rantye",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-02",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22465,8 +22609,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/voditelskie-prava.md",
       "sourceUrl": null,
-      "title": "Вождение и водительские права в Аргентине: туристу и релоканту",
-      "summary": "Турист может водить по национальным правам с международным водительским удостоверением, но резиденту рано или поздно придётся получать местную licencia de conducir — и почти всегда через полноценный экзамен, потому что права выдают провинции и муниципалитеты, а не федерация.",
+      "title": "Иностранные водительские права и аргентинская лицензия",
+      "summary": "Возможность водить по иностранным правам зависит от международных соглашений и срока после въезда; резиденту нужна местная лицензия по правилам своей юрисдикции.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22478,8 +22622,8 @@
       "coordinates": null,
       "canonicalEntityId": "voditelskie-prava",
       "duplicateGroup": null,
-      "sourceCount": 5,
-      "verifiedAt": "2026-07-12",
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22491,10 +22635,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/voinskij-uchet-i-voennyj-bilet.md",
       "sourceUrl": null,
-      "title": "Воинский учёт и военный билет при переезде в Аргентину",
-      "summary": "Разбор для мужчин призывного/мобилизационного возраста: нужен ли военный билет для аргентинских процедур (резиденция, DNI, гражданство, консульские дела) — короткий ответ: для аргентинской стороны нет; и что важно знать про российский воинский учёт при выезде и проживании за границей. Тема чувствительная и правила РФ активно меняются — материал информационный, с направлением к официальным источникам и профильным юристам.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Воинский учёт и переезд в Аргентину",
+      "summary": "Аргентинские миграционные процедуры проверяют по собственным официальным перечням, а обязанности гражданина России — только по актуальным российским государственным источникам.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22505,9 +22649,14 @@
       "canonicalEntityId": "voinskij-uchet-i-voennyj-bilet",
       "duplicateGroup": null,
       "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "volcan-lanin",
@@ -22589,8 +22738,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/vossoedinenie-semi.md",
       "sourceUrl": null,
-      "title": "Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители",
-      "summary": "Как получить резиденцию в Аргентине через родство с гражданином или резидентом ПМЖ — кто считается прямым родственником, что делать незарегистрированным парам и чем путь через гражданина отличается от пути через резидента.",
+      "title": "Временная резиденция по семейному основанию",
+      "summary": "Семейная категория доступна близким родственникам гражданина Аргентины или временного либо постоянного резидента; состав семьи и срок определяет текущая процедура DNM.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22602,8 +22751,8 @@
       "coordinates": null,
       "canonicalEntityId": "vossoedinenie-semi",
       "duplicateGroup": null,
-      "sourceCount": 4,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22616,9 +22765,9 @@
       "sourcePath": "content/knowledge-base/transport/vysokogorye-na-avto.md",
       "sourceUrl": null,
       "title": "Путешествие на автомобиле в высокогорье: Пуна и перевалы",
-      "summary": "Северо-запад Аргентины и высокие перевалы Куйо — это дороги на 3500-4900 м, где к обычным рискам добавляются горная болезнь (сороче) и особенности машины на высоте: двигатель теряет мощность, между заправками сотни километров, связь пропадает. Разбираем, как подготовиться к высоте, топливу, холоду и одиночным участкам.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "summary": "Подготовка к высокогорной дороге без неподтверждённых медицинских обещаний: высота маршрута, проверка состояния трассы, автомобиля, топлива и плана связи.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22628,10 +22777,15 @@
       "coordinates": null,
       "canonicalEntityId": "vysokogorye-na-avto",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-12",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 3,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "yapeyu",
@@ -22717,10 +22871,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/zashchita-nakoplenij-ot-inflyacii.md",
       "sourceUrl": null,
-      "title": "Как защитить накопления от инфляции в Аргентине",
-      "summary": "Обзор инструментов, которыми в Аргентине защищают деньги от инфляции: доллар (MEP, наличные), стейблкоины (USDT), CEDEARs (доступ к акциям США в песо), гособлигации и plazo fijo UVA, недвижимость как «сейф». Плюсы, минусы и риски каждого, сценарии под разные суммы и цели. Это информирование, а не индивидуальная инвестиционная рекомендация.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Как оценивать способы защиты накоплений от инфляции в Аргентине",
+      "summary": "Справочная рамка для сравнения валюты, вкладов UVA, CEDEAR, облигаций, виртуальных активов и недвижимости по риску, ликвидности и регулированию.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22730,10 +22884,15 @@
       "coordinates": null,
       "canonicalEntityId": "zashchita-nakoplenij-ot-inflyacii",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "zemletryaseniya-i-vulkany",
@@ -22743,8 +22902,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/bezopasnost/zemletryaseniya-i-vulkany.md",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:J28_085_Volc%C3%A1n_Lan%C3%ADn.jpg",
-      "title": "Землетрясения, вулканы и природные стихии Аргентины",
-      "summary": "Почему запад Аргентины трясёт, а Буэнос-Айрес — нет: плоский слэб плиты Наски, растущие Анды и цепь вулканов. Крупнейшие землетрясения (Сан-Хуан 1944, Мендоса 1861, Каусете 1977), вулканический пепел над Патагонией и другие стихии — пожары, наводнения, Эль-Ниньо. Что это значит для путешественника и жителя.",
+      "title": "Землетрясения, вулканы и природные риски Аргентины",
+      "summary": "Где сосредоточена сейсмическая опасность, как вулканический пепел влияет на Патагонию и какие официальные предупреждения нужны путешественнику.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22756,8 +22915,8 @@
       "coordinates": null,
       "canonicalEntityId": "zemletryaseniya-i-vulkany",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-04",
+      "sourceCount": 4,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22795,8 +22954,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/zhile-i-arenda.md",
       "sourceUrl": null,
-      "title": "Жильё и аренда в Аргентине",
-      "summary": "Краткосрочная аренда через Airbnb/Booking для туристов и первых недель релокации против классического договора аренды (alquiler): гарантия, инмобилиария, депозит и схемы для тех, у кого нет местного гаранта.",
+      "title": "Как безопасно арендовать жильё в Аргентине",
+      "summary": "Проверяйте собственника или представителя, состояние жилья, все платежи и условия договора до передачи денег.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -22808,8 +22967,8 @@
       "coordinates": null,
       "canonicalEntityId": "zhile-i-arenda",
       "duplicateGroup": null,
-      "sourceCount": 2,
-      "verifiedAt": "2026-07-01",
+      "sourceCount": 1,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },
@@ -22821,10 +22980,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/kultura/zhizn-bez-ispanskogo.md",
       "sourceUrl": null,
-      "title": "Жизнь без испанского: как справляться в Аргентине первое время",
-      "summary": "Практический разбор, как жить в Аргентине, пока не выучил испанский: где реально можно на английском и приложениях, а где без языка тяжело (госучреждения, банки, врачи, аренда). Какие приложения-переводчики брать, набор ключевых фраз и honest-оценка, насколько быстро язык становится необходим.",
-      "publicationStatus": "quarantined",
-      "indexable": false,
+      "title": "Жизнь без испанского: как устроить первые недели в Аргентине",
+      "summary": "Практический план на первые недели: какие бытовые задачи можно упростить приложениями, где нужен человек с испанским и как учить язык под реальные ситуации.",
+      "publicationStatus": "published",
+      "indexable": true,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22835,17 +22994,9 @@
       "canonicalEntityId": "zhizn-bez-ispanskogo",
       "duplicateGroup": null,
       "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
-      "severity": "critical",
-      "issues": [
-        {
-          "code": "mixed_script_word",
-          "severity": "critical",
-          "values": [
-            "honest-оценка"
-          ]
-        }
-      ]
+      "verifiedAt": "2026-07-17",
+      "severity": "none",
+      "issues": []
     },
     {
       "id": "zhizn-na-pensii",
@@ -22855,10 +23006,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/zhizn-na-pensii.md",
       "sourceUrl": null,
-      "title": "Жизнь на пенсии в Аргентине: переезд для пенсионера",
-      "summary": "Практический разбор для тех, кто рассматривает Аргентину для жизни на пенсии: как получить резиденцию пенсионера/рантье, как получать иностранную пенсию и конвертировать её выгодно, как устроена медицина в возрасте (prepaga и возрастные нюансы, público как база), где спокойнее и комфортнее жить, сколько реально стоит жизнь пожилой пары и честные минусы (инфляция, удалённость, язык).",
-      "publicationStatus": "published",
-      "indexable": true,
+      "title": "Жизнь на пенсии в Аргентине: что учесть до переезда",
+      "summary": "Резиденция pensionado, медицинское покрытие, жильё и бюджет: официальные правила и вопросы, которые нужно решить до переезда.",
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22868,10 +23019,15 @@
       "coordinates": null,
       "canonicalEntityId": "zhizn-na-pensii",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-05",
-      "severity": "none",
-      "issues": []
+      "sourceCount": 5,
+      "verifiedAt": "2026-07-17",
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     }
   ]
 }

@@ -3,7 +3,12 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 
-import { getPublicationIssues, isPublicKbEntry } from "../src/lib/knowledge-base/publication-quality";
+import {
+  getPublicationIssues,
+  getStrictPublicationIssues,
+  isPublicKbEntry,
+} from "../src/lib/knowledge-base/publication-quality";
+import { findRuUrlDecision } from "../src/lib/seo/publication-registry";
 import type { KbEntry } from "../src/lib/knowledge-base/types";
 
 const ROOT = process.cwd();
@@ -192,6 +197,9 @@ async function fetchRouteSnapshots(paths: string[]): Promise<Map<string, RouteSn
 function actionFor(entry: KbEntry): string {
   const issues = getPublicationIssues(entry);
   if (issues.includes("missing_sensitive_source")) return "LEGAL_REVIEW";
+  if (getStrictPublicationIssues(entry).includes("sensitive_provenance_not_ready")) {
+    return "HUMAN_REVIEW";
+  }
   if (issues.includes("machine_translation_marker")) return "HUMAN_REVIEW";
   if (
     issues.includes("placeholder_content") ||
@@ -216,6 +224,9 @@ function actionFor(entry: KbEntry): string {
 function ownerFor(entry: KbEntry): string {
   const issues = getPublicationIssues(entry);
   if (issues.includes("missing_sensitive_source")) return "Fact checker + legal reviewer";
+  if (getStrictPublicationIssues(entry).includes("sensitive_provenance_not_ready")) {
+    return "Fact checker + legal reviewer";
+  }
   if (issues.includes("machine_translation_marker")) return "Russian content editor";
   if (issues.includes("missing_hero")) return "Media editor";
   return "Content editor";
@@ -232,12 +243,13 @@ function qualityScore(entry: KbEntry): number {
     internal_editorial_marker: 50,
     malformed_markdown_heading: 25,
     missing_sensitive_source: 60,
+    sensitive_provenance_not_ready: 40,
     thin_content: 20,
     missing_hero: 15,
   };
   return Math.max(
     0,
-    100 - getPublicationIssues(entry).reduce((sum, issue) => sum + (deductions[issue] ?? 10), 0),
+    100 - getStrictPublicationIssues(entry).reduce((sum, issue) => sum + (deductions[issue] ?? 10), 0),
   );
 }
 
@@ -454,27 +466,39 @@ export async function generateContentOverhaulInventory() {
     quality_score: qualityScore(entry),
     band: qualityScore(entry) >= 90 ? "ready" : qualityScore(entry) >= 60 ? "review" : "blocked",
     public: isPublicKbEntry(entry) ? "yes" : "no",
-    blockers: getPublicationIssues(entry).join(";") || "none",
-    evidence: "publication-quality.ts",
+    blockers: getStrictPublicationIssues(entry).join(";") || "none",
+    evidence: "publication-quality.ts strict readiness",
   }));
   writeCsv("content-quality-score.csv", ["id", "url", "quality_score", "band", "public", "blockers", "evidence"], scoreRows);
 
-  const actionRows = entries.map((entry) => ({
-    id: entry.id,
-    url: `/baza-znaniy/${entry.id}`,
-    action: duplicateCandidateIds.has(entry.id) ? "HUMAN_REVIEW" : actionFor(entry),
-    priority: getPublicationIssues(entry).includes("missing_sensitive_source")
-      ? "P0"
-      : duplicateCandidateIds.has(entry.id)
-        ? "P1"
-        : isPublicKbEntry(entry)
-          ? "P2"
-          : "P1",
-    owner: duplicateCandidateIds.has(entry.id) ? "Content architect" : ownerFor(entry),
-    status: duplicateCandidateIds.has(entry.id) ? "review_required" : isPublicKbEntry(entry) ? "complete" : "backlog",
-    reason: getPublicationIssues(entry).join(";") || (duplicateCandidateIds.has(entry.id) ? "exact_title_duplicate" : "publication_gate_clean"),
-    evidence: "content.json + publication-quality.ts",
-  }));
+  const actionRows = entries.map((entry) => {
+    const strictIssues = getStrictPublicationIssues(entry);
+    const strictReady = !strictIssues.includes("sensitive_provenance_not_ready");
+    return {
+      id: entry.id,
+      url: `/baza-znaniy/${entry.id}`,
+      action: duplicateCandidateIds.has(entry.id) ? "HUMAN_REVIEW" : actionFor(entry),
+      priority: strictIssues.some((issue) =>
+        ["missing_sensitive_source", "sensitive_provenance_not_ready"].includes(issue)
+      )
+        ? "P0"
+        : duplicateCandidateIds.has(entry.id)
+          ? "P1"
+          : isPublicKbEntry(entry)
+            ? "P2"
+            : "P1",
+      owner: duplicateCandidateIds.has(entry.id) ? "Content architect" : ownerFor(entry),
+      status: duplicateCandidateIds.has(entry.id)
+        ? "review_required"
+        : isPublicKbEntry(entry) && strictReady
+          ? "complete"
+          : isPublicKbEntry(entry)
+            ? "review_required"
+            : "backlog",
+      reason: strictIssues.join(";") || (duplicateCandidateIds.has(entry.id) ? "exact_title_duplicate" : "publication_gate_clean"),
+      evidence: "content.json + publication-quality.ts",
+    };
+  });
   writeCsv("content-action-plan.csv", ["id", "url", "action", "priority", "owner", "status", "reason", "evidence"], actionRows);
 
   const sourceRows: Record<string, unknown>[] = [];
@@ -483,16 +507,23 @@ export async function generateContentOverhaulInventory() {
       const hasUrl = Boolean(source.url?.trim());
       const official = source.type === "official" || /(?:^|\.)gob\.ar\b|argentina\.gob\.ar/i.test(source.url ?? "");
       sourceRows.push({
-        source_id: `${entry.id}:source:${index + 1}`,
+        source_id: source.id ?? `${entry.id}:source:${index + 1}`,
         entry_id: entry.id,
         url: `/baza-znaniy/${entry.id}`,
         source_title: source.title ?? "not_recorded",
         source_url: source.url ?? "not_recorded",
         source_type: source.type ?? "not_recorded",
+        authority: source.authority ?? "not_recorded",
+        url_status: source.url_status ?? "not_recorded",
+        checked_at: source.checked_at ?? "not_recorded",
         language: source.lang ?? "not_recorded",
         note: source.note ?? "not_recorded",
         official: official ? "yes" : "no_or_not_recorded",
-        status: hasUrl ? "recorded_article_level" : "review_required",
+        status: !hasUrl
+          ? "review_required"
+          : source.url_status === "verified"
+            ? "verified"
+            : "recorded_article_level",
         owner: entry.editorial?.sensitive ? "Fact checker" : "Content editor",
         evidence: "content/knowledge-base/_index/content.json",
       });
@@ -500,13 +531,42 @@ export async function generateContentOverhaulInventory() {
   }
   writeCsv(
     "source-registry.csv",
-    ["source_id", "entry_id", "url", "source_title", "source_url", "source_type", "language", "note", "official", "status", "owner", "evidence"],
+    ["source_id", "entry_id", "url", "source_title", "source_url", "source_type", "authority", "url_status", "checked_at", "language", "note", "official", "status", "owner", "evidence"],
     sourceRows,
   );
 
   const claimRows: Record<string, unknown>[] = [];
   for (const entry of entries) {
     const facts = extractFactClaims(entry.body ?? "");
+    const structuredClaims = entry.claims ?? [];
+    if (structuredClaims.length > 0) {
+      structuredClaims.forEach((claim, index) => {
+        const sourceIds = claim.source_ids ?? [];
+        const primarySourceIds = sourceIds.filter((sourceId) =>
+          entry.sources?.some((source) => source.id === sourceId && source.authority === "primary"),
+        );
+        const reviewed = Boolean(claim.verified_at && claim.reviewer && primarySourceIds.length > 0);
+        claimRows.push({
+          claim_id: claim.id,
+          entry_id: entry.id,
+          url: `/baza-znaniy/${entry.id}`,
+          claim: claim.text ?? facts[index] ?? "structured claim",
+          sensitive: (claim.sensitive ?? entry.editorial?.sensitive) ? "yes" : "no",
+          last_verified_at: claim.verified_at ?? "not_recorded",
+          article_source_count: entry.sources?.length ?? 0,
+          item_source_id: sourceIds.join(";") || "not_recorded",
+          support_status: primarySourceIds.length > 0
+            ? "claim_level_primary"
+            : sourceIds.length > 0
+              ? "claim_level_non_primary"
+              : "missing_source",
+          review_status: reviewed ? "verified" : "review_required",
+          owner: entry.editorial?.sensitive ? "Fact checker" : "Content editor",
+          evidence: "frontmatter claims/source_ids",
+        });
+      });
+      continue;
+    }
     facts.forEach((claim, index) => {
       claimRows.push({
         claim_id: `${entry.id}:fact:${index + 1}`,
@@ -532,21 +592,34 @@ export async function generateContentOverhaulInventory() {
 
   const sensitiveRows = entries
     .filter((entry) => entry.editorial?.sensitive)
-    .map((entry) => ({
-      entry_id: entry.id,
-      url: `/baza-znaniy/${entry.id}`,
-      title: entry.title,
-      public: isPublicKbEntry(entry) ? "yes" : "no",
-      claim_count: extractFactClaims(entry.body ?? "").length,
-      source_count: entry.sources?.length ?? 0,
-      missing_sources: entry.editorial?.missing_sources ? "yes" : "no",
-      last_verified_at: entry.last_verified ?? "not_recorded",
-      next_review_at: entry.editorial?.review_due_at ?? "review_required",
-      status: entry.editorial?.missing_sources ? "blocked" : "review_required_item_level_mapping",
-      action: entry.editorial?.missing_sources ? "LEGAL_REVIEW" : "HUMAN_REVIEW",
-      owner: "Fact checker + legal reviewer",
-      evidence: "content.json editorial.sensitive + sources",
-    }));
+    .map((entry) => {
+      const strictReady = entry.editorial?.provenance?.strict_ready === true;
+      return {
+        entry_id: entry.id,
+        url: `/baza-znaniy/${entry.id}`,
+        title: entry.title,
+        public: isPublicKbEntry(entry) ? "yes" : "no",
+        claim_count: entry.claims?.length ?? extractFactClaims(entry.body ?? "").length,
+        source_count: entry.sources?.length ?? 0,
+        missing_sources: entry.editorial?.missing_sources ? "yes" : "no",
+        last_verified_at: entry.last_verified ?? "not_recorded",
+        next_review_at: entry.editorial?.review_due_at ?? "review_required",
+        status: entry.editorial?.missing_sources
+          ? "blocked"
+          : strictReady
+            ? "strict_ready"
+            : "review_required_item_level_mapping",
+        action: entry.editorial?.missing_sources
+          ? "LEGAL_REVIEW"
+          : strictReady
+            ? "KEEP"
+            : "HUMAN_REVIEW",
+        owner: "Fact checker + legal reviewer",
+        evidence: strictReady
+          ? "content.json editorial.provenance.strict_ready"
+          : "content.json editorial.sensitive + sources",
+      };
+    });
   writeCsv(
     "sensitive-claims.csv",
     ["entry_id", "url", "title", "public", "claim_count", "source_count", "missing_sources", "last_verified_at", "next_review_at", "status", "action", "owner", "evidence"],
@@ -663,20 +736,37 @@ export async function generateContentOverhaulInventory() {
   for (const [value, group] of bodyGroups) {
     if (group.length > 1) duplicateGroups.set(`body:${shortHash(value)}`, { reason: "exact_normalized_body", entries: group });
   }
-  const duplicateRows = [...duplicateGroups.entries()].flatMap(([groupId, group]) =>
-    group.entries.map((entry) => ({
+  const duplicateRows = [...duplicateGroups.entries()].flatMap(([groupId, group]) => {
+    const publicEntries = group.entries.filter(isPublicKbEntry);
+    const decisions = new Map(
+      group.entries.map((entry) => {
+        const url = `/baza-znaniy/${entry.id}`;
+        return [entry.id, findRuUrlDecision(url)];
+      }),
+    );
+    const resolved =
+      publicEntries.length <= 1 &&
+      group.entries.every((entry) => {
+        if (isPublicKbEntry(entry)) return true;
+        const decision = decisions.get(entry.id);
+        return decision?.disposition === "redirect" && Boolean(decision.canonicalPath);
+      });
+
+    return group.entries.map((entry) => ({
       duplicate_group: groupId,
       reason: group.reason,
       entry_id: entry.id,
       url: `/baza-znaniy/${entry.id}`,
       title: entry.title,
       public: isPublicKbEntry(entry) ? "yes" : "no",
-      action: "HUMAN_REVIEW",
-      status: "review_required",
+      action: resolved ? "REDIRECT" : "HUMAN_REVIEW",
+      status: resolved ? "resolved" : "review_required",
       owner: "Content architect",
-      evidence: "exact normalization of current content.json",
-    })),
-  );
+      evidence: resolved
+        ? `${decisions.get(entry.id)?.canonicalPath ?? "canonical public entry"}; publication registry`
+        : "exact normalization of current content.json",
+    }));
+  });
   writeCsv(
     "duplicate-content-report.csv",
     ["duplicate_group", "reason", "entry_id", "url", "title", "public", "action", "status", "owner", "evidence"],
@@ -981,7 +1071,9 @@ export async function generateContentOverhaulInventory() {
       });
     }
   }
-  for (const entry of publicEntries.filter((candidate) => candidate.editorial?.sensitive)) {
+  for (const entry of publicEntries.filter(
+    (candidate) => candidate.editorial?.sensitive && candidate.editorial?.provenance?.strict_ready !== true,
+  )) {
     ledgerRows.push({
       id: `${entry.id}:item_level_source_mapping`,
       severity: "P0",
@@ -1001,9 +1093,17 @@ export async function generateContentOverhaulInventory() {
     });
   }
   for (const [groupId, group] of duplicateGroups) {
+    const publicEntries = group.entries.filter(isPublicKbEntry);
+    const resolved =
+      publicEntries.length <= 1 &&
+      group.entries.every((entry) => {
+        if (isPublicKbEntry(entry)) return true;
+        const decision = findRuUrlDecision(`/baza-znaniy/${entry.id}`);
+        return decision?.disposition === "redirect" && Boolean(decision.canonicalPath);
+      });
     ledgerRows.push({
       id: `duplicate:${groupId}`,
-      severity: "P1",
+      severity: resolved ? "P3" : "P1",
       content_type: "knowledge_base",
       url: group.entries.map((entry) => `/baza-znaniy/${entry.id}`).join(";"),
       issue_type: group.reason,
@@ -1011,9 +1111,9 @@ export async function generateContentOverhaulInventory() {
       expected: "documented KEEP_DISTINCT, MERGE or REDIRECT decision",
       impact: "duplicate intent or title can confuse navigation and compete in search",
       root_cause: "parallel legacy entities",
-      action: "HUMAN_REVIEW",
+      action: resolved ? "REDIRECT" : "HUMAN_REVIEW",
       owner: "Content architect + SEO owner",
-      status: "open",
+      status: resolved ? "closed" : "open",
       source: "duplicate-content-report.csv",
       evidence: `exact normalized group ${groupId}`,
       test: "duplicate report + redirect contract",

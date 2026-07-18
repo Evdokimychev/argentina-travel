@@ -11,6 +11,14 @@ on:
         description: Unique fixture namespace for this run
         required: true
         type: string
+      deployment_id:
+        description: Exact immutable Vercel deployment ID serving base_url
+        required: true
+        type: string
+      migration_id:
+        description: Latest migration ID verified on the isolated staging database
+        required: true
+        type: string
 
 concurrency:
   group: staging-acceptance-${{ inputs.run_id }}
@@ -26,6 +34,8 @@ jobs:
       STAGING_ACCEPTANCE_ENABLED: "true"
       STAGING_ACCEPTANCE_BASE_URL: ${{ inputs.base_url }}
       STAGING_ACCEPTANCE_RUN_ID: ${{ inputs.run_id }}
+      STAGING_ACCEPTANCE_DEPLOYMENT_ID: ${{ inputs.deployment_id }}
+      STAGING_ACCEPTANCE_MIGRATION_ID: ${{ inputs.migration_id }}
       STAGING_ACCEPTANCE_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
       STAGING_ACCEPTANCE_SUPABASE_PROJECT_REF: ${{ vars.STAGING_SUPABASE_PROJECT_REF }}
       PRODUCTION_SUPABASE_PROJECT_REF: uooxrypocahomoqzdvzy
@@ -64,6 +74,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: staging-acceptance-${{ inputs.run_id }}-${{ github.sha }}
-          path: test-results/staging-acceptance/
+          # The canonical copy is consumed by readiness:90; the detailed copy
+          # keeps browser artifacts and the report together.
+          path: |
+            test-results/staging-acceptance/
+            var/ops/staging-acceptance-last.json
           if-no-files-found: warn
           retention-days: 14
