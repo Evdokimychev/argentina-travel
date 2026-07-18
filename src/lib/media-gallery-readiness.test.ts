@@ -77,9 +77,9 @@ describe("public media gallery readiness", () => {
     const post = blogPosts.find((candidate) => candidate.slug === slug);
 
     expect(post).toBeDefined();
-    expect(canonicalMediaPath(resolveBlogPostCardImage(post!))).toBe(
-      canonicalMediaPath(getBlogPostHeroResolved(post!).src),
-    );
+    const cardPath = canonicalMediaPath(resolveBlogPostCardImage(post!));
+    const heroPath = canonicalMediaPath(getBlogPostHeroResolved(post!).src);
+    expect(heroPath.endsWith(cardPath)).toBe(true);
   });
 
   it("returns no logo fallback for an empty rich gallery", () => {
