@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -106,6 +107,12 @@ export default function DestinationDetailView({
   const relatedItems = knowledgeLinks ? flattenKnowledgeLinks(knowledgeLinks) : [];
   const editorialTheme = resolveDestinationEditorialTheme(destination.id);
   const taxonomy = resolveDestinationTaxonomy(destination);
+  const isPatagonia = destination.id === "patagonia";
+  const galleryImages = isPatagonia
+    ? (destination.gallery ?? []).map((src) =>
+        src.replace(/\.(?:jpe?g|png|webp)$/i, "-card.webp"),
+      )
+    : destination.gallery;
 
   const destinationAside = (
     <>
@@ -150,16 +157,37 @@ export default function DestinationDetailView({
         data-editorial-theme={editorialTheme}
         className="group relative min-h-[52svh] overflow-hidden border-b-4 border-[var(--editorial-accent)] sm:min-h-[58svh]"
       >
-        <SafeImage
-          src={destination.image}
-          alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
-          fill
-          priority
-          preferLocalMedia
-          className="editorial-media-zoom object-cover object-[center_35%] sm:object-center"
-          sizes="100vw"
-          placeholderVariant="destination"
-        />
+        {isPatagonia ? (
+          <picture className="absolute inset-0 block">
+            <source
+              media="(max-width: 639px)"
+              srcSet="/media/destinations/patagonia/section-mobile.webp"
+              type="image/webp"
+            />
+            <Image
+              src="/media/destinations/patagonia/section.jpg"
+              alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
+              fill
+              unoptimized
+              loading="eager"
+              fetchPriority="high"
+              className="editorial-media-zoom object-cover object-[center_35%] sm:object-center"
+              sizes="100vw"
+            />
+          </picture>
+        ) : (
+          <SafeImage
+            src={destination.image}
+            alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
+            fill
+            priority
+            fetchPriority="high"
+            preferLocalMedia
+            className="editorial-media-zoom object-cover object-[center_35%] sm:object-center"
+            sizes="100vw"
+            placeholderVariant="destination"
+          />
+        )}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--editorial-media-overlay)_0%,rgb(15_23_42/0.62)_45%,rgb(15_23_42/0.12)_82%),linear-gradient(to_top,rgb(15_23_42/0.82),transparent_58%)]" />
         <div className="absolute right-5 top-5 hidden items-center gap-3 text-white/70 lg:flex" aria-hidden>
           <span className="h-px w-10 bg-white/50" />
@@ -265,12 +293,14 @@ export default function DestinationDetailView({
               ) : null}
             </div>
 
-            <PageSlotImage
-              pageId={`destination:${destination.id}`}
-              slotId="section"
-              role="section"
-              className="max-w-none"
-            />
+            {!isPatagonia ? (
+              <PageSlotImage
+                pageId={`destination:${destination.id}`}
+                slotId="section"
+                role="section"
+                className="max-w-none"
+              />
+            ) : null}
 
             <div>
               <h2
@@ -292,7 +322,7 @@ export default function DestinationDetailView({
               </ul>
             </div>
 
-            {destination.gallery && destination.gallery.length > 1 ? (
+            {galleryImages && galleryImages.length > 1 ? (
               <div>
                 <h2
                   id="gallery"
@@ -301,7 +331,7 @@ export default function DestinationDetailView({
                   Галерея
                 </h2>
                 <DetailPhotoGallery
-                  images={destination.gallery}
+                  images={galleryImages}
                   title={destination.name}
                   altForImage={(i) =>
                     destinationGalleryAlt(destination.name, i, destination.gallery?.length)

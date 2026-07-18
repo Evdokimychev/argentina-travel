@@ -1,6 +1,5 @@
 import HubHero from "@/components/guide/hub/HubHero";
 import { BLOG_HERO_COPY, type BlogHeroVariant } from "@/lib/blog-hero-variant";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 
 type BlogIndexHeroProps = {
   variant: BlogHeroVariant;
@@ -19,7 +18,8 @@ export default function BlogIndexHero({ variant, indexablePostsCount }: BlogInde
           ? copy.subtitle
           : `${indexablePostsCount.toLocaleString("ru-RU")} проверенных материалов — ${copy.subtitle}`
       }
-      image={getServicePageHeroImage("blog-index")}
+      image="/media/services/blog/hero-mobile.webp"
+      imageAlt="Анды на рассвете — журнал о путешествиях по Аргентине"
       theme="journal"
       eyebrow={{ label: "Журнал", href: "/blog" }}
       ctas={

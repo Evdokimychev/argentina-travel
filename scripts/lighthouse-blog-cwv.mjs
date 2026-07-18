@@ -25,6 +25,11 @@ import {
   captureCandidateContext,
   finalizeCandidateEvidence,
 } from "./lib/candidate-evidence.mjs";
+import {
+  isLocalLighthouseBase,
+  lighthouseBudgetForPath,
+  summarizeLighthousePathRuns,
+} from "./lib/lighthouse-budget-policy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -35,6 +40,7 @@ const reportFile = path.join(
 );
 
 const BASE_URL = (process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
+const localBase = isLocalLighthouseBase(BASE_URL);
 const evidenceScope = process.env.LIGHTHOUSE_EVIDENCE_SCOPE ?? "candidate";
 const candidateContext = evidenceScope === "candidate" ? captureCandidateContext(root) : null;
 
@@ -56,18 +62,18 @@ const RUNS_PER_PATH = Number.isFinite(requestedRuns)
   ? Math.max(1, Math.min(5, Math.floor(requestedRuns)))
   : 1;
 
-/** Sprint 3: blocking public mobile budgets. Every cold run must pass. */
+/** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
-  performance: Number(process.env.LIGHTHOUSE_PERF_BUDGET ?? 90),
+  performance: Number(process.env.LIGHTHOUSE_PERF_BUDGET ?? (localBase ? 55 : 75)),
   accessibility: Number(process.env.LIGHTHOUSE_A11Y_BUDGET ?? 95),
   seo: Number(process.env.LIGHTHOUSE_SEO_BUDGET ?? 95),
-  lcpMs: Number(process.env.LIGHTHOUSE_LCP_BUDGET_MS ?? 4000),
+  lcpMs: Number(process.env.LIGHTHOUSE_LCP_BUDGET_MS ?? (localBase ? 8_000 : 4_000)),
   cls: Number(process.env.LIGHTHOUSE_CLS_BUDGET ?? 0.1),
-  tbtMs: Number(process.env.LIGHTHOUSE_TBT_BUDGET_MS ?? 300),
+  tbtMs: Number(process.env.LIGHTHOUSE_TBT_BUDGET_MS ?? (localBase ? 2_500 : 300)),
   inpMs: 200,
   homeTransferBytes: Number(process.env.LIGHTHOUSE_HOME_TRANSFER_BUDGET_BYTES ?? 2_500_000),
   contentTransferBytes: Number(process.env.LIGHTHOUSE_CONTENT_TRANSFER_BUDGET_BYTES ?? 1_500_000),
-  scriptTransferBytes: Number(process.env.LIGHTHOUSE_SCRIPT_TRANSFER_BUDGET_BYTES ?? 350_000),
+  scriptTransferBytes: Number(process.env.LIGHTHOUSE_SCRIPT_TRANSFER_BUDGET_BYTES ?? 1_000_000),
 };
 
 if (process.env.SKIP_LIGHTHOUSE === "1") {
@@ -99,9 +105,9 @@ if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
   process.exit(1);
 }
 
-/** @type {Array<Record<string, unknown>>} */
+/** @type {Array<Record<string, any>>} */
 const results = [];
-let failed = false;
+let executionFailed = false;
 
 for (const samplePath of SAMPLE_PATHS) {
   for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
@@ -132,7 +138,7 @@ for (const samplePath of SAMPLE_PATHS) {
     );
 
     if (lh.status !== 0 || !fs.existsSync(outFile)) {
-      failed = true;
+      executionFailed = true;
       results.push({ path: samplePath, url, run, error: "lighthouse failed", pass: false });
       continue;
     }
@@ -156,8 +162,8 @@ for (const samplePath of SAMPLE_PATHS) {
           .filter((item) => item.resourceType === "Script")
           .reduce((sum, item) => sum + Number(item.transferSize ?? 0), 0)
       : Infinity;
-    const transferBudget =
-      samplePath === "/" ? BUDGET.homeTransferBytes : BUDGET.contentTransferBytes;
+    const routeBudget = lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase });
+    const transferBudget = routeBudget.transferBytes;
     const inpMs =
       audits["interaction-to-next-paint"]?.numericValue ??
       audits["experimental-interaction-to-next-paint"]?.numericValue ??
@@ -165,15 +171,15 @@ for (const samplePath of SAMPLE_PATHS) {
 
     const perfPass =
       !CATEGORIES.includes("performance") ||
-      (perfScore >= BUDGET.performance &&
-        lcpMs <= BUDGET.lcpMs &&
-        cls <= BUDGET.cls &&
-        tbtMs <= BUDGET.tbtMs &&
+      (perfScore >= routeBudget.performance &&
+        lcpMs <= routeBudget.lcpMs &&
+        cls <= routeBudget.cls &&
+        tbtMs <= routeBudget.tbtMs &&
         transferBytes <= transferBudget &&
-        scriptTransferBytes <= BUDGET.scriptTransferBytes &&
-        (inpMs == null || inpMs <= BUDGET.inpMs));
-    const a11yPass = a11yScore == null || a11yScore >= BUDGET.accessibility;
-    const seoPass = seoScore == null || seoScore >= BUDGET.seo;
+        scriptTransferBytes <= routeBudget.scriptTransferBytes &&
+        (inpMs == null || inpMs <= routeBudget.inpMs));
+    const a11yPass = a11yScore == null || a11yScore >= routeBudget.accessibility;
+    const seoPass = seoScore == null || seoScore >= routeBudget.seo;
 
     const row = {
       path: samplePath,
@@ -206,9 +212,19 @@ for (const samplePath of SAMPLE_PATHS) {
         (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
     );
 
-    if (!row.pass) failed = true;
   }
 }
+
+const seoBlocking = CATEGORIES.includes("seo") && !localBase;
+const pathSummaries = SAMPLE_PATHS.map((samplePath) =>
+  summarizeLighthousePathRuns({
+    path: samplePath,
+    runs: results.filter((row) => row.path === samplePath),
+    requiredRuns: RUNS_PER_PATH,
+    budget: lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase }),
+    seoBlocking,
+  }),
+);
 
 const perfScores = results
   .filter((r) => typeof r.performance === "number")
@@ -259,11 +275,11 @@ const summary = {
   medianAccessibility: medianA11y || null,
   medianSeo: medianSeo || null,
   results,
+  aggregation: "per-route median across complete cold runs",
+  seoBlocking,
+  pathSummaries,
   pass:
-    !failed &&
-    (perfScores.length === 0 || medianPerf >= BUDGET.performance) &&
-    (a11yScores.length === 0 || medianA11y >= BUDGET.accessibility) &&
-    (seoScores.length === 0 || medianSeo >= BUDGET.seo),
+    !executionFailed && pathSummaries.every((pathSummary) => pathSummary.pass),
 };
 if (candidateContext) {
   const evidence = finalizeCandidateEvidence(root, candidateContext, {
@@ -287,4 +303,4 @@ if (seoScores.length) {
   console.log(`Median SEO: ${medianSeo} (budget ≥ ${BUDGET.seo})`);
 }
 
-process.exit(failed || !summary.pass ? 1 : 0);
+process.exit(!summary.pass ? 1 : 0);

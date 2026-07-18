@@ -26,10 +26,7 @@ import TourPoliciesSection from "./TourPoliciesSection";
 import PackingListSection from "./PackingListSection";
 import { TourBookingProvider } from "./TourBookingContext";
 import MobileBookingBar from "./MobileBookingBar";
-import TourCheckoutModal from "./checkout/TourCheckoutModal";
-import TourPriceRequestModal from "./TourPriceRequestModal";
-import TourWaitlistModal from "./TourWaitlistModal";
-import PartnerTourBookingModal from "./PartnerTourBookingModal";
+import OnDemandTourBookingDialogs from "./OnDemandTourBookingDialogs";
 import TourSectionNav from "./TourSectionNav";
 import PrivateTourBanner from "./PrivateTourBanner";
 import PartnerTourBanner from "./PartnerTourBanner";
@@ -46,15 +43,14 @@ import PartnerTourImportantSection from "./PartnerTourImportantSection";
 import PartnerTourArrivalInfoSection from "./PartnerTourArrivalInfoSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
-import ReviewPromptBanner from "./ReviewPromptBanner";
-import TourReviewPanel from "./TourReviewPanel";
+import OnDemandReviewPromptBanner from "./OnDemandReviewPromptBanner";
+import OnDemandTourReviewPanel from "./OnDemandTourReviewPanel";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { PartnerInfoAutoplayGallery } from "@/components/shared/PartnerInfoAutoplayGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
-import { tourUsesExternalBooking } from "@/lib/tour-custom-booking-link";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
@@ -148,7 +144,6 @@ export default function TourDetailView({
     canonicalTour,
     flightLogisticsLabel: flightLogisticsNavLabel,
   });
-  const usesExternalBooking = tourUsesExternalBooking(tour);
   const isPartnerTour = isPartnerTourDetail(tour);
   const partnerContent = tour.partnerContent;
   const partnerSections =
@@ -197,9 +192,11 @@ export default function TourDetailView({
         />
       ) : null}
 
-      <Suspense fallback={null}>
-        <ReviewPromptBanner tourSlug={tour.slug} isPartnerTour={isPartnerTour} />
-      </Suspense>
+      {!previewMode && !isPartnerTour ? (
+        <Suspense fallback={null}>
+          <OnDemandReviewPromptBanner tourSlug={tour.slug} />
+        </Suspense>
+      ) : null}
 
       <TourDetailHeader
         tour={tour}
@@ -422,7 +419,7 @@ export default function TourDetailView({
                 guides={canonicalTour?.team.guides}
               />
               {!previewMode ? (
-                <TourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
+                <OnDemandTourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
               ) : null}
               <ReviewsSection reviews={tour.reviews} />
               {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
@@ -446,20 +443,8 @@ export default function TourDetailView({
       </div>
 
       {!previewMode ? <MobileBookingBar tour={tour} /> : null}
-      {!previewMode && usesExternalBooking && isPartnerTour ? (
-        <PartnerTourBookingModal tour={tour} />
-      ) : null}
-      {!previewMode && !usesExternalBooking && tour.priceOnRequest ? (
-        <TourPriceRequestModal tour={tour} />
-      ) : null}
-      {!previewMode && !usesExternalBooking && !tour.priceOnRequest ? (
-        <TourCheckoutModal tour={tour} />
-      ) : null}
-      {!previewMode &&
-      !usesExternalBooking &&
-      tour.waitlistEnabled &&
-      !tour.priceOnRequest ? (
-        <TourWaitlistModal tour={tour} />
+      {!previewMode ? (
+        <OnDemandTourBookingDialogs tour={tour} isPartnerTour={isPartnerTour} />
       ) : null}
     </TourBookingProvider>
   );

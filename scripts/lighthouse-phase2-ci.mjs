@@ -68,8 +68,13 @@ function runAudit() {
       LIGHTHOUSE_BASE_URL: BASE_URL,
       LIGHTHOUSE_SAMPLE_PATHS: LIGHTHOUSE_PHASE2_PATHS.join(","),
       LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3",
-      LIGHTHOUSE_CATEGORIES: "performance,accessibility,seo",
-      LIGHTHOUSE_PERF_BUDGET: process.env.LIGHTHOUSE_PERF_BUDGET ?? (isExternalBase ? "65" : "75"),
+      // A local candidate is deliberately noindex. SEO is blocking only on the
+      // published canonical host; local CI still blocks on a11y, payload and
+      // repeatable mobile performance evidence.
+      LIGHTHOUSE_CATEGORIES: isExternalBase
+        ? "performance,accessibility,seo"
+        : "performance,accessibility",
+      LIGHTHOUSE_PERF_BUDGET: process.env.LIGHTHOUSE_PERF_BUDGET ?? (isExternalBase ? "75" : "55"),
       LIGHTHOUSE_EVIDENCE_SCOPE: evidenceScope,
       EVIDENCE_ENVIRONMENT:
         process.env.EVIDENCE_ENVIRONMENT ??

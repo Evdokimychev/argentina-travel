@@ -7,9 +7,35 @@ import { isDurationFilterActive } from "@/data/duration-presets";
 import { isPriceFilterActive } from "@/lib/tour-price-bounds";
 import { getDefaultFilters } from "@/lib/filter-tours";
 import { formatCurrencyAmount } from "@/lib/currency";
-import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import type { CatalogFilterChip } from "@/components/marketplace/CatalogActiveFilterChips";
+
+export interface CatalogOrganizerIdentity {
+  slug: string;
+  name: string;
+}
+
+/**
+ * Resolve the small organizer identity needed by the public catalog directly
+ * from its SSR payload. Importing the full organizer repository here pulled
+ * private editor seeds and the complete media manifest into the browser.
+ */
+export function resolveCatalogOrganizerIdentity(
+  rawSlug: string,
+  tours: TourListing[],
+): CatalogOrganizerIdentity | null {
+  const slug = rawSlug.trim();
+  if (!slug) return null;
+
+  const sample = tours.find(
+    (tour) =>
+      !tour.partnerSource &&
+      (resolveListingOwnerUserId(tour) === slug || tour.organizer.slug === slug),
+  );
+  const name = sample?.organizer.name.trim();
+  return name ? { slug, name } : null;
+}
 
 function formatRuDate(date: Date): string {
   return date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
@@ -179,7 +205,7 @@ export function buildTourFilterChips(
 
   if (filters.organizerSlug.trim()) {
     const slug = filters.organizerSlug.trim();
-    const profile = buildPublicOrganizerProfile(slug);
+    const profile = resolveCatalogOrganizerIdentity(slug, tours);
     const youtravelExpertLabel = resolveYouTravelExpertOrganizerLabel(slug, tours);
     chips.push({
       id: "organizer",

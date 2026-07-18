@@ -1,14 +1,9 @@
 "use client";
 
-import { useCallback, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
-import Hero from "@/components/Hero";
 import ContactOfficeMap from "@/components/contacts/ContactOfficeMap";
 import ContactTeamBlock from "@/components/contacts/ContactTeamBlock";
-import { getShopProductBySlug } from "@/data/shop-products";
-import { formatShopMoney } from "@/types/shop-product";
-import { getServiceBySlug } from "@/data/services-hub";
-import { getTourBySlug } from "@/data/tours";
 import {
   SITE_EMAIL,
   SITE_OFFICE,
@@ -19,7 +14,6 @@ import { SmartInput } from "@/components/ui/smart-input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { SmartTextarea } from "@/components/ui/smart-textarea";
 import { cn } from "@/lib/cn";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
@@ -29,12 +23,18 @@ import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { requiredField, validateEmail } from "@/lib/form-validation";
 import TurnstileField from "@/components/forms/TurnstileField";
+import { pageBandSectionClass } from "@/lib/page-band";
 
-type ContactFormContext = {
+export type ContactFormContext = {
   tourSlug?: string;
   productSlug?: string;
   serviceSlug?: string;
   topic?: string;
+  tourTitle?: string;
+  productTitle?: string;
+  productFormat?: string;
+  productPriceLabel?: string;
+  serviceTitle?: string;
 };
 
 type ContactsPageClientProps = {
@@ -52,30 +52,16 @@ type ContactsPageClientProps = {
 };
 
 function buildInitialMessage(context: ContactFormContext): string {
-  const tour = context.tourSlug ? getTourBySlug(context.tourSlug) : undefined;
-  const product = context.productSlug ? getShopProductBySlug(context.productSlug) : undefined;
-  const service = context.serviceSlug ? getServiceBySlug(context.serviceSlug) : undefined;
-
-  if (tour) return `Интересует тур «${tour.title}». `;
-  if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
-  if (service) return `Запрос по сервису: «${service.title}». `;
+  if (context.tourTitle) return `Интересует тур «${context.tourTitle}». `;
+  if (context.productTitle) {
+    return `Хочу заказать «${context.productTitle}»${context.productFormat ? ` (${context.productFormat})` : ""}. `;
+  }
+  if (context.serviceTitle) return `Запрос по сервису: «${context.serviceTitle}». `;
   if (context.topic) return `Вопрос по теме: ${context.topic}. `;
   return "";
 }
 
 function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }) {
-  const tour = useMemo(
-    () => (formContext.tourSlug ? getTourBySlug(formContext.tourSlug) : undefined),
-    [formContext.tourSlug]
-  );
-  const product = useMemo(
-    () => (formContext.productSlug ? getShopProductBySlug(formContext.productSlug) : undefined),
-    [formContext.productSlug]
-  );
-  const service = useMemo(
-    () => (formContext.serviceSlug ? getServiceBySlug(formContext.serviceSlug) : undefined),
-    [formContext.serviceSlug]
-  );
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
@@ -110,9 +96,9 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
           productSlug: formContext.productSlug,
           serviceSlug: formContext.serviceSlug,
           context: {
-            tour_title: tour?.title ?? (tourTitle || undefined),
-            product_title: product?.title,
-            service_title: service?.title,
+            tour_title: formContext.tourTitle ?? (tourTitle || undefined),
+            product_title: formContext.productTitle,
+            service_title: formContext.serviceTitle,
             topic: formContext.topic,
           },
           pageUrl: typeof window !== "undefined" ? window.location.href : null,
@@ -152,25 +138,24 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
 
   return (
     <>
-      {tour ? (
+      {formContext.tourTitle ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Вопрос по туру: <span className="font-medium">{tour.title}</span>
+          Вопрос по туру: <span className="font-medium">{formContext.tourTitle}</span>
         </div>
       ) : null}
 
-      {product ? (
+      {formContext.productTitle ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Заказ продукта: <span className="font-medium">{product.title}</span>
-          <span className="text-slate">
-            {" "}
-            · {formatShopMoney(product.priceMinor, product.currency)}
-          </span>
+          Заказ продукта: <span className="font-medium">{formContext.productTitle}</span>
+          {formContext.productPriceLabel ? (
+            <span className="text-slate"> · {formContext.productPriceLabel}</span>
+          ) : null}
         </div>
       ) : null}
 
-      {service ? (
+      {formContext.serviceTitle ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Запрос по сервису: <span className="font-medium">{service.title}</span>
+          Запрос по сервису: <span className="font-medium">{formContext.serviceTitle}</span>
         </div>
       ) : null}
 
@@ -224,9 +209,9 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               id="tour"
               label="Интересующий тур"
               name="tour"
-              readOnly={Boolean(tour)}
-              defaultValue={tour?.title ?? ""}
-              className={cn(tour && "read-only:bg-gray-50")}
+              readOnly={Boolean(formContext.tourTitle)}
+              defaultValue={formContext.tourTitle ?? ""}
+              className={cn(formContext.tourTitle && "read-only:bg-gray-50")}
               placeholder="Название тура (необязательно)"
               optional
             />
@@ -291,12 +276,19 @@ export default function ContactsPageClient({
 
   return (
     <>
-      <Hero
-        title={t("contacts.hero.title")}
-        subtitle={t("contacts.hero.subtitle")}
-        image={getServicePageHeroImage("contacts")}
-        compact
-      />
+      <section data-scroll-rail-tone="light" className={pageBandSectionClass}>
+        <div className={cn(siteContainerClass, "py-8 sm:py-10 md:py-12")}>
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-sky">
+            Команда «Пора в Аргентину»
+          </p>
+          <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-tight tracking-tight text-charcoal sm:text-4xl">
+            {t("contacts.hero.title")}
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+            {t("contacts.hero.subtitle")}
+          </p>
+        </div>
+      </section>
 
       <section className={cn(siteContainerClass, "py-12 md:py-14")}>
         {whatsAppHref ? (
@@ -351,7 +343,7 @@ export default function ContactsPageClient({
                         >
                           WhatsApp: {phone.display}
                         </a>
-                        <span className="ml-2 text-xs text-slate/60">{phone.label}</span>
+                        <span className="ml-2 text-xs text-slate">{phone.label}</span>
                       </li>
                     ))}
                     {telegramHref ? (
@@ -406,7 +398,7 @@ export default function ContactsPageClient({
                   >
                     {emailDisplay}
                   </a>
-                  <p className="mt-0.5 text-sm text-slate/70">{t("contacts.email.note")}</p>
+                  <p className="mt-0.5 text-sm text-slate">{t("contacts.email.note")}</p>
                 </div>
               </div>
 
@@ -417,7 +409,7 @@ export default function ContactsPageClient({
                 <div>
                   <p className="font-semibold text-charcoal">{t("contacts.office.title")}</p>
                   <p className="mt-1 text-slate">{SITE_OFFICE.display}</p>
-                  <p className="mt-0.5 text-sm text-slate/70">{SITE_OFFICE.note}</p>
+                  <p className="mt-0.5 text-sm text-slate">{SITE_OFFICE.note}</p>
                 </div>
               </div>
             </div>
