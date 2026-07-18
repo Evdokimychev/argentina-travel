@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   DEFAULT_SITE_MODULES,
   DEFAULT_SITE_NAVIGATION,
@@ -11,6 +13,16 @@ import {
 } from "@/lib/public-mobile-nav";
 
 describe("public mobile app navigation", () => {
+  it("keeps every label readable at the 320px app width", () => {
+    const source = readFileSync(
+      join(process.cwd(), "src/components/navigation/PublicMobileBottomNav.tsx"),
+      "utf8",
+    );
+
+    expect(source).toContain("rounded-xl px-0.5 text-[10px]");
+    expect(source).toContain('<span className="max-w-full truncate">');
+  });
+
   it("stays on public discovery pages and yields to workspaces and transactions", () => {
     expect(shouldShowPublicMobileNav("/")).toBe(true);
     expect(shouldShowPublicMobileNav("/mapa-argentina")).toBe(true);

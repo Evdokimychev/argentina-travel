@@ -466,7 +466,7 @@ export default function HomeFlightSearchBlock({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2",
+        "flex min-w-0 w-full max-w-full flex-col gap-2",
         !embedded && "lg:flex-row lg:items-stretch",
         embedded && "gap-3",
       )}

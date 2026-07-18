@@ -32,10 +32,12 @@ export default function CatalogDepartureCalendarButton({
         variant={variant}
         size="sm"
         className={className}
+        aria-label="Календарь отправлений"
         onClick={() => setOpen(true)}
       >
         <CalendarDays className="h-4 w-4" aria-hidden />
-        Календарь отправлений
+        <span className="sm:hidden">Календарь</span>
+        <span className="hidden sm:inline">Календарь отправлений</span>
         {index.totalDepartures > 0 ? (
           <span className="rounded-full bg-sky/10 px-1.5 py-0.5 text-[11px] font-semibold text-sky-ink">
             {index.totalDepartures}

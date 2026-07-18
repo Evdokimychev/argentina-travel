@@ -60,7 +60,8 @@ export default function CatalogFiltersSheet({
           </div>
           <DialogFooter>
             <Button type="button" className="w-full sm:w-auto" onClick={() => setOpen(false)}>
-              Показать результаты
+              <span className="sm:hidden">Показать</span>
+              <span className="hidden sm:inline">Показать результаты</span>
             </Button>
           </DialogFooter>
         </DialogContent>

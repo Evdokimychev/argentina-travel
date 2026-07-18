@@ -84,7 +84,7 @@ export default function MarketplaceHomeHero({
             </div>
           ) : null}
 
-          <div className="relative z-10 order-2 lg:order-3 lg:col-span-2 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20">
+          <div className="relative z-10 order-2 min-w-0 w-full max-w-full lg:order-3 lg:col-span-2 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20">
             {searchControls}
           </div>
         </div>

@@ -110,7 +110,7 @@ export default function HomeMultiSearch({
   };
 
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="min-w-0 w-full max-w-full space-y-3 sm:space-y-4">
       <div
         className="scrollbar-hide -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1"
         role="tablist"
@@ -140,7 +140,7 @@ export default function HomeMultiSearch({
       </div>
 
       <div
-        className="rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4"
+        className="min-w-0 w-full max-w-full overflow-x-hidden rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4"
         role="tabpanel"
         id={`home-search-panel-${activeTab}`}
         aria-labelledby={`home-search-tab-${activeTab}`}

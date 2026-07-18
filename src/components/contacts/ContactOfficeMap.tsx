@@ -37,7 +37,8 @@ export default function ContactOfficeMap() {
             aria-controls="contact-office-map"
             onClick={() => setOpen(true)}
           >
-            Открыть карту офиса
+            <span className="sm:hidden">Показать карту</span>
+            <span className="hidden sm:inline">Открыть карту офиса</span>
           </Button>
         </div>
       )}

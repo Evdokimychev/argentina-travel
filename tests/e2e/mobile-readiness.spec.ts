@@ -44,6 +44,39 @@ async function expectMobileGeometry(page: Page, testInfo: TestInfo) {
   expect(geometry.fixedOutsideViewport, `${testInfo.title}: fixed controls outside viewport`).toEqual([]);
 }
 
+async function expectCompactMobileActions(page: Page, testInfo: TestInfo) {
+  const issues = await page.locator("button:visible, a:visible").evaluateAll((elements) =>
+    (elements as HTMLElement[])
+      .map((element) => {
+        const text = (element.textContent ?? "").replace(/\s+/g, " ").trim();
+        const rect = element.getBoundingClientRect();
+        const className = element.className?.toString() ?? "";
+        const isAction =
+          element.tagName === "BUTTON" ||
+          className.includes("rounded-button") ||
+          className.includes("bg-sky-ink");
+        return {
+          text,
+          width: rect.width,
+          inViewport:
+            rect.right > 0 &&
+            rect.left < window.innerWidth &&
+            rect.bottom > 0 &&
+            rect.top < window.innerHeight,
+          isAction,
+          clipped:
+            text.length >= 4 &&
+            (element.scrollWidth > element.clientWidth + 1 ||
+              element.scrollHeight > element.clientHeight + 1),
+        };
+      })
+      .filter((item) => item.width >= 44 && item.inViewport && item.isAction && item.clipped)
+      .filter((item) => !/^\d+\s+Issues?$/i.test(item.text)),
+  );
+
+  expect(issues, `${testInfo.title}: clipped mobile actions`).toEqual([]);
+}
+
 async function expectLoadedVisibleImages(page: Page, testInfo: TestInfo) {
   await expect
     .poll(
@@ -96,6 +129,7 @@ for (const viewport of MOBILE_VIEWPORTS) {
       await page.waitForTimeout(pathname === "/mapa-argentina" ? 2_000 : 750);
 
       await expectMobileGeometry(page, testInfo);
+      await expectCompactMobileActions(page, testInfo);
       await expectLoadedVisibleImages(page, testInfo);
 
       const mobileNav = page.getByRole("navigation", { name: "Основная навигация" });
@@ -146,6 +180,7 @@ test("[mobile-readiness] tour detail owns the bottom action", async ({ page }, t
   await page.waitForTimeout(1_000);
 
   await expectMobileGeometry(page, testInfo);
+  await expectCompactMobileActions(page, testInfo);
   await expectLoadedVisibleImages(page, testInfo);
   await expect(page.getByRole("navigation", { name: "Основная навигация" })).toHaveCount(0);
   await expect(page.locator("h1")).toBeVisible();
