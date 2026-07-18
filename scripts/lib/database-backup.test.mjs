@@ -126,6 +126,10 @@ test("workflow uploads only the encrypted directory after age encryption", () =>
   assert.match(workflow, /cron: "30 6 \* \* \*"/);
   assert.match(workflow, /secrets\.BACKUP_DATABASE_URL/);
   assert.match(workflow, /secrets\.BACKUP_AGE_RECIPIENT/);
+  assert.match(
+    workflow,
+    /id: backup\s+env:\s+BACKUP_OUTPUT_DIR: \$\{\{ runner\.temp \}\}\/encrypted-database-backup/,
+  );
   assert.match(workflow, /node scripts\/supabase-full-backup\.mjs/);
   assert.match(workflow, /path: \$\{\{ steps\.backup\.outputs\.artifact_dir \}\}/);
   assert.match(workflow, /retention-days: \$\{\{ steps\.backup\.outputs\.retention_days \}\}/);

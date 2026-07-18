@@ -22,7 +22,6 @@ jobs:
       BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
       BACKUP_AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
       BACKUP_SOURCE_PROJECT_REF: ${{ vars.BACKUP_SOURCE_PROJECT_REF }}
-      BACKUP_OUTPUT_DIR: ${{ runner.temp }}/encrypted-database-backup
       GIT_SHA: ${{ github.sha }}
 
     steps:
@@ -41,6 +40,8 @@ jobs:
 
       - name: Create, verify and encrypt logical backup
         id: backup
+        env:
+          BACKUP_OUTPUT_DIR: ${{ runner.temp }}/encrypted-database-backup
         run: node scripts/supabase-full-backup.mjs
 
       - name: Upload encrypted backup and non-PII manifest
