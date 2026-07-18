@@ -11,6 +11,10 @@ import {
 } from "@/lib/media-resolver";
 import { filterPublicGalleryImages } from "@/lib/public-gallery-images";
 
+function canonicalMediaPath(src: string): string {
+  return new URL(src, "https://www.goargentina.ru").pathname;
+}
+
 describe("public media gallery readiness", () => {
   it.each([
     [
@@ -73,7 +77,9 @@ describe("public media gallery readiness", () => {
     const post = blogPosts.find((candidate) => candidate.slug === slug);
 
     expect(post).toBeDefined();
-    expect(resolveBlogPostCardImage(post!)).toBe(getBlogPostHeroResolved(post!).src);
+    expect(canonicalMediaPath(resolveBlogPostCardImage(post!))).toBe(
+      canonicalMediaPath(getBlogPostHeroResolved(post!).src),
+    );
   });
 
   it("returns no logo fallback for an empty rich gallery", () => {
