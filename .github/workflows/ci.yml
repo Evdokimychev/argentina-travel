@@ -72,12 +72,7 @@ jobs:
         env:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
           LIGHTHOUSE_START_TIMEOUT_MS: 180000
-          LIGHTHOUSE_CATEGORIES: performance,accessibility,seo
           LIGHTHOUSE_RUNS_PER_PATH: "3"
-          LIGHTHOUSE_PERF_BUDGET: "75"
-          LIGHTHOUSE_LCP_BUDGET_MS: "4000"
-          LIGHTHOUSE_CLS_BUDGET: "0.1"
-          LIGHTHOUSE_TBT_BUDGET_MS: "300"
         run: node scripts/lighthouse-phase2-ci.mjs
 
       - name: Upload performance evidence

@@ -41,6 +41,13 @@ export const LIGHTHOUSE_PHASE2_PATHS = [
   "/destinations/patagonia",
 ];
 
+// The partner detail depends on live supplier inventory and is therefore a
+// production-only acceptance route. An isolated CI build intentionally has no
+// partner credentials and must not turn an expected 404 into performance data.
+const samplePaths = isExternalBase
+  ? LIGHTHOUSE_PHASE2_PATHS
+  : LIGHTHOUSE_PHASE2_PATHS.filter((samplePath) => !samplePath.startsWith("/tours/"));
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -66,7 +73,7 @@ function runAudit() {
     env: {
       ...process.env,
       LIGHTHOUSE_BASE_URL: BASE_URL,
-      LIGHTHOUSE_SAMPLE_PATHS: LIGHTHOUSE_PHASE2_PATHS.join(","),
+      LIGHTHOUSE_SAMPLE_PATHS: samplePaths.join(","),
       LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3",
       // A local candidate is deliberately noindex. SEO is blocking only on the
       // published canonical host; local CI still blocks on a11y, payload and
