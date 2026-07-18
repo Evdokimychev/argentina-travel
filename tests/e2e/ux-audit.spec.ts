@@ -155,11 +155,15 @@ test.describe("UX audit — navigation", () => {
 
     await page.goBack({ waitUntil: "domcontentloaded" });
     await waitForPageStable(page);
-    await expect.soft(page).toHaveURL((url) => url.pathname === "/");
+    await expect
+      .poll(() => new URL(page.url()).pathname, { message: "Back navigation returns home" })
+      .toBe("/");
 
     await page.goForward({ waitUntil: "domcontentloaded" });
     await waitForPageStable(page);
-    await expect.soft(page).toHaveURL(/\/tours/);
+    await expect
+      .poll(() => new URL(page.url()).pathname, { message: "Forward navigation returns to tours" })
+      .toBe("/tours");
 
     const scroll = await hasHorizontalScroll(page);
     if (scroll.overflow) {

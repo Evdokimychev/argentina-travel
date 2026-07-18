@@ -1,7 +1,7 @@
 ---
 id: navegacion-en-los-rios-limay-y-neuquen
 type: attraction
-title: Sailing on the Limay and Neuquén rivers
+title: Водные прогулки по рекам Лимай и Неукен
 title_es: Navegación en los ríos Limay y Neuquén
 title_en: Sailing on the Limay and Neuquén rivers
 summary: "Навигация по рекам Лимай и Неукен — там, где сливаются две главные реки северной Патагонии."

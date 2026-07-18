@@ -4,6 +4,12 @@ export const FIRST_TOUCH_COOKIE = "pva_ft_attribution";
 export const FIRST_TOUCH_STORAGE_KEY = "pva_ft_attribution";
 
 const COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 90;
+const MAX_COOKIE_VALUE_LENGTH = 4_096;
+const MAX_UTM_LENGTH = 160;
+const MAX_CAMPAIGN_LENGTH = 240;
+const MAX_REFERRER_LENGTH = 500;
+const MAX_LANDING_PATH_LENGTH = 500;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type FirstTouchAttributionInput = {
   utmSource?: string | null;
@@ -12,36 +18,93 @@ export type FirstTouchAttributionInput = {
   referrer?: string | null;
   landingPath?: string | null;
   apiKeyId?: string | null;
+  capturedAt?: string | null;
 };
 
-function trimOrUndefined(value: string | null | undefined): string | undefined {
-  const trimmed = value?.trim();
-  return trimmed || undefined;
+function normalizeText(
+  value: string | null | undefined,
+  maxLength: number
+): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, maxLength) : undefined;
 }
 
 function normalizeReferrer(referrer: string | null | undefined): string | undefined {
-  const trimmed = trimOrUndefined(referrer);
+  const trimmed = normalizeText(referrer, MAX_REFERRER_LENGTH);
   if (!trimmed) return undefined;
   try {
     const url = new URL(trimmed);
-    if (url.hostname === window.location.hostname) return undefined;
-    return trimmed.slice(0, 500);
+    if (typeof window !== "undefined" && url.hostname === window.location.hostname) {
+      return undefined;
+    }
+    return trimmed;
   } catch {
-    return trimmed.slice(0, 500);
+    return trimmed;
   }
+}
+
+function normalizeApiKeyId(value: string | null | undefined): string | undefined {
+  const normalized = normalizeText(value, 36);
+  return normalized && UUID_PATTERN.test(normalized) ? normalized : undefined;
+}
+
+function normalizeCapturedAt(value: string | null | undefined): string {
+  if (typeof value === "string") {
+    const normalized = value.trim();
+    if (normalized && Number.isFinite(Date.parse(normalized))) return normalized;
+  }
+  return new Date().toISOString();
+}
+
+function safelyDecodeCookieValue(value: string): string | null {
+  if (!value || value.length > MAX_COOKIE_VALUE_LENGTH) return null;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
+function encodeCookieAttribution(attribution: BookingAttribution): string | null {
+  const candidate = { ...attribution };
+  const reducibleFields: Array<
+    keyof Pick<
+      BookingAttribution,
+      "referrer" | "landingPath" | "utmCampaign" | "utmMedium" | "utmSource"
+    >
+  > = ["referrer", "landingPath", "utmCampaign", "utmMedium", "utmSource"];
+
+  for (const field of reducibleFields) {
+    while (candidate[field]) {
+      const encoded = encodeURIComponent(serializeFirstTouchAttribution(candidate));
+      if (encoded.length <= MAX_COOKIE_VALUE_LENGTH) return encoded;
+
+      const current = candidate[field];
+      if (!current) break;
+      if (current.length <= 32) {
+        delete candidate[field];
+      } else {
+        candidate[field] = current.slice(0, Math.max(32, Math.floor(current.length / 2)));
+      }
+    }
+  }
+
+  const encoded = encodeURIComponent(serializeFirstTouchAttribution(candidate));
+  return encoded.length <= MAX_COOKIE_VALUE_LENGTH ? encoded : null;
 }
 
 export function buildFirstTouchAttribution(
   input: FirstTouchAttributionInput
 ): BookingAttribution | null {
   const attribution: BookingAttribution = {
-    utmSource: trimOrUndefined(input.utmSource),
-    utmMedium: trimOrUndefined(input.utmMedium),
-    utmCampaign: trimOrUndefined(input.utmCampaign),
-    referrer: trimOrUndefined(input.referrer),
-    landingPath: trimOrUndefined(input.landingPath),
-    apiKeyId: trimOrUndefined(input.apiKeyId),
-    capturedAt: new Date().toISOString(),
+    utmSource: normalizeText(input.utmSource, MAX_UTM_LENGTH),
+    utmMedium: normalizeText(input.utmMedium, MAX_UTM_LENGTH),
+    utmCampaign: normalizeText(input.utmCampaign, MAX_CAMPAIGN_LENGTH),
+    referrer: normalizeReferrer(input.referrer),
+    landingPath: normalizeText(input.landingPath, MAX_LANDING_PATH_LENGTH),
+    apiKeyId: normalizeApiKeyId(input.apiKeyId),
+    capturedAt: normalizeCapturedAt(input.capturedAt),
   };
 
   const hasData =
@@ -71,6 +134,7 @@ export function parseFirstTouchAttribution(raw: string | null | undefined): Book
       referrer: parsed.referrer,
       landingPath: parsed.landingPath,
       apiKeyId: parsed.apiKeyId,
+      capturedAt: parsed.capturedAt,
     });
   } catch {
     return null;
@@ -87,15 +151,21 @@ export function readFirstTouchFromDocumentCookie(): BookingAttribution | null {
   const prefix = `${FIRST_TOUCH_COOKIE}=`;
   const entry = document.cookie.split("; ").find((part) => part.startsWith(prefix));
   if (!entry) return null;
-  const raw = decodeURIComponent(entry.slice(prefix.length));
+  const raw = safelyDecodeCookieValue(entry.slice(prefix.length));
+  if (!raw) return null;
   return parseFirstTouchAttribution(raw);
 }
 
 export function persistFirstTouchAttribution(attribution: BookingAttribution): void {
   if (typeof window === "undefined") return;
-  const serialized = serializeFirstTouchAttribution(attribution);
+  const normalized = buildFirstTouchAttribution(attribution);
+  if (!normalized) return;
+  const serialized = serializeFirstTouchAttribution(normalized);
   window.sessionStorage.setItem(FIRST_TOUCH_STORAGE_KEY, serialized);
-  document.cookie = `${FIRST_TOUCH_COOKIE}=${encodeURIComponent(serialized)}; path=/; max-age=${COOKIE_MAX_AGE_SEC}; SameSite=Lax`;
+  const encodedCookie = encodeCookieAttribution(normalized);
+  if (encodedCookie) {
+    document.cookie = `${FIRST_TOUCH_COOKIE}=${encodedCookie}; path=/; max-age=${COOKIE_MAX_AGE_SEC}; SameSite=Lax`;
+  }
 }
 
 export function clearFirstTouchAttribution(): void {
@@ -141,7 +211,8 @@ export function parseFirstTouchCookieHeader(cookieHeader: string | null | undefi
   const prefix = `${FIRST_TOUCH_COOKIE}=`;
   const entry = cookieHeader.split(";").map((part) => part.trim()).find((part) => part.startsWith(prefix));
   if (!entry) return null;
-  const raw = decodeURIComponent(entry.slice(prefix.length));
+  const raw = safelyDecodeCookieValue(entry.slice(prefix.length));
+  if (!raw) return null;
   return parseFirstTouchAttribution(raw);
 }
 

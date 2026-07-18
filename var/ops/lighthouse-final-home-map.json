@@ -1,0 +1,40 @@
+{
+  "at": "2026-07-17T03:33:50.856Z",
+  "baseUrl": "http://127.0.0.1:3131",
+  "categories": [
+    "performance",
+    "accessibility"
+  ],
+  "budget": {
+    "performance": 75,
+    "accessibility": 95,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "medianPerformance": 73,
+  "medianAccessibility": 100,
+  "results": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:3131/",
+      "performance": 69,
+      "accessibility": 100,
+      "lcpMs": 8261,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/mapa-argentina",
+      "url": "http://127.0.0.1:3131/mapa-argentina",
+      "performance": 73,
+      "accessibility": 99,
+      "lcpMs": 6744,
+      "cls": 0.077,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

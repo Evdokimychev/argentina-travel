@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "artifact": "accessibility-baseline",
+  "generatedAt": "2026-07-15T03:15:54Z",
+  "auditedCommit": "8ddef6615adb79069c444738e83a4b24bfefcef8",
+  "workingTree": {
+    "state": "dirty_shared_workspace",
+    "scopeNote": "Metrics and file evidence reflect the shared working tree at generatedAt, including uncommitted work from other agents. This agent changed only the two assigned release documents."
+  },
+  "standard": {
+    "target": "WCAG 2.2 AA",
+    "releaseDecision": "not_release_ready",
+    "reason": "The repository contains a sound accessibility foundation, but the current evidence does not demonstrate WCAG 2.2 AA conformance across critical journeys. Automated axe coverage, screen-reader smoke, 200% zoom, and complete keyboard acceptance are missing."
+  },
+  "scope": {
+    "areas": [
+      "design tokens and UI primitives",
+      "site chrome and mobile navigation",
+      "dialogs and forms",
+      "critical mobile layouts",
+      "map alternative",
+      "visual and accessibility test evidence"
+    ],
+    "excluded": [
+      "authenticated production journeys without test credentials",
+      "assistive-technology execution on physical devices",
+      "new browser automation runs that would overwrite shared release artifacts"
+    ]
+  },
+  "methodology": [
+    {
+      "method": "static_repository_review",
+      "status": "completed",
+      "evidence": [
+        "src/styles/tokens.css",
+        "src/app/globals.css",
+        "src/components/ui",
+        "src/components/navigation/SiteNavDrawer.tsx",
+        "src/components/map/ArgentinaMapFullscreenHub.tsx",
+        "tests/e2e"
+      ]
+    },
+    {
+      "method": "existing_artifact_review",
+      "status": "completed_with_limitations",
+      "evidence": [
+        "var/ops/e2e-ux-audit-last.json",
+        "test-results/.last-run.json",
+        "var/ops/screenshots/stage2-after/flights-iphone-se.png",
+        "var/ops/screenshots/stage2-after/map-mobile-list.png",
+        "var/ops/screenshots/home-mobile-after.png"
+      ]
+    },
+    {
+      "method": "axe_template_sweep",
+      "status": "not_implemented",
+      "evidence": "No axe dependency or axe invocation was found in package.json, package-lock.json, tests, or src."
+    },
+    {
+      "method": "screen_reader_smoke",
+      "status": "not_run"
+    },
+    {
+      "method": "keyboard_critical_journeys",
+      "status": "partially_documented_not_release_verified"
+    },
+    {
+      "method": "zoom_200_percent",
+      "status": "not_run"
+    },
+    {
+      "method": "reduced_motion_browser_check",
+      "status": "static_support_only"
+    }
+  ],
+  "repositoryMetrics": {
+    "tsxFiles": 1023,
+    "uiPrimitiveFiles": 25,
+    "filesUsingSemanticRadiusClasses": 38,
+    "filesUsingLegacyRadiusClasses": 498,
+    "rawHexColorOccurrencesInTsx": 93,
+    "filesUsingFocusVisible": 65,
+    "filesUsingOutlineNone": 108,
+    "filesUsingAriaLabel": 275,
+    "dialogImplementationFiles": 41,
+    "filesWithReducedMotionHandling": 39,
+    "filesWithSafeAreaHandling": 11,
+    "explicitButtonElementsInComponents": 587,
+    "componentFilesContainingButtons": 255,
+    "smallSquareControlCandidates28To36Px": 210,
+    "note": "Counts are static search results captured at auditedCommit. Small-control candidates include decorative elements; confirmed interactive examples are listed as gaps below."
+  },
+  "confirmedStrengths": [
+    {
+      "id": "A11Y-S01",
+      "status": "implemented_static",
+      "wcag": ["2.4.1", "2.4.7"],
+      "finding": "A skip link targets a focusable main landmark, and a global focus-visible outline exists.",
+      "evidence": [
+        "src/components/SkipToContentLink.tsx:3",
+        "src/components/SiteChrome.tsx:44",
+        "src/app/globals.css:247"
+      ]
+    },
+    {
+      "id": "A11Y-S02",
+      "status": "implemented_static",
+      "wcag": ["2.1.1", "2.1.2", "2.4.3"],
+      "finding": "The shared Radix dialog supplies focus management and Escape behavior; its visible close control is 44 by 44 px and mobile content uses dynamic viewport height and safe-area padding.",
+      "evidence": [
+        "src/components/ui/dialog.tsx:53",
+        "src/components/ui/dialog.tsx:109",
+        "src/components/ui/dialog.tsx:116",
+        "src/components/ui/dialog.tsx:153"
+      ]
+    },
+    {
+      "id": "A11Y-S03",
+      "status": "implemented_static",
+      "wcag": ["1.3.1", "3.3.1", "3.3.2", "4.1.3"],
+      "finding": "Shared FormField associates labels, hints, required state, invalid state, and alert errors with controls.",
+      "evidence": [
+        "src/components/ui/form-field.tsx:34",
+        "src/components/ui/form-field.tsx:49",
+        "src/components/ui/form-field.tsx:71"
+      ]
+    },
+    {
+      "id": "A11Y-S04",
+      "status": "implemented_static",
+      "wcag": ["2.3.3"],
+      "finding": "Global reduced-motion rules disable smooth scrolling and named decorative animations.",
+      "evidence": [
+        "src/app/globals.css:208",
+        "src/app/globals.css:297"
+      ]
+    },
+    {
+      "id": "A11Y-S05",
+      "status": "implemented_static",
+      "wcag": ["2.1.1", "2.4.3"],
+      "finding": "The mobile navigation drawer traps Tab, closes on Escape, restores focus, locks body scroll, and accounts for the bottom safe area.",
+      "evidence": [
+        "src/components/navigation/SiteNavDrawer.tsx:42",
+        "src/components/navigation/SiteNavDrawer.tsx:66",
+        "src/components/navigation/SiteNavDrawer.tsx:94",
+        "src/components/navigation/SiteNavDrawer.tsx:149"
+      ]
+    },
+    {
+      "id": "A11Y-S06",
+      "status": "implemented_and_visually_observed",
+      "wcag": ["1.1.1", "1.3.1"],
+      "finding": "The full-screen map exposes a labelled list alternative with selectable objects; an existing mobile screenshot shows the alternative populated.",
+      "evidence": [
+        "src/components/map/ArgentinaMapFullscreenHub.tsx:443",
+        "src/components/map/ArgentinaMapFullscreenHub.tsx:510",
+        "var/ops/screenshots/stage2-after/map-mobile-list.png"
+      ]
+    },
+    {
+      "id": "A11Y-S07",
+      "status": "implemented_test_not_currently_release_verified",
+      "wcag": ["1.3.5", "1.4.10"],
+      "finding": "The auth E2E checks autocomplete and dialog bounds at 390 by 844, but it does not cover keyboard order, announcements, 320 px, zoom, or a screen reader.",
+      "evidence": [
+        "tests/e2e/auth-flow.spec.ts:4",
+        "tests/e2e/auth-flow.spec.ts:18",
+        "tests/e2e/auth-flow.spec.ts:28"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "id": "A11Y-G01",
+      "severity": "P1",
+      "wcag": ["4.1.2"],
+      "area": "automated accessibility coverage",
+      "finding": "There is no axe template-group suite. The earlier accessibility checklist explicitly leaves automated CI axe coverage and axe/Lighthouse execution unfinished.",
+      "impact": "Critical semantic regressions can reach release without a repeatable gate.",
+      "evidence": [
+        "docs/accessibility-e52.md:38",
+        "docs/accessibility-e52.md:47"
+      ],
+      "requiredAcceptance": "Run axe against every public, auth, workspace, admin, and transactional template group and record zero critical violations plus reviewed serious violations."
+    },
+    {
+      "id": "A11Y-G02",
+      "severity": "P1",
+      "wcag": ["2.5.8"],
+      "area": "touch target size",
+      "finding": "Confirmed interactive controls are below the documented 44 by 44 px minimum, including flight clear controls at 28 px, passenger steppers at 32 px, itinerary calendar navigation at 32 px, onboarding close at 32 px, mobile header actions at 36 px, and tour gallery arrows at 32 px.",
+      "impact": "Controls are harder to activate on phones and fail the project's stricter mobile acceptance rule; spacing exceptions have not been documented for WCAG 2.5.8.",
+      "evidence": [
+        "docs/ux/mobile-acceptance.md:14",
+        "src/components/marketplace/HomeFlightSearchBlock.tsx:91",
+        "src/components/marketplace/HomeFlightSearchBlock.tsx:141",
+        "src/components/excursions/ExcursionScheduleDatePicker.tsx:126",
+        "src/components/onboarding/TouristOnboardingModal.tsx:74",
+        "src/components/Header.tsx:155",
+        "src/components/marketplace/TourCardGallery.tsx:77"
+      ],
+      "requiredAcceptance": "Use at least 44 by 44 px hit areas on mobile or document and test a valid target-spacing exception."
+    },
+    {
+      "id": "A11Y-G03",
+      "severity": "P1",
+      "wcag": ["2.1.1", "2.1.2", "2.4.3", "4.1.2"],
+      "area": "custom dialogs",
+      "finding": "PageBuilderBlockPicker implements a modal drawer without the shared Dialog primitive, a visible close button, Escape handling, focus trap, initial focus, or focus restoration.",
+      "impact": "Keyboard and screen-reader users can enter background content or be unable to close and recover context in an admin authoring journey.",
+      "evidence": [
+        "src/components/admin/page-builder/PageBuilderBlockPicker.tsx:16",
+        "src/components/admin/page-builder/PageBuilderBlockPicker.tsx:22",
+        "src/components/admin/page-builder/PageBuilderBlockPicker.tsx:29"
+      ],
+      "requiredAcceptance": "Migrate to the shared Dialog/Drawer behavior and verify initial focus, trapped Tab order, Escape, close control, and focus return."
+    },
+    {
+      "id": "A11Y-G04",
+      "severity": "P2",
+      "wcag": ["2.4.3", "2.4.11", "2.5.8"],
+      "area": "PWA install prompt",
+      "finding": "InstallPrompt has role dialog but no modal semantics or focus management; its install action uses compact vertical padding and its close control is 32 by 32 px.",
+      "impact": "The prompt may appear without an announced context change, and its controls are difficult to target on mobile.",
+      "evidence": [
+        "src/components/pwa/InstallPrompt.tsx:65",
+        "src/components/pwa/InstallPrompt.tsx:96",
+        "src/components/pwa/InstallPrompt.tsx:107"
+      ],
+      "requiredAcceptance": "Treat it as a non-modal status region or implement complete dialog behavior; ensure 44 px controls and unobscured focus."
+    },
+    {
+      "id": "A11Y-G05",
+      "severity": "P1",
+      "wcag": ["1.4.3", "1.4.11"],
+      "area": "color contrast",
+      "finding": "The token source documents sky-ink as the accessible text blue, while many controls and content fragments still use text-sky. No repository-wide measured contrast report exists for normal, hover, disabled, overlay, and dark-mode states.",
+      "impact": "Text and non-text controls can fail contrast despite the presence of semantic tokens.",
+      "evidence": [
+        "src/styles/tokens.css:12",
+        "src/styles/tokens.css:14",
+        "docs/design-tokens-e49.md:17"
+      ],
+      "requiredAcceptance": "Generate a measured contrast inventory for semantic states and replace text-sky where it conveys readable text on light surfaces."
+    },
+    {
+      "id": "A11Y-G06",
+      "severity": "P2",
+      "wcag": ["1.3.1", "1.4.10", "3.2.4"],
+      "area": "design-system consistency",
+      "finding": "Semantic tokens and 25 UI primitives exist, but adoption is partial: 38 TSX files use semantic radius classes while 498 still use legacy radii; 93 raw hex color occurrences remain in TSX.",
+      "impact": "Visual states and responsive behavior can diverge between public, transactional, organizer, and admin surfaces.",
+      "evidence": [
+        "src/styles/tokens.css:121",
+        "docs/ux/design-system-v2.md:3"
+      ],
+      "requiredAcceptance": "Prioritize shared controls and critical journey surfaces, classify intentional exceptions, and use visual diffs rather than a global replacement."
+    },
+    {
+      "id": "A11Y-G07",
+      "severity": "P1",
+      "wcag": ["1.4.4", "1.4.10", "2.4.11", "2.5.8"],
+      "area": "mobile acceptance evidence",
+      "finding": "The required viewport matrix includes 320, 360, 390, 430, and 768 px, but the Stage 2 visual suite covers only 390, 768, and 1440. Existing screenshots do not demonstrate keyboard appearance, 200% zoom, sticky overlap, back/scroll restoration, or all loading/error/success states.",
+      "impact": "A route can appear acceptable in one screenshot while remaining blocked on a smaller phone or with enlarged text.",
+      "evidence": [
+        "docs/ux/mobile-acceptance.md:3",
+        "playwright.stage2-visual.config.ts:27",
+        "tests/e2e/stage2-visual-acceptance.spec.ts:10"
+      ],
+      "requiredAcceptance": "Complete the documented viewport and state matrix for each critical route and manually review every visual diff."
+    },
+    {
+      "id": "A11Y-G08",
+      "severity": "P1",
+      "wcag": ["2.1.1", "2.4.3", "4.1.2", "4.1.3"],
+      "area": "assistive technology evidence",
+      "finding": "Screen-reader smoke, modal announcements, autocomplete announcements, complete keyboard journeys, and accessible-table checks are requested by the release prompt but have no current execution artifact.",
+      "impact": "Static ARIA review cannot prove that critical journeys are understandable and operable with assistive technology.",
+      "evidence": [
+        "docs/accessibility-e52.md:38",
+        "docs/accessibility-e52.md:43"
+      ],
+      "requiredAcceptance": "Record VoiceOver plus Safari smoke on mobile and desktop, keyboard-only critical journeys, and table/navigation announcements."
+    },
+    {
+      "id": "A11Y-G09",
+      "severity": "P1",
+      "wcag": ["1.4.10", "4.1.3"],
+      "area": "release evidence integrity",
+      "finding": "The current UX audit artifact reports 326 total checks but zero passed, failed, skipped, and violations; the latest Playwright marker says interrupted and contains failed Stage 2 traces. This is inconclusive, not a passing baseline.",
+      "impact": "The release board could incorrectly interpret an empty violation list as proof of quality.",
+      "evidence": [
+        "var/ops/e2e-ux-audit-last.json",
+        "test-results/.last-run.json",
+        "test-results/stage2-visual-acceptance-S-27772-out-critical-browser-errors-mobile-390x844/error-context.md"
+      ],
+      "requiredAcceptance": "Produce an atomic, completed report whose totals reconcile and attach traces/screenshots only from the same successful run."
+    }
+  ],
+  "mobileVisualObservations": [
+    {
+      "artifact": "var/ops/screenshots/stage2-after/map-mobile-list.png",
+      "status": "useful_partial_evidence",
+      "observation": "The 390 px map view exposes a readable object list without obvious horizontal overflow; it does not prove keyboard, screen-reader, or 320 px behavior."
+    },
+    {
+      "artifact": "var/ops/screenshots/stage2-after/flights-iphone-se.png",
+      "status": "inconclusive",
+      "observation": "The 320 px screenshot captures a loading skeleton, so final flight search controls and fallback states are not verified."
+    },
+    {
+      "artifact": "var/ops/screenshots/home-mobile-after.png",
+      "status": "useful_partial_evidence",
+      "observation": "The full-page mobile image shows no obvious page-wide horizontal shift, but its scale is insufficient for control-level contrast, overlap, and touch-target acceptance."
+    }
+  ],
+  "releaseGate": {
+    "status": "blocked",
+    "blockers": [
+      "A11Y-G01",
+      "A11Y-G02",
+      "A11Y-G03",
+      "A11Y-G05",
+      "A11Y-G07",
+      "A11Y-G08",
+      "A11Y-G09"
+    ],
+    "exitCriteria": [
+      "zero critical axe findings across all template groups",
+      "all serious axe findings fixed or documented with owner and exception",
+      "keyboard critical journeys pass",
+      "VoiceOver smoke passes for public navigation, auth, booking, map alternative, organizer editor, and admin moderation",
+      "200 percent zoom and 320 px mobile checks pass without content loss or overlap",
+      "all critical mobile controls meet the 44 px project requirement or have validated spacing exceptions",
+      "visual evidence comes from a completed run with reconciled totals"
+    ]
+  }
+}

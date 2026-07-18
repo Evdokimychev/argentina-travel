@@ -7,11 +7,32 @@ import {
   parseRetryAfterSeconds,
 } from "@/lib/auth-flow";
 import { authRedirectUrl } from "@/lib/site-url";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { hashRateLimitIdentifier } from "@/lib/rate-limit-identifier";
 
 const NEUTRAL_MESSAGE =
   "Если этот адрес зарегистрирован, мы отправили ссылку для изменения пароля.";
 
+function rateLimitedResponse(retryAfter: number) {
+  return NextResponse.json(
+    {
+      error: {
+        code: "AUTH_RESET_RATE_LIMITED",
+        retryAfter,
+        message: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
+      },
+    },
+    { status: 429, headers: { "Retry-After": String(retryAfter) } },
+  );
+}
+
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const ipLimit = await checkRateLimit(`auth:password-reset:ip:${ip}`, 5, 10 * 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitedResponse(ipLimit.retryAfterSec);
+  }
+
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json(
       {
@@ -34,6 +55,16 @@ export async function POST(request: Request) {
       );
     }
 
+    const emailHash = hashRateLimitIdentifier("auth-password-reset", email);
+    const emailLimit = await checkRateLimit(
+      `auth:password-reset:email:${emailHash}`,
+      3,
+      15 * 60_000,
+    );
+    if (!emailLimit.ok) {
+      return rateLimitedResponse(emailLimit.retryAfterSec);
+    }
+
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: authRedirectUrl(
@@ -44,16 +75,7 @@ export async function POST(request: Request) {
 
     if (error?.status === 429) {
       const retryAfter = parseRetryAfterSeconds(error, 60);
-      return NextResponse.json(
-        {
-          error: {
-            code: "AUTH_RESET_RATE_LIMITED",
-            retryAfter,
-            message: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
-          },
-        },
-        { status: 429, headers: { "Retry-After": String(retryAfter) } }
-      );
+      return rateLimitedResponse(retryAfter);
     }
 
     if (error) {

@@ -1,7 +1,7 @@
 ---
 id: ruta-de-los-siete-lagos
 type: attraction
-title: Route of Seven Lakes
+title: Дорога семи озёр
 title_es: Ruta de los Siete Lagos
 title_en: Route of Seven Lakes
 summary: "«Дорога семи озёр» между Сан-Мартин-де-лос-Андес и Вилья-Ла-Ангостурой — классический маршрут озёрного края."

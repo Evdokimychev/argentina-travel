@@ -1,4 +1,4 @@
-import { appendCronRouteRun } from "@/lib/ops/ops-status";
+import { appendCronRouteRunDurably } from "@/lib/ops/ops-status";
 import { addCronBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 
 type CronLogResult = {
@@ -57,7 +57,7 @@ export async function logCronResult(route: string, result: CronLogResult): Promi
   const message = result.message?.trim() || (result.ok ? "OK" : resolveErrorMessage(result.error));
   const details = result.details;
 
-  appendCronRouteRun({
+  const durable = await appendCronRouteRunDurably({
     route: normalizedRoute,
     ranAt,
     ok: result.ok,
@@ -73,6 +73,7 @@ export async function logCronResult(route: string, result: CronLogResult): Promi
     message,
     statusCode: result.statusCode,
     durationMs: result.durationMs,
+    durable,
     ...(details ?? {}),
   });
 

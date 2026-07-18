@@ -1,7 +1,9 @@
 import "server-only";
 
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export type OpsAuditLogEntry = {
   ok: boolean;
@@ -17,6 +19,9 @@ export type OpsBackupHint = {
   lastBackupAt: string | null;
   lastBackupFile: string | null;
   hint: string;
+  productionReady: boolean;
+  mode: "managed" | "offsite" | "unverified";
+  restoreVerifiedAt: string | null;
 };
 
 export type CronJobId =
@@ -49,7 +54,9 @@ export type CronHealthReport = {
   ok: boolean;
   status: "ok" | "degraded";
   generatedAt: string;
-  source: "file" | "memory" | "none";
+  source: "database" | "file" | "memory" | "none";
+  dataAvailable: boolean;
+  durable: boolean;
   failingRoutes: string[];
   latestByRoute: Record<string, CronRouteRunEntry>;
   recent: CronRouteRunEntry[];
@@ -192,6 +199,53 @@ export function appendCronRouteRun(entry: CronRouteRunEntry): void {
   writeJsonFile(CRON_HEALTH_FILE, cronRouteRingBuffer);
 }
 
+function sanitizeCronDetails(details: Record<string, unknown> | undefined): Record<string, unknown> {
+  if (!details) return {};
+  const blocked = /(email|phone|name|recipient|token|secret|password|body|html|text)/i;
+  const safe: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(details)) {
+    if (blocked.test(key)) continue;
+    if (value == null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      safe[key] = typeof value === "string" ? value.slice(0, 500) : value;
+      continue;
+    }
+    if (Array.isArray(value) && value.every((item) => typeof item === "string" || typeof item === "number")) {
+      safe[key] = value.slice(0, 50);
+    }
+  }
+  return safe;
+}
+
+export async function appendCronRouteRunDurably(entry: CronRouteRunEntry): Promise<boolean> {
+  appendCronRouteRun(entry);
+  try {
+    const supabase = createSupabaseAdminClient();
+    const finishedAt = new Date(entry.ranAt);
+    const durationMs = Math.max(0, Math.floor(entry.durationMs ?? 0));
+    const startedAt = new Date(finishedAt.getTime() - durationMs).toISOString();
+    const message = entry.message.trim().slice(0, 1000) || (entry.ok ? "OK" : "Cron failed");
+    const errorFingerprint = entry.ok
+      ? null
+      : createHash("sha256").update(`${entry.route}:${message}`).digest("hex").slice(0, 32);
+    // Database types are regenerated after the migration set is frozen.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).from("ops_cron_runs").insert({
+      route: entry.route,
+      started_at: startedAt,
+      finished_at: finishedAt.toISOString(),
+      status: entry.ok ? "succeeded" : "failed",
+      status_code: entry.statusCode ?? null,
+      duration_ms: entry.durationMs == null ? null : durationMs,
+      message,
+      error_fingerprint: errorFingerprint,
+      details: sanitizeCronDetails(entry.details),
+    });
+    return !error;
+  } catch {
+    return false;
+  }
+}
+
 export function readCronHealthReport(recentLimit = 20): CronHealthReport {
   const resolvedRecentLimit = Math.max(1, Math.min(100, Math.floor(recentLimit)));
   const { source, entries } = readCronRouteHistory();
@@ -210,17 +264,67 @@ export function readCronHealthReport(recentLimit = 20): CronHealthReport {
     .map((entry) => entry.route)
     .sort((a, b) => a.localeCompare(b));
 
-  const ok = failingRoutes.length === 0;
+  const dataAvailable = source !== "none";
+  const durable = false;
+  const ok = dataAvailable && durable && failingRoutes.length === 0;
 
   return {
     ok,
     status: ok ? "ok" : "degraded",
     generatedAt: new Date().toISOString(),
     source,
+    dataAvailable,
+    durable,
     failingRoutes,
     latestByRoute,
     recent: sorted.slice(0, resolvedRecentLimit),
   };
+}
+
+export async function fetchCronHealthReport(recentLimit = 20): Promise<CronHealthReport> {
+  const resolvedLimit = Math.max(1, Math.min(100, Math.floor(recentLimit)));
+  try {
+    const supabase = createSupabaseAdminClient();
+    // Database types are regenerated after the migration set is frozen.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from("ops_cron_runs")
+      .select("route, finished_at, status, message, status_code, duration_ms, details")
+      .order("finished_at", { ascending: false })
+      .limit(100);
+    if (error || !Array.isArray(data)) return readCronHealthReport(resolvedLimit);
+
+    const entries: CronRouteRunEntry[] = data.map((row) => ({
+      route: String(row.route),
+      ranAt: String(row.finished_at),
+      ok: row.status === "succeeded",
+      message: String(row.message),
+      statusCode: typeof row.status_code === "number" ? row.status_code : undefined,
+      durationMs: typeof row.duration_ms === "number" ? row.duration_ms : undefined,
+      details: row.details && typeof row.details === "object" ? row.details : undefined,
+    }));
+    const latestByRoute: Record<string, CronRouteRunEntry> = {};
+    for (const entry of entries) latestByRoute[entry.route] ??= entry;
+    const failingRoutes = Object.values(latestByRoute)
+      .filter((entry) => !entry.ok)
+      .map((entry) => entry.route)
+      .sort();
+    const dataAvailable = entries.length > 0;
+    const ok = dataAvailable && failingRoutes.length === 0;
+    return {
+      ok,
+      status: ok ? "ok" : "degraded",
+      generatedAt: new Date().toISOString(),
+      source: "database",
+      dataAvailable,
+      durable: true,
+      failingRoutes,
+      latestByRoute,
+      recent: entries.slice(0, resolvedLimit),
+    };
+  } catch {
+    return readCronHealthReport(resolvedLimit);
+  }
 }
 
 export function readOpsStatusSnapshot(): OpsStatusSnapshot {
@@ -232,8 +336,19 @@ export function readOpsStatusSnapshot(): OpsStatusSnapshot {
     backupMeta?.lastBackupAt ??
     (latestBackup ? latestBackup.mtime.toISOString() : null);
   const lastBackupFile = backupMeta?.lastBackupFile ?? latestBackup?.file ?? null;
+  const configuredMode = process.env.SUPABASE_BACKUP_MODE?.trim().toLowerCase();
+  const mode: OpsBackupHint["mode"] =
+    configuredMode === "managed" || configuredMode === "offsite" ? configuredMode : "unverified";
+  const managedBackupAt = process.env.SUPABASE_BACKUP_VERIFIED_AT?.trim() || null;
+  const restoreVerifiedAt = process.env.SUPABASE_RESTORE_REHEARSAL_AT?.trim() || null;
+  const backupAgeMs = managedBackupAt ? Date.now() - Date.parse(managedBackupAt) : Number.POSITIVE_INFINITY;
+  const restoreAgeMs = restoreVerifiedAt ? Date.now() - Date.parse(restoreVerifiedAt) : Number.POSITIVE_INFINITY;
+  const productionReady =
+    mode !== "unverified" &&
+    Number.isFinite(backupAgeMs) && backupAgeMs >= 0 && backupAgeMs <= 26 * 60 * 60_000 &&
+    Number.isFinite(restoreAgeMs) && restoreAgeMs >= 0 && restoreAgeMs <= 35 * 24 * 60 * 60_000;
 
-  let hint = "Резервная копия схемы не найдена. Запустите: npm run backup:schema";
+  let hint = "Нет подтверждённой копии данных и проверки восстановления";
   if (lastBackupAt && lastBackupFile) {
     hint = `Последний дамп: ${lastBackupFile} (${lastBackupAt})`;
   } else if (lastBackupAt) {
@@ -246,6 +361,9 @@ export function readOpsStatusSnapshot(): OpsStatusSnapshot {
       lastBackupAt,
       lastBackupFile,
       hint,
+      productionReady,
+      mode,
+      restoreVerifiedAt,
     },
     cron: readCronStatus(),
   };

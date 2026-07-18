@@ -56,7 +56,7 @@ export type ExcursionPriceUnit = "per_person" | "per_excursion";
 
 export type ExcursionFormatKind = "group" | "individual";
 
-export type ExcursionPartner = "tripster" | "sputnik8";
+export type ExcursionPartner = "platform" | "tripster" | "sputnik8";
 
 export type ExcursionListing = {
   partner: ExcursionPartner;
@@ -115,6 +115,23 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   /** Текст условий отмены из Sputnik8 (refund_info). */
   refundPolicy?: string;
   reviews?: ExcursionReview[];
+  /** Internal catalog id used only by first-party excursions. */
+  platformTourId?: string;
+  /** First-party schedule data. Partner excursions load their schedule from partner APIs. */
+  platformDates?: Array<{
+    id: string;
+    startDate: string;
+    endDate?: string;
+    spotsLeft: number;
+    priceUsd: number;
+  }>;
+  platformBookingMode?: "scheduled" | "on_request" | "both";
+  platformRequestDateFrom?: string;
+  platformRequestDateTo?: string;
+  platformStartTime?: string;
+  platformEndTime?: string;
+  /** Единый источник поведения CTA, оплаты, поддержки и подтверждения. */
+  offerCapabilities?: import("@/types/product-capability").OfferCapabilities;
 };
 
 export type ExcursionReview = {

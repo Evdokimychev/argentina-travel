@@ -1,5 +1,6 @@
 import type { OrganizerTourDraft, OrganizerTourEditorTabId } from "@/types/organizer-tour";
 import { evaluatePublishReadiness } from "@/lib/publish-readiness";
+import { ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE } from "@/data/tour-photos-defaults";
 
 export interface TourProfileCompletionItem {
   id: string;
@@ -24,7 +25,12 @@ function hasSchedule(draft: OrganizerTourDraft): boolean {
 }
 
 function hasPhotos(draft: OrganizerTourDraft): boolean {
-  return Boolean(draft.image.trim() || draft.gallery.filter(Boolean).length > 0);
+  return Boolean(
+    (draft.image.trim() && draft.image !== ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE) ||
+      draft.gallery.some(
+        (image) => Boolean(image) && image !== ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE
+      )
+  );
 }
 
 function hasProgram(draft: OrganizerTourDraft): boolean {
@@ -39,10 +45,11 @@ function hasPrice(draft: OrganizerTourDraft): boolean {
 export function evaluateTourProfileCompletion(
   draft: OrganizerTourDraft
 ): TourProfileCompletionResult {
+  const productGenitive = draft.type === "excursion" ? "экскурсии" : "тура";
   const items: TourProfileCompletionItem[] = [
     {
       id: "title",
-      label: "Название тура",
+      label: `Название ${productGenitive}`,
       done: draft.title.trim().length >= 8,
       weight: 12,
       tabId: "main",
@@ -100,7 +107,7 @@ export function evaluateTourProfileCompletion(
     },
     {
       id: "languages",
-      label: "Языки тура",
+      label: `Языки ${productGenitive}`,
       done: draft.languages.length > 0,
       weight: 5,
       tabId: "main",

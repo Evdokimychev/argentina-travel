@@ -43,6 +43,14 @@ export type BlogRouteMapPoint = {
   label: string;
 };
 
+export type BlogImageTextPosition = "left" | "right";
+
+export type BlogFactItem = {
+  label: string;
+  value: string;
+  description?: string;
+};
+
 /** Payload Blocks–compatible union — stored in content_documents JSONB. */
 export type BlogBodyBlock =
   | { type: "paragraph"; text: string; html?: string }
@@ -80,6 +88,37 @@ export type BlogBodyBlock =
   | { type: "tourism-timeline" }
   | { type: "budget"; items: BlogBudgetItem[]; note?: string }
   | { type: "media"; src: string; alt: string; caption?: string }
+  | {
+      type: "image-text";
+      src: string;
+      alt: string;
+      title: string;
+      body: string;
+      imagePosition?: BlogImageTextPosition;
+      caption?: string;
+    }
+  | {
+      type: "author-card";
+      name: string;
+      role?: string;
+      bio: string;
+      avatarSrc?: string;
+      avatarAlt?: string;
+      href?: string;
+      linkLabel?: string;
+    }
+  | {
+      type: "facts-grid";
+      title?: string;
+      items: BlogFactItem[];
+      columns?: 2 | 3 | 4;
+    }
+  | {
+      type: "quote";
+      text: string;
+      author?: string;
+      context?: string;
+    }
   | { type: "gallery"; items: BlogGalleryItem[]; columns?: 2 | 3 | 4 }
   | {
       type: "video";

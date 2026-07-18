@@ -44,12 +44,12 @@ describe("buildCatalogMetadata", () => {
   it("indexes clean catalog URL", () => {
     const meta = buildCatalogMetadata({}, tours);
     expect(meta.robots).toBeUndefined();
-    expect(meta.alternates?.canonical).toBe("/tours");
+    expect(meta.alternates?.canonical).toBe("https://www.goargentina.ru/tours");
   });
 
   it("noindexes filtered catalog URLs and keeps clean canonical", () => {
     const meta = buildCatalogMetadata({ query: "патагония" }, tours);
     expect(meta.robots).toEqual({ index: false, follow: true });
-    expect(meta.alternates?.canonical).toBe("/tours");
+    expect(meta.alternates?.canonical).toBe("https://www.goargentina.ru/tours");
   });
 });

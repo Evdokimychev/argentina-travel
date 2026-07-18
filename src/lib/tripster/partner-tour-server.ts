@@ -268,17 +268,16 @@ async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
   }
 
   if (!tour) return null;
-  return enrichPartnerTourDetail(tour);
+  if (process.env.ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT === "true") {
+    return enrichPartnerTourDetail(tour);
+  }
+  return tour;
 }
 
 /**
- * Cross-request, time-based cache (10 min) for the partner-tour detail. The
- * enrichment cascade hits the live Tripster API (experience, web v2, plan,
- * schedule, reviews, guide) and the catalog only changes on the nightly sync,
- * so serving a slightly stale snapshot is the right trade-off — live price and
- * availability are still fetched per-request by the booking/price route. The
- * resolved `TourDetail` is plain JSON, and the cascade reads only env + the
- * partner API (no cookies/headers), so it is safe inside `unstable_cache`.
+ * Cross-request cache for the synchronized partner detail. Live price and
+ * availability are fetched by dedicated routes; optional diagnostic live
+ * enrichment must not delay the public detail page by default.
  */
 const cachedPartnerTourDetail = unstable_cache(
   loadPartnerTourDetail,

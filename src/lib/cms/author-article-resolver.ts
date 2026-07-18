@@ -19,24 +19,34 @@ export async function resolveAuthorArticle(
   locale = "ru"
 ): Promise<BlogPost | undefined> {
   const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "author_article", slug, {
+  const translationStatusPromise = supabase
+    ? fetchCmsTranslationStatusForSlug(supabase, "author_article", slug, {
         ruFallbackComplete: false,
       })
-    : buildDefaultTranslationStatus(false);
+    : Promise.resolve(buildDefaultTranslationStatus(false));
 
-  const resolved = await resolveWithPublishedCmsOverride<BlogPost>({
-    docType: "author_article",
-    slug,
-    locale,
-    fallback: null,
-    merge: (doc) => authorArticleFromCms(doc) ?? null,
-    supabase,
-    isUsable: isCmsDocumentComplete,
-  });
+  let resolvedSeo: CmsDocument["seo"] | undefined;
+  const [translationStatus, resolved] = await Promise.all([
+    translationStatusPromise,
+    resolveWithPublishedCmsOverride<BlogPost>({
+      docType: "author_article",
+      slug,
+      locale,
+      fallback: null,
+      merge: (doc) => authorArticleFromCms(doc) ?? null,
+      supabase,
+      isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
+    }),
+  ]);
 
   if (!resolved) return undefined;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedAuthorArticleSlugs(locale = "ru"): Promise<string[]> {
@@ -45,12 +55,17 @@ export async function listPublishedAuthorArticleSlugs(locale = "ru"): Promise<st
 
   const { data } = await supabase
     .from("content_documents")
-    .select("slug")
+    .select("slug, seo")
     .eq("doc_type", "author_article")
     .eq("locale", locale)
     .eq("status", "published");
 
-  return (data ?? []).map((row) => row.slug);
+  return (data ?? [])
+    .filter((row) => {
+      const seo = row.seo;
+      return !(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);
+    })
+    .map((row) => row.slug);
 }
 
 export type { CmsDocument };

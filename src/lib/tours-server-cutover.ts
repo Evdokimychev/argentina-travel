@@ -72,7 +72,7 @@ export async function fetchCutoverTourDetailBySlug(
   if (isSupabaseToursEnabled()) {
     try {
       const { fetchTourDetailBySlugServer } = await import("@/lib/tour-content-server");
-      const fromDb = await fetchTourDetailBySlugServer(slug);
+      const fromDb = await fetchTourDetailBySlugServer(slug, opts);
       if (fromDb) return fromDb;
       if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
     } catch (error) {

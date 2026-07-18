@@ -13,9 +13,11 @@ import {
   killPorts,
   killProjectNextDev,
   isNextCacheCorrupted,
+  readProductionBuildLock,
   readStaleDevLock,
   removeDevLock,
   removeNextCache,
+  removeProductionBuildLock,
   writeDevLock,
 } from "./dev-utils.mjs";
 
@@ -23,6 +25,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const forceClean = process.argv.includes("--clean");
 const port = process.env.PORT?.trim() || "3000";
+
+const buildLock = readProductionBuildLock(root);
+if (buildLock && !buildLock.stale) {
+  console.error(`Production build is running (pid ${buildLock.lock.pid}); dev start skipped.`);
+  process.exit(75);
+}
+if (buildLock?.stale) {
+  removeProductionBuildLock(root, buildLock.lock?.pid);
+}
 
 const killedNext = killProjectNextDev(root);
 const killedByPort = killPorts(["3000", "3001", "3002", "3003"]);

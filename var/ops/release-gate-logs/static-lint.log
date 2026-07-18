@@ -1,0 +1,234 @@
+
+> argentina-travel@0.1.0 lint
+> next lint
+
+
+./src/app/api/conversations/by-booking/[bookingId]/route.ts
+4:3  Warning: 'fetchConversationMessages' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/blog/feed.xml/route.ts
+1:10  Warning: 'NextResponse' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/archive/flights-native-search/components/AirportCombobox.tsx
+144:17  Warning: Elements with the ARIA role "option" must have the following attributes defined: aria-selected  jsx-a11y/role-has-required-aria-props
+
+./src/components/admin/CmsLocaleTabs.tsx
+17:3  Warning: 'docType' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'slug' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/analytics/YandexMetrikaHeadScripts.tsx
+25:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/auth/PhoneCountryInput.tsx
+299:13  Warning: 'start' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogPostBreadcrumbs.tsx
+1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogPostSectionView.tsx
+7:10  Warning: 'hasContentSlotImage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogReadingHistoryRecorder.tsx
+25:6  Warning: React Hook useEffect has a missing dependency: 'post'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/blog/BlogSearchFilters.tsx
+6:10  Warning: 'pluralizeArticles' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogStatsOverview.tsx
+3:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/flights/FlightsWhitelabelWidget.tsx
+5:41  Warning: 'ParsedFlightsSearch' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/GuidePillarView.tsx
+1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/GuideWidgetSlot.tsx
+4:3  Warning: 'ArgentinaSeasonMatrixSkeleton' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/hub/HubDataTable.tsx
+39:32  Warning: '_isFirst' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/hub/KakDobratsyaHubView.tsx
+5:3  Warning: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+6:3  Warning: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/marketplace/CatalogDepartureCalendarModal.tsx
+18:33  Warning: 'DialogDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/messages/MessagesInboxView.tsx
+287:6  Warning: React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/navigation/DestinationsMegaMenuPanel.tsx
+34:26  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/ExcursionsMegaMenuPanel.tsx
+35:24  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/NavOverflowMegaMenuTrigger.tsx
+163:3  Warning: 'compact' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/PlacesMegaMenuPanel.tsx
+42:20  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/ToursMegaMenuPanel.tsx
+35:19  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerBookingDetailView.tsx
+47:8  Warning: 'FormattedPrice' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerCancellationTab.tsx
+24:8  Warning: 'OrganizerCancellationPolicyType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerGuidesTab.tsx
+19:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerTripOperationsPanel.tsx
+35:10  Warning: 'BOOKINGS_UPDATED_EVENT' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourArrivalDepartureBlock.tsx
+6:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourIndividualBlock.tsx
+7:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourRoutePointsEditor.tsx
+199:9  Warning: The 'points' conditional could make the dependencies of useMemo Hook (at line 205) change on every render. To fix this, wrap the initialization of 'points' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/GroupDiscountPanel.tsx
+4:3  Warning: 'formatGroupDiscountTierGuestRange' is defined but never used.  @typescript-eslint/no-unused-vars
+5:3  Warning: 'formatGroupDiscountTierValueLabel' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/OrganizerSection.tsx
+29:62  Warning: 'tourDetailInsetMutedClass' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/PartnerTourAccommodationSection.tsx
+15:10  Warning: 'tourDetailCardBorderClass' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/PartnerTourImportantSection.tsx
+26:9  Warning: The 'items' logical expression could make the dependencies of useMemo Hook (at line 30) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'items' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/TourFlightBriefingPanel.tsx
+5:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/context/LocaleCurrencyContext.tsx
+70:6  Warning: React Hook useEffect has a missing dependency: 'pathname'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/data/blog-content/article-content.ts
+233:3  Warning: 'region' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/blog-editorial/money.ts
+15:7  Warning: 'CASH' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+19:7  Warning: 'CHECKLIST' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/blog.ts
+2:30  Warning: 'filterIndexableBlogPosts' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/tour-guides-defaults.ts
+89:25  Warning: '_ignored' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/usePartnerTourPriceQuote.ts
+75:6  Warning: React Hook useEffect has a missing dependency: 'parsedDate'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/hooks/usePartnerTourSchedule.ts
+77:6  Warning: React Hook useEffect has a missing dependency: 'tour'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/lib/blog-post-ux.test.ts
+17:31  Warning: 'sortBlogPostsByUpdated' is defined but never used.  @typescript-eslint/no-unused-vars
+19:3  Warning: 'getBlogPostFooterLinks' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/bookings-demo-seeds-active.ts
+4:37  Warning: '_now' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/bookings-store.ts
+83:3  Warning: 'appendTripClientUpdates' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/flights/destination-airports.ts
+58:53  Warning: 'hub' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/geo/locations.ts
+6:15  Warning: 'GeoCountryCode' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/image-provider/page-registry.ts
+1:38  Warning: 'ResolvedImage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/media-resolver.ts
+9:3  Warning: 'GUIDE_TOPIC_PLACE_MAP' is defined but never used.  @typescript-eslint/no-unused-vars
+266:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/organizer/inbox-server.ts
+7:3  Warning: 'OrganizerInboxCategory' is defined but never used.  @typescript-eslint/no-unused-vars
+10:3  Warning: 'OrganizerInboxItemType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/payments/commission-server.ts
+273:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/permissions.ts
+11:10  Warning: 'hasAnyRole' is defined but never used.  @typescript-eslint/no-unused-vars
+36:32  Warning: '_user' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/places-ingestion/overpass.ts
+9:15  Warning: '_query' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/privacy/delete-automation.ts
+3:8  Warning: 'pg' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/quick-explore/build-payload.ts
+5:26  Warning: 'PLACE_TO_KB_ID' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/reviews-demo-seeds-active.ts
+4:36  Warning: '_now' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/manifest.ts
+42:40  Warning: '_id' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/providers/instagram-api.ts
+12:12  Warning: '_request' is defined but never used.  @typescript-eslint/no-unused-vars
+21:12  Warning: '_request' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/resolve-context.ts
+7:41  Warning: '_context' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Warning: '_context' is defined but never used.  @typescript-eslint/no-unused-vars
+14:3  Warning: '_topicList' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-accommodation-public.ts
+7:15  Warning: 'AccommodationType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-nav-icons.ts
+10:3  Warning: 'MessageSquare' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-slug.ts
+1:15  Warning: 'OrganizerTourDraft' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/argentina-resolver.ts
+2:10  Warning: 'getTripsterSyncCountryMatchers' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/auth.ts
+12:3  Warning: Unused eslint-disable directive (no problems were reported from 'no-var').
+
+./src/lib/tripster/partner-tour-guide-server.ts
+5:30  Warning: 'isTripsterConfigured' is defined but never used.  @typescript-eslint/no-unused-vars
+11:10  Warning: 'mapPartnerTourReviews' is defined but never used.  @typescript-eslint/no-unused-vars
+12:10  Warning: 'tripsterReviewToRow' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/partner-tour-mapper.ts
+26:3  Warning: 'ComfortLevel' is defined but never used.  @typescript-eslint/no-unused-vars
+28:3  Warning: 'DifficultyLevel' is defined but never used.  @typescript-eslint/no-unused-vars
+32:3  Warning: 'TourDate' is defined but never used.  @typescript-eslint/no-unused-vars
+33:3  Warning: 'TourDescriptionExtra' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/offers-mapper.ts
+266:25  Warning: '_sort' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/partner-pipeline.test.ts
+18:15  Warning: 'CurrencyCode' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/partner-tour-utils.ts
+89:51  Warning: '_slug' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+

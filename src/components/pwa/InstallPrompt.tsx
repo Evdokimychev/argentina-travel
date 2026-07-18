@@ -46,6 +46,17 @@ export default function InstallPrompt() {
     return () => window.removeEventListener("beforeinstallprompt", onBeforeInstall);
   }, []);
 
+  useEffect(() => {
+    if (!visible) {
+      delete document.documentElement.dataset.pwaInstallVisible;
+      return;
+    }
+    document.documentElement.dataset.pwaInstallVisible = "true";
+    return () => {
+      delete document.documentElement.dataset.pwaInstallVisible;
+    };
+  }, [visible]);
+
   function close() {
     dismissPwaInstall();
     setVisible(false);
@@ -67,8 +78,8 @@ export default function InstallPrompt() {
       role="dialog"
       aria-label="Установить приложение"
       className={cn(
-        "fixed inset-x-4 z-[75] mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-sky/25",
-        "bg-white/95 p-4 shadow-elevated backdrop-blur-md",
+        "site-cookie-suppressible fixed inset-x-4 z-[75] mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-sky/25",
+        "max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain bg-white/95 p-4 shadow-elevated backdrop-blur-md",
         "bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
       )}
     >
@@ -97,7 +108,7 @@ export default function InstallPrompt() {
             type="button"
             onClick={install}
             data-no-custom-cursor
-            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-sky px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sky-dark"
+            className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-sky-ink px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-sky-ink/90"
           >
             Установить
           </button>
@@ -108,7 +119,7 @@ export default function InstallPrompt() {
         type="button"
         onClick={close}
         data-no-custom-cursor
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-charcoal/5 hover:text-charcoal"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-charcoal/5 hover:text-charcoal"
         aria-label="Закрыть"
       >
         <X className="h-4 w-4" strokeWidth={2} aria-hidden />

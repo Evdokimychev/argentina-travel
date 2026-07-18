@@ -1,8 +1,9 @@
 import type { GuidePillarFaqItem, GuidePillarHeroCta } from "@/types/guide-pillar";
 import type { TravelHubArticleLink, TravelHubQuickFact, TravelHubTocItem } from "@/types/guide-travel-hub";
 import { getPlaceCoverImage } from "@/lib/media-resolver";
+import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-paths";
 
-export const GUIDE_ABOUT_ARGENTINA_PATH = "/guide/ob-argentine";
+export { GUIDE_ABOUT_ARGENTINA_PATH };
 
 export type GuideAboutRegion = {
   rank: number;

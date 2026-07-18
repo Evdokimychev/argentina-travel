@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-15T03:20:00.000Z",
+  "release": "2026-07",
+  "status": "fail",
+  "scope": "Production synthetic mobile baseline for representative public templates",
+  "baseUrl": "https://www.goargentina.ru",
+  "measurement": {
+    "tool": "Lighthouse",
+    "kind": "synthetic_lab",
+    "latestMeasuredAt": "2026-07-15T00:52:33.681Z",
+    "routeCount": 13,
+    "fieldDataAvailable": false,
+    "coldAndWarmRunsSeparated": false,
+    "notes": [
+      "This is a lab baseline, not field p75 Core Web Vitals.",
+      "INP cannot be established from the available navigation-only Lighthouse runs.",
+      "TTFB, API, DB, cache-hit and hydration timings are not present in the latest aggregate artifact.",
+      "A separate 2026-07-01 diagnostic snapshot supplies FCP, TBT, transfer size and request counts; it must not be treated as the same run."
+    ]
+  },
+  "budgets": {
+    "performanceScoreMin": 65,
+    "accessibilityScoreMin": 95,
+    "lcpMsMax": 2500,
+    "inpMsMax": 200,
+    "clsMax": 0.1
+  },
+  "latestSummary": {
+    "routesPassedAllAvailableBudgets": 1,
+    "routesFailedAllAvailableBudgets": 12,
+    "medianPerformanceScore": 49,
+    "medianAccessibilityScore": 97,
+    "performanceScore": {
+      "min": 29,
+      "p50": 49,
+      "p75": 53,
+      "p95": 80,
+      "max": 80
+    },
+    "lcpMs": {
+      "min": 1569,
+      "p50": 17777,
+      "p75": 22148,
+      "p95": 51120,
+      "max": 51120,
+      "routesWithinBudget": 1,
+      "routesOverBudget": 12
+    },
+    "cls": {
+      "p50": 0.002,
+      "p75": 0.002,
+      "p95": 0.668,
+      "max": 0.668,
+      "routesWithinBudget": 12,
+      "routesOverBudget": 1
+    },
+    "inpMs": null
+  },
+  "routes": [
+    {
+      "path": "/",
+      "template": "home",
+      "performanceScore": 29,
+      "accessibilityScore": 100,
+      "lcpMs": 35405,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours",
+      "template": "tour_catalog",
+      "performanceScore": 49,
+      "accessibilityScore": 100,
+      "lcpMs": 41939,
+      "cls": 0.05,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours/patagonia-glaciers",
+      "template": "tour_detail",
+      "performanceScore": 33,
+      "accessibilityScore": 95,
+      "lcpMs": 6998,
+      "cls": 0.668,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog",
+      "template": "blog_catalog",
+      "performanceScore": 33,
+      "accessibilityScore": 100,
+      "lcpMs": 51120,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog/natsionalnyy-park-iguasu",
+      "template": "blog_detail",
+      "performanceScore": 52,
+      "accessibilityScore": 89,
+      "lcpMs": 4766,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/mapa-argentina",
+      "template": "interactive_map",
+      "performanceScore": 43,
+      "accessibilityScore": 99,
+      "lcpMs": 6705,
+      "cls": 0.073,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/immigration",
+      "template": "content_hub",
+      "performanceScore": 55,
+      "accessibilityScore": 97,
+      "lcpMs": 18480,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/destinations/patagonia",
+      "template": "destination_detail",
+      "performanceScore": 53,
+      "accessibilityScore": 97,
+      "lcpMs": 8799,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/places",
+      "template": "place_catalog",
+      "performanceScore": 46,
+      "accessibilityScore": 97,
+      "lcpMs": 17777,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/destinations",
+      "template": "destination_catalog",
+      "performanceScore": 55,
+      "accessibilityScore": 97,
+      "lcpMs": 7701,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/about",
+      "template": "static_content",
+      "performanceScore": 80,
+      "accessibilityScore": 97,
+      "lcpMs": 1569,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": true
+    },
+    {
+      "path": "/contacts",
+      "template": "contact",
+      "performanceScore": 53,
+      "accessibilityScore": 97,
+      "lcpMs": 22148,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/en/places",
+      "template": "localized_place_catalog",
+      "performanceScore": 44,
+      "accessibilityScore": 97,
+      "lcpMs": 18298,
+      "cls": 0.002,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "diagnosticSnapshot": {
+    "measuredAt": "2026-07-01T21:44:35.863Z",
+    "routeCount": 13,
+    "sourcePattern": "var/ops/lh-*.json",
+    "fcpMs": {
+      "p50": 1296.598,
+      "p75": 1410.962,
+      "p95": 3260.162
+    },
+    "tbtMs": {
+      "p50": 365,
+      "p75": 403,
+      "p95": 567
+    },
+    "transferBytes": {
+      "p50": 1425651,
+      "p75": 1880153,
+      "p95": 6479501
+    },
+    "requestCount": {
+      "p50": 69,
+      "p75": 83,
+      "p95": 84
+    },
+    "sharedFirstLoadJsKbReported": 104,
+    "buildObservation": "Production build completed with warnings; the largest shared App Router first-load bundle reported by the build summary was 104 kB."
+  },
+  "unmeasured": {
+    "ttfbP50Ms": null,
+    "ttfbP75Ms": null,
+    "ttfbP95Ms": null,
+    "inpP75Ms": null,
+    "htmlBytes": null,
+    "jsBytesByRoute": null,
+    "cssBytesByRoute": null,
+    "imageBytesByRoute": null,
+    "dbTimingsMs": null,
+    "apiTimingsMs": null,
+    "cacheHitRatio": null,
+    "serverTiming": null,
+    "hydrationTimeMs": null,
+    "rumFieldP75": null
+  },
+  "releaseAssessment": {
+    "decision": "not_ready_on_performance",
+    "blockingFindings": [
+      "12 of 13 representative routes exceed the 2.5 s LCP budget.",
+      "The tour detail template has CLS 0.668, above the 0.1 budget.",
+      "No field p75 RUM evidence is available for LCP, INP or CLS."
+    ],
+    "highestPriorityRoutes": [
+      "/blog",
+      "/tours",
+      "/",
+      "/contacts",
+      "/tours/patagonia-glaciers"
+    ]
+  },
+  "sources": [
+    "var/ops/lighthouse-phase2-prod-last.json",
+    "var/ops/lh-*.json",
+    "var/ops/release-gate-logs/production-production-build.log"
+  ]
+}

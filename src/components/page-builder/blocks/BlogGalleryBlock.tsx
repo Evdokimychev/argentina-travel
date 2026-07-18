@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { mediaUrl } from "@/lib/media-resolver";
+import { mediaUrl } from "@/lib/media/media-cdn";
 import { cn } from "@/lib/cn";
 import type { BlogGalleryItem } from "@/types/blog-content-blocks";
 

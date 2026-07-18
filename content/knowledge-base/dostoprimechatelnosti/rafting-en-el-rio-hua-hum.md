@@ -1,7 +1,7 @@
 ---
 id: rafting-en-el-rio-hua-hum
 type: attraction
-title: Rafting in the Hua Hum River
+title: Рафтинг по реке Уа-Ум
 title_es: Rafting en el río Hua Hum
 title_en: Rafting in the Hua Hum River
 summary: "Рафтинг по реке Уа-Ум в Патагонии — сплав с адреналином и выходом к чилийской границе."

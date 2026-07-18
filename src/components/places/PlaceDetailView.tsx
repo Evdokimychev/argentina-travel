@@ -8,7 +8,6 @@ import {
   Clock,
   ExternalLink,
   MapPin,
-  Star,
   Ticket,
 } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
@@ -25,14 +24,10 @@ import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
-import { pairedDestinationIdForPlace } from "@/lib/geography-links";
-import { matchToursForPlace } from "@/lib/places-tour-match";
-import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
-import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
+import { PLACE_TO_DESTINATION } from "@/data/knowledge-graph/entities";
 import { collectionHref, itineraryHref } from "@/lib/places-urls";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
-import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
@@ -40,24 +35,26 @@ export default function PlaceDetailView({
   place,
   knowledgeLinks,
   initialTours = [],
+  coverImageAlt,
+  galleryAlts = [],
 }: {
   place: PlaceDetail;
   knowledgeLinks?: KnowledgeLinksBundle;
   initialTours?: TourListing[];
+  coverImageAlt?: string;
+  galleryAlts?: string[];
 }) {
-  const tours = useRepositoryTourListings(initialTours);
-  const matchedTours = resolveRelatedToursForPlace(place, tours);
-  const galleryAlts = getPlaceGalleryAlts(place.slug);
-  const destinationId = pairedDestinationIdForPlace(place.slug);
+  const matchedTours = initialTours;
+  const destinationId = PLACE_TO_DESTINATION[place.slug];
   const destinationPage = destinationId ? getDestinationPageById(destinationId) : undefined;
 
   return (
     <article className="pb-16">
-      <div className="relative aspect-[21/9] min-h-[240px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
+      <div className="relative aspect-[21/9] min-h-[360px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
         {place.coverImage ? (
           <Image
             src={place.coverImage}
-            alt={getPlaceCoverAlt(place.slug)}
+            alt={coverImageAlt ?? place.name}
             fill
             priority
             className="object-cover"
@@ -65,7 +62,7 @@ export default function PlaceDetailView({
           />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-charcoal/10" />
-        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-8 pt-16")}>
+        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-6 pt-12 sm:pb-8 sm:pt-16")}>
           <PageBreadcrumbs
             variant="on-dark"
             separator="dash"
@@ -179,50 +176,39 @@ export default function PlaceDetailView({
           <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
             <h2 className="font-heading text-lg font-bold text-charcoal">Практическая информация</h2>
             <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                <div>
-                  <dt className="text-slate">Регион</dt>
-                  <dd className="font-medium text-charcoal">{place.region}</dd>
-                  {place.province ? (
-                    <dd className="text-slate">{place.province}</dd>
-                  ) : null}
-                </div>
+              <div className="grid grid-cols-[1rem_1fr] gap-x-3">
+                <dt className="contents">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
+                  <span className="text-slate">Регион</span>
+                </dt>
+                <dd className="col-start-2 font-medium text-charcoal">{place.region}</dd>
+                {place.province ? <dd className="col-start-2 text-slate">{place.province}</dd> : null}
               </div>
               {place.visitDuration ? (
-                <div className="flex gap-3">
-                  <Clock className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Время посещения</dt>
-                    <dd className="font-medium text-charcoal">{place.visitDuration}</dd>
-                  </div>
+                <div className="grid grid-cols-[1rem_1fr] gap-x-3">
+                  <dt className="contents">
+                    <Clock className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
+                    <span className="text-slate">Время посещения</span>
+                  </dt>
+                  <dd className="col-start-2 font-medium text-charcoal">{place.visitDuration}</dd>
                 </div>
               ) : null}
               {place.season ? (
-                <div className="flex gap-3">
-                  <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Лучший сезон</dt>
-                    <dd className="font-medium text-charcoal">{place.season}</dd>
-                  </div>
+                <div className="grid grid-cols-[1rem_1fr] gap-x-3">
+                  <dt className="contents">
+                    <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
+                    <span className="text-slate">Лучший сезон</span>
+                  </dt>
+                  <dd className="col-start-2 font-medium text-charcoal">{place.season}</dd>
                 </div>
               ) : null}
               {place.ticketPrice ? (
-                <div className="flex gap-3">
-                  <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Стоимость</dt>
-                    <dd className="font-medium text-charcoal">{place.ticketPrice}</dd>
-                  </div>
-                </div>
-              ) : null}
-              {place.rating != null ? (
-                <div className="flex gap-3">
-                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-sun text-sun" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Рейтинг</dt>
-                    <dd className="font-medium text-charcoal">{place.rating.toFixed(1)} / 5</dd>
-                  </div>
+                <div className="grid grid-cols-[1rem_1fr] gap-x-3">
+                  <dt className="contents">
+                    <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
+                    <span className="text-slate">Стоимость</span>
+                  </dt>
+                  <dd className="col-start-2 font-medium text-charcoal">{place.ticketPrice}</dd>
                 </div>
               ) : null}
             </dl>

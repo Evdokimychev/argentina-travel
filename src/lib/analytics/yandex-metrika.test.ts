@@ -24,16 +24,26 @@ type TestWindow = Window & {
 };
 
 function withWindow<T>(setup: (win: TestWindow) => void, run: () => T): T {
+  const consent = JSON.stringify({
+    version: 2,
+    necessary: true,
+    analytics: true,
+    personalization: false,
+    decidedAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 60_000).toISOString(),
+  });
   const win = {
     location: { origin: "https://www.goargentina.ru" },
     setInterval: (...args: Parameters<typeof setInterval>) => setInterval(...args),
     clearInterval: (...args: Parameters<typeof clearInterval>) => clearInterval(...args),
     setTimeout: (...args: Parameters<typeof setTimeout>) => setTimeout(...args),
     clearTimeout: (...args: Parameters<typeof clearTimeout>) => clearTimeout(...args),
+    localStorage: { getItem: () => consent },
   } as unknown as TestWindow;
   setup(win);
   vi.stubGlobal("window", win);
   vi.stubGlobal("document", {
+    cookie: "",
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),

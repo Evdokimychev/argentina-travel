@@ -9,6 +9,7 @@ import {
 } from "@/lib/catalog-filter-url";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 const DEFAULT_CURRENCY = "RUB" as const;
 
@@ -89,19 +90,18 @@ export function buildCatalogMetadata(
       : `${count} авторских туров и экскурсий по Аргентине — от Буэнос-Айреса до Патагонии. Фильтры по датам, цене, формату и региону.`;
 
   const hasFilters = filterParts.length > 0;
-
-  return {
+  const metadata = buildPublicPageMetadata({
     title,
     description,
+    path: "/tours",
+  });
+
+  return {
+    ...metadata,
     alternates: {
       ...buildHreflangAlternates("/tours"),
-      canonical: "/tours",
+      ...metadata.alternates,
     },
     ...(hasFilters ? { robots: { index: false, follow: true } } : {}),
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
   };
 }

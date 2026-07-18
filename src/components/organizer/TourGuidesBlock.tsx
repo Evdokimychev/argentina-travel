@@ -8,15 +8,12 @@ import UserAvatar from "@/components/auth/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 import {
   ORGANIZER_TOUR_GUIDES_MAX,
-  ORGANIZER_TEAM_GUIDES_MAX,
   buildTourAuthorGuide,
-  teamGuideFromTourGuide,
 } from "@/data/tour-guides-defaults";
 import {
   ORGANIZER_PROFILE_UPDATED_EVENT,
   readOrganizerGuideTeam,
   readOrganizerProfile,
-  updateOrganizerProfile,
 } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
@@ -122,11 +119,22 @@ function GuideCard({
 }
 
 interface TourGuidesBlockProps {
+  productId: string;
+  productType?: "tour" | "excursion";
   guides: OrganizerTourGuide[];
   onChange: (guides: OrganizerTourGuide[]) => void;
 }
 
-export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockProps) {
+function productSafeAvatar(value: string): string {
+  return /^data:/i.test(value.trim()) ? "" : value;
+}
+
+export default function TourGuidesBlock({
+  productId,
+  productType = "tour",
+  guides,
+  onChange,
+}: TourGuidesBlockProps) {
   const { user } = useAuth();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -159,6 +167,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
   }, [guides, user]);
 
   const teamGuides = useMemo(() => {
+    void teamVersion;
     if (!user) return [];
     return readOrganizerGuideTeam(user.id);
     // teamVersion keeps the list in sync after profile updates
@@ -175,20 +184,15 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
 
   function addGuide(guide: Omit<OrganizerTourGuide, "isTourAuthor">) {
     if (guides.length >= ORGANIZER_TOUR_GUIDES_MAX) return;
-    onChange([...guides, { ...guide, isTourAuthor: false }]);
+    onChange([
+      ...guides,
+      { ...guide, avatar: productSafeAvatar(guide.avatar), isTourAuthor: false },
+    ]);
     setPickerOpen(false);
   }
 
   function addCustomGuide(guide: OrganizerTourGuide) {
     if (guides.length >= ORGANIZER_TOUR_GUIDES_MAX) return;
-
-    if (user) {
-      const team = readOrganizerGuideTeam(user.id);
-      const teamGuide = teamGuideFromTourGuide(guide);
-      if (!team.some((item) => item.id === teamGuide.id) && team.length < ORGANIZER_TEAM_GUIDES_MAX) {
-        updateOrganizerProfile(user.id, { guides: [...team, teamGuide] });
-      }
-    }
 
     onChange([...guides, guide]);
     setPickerOpen(false);
@@ -208,7 +212,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
       buildTourAuthorGuide({
         id: `guide-author-${user.id}`,
         name: user.fullName,
-        avatar: user.avatarUrl || buildTourAuthorGuide().avatar,
+        avatar: productSafeAvatar(user.avatarUrl || buildTourAuthorGuide().avatar),
         bio: profile.extendedDescription.trim() || buildTourAuthorGuide().bio,
         userId: user.id,
       }),
@@ -224,11 +228,11 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <div>
         <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-          Организатор и гиды тура
+          Организатор и гиды {productType === "excursion" ? "экскурсии" : "тура"}
         </h2>
         <p className="mt-1 text-sm text-slate">
-          Автор тура отображается на странице как организатор и гид. Добавьте других гидов, если
-          тур ведёт команда.
+          Автор {productType === "excursion" ? "экскурсии" : "тура"} отображается на странице как
+          организатор и гид. Добавьте других гидов, если предложение ведёт команда.
         </p>
       </div>
 
@@ -244,8 +248,8 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
         </div>
       ) : (
         <p className="rounded-2xl border border-dashed border-gray-200 px-4 py-6 text-center text-sm text-slate">
-          Добавьте себя как автора тура — так путешественники увидят вас организатором и гидом на
-          странице тура.
+          Добавьте себя как автора {productType === "excursion" ? "экскурсии" : "тура"} — так
+          путешественники увидят вас организатором и гидом на странице предложения.
         </p>
       )}
 
@@ -331,6 +335,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
       )}
 
       <TourGuideCreateModal
+        productId={productId}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSave={addCustomGuide}

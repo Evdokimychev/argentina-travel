@@ -1,7 +1,7 @@
 ---
 id: canon-del-atuel
 type: attraction
-title: Atuel Canyon
+title: Каньон Атуэль
 title_es: Cañón del Atuel
 title_en: Atuel Canyon
 summary: "Каньон реки Атуэль в Мендосе (Сан-Рафаэль): живописное ущелье и активный отдых на воде."

@@ -1,7 +1,7 @@
 ---
 id: empedrado
 type: attraction
-title: Empedrado
+title: Эмпедрадо
 title_es: Empedrado
 title_en: Empedrado
 summary: "Эмпедрадо в Корриентесе — тихое место на Паране, известное спортивной рыбалкой."

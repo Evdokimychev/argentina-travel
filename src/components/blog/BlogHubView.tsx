@@ -25,13 +25,13 @@ import type { BlogPost, TourListing } from "@/types";
 type BlogHubViewProps = {
   hub: BlogHub;
   posts?: BlogPost[];
-  initialTours?: TourListing[];
+  featuredTours?: TourListing[];
 };
 
 export default function BlogHubView({
   hub,
   posts = blogPosts,
-  initialTours = [],
+  featuredTours = [],
 }: BlogHubViewProps) {
   const hubPosts = getBlogHubPosts(hub, posts);
   const pinnedPosts = getBlogHubPinnedPosts(hub, posts);
@@ -75,13 +75,13 @@ export default function BlogHubView({
           <BlogHubPinnedNav posts={pinnedPosts} />
 
           <BlogTrendingDestinations className="mt-10" />
-          <BlogRecommendedTours className="mt-10" initialTours={initialTours} />
+          <BlogRecommendedTours className="mt-10" featuredTours={featuredTours} />
 
           {hubPosts.length > 0 ? (
             <BlogHubCatalog hub={hub} posts={hubPosts} />
           ) : (
             <p className="mt-8 rounded-panel border border-dashed border-border-subtle bg-surface-elevated p-10 text-center text-slate">
-              Материалы подборки скоро появятся. Пока загляните в{" "}
+              В этой подборке сейчас нет опубликованных материалов. Посмотрите{" "}
               <Link href="/blog" className="font-medium text-sky hover:underline">
                 каталог блога
               </Link>

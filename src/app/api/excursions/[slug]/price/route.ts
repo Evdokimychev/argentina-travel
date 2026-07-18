@@ -60,6 +60,10 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json(buildEstimateQuote(excursion, personsCount));
   }
 
+  if (excursion.partner === "platform") {
+    return NextResponse.json(buildEstimateQuote(excursion, personsCount));
+  }
+
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {

@@ -40,7 +40,7 @@ export default function GuidePillarCta({
         </Link>
       </div>
       <p className="mt-4">
-        <Link href="/immigration" className="text-sm font-medium text-sky hover:underline">
+        <Link href="/immigration" className="text-sm font-medium text-sky-ink hover:underline">
           Иммиграция и ВНЖ →
         </Link>
       </p>

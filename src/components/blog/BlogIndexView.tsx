@@ -12,14 +12,14 @@ import BlogIndexDiscoverySidebar, {
 import { buttonVariants } from "@/components/ui/button";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import {
-  blogPosts,
   filterBlogPosts,
+  filterIndexableBlogPosts,
   getBlogCategoriesWithCounts,
-  getBlogStartHerePosts,
   getTopBlogTags,
+  resolveBlogCardVariant,
   sortBlogPostsByDate,
-} from "@/data/blog";
-import { filterIndexableBlogPosts, resolveBlogCardVariant } from "@/lib/blog-utils";
+} from "@/lib/blog-utils";
+import { getBlogStartHerePostsFromCatalog } from "@/lib/blog-index-payload";
 import { BLOG_HERO_VARIANT_KEY, type BlogHeroVariant } from "@/lib/blog-hero-variant";
 import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
 import { cn } from "@/lib/cn";
@@ -30,9 +30,9 @@ import "@/components/blog/blog-index.css";
 const PAGE_SIZE = 12;
 
 type BlogIndexViewProps = {
-  posts?: BlogPost[];
-  initialTours?: TourListing[];
-  initialPersonalizedPosts?: BlogPost[];
+  posts: BlogPost[];
+  featuredTours?: TourListing[];
+  initialPersonalizedSlugs?: string[];
   heroVariant?: BlogHeroVariant;
   initialTag?: string | null;
   initialCategory?: string | null;
@@ -40,8 +40,8 @@ type BlogIndexViewProps = {
 
 export default function BlogIndexView({
   posts,
-  initialTours = [],
-  initialPersonalizedPosts = [],
+  featuredTours = [],
+  initialPersonalizedSlugs = [],
   heroVariant = "a",
   initialTag = null,
   initialCategory = null,
@@ -55,7 +55,7 @@ export default function BlogIndexView({
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const catalogPosts = useMemo(
-    () => filterIndexableBlogPosts(sortBlogPostsByDate(posts?.length ? posts : blogPosts)),
+    () => filterIndexableBlogPosts(sortBlogPostsByDate(posts)),
     [posts],
   );
 
@@ -64,7 +64,10 @@ export default function BlogIndexView({
     [catalogPosts],
   );
 
-  const editorialPosts = useMemo(() => getBlogStartHerePosts(), []);
+  const editorialPosts = useMemo(
+    () => getBlogStartHerePostsFromCatalog(indexableCatalog),
+    [indexableCatalog],
+  );
   const categoriesWithCounts = useMemo(
     () => getBlogCategoriesWithCounts(indexableCatalog),
     [indexableCatalog],
@@ -286,7 +289,7 @@ export default function BlogIndexView({
               {!hasActiveFilters ? (
                 <BlogIndexSecondaryDiscovery
                   catalog={indexableCatalog}
-                  initialTours={initialTours}
+                  featuredTours={featuredTours}
                   className="mt-10 border-t border-gray-200/80 pt-10"
                 />
               ) : null}
@@ -299,7 +302,7 @@ export default function BlogIndexView({
                 onCategorySelect={handleSidebarCategorySelect}
                 startHerePosts={editorialPosts}
                 catalog={indexableCatalog}
-                initialPersonalizedPosts={initialPersonalizedPosts}
+                initialPersonalizedSlugs={initialPersonalizedSlugs}
                 freshPosts={freshPosts}
                 className="hidden lg:block"
               />

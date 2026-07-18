@@ -2,7 +2,7 @@ import {
   SEARCH_TYPE_LABELS,
   type SearchIndexItem,
   type SearchResultType,
-} from "@/lib/site-search-index";
+} from "@/lib/site-search-schema";
 
 export type SearchResultGroup = {
   type: SearchResultType;
@@ -77,6 +77,7 @@ function scoreItem(item: SearchIndexItem, tokens: string[]): number {
 const TYPE_ORDER: SearchResultType[] = [
   "tour",
   "excursion",
+  "place",
   "blog",
   "guide",
   "destination",

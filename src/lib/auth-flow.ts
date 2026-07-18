@@ -16,9 +16,19 @@ export const AUTH_CONFIRM_TYPES = new Set<EmailOtpType>([
 const AUTH_NEXT_PATHS = new Set([
   "/",
   "/profile",
+  "/join",
   "/organizer",
   "/account/update-password",
 ]);
+
+const AUTH_ENTRY_QUERY_KEYS = ["auth", "role", "step", "next", "error"] as const;
+
+export function cleanAuthEntryUrl(search: string): string {
+  const cleaned = new URLSearchParams(search);
+  for (const key of AUTH_ENTRY_QUERY_KEYS) cleaned.delete(key);
+  const query = cleaned.toString();
+  return query ? `/?${query}` : "/";
+}
 
 export function normalizeAuthEmail(value: string): string {
   return value.normalize("NFKC").replace(INVISIBLE_EMAIL_CHARS, "").trim().toLowerCase();

@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import LegalPageView from "@/components/legal/LegalPageView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
-import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveLegalDocument, listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
-import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -24,15 +24,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const doc = await resolveLegalDocument(slug, locale);
   if (!doc) return { title: "Документ" };
   const alternates = await buildCmsContentHreflangAlternates("legal", slug, locale);
-  return {
-    ...buildPublicPageMetadata({
-      title: doc.title,
-      description: doc.description,
-      path: `/legal/${slug}`,
-    }),
+  return buildCmsPageMetadata({
+    content: doc,
+    title: doc.title,
+    description: doc.description,
+    path: `/legal/${slug}`,
     alternates,
-    robots: cmsFallbackRobots(doc),
-  };
+  });
 }
 
 export default async function LegalDocumentPage({ params }: PageProps) {

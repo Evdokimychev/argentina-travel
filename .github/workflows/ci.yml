@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_SHA: ${{ github.sha }}
-      DEPLOY_ENV: production
+      DEPLOY_ENV: preview
       NEXT_PUBLIC_APP_MODE: production
       NEXT_PUBLIC_ENABLE_DEMO_SEED: "false"
       NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
@@ -26,6 +26,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python for knowledge validation
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-content.txt
+
+      - name: Install knowledge validation dependencies
+        run: python -m pip install --requirement requirements-content.txt
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -56,18 +68,57 @@ jobs:
         run: npm run bundle:report
         continue-on-error: true
 
-      - name: Lighthouse blog CWV
+      - name: Blocking public performance budgets (3 cold mobile runs)
         env:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
           LIGHTHOUSE_START_TIMEOUT_MS: 180000
-          LIGHTHOUSE_CATEGORIES: performance,accessibility
-          LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/authors,/blog/hub/patagonia,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
-        run: node scripts/lighthouse-ci.mjs
-        continue-on-error: true
+          LIGHTHOUSE_CATEGORIES: performance,accessibility,seo
+          LIGHTHOUSE_RUNS_PER_PATH: "3"
+          LIGHTHOUSE_PERF_BUDGET: "75"
+          LIGHTHOUSE_LCP_BUDGET_MS: "4000"
+          LIGHTHOUSE_CLS_BUDGET: "0.1"
+          LIGHTHOUSE_TBT_BUDGET_MS: "300"
+        run: node scripts/lighthouse-phase2-ci.mjs
+
+      - name: Upload performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-budgets-${{ github.sha }}
+          path: |
+            var/ops/lighthouse-phase2-sample-last.json
+            var/ops/lh-*.json
+          if-no-files-found: error
 
       - name: E2E UX audit
         run: npm run test:e2e:ux-audit
         continue-on-error: true
+
+  production-acceptance:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    env:
+      GIT_SHA: ${{ github.sha }}
+      PLAYWRIGHT_BASE_URL: https://www.goargentina.ru
+      SMOKE_BASE_URL: https://www.goargentina.ru
+      EXPECTED_GIT_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
 
       - name: Wait for matching production deployment
         run: |
@@ -83,14 +134,9 @@ jobs:
           exit 1
 
       - name: Production smoke
-        env:
-          SMOKE_BASE_URL: https://www.goargentina.ru
-          EXPECTED_GIT_SHA: ${{ github.sha }}
         run: npm run production-smoke
 
       - name: Stage 2 visual acceptance
-        env:
-          PLAYWRIGHT_BASE_URL: https://www.goargentina.ru
         run: npm run test:e2e:stage2-visual
 
       - name: Upload Stage 2 visual gallery

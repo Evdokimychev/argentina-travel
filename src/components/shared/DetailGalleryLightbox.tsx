@@ -171,6 +171,8 @@ export function DetailGalleryLightbox({
           sizes="100vw"
           priority
           placeholderVariant="tour"
+          partnerImageWidth={1600}
+          partnerImageQuality={84}
           blurPlaceholder={false}
         />
       </div>
@@ -208,6 +210,8 @@ export function DetailGalleryLightbox({
                   sizes="96px"
                   loading="lazy"
                   placeholderVariant="tour"
+                  partnerImageWidth={320}
+                  partnerImageQuality={70}
                   blurPlaceholder={false}
                 />
               </button>

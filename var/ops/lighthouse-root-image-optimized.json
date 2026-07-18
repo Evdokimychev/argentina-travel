@@ -1,0 +1,30 @@
+{
+  "at": "2026-07-17T00:05:37.672Z",
+  "baseUrl": "http://127.0.0.1:3112",
+  "categories": [
+    "performance",
+    "accessibility"
+  ],
+  "budget": {
+    "performance": 90,
+    "accessibility": 95,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "medianPerformance": 66,
+  "medianAccessibility": 100,
+  "results": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:3112/",
+      "performance": 66,
+      "accessibility": 100,
+      "lcpMs": 8647,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

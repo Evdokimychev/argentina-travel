@@ -32,9 +32,16 @@ import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 interface TourDetailHeaderProps {
   tour: TourDetail;
   canonicalTour?: Tour | null;
+  showMedia?: boolean;
+  catalogKind?: "tour" | "excursion";
 }
 
-export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHeaderProps) {
+export default function TourDetailHeader({
+  tour,
+  canonicalTour,
+  showMedia = true,
+  catalogKind = "tour",
+}: TourDetailHeaderProps) {
   const [shared, setShared] = useState(false);
   const isPartnerTour = isPartnerTourDetail(tour);
   const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.reviews));
@@ -88,29 +95,35 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
         <PageBreadcrumbs
           items={[
             { label: "Главная", href: "/" },
-            { label: "Авторские туры", href: "/tours" },
+            {
+              label: catalogKind === "excursion" ? "Экскурсии" : "Авторские туры",
+              href: catalogKind === "excursion" ? "/excursions" : "/tours",
+            },
             { label: provinceLabel },
             { label: tour.title },
           ]}
         />
 
-        <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,400px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-10">
+        <div
+          className={cn(
+            "mt-6 grid items-start gap-8",
+            showMedia
+              ? "lg:grid-cols-[minmax(0,1fr)_min(42%,400px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-10"
+              : "max-w-4xl",
+          )}
+        >
           <div className="min-w-0">
-            <Link
-              href="/tours"
-              className="group inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
-            >
-              {cityDisplay}
-              <ArrowUpRight
-                className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden
-              />
-            </Link>
-
-            <div className="mt-4 flex items-start justify-between gap-4">
-              <h1 className="min-w-0 flex-1 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
-                {tour.title}
-              </h1>
+            <div className="flex items-center justify-between gap-3">
+              <Link
+                href={catalogKind === "excursion" ? "/excursions" : "/tours"}
+                className="group inline-flex min-h-11 min-w-0 items-center gap-1.5 truncate rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
+              >
+                <span className="truncate">{cityDisplay}</span>
+                <ArrowUpRight
+                  className="h-3 w-3 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden
+                />
+              </Link>
               <div className="flex shrink-0 items-center gap-1.5">
                 <FavoriteButton
                   tourId={tour.id}
@@ -127,12 +140,16 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                   type="button"
                   onClick={handleShare}
                   aria-label={shared ? "Ссылка скопирована" : "Поделиться"}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200/80 bg-white/90 text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:bg-white"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200/80 bg-white/90 text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:bg-white"
                 >
                   <Share2 className="h-4 w-4" />
                 </button>
               </div>
             </div>
+
+            <h1 className="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+              {tour.title}
+            </h1>
 
             {tour.shortDescription?.trim() ? (
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
@@ -180,30 +197,34 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
             ) : null}
           </div>
 
-          <div className="relative mx-auto hidden w-full max-w-md lg:mx-0 lg:block lg:max-w-none">
-            <div
-              className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] rounded-2xl border border-sky/20 lg:block"
-              aria-hidden
-            />
-            <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
-              <div className="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[4/3]">
-                <SafeImage
-                  src={tour.image}
-                  alt={tour.title}
-                  fill
-                  priority
-                  fetchPriority="high"
-                  placeholderVariant="tour"
-                  sizes="(max-width: 1024px) 100vw, 420px"
-                  className="object-cover"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-charcoal/20 via-transparent to-transparent"
-                  aria-hidden
-                />
+          {showMedia ? (
+            <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+              <div
+                className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] rounded-2xl border border-sky/20 lg:block"
+                aria-hidden
+              />
+              <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
+                <div className="relative aspect-[16/10] w-full lg:aspect-[4/3]">
+                  <SafeImage
+                    src={tour.image}
+                    alt={tour.title}
+                    fill
+                    priority
+                    fetchPriority="high"
+                    placeholderVariant="tour"
+                    partnerImageWidth={960}
+                    partnerImageQuality={82}
+                    sizes="(max-width: 1024px) 100vw, 420px"
+                    className="object-cover"
+                  />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-charcoal/20 via-transparent to-transparent"
+                    aria-hidden
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </section>

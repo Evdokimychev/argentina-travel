@@ -92,7 +92,10 @@ export async function PUT(request: Request, context: RouteContext) {
 
   const saved = await upsertTourAvailabilitySlots(auth.admin, id, slots);
   if ("error" in saved) {
-    return NextResponse.json({ error: saved.error }, { status: 500 });
+    return NextResponse.json(
+      { error: saved.error },
+      { status: "status" in saved ? saved.status : 500 }
+    );
   }
 
   const nextSlots = await fetchTourAvailabilityByTourId(auth.admin, id);

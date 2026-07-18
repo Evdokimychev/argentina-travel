@@ -105,6 +105,7 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
           seo,
           articleType,
           relations,
+          expectedVersion: doc.rowVersion,
         }),
       });
       const data = (await res.json()) as { document?: CmsDocument; error?: string };
@@ -148,7 +149,15 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
       const saveResponse = await fetch(`/api/organizer/articles/${encodeURIComponent(documentId)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, excerpt, sections, seo, articleType, relations }),
+        body: JSON.stringify({
+          title,
+          excerpt,
+          sections,
+          seo,
+          articleType,
+          relations,
+          expectedVersion: doc.rowVersion,
+        }),
       });
       const saveData = (await saveResponse.json()) as { document?: CmsDocument; error?: string };
       if (!saveResponse.ok || !saveData.document) {

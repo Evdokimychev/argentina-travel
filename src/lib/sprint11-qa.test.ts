@@ -20,27 +20,22 @@ const testsRoot = join(process.cwd(), "tests");
 const LIGHTHOUSE_PHASE2_PATHS = [
   "/",
   "/tours",
-  "/tours/patagonia-glaciers",
+  "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  "/blog/natsionalnyy-park-iguasu",
+  "/blog/best-time-to-visit-argentina",
   "/mapa-argentina",
-  "/immigration",
-  "/destinations/patagonia",
-  "/places",
-  "/destinations",
-  "/about",
   "/contacts",
-  "/en/places",
+  "/destinations/patagonia",
 ];
 
 const VISUAL_SMOKE_PATHS = [
   "/",
   "/tours",
-  "/tours/patagonia-glaciers",
+  "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  "/blog/buenos-aires-rajony",
-  "/blog/natsionalnyy-park-iguasu",
-  "/destinations/patagonia",
+  "/blog/argentinian-steak-guide",
+  "/blog/best-time-to-visit-argentina",
+  "/destinations/ba",
   "/mapa-argentina",
   "/immigration",
   "/gallery",
@@ -135,11 +130,12 @@ describe("Sprint 11 — final QA gate (S5–S10 regression)", () => {
     expect(Object.keys(MAP_KIND_COLORS).length).toBeGreaterThanOrEqual(7);
   });
 
-  it("phase-2 Lighthouse automation covers 13 public URLs with perf + a11y", () => {
+  it("phase-2 Lighthouse automation covers eight blocking public routes with perf + a11y", () => {
     const script = readFileSync(join(scriptsRoot, "lighthouse-phase2-ci.mjs"), "utf8");
     expect(script).toContain("LIGHTHOUSE_PHASE2_PATHS");
     expect(script).toContain("performance,accessibility");
-    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(13);
+    expect(script).toContain('LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3"');
+    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(8);
     for (const path of LIGHTHOUSE_PHASE2_PATHS) {
       expect(script).toContain(path);
     }

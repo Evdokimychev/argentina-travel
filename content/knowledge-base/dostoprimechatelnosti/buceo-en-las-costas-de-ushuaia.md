@@ -1,7 +1,7 @@
 ---
 id: buceo-en-las-costas-de-ushuaia
 type: attraction
-title: Buceo en las costas de Ушуайя
+title: Дайвинг у берегов Ушуайи
 title_es: Buceo en las costas de Ushuaia
 title_en: Diving off the shores of Ushuaia
 summary: "Дайвинг в водах канала Бигл у Ушуайи — погружение в подводный мир самой южной Патагонии."

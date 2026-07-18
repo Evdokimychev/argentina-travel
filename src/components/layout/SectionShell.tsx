@@ -80,7 +80,7 @@ export default function SectionShell({
             {eyebrow ? (
               <p
                 className={cn(
-                  "text-xs font-semibold uppercase tracking-wider",
+                  "flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] before:h-px before:w-7 before:bg-current before:opacity-50",
                   isDark ? "text-sky-light/90" : "text-sky-ink"
                 )}
               >
@@ -89,7 +89,7 @@ export default function SectionShell({
             ) : null}
             <h2
               className={cn(
-                "font-heading text-2xl font-bold sm:text-3xl",
+                "font-display text-2xl font-bold leading-tight tracking-[-0.025em] sm:text-[2rem]",
                 eyebrow && "mt-2",
                 isDark ? "text-white" : "text-charcoal"
               )}
@@ -122,6 +122,19 @@ export default function SectionShell({
           ) : null}
         </div>
         {children}
+        {actions ? <div className="mt-6 sm:hidden">{actions}</div> : null}
+        {href && linkLabel ? (
+          <Link
+            href={href}
+            className={cn(
+              "mt-6 inline-flex items-center gap-1 text-sm font-semibold sm:hidden",
+              isDark ? "text-white/90 hover:text-white" : "text-sky-ink",
+            )}
+          >
+            {linkLabel}
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+        ) : null}
       </div>
     </section>
   );

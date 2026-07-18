@@ -88,7 +88,8 @@ export async function fetchTopAttributionSources(
     query = query.gte("created_at", since);
   }
 
-  const { data } = await query;
+  const { data, error } = await query;
+  if (error) throw new Error("booking_attribution_unavailable");
   if (!data?.length) return [];
 
   const counts = new Map<string, number>();

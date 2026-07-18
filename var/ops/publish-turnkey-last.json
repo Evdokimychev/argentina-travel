@@ -1,13 +1,13 @@
 {
-  "ok": true,
-  "ranAt": "2026-07-12T15:00:21.964Z",
+  "ok": false,
+  "ranAt": "2026-07-15T20:04:42.358Z",
   "baseUrl": "https://www.goargentina.ru",
   "full": true,
   "preDeploy": true,
   "summary": {
-    "ok": 15,
+    "ok": 14,
     "warn": 1,
-    "fail": 0,
+    "fail": 1,
     "manual": 3
   },
   "steps": [
@@ -17,8 +17,8 @@
       "command": "node scripts/write-migration-meta.mjs",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 63,
-      "output": "Migration meta: 56 files, latest=20250707000000_auth_profile_protect → src/lib/ops/migration-meta.generated.json"
+      "durationMs": 48,
+      "output": "Migration meta: 66 files, latest=20260715132000_email_delivery_outbox → src/lib/ops/migration-meta.generated.json"
     },
     {
       "id": "check:tsc",
@@ -26,7 +26,7 @@
       "command": "npx tsc --noEmit",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 33697,
+      "durationMs": 6220,
       "output": ""
     },
     {
@@ -35,17 +35,17 @@
       "command": "npm test",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 14508,
-      "output": "t.ts (7 tests) 8ms\n ✓ src/lib/youtravel/offers-mapper.test.ts (16 tests) 9ms\n ✓ src/lib/youtravel/affise-snapshots.test.ts (5 tests) 8ms\n ✓ src/lib/youtravel/checkout-url.test.ts (4 tests) 2ms\n ✓ src/lib/image-placeholder.test.ts (3 tests) 3ms\n ✓ src/lib/perf-budget.test.ts (4 tests) 6ms\n ✓ src/lib/analytics/yandex-metrika-config.test.ts (2 tests) 2ms\n ✓ src/lib/cms/cms-cutover.test.ts (9 tests) 8ms\n ✓ src/lib/maintenance-countdown.test.ts (4 tests) 4ms\n ✓ src/lib/blog-section-blocks.test.ts (2 tests) 5ms\n ✓ src/lib/tripster/fetch-experience-affiliate.test.ts (1 test) 2ms\n ✓ src/lib/gallery-images.test.ts (1 test) 3ms\n ✓ src/lib/youtravel/partner-tour-guide.test.ts (8 tests) 4ms\n ✓ src/lib/cms/site-globals/normalize.test.ts (16 tests) 5ms\n ✓ src/lib/route-error-retry.test.ts (4 tests) 6ms\n ✓ src/lib/personalization/interaction-consent.test.ts (1 test) 5ms\n ✓ src/lib/map-argentina-url-state.test.ts (8 tests) 3ms\n ✓ src/lib/youtravel/partner-tour-tags.test.ts (6 tests) 4ms\n ✓ src/lib/cms/page-builder/block-normalize.test.ts (5 tests) 6ms\n ✓ src/lib/map-thematic-loader.test.ts (3 tests) 5ms\n ✓ src/lib/site-sections-json-ld.test.ts (3 tests) 14ms\n ✓ src/lib/dialog-outside-events.test.ts (3 tests) 4ms\n ✓ src/lib/sort-tours.test.ts (3 tests) 4ms\n ✓ src/lib/metadata/page-title.test.ts (3 tests) 14ms\n ✓ src/lib/youtravel/filter-tours.test.ts (12 tests) 8ms\n ✓ src/data/map-barrios/caba-barrios.test.ts (4 tests) 3ms\n ✓ src/lib/youtravel/partner-offer-occupancy.test.ts (11 tests) 3ms\n ✓ src/lib/route-segment-filter.test.ts (4 tests) 4ms\n ✓ src/lib/excursion-calendar.test.ts (6 tests) 6ms\n ✓ src/lib/geo/validation.test.ts (7 tests) 3ms\n ✓ src/lib/youtravel/booking-fallback.test.ts (5 tests) 4ms\n ✓ src/lib/excursion-date-label.test.ts (7 tests) 31ms\n ✓ src/lib/tour-route-endpoints.test.ts (4 tests) 2ms\n ✓ src/lib/youtravel/marketplace-slug.test.ts (2 tests) 3ms\n ✓ src/lib/site-url.test.ts (8 tests) 3ms\n ✓ src/lib/partner-tours/filter-price.test.ts (7 tests) 3ms\n ✓ src/lib/guide-section-blocks.test.ts (2 tests) 2ms\n ✓ src/lib/sprint3-ux.test.ts (6 tests) 4ms\n ✓ src/lib/payments/payment-sandbox.test.ts (6 tests) 2ms\n ✓ src/lib/tripster/partner-tour-levels.test.ts (4 tests) 3ms\n ✓ src/lib/map-thematic-derived.test.ts (2 tests) 2ms\n ✓ src/lib/map-thematic-layers.test.ts (5 tests) 3ms\n ✓ src/lib/flights/meeting-point-flight.test.ts (4 tests) 3ms\n ✓ src/lib/tour-price-bounds.test.ts (6 tests) 5ms\n ✓ src/lib/youtravel/partner-invariants.test.ts (5 tests) 3ms\n ✓ src/lib/media/media-cdn.test.ts (5 tests) 2ms\n ✓ src/lib/favorite-href.test.ts (2 tests) 2ms\n ✓ src/lib/redirects/url-redirect-normalize.test.ts (5 tests) 4ms\n ✓ src/lib/excursion-catalog-filters.test.ts (3 tests) 3ms\n ✓ src/lib/blog-p2.test.ts (2 tests) 16ms\n ✓ src/lib/cms/cms-preview.test.ts (2 tests) 11ms\n ✓ src/lib/blog-resolver-public.test.ts (2 tests) 3ms\n ✓ src/lib/excursion-listing-meta.test.ts (8 tests) 2ms\n ✓ src/lib/tour-price-public.test.ts (6 tests) 2ms\n ✓ src/lib/tripster/open-partner-booking-url.test.ts (3 tests) 2ms\n ✓ src/lib/knowledge-base/kb-breadcrumbs-json-ld.test.ts (1 test) 3ms\n ✓ src/lib/map-geodata-source.test.ts (2 tests) 2ms\n ✓ src/lib/youtravel/partner-tour-group-size.test.ts (3 tests) 3ms\n ✓ src/lib/site-feedback/normalize-error.test.ts (7 tests) 5ms\n ✓ src/lib/robots-txt.test.ts (2 tests) 2ms\n ✓ src/lib/blog-hero-variant-cookie.test.ts (2 tests) 2ms\n ✓ src/lib/search/cms-search-sync.test.ts (3 tests) 5ms\n ✓ src/lib/excursion-search-index.test.ts (1 test) 2ms\n ✓ src/lib/yandex-distribution-verify.test.ts (2 tests) 3ms\n ✓ src/lib/partner-tour/affiliate-fallback.test.ts (2 tests) 3ms\n ✓ src/lib/site-container.test.ts (2 tests) 2ms\n ✓ src/lib/mobile-nav.test.ts (2 tests) 3ms\n ✓ src/lib/search/search-readiness.test.ts (1 test) 3ms\n ✓ src/lib/catalog-seo.test.ts (2 tests) 3ms\n\n Test Files  150 passed (150)\n      Tests  877 passed (877)\n   Start at  11:57:04\n   Duration  13.66s (transform 7.47s, setup 0ms, collect 73.95s, tests 1.56s, environment 21ms, prepare 9.57s)"
+      "durationMs": 16029,
+      "output": "public.test.ts (2 tests) 3ms\n ✓ src/lib/partner-booking/idempotency.test.ts (3 tests) 4ms\n ✓ src/lib/payments/payment-sandbox.test.ts (6 tests) 2ms\n ✓ src/lib/excursion-date-label.test.ts (7 tests) 9ms\n ✓ src/lib/editorial-theme.test.ts (3 tests) 4ms\n ✓ src/lib/cms/cms-import-preview.test.ts (4 tests) 4ms\n ✓ src/app/api/bookings/notify/route.test.ts (1 test) 3ms\n ✓ src/lib/youtravel/partner-tour-repository.test.ts (4 tests) 4ms\n ✓ src/lib/cms/author-article-moderation-security.test.ts (2 tests) 4ms\n ✓ src/lib/auth-flow.test.ts (3 tests) 3ms\n ✓ src/lib/partner-tours/filter-price.test.ts (7 tests) 14ms\n ✓ src/lib/article-plain-text.test.ts (5 tests) 3ms\n ✓ src/lib/internal-route-access.test.ts (3 tests) 2ms\n ✓ src/lib/knowledge-base/kb-breadcrumbs-json-ld.test.ts (1 test) 3ms\n ✓ src/lib/image-placeholder.test.ts (3 tests) 3ms\n ✓ src/lib/travelpayouts/whitelabel/insurance-widget-lifecycle.test.ts (1 test) 2ms\n ✓ src/lib/excursion-catalog-filters.test.ts (3 tests) 2ms\n ✓ src/lib/cms-content-cross-links.test.ts (6 tests) 3ms\n ✓ src/lib/gallery-images.test.ts (1 test) 3ms\n ✓ src/lib/site-sections-json-ld.test.ts (3 tests) 3ms\n ✓ src/lib/product-capabilities.test.ts (4 tests) 3ms\n ✓ src/lib/catalog-seo.test.ts (2 tests) 3ms\n ✓ src/lib/tour-route-endpoints.test.ts (4 tests) 3ms\n ✓ src/lib/cms/cms-preview.test.ts (2 tests) 2ms\n ✓ src/lib/booking-create-command-integrity.test.ts (2 tests) 3ms\n ✓ src/lib/blog-section-blocks.test.ts (2 tests) 3ms\n ✓ src/lib/tripster/open-partner-booking-url.test.ts (3 tests) 3ms\n ✓ src/lib/booking-cancellation-integrity.test.ts (1 test) 8ms\n ✓ src/lib/search/cms-search-sync.test.ts (3 tests) 2ms\n ✓ src/lib/form-validation.test.ts (4 tests) 2ms\n ✓ src/lib/notifications/email-outbox-security.test.ts (2 tests) 5ms\n ✓ src/lib/youtravel/partner-offer-occupancy.test.ts (11 tests) 3ms\n ✓ src/lib/tour-card-fallback-image.test.ts (5 tests) 3ms\n ✓ src/lib/map-thematic-derived.test.ts (2 tests) 4ms\n ✓ src/lib/payments/sandbox-mode.test.ts (5 tests) 2ms\n ✓ src/lib/youtravel/checkout-url.test.ts (4 tests) 3ms\n ✓ src/lib/site-feedback/normalize-error.test.ts (7 tests) 2ms\n ✓ src/lib/tripster/fetch-experience-affiliate.test.ts (1 test) 3ms\n ✓ src/lib/map-thematic-layers.test.ts (5 tests) 3ms\n ✓ src/lib/cms/site-globals/locale-resolve.test.ts (5 tests) 3ms\n ✓ src/lib/public-detail-existence.test.ts (1 test) 2ms\n ✓ src/lib/excursion-listing-meta.test.ts (8 tests) 2ms\n ✓ src/lib/booking-state-machine.test.ts (3 tests) 4ms\n ✓ src/lib/tripster/partner-tour-levels.test.ts (4 tests) 3ms\n ✓ src/lib/search/search-readiness.test.ts (1 test) 2ms\n ✓ src/lib/cms/site-globals/robots-meta.test.ts (2 tests) 2ms\n ✓ src/lib/tripster/booking-conditions.test.ts (2 tests) 2ms\n ✓ src/lib/map-accessibility.test.ts (2 tests) 2ms\n ✓ src/lib/partner-tour/affiliate-fallback.test.ts (2 tests) 2ms\n ✓ src/lib/user-experience/workspaces.test.ts (2 tests) 2ms\n ✓ src/lib/cms/seo-utils.test.ts (4 tests) 3ms\n ✓ src/lib/site-container.test.ts (2 tests) 2ms\n ✓ src/lib/excursion-detail-items.test.ts (3 tests) 3ms\n ✓ src/lib/media/partner-image-proxy.test.ts (2 tests) 2ms\n ✓ src/lib/map-object-ranking.test.ts (2 tests) 2ms\n ✓ src/lib/runtime-mode.test.ts (3 tests) 2ms\n ✓ src/lib/yandex-distribution-verify.test.ts (2 tests) 2ms\n ✓ src/lib/mobile-nav.test.ts (2 tests) 2ms\n ✓ src/lib/blog-hero-variant-cookie.test.ts (2 tests) 2ms\n ✓ src/lib/cms/author-article-workflow.test.ts (3 tests) 2ms\n ✓ src/lib/excursion-json-ld.test.ts (1 test) 2ms\n ✓ src/lib/database-url.test.ts (1 test) 3ms\n ✓ src/lib/map-geodata-source.test.ts (2 tests) 6ms\n ✓ src/lib/travelpayouts/whitelabel/ensure-wl-search-responsive.test.ts (1 test) 1ms\n ✓ src/lib/favorite-href.test.ts (2 tests) 2ms\n ✓ src/lib/privacy/delete-automation.test.ts (1 test) 2ms\n ✓ src/lib/bookings-notify.test.ts (3 tests) 2ms\n\n Test Files  195 passed (195)\n      Tests  1023 passed (1023)\n   Start at  17:00:04\n   Duration  15.28s (transform 8.80s, setup 0ms, collect 78.00s, tests 1.94s, environment 36ms, prepare 10.99s)"
     },
     {
       "id": "check:rls",
       "label": "RLS audit",
       "command": "node scripts/rls-audit.mjs",
-      "status": "ok",
-      "exitCode": 0,
-      "durationMs": 73,
-      "output": "RLS audit (static): 81 tables\n✓ No critical RLS issues.\nAudit log: var/ops/rls-audit-last.json"
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": 55,
+      "output": "RLS audit (static): 86 tables\nAudit log: var/ops/rls-audit-last.json\n✗ Critical RLS issues (2):\n  - [missing_policies] email_delivery_outbox: Таблица public.email_delivery_outbox без политик RLS (критично для публичных таблиц)\n  - [missing_policies] partner_booking_operations: Таблица public.partner_booking_operations без политик RLS (критично для публичных таблиц)"
     },
     {
       "id": "check:blog-sync",
@@ -53,7 +53,7 @@
       "command": "npm run sync-manual-posts:check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 331,
+      "durationMs": 229,
       "output": "> argentina-travel@0.1.0 sync-manual-posts:check\n> node scripts/sync-blog-manual-posts-from-md.mjs --check\n\nOK argentina-2-nedeli-marshrut.ts\nOK argentina-10-dnej-3-nedeli.ts\nOK ruta-40-sem-ozer.ts\nOK vnutrennie-aviabilety-argentina.ts\nOK kak-dobratsya-v-argentinu.ts\nOK byudzhet-poezdki-argentina.ts\nOK stoimost-zhizni-buenos-aires.ts\nOK kak-menyat-dengi-argentina.ts\nOK buenos-aires-rajony.ts\nOK mendoza-vinnyj-gid.ts\nOK vnzh-argentina-rezidenciya.ts\nOK viza-cifrovogo-kochevnika-argentina.ts\nOK dni-cuil-argentina.ts\nOK grazhdanstvo-argentiny.ts\nOK bankovskij-schet-argentina.ts\nOK index.ts\nAll manual blog posts in sync with MD sources."
     },
     {
@@ -62,7 +62,7 @@
       "command": "npm run sync-rich-articles:check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 262,
+      "durationMs": 228,
       "output": "> argentina-travel@0.1.0 sync-rich-articles:check\n> node scripts/sync-blog-rich-articles-from-md.mjs --check\n\nOK iguazu-national-park.ts\nOK tierra-del-fuego-national-park.ts\nOK nahuel-huapi-national-park.ts\nOK los-glaciares-national-park.ts\nOK ibera-national-park.ts\nOK lanin-national-park.ts\nOK los-alerces-national-park.ts\nOK los-cardones-national-park.ts\nOK patagonia-national-park.ts\nOK talampaya-national-park.ts\nOK banado-la-estrella.ts\nOK all-argentina-national-parks.ts\nOK ischigualasto-valley-of-the-moon.ts\nAll rich articles in sync with MD sources."
     },
     {
@@ -71,7 +71,7 @@
       "command": "node scripts/audit-blog-heroes.mjs --strict",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 76,
+      "durationMs": 47,
       "output": "Blog hero audit: 49/49 indexable (100%) have local hero.jpg"
     },
     {
@@ -80,7 +80,7 @@
       "command": "npm run register-cornerstone-media:check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 298,
+      "durationMs": 184,
       "output": "> argentina-travel@0.1.0 register-cornerstone-media:check\n> node scripts/register-cornerstone-blog-media.mjs --check\n\nCornerstone media OK (16 posts)"
     },
     {
@@ -89,7 +89,7 @@
       "command": "npm run sync-content-plan-redirects:check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 477,
+      "durationMs": 303,
       "output": "> argentina-travel@0.1.0 sync-content-plan-redirects:check\n> tsx scripts/sync-content-plan-redirects.mjs --check\n\nContent-plan redirects: 20 entries in TS\n  /marshruty/argentina-2-nedeli → /blog/argentina-2-nedeli-marshrut\n  /marshruty/argentina-10-dnej → /blog/argentina-10-dnej-3-nedeli\n  /marshruty/ruta-40-sem-ozer → /blog/ruta-40-sem-ozer\n  /dengi/stoimost-zhizni-ba → /blog/stoimost-zhizni-buenos-aires\n  /dengi/kak-menyat-dengi → /blog/kak-menyat-dengi-argentina\n  /dengi/kak-menyat-valyutu → /blog/kak-menyat-dengi-argentina\n  /dengi/byudzhet-poezdki → /blog/byudzhet-poezdki-argentina\n  /transport/vnutrennie-aviabilety → /blog/vnutrennie-aviabilety-argentina\n  /transport/kak-dobratsya-v-argentinu → /blog/kak-dobratsya-v-argentinu\n  /goroda/buenos-aires-rajony → /blog/buenos-aires-rajony\n  /goroda/mendoza-vino → /blog/mendoza-vinnyj-gid\n  /pereezd/vnzh-argentina → /blog/vnzh-argentina-rezidenciya\n  /pereezd/viza-cifrovogo-kochevnika → /blog/viza-cifrovogo-kochevnika-argentina\n  /pereezd/dni-cuil → /blog/dni-cuil-argentina\n  /pereezd/grazhdanstvo → /blog/grazhdanstvo-argentiny\n  /pereezd/bankovskij-schet → /blog/bankovskij-schet-argentina\n  /blog/buenos-aires-neighborhoods → /blog/buenos-aires-rajony\n  /blog/mendoza-wine-route → /blog/mendoza-vinnyj-gid\n  /map → /mapa-argentina\n  /parki/ischigualasto-valle-de-la-luna → /blog/ischigualasto-valle-de-la-luna"
     },
     {
@@ -98,7 +98,7 @@
       "command": "npm run prune-legacy-blog-media:check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 281,
+      "durationMs": 207,
       "output": "> argentina-travel@0.1.0 prune-legacy-blog-media:check\n> node scripts/prune-legacy-blog-media.mjs --check\n\n✓ manifest: no legacy blog slugs\n✓ src/data/media-library/stock-cache.json: clean\n✓ var/cache/image-provider/stock-cache.json: clean"
     },
     {
@@ -107,7 +107,7 @@
       "command": "npm run cms-media:deploy-check",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 1048,
+      "durationMs": 3984,
       "output": "> argentina-travel@0.1.0 cms-media:deploy-check\n> node scripts/cms-media-deploy-check.mjs\n\nCMS media deploy check\n✓ manifest: no legacy blog slugs\n✓ Local/dev can run: npm run sync-cms-media-manifest\n✓ no pending CMS media uploads in DB\n\nDeploy checklist:\n  1. Upload in Admin → Media\n  2. npm run sync-cms-media-manifest\n  3. git add src/data/media-library/manifest.json && deploy"
     },
     {
@@ -116,7 +116,7 @@
       "command": "npm run cms:readiness -- --strict",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 3070,
+      "durationMs": 2806,
       "output": "> argentina-travel@0.1.0 cms:readiness\n> tsx scripts/cms-cutover-readiness.mjs --strict\n\nCMS cutover readiness\nLanes: 3/4 cutover on, 4/4 ready, 3/4 at 100%\n\n✓ blog: 100% (290/290) cutover=true canEnable=true\n✓ guide: 100% (5/5) cutover=true canEnable=true\n✓ destination: 100% (8/8) cutover=true canEnable=true\n– place: 28% (27/98) cutover=false canEnable=false\n    missing: cafayate, tilcara, quebrada-de-humahuaca, salinas-grandes, san-martin-de-los-andes, villa-la-angostura, rosario, la-plata, tucuman, san-salvador-de-jujuy, neuquen, san-juan\n\nReport: var/ops/cms-cutover-readiness-last.json"
     },
     {
@@ -125,8 +125,8 @@
       "command": "npm run build",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 149514,
-      "output": "                                               15.6 kB         540 kB\n├ ƒ /profile/trip-prep                                                                                 2.06 kB         508 kB\n├ ƒ /robots.txt                                                                                          382 B         105 kB\n├ ƒ /services                                                                                          3.31 kB         125 kB\n├ ƒ /shop                                                                                              1.21 kB         563 kB\n├ ƒ /shop/[slug]                                                                                       2.55 kB         564 kB\n├ ƒ /sitemap.xml                                                                                         382 B         105 kB\n├ ƒ /tours                                                                                             25.2 kB         617 kB\n├ ● /tours/[slug]                                                                                        295 B         768 kB\n├   ├ /tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535\n├   ├ /tours/bolshoy-tur-v-argentinu-chili-i-braziliyu-trekkingi-v-patagonii-vodopady-iguasu--t92532\n├   ├ /tours/ot-buenos-ayresa-do-kraya-sveta-bolshoy-fototur-po-znakovym-lokatsiyam-argentiny-t109207\n├   └ [+50 more paths]\n├ ƒ /transfers                                                                                         16.6 kB         356 kB\n├ ƒ /trip-prep                                                                                           831 B         109 kB\n├ ƒ /trip/[token]                                                                                      4.75 kB         412 kB\n└ ƒ /yandex-verification                                                                                 382 B         105 kB\n+ First Load JS shared by all                                                                           104 kB\n  ├ chunks/31255-1694efc89059d06f.js                                                                     46 kB\n  ├ chunks/4bd1b696-bad92808725a934a.js                                                                54.2 kB\n  └ other shared chunks (total)                                                                        4.27 kB\n\nRoute (pages)                                                                                             Size  First Load JS\n─   /_app                                                                                                  0 B         101 kB\n+ First Load JS shared by all                                                                           101 kB\n  ├ chunks/framework-2746044f3499a1c3.js                                                               59.8 kB\n  ├ chunks/main-d47b0a8f09d0c5c3.js                                                                    37.9 kB\n  └ other shared chunks (total)                                                                        3.59 kB\n\nƒ Middleware                                                                                           91.9 kB\n\n●  (SSG)      prerendered as static HTML (uses generateStaticParams)\nƒ  (Dynamic)  server-rendered on demand\n\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n ⚠ Compiled with warnings in 55s\n\n./node_modules/@supabase/supabase-js/dist/index.mjs\nA Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.\nLearn more: https://nextjs.org/docs/api-reference/edge-runtime\n\nImport trace for requested module:\n./node_modules/@supabase/supabase-js/dist/index.mjs\n./src/lib/supabase/admin.ts\n./src/lib/site-settings-server.ts"
+      "durationMs": 223844,
+      "output": "                                                2.06 kB         510 kB\n├ ƒ /robots.txt                                                                                          416 B         105 kB\n├ ƒ /services                                                                                          3.77 kB         125 kB\n├ ƒ /shop                                                                                              3.18 kB         567 kB\n├ ƒ /shop/[slug]                                                                                       2.54 kB         567 kB\n├ ƒ /sitemap.xml                                                                                         416 B         105 kB\n├ ƒ /tours                                                                                               16 kB         622 kB\n├ ● /tours/[slug]                                                                                        303 B         773 kB\n├   ├ /tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535\n├   ├ /tours/bolshoy-tur-v-argentinu-chili-i-braziliyu-trekkingi-v-patagonii-vodopady-iguasu--t92532\n├   ├ /tours/ot-buenos-ayresa-do-kraya-sveta-bolshoy-fototur-po-znakovym-lokatsiyam-argentiny-t109207\n├   └ [+50 more paths]\n├ ƒ /transfers                                                                                         15.6 kB         361 kB\n├ ƒ /trip-prep                                                                                           831 B         109 kB\n├ ƒ /trip/[token]                                                                                      4.88 kB         412 kB\n└ ƒ /yandex-verification                                                                                 416 B         105 kB\n+ First Load JS shared by all                                                                           104 kB\n  ├ chunks/31255-1694efc89059d06f.js                                                                     46 kB\n  ├ chunks/4bd1b696-bad92808725a934a.js                                                                54.2 kB\n  └ other shared chunks (total)                                                                        4.26 kB\n\nRoute (pages)                                                                                             Size  First Load JS\n─   /_app                                                                                                  0 B         101 kB\n+ First Load JS shared by all                                                                           101 kB\n  ├ chunks/framework-2746044f3499a1c3.js                                                               59.8 kB\n  ├ chunks/main-d47b0a8f09d0c5c3.js                                                                    37.9 kB\n  └ other shared chunks (total)                                                                        3.61 kB\n\nƒ Middleware                                                                                           92.5 kB\n\n●  (SSG)      prerendered as static HTML (uses generateStaticParams)\nƒ  (Dynamic)  server-rendered on demand\n\nProduction client bundle contains no demo authentication adapter markers\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n ⚠ Compiled with warnings in 120s\n\n./node_modules/@supabase/supabase-js/dist/index.mjs\nA Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.\nLearn more: https://nextjs.org/docs/api-reference/edge-runtime\n\nImport trace for requested module:\n./node_modules/@supabase/supabase-js/dist/index.mjs\n./node_modules/@supabase/ssr/dist/module/createServerClient.js\n./node_modules/@supabase/ssr/dist/module/index.js"
     },
     {
       "id": "smoke:production",
@@ -134,23 +134,23 @@
       "command": "node scripts/production-smoke.mjs",
       "status": "ok",
       "exitCode": 0,
-      "durationMs": 21538,
-      "output": "Production smoke base URL: https://www.goargentina.ru\n✓ /api/health (deployEnv=production, migrationVersion=20250707000000_auth_profile_protect)\n✓ /\n✓ /tours\n✓ /excursions\n✓ /destinations\n✓ /places\n✓ /blog\n✓ /blog/buenos-aires-rajony\n✓ /blog/natsionalnyy-park-iguasu\n✓ /guide/sezony-i-klimat\n✓ /destinations/patagonia\n✓ /places/iguazu-falls\n✓ /gallery\n✓ /collections\n✓ /immigration\n✓ /mapa-argentina\n✓ /map → /mapa-argentina\n✓ /blog/buenos-aires-rajony hero image (og:image set)\n✓ /blog/natsionalnyy-park-iguasu hero image (og:image set)\nProduction smoke checks passed."
+      "durationMs": 23806,
+      "output": "Production smoke base URL: https://www.goargentina.ru\n✓ /api/health (deployEnv=production, migrationVersion=20260715032401_secure_auth_role_bootstrap)\n✓ /\n✓ /tours\n✓ /excursions\n✓ /destinations\n✓ /places\n✓ /blog\n✓ /blog/buenos-aires-rajony\n✓ /blog/natsionalnyy-park-iguasu\n✓ /guide/sezony-i-klimat\n✓ /destinations/patagonia\n✓ /places/iguazu-falls\n✓ /gallery\n✓ /collections\n✓ /immigration\n✓ /mapa-argentina\n✓ /map → /mapa-argentina\n✓ /dev/design-system closed\n✓ anonymous reading history\n✓ /favicon.ico\n✓ /favicon-16x16.png\n✓ /favicon-32x32.png\n✓ /apple-touch-icon.png\n✓ /icons/icon-192.png\n✓ /icons/icon-512.png\n✓ /icons/icon-maskable-512.png\n✓ /blog/buenos-aires-rajony hero image (og:image set)\n✓ /blog/natsionalnyy-park-iguasu hero image (og:image set)\nProduction smoke checks passed."
     },
     {
       "id": "live:health",
       "label": "Live /api/health (https://www.goargentina.ru)",
       "status": "ok",
-      "message": "deployEnv=production, migration=20250707000000_auth_profile_protect",
+      "message": "deployEnv=production, migration=20260715032401_secure_auth_role_bootstrap",
       "data": {
         "ok": true,
         "version": "0.1.0",
-        "gitSha": "f009cf8e0858081f466e152fd01515f30ac856ab",
+        "gitSha": "543ead8ac198d8e45e73b840221a460fb43cdb7b",
         "environment": {
           "nodeEnv": "production",
           "deployEnv": "production"
         },
-        "migrationVersion": "20250707000000_auth_profile_protect",
+        "migrationVersion": "20260715032401_secure_auth_role_bootstrap",
         "checks": {
           "database": {
             "ok": true,
@@ -158,8 +158,8 @@
             "error": null
           },
           "migrations": {
-            "latestId": "20250707000000_auth_profile_protect",
-            "fileCount": 56
+            "latestId": "20260715032401_secure_auth_role_bootstrap",
+            "fileCount": 61
           },
           "searchIndex": {
             "count": 500,
@@ -167,12 +167,12 @@
             "error": null
           },
           "postgresDirect": {
-            "ok": false,
-            "tripsterCount": null,
-            "error": "getaddrinfo ENOTFOUND db.uooxrypocahomoqzdvzy.supabase.co"
+            "ok": true,
+            "tripsterCount": 68,
+            "error": null
           }
         },
-        "generatedAt": "2026-07-12T15:00:16.094Z"
+        "generatedAt": "2026-07-15T20:04:37.352Z"
       }
     },
     {
@@ -181,8 +181,8 @@
       "command": "node scripts/analytics-readiness.mjs",
       "status": "warn",
       "exitCode": 1,
-      "durationMs": 5910,
-      "output": "Analytics readiness (I2)\nBase URL: https://www.goargentina.ru\nChecks: OK 3, warn 7, fail 6, skip 4\n\n✗ [fail] NEXT_PUBLIC_GTM_ID: Не задан — GTM не загрузится\n! [warn] NEXT_PUBLIC_GA4_MEASUREMENT_ID: Не задана — справочно для настройки тегов\n! [warn] NEXT_PUBLIC_YANDEX_METRIKA_ID: Не задана — Метрика не загрузится\n! [warn] NEXT_PUBLIC_CLARITY_PROJECT_ID: Не задана — справочно для настройки тегов\n✗ [fail] Verification env (GSC / Bing / Ahrefs): Ни один токен не задан — meta-теги не появятся без CMS SEO globals\n! [warn] CMS site.seo verification tokens: Пусто — задайте в Vercel env или Admin → Настройки → SEO\n! [warn] NEXT_PUBLIC_SITE_URL совпадает с baseUrl: NEXT_PUBLIC_SITE_URL не задан — сравнение пропущено\n✓ [ok] GTM_EVENTS в gtm-events.ts: 19 событий (ожидается 19)\n✗ [fail] Live GTM snippet (https://www.goargentina.ru): GTM не в HTML — проверьте env на хостинге и redeploy\n– [skip] Live Yandex Metrika snippet (https://www.goargentina.ru): NEXT_PUBLIC_YANDEX_METRIKA_ID не задан — проверка пропущена\n✗ [fail] Live Consent Mode default (gtm-consent-default): Consent default отсутствует — GTM может загрузиться до denied\n✗ [fail] Live dataLayer initialization: dataLayer не инициализирован в HTML\n✗ [fail] Live google-site-verification: Meta-тег отсутствует\n! [warn] Live msvalidate.01 (Bing): Meta-тег отсутствует\n! [warn] Live ahrefs-site-verification: Meta-тег отсутствует\n✓ [ok] robots.txt → Sitemap: https://www.goargentina.ru/sitemap.xml\n✓ [ok] sitemap.xml доступен: 1319 URL\n– [skip] GSC: sitemap отправлен вручную: Search Console → Sitemaps → https://www.goargentina.ru/sitemap.xml (после верификации google-site-verification)\n– [skip] GTM: контейнер опубликован: Submit + Publish в tagmanager.google.com (GA4, Clarity). Метрика — в коде приложения, не в GTM.\n– [skip] GA4 / Метрика: конверсии и цели: Настроить: booking_submit, contact_form_submit, newsletter_subscribe\n\nReport: var/ops/analytics-readiness-last.json\nRunbook: docs/i2-analytics-gsc-runbook.md\n\nGTM go-live checklist\n=====================\nVercel NEXT_PUBLIC_GTM_ID: не задан\nLive GTM snippet (https://www.goargentina.ru): нет\nСобытия dataLayer в коде: 19\nАвтопроверки: OK 3, warn 7, fail 6\n\nРучные шаги:\n  1. Vercel Production: NEXT_PUBLIC_GTM_ID + verification tokens → Redeploy\n  2. GTM: GA4 Configuration + GA4 Event (regex в docs/analytics-gtm-setup.md)\n  3. GTM: Consent Mode на всех тегах аналитики\n  4. GA4: конверсии — booking_submit, contact_form_submit, newsletter_subscribe\n  5. Метрика: цели по событиям dataLayer\n  6. Submit + Publish контейнера в tagmanager.google.com\n  7. Tag Assistant + GA4 DebugView после согласия на cookie",
+      "durationMs": 4991,
+      "output": "Analytics readiness (I2)\nBase URL: https://www.goargentina.ru\nChecks: OK 3, warn 7, fail 6, skip 4\n\n✗ [fail] NEXT_PUBLIC_GTM_ID: Не задан — GTM не загрузится\n! [warn] NEXT_PUBLIC_GA4_MEASUREMENT_ID: Не задана — справочно для настройки тегов\n! [warn] NEXT_PUBLIC_YANDEX_METRIKA_ID: Не задана — Метрика не загрузится\n! [warn] NEXT_PUBLIC_CLARITY_PROJECT_ID: Не задана — справочно для настройки тегов\n✗ [fail] Verification env (GSC / Bing / Ahrefs): Ни один токен не задан — meta-теги не появятся без CMS SEO globals\n! [warn] CMS site.seo verification tokens: Пусто — задайте в Vercel env или Admin → Настройки → SEO\n! [warn] NEXT_PUBLIC_SITE_URL совпадает с baseUrl: NEXT_PUBLIC_SITE_URL не задан — сравнение пропущено\n✓ [ok] GTM_EVENTS в gtm-events.ts: 19 событий (ожидается 19)\n✗ [fail] Live GTM snippet (https://www.goargentina.ru): GTM не в HTML — проверьте env на хостинге и redeploy\n– [skip] Live Yandex Metrika snippet (https://www.goargentina.ru): NEXT_PUBLIC_YANDEX_METRIKA_ID не задан — проверка пропущена\n✗ [fail] Live Consent Mode default (gtm-consent-default): Consent default отсутствует — GTM может загрузиться до denied\n✗ [fail] Live dataLayer initialization: dataLayer не инициализирован в HTML\n✗ [fail] Live google-site-verification: Meta-тег отсутствует\n! [warn] Live msvalidate.01 (Bing): Meta-тег отсутствует\n! [warn] Live ahrefs-site-verification: Meta-тег отсутствует\n✓ [ok] robots.txt → Sitemap: https://www.goargentina.ru/sitemap.xml\n✓ [ok] sitemap.xml доступен: 1172 URL\n– [skip] GSC: sitemap отправлен вручную: Search Console → Sitemaps → https://www.goargentina.ru/sitemap.xml (после верификации google-site-verification)\n– [skip] GTM: контейнер опубликован: Submit + Publish в tagmanager.google.com (GA4, Clarity). Метрика — в коде приложения, не в GTM.\n– [skip] GA4 / Метрика: конверсии и цели: Настроить: booking_submit, contact_form_submit, newsletter_subscribe\n\nReport: var/ops/analytics-readiness-last.json\nRunbook: docs/i2-analytics-gsc-runbook.md\n\nGTM go-live checklist\n=====================\nVercel NEXT_PUBLIC_GTM_ID: не задан\nLive GTM snippet (https://www.goargentina.ru): нет\nСобытия dataLayer в коде: 19\nАвтопроверки: OK 3, warn 7, fail 6\n\nРучные шаги:\n  1. Vercel Production: NEXT_PUBLIC_GTM_ID + verification tokens → Redeploy\n  2. GTM: GA4 Configuration + GA4 Event (regex в docs/analytics-gtm-setup.md)\n  3. GTM: Consent Mode на всех тегах аналитики\n  4. GA4: конверсии — booking_submit, contact_form_submit, newsletter_subscribe\n  5. Метрика: цели по событиям dataLayer\n  6. Submit + Publish контейнера в tagmanager.google.com\n  7. Tag Assistant + GA4 DebugView после согласия на cookie",
       "message": "GTM/verification не настроены — см. docs/i2-analytics-gsc-runbook.md (не блокирует контент)"
     },
     {

@@ -37,8 +37,8 @@ export default function MaintenancePreviewPanel({ maintenance, branding, contact
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-charcoal shadow-inner">
-        <div className="pointer-events-none origin-top-left scale-[0.42] sm:scale-[0.48] lg:scale-[0.52]">
+      <div className="relative aspect-video overflow-hidden rounded-xl border border-gray-200 bg-charcoal shadow-inner [container-type:inline-size]">
+        <div className="pointer-events-none absolute left-0 top-0 origin-top-left scale-[calc(100cqw/1280)]">
           <div className="h-[720px] w-[1280px] overflow-hidden">
             <MaintenanceComingSoonView model={model} preview />
           </div>

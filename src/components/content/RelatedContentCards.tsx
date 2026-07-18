@@ -48,10 +48,10 @@ export default function RelatedContentCards({
                 "hover:border-sky/25 hover:bg-sky/5",
               )}
             >
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-sky">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-sky-ink">
                 {kindLabels[item.kind ?? "link"]}
               </span>
-              <span className="mt-1 block flex-1 text-sm font-medium leading-snug text-charcoal group-hover:text-sky">
+              <span className="mt-1 block flex-1 text-sm font-medium leading-snug text-charcoal group-hover:text-sky-ink">
                 {item.title}
               </span>
               {item.description ? (
@@ -60,7 +60,7 @@ export default function RelatedContentCards({
                 </span>
               ) : null}
               <ArrowRight
-                className="mt-2 h-4 w-4 text-sky opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+                className="mt-2 h-4 w-4 text-sky-ink opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
                 aria-hidden
               />
             </Link>

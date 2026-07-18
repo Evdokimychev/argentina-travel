@@ -8,8 +8,7 @@ import {
   parsePublicApiPagination,
   serializePublicTourListing,
 } from "@/lib/public-api/serializers";
-import { fetchPublishedListings } from "@/lib/tour-content-server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchPublishedListingsServer } from "@/lib/tour-content-server";
 
 export async function GET(request: Request) {
   return handlePublicApiRequest(request, "tours:read", async (req, { key }) => {
@@ -21,8 +20,7 @@ export async function GET(request: Request) {
     const { page, pageSize } = parsePublicApiPagination(searchParams);
     const organizerSlug = searchParams.get("organizer")?.trim() || null;
 
-    const supabase = await createSupabaseServerClient();
-    const tours = await fetchPublishedListings(supabase);
+    const tours = await fetchPublishedListingsServer();
     const filtered = filterToursForPublicApi(tours, {
       organizerSlug,
       organizerId: key.organizerId,

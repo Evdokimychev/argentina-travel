@@ -11,7 +11,7 @@ export default function ItineraryDetailView({ itinerary }: { itinerary: PlaceIti
 
   return (
     <article className="pb-16">
-      <div className="relative aspect-[21/9] min-h-[200px] w-full overflow-hidden bg-charcoal">
+      <div className="relative aspect-[21/9] min-h-[288px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
         {itinerary.coverImage ? (
           <Image
             src={itinerary.coverImage}
@@ -23,7 +23,7 @@ export default function ItineraryDetailView({ itinerary }: { itinerary: PlaceIti
           />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 to-charcoal/20" />
-        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-8 pt-16")}>
+        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-6 pt-12 sm:pb-8 sm:pt-16")}>
           <Link href="/itineraries" className="text-sm text-white/70 hover:text-white">
             ← Все маршруты
           </Link>

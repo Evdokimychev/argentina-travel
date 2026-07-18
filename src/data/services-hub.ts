@@ -1,3 +1,5 @@
+import type { SiteModulesGlobal } from "@/types/site-globals";
+
 export type ServiceItem = {
   id: string;
   slug: string;
@@ -177,10 +179,91 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   },
 ];
 
-export function getServiceBySlug(slug: string): ServiceItem | undefined {
+export const OPTIONAL_SERVICE_CATEGORIES: ServiceCategory[] = [
+  {
+    id: "apartments",
+    title: "Апартаменты",
+    description: "Подбор проверенного жилья для поездки, переезда или длительного проживания.",
+    items: [
+      {
+        id: "apartments-request",
+        slug: "apartment-rental",
+        title: "Подобрать апартаменты",
+        description:
+          "Расскажите о датах, районе и составе гостей — менеджер уточнит реальные варианты и условия.",
+        href: "/contacts?service=apartment-rental",
+      },
+    ],
+  },
+];
+
+const NATIVE_APARTMENTS_CATEGORY: ServiceCategory = {
+  id: "apartments",
+  title: "Апартаменты",
+  description: "Проверенные объекты платформы и организаторов с запросом подтверждения дат.",
+  items: [{
+    id: "apartments-native",
+    slug: "apartments",
+    title: "Выбрать апартаменты",
+    description: "Сравните условия и отправьте запрос владельцу — доступность подтверждается до бронирования.",
+    href: "/apartments",
+  }],
+};
+
+const TRANSFER_REQUEST_SERVICE: ServiceItem = {
+  id: "transfers-request",
+  slug: "transfer-request",
+  title: "Запросить трансфер",
+  description:
+    "Укажите маршрут, даты, количество пассажиров и багаж — менеджер уточнит доступность и условия.",
+  href: "/contacts?service=transfer-request",
+};
+
+/**
+ * Builds the public services hub from the admin product strategy.
+ * A setting controls discoverability only: it never creates inventory or enables checkout.
+ */
+export function getServiceCategoriesForModules(
+  modules: SiteModulesGlobal,
+): ServiceCategory[] {
+  const categories: ServiceCategory[] = [];
+
   for (const category of SERVICE_CATEGORIES) {
+    if (category.id === "car-rental") {
+      if (modules.carRentalMode !== "disabled" && modules.showCarRentalInServices) {
+        categories.push(category);
+      }
+      continue;
+    }
+    if (category.id === "transfers") {
+      if (modules.transfersMode === "disabled" || !modules.showTransfersInServices) {
+        continue;
+      }
+      categories.push(
+        modules.transfersMode === "request"
+          ? {
+              ...category,
+              description: "Индивидуальный подбор трансфера менеджером под ваш маршрут.",
+              items: [TRANSFER_REQUEST_SERVICE],
+            }
+          : category,
+      );
+      continue;
+    }
+    categories.push(category);
+  }
+
+  if (modules.apartmentsMode !== "disabled" && modules.showApartmentsInServices) {
+    categories.push(modules.apartmentsMode === "native_request" ? NATIVE_APARTMENTS_CATEGORY : OPTIONAL_SERVICE_CATEGORIES[0]);
+  }
+
+  return categories;
+}
+
+export function getServiceBySlug(slug: string): ServiceItem | undefined {
+  for (const category of [...SERVICE_CATEGORIES, ...OPTIONAL_SERVICE_CATEGORIES, NATIVE_APARTMENTS_CATEGORY]) {
     const item = category.items.find((entry) => entry.slug === slug);
     if (item) return item;
   }
-  return undefined;
+  return slug === TRANSFER_REQUEST_SERVICE.slug ? TRANSFER_REQUEST_SERVICE : undefined;
 }

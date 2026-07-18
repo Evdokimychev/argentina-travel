@@ -4,15 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FileText, MessageCircle, ShoppingBag } from "lucide-react";
-import type { ShopProduct } from "@/data/shop-products";
+import { formatShopMoney, type ShopProduct } from "@/types/shop-product";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
+import type { SiteCommerceGlobal } from "@/types/site-globals";
+import { DEFAULT_SITE_COMMERCE } from "@/lib/cms/site-globals/normalize";
 
 interface ShopProductCardProps {
   product: ShopProduct;
+  settings?: SiteCommerceGlobal;
 }
 
-export default function ShopProductCard({ product }: ShopProductCardProps) {
+export default function ShopProductCard({
+  product,
+  settings = DEFAULT_SITE_COMMERCE,
+}: ShopProductCardProps) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const shopCheckoutEnabled = isSupabaseShopEnabled();
 
@@ -22,15 +28,17 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
         <Link href={`/shop/${product.slug}`} className="relative aspect-[4/3] overflow-hidden">
           <Image
             src={product.image}
-            alt={product.title}
+            alt={product.imageAlt}
             fill
             className="object-cover transition-transform duration-300 hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-charcoal">
-            <FileText className="h-3 w-3" aria-hidden />
-            {product.format}
-          </span>
+          {settings.showProductFormat ? (
+            <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-charcoal">
+              <FileText className="h-3 w-3" aria-hidden />
+              {product.format}
+            </span>
+          ) : null}
         </Link>
         <div className="flex flex-1 flex-col p-5">
           <Link
@@ -41,18 +49,21 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
           </Link>
           <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">{product.description}</p>
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
-            <span className="font-heading text-xl font-bold text-charcoal">
-              ${product.price}{" "}
-              <span className="text-sm font-normal text-slate">{product.currency}</span>
-            </span>
+            {settings.showProductPrice ? (
+              <span className="font-heading text-xl font-bold text-charcoal">
+                {formatShopMoney(product.priceMinor, product.currency)}
+              </span>
+            ) : <span />}
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <Link
-                href={`/contacts?product=${product.slug}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
-              >
-                <MessageCircle className="h-4 w-4" aria-hidden />
-                Вопрос
-              </Link>
+              {settings.showProductQuestions ? (
+                <Link
+                  href={`/contacts?product=${product.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+                >
+                  <MessageCircle className="h-4 w-4" aria-hidden />
+                  Вопрос
+                </Link>
+              ) : null}
               {shopCheckoutEnabled ? (
                 <button
                   type="button"

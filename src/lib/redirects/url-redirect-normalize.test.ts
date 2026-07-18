@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   normalizeRedirectFromPath,
   normalizeRedirectToPath,
+  validateUrlRedirectGraph,
   validateUrlRedirectInput,
 } from "@/lib/redirects/url-redirect-normalize";
 
@@ -10,6 +11,36 @@ describe("normalizeRedirectFromPath", () => {
     expect(normalizeRedirectFromPath("blog/old")).toBe("/blog/old");
     expect(normalizeRedirectFromPath("/blog/old/")).toBe("/blog/old");
     expect(normalizeRedirectFromPath("/")).toBe("/");
+  });
+});
+
+describe("validateUrlRedirectGraph", () => {
+  it("rejects a two-node cycle", () => {
+    expect(
+      validateUrlRedirectGraph([
+        { fromPath: "/a", toPath: "/b" },
+        { fromPath: "/b", toPath: "/a" },
+      ])
+    ).toMatch(/цикл/);
+  });
+
+  it("rejects a cycle through an existing chain", () => {
+    expect(
+      validateUrlRedirectGraph([
+        { fromPath: "/a", toPath: "/b" },
+        { fromPath: "/b", toPath: "/c" },
+        { fromPath: "/c", toPath: "/a" },
+      ])
+    ).toMatch(/цикл/);
+  });
+
+  it("accepts an internal chain that reaches a final page", () => {
+    expect(
+      validateUrlRedirectGraph([
+        { fromPath: "/a", toPath: "/b" },
+        { fromPath: "/b", toPath: "/final" },
+      ])
+    ).toBeNull();
   });
 });
 

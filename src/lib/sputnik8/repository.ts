@@ -255,7 +255,8 @@ export async function logSputnik8AffiliateClick(
   }
 ): Promise<void> {
   await supabase.from("affiliate_link_clicks").insert({
-    experience_id: input.productId ?? null,
+    // This column references tripster_experiences and must never receive a Sputnik8 id.
+    experience_id: null,
     experience_slug: input.experienceSlug,
     partner_url: input.partnerUrl,
     referer: input.referer ?? null,

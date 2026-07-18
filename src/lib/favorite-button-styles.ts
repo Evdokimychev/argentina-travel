@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 
 /** Круглая кнопка «избранное» на карточках (оверлей на фото). */
 export const favoriteOverlayButtonClass = cn(
-  "pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full",
+  "pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full",
   "border-0 bg-white/95 text-charcoal/75 shadow-sm backdrop-blur-sm",
   "transition-colors duration-200",
   "hover:bg-white hover:text-red-500",
@@ -11,7 +11,7 @@ export const favoriteOverlayButtonClass = cn(
 
 /** Круглая кнопка рядом с заголовком на детальной странице. */
 export const favoriteHeaderButtonClass = cn(
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
   "border border-gray-200/80 bg-white/90 text-charcoal/75 shadow-sm",
   "transition-colors duration-200",
   "hover:border-red-200/80 hover:bg-white hover:text-red-500",

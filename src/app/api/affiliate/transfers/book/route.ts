@@ -5,10 +5,14 @@ import {
 } from "@/lib/intui/transfers-affiliate";
 import { isTravelpayoutsConfigured, TravelpayoutsError } from "@/lib/travelpayouts";
 import type { LocaleCode } from "@/types/locale";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 const LOCALES = new Set<LocaleCode>(["ru", "en", "es", "pt"]);
 
 export async function GET(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("transfers", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   const { searchParams } = new URL(request.url);
   const bookPath = searchParams.get("book")?.trim() ?? "";
   const routeKey = searchParams.get("route")?.trim() || "unknown";

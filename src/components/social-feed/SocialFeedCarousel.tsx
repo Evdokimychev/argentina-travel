@@ -33,7 +33,7 @@ export default function SocialFeedCarousel({
         className="flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-roledescription="carousel"
       >
-        {items.map((item, index) => (
+        {items.map((item) => (
           <div
             key={item.id}
             className="w-[min(72vw,280px)] shrink-0 snap-start sm:w-[240px] lg:w-[260px]"
@@ -41,7 +41,6 @@ export default function SocialFeedCarousel({
             <SocialFeedTile
               item={item}
               source={sourcesById.get(item.sourceId)}
-              priority={index < 2}
             />
           </div>
         ))}

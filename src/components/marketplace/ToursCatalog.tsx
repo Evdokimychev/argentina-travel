@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
@@ -85,9 +86,24 @@ const CatalogMapView = dynamic(
 interface ToursCatalogProps {
   tours: TourListing[];
   platformStats?: PlatformStats;
+  catalogBasePath?: string;
+  title?: string;
+  subtitle?: string;
+  kicker?: string;
+  heroCaption?: string;
+  heroImageAlt?: string;
 }
 
-export default function ToursCatalog({ tours: initialTours, platformStats }: ToursCatalogProps) {
+export default function ToursCatalog({
+  tours: initialTours,
+  platformStats,
+  catalogBasePath = "/tours",
+  title = "Туры в Аргентину: авторские маршруты по стране",
+  subtitle = "Сравнивайте программы, даты и формат поездки — от Игуасу до ледников Патагонии.",
+  kicker = "Маршруты по стране",
+  heroCaption = "Патагония · Анды · Игуасу",
+  heroImageAlt = "Горный маршрут по Патагонии",
+}: ToursCatalogProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tours = useRepositoryTourListings(initialTours);
@@ -141,8 +157,8 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
     if (catalogFilterParamsMatch(nextParams, currentParams)) return;
 
     const qs = nextParams.toString();
-    router.replace(qs ? `/tours?${qs}` : "/tours", { scroll: false });
-  }, [filters, sort, viewMode, currency, tours, router, searchParams]);
+    router.replace(qs ? `${catalogBasePath}?${qs}` : catalogBasePath, { scroll: false });
+  }, [catalogBasePath, filters, sort, viewMode, currency, tours, router, searchParams]);
 
   const handleFiltersChange = useCallback((next: TourFilters) => {
     setFilters(next);
@@ -219,7 +235,7 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
 
   return (
     <div className="catalog-listing-page-root w-full max-w-full overflow-x-clip pb-16">
-      <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
+      <header className="catalog-listing-page-hero editorial-hero" data-scroll-rail-tone="light" data-editorial-theme="highland">
         <div
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--primary"
           aria-hidden
@@ -228,13 +244,33 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
           aria-hidden
         />
-        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
-          <h1 className="max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
-            Каталог туров
-          </h1>
-          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
-            Все авторские путешествия по Аргентине
-          </p>
+        <div className={cn(siteContainerClass, "relative grid items-center gap-6 pb-9 pt-8 sm:pb-10 sm:pt-9 md:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10 lg:pb-12 lg:pt-10")}>
+          <div>
+            <p className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
+              {kicker}
+            </p>
+            <div className="editorial-rule mt-4 h-1 w-12 rounded-full" aria-hidden />
+            <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-charcoal sm:text-4xl lg:text-[2.65rem]">
+              {title}
+            </h1>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
+              {subtitle}
+            </p>
+          </div>
+          <div className="editorial-media-frame group relative hidden aspect-[4/3] overflow-hidden rounded-[1.5rem] border md:block">
+            <Image
+              src="/media/destinations/patagonia/cover.jpg"
+              alt={heroImageAlt}
+              fill
+              priority
+              sizes="288px"
+              className="editorial-media-zoom object-cover"
+            />
+            <div className="editorial-media-overlay absolute inset-0 opacity-60" aria-hidden />
+            <p className="absolute inset-x-0 bottom-0 p-5 text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
+              {heroCaption}
+            </p>
+          </div>
         </div>
       </header>
 

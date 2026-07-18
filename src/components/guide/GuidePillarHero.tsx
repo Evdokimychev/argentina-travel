@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_WHATSAPP_URL } from "@/data/site-contacts";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
+import { resolveGuideEditorialTheme } from "@/lib/editorial-theme";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { GuidePillarHeroCta } from "@/types/guide-pillar";
@@ -25,7 +26,13 @@ export default function GuidePillarHero({
 
   return (
     <>
-      <Hero title={heroTitle} subtitle={heroSubtitle} image={heroImage} compact />
+      <Hero
+        title={heroTitle}
+        subtitle={heroSubtitle}
+        image={heroImage}
+        theme={resolveGuideEditorialTheme(topic.slug)}
+        compact
+      />
       <div className="border-b border-gray-100 bg-white">
         <div
           className={cn(

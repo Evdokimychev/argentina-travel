@@ -179,12 +179,13 @@ export async function fetchExcursionListingsByGuideId(
 export async function fetchExcursionGuideIds(supabase: DbClient): Promise<number[]> {
   const { data, error } = await supabase
     .from("tripster_experiences")
-    .select("payload");
+    .select("experience_type, payload");
 
   if (error || !data) return [];
 
   const ids = new Set<number>();
   for (const row of data) {
+    if (isTripsterTourExperience(row)) continue;
     const payload = row.payload as { guide?: { id?: number } } | null;
     const guideId = payload?.guide?.id;
     if (typeof guideId === "number" && Number.isFinite(guideId)) {

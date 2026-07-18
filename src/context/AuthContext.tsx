@@ -10,15 +10,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import dynamic from "next/dynamic";
 import type { AuthIntent, FavoriteAuthStep } from "@/types/auth";
 import type { SessionUser, AccountRole } from "@/types/user";
 import type { FavoriteTourInput } from "@/hooks/useFavoriteTour";
 import { splitFullName } from "@/lib/full-name";
 import { getAuthProvider } from "@/lib/auth-provider";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { profileToSessionUser } from "@/lib/profile-mapper";
-import { attachGuestBookingsToUser } from "@/lib/bookings-store";
+import { attachGuestBookingsAfterLogin } from "@/lib/booking-attach-client";
 import {
   flushFavoriteSyncQueue,
   syncFavoritesOnLogin,
@@ -27,10 +27,41 @@ import {
 import { syncBlogReadingHistoryWithRemote } from "@/lib/blog-reading-history-sync";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
-import AuthModal from "@/components/auth/AuthModal";
 import AuthQueryHandler from "@/components/auth/AuthQueryHandler";
-import FavoriteAuthPromptModal from "@/components/auth/FavoriteAuthPromptModal";
 import FavoriteAuthSuccessListener from "@/components/auth/FavoriteAuthSuccessListener";
+
+function AuthModalLoadingFallback() {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="auth-loading-title"
+      aria-describedby="auth-loading-description"
+      className="fixed inset-0 z-modal flex items-center justify-center bg-charcoal/35 px-4 backdrop-blur-sm"
+    >
+      <div className="w-full max-w-md rounded-3xl border border-border-subtle bg-surface-elevated p-6 shadow-elevated">
+        <p id="auth-loading-title" className="font-display text-lg font-semibold text-foreground">
+          Открываем вход…
+        </p>
+        <p id="auth-loading-description" className="mt-2 text-sm text-slate">
+          Подготавливаем защищённую форму. Это займёт несколько секунд.
+        </p>
+        <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-surface-muted">
+          <div className="h-full w-1/2 animate-pulse rounded-full bg-sky" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const AuthModal = dynamic(() => import("@/components/auth/AuthModal"), {
+  ssr: false,
+  loading: AuthModalLoadingFallback,
+});
+const FavoriteAuthPromptModal = dynamic(
+  () => import("@/components/auth/FavoriteAuthPromptModal"),
+  { ssr: false },
+);
 
 export const FAVORITE_SAVED_AFTER_AUTH_EVENT = "favorite-saved-after-auth";
 
@@ -100,6 +131,13 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+export function hasBrowserSupabaseAuthCookie(cookieHeader: string): boolean {
+  return cookieHeader
+    .split(";")
+    .map((part) => part.trim().split("=", 1)[0] ?? "")
+    .some((name) => name.startsWith("sb-") && name.includes("-auth-token"));
+}
+
 async function resolveProviderUser(activeRole?: AccountRole): Promise<SessionUser | null> {
   const provider = getAuthProvider();
   const user = await provider.getSessionUser();
@@ -130,43 +168,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    const supabase = createSupabaseBrowserClient();
-
-    async function loadProfile(userId: string) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
-      if (profile) {
-        setUser(profileToSessionUser(profile));
-      } else {
-        setUser(null);
-      }
+    // Anonymous public visitors do not need the Supabase/WebAuthn bundle. The
+    // provider is still loaded on demand by every login/register action.
+    if (!hasBrowserSupabaseAuthCookie(document.cookie)) {
+      setUser(null);
       setHydrated(true);
+      return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        void loadProfile(session.user.id);
-      } else {
-        setUser(null);
+    let cancelled = false;
+    let unsubscribe: (() => void) | null = null;
+
+    void import("@/lib/supabase/client").then(({ createSupabaseBrowserClient }) => {
+      if (cancelled) return;
+      const supabase = createSupabaseBrowserClient();
+
+      async function loadProfile(userId: string) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .maybeSingle();
+        if (cancelled) return;
+        setUser(profile ? profileToSessionUser(profile) : null);
         setHydrated(true);
       }
+
+      void supabase.auth.getSession().then(({ data: { session } }) => {
+        if (cancelled) return;
+        if (session?.user) {
+          void loadProfile(session.user.id);
+        } else {
+          setUser(null);
+          setHydrated(true);
+        }
+      });
+
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (cancelled) return;
+        if (session?.user) {
+          void loadProfile(session.user.id);
+        } else {
+          setUser(null);
+          setHydrated(true);
+        }
+      });
+      unsubscribe = () => subscription.unsubscribe();
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        void loadProfile(session.user.id);
-      } else {
-        setUser(null);
-        setHydrated(true);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [refreshSessionUser]);
 
   useEffect(() => {
@@ -244,7 +299,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const afterAuthSuccess = useCallback(async (nextUser: SessionUser) => {
     setUser(nextUser);
     if (nextUser.email) {
-      attachGuestBookingsToUser(nextUser.id, nextUser.email);
+      attachGuestBookingsAfterLogin();
     }
 
     if (favoriteFlowRef.current && pendingFavoriteRef.current) {
@@ -511,9 +566,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={value}>
       {children}
       <AuthQueryHandler />
-      <FavoriteAuthPromptModal />
+      {favoritePromptOpen ? <FavoriteAuthPromptModal /> : null}
       <FavoriteAuthSuccessListener />
-      <AuthModal />
+      {authOpen ? <AuthModal /> : null}
     </AuthContext.Provider>
   );
 }

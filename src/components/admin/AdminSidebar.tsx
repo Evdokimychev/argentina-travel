@@ -1,15 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
+  CarFront,
   ClipboardList,
   Clock3,
   Languages,
   LayoutGrid,
   MapPin,
+  MoreHorizontal,
   Settings,
   ShoppingBag,
   Shield,
@@ -17,11 +20,13 @@ import {
   Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   cabinetMobileHeaderClass,
   cabinetMobileNavClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
+  cabinetNavLinkClass,
   cabinetSidebarClass,
   cabinetBorderDividerClass,
 } from "@/lib/cabinet-ui";
@@ -34,17 +39,34 @@ import {
   AdminCommandPaletteButton,
   AdminDarkSidebarToggle,
   AdminDenseTableToggle,
+  AdminSimpleNavigationToggle,
 } from "@/components/admin/AdminLayoutControls";
 import AdminNotificationsMenu from "@/components/admin/AdminNotificationsMenu";
 import { useAuth } from "@/context/AuthContext";
 import { useAdminContext } from "@/context/AdminContext";
 import { useAdminLayoutPrefs } from "@/context/AdminLayoutPrefsContext";
 import {
+  ADMIN_NAV_ITEMS,
   ADMIN_NAV_SECTION_LABELS,
   filterAdminNavItems,
   groupAdminNavItems,
 } from "@/lib/admin/nav-config";
 import type { AdminNavItemId } from "@/types/admin";
+import { filterAdminNavForMode } from "@/lib/admin/admin-navigation-mode";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const MOBILE_PRIMARY_NAV_IDS: AdminNavItemId[] = [
+  "dashboard",
+  "operations-hub",
+  "operations-bookings",
+];
 
 const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   dashboard: LayoutGrid,
@@ -54,6 +76,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   "operations-payments": Wallet,
   "operations-shop": ShoppingBag,
   "marketplace-tours": MapPin,
+  "marketplace-mobility": CarFront,
   "marketplace-excursions": MapPin,
   "marketplace-organizers": Users,
   "marketplace-experts": Users,
@@ -72,28 +95,55 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
 };
 
 function isNavActive(pathname: string, href: string): boolean {
-  if (href === "/admin" || href === "/admin/operations") return pathname === href;
-  return pathname === href || pathname.startsWith(`${href}/`);
+  const closestMatch = ADMIN_NAV_ITEMS.reduce<(typeof ADMIN_NAV_ITEMS)[number] | null>(
+    (current, candidate) => {
+      const matches = pathname === candidate.href || pathname.startsWith(`${candidate.href}/`);
+      if (!matches || (current && current.href.length >= candidate.href.length)) return current;
+      return candidate;
+    },
+    null,
+  );
+
+  return closestMatch?.href === href;
 }
 
-function AdminNavLink({ item, compact }: { item: { href: string; label: string; id: AdminNavItemId }; compact?: boolean }) {
+function AdminNavLink({
+  item,
+  compact,
+  onNavigate,
+}: {
+  item: { href: string; label: string; id: AdminNavItemId };
+  compact?: boolean;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
   const active = isNavActive(pathname, item.href);
   const Icon = NAV_ICONS[item.id] ?? LayoutGrid;
 
-  return (
+  const link = (
     <Link
       href={item.href}
+      aria-current={active ? "page" : undefined}
+      onClick={onNavigate}
       className={cn(
-        "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+        cabinetNavLinkClass,
+        "flex min-h-11 shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
         active ? cn(cabinetNavActiveClass, "admin-nav-active") : cn(cabinetNavIdleClass, "admin-nav-idle"),
         compact && "justify-center px-2"
       )}
-      title={compact ? item.label : undefined}
     >
       <Icon className="h-4 w-4 shrink-0" aria-hidden />
       {!compact ? <span className="truncate">{item.label}</span> : null}
     </Link>
+  );
+
+  if (!compact) return link;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{link}</TooltipTrigger>
+      <TooltipContent side="right">{item.label}</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -101,7 +151,7 @@ export function AdminMobileHeader({ buildVersionChip }: { buildVersionChip?: Rea
   const { user } = useAuth();
   return (
     <header className={cabinetMobileHeaderClass}>
-      <Link href="/admin" className="flex items-center gap-2">
+      <Link href="/admin" className="flex min-h-11 items-center gap-2">
         <ArgentinaLogo className="h-7 w-auto" />
         <span className="font-heading text-sm font-bold text-foreground">Админ</span>
         {buildVersionChip}
@@ -114,23 +164,97 @@ export function AdminMobileHeader({ buildVersionChip }: { buildVersionChip?: Rea
 }
 
 export function AdminMobileNav() {
+  const pathname = usePathname();
   const { capabilities } = useAdminContext();
-  const items = filterAdminNavItems(capabilities);
+  const { simpleNavigation } = useAdminLayoutPrefs();
+  const authorizedItems = filterAdminNavItems(capabilities);
+  const items = filterAdminNavForMode(authorizedItems, simpleNavigation, pathname);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const activeItem = items.find((item) => isNavActive(pathname, item.href));
+  const defaultPrimaryItems = items.filter((item) => MOBILE_PRIMARY_NAV_IDS.includes(item.id));
+  const primaryItems = activeItem && !MOBILE_PRIMARY_NAV_IDS.includes(activeItem.id)
+    ? [...defaultPrimaryItems.slice(0, 2), activeItem]
+    : defaultPrimaryItems;
+  const groups = groupAdminNavItems(items);
+
+  useEffect(() => {
+    setMoreOpen(false);
+  }, [pathname]);
 
   return (
-    <nav className={cabinetMobileNavClass} aria-label="Разделы админ-панели">
-      {items.map((item) => (
-        <AdminNavLink key={item.id} item={item} />
-      ))}
-    </nav>
+    <>
+      <nav className={cabinetMobileNavClass} aria-label="Основные разделы админ-панели">
+        {primaryItems.map((item) => (
+          <AdminNavLink key={item.id} item={item} />
+        ))}
+        <button
+          type="button"
+          aria-expanded={moreOpen}
+          aria-controls="admin-mobile-all-sections"
+          onClick={() => setMoreOpen(true)}
+          className={cn(
+            cabinetNavLinkClass,
+            "flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+            moreOpen ? cabinetNavActiveClass : cabinetNavIdleClass,
+          )}
+        >
+          <MoreHorizontal className="h-4 w-4 shrink-0" aria-hidden />
+          Ещё
+        </button>
+      </nav>
+
+      <Dialog open={moreOpen} onOpenChange={setMoreOpen}>
+        <DialogContent
+          id="admin-mobile-all-sections"
+          className="p-0 md:hidden"
+          aria-label="Все разделы админ-панели"
+        >
+          <DialogHeader className="pr-16">
+            <DialogTitle>Все разделы</DialogTitle>
+            <DialogDescription>Управление продажами, контентом и настройками сайта</DialogDescription>
+          </DialogHeader>
+          <DialogBody className="space-y-6 overflow-y-auto pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
+              <p className="text-xs text-slate">
+                {simpleNavigation
+                  ? "Показаны основные задачи владельца"
+                  : "Показаны все профессиональные инструменты"}
+              </p>
+              <AdminSimpleNavigationToggle className="shrink-0 bg-white" />
+            </div>
+            {Array.from(groups.entries()).map(([sectionId, sectionItems]) => (
+              <section key={sectionId} aria-labelledby={`admin-mobile-section-${sectionId}`}>
+                <h2
+                  id={`admin-mobile-section-${sectionId}`}
+                  className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-muted"
+                >
+                  {ADMIN_NAV_SECTION_LABELS[sectionId]}
+                </h2>
+                <div className="grid gap-1 sm:grid-cols-2">
+                  {sectionItems.map((item) => (
+                    <AdminNavLink
+                      key={item.id}
+                      item={item}
+                      onNavigate={() => setMoreOpen(false)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
 export default function AdminSidebar({ buildVersionChip }: { buildVersionChip?: React.ReactNode }) {
+  const pathname = usePathname();
   const { user } = useAuth();
   const { capabilities } = useAdminContext();
-  const { darkSidebar } = useAdminLayoutPrefs();
-  const items = filterAdminNavItems(capabilities);
+  const { darkSidebar, simpleNavigation } = useAdminLayoutPrefs();
+  const authorizedItems = filterAdminNavItems(capabilities);
+  const items = filterAdminNavForMode(authorizedItems, simpleNavigation, pathname);
   const groups = groupAdminNavItems(items);
 
   return (
@@ -160,14 +284,15 @@ export default function AdminSidebar({ buildVersionChip }: { buildVersionChip?: 
       <div className="mb-4 space-y-2">
         <AdminCommandPaletteButton />
         <div className="flex flex-wrap gap-1">
+          <AdminSimpleNavigationToggle />
           <AdminDenseTableToggle />
           <AdminDarkSidebarToggle />
         </div>
       </div>
 
-      <nav className="flex flex-col gap-5">
+      <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-0.5 pb-2 scrollbar-thin">
         {Array.from(groups.entries()).map(([sectionId, sectionItems]) => (
-          <div key={sectionId}>
+          <div key={sectionId} className="mb-5 last:mb-0">
             <p
               className="admin-nav-section mb-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate/80"
             >
@@ -209,12 +334,12 @@ export function AdminPageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-start justify-between gap-4">
-      <div>
+    <header className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
+      <div className="min-w-0">
         <h1 className="font-heading text-2xl font-bold text-foreground">{title}</h1>
         {subtitle ? <p className="mt-1 text-sm text-slate">{subtitle}</p> : null}
       </div>
-      {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
+      {actions ? <div className="flex w-full flex-wrap gap-2 sm:w-auto">{actions}</div> : null}
     </header>
   );
 }
@@ -222,9 +347,9 @@ export function AdminPageHeader({
 export function AdminPageShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={cn(siteContainerClass, "pb-10")}>
-      <AdminBreadcrumbs className="mb-4" />
+      <AdminBreadcrumbs className="mb-3 sm:mb-4" />
       <AdminCronHealthBanner />
-      <div className="space-y-8">{children}</div>
+      <div className="space-y-6 md:space-y-8">{children}</div>
     </div>
   );
 }

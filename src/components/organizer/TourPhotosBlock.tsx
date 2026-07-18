@@ -4,15 +4,12 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Camera, Eye, ImageIcon, Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   ORGANIZER_TOUR_GALLERY_MAX,
   ORGANIZER_TOUR_GALLERY_MIN,
-  ORGANIZER_TOUR_PHOTO_MAX_BYTES,
 } from "@/data/tour-photos-defaults";
-import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
 import { cn } from "@/lib/cn";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 
 function PhotoInfoBanner({ children }: { children: React.ReactNode }) {
   return (
@@ -68,9 +65,6 @@ function PhotoThumbnail({
 
 function PhotoUploadControls({
   inputId,
-  urlValue,
-  onUrlChange,
-  onUploadUrl,
   onUploadFile,
   uploading,
   disabled,
@@ -78,9 +72,6 @@ function PhotoUploadControls({
   compact,
 }: {
   inputId: string;
-  urlValue: string;
-  onUrlChange: (value: string) => void;
-  onUploadUrl: () => void;
   onUploadFile: (file: File) => void;
   uploading?: boolean;
   disabled?: boolean;
@@ -95,7 +86,7 @@ function PhotoUploadControls({
         ref={fileInputRef}
         id={inputId}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
         className="sr-only"
         onChange={(event) => {
           const file = event.target.files?.[0];
@@ -118,37 +109,14 @@ function PhotoUploadControls({
         {compact ? "С устройства" : "Загрузить фото с устройства"}
       </button>
 
-      <div className={cn("flex gap-2", compact ? "flex-col sm:flex-row" : "flex-col sm:flex-row")}>
-        <Input
-          value={urlValue}
-          onChange={(event) => onUrlChange(event.target.value)}
-          placeholder="Ссылка на фото"
-          disabled={disabled || uploading}
-          className={compact ? "h-9 text-sm" : undefined}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              onUploadUrl();
-            }
-          }}
-        />
-        <Button
-          type="button"
-          size={compact ? "sm" : "default"}
-          disabled={disabled || uploading || !urlValue.trim()}
-          onClick={onUploadUrl}
-          className={cn("shrink-0", compact ? "sm:min-w-[108px]" : "sm:min-w-[132px]")}
-        >
-          Загрузить
-        </Button>
-      </div>
-
       {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </div>
   );
 }
 
 interface TourPhotosBlockProps {
+  productId: string;
+  productType?: "tour" | "excursion";
   coverImage: string;
   gallery: string[];
   onCoverChange: (image: string) => void;
@@ -157,6 +125,8 @@ interface TourPhotosBlockProps {
 }
 
 export default function TourPhotosBlock({
+  productId,
+  productType = "tour",
   coverImage,
   gallery,
   onCoverChange,
@@ -164,32 +134,13 @@ export default function TourPhotosBlock({
   designExampleHref = "/tours/iguazu-falls",
 }: TourPhotosBlockProps) {
   const galleryInputRef = useRef<HTMLInputElement>(null);
-  const [coverUrlInput, setCoverUrlInput] = useState("");
-  const [galleryUrlInput, setGalleryUrlInput] = useState("");
   const [coverError, setCoverError] = useState<string | null>(null);
   const [galleryError, setGalleryError] = useState<string | null>(null);
   const [coverUploading, setCoverUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
 
   async function uploadImageFile(file: File): Promise<string> {
-    if (!file.type.startsWith("image/")) {
-      throw new Error("Выберите файл изображения");
-    }
-
-    if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
-      throw new Error("Фото должно быть не больше 5 МБ");
-    }
-
-    return readFileAsDataUrl(file);
-  }
-
-  function normalizeUrl(value: string): string {
-    const trimmed = value.trim();
-    if (!trimmed) throw new Error("Вставьте ссылку на фото");
-    if (!/^https?:\/\//i.test(trimmed)) {
-      throw new Error("Ссылка должна начинаться с http:// или https://");
-    }
-    return trimmed;
+    return uploadOrganizerProductImage(productId, file);
   }
 
   async function handleCoverFile(file: File) {
@@ -198,20 +149,6 @@ export default function TourPhotosBlock({
 
     try {
       onCoverChange(await uploadImageFile(file));
-    } catch (error) {
-      setCoverError(error instanceof Error ? error.message : "Не удалось загрузить фото");
-    } finally {
-      setCoverUploading(false);
-    }
-  }
-
-  async function handleCoverUrl() {
-    setCoverUploading(true);
-    setCoverError(null);
-
-    try {
-      onCoverChange(normalizeUrl(coverUrlInput));
-      setCoverUrlInput("");
     } catch (error) {
       setCoverError(error instanceof Error ? error.message : "Не удалось загрузить фото");
     } finally {
@@ -237,25 +174,6 @@ export default function TourPhotosBlock({
     }
   }
 
-  async function handleGalleryUrl() {
-    if (gallery.length >= ORGANIZER_TOUR_GALLERY_MAX) {
-      setGalleryError(`Можно загрузить не больше ${ORGANIZER_TOUR_GALLERY_MAX} фото`);
-      return;
-    }
-
-    setGalleryUploading(true);
-    setGalleryError(null);
-
-    try {
-      onGalleryChange([...gallery, normalizeUrl(galleryUrlInput)]);
-      setGalleryUrlInput("");
-    } catch (error) {
-      setGalleryError(error instanceof Error ? error.message : "Не удалось загрузить фото");
-    } finally {
-      setGalleryUploading(false);
-    }
-  }
-
   const galleryFull = gallery.length >= ORGANIZER_TOUR_GALLERY_MAX;
   const galleryNeedsMore = gallery.length < ORGANIZER_TOUR_GALLERY_MIN;
 
@@ -267,7 +185,7 @@ export default function TourPhotosBlock({
         </h2>
         <p className="mt-1 text-sm text-slate">
           Обложка — одно главное фото для каталога. Галерея — от {ORGANIZER_TOUR_GALLERY_MIN} до{" "}
-          {ORGANIZER_TOUR_GALLERY_MAX} снимков на странице тура.
+          {ORGANIZER_TOUR_GALLERY_MAX} снимков на странице {productType === "excursion" ? "экскурсии" : "тура"}.
         </p>
       </div>
 
@@ -300,15 +218,13 @@ export default function TourPhotosBlock({
             <div>
               <h3 className="text-base font-bold text-charcoal">Фотография обложки</h3>
               <p className="mt-1 text-xs leading-relaxed text-slate">
-                Одно фото — отображается в карточке тура в каталоге и в шапке страницы.
+                Одно фото — отображается в карточке {productType === "excursion" ? "экскурсии" : "тура"}{" "}
+                в каталоге и в шапке страницы.
               </p>
             </div>
 
             <PhotoUploadControls
               inputId="tour-cover-file"
-              urlValue={coverUrlInput}
-              onUrlChange={setCoverUrlInput}
-              onUploadUrl={handleCoverUrl}
               onUploadFile={handleCoverFile}
               uploading={coverUploading}
               error={coverError}
@@ -321,9 +237,12 @@ export default function TourPhotosBlock({
       <div className="space-y-4 rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="text-base font-bold text-charcoal sm:text-lg">Фотографии тура</h3>
+            <h3 className="text-base font-bold text-charcoal sm:text-lg">
+              Фотографии {productType === "excursion" ? "экскурсии" : "тура"}
+            </h3>
             <p className="mt-1 text-sm text-slate">
-              Лучшие снимки разместите в начале — они показываются первыми на странице тура.
+              Лучшие снимки разместите в начале — они показываются первыми на странице{" "}
+              {productType === "excursion" ? "экскурсии" : "тура"}.
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -345,9 +264,6 @@ export default function TourPhotosBlock({
           <div className="min-w-0 flex-1">
             <PhotoUploadControls
               inputId="tour-gallery-file"
-              urlValue={galleryUrlInput}
-              onUrlChange={setGalleryUrlInput}
-              onUploadUrl={handleGalleryUrl}
               onUploadFile={handleGalleryFile}
               uploading={galleryUploading}
               disabled={galleryFull}
@@ -373,7 +289,7 @@ export default function TourPhotosBlock({
             <PhotoThumbnail
               key={`${photo}-${index}`}
               src={photo}
-              alt={`Фото тура ${index + 1}`}
+              alt={`Фото ${productType === "excursion" ? "экскурсии" : "тура"} ${index + 1}`}
               size="sm"
               onRemove={() => onGalleryChange(gallery.filter((_, itemIndex) => itemIndex !== index))}
             />

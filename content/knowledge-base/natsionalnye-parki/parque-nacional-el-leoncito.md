@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-el-leoncito
 type: national_park
-title: национальный парк El Leoncito
+title: Национальный парк Эль-Леонсито
 title_es: Parque Nacional El Leoncito
 title_en: El Leoncito National Park
 summary: "Эль-Леонсито в Сан-Хуане на высоте ~2250 м — одно из самых чистых небес Земли и астрономические обсерватории."

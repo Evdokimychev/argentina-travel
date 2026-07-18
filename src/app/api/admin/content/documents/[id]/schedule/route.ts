@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import { parseScheduledPublishAt } from "@/lib/cms/cms-scheduled-publish";
-import { cancelCmsDocumentSchedule, scheduleCmsDocument } from "@/lib/cms/content-server";
+import { cancelCmsDocumentSchedule, cmsMutationHttpStatus, scheduleCmsDocument } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { validateAndNormalizeCmsSeo } from "@/lib/cms/seo-utils";
 import type { CmsDocumentBody, CmsDocumentSeo } from "@/types/cms-content";
 
 type ScheduleBody = {
@@ -11,6 +12,7 @@ type ScheduleBody = {
   title?: string;
   body?: CmsDocumentBody;
   seo?: CmsDocumentSeo;
+  expectedVersion?: number;
 };
 
 export async function POST(
@@ -22,7 +24,14 @@ export async function POST(
 
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
-  const body = (await request.json()) as ScheduleBody;
+  const body = (await request.json().catch(() => null)) as ScheduleBody | null;
+  if (!body || !Number.isInteger(body.expectedVersion) || (body.expectedVersion ?? 0) < 1) {
+    return NextResponse.json({ error: "Обновите страницу и повторите планирование" }, { status: 409 });
+  }
+  const validatedSeo = body.seo === undefined ? null : validateAndNormalizeCmsSeo(body.seo);
+  if (validatedSeo && !validatedSeo.ok) {
+    return NextResponse.json({ error: validatedSeo.error }, { status: 400 });
+  }
   const scheduledPublishAt = parseScheduledPublishAt(body.scheduledPublishAt);
   if (!scheduledPublishAt) {
     return NextResponse.json({ error: "Укажите дату и время публикации" }, { status: 400 });
@@ -33,22 +42,15 @@ export async function POST(
     scheduledPublishAt,
     title: body.title,
     body: body.body,
-    seo: body.seo,
+    seo: validatedSeo?.seo,
     actorId: auth.actorId,
+    expectedVersion: body.expectedVersion!,
+    ipAddress: clientIpFromRequest(request),
   });
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json({ error: result.error, code: result.code }, { status: cmsMutationHttpStatus(result.code) });
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.schedule",
-    entityType: "content_document",
-    entityId: decodedId,
-    payload: { scheduledPublishAt: result.document.scheduledPublishAt },
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ document: result.document });
 }
@@ -62,20 +64,20 @@ export async function DELETE(
 
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
-  const supabase = createSupabaseAdminClient();
-  const result = await cancelCmsDocumentSchedule(supabase, decodedId, auth.actorId);
-
-  if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+  const body = (await request.json().catch(() => null)) as { expectedVersion?: number } | null;
+  if (!body || !Number.isInteger(body.expectedVersion) || (body.expectedVersion ?? 0) < 1) {
+    return NextResponse.json({ error: "Обновите страницу и повторите отмену" }, { status: 409 });
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.unschedule",
-    entityType: "content_document",
-    entityId: decodedId,
+  const supabase = createSupabaseAdminClient();
+  const result = await cancelCmsDocumentSchedule(supabase, decodedId, {
+    actorId: auth.actorId,
+    expectedVersion: body.expectedVersion!,
     ipAddress: clientIpFromRequest(request),
   });
+
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error, code: result.code }, { status: cmsMutationHttpStatus(result.code) });
+  }
 
   return NextResponse.json({ document: result.document });
 }

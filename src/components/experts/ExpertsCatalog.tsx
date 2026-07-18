@@ -104,14 +104,15 @@ export default function ExpertsCatalog({ experts }: ExpertsCatalogProps) {
         <div className={cn(siteContainerClass, "py-8 sm:py-10")}>
           <div className="max-w-3xl">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-sky">
-              Сообщество
+              Помощь на месте
             </p>
             <h1 className="font-heading text-3xl font-bold text-charcoal sm:text-4xl">
-              Локальные эксперты
+              Русскоязычные гиды и эксперты в Аргентине
             </h1>
             <p className="mt-3 text-base leading-relaxed text-slate">
-              Гиды, консультанты по переезду, фотографы и другие специалисты на месте —
-              с проверенными профилями и перепиской через личный кабинет.
+              Найдите гида, консультанта по переезду, фотографа или другого местного
+              специалиста. Сравните город, язык и направление помощи, а затем уточните
+              доступность напрямую через профиль.
             </p>
           </div>
         </div>

@@ -1,0 +1,38 @@
+{
+  "measuredAt": "2026-07-15T16:53:00-03:00",
+  "status": "partial",
+  "measurement": "local production HTTP, cold then warm",
+  "routes": [
+    {
+      "path": "/",
+      "beforeBytes": 4002017,
+      "afterBytes": 409068,
+      "coldSeconds": 2.47,
+      "warmSeconds": 0.031
+    },
+    {
+      "path": "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
+      "beforeColdSeconds": 13.437,
+      "afterColdSeconds": 3.545,
+      "afterWarmSeconds": 0.536,
+      "afterBytes": 389468
+    },
+    {
+      "path": "/tours/net-takogo-tura-999999",
+      "status": 404,
+      "seconds": 0.022,
+      "bytes": 71628
+    }
+  ],
+  "build": {
+    "staticPages": 964,
+    "homeFirstLoadJsKb": 837,
+    "sharedAppRouterJsKb": 104,
+    "largestObservedPreviewMb": 1.19
+  },
+  "remaining": [
+    "No post-deploy Lighthouse or field p75 LCP/INP/CLS.",
+    "Client bundles remain above target on home, blog, guide, immigration and preview routes.",
+    "Cold partner detail is improved but still above 2.5 seconds in this local measurement."
+  ]
+}

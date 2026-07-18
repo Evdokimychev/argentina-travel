@@ -1,11 +1,11 @@
 {
-  "ranAt": "2026-07-12T15:00:47.789Z",
-  "overall": 8.5,
-  "grade": "B+",
+  "ranAt": "2026-07-17T08:41:37.861Z",
+  "overall": 6.6,
+  "grade": "C+",
   "dimensions": {
     "code": {
-      "score": 9.9,
-      "note": "OK 15, warn 1, fail 0"
+      "score": 4.4,
+      "note": "OK 14, warn 1, fail 1"
     },
     "cms": {
       "score": 10,
@@ -21,12 +21,12 @@
       "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
     },
     "performance": {
-      "score": 5.7,
-      "note": "median perf 65, a11y 97, worst CLS 0.981 (prod CDN)"
+      "score": 5.9,
+      "note": "median perf 49, a11y 97, worst CLS 0.668 (prod CDN)"
     }
   },
   "blockers": [
-    "analytics: 6 blocking failure(s)"
+    "publish:verify has blocking failures"
   ],
   "manualNext": [
     "Vercel: NEXT_PUBLIC_GTM_ID + verification tokens → redeploy",

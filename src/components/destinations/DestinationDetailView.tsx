@@ -25,8 +25,10 @@ import type { DestinationPage } from "@/data/destination-pages";
 import { destinationGalleryAlt, destinationHeroAlt } from "@/lib/media-alt-text";
 import { getPlaceBySlug } from "@/data/places-seed";
 import { destinationExcursionsHref } from "@/data/excursion-city-links";
+import { resolveDestinationEditorialTheme } from "@/lib/editorial-theme";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { destinationCatalogLink, matchToursForDestination } from "@/lib/destinations";
+import { resolveDestinationTaxonomy } from "@/lib/destination-taxonomy";
 import { flattenKnowledgeLinks } from "@/lib/content-related-links";
 import { pairedPlaceSlugForDestination, placeSlugsForDestination } from "@/lib/geography-links";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
@@ -49,7 +51,7 @@ function buildDestinationQuickFacts(destination: DestinationPage) {
       emoji: "🗓",
       label: "Срок",
       headline: destination.idealDuration,
-      detail: "Оптимальная длительность поездки в регион",
+      detail: "Оптимальная длительность поездки по этому направлению",
     },
     {
       emoji: "☀️",
@@ -71,7 +73,7 @@ function buildDestinationQuickFacts(destination: DestinationPage) {
 function buildDestinationTocItems(destination: DestinationPage): ContentTocItem[] {
   const items: ContentTocItem[] = [
     { id: "about", label: "О направлении", level: 2 },
-    { id: "highlights", label: "Главное в регионе", level: 2 },
+    { id: "highlights", label: "Главное в направлении", level: 2 },
   ];
 
   if (destination.gallery && destination.gallery.length > 1) {
@@ -102,6 +104,8 @@ export default function DestinationDetailView({
   const primaryPlace = primaryPlaceSlug ? getPlaceBySlug(primaryPlaceSlug) : undefined;
   const tocItems = buildDestinationTocItems(destination);
   const relatedItems = knowledgeLinks ? flattenKnowledgeLinks(knowledgeLinks) : [];
+  const editorialTheme = resolveDestinationEditorialTheme(destination.id);
+  const taxonomy = resolveDestinationTaxonomy(destination);
 
   const destinationAside = (
     <>
@@ -142,41 +146,50 @@ export default function DestinationDetailView({
 
   return (
     <>
-      <section className="relative min-h-[56vh] overflow-hidden sm:min-h-[62vh]">
+      <section
+        data-editorial-theme={editorialTheme}
+        className="group relative min-h-[52svh] overflow-hidden border-b-4 border-[var(--editorial-accent)] sm:min-h-[58svh]"
+      >
         <SafeImage
           src={destination.image}
           alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
           fill
           priority
-          className="object-cover object-[center_35%] sm:object-center"
+          preferLocalMedia
+          className="editorial-media-zoom object-cover object-[center_35%] sm:object-center"
           sizes="100vw"
           placeholderVariant="destination"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/50 to-charcoal/15" />
-        <div className={cn(siteContainerClass, "relative flex min-h-[56vh] flex-col justify-end py-12 sm:min-h-[62vh] sm:py-14")}>
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--editorial-media-overlay)_0%,rgb(15_23_42/0.62)_45%,rgb(15_23_42/0.12)_82%),linear-gradient(to_top,rgb(15_23_42/0.82),transparent_58%)]" />
+        <div className="absolute right-5 top-5 hidden items-center gap-3 text-white/70 lg:flex" aria-hidden>
+          <span className="h-px w-10 bg-white/50" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.28em]">Argentina</span>
+        </div>
+        <div className={cn(siteContainerClass, "relative flex min-h-[52svh] flex-col justify-end py-8 sm:min-h-[58svh] sm:py-10")}>
           <PageBreadcrumbs
             variant="on-dark"
             separator="dash"
             className="mb-4"
             items={[
               { label: "Главная", href: "/" },
-              { label: "Регионы и места", href: "/destinations" },
+              { label: "Направления и места", href: "/destinations" },
               { label: destination.name },
             ]}
           />
-          <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-5">
             <div className="min-w-0 flex-1">
-              <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
-                {destination.regionGroup}
+              <span className="inline-flex w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/90 backdrop-blur-sm">
+                {taxonomy.kindLabel} · {destination.regionGroup}
               </span>
               <p className="mt-3 flex items-center gap-1.5 text-sm text-white/80">
                 <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-                {destination.region}
+                {taxonomy.administrativeArea}
               </p>
-              <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+              <div className="mt-4 h-1 w-12 rounded-full bg-[var(--editorial-accent)]" aria-hidden />
+              <h1 className="mt-3 max-w-4xl font-display text-3xl font-bold leading-[1.06] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
                 {destination.name}
               </h1>
-              <p className="mt-3 max-w-2xl text-base text-white/85 sm:text-lg">{destination.description}</p>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">{destination.description}</p>
             </div>
             <SharePageLinkButton
               title={destination.name}
@@ -186,9 +199,13 @@ export default function DestinationDetailView({
         </div>
       </section>
 
-      <section className="relative z-10 -mt-10 pb-2 sm:-mt-12">
+      <section className="relative z-10 -mt-8 pb-2 sm:-mt-10">
         <div className={siteContainerClass}>
-          <HubQuickFactsGrid facts={buildDestinationQuickFacts(destination)} columns={3} />
+          <HubQuickFactsGrid
+            facts={buildDestinationQuickFacts(destination)}
+            columns={3}
+            className="max-sm:grid-flow-col max-sm:auto-cols-[82%] max-sm:snap-x max-sm:overflow-x-auto max-sm:pb-2 [&>article]:snap-start"
+          />
         </div>
       </section>
 
@@ -260,7 +277,7 @@ export default function DestinationDetailView({
                 id="highlights"
                 className={cn("font-heading text-xl font-bold text-charcoal", siteScrollAnchorClass)}
               >
-                Главное в регионе
+                Главное в направлении
               </h2>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {destination.highlights.map((item) => (
@@ -344,7 +361,7 @@ export default function DestinationDetailView({
             <TourEmbedSection
               config={{
                 variant: "grid",
-                title: "Туры в регионе",
+                title: "Туры по направлению",
                 subtitle: `Найдено ${matchedTours.length} подходящих маршрутов`,
                 limit: 6,
                 source: { kind: "destination", destinationSlug: destination.id },
@@ -358,7 +375,7 @@ export default function DestinationDetailView({
             <>
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры в регионе</h2>
+                  <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры по направлению</h2>
                   <p className="mt-2 text-slate">Пока нет точных совпадений — откройте полный каталог</p>
                 </div>
                 <Link href={catalogHref} className="text-sm font-medium text-sky-ink hover:underline">
@@ -366,7 +383,7 @@ export default function DestinationDetailView({
                 </Link>
               </div>
               <div className="mt-8 rounded-card border border-dashed border-border-default bg-surface-elevated px-6 py-12 text-center">
-                <p className="font-medium text-charcoal">Туры по этому направлению скоро появятся</p>
+                <p className="font-medium text-charcoal">В каталоге нет точных совпадений</p>
                 <p className="mx-auto mt-2 max-w-md text-sm text-slate">
                   Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
                 </p>

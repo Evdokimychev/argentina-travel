@@ -13,6 +13,7 @@ import type { DifficultyLevel } from "@/types";
 const DIFFICULTY_DESCRIPTION_MAX = 4000;
 
 interface TourDifficultyBlockProps {
+  productType?: "tour" | "excursion";
   difficultyLevel: DifficultyLevel;
   difficultyDescriptionText: string;
   onDifficultyLevelChange: (level: DifficultyLevel) => void;
@@ -20,6 +21,7 @@ interface TourDifficultyBlockProps {
 }
 
 export default function TourDifficultyBlock({
+  productType = "tour",
   difficultyLevel,
   difficultyDescriptionText,
   onDifficultyLevelChange,
@@ -28,7 +30,7 @@ export default function TourDifficultyBlock({
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-        Уровень сложности тура
+        Уровень сложности {productType === "excursion" ? "экскурсии" : "тура"}
       </h2>
 
       <div className="space-y-3">

@@ -20,6 +20,7 @@ export default function BlogIndexHero({ variant, indexablePostsCount }: BlogInde
           : `${indexablePostsCount.toLocaleString("ru-RU")} проверенных материалов — ${copy.subtitle}`
       }
       image={getServicePageHeroImage("blog-index")}
+      theme="journal"
       eyebrow={{ label: "Журнал", href: "/blog" }}
       ctas={
         variant === "b"

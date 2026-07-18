@@ -73,7 +73,7 @@ export const enDictionary: Record<DictionaryKey, string> = {
   "locale.language": "Language",
   "locale.currency": "Currency",
   "locale.search": "Search",
-  "locale.languageHint": "Choose interface language. More translations coming soon.",
-  "locale.currencyHint": "Prices converted using test exchange rates.",
+  "locale.languageHint": "Choose the interface language.",
+  "locale.currencyHint": "Currency conversion is for reference; the final price is shown at booking.",
   "locale.title": "Language & currency",
 };

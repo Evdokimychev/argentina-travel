@@ -3,7 +3,7 @@ id: falshivye-policejskie-i-obmenniki
 type: author_tip
 subtype: mistake
 title: "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться"
-summary: "Уличные обменники с курсом заметно выше рыночного и лже-полицейские, «проверяющие» наличные, — два классических сценария, на которые до сих пор попадаются туристы и новые релоканты."
+summary: "Памятка о безопасном обмене денег и действиях при подозрительном обращении от человека, представляющегося полицейским."
 status: published
 site_sections: [lichnyy-opyt, finansy-i-ekonomika]
 tags: [безопасность, обмен валют]
@@ -11,14 +11,33 @@ personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Деньги-как-менять-валюту-Аргентина.md"
 related: [kak-menyat-valyutu, bezopasnost-argentina]
-last_verified: "2026-06-30"
-confidence: medium
+last_verified: "2026-07-17"
+confidence: low
+site_ready: false
+publication_block_reason: "Argentina-specific fake-police scenario lacks a verified primary source; exchange guidance must use only authorized entities."
+provenance:
+  schema_version: 1
+  mode: diagnostic
+  stale_after_days: 45
 sources:
-  - title: "Деньги-как-менять-валюту-Аргентина.md, Практика-Безопасность-в-Аргентине.md — разделы «Практические советы» и «Частые ошибки»"
-    url: ""
-    lang: ru
-    type: aggregator
-    note: "извлечено из готовых лонгридов проекта"
+  - id: bcra-authorized-exchange-entities
+    title: "BCRA — операции обмена через уполномоченные организации"
+    url: "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает, что операции обмена должны проводиться через банки и уполномоченные обменные организации."
+  - id: argentina-911-emergencies
+    title: "Ministerio de Seguridad Nacional — 911 Emergencias"
+    url: "https://www.argentina.gob.ar/seguridad/911emergencias"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает официальный экстренный номер 911; отдельный сценарий с лже-полицейскими источник не подтверждает."
 ---
 
 ## Текст

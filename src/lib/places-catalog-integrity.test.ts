@@ -47,6 +47,14 @@ describe("Places catalog integrity", () => {
     }
   });
 
+  it("publishes complete human-readable descriptions", () => {
+    const forbidden = /(?:…|\.\.\.)\s*$|\b(?:production|bodegas|kayaking|Magellanic penguins)\b/i;
+    for (const place of PLACES_SEED) {
+      expect(place.shortDescription, place.slug).not.toMatch(forbidden);
+      expect(place.fullDescription, place.slug).not.toMatch(forbidden);
+    }
+  });
+
   it("never renders the logo placeholder as a place cover", () => {
     for (const place of PLACES_SEED) {
       expect(getPlaceCoverImage(place.slug), place.slug).not.toBe(MEDIA_LOGO_FALLBACK);

@@ -10,6 +10,7 @@ import {
   fetchExpertsForAdmin,
 } from "@/lib/local-experts-server";
 import type { ExpertInquiryStatus, ExpertStatus } from "@/types/local-experts";
+import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "marketplace.moderation");
@@ -66,6 +67,14 @@ export async function PATCH(request: Request) {
       if ("error" in result) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
+      await writeAdminAuditLog({
+        actorUserId: auth.actorId,
+        action: "expert_inquiry.status_update",
+        entityType: "expert_inquiry",
+        entityId: body.inquiryId,
+        payload: { status: body.inquiryStatus },
+        ipAddress: clientIpFromRequest(request),
+      });
       return NextResponse.json({ ok: true });
     }
 
@@ -96,6 +105,18 @@ export async function PATCH(request: Request) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    await writeAdminAuditLog({
+      actorUserId: auth.actorId,
+      action: `expert.${body.action}`,
+      entityType: "local_expert",
+      entityId: body.id,
+      payload: {
+        previousStatus: expert.status,
+        nextStatus,
+      },
+      ipAddress: clientIpFromRequest(request),
+    });
 
     return NextResponse.json({ ok: true, status: nextStatus });
   } catch (error) {

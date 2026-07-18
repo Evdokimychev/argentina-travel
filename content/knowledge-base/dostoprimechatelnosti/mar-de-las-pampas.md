@@ -33,4 +33,8 @@ confidence: medium
 seo_slug: mar-de-las-pampas-lesnoy-plyazh
 ---
 
-- **Провинция:** Buenos Aires ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/mar-de-las-pampas) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Buenos Aires
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/mar-de-las-pampas) (исп.; адаптировано 2026-07-07).

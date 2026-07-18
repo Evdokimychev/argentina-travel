@@ -118,7 +118,12 @@ export default function PageBuilderBlockCard({
               block={block}
               onChange={onChange}
               onPickMedia={
-                block.type === "media" || block.type === "gallery" ? onPickMedia : undefined
+                block.type === "media" ||
+                block.type === "gallery" ||
+                block.type === "image-text" ||
+                block.type === "author-card"
+                  ? onPickMedia
+                  : undefined
               }
             />
           )}

@@ -88,7 +88,7 @@ function AdminAccessGate({
       <AdminMobileNav />
       <div className={cabinetContentGapClass}>
         <AdminSidebar buildVersionChip={buildVersionChip} />
-        <main className="min-w-0 flex-1 px-4 md:px-0">{children}</main>
+        <main className="min-w-0 flex-1">{children}</main>
       </div>
     </div>
   );

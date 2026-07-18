@@ -1,7 +1,7 @@
 ---
 id: caviahue-copahue
 type: attraction
-title: Caviahue - Copahue
+title: Кавиауэ и Копауэ
 title_es: Caviahue - Copahue
 title_en: Caviahue - Copahue
 summary: "Кавиауэ и Копауэ в Неукене: термальные источники, вулкан и активный отдых среди араукарий."

@@ -6,11 +6,6 @@ import {
   GroupSizeBucket,
   TourLanguage,
 } from "@/types";
-import {
-  getDestinationGallery,
-  getDestinationImage,
-  getDestinationImageAlt,
-} from "@/lib/media-resolver";
 
 export const SEARCH_DESTINATIONS = [
   {
@@ -260,10 +255,32 @@ const POPULAR_DESTINATIONS_BASE = [
   keywords: readonly string[];
 }>;
 
+const DESTINATION_IMAGE_ALTS: Record<(typeof POPULAR_DESTINATIONS_BASE)[number]["id"], string> = {
+  ba: "Скульптура Флоралис Хенерика и архитектура Буэнос-Айреса",
+  bariloche: "Озеро Науэль-Уапи и горы Патагонии у Барилоче",
+  calafate: "Ледник Перито-Морено — голубой лёд у Эль-Калафате",
+  ushuaia: "Гавань Ушуайи на фоне гор и пролива Бигль",
+  iguazu: "Водопад Гарганта-дель-Дьябло в Игуасу",
+  mendoza: "Виноградники и винодельни Мендосы на фоне Анд",
+  salta: "Красочные холмы Кебрады-де-Умауака",
+  patagonia: "Массив Фицрой на рассвете — сердце Патагонии",
+};
+
+function destinationMediaPath(id: string, filename: string): string {
+  return `/media/destinations/${id}/${filename}`;
+}
+
 export const POPULAR_DESTINATIONS = POPULAR_DESTINATIONS_BASE.map((dest) => ({
   ...dest,
   keywords: [...dest.keywords],
-  image: getDestinationImage(dest.id),
-  imageAlt: getDestinationImageAlt(dest.id),
-  gallery: getDestinationGallery(dest.id),
+  image: destinationMediaPath(dest.id, "section.jpg"),
+  imageAlt: DESTINATION_IMAGE_ALTS[dest.id],
+  gallery: [
+    "cover.jpg",
+    "gallery-1.jpg",
+    "gallery-2.jpg",
+    "gallery-3.jpg",
+  ]
+    .filter((filename) => !(dest.id === "mendoza" && filename === "gallery-2.jpg"))
+    .map((filename) => destinationMediaPath(dest.id, filename)),
 }));

@@ -5,9 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import ForumPostBody from "@/components/forum/ForumPostBody";
 import ForumReportButton from "@/components/forum/ForumReportButton";
+import { Button } from "@/components/ui/button";
+import { SmartTextarea } from "@/components/ui/smart-textarea";
 import type { ForumThreadDetail } from "@/lib/forum/forum-types";
+import { sanitizeForumBody } from "@/lib/forum/forum-body";
 import { formatDateShort } from "@/lib/utils";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
@@ -17,7 +21,8 @@ export default function ForumThreadView({ thread }: { thread: ForumThreadDetail 
   const router = useRouter();
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [bodyError, setBodyError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const canRead = thread.categoryPublicRead || Boolean(user);
   const canReply = Boolean(user) && !thread.locked;
@@ -26,8 +31,12 @@ export default function ForumThreadView({ thread }: { thread: ForumThreadDetail 
     event.preventDefault();
     if (!canReply) return;
 
+    const nextBodyError = validateBody(body);
+    setBodyError(nextBodyError);
+    if (nextBodyError) return;
+
     setSubmitting(true);
-    setError(null);
+    setFormError(null);
 
     try {
       const res = await fetch(`/api/forum/threads/${thread.id}/posts`, {
@@ -41,7 +50,9 @@ export default function ForumThreadView({ thread }: { thread: ForumThreadDetail 
       setBody("");
       router.refresh();
     } catch (replyError) {
-      setError(replyError instanceof Error ? replyError.message : "Ошибка");
+      setFormError(
+        replyError instanceof Error ? replyError.message : "Не удалось отправить ответ"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -109,23 +120,38 @@ export default function ForumThreadView({ thread }: { thread: ForumThreadDetail 
           <section className="mt-8 rounded-2xl border border-border-subtle bg-surface-elevated p-5">
             <h2 className="font-heading text-lg font-bold text-charcoal">Ответить</h2>
             {canReply ? (
-              <form onSubmit={(event) => void handleReply(event)} className="mt-4 space-y-3">
-                <textarea
+              <form onSubmit={(event) => void handleReply(event)} className="mt-4 space-y-4">
+                <SmartTextarea
+                  id="forum-reply-body"
+                  label="Текст ответа"
                   value={body}
-                  onChange={(event) => setBody(event.target.value)}
+                  onValueChange={(value) => {
+                    setBody(value);
+                    setBodyError(null);
+                    setFormError(null);
+                  }}
+                  error={bodyError}
+                  validate={validateBody}
                   required
                   rows={5}
-                  className="w-full rounded-xl border border-border-subtle bg-surface px-3 py-2 text-sm"
-                  placeholder="Ваш ответ. Простая разметка: **жирный**, *курсив*."
+                  maxLength={10_000}
+                  hint="Можно использовать простую разметку: **жирный**, *курсив* и списки."
+                  placeholder="Напишите ответ по теме обсуждения"
                 />
-                {error ? <p className="text-sm text-red-600">{error}</p> : null}
-                <button
+                {formError ? (
+                  <InlineFeedback
+                    variant="error"
+                    title="Не удалось отправить ответ"
+                    description={formError}
+                  />
+                ) : null}
+                <Button
                   type="submit"
-                  disabled={submitting}
-                  className="rounded-xl bg-sky px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                  loading={submitting}
+                  loadingLabel="Отправляем…"
                 >
-                  {submitting ? "Отправка…" : "Отправить ответ"}
-                </button>
+                  Отправить ответ
+                </Button>
               </form>
             ) : thread.locked ? (
               <p className="mt-3 text-sm text-slate">Тема закрыта для новых сообщений.</p>
@@ -142,4 +168,9 @@ export default function ForumThreadView({ thread }: { thread: ForumThreadDetail 
       </div>
     </div>
   );
+}
+
+function validateBody(value: string): string | null {
+  const result = sanitizeForumBody(value);
+  return "error" in result ? result.error : null;
 }

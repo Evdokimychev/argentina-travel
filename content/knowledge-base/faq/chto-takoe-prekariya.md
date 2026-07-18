@@ -2,36 +2,64 @@
 id: chto-takoe-prekariya
 type: faq
 question: "Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?"
-short_answer: "Прекария — временный сертификат, который выдают на время рассмотрения заявки на резиденцию: с ним можно легально находиться в стране, выезжать и возвращаться, оформить CUIL/CUIT и открыть банковский счёт. После реформы DNU 366/2025 выдаётся на 90 дней (раньше — на 180)."
+short_answer: "Residencia Precaria — временное разрешение на период рассмотрения резиденции. Пока документ действует, его владелец может находиться в Аргентине, работать, учиться, выезжать и возвращаться. Срок — до 90 дней с возможностью продления по решению Migraciones."
 topic: visa
 status: published
+site_ready: true
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, релокация]
 related: [vnzh-argentina, dni-cuil]
-last_verified: "2026-07-01"
-confidence: medium
+last_verified: "2026-07-17"
+confidence: high
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "Boletín Oficial — Decreto 366/2025"
-    url: "https://www.boletinoficial.gob.ar/detalleAviso/primera/326096/20250529"
+  - id: argentina-dnu-366-2025-precaria
+    title: "Decreto DNU 366/2025 — residencia precaria"
+    url: "https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto"
     lang: es
     type: official
-    note: "текст миграционной реформы 2025 года, сокращение срока прекарии до 90 дней"
-  - title: "Afon.site — FAQ «Легализация и въезд»"
-    url: "https://afon.site/legalizaciya-i-vuezd"
-    lang: ru
-    type: ru_blog
-    note: "живая практика: что даёт прекария (CUIL/CUIT, счёт, выезд без обратного билета). Блог датирован январём 2024 — срок действия прекарии там устарел, сверено с DNU 366/2025"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-17"
+    note: "Устанавливает срок до 90 дней, возможное продление и права на пребывание, работу, учёбу, выезд и въезд."
+  - id: migraciones-precaria-border
+    title: "Migraciones — въезд как residente precario"
+    url: "https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-residente-precario"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-17"
+    note: "Перечисляет документы для выезда и возвращения с действующей прекарией."
+claims:
+  - id: precaria-rights-and-term
+    text: "Действующая residencia precaria разрешает находиться в стране, работать, учиться, выезжать и возвращаться; её срок составляет до 90 дней и может быть продлён Migraciones."
+    sensitive: true
+    source_ids: [argentina-dnu-366-2025-precaria]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: precaria-reentry-documents
+    text: "Для выезда и возвращения нужны действующий проездной документ и действующий сертификат residencia precaria."
+    sensitive: true
+    source_ids: [migraciones-precaria-border]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
 ## Ответ
 
-Residencia Precaria («прекария») — это не отдельный вид ВНЖ, а временный сертификат, который миграционная служба (DNM) выдаёт сразу после подачи заявки на любую резиденцию через систему RaDEX — на время, пока дело рассматривается. Это первая ступенька легализации: прекария подтверждает, что вы находитесь в стране законно, даже если туристические 90 дней уже истекли.
+Residencia Precaria — не отдельный вид ВНЖ и не обещание положительного решения. Это временное разрешение, которое Migraciones может выдать на период рассмотрения заявления о резиденции.
 
-На практике прекария даёт три главные вещи: во-первых, право выезжать из Аргентины и возвращаться без обратного билета и туристических формальностей; во-вторых, возможность оформить налоговые номера CUIL/CUIT; в-третьих, с этими номерами — открыть банковский счёт, зарегистрировать monotributo (аналог ИП), купить автомобиль или недвижимость.
+Пока документ действует, он разрешает находиться в стране, работать, учиться, выезжать и возвращаться. Срок составляет до **90 дней**; продление возможно по решению Migraciones. Перед поездкой за границу проверьте дату окончания: на контроле нужны действующий паспорт или иной допустимый проездной документ и действующая прекария.
 
-Важное изменение 2025 года: декрет DNU 366/2025 сократил срок действия прекарии со 180 до 90 дней. В материалах релокантов, написанных до реформы (включая FAQ Ивана Афонина от января 2024), фигурирует старый срок — не ориентируйтесь на него. Если рассмотрение затягивается, прекарию продлевают, но порядок продлений после реформы уточняйте на migraciones.gob.ar перед подачей.
+Прекария сама по себе не гарантирует банковский счёт, налоговую регистрацию или одобрение будущей резиденции: эти процедуры имеют отдельные требования. Если документ истекает, проверяйте порядок продления в Migraciones до поездки.
 
 ## Источники
 
-- [Boletín Oficial — Decreto 366/2025](https://www.boletinoficial.gob.ar/detalleAviso/primera/326096/20250529) — сокращение прекарии до 90 дней, es.
-- [Afon.site — Легализация и въезд](https://afon.site/legalizaciya-i-vuezd) — практика: CUIL/CUIT, счёт, выезд с прекарией; срок 180 дней в блоге устарел, ru.
+- [Decreto DNU 366/2025 — права и срок residencia precaria](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).
+- [Migraciones — документы для выезда и возвращения](https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-residente-precario).

@@ -10,7 +10,7 @@ export function formatBlogReadTime(minutes: number): string {
   return `${minutes} мин`;
 }
 
-function formatBlogDate(dateStr: string): string {
+export function formatBlogDate(dateStr: string): string {
   const parsed = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
     ? new Date(`${dateStr}T12:00:00.000Z`)
     : new Date(dateStr);

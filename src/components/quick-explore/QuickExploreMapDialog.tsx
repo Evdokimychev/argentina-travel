@@ -29,7 +29,7 @@ import { serializeMapArgentinaKinds } from "@/lib/map-argentina-url-state";
 import { ARGENTINA_MAP_VIEW } from "@/lib/map-view-config";
 import type { MapMarkerKind, MapObject } from "@/lib/map-types";
 import { spotsToMapObjects } from "@/lib/quick-explore/spot-to-map-object";
-import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-open";
+import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-events";
 import type {
   QuickExploreProvince,
   QuickExploreSpot,
@@ -76,13 +76,17 @@ function filterSpots(spots: QuickExploreSpot[], query: string): QuickExploreSpot
   );
 }
 
-export default function QuickExploreMapDialog() {
+export default function QuickExploreMapDialog({ initialOpen = false }: { initialOpen?: boolean }) {
   const { payload, loading, error, refresh } = useQuickExplore();
   const [open, setOpen] = useState(false);
   const [provinceIso, setProvinceIso] = useState<string | null>(null);
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onOpenRequest() {
@@ -251,7 +255,7 @@ export default function QuickExploreMapDialog() {
                     type="button"
                     onClick={goBackToProvinces}
                     className={cn(
-                      "inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-sky transition-colors hover:text-sky-ink",
+                      "inline-flex min-h-11 items-center gap-1 rounded-lg pr-2 text-xs font-semibold uppercase tracking-wide text-sky transition-colors hover:text-sky-ink",
                       tokenFocusRingClass
                     )}
                   >
@@ -266,7 +270,7 @@ export default function QuickExploreMapDialog() {
                 )}
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-muted/60 px-3 py-2">
+              <div className="flex min-h-11 items-center gap-2 rounded-xl border border-border-subtle bg-surface-muted/60 px-3">
                 <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} />
                 <input
                   ref={searchRef}
@@ -278,7 +282,7 @@ export default function QuickExploreMapDialog() {
                       ? "Города, парки, достопримечательности…"
                       : "Провинция или регион…"
                   }
-                  className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-slate/70"
+                  className="min-h-11 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-slate/70"
                   autoComplete="off"
                   spellCheck={false}
                 />
@@ -296,7 +300,7 @@ export default function QuickExploreMapDialog() {
                   <button
                     type="button"
                     onClick={() => void refresh()}
-                    className="mt-2 block w-full text-sky underline"
+                    className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-lg text-sky underline"
                   >
                     Повторить
                   </button>
@@ -396,7 +400,7 @@ export default function QuickExploreMapDialog() {
                 href={fullMapHref}
                 onClick={() => handleOpenChange(false)}
                 className={cn(
-                  "flex w-full items-center justify-center gap-2 rounded-pill px-4 py-2.5 text-sm font-semibold transition-colors",
+                  "flex min-h-11 w-full items-center justify-center gap-2 rounded-pill px-4 py-2.5 text-sm font-semibold transition-colors",
                   tokenButtonOutlineClass,
                   tokenFocusRingClass
                 )}

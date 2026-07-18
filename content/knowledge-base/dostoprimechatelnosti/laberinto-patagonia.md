@@ -1,7 +1,7 @@
 ---
 id: laberinto-patagonia
 type: attraction
-title: Laberinto Патагония
+title: Лабиринт Патагонии
 title_es: Laberinto Patagonia
 title_en: Patagonia maze [Laberinto Patagonia]
 summary: "Лабиринт Патагонии в Эль-Больсоне — тематический парк на стыке мифологии, философии и сакральной геометрии."

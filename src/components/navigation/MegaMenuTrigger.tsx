@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
 import {
@@ -39,10 +40,33 @@ export function MegaMenuTrigger({
 }) {
   const { rootRef, panelRef, openMenu, scheduleClose, closeMenu, rememberPointer } =
     useMegaMenuHoverIntent(open, onOpenChange);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const label = navSectionLabel(section, t);
   const num = String(index).padStart(2, "0");
   const indexClassName = navMegaMenuIndexClassName(compact);
+  const panelId = `site-mega-menu-${section.id}`;
+
+  useEffect(() => {
+    if (!open) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      closeMenu();
+      menuButtonRef.current?.focus();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [closeMenu, open]);
+
+  const openFromControl = () => {
+    openMenu();
+    window.setTimeout(() => {
+      panelRef.current
+        ?.querySelector<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+        ?.focus();
+    }, 0);
+  };
 
   if (!section.columns?.length && section.href) {
     return (
@@ -95,12 +119,14 @@ export function MegaMenuTrigger({
           </Link>
           {section.badge ? <NavBadge badge={section.badge} /> : null}
           <button
+            ref={menuButtonRef}
             type="button"
             aria-expanded={open}
             aria-haspopup="true"
+            aria-controls={panelId}
             aria-label={`${label}: подменю`}
-            onClick={() => (open ? closeMenu() : openMenu())}
-            className="rounded-md p-0.5 transition-colors hover:bg-sky/10 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            onClick={() => (open ? closeMenu() : openFromControl())}
+            className="-mr-1 rounded-lg p-1.5 transition-colors hover:bg-sky/10 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
           >
             <ChevronDown
               className={cn(
@@ -113,10 +139,12 @@ export function MegaMenuTrigger({
         </div>
       ) : (
         <button
+          ref={menuButtonRef}
           type="button"
           aria-expanded={open}
           aria-haspopup="true"
-          onClick={() => (open ? closeMenu() : openMenu())}
+          aria-controls={panelId}
+          onClick={() => (open ? closeMenu() : openFromControl())}
           className={cn(
             navMegaMenuTriggerClassName,
             active || open ? "text-sky" : "text-foreground/70 hover:text-sky",
@@ -142,6 +170,7 @@ export function MegaMenuTrigger({
         widthClass={megaMenuWidthClass(section.id)}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        panelId={panelId}
       >
         <MegaMenuSectionContent section={section} t={t} onNavigate={closeMenu} />
       </MegaMenuDropdown>

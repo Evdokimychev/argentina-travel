@@ -1,10 +1,24 @@
-import { PREFIXED_I18N_LOCALES } from "./config";
-import { addLocalePrefix } from "./locale-path";
+import { filterRuSitemapPaths } from "@/lib/seo/publication-registry";
+
+export type SitemapLocale = "en" | "es";
+
+export interface PublishedLocaleRoute {
+  locale: SitemapLocale;
+  ruPath: string;
+  localizedPath: string;
+  published: true;
+  indexable: true;
+  canonicalPath: string;
+}
 
 /**
- * Paths eligible for /es/ and /en/ sitemap variants (E39 pilot + E43 CMS i18n).
- * Russian canonical stays unprefixed.
+ * Explicit locale publication registry. It stays empty while /es and /en are
+ * RU fallback rewrites with noindex. A translation may be added only after its
+ * own content, reciprocal hreflang and self-canonical have been verified.
  */
+export const PUBLISHED_LOCALE_ROUTES: readonly PublishedLocaleRoute[] = [];
+
+/** Paths structurally eligible for a future complete translation. */
 export function isI18nSitemapPath(path: string): boolean {
   if (path.includes("?")) return false;
 
@@ -20,14 +34,15 @@ export function isI18nSitemapPath(path: string): boolean {
 }
 
 export function expandI18nSitemapPaths(paths: string[]): string[] {
-  const expanded = new Set(paths);
+  const ruPaths = filterRuSitemapPaths(paths);
+  const ruPathSet = new Set(ruPaths);
+  const publishedLocalePaths = PUBLISHED_LOCALE_ROUTES.filter(
+    (entry) =>
+      ruPathSet.has(entry.ruPath) &&
+      entry.published &&
+      entry.indexable &&
+      entry.localizedPath === entry.canonicalPath,
+  ).map((entry) => entry.localizedPath);
 
-  for (const path of paths) {
-    if (!isI18nSitemapPath(path)) continue;
-    for (const locale of PREFIXED_I18N_LOCALES) {
-      expanded.add(addLocalePrefix(path, locale));
-    }
-  }
-
-  return [...expanded];
+  return [...new Set([...ruPaths, ...publishedLocalePaths])];
 }

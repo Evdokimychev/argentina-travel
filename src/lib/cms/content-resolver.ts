@@ -10,14 +10,22 @@ import {
 import { I18N_LOCALES, isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
-import { cmsDocumentId, type CmsDocType, type CmsDocument } from "@/types/cms-content";
+import {
+  cmsDocumentId,
+  type CmsDocType,
+  type CmsDocument,
+  type CmsDocumentSeo,
+} from "@/types/cms-content";
 
 export type CmsDbClient = SupabaseClient<Database>;
+
+const CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500;
 
 export type CmsResolverMetadata = {
   requestedLocale: I18nLocale;
   translationStatus: CmsTranslationStatus;
   showTranslationBanner: boolean;
+  seo?: CmsDocumentSeo;
 };
 
 export type CmsContentWithMetadata<T extends object> = T & {
@@ -41,13 +49,15 @@ function getRequestedLocaleStatus(
 
 export function buildCmsResolverMetadata(
   requestedLocale: string,
-  translationStatus: CmsTranslationStatus
+  translationStatus: CmsTranslationStatus,
+  seo?: CmsDocumentSeo,
 ): CmsResolverMetadata {
   const locale = normalizeRequestedLocale(requestedLocale);
   return {
     requestedLocale: locale,
     translationStatus,
     showTranslationBanner: locale !== "ru" && !getRequestedLocaleStatus(locale, translationStatus),
+    ...(seo ? { seo } : {}),
   };
 }
 
@@ -65,7 +75,8 @@ export function getCmsResolverMetadata(value: unknown): CmsResolverMetadata | nu
 }
 
 export function cmsFallbackRobots(value: unknown): { index: false; follow: true } | undefined {
-  return getCmsResolverMetadata(value)?.showTranslationBanner
+  const metadata = getCmsResolverMetadata(value);
+  return metadata?.showTranslationBanner || metadata?.seo?.noIndex
     ? { index: false, follow: true }
     : undefined;
 }
@@ -91,6 +102,8 @@ export async function fetchPublishedCmsDocument(
     .select("*")
     .eq("id", id)
     .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -107,7 +120,9 @@ export async function fetchPublishedCmsDocumentsByType(
     .select("*")
     .eq("doc_type", docType)
     .eq("locale", locale)
-    .eq("status", "published");
+    .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
 
   if (error || !data) return [];
   return data.map(rowToCmsDocument);
@@ -124,9 +139,11 @@ export async function fetchPublishedCmsDocumentsMergedByLocaleChain(
 ): Promise<CmsDocument[]> {
   const bySlug = new Map<string, CmsDocument>();
   const chain = [...cmsLocaleFallbackChain(locale)].reverse();
+  const docsByLocale = await Promise.all(
+    chain.map((tryLocale) => fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale)),
+  );
 
-  for (const tryLocale of chain) {
-    const docs = await fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale);
+  for (const docs of docsByLocale) {
     for (const doc of docs) {
       bySlug.set(doc.slug, doc);
     }
@@ -144,15 +161,23 @@ export async function resolvePublishedCmsLocaleSlugs(
   if (!supabase) return { ru: slug };
 
   const slugs: Partial<Record<I18nLocale, string>> = {};
+  let hasRuOverride = false;
 
-  for (const locale of I18N_LOCALES) {
-    const doc = await fetchPublishedCmsDocument(supabase, docType, slug, locale);
-    if (doc) {
+  const localizedDocuments = await Promise.all(
+    I18N_LOCALES.map(async (locale) => ({
+      locale,
+      doc: await fetchPublishedCmsDocument(supabase, docType, slug, locale),
+    })),
+  );
+
+  for (const { locale, doc } of localizedDocuments) {
+    if (locale === "ru" && doc) hasRuOverride = true;
+    if (doc && !doc.seo.noIndex && isCmsDocumentComplete(doc)) {
       slugs[locale] = doc.slug;
     }
   }
 
-  if (!slugs.ru) slugs.ru = slug;
+  if (!slugs.ru && !hasRuOverride) slugs.ru = slug;
   return slugs;
 }
 
@@ -182,7 +207,12 @@ export async function fetchCmsTranslationStatusForSlug(
   options?: { ruFallbackComplete?: boolean }
 ): Promise<CmsTranslationStatus> {
   const ids = I18N_LOCALES.map((locale) => cmsDocumentId(docType, slug, locale));
-  const { data, error } = await supabase.from("content_documents").select("*").in("id", ids);
+  const { data, error } = await supabase
+    .from("content_documents")
+    .select("*")
+    .in("id", ids)
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
   if (error) {
     return buildDefaultTranslationStatus(options?.ruFallbackComplete ?? false);
   }
@@ -214,14 +244,28 @@ export async function listPublishedCmsSlugs(
 
   const { data } = await supabase
     .from("content_documents")
-    .select("slug")
+    .select("slug, seo")
     .eq("doc_type", docType)
     .eq("locale", locale)
-    .eq("status", "published");
+    .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
 
-  const cmsSlugs = (data ?? []).map((row) => row.slug);
+  const noIndexSlugs = new Set(
+    (data ?? [])
+      .filter((row) => {
+        const seo = row.seo;
+        return Boolean(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);
+      })
+      .map((row) => row.slug),
+  );
+  const cmsSlugs = (data ?? [])
+    .map((row) => row.slug)
+    .filter((slug) => !noIndexSlugs.has(slug));
   if (options?.cmsOnly) return Array.from(new Set(cmsSlugs));
-  return Array.from(new Set([...fallbackSlugs, ...cmsSlugs]));
+  return Array.from(
+    new Set([...fallbackSlugs.filter((slug) => !noIndexSlugs.has(slug)), ...cmsSlugs]),
+  );
 }
 
 /**
@@ -242,15 +286,21 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   merge: (doc: CmsDocument, fallback: T | undefined) => T | null;
   supabase?: CmsDbClient | null;
   isUsable?: (doc: CmsDocument) => boolean;
+  onResolvedDocument?: (doc: CmsDocument) => void;
 }): Promise<T | null> {
-  const { docType, slug, locale = "ru", fallback, merge, isUsable } = options;
+  const { docType, slug, locale = "ru", fallback, merge, isUsable, onResolvedDocument } = options;
   const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
   if (!supabase) return fallback;
 
-  for (const tryLocale of cmsLocaleFallbackChain(locale)) {
-    const override = await fetchPublishedCmsDocument(supabase, docType, slug, tryLocale);
+  const chain = cmsLocaleFallbackChain(locale);
+  const overrides = await Promise.all(
+    chain.map((tryLocale) => fetchPublishedCmsDocument(supabase, docType, slug, tryLocale)),
+  );
+
+  for (const override of overrides) {
     if (override) {
       if (isUsable && !isUsable(override)) continue;
+      onResolvedDocument?.(override);
       return merge(override, fallback ?? undefined) ?? fallback;
     }
   }

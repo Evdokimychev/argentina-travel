@@ -1,7 +1,4 @@
-/**
- * Client-safe booking notification triggers (demo / localStorage mode).
- * Delegates to POST /api/bookings/notify — never imports server modules.
- */
+/** Demo/localStorage mode never sends transactional email. */
 
 type BookingCreatedEmailInput = {
   userId?: string | null;
@@ -25,22 +22,12 @@ type PaymentReceivedEmailInput = {
   providerLabel?: string | null;
 };
 
-async function postBookingNotify(body: Record<string, unknown>): Promise<void> {
-  try {
-    await fetch("/api/bookings/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-  } catch {
-    // Non-blocking
-  }
-}
-
 export function notifyBookingCreatedEmail(input: BookingCreatedEmailInput): void {
-  void postBookingNotify({ kind: "booking_created", ...input });
+  void input;
+  // Production notifications originate from the canonical booking API.
 }
 
 export function notifyPaymentReceivedEmail(input: PaymentReceivedEmailInput): void {
-  void postBookingNotify({ kind: "payment_received", ...input });
+  void input;
+  // Production payment notifications originate from verified webhooks.
 }

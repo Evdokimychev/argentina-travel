@@ -213,10 +213,12 @@ export interface TourGeographyValues {
 }
 
 interface TourGeographyBlockProps extends TourGeographyValues {
+  productType?: "tour" | "excursion";
   onChange: (patch: Partial<TourGeographyValues>) => void;
 }
 
 export default function TourGeographyBlock({
+  productType = "tour",
   countries,
   cities,
   mainLocation,
@@ -227,7 +229,9 @@ export default function TourGeographyBlock({
 }: TourGeographyBlockProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">География тура</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
+        География {productType === "excursion" ? "экскурсии" : "тура"}
+      </h2>
 
       <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Если вы не нашли свой регион, напишите в{" "}
@@ -255,13 +259,13 @@ export default function TourGeographyBlock({
             onChange={(next) => onChange({ cities: next })}
           />
           <SingleSelectField
-            label="Основная локация тура"
+            label={`Основная локация ${productType === "excursion" ? "экскурсии" : "тура"}`}
             required
             placeholder="Выберите локацию"
             options={TOUR_CITY_OPTIONS}
             value={mainLocation}
             onChange={(next) => onChange({ mainLocation: next })}
-            hint="Основная локация выводится в карточке тура в поиске. Тур приоритетно попадает в каталог по своей основной локации."
+            hint={`Основная локация выводится в карточке ${productType === "excursion" ? "экскурсии" : "тура"} в поиске. Предложение приоритетно попадает в каталог по этой локации.`}
           />
         </div>
 

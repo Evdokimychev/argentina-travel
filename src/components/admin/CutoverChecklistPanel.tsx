@@ -38,9 +38,9 @@ type CutoverChecklistPanelProps = {
 };
 
 const STATUS_LABELS: Record<CutoverStatus, string> = {
-  green: "Зелёный",
-  yellow: "Жёлтый",
-  red: "Красный",
+  green: "Пройдено",
+  yellow: "Нужна проверка",
+  red: "Блокер",
 };
 
 const STATUS_CLASS: Record<CutoverStatus, string> = {
@@ -59,7 +59,7 @@ function maxStatus(values: CutoverStatus[]): CutoverStatus {
   return values.reduce<CutoverStatus>((acc, item) => (rankStatus(item) > rankStatus(acc) ? item : acc), "green");
 }
 
-function buildChecklist(
+export function buildCutoverChecklist(
   health: PublicHealthSnapshot | null | undefined,
   readiness: ProductionReadinessSnapshot | null | undefined
 ): ChecklistItem[] {
@@ -70,7 +70,7 @@ function buildChecklist(
       id: "health",
       title: "Публичная проверка состояния",
       status: "red",
-      detail: "Нет данных /api/health",
+      detail: "Нет данных о состоянии опубликованного сайта",
     });
   } else if (health.ok && health.checks.database.ok) {
     items.push({
@@ -98,9 +98,9 @@ function buildChecklist(
   if (!health) {
     items.push({
       id: "migrations",
-      title: "Версия миграций",
+      title: "Обновление базы данных",
       status: "red",
-      detail: "Не удалось определить migrationVersion",
+      detail: "Не удалось подтвердить версию базы данных",
     });
   } else {
     const { migrationVersion } = health;
@@ -110,27 +110,32 @@ function buildChecklist(
     const migrationStatus: CutoverStatus = matched ? "green" : migrationVersion ? "yellow" : "red";
     items.push({
       id: "migrations",
-      title: "Версия миграций",
+      title: "Обновление базы данных",
       status: migrationStatus,
       detail: matched
-        ? `migrationVersion=${migrationVersion}, файлов миграций: ${fileCount}`
-        : `migrationVersion=${migrationVersion ?? "—"}, latestId=${latestId ?? "—"}, файлов: ${fileCount}`,
+        ? `Установлена актуальная версия (${fileCount} обновлений)`
+        : migrationVersion
+          ? "Версия базы данных отличается от версии приложения"
+          : "Версия базы данных не подтверждена",
     });
   }
 
   if (!readiness) {
     items.push({
       id: "readiness",
-      title: "Готовность к продакшену",
+      title: "Готовность к публикации",
       status: "yellow",
-      detail: "Нет снимка: запустите npm run production-readiness",
+      detail: "Полная проверка текущего релиза ещё не выполнена",
     });
   } else {
-    const readinessStatus: CutoverStatus =
-      readiness.summary.fail > 0 ? "red" : readiness.summary.warn > 0 ? "yellow" : "green";
+    const readinessStatus: CutoverStatus = readiness.state === "ready_to_publish"
+      ? "green"
+      : readiness.state === "blocked"
+        ? "red"
+        : "yellow";
     items.push({
       id: "readiness",
-      title: "Готовность к продакшену",
+      title: "Готовность к публикации",
       status: readinessStatus,
       detail: `OK: ${readiness.summary.ok}, предупреждений: ${readiness.summary.warn}, ошибок: ${readiness.summary.fail}`,
     });
@@ -148,26 +153,27 @@ function buildChecklist(
     id: "env",
     title: "Окружение переключения",
     status: envStatus,
-    detail: `health: ${healthEnv ?? "—"}, readiness: ${readinessEnv ?? "—"}`,
+    detail: envAligned
+      ? "Обе проверки относятся к опубликованному сайту"
+      : envStatus === "yellow"
+        ? "Проверяется тестовая среда, а не окончательная публикация"
+        : "Среда публикации не подтверждена",
   });
 
   return items;
 }
 
 export default function CutoverChecklistPanel({ health, readiness }: CutoverChecklistPanelProps) {
-  const checklist = buildChecklist(health, readiness);
+  const checklist = buildCutoverChecklist(health, readiness);
   const overallStatus = maxStatus(checklist.map((item) => item.status));
 
   return (
     <section className={`${cabinetCardClass} space-y-4 p-5`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-heading text-lg font-bold text-foreground">Чеклист cutover</h2>
+          <h2 className="font-heading text-lg font-bold text-foreground">Проверка перед публикацией</h2>
           <p className="mt-1 text-sm text-slate">
-            Статус рассчитывается по данным{" "}
-            <code className="text-xs">/api/health</code> и{" "}
-            <code className="text-xs">production-readiness</code>. Пошаговая инструкция:{" "}
-            <code className="text-xs">docs/production-cutover-e81.md</code>.
+            Сайт можно публиковать только после подтверждения приложения, базы данных и текущей версии.
           </p>
         </div>
         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${STATUS_CLASS[overallStatus]}`}>
@@ -190,7 +196,7 @@ export default function CutoverChecklistPanel({ health, readiness }: CutoverChec
       </ul>
 
       <div className="text-xs text-slate">
-        Проверка после деплоя: <code>SMOKE_BASE_URL=https://www.goargentina.ru npm run production-smoke</code>
+        После публикации система должна повторно проверить ключевые страницы и сценарии бронирования.
       </div>
     </section>
   );

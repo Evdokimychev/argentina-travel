@@ -65,14 +65,22 @@ export default function PlaceDetailMap({ place, relatedPlaces = [], className }:
 
     const bounds: L.LatLngExpression[] = [[place.latitude, place.longitude]];
 
-    const mainMarker = L.marker([place.latitude, place.longitude], { icon: createMainIcon() });
+    const mainMarker = L.marker([place.latitude, place.longitude], {
+      icon: createMainIcon(),
+      title: place.name,
+      alt: `Место на карте: ${place.name}`,
+    });
     mainMarker.bindPopup(popupHtml(place.name, placeHref(place.slug), place.region));
     mainMarker.addTo(map);
 
     for (const related of relatedPlaces.slice(0, 8)) {
       if (related.slug === place.slug) continue;
       bounds.push([related.latitude, related.longitude]);
-      const marker = L.marker([related.latitude, related.longitude], { icon: createRelatedIcon() });
+      const marker = L.marker([related.latitude, related.longitude], {
+        icon: createRelatedIcon(),
+        title: related.name,
+        alt: `Место на карте: ${related.name}`,
+      });
       marker.bindPopup(popupHtml(related.name, placeHref(related.slug), related.region));
       marker.addTo(map);
     }

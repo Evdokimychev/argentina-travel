@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import ExcursionGuideProfileView from "@/components/excursions/ExcursionGuideProfileView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import {
   fetchGuideIdsServer,
   fetchGuidePageServer,
 } from "@/lib/tripster/guide-server";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { SITE_BRAND_NAME } from "@/lib/site-brand";
 
 type GuidePageProps = {
@@ -26,24 +28,19 @@ export async function generateMetadata({ params }: GuidePageProps) {
   const page = await fetchGuidePageServer(id);
   if (!page) return { title: "Гид не найден" };
 
-  const { profile } = page;
-  const description =
-    profile.description?.slice(0, 160) ||
-    `Экскурсии с гидом ${profile.name} в Аргентине — ${SITE_BRAND_NAME}`;
+  const { profile, excursions } = page;
+  const location = profile.cityName || excursions[0]?.cityName || "Аргентине";
+  const role = profile.tagline || profile.roleLabel || `гид в ${location}`;
+  const description = profile.description
+    ? `Экскурсии с гидом ${profile.name} в ${location}. ${profile.description}`
+    : `Экскурсии с гидом ${profile.name} в ${location} — ${SITE_BRAND_NAME}`;
 
-  return {
-    title: `${profile.name} — гид по экскурсиям в Аргентине`,
+  return buildPublicPageMetadata({
+    title: `${profile.name} — ${role}`,
     description,
-    openGraph: {
-      title: `${profile.name} — гид`,
-      description,
-      images: profile.avatar ? [profile.avatar] : undefined,
-      type: "profile",
-    },
-    alternates: {
-      canonical: `/excursions/guide/${guideId}`,
-    },
-  };
+    path: `/excursions/guide/${guideId}`,
+    image: profile.avatar,
+  });
 }
 
 export default async function ExcursionGuidePage({ params }: GuidePageProps) {
@@ -54,5 +51,18 @@ export default async function ExcursionGuidePage({ params }: GuidePageProps) {
   const page = await fetchGuidePageServer(id);
   if (!page) notFound();
 
-  return <ExcursionGuideProfileView profile={page.profile} excursions={page.excursions} />;
+  const path = `/excursions/guide/${guideId}`;
+
+  return (
+    <>
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Главная", path: "/" },
+          { name: "Экскурсии", path: "/excursions" },
+          { name: page.profile.name, path },
+        ]}
+      />
+      <ExcursionGuideProfileView profile={page.profile} excursions={page.excursions} />
+    </>
+  );
 }

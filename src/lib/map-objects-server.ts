@@ -27,6 +27,21 @@ const DEFAULT_LIMIT = 240;
 const MAP_SOURCE = "Редакционная база GoArgentina";
 const AIRPORT_SOURCE_URL = "https://www.argentina.gob.ar/anac/catalogo-de-datos";
 const AIRPORTS_VERIFIED_AT = "2026-07-14";
+const CANONICAL_AIRPORT_IATAS = new Set(
+  ARGENTINA_AIRPORTS.map((airport) => airport.iata),
+);
+
+export function selectTransportHubsForMap(
+  canonicalAirportsIncluded: boolean,
+): typeof ARGENTINA_TRANSPORT_HUBS {
+  if (!canonicalAirportsIncluded) return ARGENTINA_TRANSPORT_HUBS;
+  return ARGENTINA_TRANSPORT_HUBS.filter(
+    (hub) =>
+      hub.kind !== "airport" ||
+      !hub.iata ||
+      !CANONICAL_AIRPORT_IATAS.has(hub.iata),
+  );
+}
 
 function mapEditorialFields(input: {
   kind: MapMarkerKind;
@@ -267,7 +282,7 @@ function airportToMapObject(airport: (typeof ARGENTINA_AIRPORTS)[number]): MapOb
     ...mapEditorialFields({
       kind: "airport",
       featured: ["EZE", "AEP", "COR", "MDZ", "BRC", "FTE", "USH", "IGR"].includes(airport.iata),
-      source: "ANAC и редакционная проверка GoArgentina",
+      source: "Каталог аэропортов ANAC; направления — ориентир для планирования",
       sourceUrl: AIRPORT_SOURCE_URL,
       sourceVerifiedAt: AIRPORTS_VERIFIED_AT,
     }),
@@ -331,11 +346,16 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
   const limit = query.limit ?? DEFAULT_LIMIT;
   const activeKinds = query.kinds?.length ? query.kinds : undefined;
 
-  const [tours, places, curation] = await Promise.all([
+  const [toursResult, placesResult, curationResult] = await Promise.allSettled([
     fetchMarketplaceTours(),
     fetchPlacesServer(),
     loadMapCuration(),
   ]);
+  // The map must remain useful when one remote catalog is temporarily down:
+  // airports, transport hubs and whichever local source succeeded still render.
+  const tours = toursResult.status === "fulfilled" ? toursResult.value : [];
+  const places = placesResult.status === "fulfilled" ? placesResult.value : [];
+  const curation = curationResult.status === "fulfilled" ? curationResult.value : new Map();
 
   const objects: MapObject[] = [];
 
@@ -371,7 +391,10 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
   }
 
   if (!activeKinds || activeKinds.includes("transport")) {
-    objects.push(...ARGENTINA_TRANSPORT_HUBS.map(transportHubToMapObject));
+    const canonicalAirportsIncluded = !activeKinds || activeKinds.includes("airport");
+    objects.push(
+      ...selectTransportHubsForMap(canonicalAirportsIncluded).map(transportHubToMapObject),
+    );
   }
 
   const curatedObjects = objects.map((object) => applyMapCuration(object, curation.get(object.id)));

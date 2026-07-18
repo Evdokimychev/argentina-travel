@@ -23,11 +23,16 @@ import type { GroupDiscountSettings } from "@/types/group-discount";
 
 export type OrganizerTourType = "tour" | "excursion";
 export type OrganizerTourStatus = "published" | "draft";
+export type OrganizerTourModerationStatus = "none" | "pending" | "approved" | "rejected";
 
 export interface OrganizerTourListing {
   id: string;
   /** Owner organizer account id. */
   ownerUserId?: string;
+  /** Stable commercial market capability code (for example, ar). */
+  marketId?: string;
+  /** Optimistic concurrency version returned by the canonical server store. */
+  rowVersion?: number;
   /** Internal slug; defaults to catalogSlug for new tours. */
   slug: string;
   /** Public catalog slug used in /tours/[slug]. Falls back to slug when omitted. */
@@ -38,6 +43,8 @@ export interface OrganizerTourListing {
   durationDays: number;
   type: OrganizerTourType;
   status: OrganizerTourStatus;
+  moderationStatus?: OrganizerTourModerationStatus;
+  moderationNotes?: string | null;
   archived: boolean;
   deleted?: boolean;
   isPreliminaryProgram?: boolean;
@@ -86,6 +93,9 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   individualPeriodFrom: string;
   individualPeriodTo: string;
   individualPriceUsd: number;
+  /** Start/end time shown for first-party excursion booking slots. */
+  excursionStartTime: string;
+  excursionEndTime: string;
   autoRollGroupDatesToNextYear: boolean;
   groupTourDates: OrganizerGroupTourDate[];
   activityType: ActivityType;

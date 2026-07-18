@@ -22,6 +22,8 @@ import {
 import type { ExcursionScheduleDate } from "@/lib/excursion-schedule";
 import type { ExcursionDetail } from "@/types/excursion";
 import type { TripsterPriceQuote } from "@/lib/tripster/types";
+import { resolveExcursionOfferCapabilities } from "@/lib/product-capabilities";
+import type { OfferCapabilities } from "@/types/product-capability";
 
 export type ExcursionBookingContextValue = {
   excursion: ExcursionDetail;
@@ -51,6 +53,7 @@ export type ExcursionBookingContextValue = {
   canBookOnSite: boolean;
   prefersAffiliate: boolean;
   submitButtonLabel: string;
+  offerCapabilities: OfferCapabilities;
   bookingPreviewOpen: boolean;
   openBookingPreview: () => boolean;
   closeBookingPreview: () => void;
@@ -114,11 +117,12 @@ export function ExcursionBookingProvider({
       try {
         const response = await fetch(`/api/excursions/${excursion.slug}/schedule`);
         const data = (await response.json()) as {
-          error?: string;
           dates?: ExcursionScheduleDate[];
           maxPersons?: number;
         };
-        if (!response.ok) throw new Error(data.error ?? "Schedule unavailable");
+        if (!response.ok) {
+          throw new Error("Не удалось загрузить доступные даты. Попробуйте немного позже.");
+        }
         if (cancelled) return;
 
         setScheduleDates(data.dates ?? []);
@@ -127,7 +131,11 @@ export function ExcursionBookingProvider({
         setSelectedTime("");
       } catch (error) {
         if (!cancelled) {
-          setScheduleError(error instanceof Error ? error.message : "Schedule unavailable");
+          setScheduleError(
+            error instanceof Error
+              ? error.message
+              : "Не удалось загрузить доступные даты. Попробуйте немного позже.",
+          );
         }
       } finally {
         if (!cancelled) setScheduleLoading(false);
@@ -198,16 +206,18 @@ export function ExcursionBookingProvider({
   );
 
   const prefersAffiliate =
-    (excursion.partner === "sputnik8" &&
-      !scheduleLoading &&
-      (scheduleError != null || scheduleDates.length === 0)) ||
+    excursion.partner === "sputnik8" ||
     (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured);
 
-  const canBookOnSite = excursion.isBookable !== false && !prefersAffiliate;
-  const submitButtonLabel =
-    excursion.partner === "tripster" && isTripsterPartnerApiConfigured
-      ? "Забронировать на сайте"
-      : t("excursions.booking.submit");
+  const offerCapabilities = useMemo(
+    () => resolveExcursionOfferCapabilities(excursion),
+    [excursion]
+  );
+  const canBookOnSite =
+    offerCapabilities.bookingMode !== "disabled" &&
+    offerCapabilities.bookingMode !== "information_only" &&
+    !prefersAffiliate;
+  const submitButtonLabel = offerCapabilities.primaryActionLabel;
 
   const listedPriceLabel =
     quote?.value_string?.trim() ||
@@ -258,6 +268,7 @@ export function ExcursionBookingProvider({
       canBookOnSite,
       prefersAffiliate,
       submitButtonLabel,
+      offerCapabilities,
       bookingPreviewOpen,
       openBookingPreview,
       closeBookingPreview,
@@ -287,6 +298,7 @@ export function ExcursionBookingProvider({
       canBookOnSite,
       prefersAffiliate,
       submitButtonLabel,
+      offerCapabilities,
       bookingPreviewOpen,
       openBookingPreview,
       closeBookingPreview,

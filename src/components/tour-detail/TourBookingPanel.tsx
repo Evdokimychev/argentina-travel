@@ -4,13 +4,12 @@ import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
-import { formatTourBookingGuestsDays, formatTourists, formatTouristsRange, formatSpots } from "@/lib/pluralize";
+import { formatTourBookingGuestsDays, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourBookingPriceSummary from "./TourBookingPriceSummary";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
@@ -63,6 +62,7 @@ export default function TourBookingPanel({
     setBookingErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
   const {
+    productKind,
     guests,
     setGuests,
     dateMode,
@@ -77,6 +77,7 @@ export default function TourBookingPanel({
     priceOnRequest,
     canJoinWaitlist,
     openWaitlist,
+    offerCapabilities,
     usesExternalBooking,
     externalBookingLink,
     externalBookingHref,
@@ -86,10 +87,6 @@ export default function TourBookingPanel({
     openPartnerBookingPreview,
     partnerEditRequest,
   } = useTourBooking();
-
-  const bookButtonPulseKey = useRandomAttentionPulse({
-    enabled: !previewMode && !usesExternalBooking,
-  });
 
   useEffect(() => {
     if (!partnerEditRequest) return;
@@ -150,14 +147,12 @@ export default function TourBookingPanel({
     externalBookingLink?.hint?.trim() || DEFAULT_CUSTOM_BOOKING_HINT;
 
   const primaryLabel = usesExternalBooking
-    ? externalBookingLink?.label ?? "Забронировать на сайте организатора"
-    : priceOnRequest
-      ? "Запросить расчёт"
+    ? offerCapabilities.primaryActionLabel
+    : offerCapabilities.bookingMode === "disabled"
+      ? offerCapabilities.primaryActionLabel
       : canJoinWaitlist && bookingValidationError
         ? "Встать в лист ожидания"
-        : dateMode === "custom" || bookingMode === "on_request"
-          ? "Забронировать индивидуально"
-          : "Забронировать";
+        : offerCapabilities.primaryActionLabel;
 
   function handleBookClick() {
     if (bookingValidationError) {
@@ -287,7 +282,9 @@ export default function TourBookingPanel({
 
       {startLocation && (
         <div className="mt-5 border-t border-gray-100 pt-5">
-          <p className="text-sm font-medium text-charcoal">Место начала тура</p>
+          <p className="text-sm font-medium text-charcoal">
+            Место начала {productKind === "excursion" ? "экскурсии" : "тура"}
+          </p>
           <p className="mt-1 text-sm text-slate">{startLocation}</p>
         </div>
       )}
@@ -328,7 +325,8 @@ export default function TourBookingPanel({
 
       {previewMode ? (
         <div className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">
-          Бронирование недоступно в режиме предпросмотра. Опубликуйте тур, чтобы принимать заявки.
+          Бронирование недоступно в режиме предпросмотра. Опубликуйте{" "}
+          {productKind === "excursion" ? "экскурсию" : "тур"}, чтобы принимать заявки.
         </div>
       ) : (
         <>
@@ -342,12 +340,22 @@ export default function TourBookingPanel({
             />
           ) : null}
 
-          {usesExternalBooking && externalBookingHref && externalBookingLink ? (
+          {offerCapabilities.bookingMode === "disabled" ? (
+            <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+              <p className="text-sm font-semibold text-charcoal">
+                {offerCapabilities.primaryActionLabel}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-slate">
+                {offerCapabilities.disabledReason ?? offerCapabilities.disclosure}
+              </p>
+            </div>
+          ) : usesExternalBooking && externalBookingHref && externalBookingLink ? (
             <>
               <p className="mt-4 text-xs leading-relaxed text-slate">{externalHint}</p>
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
+                label={offerCapabilities.primaryActionLabel}
                 className="mt-3"
                 onClick={handleExternalBookingClick}
               />
@@ -355,13 +363,9 @@ export default function TourBookingPanel({
             </>
           ) : isPartnerTour ? null : (
             <Button
-              key={bookButtonPulseKey}
               type="button"
               onClick={handlePrimaryAction}
-              className={cn(
-                "mt-5 w-full",
-                bookButtonPulseKey > 0 && "animate-book-cta-pulse"
-              )}
+              className="mt-5 w-full"
             >
               {primaryLabel}
             </Button>

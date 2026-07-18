@@ -141,7 +141,7 @@ export default function ContentTranslationsView() {
             </p>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+            <table className="w-full min-w-[720px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/80 text-left text-xs uppercase tracking-wide text-slate">
                   <th className="px-5 py-3 font-medium">Документ</th>

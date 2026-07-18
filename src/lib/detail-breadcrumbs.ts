@@ -23,9 +23,9 @@ export const BREADCRUMB_SECTIONS = {
     fallback: "Экскурсии по Аргентине",
   },
   destinations: {
-    labelKey: "nav.geography",
+    labelKey: "destinations.catalog.title",
     path: "/destinations",
-    fallback: "Регионы и места",
+    fallback: "Направления и места",
   },
   places: {
     labelKey: "places.title",

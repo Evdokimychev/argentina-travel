@@ -79,7 +79,7 @@ export default function ContentSectionImage({
       )}
       {attributionHtml ? (
         <figcaption
-          className="border-t border-gray-100 px-4 py-2 text-xs text-slate/70"
+          className="border-t border-gray-100 px-4 py-2 text-xs text-slate"
           dangerouslySetInnerHTML={{ __html: attributionHtml }}
         />
       ) : null}

@@ -1,0 +1,2 @@
+document_id,slug,current_author_id,target_author_id,eligible,reason,revision_id,content_hash,action
+N/A,N/A,N/A,N/A,false,Production dry-run intentionally not executed before revision-pinning fix,N/A,N/A,blocked

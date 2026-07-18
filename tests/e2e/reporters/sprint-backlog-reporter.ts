@@ -39,6 +39,8 @@ function resolveProjectName(test: TestCase): string {
 class SprintBacklogReporter implements Reporter {
   private violations: UxViolation[] = [];
 
+  private partialRun = false;
+
   private stats = {
     total: 0,
     passed: 0,
@@ -47,6 +49,13 @@ class SprintBacklogReporter implements Reporter {
   };
 
   onBegin(_config: FullConfig, suite: Suite): void {
+    this.partialRun = process.argv.some(
+      (argument) => argument === "--grep" || argument.startsWith("--grep="),
+    );
+    if (this.partialRun) {
+      this.stats.total = suite.allTests().length;
+      return;
+    }
     resetUxAuditViolationsFile();
     this.stats.total = suite.allTests().length;
   }
@@ -83,19 +92,20 @@ class SprintBacklogReporter implements Reporter {
   }
 
   onEnd(result: FullResult): void {
+    if (this.partialRun) {
+      console.log("[ux-audit] Partial run completed; canonical audit artifacts were not replaced.");
+      return;
+    }
+
     const fileViolations = readUxViolationsFromFile();
-    const merged = assignViolationIds(
-      [...this.violations, ...fileViolations].filter(
-        (violation, index, all) =>
-          all.findIndex(
-            (candidate) =>
-              candidate.route === violation.route &&
-              candidate.viewport === violation.viewport &&
-              candidate.check === violation.check &&
-              candidate.message === violation.message,
-          ) === index,
-      ),
-    );
+    const violationsByCheck = new Map<string, UxViolation>();
+    for (const violation of [...this.violations, ...fileViolations]) {
+      const key = `${violation.route}|${violation.viewport}|${violation.check}`;
+      // Structured file records are appended last and contain the useful
+      // human-readable message/samples, so they replace reporter fallbacks.
+      violationsByCheck.set(key, violation);
+    }
+    const merged = assignViolationIds([...violationsByCheck.values()]);
 
     const report: UxAuditReport = {
       runAt: new Date().toISOString(),

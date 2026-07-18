@@ -1,47 +1,11 @@
 {
-  "runAt": "2026-06-25T04:04:48.396Z",
+  "runAt": "2026-07-16T02:56:23.259Z",
   "summary": {
-    "total": 6,
-    "passed": 3,
-    "failed": 3,
-    "skipped": 0,
-    "violations": 4
+    "total": 324,
+    "passed": 323,
+    "failed": 0,
+    "skipped": 1,
+    "violations": 0
   },
-  "violations": [
-    {
-      "route": "/",
-      "viewport": "desktop",
-      "check": "horizontal-scroll",
-      "severity": "critical",
-      "message": "Error: HTTP 500 for /",
-      "testTitle": "[ux-audit] / horizontal-scroll",
-      "id": "UX-E2E-001"
-    },
-    {
-      "route": "/?auth=sign-in",
-      "viewport": "desktop",
-      "check": "modal-close-button",
-      "severity": "high",
-      "message": "Error: HTTP 500 for /?auth=sign-in; Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed; Error: Auth modal close button",
-      "testTitle": "[ux-audit] /?auth=sign-in modal-close-button",
-      "id": "UX-E2E-002"
-    },
-    {
-      "route": "/",
-      "viewport": "desktop",
-      "check": "navigation",
-      "severity": "critical",
-      "message": "Error: HTTP 500 for /",
-      "testTitle": "[ux-audit] / navigation",
-      "id": "UX-E2E-003"
-    },
-    {
-      "route": "/?auth=sign-in",
-      "viewport": "mobile",
-      "check": "modal-close-button",
-      "severity": "high",
-      "message": "Диалог авторизации без кнопки «Закрыть»",
-      "id": "UX-E2E-004"
-    }
-  ]
+  "violations": []
 }

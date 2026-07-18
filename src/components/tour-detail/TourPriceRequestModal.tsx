@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { TourDetail } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
@@ -24,6 +29,7 @@ import { createInitialCheckoutForm } from "./checkout/types";
 import { TOUR_PRICE_ON_REQUEST_HINT } from "@/lib/tour-price-public";
 import { tourDetailInsetMutedClass, tourDetailPromoHeadingClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 interface TourPriceRequestModalProps {
   tour: TourDetail;
@@ -49,6 +55,9 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const [company, setCompany] = useState("");
   const [form, setForm] = useState(() => {
     const base = createInitialCheckoutForm(guests);
     return {
@@ -78,6 +87,8 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
       setError(null);
     } else {
       idempotencyKeyRef.current = crypto.randomUUID();
+      setCaptchaToken("");
+      setCompany("");
     }
   }, [priceRequestOpen]);
 
@@ -107,61 +118,70 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
             .slice(0, 10)
         : selectedDate?.endDate;
 
-    const checkoutForm = createInitialCheckoutForm(guests);
-    const result = await createBookingFromCheckout({
-      actor: user,
-      userId: user?.id,
-      tour,
-      guests,
-      startDate,
-      endDate,
-      totalPriceUsd: 0,
-      form: {
-        ...checkoutForm,
-        contactFirstName: form.contactFirstName,
-        contactLastName: form.contactLastName,
-        contactEmail: form.contactEmail,
-        contactPhone: form.contactPhone,
-        comments: form.comments,
-        paymentOption: "later",
-        fillTravelersLater: true,
-      },
-      priceQuoteRequest: true,
-      attribution: getStoredFirstTouchAttribution() ?? undefined,
-      optionId: selectedDate?.id,
-      idempotencyKey: idempotencyKeyRef.current,
-    });
-
-    if ("error" in result) {
-      const normalized = normalizeSiteError(result.error, {
-        title: "Не удалось отправить запрос",
+    try {
+      const checkoutForm = createInitialCheckoutForm(guests);
+      const result = await createBookingFromCheckout({
+        actor: user,
+        userId: user?.id,
+        tour,
+        guests,
+        startDate,
+        endDate,
+        totalPriceUsd: 0,
+        form: {
+          ...checkoutForm,
+          contactFirstName: form.contactFirstName,
+          contactLastName: form.contactLastName,
+          contactEmail: form.contactEmail,
+          contactPhone: form.contactPhone,
+          comments: form.comments,
+          paymentOption: "later",
+          fillTravelersLater: true,
+        },
+        priceQuoteRequest: true,
+        attribution: getStoredFirstTouchAttribution() ?? undefined,
+        optionId: selectedDate?.id,
+        idempotencyKey: idempotencyKeyRef.current,
+        captchaToken,
+        honeypot: company,
       });
-      setError(normalized.description ?? normalized.title);
-      feedback.showError(normalized);
-      setSubmitting(false);
-      return;
-    }
 
-    setSubmitted(true);
-    setSubmitting(false);
-    feedback.success({
-      title: "Запрос отправлен",
-      description: "Организатор подготовит персональный расчёт и свяжется с вами по email.",
-      action: user ? { label: "Мои заявки", href: "/profile/bookings" } : undefined,
-    });
+      if ("error" in result) {
+        const normalized = normalizeSiteError(result.error, {
+          title: "Не удалось отправить запрос",
+        });
+        setError(normalized.description ?? normalized.title);
+        feedback.showError(normalized);
+        return;
+      }
+
+      setSubmitted(true);
+      feedback.success({
+        title: "Запрос отправлен",
+        description: "Организатор подготовит персональный расчёт и свяжется с вами по email.",
+        action: user ? { label: "Мои заявки", href: "/profile/bookings" } : undefined,
+      });
+    } finally {
+      setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
+    }
   }
 
   return (
     <Dialog open={priceRequestOpen} onOpenChange={(open) => !open && closePriceRequest()}>
-      <DialogContent bottomSheet className="max-w-lg p-0">
+      <DialogContent bottomSheet showClose={false} className="max-w-lg p-0">
         <div className="border-b border-gray-100 px-5 py-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className={tourDetailPromoHeadingClass}>
                 Цена по запросу
               </p>
-              <h2 className="font-heading text-xl font-bold text-charcoal">Запросить расчёт</h2>
-              <p className="mt-1 text-sm text-slate">{TOUR_PRICE_ON_REQUEST_HINT}</p>
+              <DialogTitle className="font-heading text-xl font-bold text-charcoal">
+                Запросить расчёт
+              </DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-slate">
+                {TOUR_PRICE_ON_REQUEST_HINT}
+              </DialogDescription>
             </div>
             <button
               type="button"
@@ -235,6 +255,22 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
                 value={form.comments}
                 onChange={(event) => setForm((prev) => ({ ...prev, comments: event.target.value }))}
                 rows={4}
+              />
+
+              <input
+                type="text"
+                name="company"
+                value={company}
+                onChange={(event) => setCompany(event.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+              <TurnstileField
+                formId="native_booking"
+                onToken={setCaptchaToken}
+                resetSignal={captchaResetSignal}
               />
 
               {error ? (

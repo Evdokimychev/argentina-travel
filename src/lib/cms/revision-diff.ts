@@ -20,7 +20,13 @@ export type CmsRevisionDiffResult = {
 type CmsSnapshot = {
   title: string;
   body: CmsDocumentBody;
-  seo?: { title?: string; description?: string; image?: string };
+  seo?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    canonical?: string;
+    noIndex?: boolean;
+  };
 };
 
 function normalizeText(value: string | null | undefined): string {
@@ -226,6 +232,13 @@ export function buildCmsRevisionDiff(current: CmsSnapshot, revision: CmsSnapshot
   pushTextDiff(items, "SEO title", current.seo?.title ?? "", revision.seo?.title ?? "");
   pushTextDiff(items, "SEO description", current.seo?.description ?? "", revision.seo?.description ?? "");
   pushTextDiff(items, "SEO image", current.seo?.image ?? "", revision.seo?.image ?? "");
+  pushTextDiff(items, "Canonical", current.seo?.canonical ?? "", revision.seo?.canonical ?? "");
+  pushTextDiff(
+    items,
+    "Индексация",
+    current.seo?.noIndex ? "Запрещена" : "Разрешена",
+    revision.seo?.noIndex ? "Запрещена" : "Разрешена"
+  );
 
   if (current.body.kind === "legal" && revision.body.kind === "legal") {
     diffLegalBody(items, current.body, revision.body);

@@ -37,6 +37,9 @@ const PlacesCatalogMap = dynamic(() => import("@/components/places/PlacesCatalog
   ),
 });
 
+const INITIAL_VISIBLE_PLACES = 24;
+const PLACES_PAGE_SIZE = 24;
+
 type PlacesCatalogProps = {
   places: PlaceListing[];
   collections?: PlaceCollection[];
@@ -60,12 +63,14 @@ export default function PlacesCatalog({
   const [filters, setFilters] = useState<PlaceCatalogFilters>(initialFilters);
   const [viewMode, setViewMode] = useState<"grid" | "map">(initialViewMode);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_PLACES);
 
   useEffect(() => {
     const syncFromUrl = () => {
       const params = new URLSearchParams(window.location.search);
       setFilters(parsePlaceFiltersFromSearchParams(params));
       setViewMode(params.get("view") === "map" ? "map" : "grid");
+      setVisibleCount(INITIAL_VISIBLE_PLACES);
     };
 
     window.addEventListener("popstate", syncFromUrl);
@@ -74,6 +79,7 @@ export default function PlacesCatalog({
 
   const filtered = useMemo(() => filterPlaces(places, filters), [places, filters]);
   const sorted = useMemo(() => sortPlaces(filtered, filters.sort), [filtered, filters.sort]);
+  const visiblePlaces = useMemo(() => sorted.slice(0, visibleCount), [sorted, visibleCount]);
 
   const updateUrl = (nextFilters: PlaceCatalogFilters, view: "grid" | "map" = viewMode) => {
     const params = placeFiltersToSearchParams(nextFilters);
@@ -84,27 +90,25 @@ export default function PlacesCatalog({
 
   const applyFilters = (next: PlaceCatalogFilters) => {
     setFilters(next);
+    setVisibleCount(INITIAL_VISIBLE_PLACES);
     updateUrl(next);
   };
 
-  const filterChips = useMemo(
-    () =>
-      buildPlaceFilterChips(filters, applyFilters, {
-        searchPrefix: t("places.filters.search"),
-        categoryPrefix: t("places.filters.category"),
-        regionPrefix: t("places.filters.region"),
-        provincePrefix: t("places.filters.province"),
-        seasonPrefix: t("places.filters.season"),
-        tagPrefix: t("places.filters.tag"),
-      }),
-    [filters, t, viewMode],
-  );
+  const filterChips = buildPlaceFilterChips(filters, applyFilters, {
+    searchPrefix: t("places.filters.search"),
+    categoryPrefix: t("places.filters.category"),
+    regionPrefix: t("places.filters.region"),
+    provincePrefix: t("places.filters.province"),
+    seasonPrefix: t("places.filters.season"),
+    tagPrefix: t("places.filters.tag"),
+  });
 
   const activeChipCount = useMemo(() => countPlaceFilterChips(filters), [filters]);
 
   const resetFilters = () => {
     const next = getDefaultPlaceCatalogFilters();
     setFilters(next);
+    setVisibleCount(INITIAL_VISIBLE_PLACES);
     updateUrl(next);
   };
 
@@ -185,8 +189,9 @@ export default function PlacesCatalog({
               <button
                 type="button"
                 onClick={() => switchView("grid")}
+                aria-pressed={viewMode === "grid"}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
                   viewMode === "grid" ? "bg-sky-ink text-white" : "text-slate hover:text-charcoal",
                 )}
               >
@@ -196,8 +201,9 @@ export default function PlacesCatalog({
               <button
                 type="button"
                 onClick={() => switchView("map")}
+                aria-pressed={viewMode === "map"}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
                   viewMode === "map" ? "bg-sky-ink text-white" : "text-slate hover:text-charcoal",
                 )}
               >
@@ -248,11 +254,27 @@ export default function PlacesCatalog({
             onSelect={setSelectedSlug}
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {sorted.map((place, index) => (
-              <PlaceCard key={place.slug} place={place} imagePriority={index === 0} />
-            ))}
-          </div>
+          <>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {visiblePlaces.map((place, index) => (
+                <PlaceCard key={place.slug} place={place} imagePriority={index < 4} />
+              ))}
+            </div>
+            {visibleCount < sorted.length ? (
+              <div className="mt-10 flex flex-col items-center gap-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((count) => count + PLACES_PAGE_SIZE)}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-sky/25 bg-sky/[0.07] px-7 text-sm font-semibold text-sky-ink transition-colors hover:border-sky/45 hover:bg-sky/[0.12]"
+                >
+                  Показать ещё места
+                </button>
+                <p className="text-xs text-slate">
+                  Показано {visiblePlaces.length} из {sorted.length}
+                </p>
+              </div>
+            ) : null}
+          </>
         )}
       </div>
     </div>

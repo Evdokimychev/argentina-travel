@@ -6,70 +6,95 @@ import type { Tour } from "@/types/tour";
 import type { TourContentAdminSummary } from "@/types/tour-content";
 import {
   rowToAdminSummary,
-  rowToTour,
-  rowToTourDetail,
-  rowToTourListing,
+  rowToPublicTour,
+  rowToPublicTourDetail,
+  rowToPublicTourListing,
   tourToContentRow,
 } from "@/lib/tour-content-mapper";
 import { PUBLIC_TOUR_MODERATION_STATUSES } from "@/lib/tour-content-visibility";
 type DbClient = SupabaseClient<Database>;
+const PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES = [
+  ...PUBLIC_TOUR_MODERATION_STATUSES,
+  "pending",
+  "rejected",
+] as const;
 
 export async function fetchPublishedListings(supabase: DbClient): Promise<TourListing[]> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
+    .eq("product_type", "tour")
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .order("published_at", { ascending: false, nullsFirst: false });
 
   if (error || !data) return [];
 
   return data
-    .map((row) => rowToTourListing(row))
+    .filter((row) => !rowToPublicTour(row)?.isPrivate)
+    .map((row) => rowToPublicTourListing(row))
     .filter((listing): listing is TourListing => listing != null);
 }
 
 export async function fetchPublishedSlugs(supabase: DbClient): Promise<string[]> {
   const { data, error } = await supabase
     .from("tours")
-    .select("slug")
+    .select("slug, payload, approved_payload, moderation_status")
+    .eq("product_type", "tour")
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES]);
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES]);
 
   if (error || !data) return [];
-  return data.map((row) => row.slug);
+  return data
+    .filter((row) => {
+      const tour = rowToPublicTour(row as import("@/types/database").TourRow);
+      return Boolean(tour && !tour.isPrivate);
+    })
+    .map((row) => row.slug);
 }
 
 export async function fetchTourBySlug(
   supabase: DbClient,
-  slug: string
+  slug: string,
+  accessToken?: string | null
 ): Promise<Tour | null> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
+    .eq("product_type", "tour")
     .eq("slug", slug)
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;
-  return rowToTour(data);
+  const tour = rowToPublicTour(data);
+  if (!tour) return null;
+  if (tour.isPrivate && (!accessToken || accessToken !== tour.privateAccessToken)) return null;
+  return tour;
 }
 
 export async function fetchTourDetailBySlug(
   supabase: DbClient,
-  slug: string
+  slug: string,
+  accessToken?: string | null
 ) {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
+    .eq("product_type", "tour")
     .eq("slug", slug)
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;
-  return rowToTourDetail(data);
+  const canonical = rowToPublicTour(data);
+  if (!canonical) return null;
+  if (canonical.isPrivate && (!accessToken || accessToken !== canonical.privateAccessToken)) {
+    return null;
+  }
+  return rowToPublicTourDetail(data);
 }
 
 export async function fetchPublishedTourBookingSourceById(
@@ -81,11 +106,11 @@ export async function fetchPublishedTourBookingSourceById(
     .select("*")
     .eq("id", tourId)
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;
-  const tour = rowToTourDetail(data);
+  const tour = rowToPublicTourDetail(data);
   if (!tour) return null;
   return { tour, ownerUserId: data.owner_user_id };
 }
@@ -93,14 +118,19 @@ export async function fetchPublishedTourBookingSourceById(
 export async function upsertTourFromCanonical(
   supabase: DbClient,
   tour: Tour,
-  ownerUserId: string
+  ownerUserId: string,
+  editorDraft?: import("@/types/organizer-tour").OrganizerTourDraft,
+  options?: { bypassModeration?: boolean; moderationClient?: DbClient }
 ): Promise<{ ok: true } | { error: string }> {
   const row = tourToContentRow(tour, ownerUserId);
+  if (editorDraft) {
+    row.editor_draft = editorDraft as unknown as import("@/types/database").Json;
+  }
 
   const { data: existing } = await supabase
     .from("tours")
-    .select("published_at, moderation_status")
-    .eq("slug", tour.slug)
+    .select("published_at, moderation_status, approved_listing, approved_payload, approved_at, row_version")
+    .eq("id", tour.id)
     .maybeSingle();
 
   if (existing?.published_at && row.status === "published") {
@@ -108,10 +138,26 @@ export async function upsertTourFromCanonical(
   }
 
   const isPublishing = row.status === "published";
-  const alreadyApproved = existing?.moderation_status === "approved";
+  const bypassModeration = options?.bypassModeration === true;
 
-  if (isPublishing && !alreadyApproved) {
+  row.approved_listing = existing?.approved_listing ?? null;
+  row.approved_payload = existing?.approved_payload ?? null;
+  row.approved_at = existing?.approved_at ?? null;
+  row.row_version = existing?.row_version ?? 1;
+
+  if (isPublishing && bypassModeration) {
+    row.approved_listing = row.listing;
+    row.approved_payload = row.payload;
+    row.approved_at = new Date().toISOString();
+  }
+
+  if (isPublishing && !bypassModeration) {
     row.moderation_status = "pending";
+    row.moderation_notes = null;
+    row.moderated_by = null;
+    row.moderated_at = null;
+  } else if (!isPublishing && existing?.moderation_status === "pending") {
+    row.moderation_status = "none";
     row.moderation_notes = null;
     row.moderated_by = null;
     row.moderated_at = null;
@@ -119,17 +165,19 @@ export async function upsertTourFromCanonical(
     row.moderation_status = existing.moderation_status;
   }
 
-  const { error } = await supabase.from("tours").upsert(row, { onConflict: "slug" });
+  const { error } = await supabase.from("tours").upsert(row, { onConflict: "id" });
 
   if (error) return { error: error.message };
 
-  if (isPublishing && !alreadyApproved) {
+  if (isPublishing && !bypassModeration) {
     const { enqueueTourModeration } = await import("@/lib/admin/moderation-server");
-    await enqueueTourModeration(supabase, row.id, {
+    const moderationResult = await enqueueTourModeration(options?.moderationClient ?? supabase, row.id, {
       slug: tour.slug,
       title: tour.title,
       ownerUserId,
+      productType: tour.type,
     });
+    if ("error" in moderationResult) return moderationResult;
   }
 
   return { ok: true };
@@ -150,21 +198,90 @@ export async function deleteTourBySlug(
   return { ok: true };
 }
 
-export async function fetchAllToursAdmin(supabase: DbClient): Promise<TourContentAdminSummary[]> {
+export async function fetchAllToursAdmin(
+  supabase: DbClient,
+  options: {
+    limit?: number;
+    offset?: number;
+    status?: "draft" | "published" | "archived";
+    productType?: "tour" | "excursion";
+  } = {}
+): Promise<{ tours: TourContentAdminSummary[]; total: number; error?: "unavailable" }> {
+  const limit = Math.min(100, Math.max(1, options.limit ?? 50));
+  const offset = Math.max(0, options.offset ?? 0);
+  let query = supabase
+    .from("tours")
+    .select("*", { count: "exact" })
+    .order("updated_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+  if (options.status) query = query.eq("status", options.status);
+  if (options.productType) query = query.eq("product_type", options.productType);
+  const { data, error, count } = await query;
+
+  if (error || !data) return { tours: [], total: 0, error: "unavailable" };
+  return { tours: data.map(rowToAdminSummary), total: count ?? data.length };
+}
+
+export async function fetchPublishedExcursionListings(
+  supabase: DbClient
+): Promise<TourListing[]> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
-    .order("updated_at", { ascending: false })
-    .limit(500);
+    .eq("product_type", "excursion")
+    .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
+    .order("published_at", { ascending: false, nullsFirst: false });
 
   if (error || !data) return [];
-  return data.map(rowToAdminSummary);
+  return data
+    .filter((row) => !rowToPublicTour(row)?.isPrivate)
+    .map((row) => rowToPublicTourListing(row))
+    .filter((listing): listing is TourListing => listing != null);
+}
+
+export async function fetchPublishedExcursionBySlug(
+  supabase: DbClient,
+  slug: string,
+  accessToken?: string | null
+): Promise<{ canonical: Tour; detail: TourDetail } | null> {
+  const { data, error } = await supabase
+    .from("tours")
+    .select("*")
+    .eq("slug", slug)
+    .eq("product_type", "excursion")
+    .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
+    .maybeSingle();
+
+  if (error || !data) return null;
+  const canonical = rowToPublicTour(data);
+  const detail = rowToPublicTourDetail(data);
+  if (canonical?.isPrivate && (!accessToken || accessToken !== canonical.privateAccessToken)) {
+    return null;
+  }
+  return canonical && detail ? { canonical, detail } : null;
+}
+
+export async function fetchPublishedExcursionListingsServer(): Promise<TourListing[]> {
+  const supabase = await getServerSupabase();
+  if (!supabase) return [];
+  return fetchPublishedExcursionListings(supabase);
+}
+
+export async function fetchPublishedExcursionBySlugServer(
+  slug: string,
+  opts?: { accessToken?: string | null }
+) {
+  const supabase = await getServerSupabase();
+  if (!supabase) return null;
+  return fetchPublishedExcursionBySlug(supabase, slug, opts?.accessToken);
 }
 
 async function getServerSupabase(): Promise<DbClient | null> {
   try {
-    const { createSupabaseServerClient } = await import("@/lib/supabase/server");
-    return await createSupabaseServerClient();
+    const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+    return createSupabaseAdminClient();
   } catch {
     return null;
   }
@@ -176,20 +293,32 @@ export async function fetchPublishedListingsServer(): Promise<TourListing[]> {
   return fetchPublishedListings(supabase);
 }
 
+export async function fetchPublishedTourBookingSourceByIdServer(tourId: string) {
+  const supabase = await getServerSupabase();
+  if (!supabase) return null;
+  return fetchPublishedTourBookingSourceById(supabase, tourId);
+}
+
 export async function fetchPublishedSlugsServer(): Promise<string[]> {
   const supabase = await getServerSupabase();
   if (!supabase) return [];
   return fetchPublishedSlugs(supabase);
 }
 
-export async function fetchTourDetailBySlugServer(slug: string) {
+export async function fetchTourDetailBySlugServer(
+  slug: string,
+  opts?: { accessToken?: string | null }
+) {
   const supabase = await getServerSupabase();
   if (!supabase) return null;
-  return fetchTourDetailBySlug(supabase, slug);
+  return fetchTourDetailBySlug(supabase, slug, opts?.accessToken);
 }
 
-export async function fetchCanonicalTourBySlugServer(slug: string): Promise<Tour | null> {
+export async function fetchCanonicalTourBySlugServer(
+  slug: string,
+  opts?: { accessToken?: string | null }
+): Promise<Tour | null> {
   const supabase = await getServerSupabase();
   if (!supabase) return null;
-  return fetchTourBySlug(supabase, slug);
+  return fetchTourBySlug(supabase, slug, opts?.accessToken);
 }

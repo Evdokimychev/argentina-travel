@@ -41,6 +41,11 @@ describe("media-detail-gallery-layout", () => {
     expect(plan.slots.some((slot) => slot.cell.showAllOverlay)).toBe(true);
   });
 
+  it("always keeps the canonical cover in a large gallery mosaic", () => {
+    const plan = buildGalleryMosaicPlan(sampleImages(47), "partner-gallery");
+    expect(plan.slots.some((slot) => slot.imageIndex === 0)).toBe(true);
+  });
+
   it("places the all-photos overlay on the bottom-right visible tile", () => {
     const plan = buildGalleryMosaicPlan(sampleImages(12), "right-hero-seed");
     const overlaySlot = plan.slots.find((slot) => slot.cell.showAllOverlay);

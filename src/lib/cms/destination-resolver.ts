@@ -99,23 +99,35 @@ export async function resolveDestinationPage(
     ? (await import("@/lib/kb-place-bridge")).applyKbToDestination(rawFallback)
     : null;
   const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "destination", slug, {
+  const translationStatusPromise = supabase
+    ? fetchCmsTranslationStatusForSlug(supabase, "destination", slug, {
         ruFallbackComplete: cutover.destination ? false : Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(cutover.destination ? false : Boolean(fallback));
+    : Promise.resolve(
+        buildDefaultTranslationStatus(cutover.destination ? false : Boolean(fallback)),
+      );
 
-  const resolved = await resolveWithPublishedCmsOverride({
-    docType: "destination",
-    slug,
-    locale,
-    fallback,
-    merge: (doc, fb) => destinationPageFromCms(doc, fb),
-    supabase,
-    isUsable: isCmsDocumentComplete,
-  });
+  let resolvedSeo: CmsDocument["seo"] | undefined;
+  const [translationStatus, resolved] = await Promise.all([
+    translationStatusPromise,
+    resolveWithPublishedCmsOverride({
+      docType: "destination",
+      slug,
+      locale,
+      fallback,
+      merge: (doc, fb) => destinationPageFromCms(doc, fb),
+      supabase,
+      isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
+    }),
+  ]);
   if (!resolved) return null;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedDestinationSlugs(locale = "ru"): Promise<string[]> {

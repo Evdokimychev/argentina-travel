@@ -6,7 +6,9 @@ import { Plus, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 import { useAuth } from "@/context/AuthContext";
-import { createOrganizerTour } from "@/lib/organizer-tour-store";
+import { createOrganizerTour, deleteOrganizerTour } from "@/lib/organizer-tour-store";
+import { patchOrganizerTourDraftRemote } from "@/lib/organizer-tour-draft-api";
+import { isRemoteToursMode } from "@/lib/tour-content-api";
 import {
   dismissOrganizerOnboarding,
   isOrganizerOnboardingDismissed,
@@ -36,6 +38,8 @@ export default function OrganizerOnboardingWizard({
   const [dismissed, setDismissed] = useState(true);
   const [steps, setSteps] = useState<OnboardingStep[]>([]);
   const [complete, setComplete] = useState(false);
+  const [creatingTour, setCreatingTour] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -79,12 +83,40 @@ export default function OrganizerOnboardingWizard({
     onWelcomeDismiss?.();
   }
 
+  async function createFirstTour() {
+    if (creatingTour) return;
+    setCreatingTour(true);
+    setCreateError(null);
+
+    const result = createOrganizerTour(user, "tour", { skipRemoteSync: true });
+    if ("error" in result) {
+      setCreateError(result.error);
+      setCreatingTour(false);
+      return;
+    }
+
+    try {
+      if (isRemoteToursMode()) {
+        await patchOrganizerTourDraftRemote({
+          tourId: result.draft.id,
+          draft: result.draft,
+        });
+      }
+      onWelcomeDismiss?.();
+      router.push(`/organizer/tours/${result.draft.id}/edit`);
+    } catch (error) {
+      deleteOrganizerTour(result.draft.id, user, { skipRemoteSync: true });
+      setCreateError(
+        error instanceof Error ? error.message : "Не удалось создать черновик. Попробуйте ещё раз."
+      );
+    } finally {
+      setCreatingTour(false);
+    }
+  }
+
   function handleStepAction(step: OnboardingStep) {
     if (step.id === "first-tour" && !step.href) {
-      const result = createOrganizerTour(user);
-      if ("error" in result) return;
-      router.push(`/organizer/tours/${result.draft.id}/edit`);
-      onWelcomeDismiss?.();
+      void createFirstTour();
       return;
     }
 
@@ -92,13 +124,6 @@ export default function OrganizerOnboardingWizard({
       router.push(step.href);
       if (welcome) onWelcomeDismiss?.();
     }
-  }
-
-  function handleWelcomeCreateTour() {
-    const result = createOrganizerTour(user);
-    if ("error" in result) return;
-    onWelcomeDismiss?.();
-    router.push(`/organizer/tours/${result.draft.id}/edit`);
   }
 
   const currentStep = steps.find((step) => step.status === "current");
@@ -113,13 +138,13 @@ export default function OrganizerOnboardingWizard({
       <button
         type="button"
         onClick={handleDismiss}
-        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+        className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:right-3 sm:top-3"
         aria-label="Скрыть чек-лист"
       >
         <X className="h-4 w-4" />
       </button>
 
-      <div className="flex items-start gap-3 pr-8">
+      <div className="flex items-start gap-3 pr-11">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/15 text-sky">
           <Sparkles className="h-5 w-5" aria-hidden />
         </span>
@@ -138,14 +163,24 @@ export default function OrganizerOnboardingWizard({
 
           {welcome && currentStep?.id === "first-tour" ? (
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button type="button" className="gap-2" onClick={handleWelcomeCreateTour}>
+              <Button
+                type="button"
+                className="gap-2"
+                onClick={() => void createFirstTour()}
+                disabled={creatingTour}
+              >
                 <Plus className="h-4 w-4" />
-                Создать первый тур
+                {creatingTour ? "Создаём…" : "Создать первый тур"}
               </Button>
               <Button type="button" variant="outline" onClick={handleDismiss}>
                 Позже
               </Button>
             </div>
+          ) : null}
+          {createError ? (
+            <p role="alert" className="mt-3 text-sm font-medium text-red-600">
+              {createError}
+            </p>
           ) : null}
         </div>
       </div>

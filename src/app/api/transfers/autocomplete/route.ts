@@ -8,6 +8,7 @@ import { searchIntuiLocations } from "@/lib/intui/search";
 import { searchAviasalesPlaces } from "@/lib/travelpayouts/aviasales/autocomplete";
 import type { TransferLocation } from "@/lib/intui/types";
 import type { LocaleCode } from "@/types/locale";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 const LOCALES = new Set<LocaleCode>(["ru", "en", "es", "pt"]);
 
@@ -42,6 +43,9 @@ function dedupeLocations(locations: TransferLocation[]): TransferLocation[] {
 }
 
 export async function GET(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("transfers", "public_read");
+  if (moduleBlocked) return moduleBlocked;
+
   const { searchParams } = new URL(request.url);
   const term = searchParams.get("term")?.trim() ?? "";
   const localeParam = searchParams.get("locale")?.trim() ?? "ru";

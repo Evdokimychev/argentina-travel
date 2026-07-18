@@ -1,7 +1,7 @@
 ---
 id: parque-provincial-ischigualasto
 type: national_park
-title: провинциальный парк Ischigualasto
+title: Провинциальный парк Исчигуаласто
 title_es: Parque Provincial Ischigualasto
 title_en: Ischigualasto Provincial Park
 summary: "Исчигуаласто (Долина Луны) в Сан-Хуане — инопланетные пейзажи и палеонтология, объект ЮНЕСКО."

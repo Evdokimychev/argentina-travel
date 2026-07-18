@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { publishCmsDocument } from "@/lib/cms/content-server";
+import { clientIpFromRequest } from "@/lib/admin/audit";
+import { cmsMutationHttpStatus, publishCmsDocument } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(
@@ -13,20 +13,20 @@ export async function POST(
 
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
-  const supabase = createSupabaseAdminClient();
-  const result = await publishCmsDocument(supabase, decodedId, auth.actorId);
-
-  if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+  const body = (await request.json().catch(() => null)) as { expectedVersion?: number } | null;
+  if (!body || !Number.isInteger(body.expectedVersion) || (body.expectedVersion ?? 0) < 1) {
+    return NextResponse.json({ error: "Обновите страницу и повторите публикацию" }, { status: 409 });
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.publish",
-    entityType: "content_document",
-    entityId: decodedId,
+  const supabase = createSupabaseAdminClient();
+  const result = await publishCmsDocument(supabase, decodedId, {
+    actorId: auth.actorId,
+    expectedVersion: body.expectedVersion!,
     ipAddress: clientIpFromRequest(request),
   });
+
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error, code: result.code }, { status: cmsMutationHttpStatus(result.code) });
+  }
 
   return NextResponse.json({ document: result.document });
 }

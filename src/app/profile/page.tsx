@@ -96,7 +96,7 @@ export default function ProfileDashboardPage() {
       <ProfileNotifications limit={5} />
 
       <section className={cabinetPanelClass}>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="font-heading text-lg font-bold text-foreground">Последние бронирования</h3>
           <Link
             href="/profile/bookings"

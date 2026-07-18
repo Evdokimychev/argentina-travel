@@ -90,10 +90,12 @@ export default function BlogInternalLinksPreview({
 
       <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4">
         <Sparkles className="h-4 w-4 text-sky" aria-hidden />
-        <h3 className="text-sm font-semibold text-charcoal">AI-подсказки</h3>
+        <h3 className="text-sm font-semibold text-charcoal">Дополнительные подсказки</h3>
       </div>
       <p className="mt-1 text-xs leading-relaxed text-slate">
-        Дополнительные ссылки по теме статьи{aiEnabled ? "" : " (без OpenAI — только эвристики)"}.
+        {aiEnabled
+          ? "Расширенный подбор ссылок по смыслу статьи."
+          : "Подбор ссылок по теме статьи на основе опубликованных материалов."}
       </p>
 
       {aiLoading ? (
@@ -114,7 +116,7 @@ export default function BlogInternalLinksPreview({
               </p>
               <p className="mt-1 text-slate/90">
                 {item.reason}
-                {item.source === "ai" ? " · ИИ" : ""}
+                {item.source === "ai" ? " · расширенный подбор" : ""}
               </p>
             </li>
           ))}

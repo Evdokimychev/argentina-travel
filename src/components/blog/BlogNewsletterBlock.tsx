@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SmartInput } from "@/components/ui/smart-input";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import { trackNewsletterSubscribe } from "@/lib/analytics/gtm-events";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { cn } from "@/lib/cn";
+import { validateEmail } from "@/lib/form-validation";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 type BlogNewsletterBlockProps = {
   className?: string;
@@ -23,22 +25,32 @@ export default function BlogNewsletterBlock({
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<SiteFeedbackMessage | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const feedback = useSiteFeedback();
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const value = email.trim();
-    if (!value) return;
+    const honeypot = String(new FormData(event.currentTarget as HTMLFormElement).get("company") ?? "");
+    const validationError = validateEmail(value);
+    if (validationError) {
+      setEmailError(validationError);
+      return;
+    }
 
     setLoading(true);
     setError(null);
+    setEmailError(null);
 
     try {
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: value, source }),
+        body: JSON.stringify({ email: value, source, captchaToken, honeypot }),
       });
 
       if (!response.ok) {
@@ -58,9 +70,9 @@ export default function BlogNewsletterBlock({
         steps: ["Проверьте правильность email", "Попробуйте ещё раз через минуту"],
       });
       setError(normalized);
-      feedback.showError(normalized);
     } finally {
       setLoading(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
@@ -110,20 +122,43 @@ export default function BlogNewsletterBlock({
             className="mt-3"
           />
         ) : null}
-        <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2 sm:flex-row">
-          <Input
+        <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+          <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+            Компания
+            <input name="company" tabIndex={-1} autoComplete="off" />
+          </label>
+          <TurnstileField
+            formId="newsletter"
+            onToken={handleCaptchaToken}
+            resetSignal={captchaResetSignal}
+          />
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-end">
+          <div className="min-w-0 flex-1">
+          <SmartInput
+            id={`newsletter-email-${source.replace(/[^a-z0-9_-]+/gi, "-")}`}
+            label="Email"
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onValueChange={(value) => {
+              setEmail(value);
+              if (emailError) setEmailError(null);
+              if (error) setError(null);
+            }}
+            validate={validateEmail}
+            error={emailError}
             placeholder="email@example.com"
-            className="h-10 flex-1 border-border-subtle bg-white/90"
-            aria-label="Email для подписки"
+            autoComplete="email"
+            inputMode="email"
+            className="h-10 border-border-subtle bg-white/90"
             disabled={loading}
             required
+            showValidationSuccess={false}
           />
+          </div>
           <Button type="submit" className="shrink-0 sm:px-5" loading={loading} loadingLabel="Подписываем…">
             Подписаться
           </Button>
+          </div>
         </form>
       </div>
     </section>

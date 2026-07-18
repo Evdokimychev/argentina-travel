@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { Clock, UserRound } from "lucide-react";
 import BlogPostBreadcrumbs from "@/components/blog/BlogPostBreadcrumbs";
 import BlogPostHeroImage from "@/components/blog/BlogPostHeroImage";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
-import { formatDate, formatBlogUpdatedLabel } from "@/data/blog";
+import { formatBlogDate, formatBlogUpdatedLabel } from "@/lib/blog-utils";
 import { cn } from "@/lib/cn";
+import { resolveBlogEditorialTheme } from "@/lib/editorial-theme";
 import { siteContainerClass } from "@/lib/site-container";
 import type { BlogUiBreadcrumbItem } from "@/lib/blog-breadcrumbs";
 import type { BlogPost } from "@/types";
@@ -16,41 +16,45 @@ type BlogPostHeaderProps = {
 };
 
 export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPostHeaderProps) {
+  const editorialTheme = resolveBlogEditorialTheme(post);
+
   return (
     <section
       data-scroll-rail-tone="light"
+      data-editorial-theme={editorialTheme}
       className={cn(
-        "relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]",
+        "editorial-hero relative overflow-hidden border-b border-[var(--editorial-line)]",
         className
       )}
     >
-      <div className={cn(siteContainerClass, "relative py-8 md:py-10")}>
+      <div className={cn(siteContainerClass, "relative py-8 md:py-10 lg:py-12")}>
         <BlogPostBreadcrumbs items={breadcrumbs} />
 
-        <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_min(100%,380px)] lg:gap-10">
+        <div className="mt-5 grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_min(42%,460px)] lg:gap-10">
           <div className="min-w-0">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink">
+                  <span className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
                     {post.category}
                   </span>
                   {post.richArticleId ? (
-                    <span className="inline-flex rounded-full bg-sky-ink px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+                    <span className="inline-flex rounded-full bg-[var(--editorial-accent-strong)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white">
                       Полный гид
                     </span>
                   ) : null}
                 </div>
+                <div className="editorial-rule mt-4 h-1 w-12 rounded-full" aria-hidden />
                 <h1
                   data-speakable="headline"
-                  className="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.5rem]"
+                  className="mt-3 font-display text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-charcoal sm:text-4xl lg:text-[2.85rem]"
                 >
                   {post.title}
                 </h1>
-                <div className="mt-4 max-w-2xl rounded-xl border border-gray-200/80 bg-white/70 px-4 py-3.5 shadow-sm backdrop-blur-sm sm:px-5 sm:py-4">
+                <div className="mt-4 max-w-2xl border-l-2 border-[var(--editorial-accent)] pl-4 sm:pl-5">
                   <p
                     data-speakable="lede"
-                    className="text-base leading-[1.7] text-slate sm:text-lg"
+                    className="font-editorial text-base leading-relaxed text-slate sm:text-lg"
                   >
                     {post.excerpt}
                   </p>
@@ -65,7 +69,7 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
                 {post.author}
               </span>
               <span aria-hidden>·</span>
-              <span>{formatDate(post.date)}</span>
+              <span>{formatBlogDate(post.date)}</span>
               <span aria-hidden>·</span>
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-4 w-4" aria-hidden />
@@ -91,10 +95,10 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
             </ul>
           </div>
 
-          <BlogPostHeroImage post={post} className="hidden lg:block" />
+          <BlogPostHeroImage post={post} className="editorial-media-frame hidden rounded-[1.75rem] border-[var(--editorial-line)] lg:block" />
         </div>
 
-        <BlogPostHeroImage post={post} className="mt-6 lg:hidden" />
+        <BlogPostHeroImage post={post} className="mt-5 lg:hidden [&>div]:aspect-[16/9]" />
       </div>
     </section>
   );

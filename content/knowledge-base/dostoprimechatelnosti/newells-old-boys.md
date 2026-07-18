@@ -1,7 +1,7 @@
 ---
 id: newells-old-boys
 type: attraction
-title: Newell's Old Boys
+title: «Ньюэллс Олд Бойз» в Росарио
 title_es: Newell's Old Boys
 title_en: Newell's Old Boys
 summary: "«Ньюэллс Олд Бойз» в Росарио — клуб, где в детстве начинал Лионель Месси."

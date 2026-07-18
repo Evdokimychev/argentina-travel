@@ -1,7 +1,7 @@
 ---
 id: cabalgatas-en-la-estepa-de-bariloche
 type: attraction
-title: Cabalgatas en la estepa de Барилоче
+title: Конные прогулки по степям Барилоче
 title_es: Cabalgatas en la estepa de Bariloche
 title_en: Horseback riding on the Bariloche steppe
 summary: "Верховые прогулки по патагонской степи в окрестностях Барилоче."
@@ -55,4 +55,8 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-- **Провинция:** Рио-Негро ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cabalgatas-en-la-estepa-de-bariloche) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Рио-Негро
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cabalgatas-en-la-estepa-de-bariloche) (исп.; адаптировано 2026-07-07).

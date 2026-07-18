@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchTourAvailabilityBySlug } from "@/lib/tour-availability-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
@@ -12,7 +12,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
   try {
     const { slug } = await context.params;
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
     const availability = await fetchTourAvailabilityBySlug(supabase, slug);
 
     if (!availability) {

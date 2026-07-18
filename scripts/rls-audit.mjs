@@ -5,6 +5,7 @@
  * Validates supabase/migrations/*.sql:
  * - every public table enables RLS
  * - non–service-role tables have at least one policy
+ * - the migration set declares the explicit service-role Data API grant
  *
  * Writes var/ops/rls-audit-last.json for admin UI.
  *
@@ -15,36 +16,21 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
+import { SERVICE_ROLE_ONLY_TABLES } from "./lib/rls-audit-config.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const opsDir = path.join(root, "var/ops");
 const auditFile = path.join(opsDir, "rls-audit-last.json");
 
-const SERVICE_ROLE_ONLY_TABLES = new Set([
-  "api_key_usage_log",
-  "affiliate_link_clicks",
-  "booking_commission_snapshots",
-  "booking_lookup_audit_log",
-  "booking_lookup_challenges",
-  "payment_audit_log",
-  "payment_transactions",
-  "payout_records",
-  "platform_commission_rules",
-  "sputnik8_booking_requests",
-  "sputnik8_sync_runs",
-  "trip_prep_reminders_sent",
-  "tripster_booking_requests",
-  "tripster_sync_runs",
-  "url_redirects",
-  "youtravel_affise_snapshots",
-  "youtravel_booking_requests",
-  "youtravel_sync_runs",
-]);
-
-const TABLE_RE = /create\s+table\s+if\s+not\s+exists\s+public\.([a-z0-9_]+)/gi;
+const TABLE_RE = /create\s+table\s+(?:if\s+not\s+exists\s+)?public\.([a-z0-9_]+)/gi;
 const RLS_RE = /alter\s+table\s+public\.([a-z0-9_]+)\s+enable\s+row\s+level\s+security/gi;
 const POLICY_RE = /create\s+policy\s+(?:"[^"]+"|[a-z0-9_]+)\s+on\s+public\.([a-z0-9_]+)/gi;
+const SERVICE_ROLE_DATA_API_GRANT_RE =
+  /grant\s+select\s*,\s*insert\s*,\s*update\s*,\s*delete\s+on\s+all\s+tables\s+in\s+schema\s+public\s+to\s+service_role\s*;/i;
+const CLIENT_DEFAULT_REVOKE_RE =
+  /revoke\s+all\s+privileges\s+on\s+all\s+tables\s+in\s+schema\s+public\s+from\s+anon\s*,\s*authenticated\s*;/i;
 
 function loadEnvLocal() {
   for (const file of [".env.local", ".env"]) {
@@ -108,6 +94,22 @@ function runStaticRlsAudit() {
     }
   }
 
+  if (!SERVICE_ROLE_DATA_API_GRANT_RE.test(sql)) {
+    criticalIssues.push({
+      table: "*",
+      kind: "missing_service_role_grants",
+      message: "Миграции не фиксируют явный Data API grant для service_role",
+    });
+  }
+
+  if (!CLIENT_DEFAULT_REVOKE_RE.test(sql)) {
+    criticalIssues.push({
+      table: "*",
+      kind: "missing_client_default_revoke",
+      message: "Миграции не сбрасывают неявные grants старых Supabase-проектов",
+    });
+  }
+
   return { tables, criticalIssues, ok: criticalIssues.length === 0, source: "static" };
 }
 
@@ -115,11 +117,13 @@ async function main() {
   loadEnvLocal();
 
   const result = runStaticRlsAudit();
+  const release = buildReleaseFingerprint(root, process.env);
   const payload = {
     ok: result.ok,
     source: result.source,
     ranAt: new Date().toISOString(),
-    gitSha: process.env.GIT_SHA?.trim() || null,
+    gitSha: release.commitSha,
+    gitShaSource: release.source,
     tableCount: result.tables.length,
     criticalIssueCount: result.criticalIssues.length,
     criticalIssues: result.criticalIssues,

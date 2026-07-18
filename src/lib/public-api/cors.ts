@@ -41,7 +41,10 @@ export function applyPublicApiCorsHeaders(
   });
 }
 
-export function publicApiPreflightResponse(request: Request): Response {
+export function publicApiPreflightResponse(
+  request: Request,
+  options?: { methods?: string; headers?: string }
+): Response {
   const allowOrigin = resolvePublicApiCorsOrigin(request);
   if (!allowOrigin) {
     return new Response(null, { status: 204 });
@@ -52,8 +55,8 @@ export function publicApiPreflightResponse(request: Request): Response {
     headers: {
       "Access-Control-Allow-Origin": allowOrigin,
       Vary: "Origin",
-      "Access-Control-Allow-Methods": DEFAULT_METHODS,
-      "Access-Control-Allow-Headers": DEFAULT_HEADERS,
+      "Access-Control-Allow-Methods": options?.methods ?? DEFAULT_METHODS,
+      "Access-Control-Allow-Headers": options?.headers ?? DEFAULT_HEADERS,
       "Access-Control-Max-Age": "86400",
     },
   });

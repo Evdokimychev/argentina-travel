@@ -1,5 +1,6 @@
 import type {
   Article,
+  Apartment,
   BreadcrumbList,
   FAQPage,
   ItemList,
@@ -20,13 +21,19 @@ export type JsonLdGraph = WithContext<
   | FAQPage
   | BreadcrumbList
   | Article
+  | Apartment
   | ItemList
   | Trip
   | TouristDestination
 >;
 
-export function serializeJsonLd(data: JsonLdGraph | JsonLdGraph[]): string {
-  return JSON.stringify(data);
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data)
+    .replace(/&/g, "\\u0026")
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 
 export const ORGANIZATION_SCHEMA_ID = "#organization";
@@ -222,10 +229,12 @@ export function buildArticleSchema(input: {
         },
     publisher: {
       "@type": "Organization",
+      "@id": organizationSchemaId(absoluteUrl("/")),
       name: publisherName,
+      url: absoluteUrl("/"),
       logo: {
         "@type": "ImageObject",
-        url: absoluteUrl(DEFAULT_SITE_BRANDING.defaultOgImage),
+        url: absoluteUrl("/icons/icon-512.png"),
       },
     },
     ...(input.about?.length

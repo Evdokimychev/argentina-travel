@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import {
   assertBookingMutationAllowed,
@@ -53,7 +54,7 @@ export async function GET(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (!canAccessBooking(booking, sessionUser, sessionUser?.email)) {
+    if (!canAccessBooking(booking, sessionUser)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -86,9 +87,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (!canAccessBooking(current, sessionUser, sessionUser?.email)) {
+    if (!canAccessBooking(current, sessionUser)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+    const admin = createSupabaseAdminClient();
 
     if (body.action === "cancel") {
       const allowed = assertBookingMutationAllowed(current, sessionUser, "cancel");
@@ -123,7 +125,7 @@ export async function PATCH(
       });
 
       const result = await cancelBookingAndReleaseReservation(
-        supabase,
+        admin,
         updated,
         current.updatedAt,
       );
@@ -195,7 +197,7 @@ export async function PATCH(
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
+      const result = await updateBookingRecord(admin, updated, current.updatedAt);
       if ("error" in result) {
         addBookingBreadcrumb("booking.status_update.failed", {
           bookingId: id,
@@ -256,7 +258,7 @@ export async function PATCH(
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
+      const result = await updateBookingRecord(admin, updated, current.updatedAt);
       if ("error" in result) {
         addBookingBreadcrumb("booking.comment.failed", {
           bookingId: id,
@@ -315,7 +317,7 @@ export async function PATCH(
               }),
             ],
       });
-      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
+      const result = await updateBookingRecord(admin, updated, current.updatedAt);
       if ("error" in result) {
         return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
       }

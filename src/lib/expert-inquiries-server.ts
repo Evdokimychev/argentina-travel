@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   insertConversationMessage,
   rowToThreadFromDb,
@@ -97,7 +98,8 @@ export async function createExpertInquiry(input: {
   let threadId: string | null = null;
 
   if (input.expert.userId && input.expert.userId !== input.userId) {
-    const { data: threadRow, error: threadError } = await input.supabase
+    const admin = createSupabaseAdminClient();
+    const { data: threadRow, error: threadError } = await admin
       .from("conversation_threads")
       .insert({
         booking_id: null,
@@ -112,7 +114,7 @@ export async function createExpertInquiry(input: {
       threadId = threadRow.id;
       const thread = rowToThreadFromDb(threadRow);
       const messageResult = await insertConversationMessage(
-        input.supabase,
+        admin,
         thread,
         input.userId,
         text

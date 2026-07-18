@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import { BlogRichGalleryCarousel } from "@/components/blog/BlogRichGalleryCarousel";
+import { filterPublicGalleryImages } from "@/lib/public-gallery-images";
 
 const BlogMapBlock = dynamic(() => import("@/components/blog/BlogMapBlock"), {
   ssr: false,
@@ -22,8 +23,9 @@ export function BlogRichGallerySection({
   images: Array<{ src: string; alt: string; caption?: string }>;
   ariaLabel: string;
 }) {
-  if (images.length === 0) return null;
-  return <BlogRichGalleryCarousel images={images} ariaLabel={ariaLabel} />;
+  const publicImages = filterPublicGalleryImages(images);
+  if (publicImages.length === 0) return null;
+  return <BlogRichGalleryCarousel images={publicImages} ariaLabel={ariaLabel} />;
 }
 
 export default function BlogRichArticleClientBlock({ block }: { block: BlogRichBlock }) {
@@ -34,7 +36,7 @@ export default function BlogRichArticleClientBlock({ block }: { block: BlogRichB
       return <BlogFaqSection items={block.items} />;
     case "gallery":
       return (
-        <BlogRichGalleryCarousel
+        <BlogRichGallerySection
           images={block.images.map((image) => ({
             src: image.src,
             alt: image.alt,

@@ -1,7 +1,7 @@
 ---
 id: trekking-en-tolhuin
 type: attraction
-title: Trekking in Tolhuin
+title: Треккинг в Тольуине
 title_es: Trekking en Tolhuin
 title_en: Trekking in Tolhuin
 summary: "Треккинг в окрестностях Тольуина на Огненной Земле — маршруты разной сложности."

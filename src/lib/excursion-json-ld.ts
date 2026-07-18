@@ -45,41 +45,11 @@ export function buildExcursionTouristTripJsonLd(excursion: ExcursionDetail) {
   };
 }
 
-/** Scheduled bookable experiences also expose Event for rich results. */
-export function buildExcursionEventJsonLd(excursion: ExcursionDetail) {
-  if (excursion.isBookable === false) return null;
-
-  const location = excursion.cityName
-    ? {
-        "@type": "Place",
-        name: excursion.cityName,
-        ...(excursion.meetingPoint?.text
-          ? { address: { "@type": "PostalAddress", streetAddress: excursion.meetingPoint.text } }
-          : {}),
-      }
-    : undefined;
-
-  return {
-    "@type": "Event",
-    name: excursion.title,
-    description: excursion.annotation || excursion.tagline || excursion.title,
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    eventStatus: "https://schema.org/EventScheduled",
-    url: absoluteUrl(`/excursions/${excursion.slug}`),
-    location,
-    offers: buildExcursionOffers(excursion),
-    aggregateRating: buildExcursionAggregateRating(excursion),
-  };
-}
-
 export function buildExcursionJsonLd(excursion: ExcursionDetail) {
-  const graph = [
-    buildExcursionTouristTripJsonLd(excursion),
-    buildExcursionEventJsonLd(excursion),
-  ].filter(Boolean);
-
   return {
     "@context": "https://schema.org",
-    "@graph": graph,
+    // Event requires a concrete startDate and location. Detail data describes
+    // a reusable excursion, so TouristTrip is the honest schema here.
+    "@graph": [buildExcursionTouristTripJsonLd(excursion)],
   };
 }

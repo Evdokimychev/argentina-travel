@@ -1,8 +1,12 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { matchContentPlanRedirect } from "@/data/content-plan-url-redirects";
+import {
+  CONTENT_PLAN_URL_REDIRECTS,
+  matchContentPlanRedirect,
+} from "@/data/content-plan-url-redirects";
 import {
   mapUrlRedirectRow,
   normalizeUrlRedirectInput,
+  validateUrlRedirectGraph,
   validateUrlRedirectInput,
 } from "@/lib/redirects/url-redirect-normalize";
 import type { UrlRedirect, UrlRedirectInput } from "@/types/url-redirect";
@@ -25,6 +29,33 @@ function readCache(): Map<string, RedirectMatch> | null {
 
 export function invalidateUrlRedirectCache(): void {
   cache = null;
+}
+
+async function validateRedirectGraphCandidate(
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  candidate: UrlRedirectInput,
+  excludeId?: string
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("url_redirects")
+    .select("id, from_path, to_path, enabled");
+
+  if (error) return `Не удалось проверить цепочку редиректов: ${error.message}`;
+
+  const staticEntries = Object.entries(CONTENT_PLAN_URL_REDIRECTS).map(([fromPath, toPath]) => ({
+    fromPath,
+    toPath,
+    enabled: true,
+  }));
+  const storedEntries = (data ?? [])
+    .filter((row) => row.id !== excludeId)
+    .map((row) => ({
+      fromPath: row.from_path,
+      toPath: row.to_path,
+      enabled: row.enabled,
+    }));
+
+  return validateUrlRedirectGraph([...staticEntries, ...storedEntries, candidate]);
 }
 
 async function loadActiveRedirectsMap(): Promise<Map<string, RedirectMatch>> {
@@ -85,6 +116,8 @@ export async function createUrlRedirect(
 
   const normalized = normalizeUrlRedirectInput(input);
   const supabase = createSupabaseAdminClient();
+  const graphError = await validateRedirectGraphCandidate(supabase, normalized);
+  if (graphError) return { error: graphError };
 
   const { data, error } = await supabase
     .from("url_redirects")
@@ -130,6 +163,8 @@ export async function updateUrlRedirect(
   if (validationError) return { error: validationError };
 
   const normalized = normalizeUrlRedirectInput(merged);
+  const graphError = await validateRedirectGraphCandidate(supabase, normalized, id);
+  if (graphError) return { error: graphError };
 
   const { data, error } = await supabase
     .from("url_redirects")

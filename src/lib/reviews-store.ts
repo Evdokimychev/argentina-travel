@@ -4,7 +4,7 @@ import {
   type TouristReview,
   type TouristReviewStatus,
 } from "@/types/tourist";
-import { shouldSeedDemoData } from "@/lib/demo-mode";
+import { getDemoReviewSeeds } from "@/lib/reviews-demo-seeds-active";
 import { assertPermission, canLeaveReview } from "@/lib/permissions";
 import type { SessionUser } from "@/types/user";
 
@@ -39,46 +39,12 @@ function notifyUpdated() {
   }
 }
 
-function seedDemoReviewsIfEmpty(): TouristReview[] {
+function seedReviewsIfEmpty(): TouristReview[] {
   const existing = readAllReviews();
   if (existing.length > 0) return existing;
 
-  if (!shouldSeedDemoData()) {
-    return [];
-  }
-
   const now = new Date().toISOString();
-  const seeded: TouristReview[] = [
-    {
-      id: "review-demo-published",
-      userId: "ivan-evdokimychev",
-      tourId: "2",
-      tourSlug: "mendoza-wine",
-      tourTitle: "Мендоса: винные маршруты, Аконкагуа и гастрономические ужины",
-      bookingId: "booking-demo-completed",
-      rating: 5,
-      text:
-        "Отличная организация, насыщенная программа и внимательный гид. Винные дегустации и вид на Аконкагуа — лучшие впечатления поездки.",
-      photos: [],
-      tripDate: "2025-11-05",
-      status: "published",
-      createdAt: "2025-11-08T12:00:00.000Z",
-      updatedAt: now,
-    },
-    {
-      id: "review-demo-draft",
-      userId: "ivan-evdokimychev",
-      tourId: "4",
-      tourSlug: "iguazu-falls",
-      tourTitle: "Водопады Игуасу за 1 день: аргентинская и бразильская стороны",
-      rating: 4,
-      text: "Черновик отзыва — допишу после поездки.",
-      photos: [],
-      status: "draft",
-      createdAt: now,
-      updatedAt: now,
-    },
-  ];
+  const seeded = getDemoReviewSeeds(now);
 
   writeAllReviews(seeded);
   return seeded;
@@ -86,7 +52,7 @@ function seedDemoReviewsIfEmpty(): TouristReview[] {
 
 export function getAllReviews(): TouristReview[] {
   if (typeof window === "undefined") return [];
-  return seedDemoReviewsIfEmpty();
+  return seedReviewsIfEmpty();
 }
 
 export function getUserReviews(userId: string): TouristReview[] {

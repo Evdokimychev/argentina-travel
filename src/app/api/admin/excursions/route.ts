@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchExcursionAdminStats } from "@/lib/tripster/admin-stats";
 import { fetchYouTravelAdminBookingStats } from "@/lib/youtravel/admin-stats";

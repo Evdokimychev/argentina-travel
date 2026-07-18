@@ -128,15 +128,16 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
       <div
         role="group"
         aria-label="Сортировка"
-        className="scrollbar-hide flex min-w-0 flex-1 flex-nowrap items-center gap-0.5 overflow-x-auto rounded-full bg-gray-100 px-1 py-1"
+        className="scrollbar-hide flex min-w-0 flex-1 snap-x flex-nowrap items-center gap-0.5 overflow-x-auto rounded-full bg-gray-100 px-1 py-1 pr-7 [mask-image:linear-gradient(to_right,#000_0,#000_calc(100%-1.25rem),transparent_100%)] sm:pr-1 sm:[mask-image:none]"
       >
         {primarySortOptions.map((option) => (
           <button
             key={option.value}
             type="button"
             onClick={() => onSortChange(option.value)}
+            aria-pressed={sort === option.value}
             className={cn(
-              "shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+              "min-h-11 shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:min-h-9 sm:px-3 sm:text-sm",
               sort === option.value
                 ? "bg-white text-brand-dark shadow-sm"
                 : "text-slate hover:text-charcoal",
@@ -151,8 +152,9 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
             <PopoverTrigger asChild>
               <button
                 type="button"
+                aria-pressed={isSecondary}
                 className={cn(
-                  "flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+                  "flex min-h-11 shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:min-h-9 sm:px-3 sm:text-sm",
                   isSecondary
                     ? "bg-white text-brand shadow-sm"
                     : "text-slate hover:text-charcoal",
@@ -170,7 +172,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
                       type="button"
                       onClick={() => onSortChange(option.value)}
                       className={cn(
-                        "w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-gray-50",
+                        "min-h-11 w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-gray-50",
                         sort === option.value ? "font-semibold text-brand" : "text-charcoal",
                       )}
                     >
@@ -190,7 +192,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 shrink-0 px-2 text-xs"
+            className="h-11 shrink-0 px-2 text-xs sm:h-8"
             onClick={onResetFilters}
           >
             Сбросить

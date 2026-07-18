@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, Check, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -71,7 +71,7 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <div className="m-4 mb-3 grid grid-cols-2 gap-1 rounded-xl bg-gray-100 p-1">
         <button
           type="button"
@@ -119,7 +119,7 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
         </div>
       </div>
 
-      <div className="max-h-72 overflow-y-auto px-2 pb-2">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-2 sm:max-h-72">
         {tab === "language" &&
           filteredLanguages.map((lang) => (
             <button
@@ -217,14 +217,53 @@ export default function LocaleCurrencySwitcher({
   const { locale, language, currencyInfo, ready, t } = useLocaleCurrency();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileSheetRef = useRef<HTMLDivElement>(null);
 
   useSiteHeaderOverlayLock(mobileOpen);
 
   useEffect(() => {
-    if (mobileOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const focusTimer = window.setTimeout(() => {
+      const panel = mobileSheetRef.current;
+      panel?.querySelector<HTMLElement>("button:not([disabled]), input:not([disabled])")?.focus();
+    }, 0);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMobileOpen(false);
+        window.setTimeout(() => mobileTriggerRef.current?.focus(), 0);
+        return;
+      }
+
+      if (event.key !== "Tab" || !mobileSheetRef.current) return;
+      const focusable = mobileSheetRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [mobileOpen]);
 
@@ -265,10 +304,10 @@ export default function LocaleCurrencySwitcher({
 
   const triggerClassName =
     variant === "header"
-      ? "flex h-8 items-center gap-1 rounded-full bg-charcoal/[0.04] px-2 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-2.5"
+      ? "flex h-11 items-center gap-1 rounded-full bg-charcoal/[0.04] px-2 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-2.5"
       : variant === "compact"
-        ? "flex h-9 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 sm:gap-2 sm:px-3"
-        : "flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-charcoal transition-all duration-200 hover:border-brand/40 hover:bg-brand-light/30";
+        ? "flex h-11 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 sm:gap-2 sm:px-3"
+        : "flex min-h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-charcoal transition-all duration-200 hover:border-brand/40 hover:bg-brand-light/30";
 
   const triggerAriaLabel = `${t("locale.language")}: ${language.nativeName}. ${t("locale.currency")}: ${currencyInfo.code}`;
 
@@ -279,10 +318,10 @@ export default function LocaleCurrencySwitcher({
           "animate-pulse rounded-full bg-gray-100",
           // header/compact видимы только с sm — скелетон повторяет финальную видимость, иначе шапка меняет высоту (CLS)
           variant === "header"
-            ? "hidden h-8 w-[5.5rem] sm:block"
+            ? "hidden h-11 w-[5.5rem] sm:block"
             : variant === "compact"
-              ? "hidden h-9 w-[7.5rem] sm:block"
-              : "h-10 w-28 rounded-xl"
+              ? "hidden h-11 w-[7.5rem] sm:block"
+              : "h-11 w-28 rounded-xl"
         )}
       />
     );
@@ -313,9 +352,10 @@ export default function LocaleCurrencySwitcher({
 
       <div className={variant === "compact" || variant === "header" ? "hidden" : "md:hidden"}>
         <button
+          ref={mobileTriggerRef}
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="flex h-10 items-center gap-2 rounded-full bg-charcoal/[0.04] px-3 text-charcoal ring-1 ring-charcoal/10"
+          className="flex h-11 items-center gap-2 rounded-full bg-charcoal/[0.04] px-3 text-charcoal ring-1 ring-charcoal/10"
           aria-label={triggerAriaLabel}
         >
           {triggerLabel}
@@ -328,11 +368,17 @@ export default function LocaleCurrencySwitcher({
                 "fixed inset-0 z-[60] bg-charcoal/40 backdrop-blur-sm",
                 motionClass.enterOverlay
               )}
+              aria-hidden
               onClick={() => setMobileOpen(false)}
             />
             <div
+              ref={mobileSheetRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={t("locale.title")}
+              tabIndex={-1}
               className={cn(
-                "fixed inset-x-0 bottom-0 z-[70] max-h-[min(85dvh,calc(100dvh-env(keyboard-inset-height,0px)-1rem))] overflow-hidden rounded-t-3xl bg-white shadow-2xl",
+                "fixed inset-x-0 bottom-0 z-[70] flex max-h-[min(85dvh,calc(100dvh-env(keyboard-inset-height,0px)-1rem))] flex-col overflow-hidden rounded-t-3xl bg-white pb-[env(safe-area-inset-bottom,0px)] shadow-2xl",
                 motionClass.enterSheet
               )}
             >
@@ -340,8 +386,12 @@ export default function LocaleCurrencySwitcher({
                 <p className="font-semibold text-charcoal">{t("locale.title")}</p>
                 <button
                   type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    window.setTimeout(() => mobileTriggerRef.current?.focus(), 0);
+                  }}
+                  aria-label="Закрыть выбор языка и валюты"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
                 >
                   <X className="h-4 w-4" />
                 </button>

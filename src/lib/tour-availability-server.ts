@@ -21,7 +21,6 @@ export interface TourAvailabilitySlot {
 export interface SlotUpsertInput {
   date: string;
   capacity: number;
-  bookedCount?: number;
   status?: TourAvailabilitySlotStatus;
 }
 
@@ -30,6 +29,13 @@ export interface SlotReservation {
   date: string;
   guests: number;
 }
+
+type AvailabilitySlotUpdate = {
+  tour_id: string;
+  date: string;
+  capacity: number;
+  status: TourAvailabilitySlotStatus;
+};
 
 interface SeedSlot {
   date: string;
@@ -123,14 +129,23 @@ async function fetchTourRowBySlug(
 ): Promise<Pick<TourRow, "id" | "payload"> | null> {
   const { data, error } = await supabase
     .from("tours")
-    .select("id, payload, moderation_status")
+    .select("id, payload, approved_payload, moderation_status")
     .eq("slug", slug)
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [
+      ...PUBLIC_TOUR_MODERATION_STATUSES,
+      "pending",
+      "rejected",
+    ])
     .maybeSingle();
 
   if (error || !data) return null;
-  return data as Pick<TourRow, "id" | "payload">;
+  const payload =
+    data.moderation_status === "pending" || data.moderation_status === "rejected"
+      ? data.approved_payload
+      : data.payload;
+  if (!payload) return null;
+  return { id: data.id, payload };
 }
 
 async function fetchTourRowById(
@@ -223,41 +238,60 @@ export async function fetchTourAvailabilityByTourId(
   return mergeSeedSlots(tourId, dbSlots, seedSlots);
 }
 
+export function buildAvailabilitySlotUpdates(
+  tourId: string,
+  slots: SlotUpsertInput[],
+  existingSlots: Pick<TourAvailabilitySlot, "date" | "bookedCount">[]
+): { updates: AvailabilitySlotUpdate[] } | { error: string; status: 400 | 409 } {
+  const bookedByDate = new Map(existingSlots.map((slot) => [slot.date, slot.bookedCount]));
+  const updates: AvailabilitySlotUpdate[] = [];
+
+  for (const slot of slots) {
+    const date = toIsoDate(slot.date);
+    if (!date) return { error: "Дата слота должна быть в формате YYYY-MM-DD.", status: 400 };
+    if (!Number.isFinite(slot.capacity) || slot.capacity < 0) {
+      return { error: `Некорректная вместимость на ${date}.`, status: 400 };
+    }
+
+    const capacity = clampInt(slot.capacity);
+    const bookedCount = bookedByDate.get(date) ?? 0;
+    if (capacity < bookedCount) {
+      return {
+        error: `Вместимость на ${date} не может быть меньше уже занятых мест (${bookedCount}).`,
+        status: 409,
+      };
+    }
+    if (slot.status && !["open", "closed", "sold_out"].includes(slot.status)) {
+      return { error: `Некорректный статус слота на ${date}.`, status: 400 };
+    }
+
+    updates.push({
+      tour_id: tourId,
+      date,
+      capacity,
+      // booked_count deliberately stays server-owned and is never part of an organizer update.
+      status: normalizeSlotStatus(slot.status, capacity, bookedCount),
+    });
+  }
+
+  return { updates };
+}
+
 export async function upsertTourAvailabilitySlots(
   supabase: DbClient,
   tourId: string,
   slots: SlotUpsertInput[]
-): Promise<{ ok: true } | { error: string }> {
+): Promise<{ ok: true } | { error: string; status?: 400 | 409 }> {
   if (!slots.length) return { ok: true };
 
-  const payload = slots
-    .map((slot) => {
-      const date = toIsoDate(slot.date);
-      if (!date) return null;
-      const capacity = clampInt(slot.capacity);
-      const bookedCount = Math.min(capacity, clampInt(slot.bookedCount ?? 0));
-      const status = normalizeSlotStatus(slot.status, capacity, bookedCount);
-      return {
-        tour_id: tourId,
-        date,
-        capacity,
-        booked_count: bookedCount,
-        status,
-      };
-    })
-    .filter((item): item is {
-      tour_id: string;
-      date: string;
-      capacity: number;
-      booked_count: number;
-      status: TourAvailabilitySlotStatus;
-    } => Boolean(item));
-
-  if (!payload.length) return { ok: true };
+  const existingSlots = await fetchTourAvailabilityByTourId(supabase, tourId);
+  const result = buildAvailabilitySlotUpdates(tourId, slots, existingSlots);
+  if ("error" in result) return result;
+  if (!result.updates.length) return { ok: true };
 
   const { error } = await supabase
     .from("tour_availability_slots")
-    .upsert(payload, { onConflict: "tour_id,date" });
+    .upsert(result.updates, { onConflict: "tour_id,date" });
 
   if (error) return { error: error.message };
   return { ok: true };

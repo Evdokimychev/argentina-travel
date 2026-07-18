@@ -25,22 +25,43 @@ function RateColumn({
         <h3 className="font-heading text-sm font-bold text-charcoal">{label}</h3>
       </div>
       <dl className="mt-3 space-y-2">
-        <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-xs text-slate">Покупка</dt>
-          <dd className="font-heading text-lg font-bold tabular-nums text-charcoal">
-            {formatArsRate(quote.buy)}
-          </dd>
-        </div>
-        <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-xs text-slate">Продажа</dt>
-          <dd className="font-heading text-lg font-bold tabular-nums text-sky">
-            {formatArsRate(quote.sell)}
-          </dd>
-        </div>
+        {quote.reference !== undefined ? (
+          <div className="flex items-baseline justify-between gap-3">
+            <dt className="text-xs text-slate">Справочный курс</dt>
+            <dd className="font-heading text-lg font-bold tabular-nums text-charcoal">
+              {formatArsRate(quote.reference)}
+            </dd>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="text-xs text-slate">Покупка</dt>
+              <dd className="font-heading text-lg font-bold tabular-nums text-charcoal">
+                {quote.buy !== undefined ? formatArsRate(quote.buy) : "Нет данных"}
+              </dd>
+            </div>
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="text-xs text-slate">Продажа</dt>
+              <dd className="font-heading text-lg font-bold tabular-nums text-sky-ink">
+                {quote.sell !== undefined ? formatArsRate(quote.sell) : "Нет данных"}
+              </dd>
+            </div>
+          </>
+        )}
       </dl>
       <p className="mt-2 text-[11px] text-slate">
-        за 1 USD · обновлено{" "}
-        {formatExchangeRateUpdatedAt(quote.updatedAt)}
+        за 1 USD · данные на {formatExchangeRateUpdatedAt(quote.updatedAt)}
+      </p>
+      <p className="mt-1 text-[11px] text-slate">
+        Источник:{" "}
+        <a
+          href={quote.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-sky-ink underline underline-offset-2"
+        >
+          {quote.sourceName}
+        </a>
       </p>
     </div>
   );
@@ -111,18 +132,24 @@ async function ArgentinaExchangeRatesContent() {
             id="exchange-rates-title"
             className="font-heading text-lg font-bold text-charcoal"
           >
-            Курс доллара сегодня
+            Справочные курсы доллара
           </h2>
           <p className="mt-1 text-sm text-slate">
-            Справочные котировки в аргентинских песо за 1 USD. Официальный и параллельный
-            («синий») рынок часто расходятся — учитывайте оба при планировании бюджета.
+            Официальный ориентир публикует BCRA. Параллельный наличный ориентир, когда он
+            доступен, показан отдельно и не является предложением обмена.
           </p>
         </div>
       </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <RateColumn label="Официальный" quote={data.oficial} accentClass="bg-sky" />
-        <RateColumn label="Синий (paralelo)" quote={data.blue} accentClass="bg-patagonia" />
+        <RateColumn label="Официальный ориентир" quote={data.oficial} accentClass="bg-sky" />
+        {data.blue ? (
+          <RateColumn
+            label="Параллельный наличный ориентир"
+            quote={data.blue}
+            accentClass="bg-patagonia"
+          />
+        ) : null}
       </div>
 
       <footer className="mt-5 flex flex-col gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
@@ -131,7 +158,7 @@ async function ArgentinaExchangeRatesContent() {
           Обновлено: {formatExchangeRateUpdatedAt(lastUpdated)} (Буэнос-Айрес)
         </p>
         <p className="text-[11px] leading-snug text-slate">
-          Справочно, не является финансовой рекомендацией
+          Курс конкретного банка или карты может отличаться · не является финансовой рекомендацией
         </p>
       </footer>
     </section>

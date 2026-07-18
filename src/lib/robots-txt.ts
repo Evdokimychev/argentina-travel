@@ -1,5 +1,34 @@
 import { absoluteUrl } from "@/lib/site-url";
 
+const CANONICAL_INDEXING_HOST = "www.goargentina.ru";
+
+type SearchIndexingEnvironment = Partial<
+  Pick<NodeJS.ProcessEnv, "NODE_ENV" | "VERCEL_ENV" | "DEPLOY_ENV">
+>;
+
+/**
+ * Only the canonical production host may be indexed. This keeps Vercel previews,
+ * staging deployments and local production previews out of search results even
+ * when they read `allowIndexing: true` from the production CMS.
+ */
+export function isCanonicalIndexingRequest(
+  requestUrl: string,
+  env: SearchIndexingEnvironment = process.env,
+): boolean {
+  let hostname: string;
+  try {
+    hostname = new URL(requestUrl).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+
+  if (hostname !== CANONICAL_INDEXING_HOST) return false;
+
+  const deploymentEnvironment = env.VERCEL_ENV ?? env.DEPLOY_ENV;
+  if (deploymentEnvironment) return deploymentEnvironment === "production";
+  return env.NODE_ENV === "production";
+}
+
 /** Paths closed from indexing (aligned with legacy robots.ts). */
 export const ROBOTS_DISALLOW_PATHS = [
   "/admin/",

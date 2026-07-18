@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { handlePublicApiRequest, publicApiJson } from "@/lib/public-api/handlers";
 import { serializePublicTourDetail } from "@/lib/public-api/serializers";
-import { fetchTourDetailBySlug } from "@/lib/tour-content-server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchTourDetailBySlugServer } from "@/lib/tour-content-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -14,8 +13,7 @@ export async function GET(request: Request, context: RouteContext) {
     }
 
     const { slug } = await context.params;
-    const supabase = await createSupabaseServerClient();
-    const tour = await fetchTourDetailBySlug(supabase, slug);
+    const tour = await fetchTourDetailBySlugServer(slug);
 
     if (!tour) {
       return publicApiJson({ error: "Тур не найден" }, { status: 404 });

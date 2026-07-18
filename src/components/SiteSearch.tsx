@@ -27,8 +27,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useAdaptiveFloatingTone } from "@/hooks/useAdaptiveFloatingTone";
-import { floatingChromeButtonClass, floatingChromeInsetClass } from "@/lib/floating-chrome-button";
 import { cn } from "@/lib/cn";
 import { SITE_SEARCH_OPEN_EVENT } from "@/lib/site-search-open";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
@@ -43,7 +41,7 @@ import {
   SEARCH_TYPE_LABELS,
   type SearchIndexItem,
   type SearchResultType,
-} from "@/lib/site-search-index";
+} from "@/lib/site-search-schema";
 import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
@@ -51,6 +49,7 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   excursion: Landmark,
   place: Mountain,
   blog: BookOpen,
+  knowledge: BookOpen,
   faq: HelpCircle,
   page: Compass,
   legal: FileText,
@@ -65,6 +64,7 @@ const KIND_FILTERS: Array<{ kind: SearchResultType | "all"; label: string }> = [
   { kind: "excursion", label: SEARCH_TYPE_LABELS.excursion },
   { kind: "place", label: SEARCH_TYPE_LABELS.place },
   { kind: "blog", label: SEARCH_TYPE_LABELS.blog },
+  { kind: "knowledge", label: SEARCH_TYPE_LABELS.knowledge },
   { kind: "guide", label: SEARCH_TYPE_LABELS.guide },
   { kind: "destination", label: SEARCH_TYPE_LABELS.destination },
 ];
@@ -147,6 +147,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
     "tour",
     "excursion",
     "place",
+    "knowledge",
     "blog",
     "guide",
     "destination",
@@ -159,7 +160,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
   return order.filter((type) => groups.has(type)).map((type) => groups.get(type)!);
 }
 
-export default function SiteSearch() {
+export default function SiteSearch({ initialOpen = false }: { initialOpen?: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -170,11 +171,13 @@ export default function SiteSearch() {
   const [searchSource, setSearchSource] = useState<SearchSource | null>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const abortRef = useRef<AbortController | null>(null);
   const lastTrackedSubmitRef = useRef<string>("");
-  const tone = useAdaptiveFloatingTone(buttonRef);
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -214,6 +217,7 @@ export default function SiteSearch() {
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>(() => getDefaultSearchIndex());
 
   useEffect(() => {
+    if (!open) return;
     let cancelled = false;
 
     void loadSearchIndex().then((index) => {
@@ -223,7 +227,7 @@ export default function SiteSearch() {
     return () => {
       cancelled = true;
     };
-  }, [indexVersion]);
+  }, [indexVersion, open]);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
@@ -380,21 +384,6 @@ export default function SiteSearch() {
 
   return (
     <>
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => setOpen(true)}
-        data-no-custom-cursor
-        data-floating-chrome="true"
-        className={floatingChromeButtonClass(
-          tone === "dark",
-          cn(floatingChromeInsetClass, "fixed bottom-20 z-[90] hidden sm:bottom-6 sm:flex")
-        )}
-        aria-label="Поиск по сайту"
-      >
-        <Search className="h-4 w-4" strokeWidth={2} />
-      </button>
-
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
           bottomSheet={false}
@@ -420,7 +409,7 @@ export default function SiteSearch() {
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Туры, статьи, FAQ, направления…"
-                className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-slate/70 focus-visible:outline-none"
+                className="min-h-11 min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-slate/70 focus-visible:outline-none"
                 autoComplete="off"
                 spellCheck={false}
                 role="combobox"
@@ -436,7 +425,7 @@ export default function SiteSearch() {
                 <Loader2 className="h-4 w-4 shrink-0 animate-spin text-muted" aria-hidden />
               ) : null}
             </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
+            <div className="scrollbar-hide -mx-1 mt-2 flex gap-1.5 overflow-x-auto px-1 pb-1">
               {KIND_FILTERS.map((filter) => (
                 <button
                   key={filter.kind}
@@ -444,7 +433,7 @@ export default function SiteSearch() {
                   onClick={() => setKindFilter(filter.kind)}
                   aria-pressed={kindFilter === filter.kind}
                   className={cn(
-                    "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+                    "min-h-11 shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
                     kindFilter === filter.kind
                       ? "bg-sky/15 text-sky"
                       : "bg-muted/10 text-muted hover:bg-muted/20 hover:text-foreground"
@@ -454,7 +443,7 @@ export default function SiteSearch() {
                 </button>
               ))}
             </div>
-            <p className="mt-2 text-xs text-muted">
+            <p className="mt-1 hidden text-xs text-muted sm:block">
               <kbd className="rounded border border-border-subtle px-1">⌘</kbd>
               {" + "}
               <kbd className="rounded border border-border-subtle px-1">K</kbd>
@@ -464,7 +453,7 @@ export default function SiteSearch() {
 
           <div
             id="site-search-results"
-            className="max-h-[min(60vh,28rem)] overflow-y-auto px-2 py-2 sm:px-3"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-2 sm:max-h-[min(60vh,28rem)] sm:px-3"
             role="listbox"
           >
             {!hasQuery ? (
@@ -555,7 +544,7 @@ export default function SiteSearch() {
               <Link
                 href={`/tours?query=${encodeURIComponent(trimmedQuery)}`}
                 onClick={() => handleOpenChange(false)}
-                className="font-medium text-sky hover:underline"
+                className="inline-flex min-h-11 items-center font-medium text-sky hover:underline"
               >
                 Показать туры в каталоге →
               </Link>

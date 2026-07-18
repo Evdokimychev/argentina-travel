@@ -93,7 +93,7 @@ export default function MediaUploadDropzone({ onUploaded, disabled }: Props) {
           </button>
         </p>
         <p className="text-xs text-slate">
-          До 10 МБ · JPEG, PNG, WebP, GIF, AVIF · оптимизация в WebP · Supabase Storage
+          До 10 МБ · JPEG, PNG, WebP, GIF, AVIF · изображения автоматически оптимизируются
         </p>
         {uploading ? <p className="text-sm text-sky">Загрузка…</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}

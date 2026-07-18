@@ -1,7 +1,7 @@
 ---
 id: navegacion-por-el-lago-argentino
 type: attraction
-title: Sailing along Lago Argentino
+title: Водные прогулки по озеру Архентино
 title_es: Navegación por el Lago Argentino
 title_en: Sailing along Lago Argentino
 summary: "Навигация по озеру Архентино от Пуэрто-Бандеры к ледникам парка Лос-Гласьярес."

@@ -1,4 +1,4 @@
-import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Image as PdfImage, Page, Text, View } from "@react-pdf/renderer";
 import { formatDurationShort } from "@/lib/pluralize";
 import { pdfStyles } from "@/lib/tour-itinerary-pdf/pdf-styles";
 import { formatPdfGeneratedDate } from "@/lib/tour-itinerary-pdf/pdf-meta";
@@ -106,7 +106,7 @@ export function TourItineraryPdfDocument({ source, meta }: TourItineraryPdfDocum
           </View>
         </View>
 
-        {heroImage ? <Image style={pdfStyles.heroImage} src={heroImage} /> : null}
+        {heroImage ? <PdfImage style={pdfStyles.heroImage} src={heroImage} /> : null}
 
         <Text style={pdfStyles.title}>{source.title}</Text>
         <Text style={pdfStyles.subtitle}>
@@ -175,7 +175,7 @@ export function TourItineraryPdfDocument({ source, meta }: TourItineraryPdfDocum
                 {dayImages.length > 0 ? (
                   <View style={pdfStyles.dayImagesRow}>
                     {dayImages.map((img) => (
-                      <Image key={img} style={pdfStyles.dayImage} src={img} />
+                      <PdfImage key={img} style={pdfStyles.dayImage} src={img} />
                     ))}
                   </View>
                 ) : null}

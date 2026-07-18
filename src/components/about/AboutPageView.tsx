@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, Compass, Shield, Users } from "lucide-react";
 import PlatformStatsBlock from "@/components/marketplace/PlatformStatsBlock";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { SafeImage } from "@/components/ui/safe-image";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { siteContainerClass } from "@/lib/site-container";
 import type { PlatformStats } from "@/lib/organizer-public";
@@ -47,24 +48,56 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky/10 via-white to-surface-muted pb-16 pt-12 sm:pb-20 sm:pt-16">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-sun/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-sky/25 blur-3xl" />
-        <div className={cn(siteContainerClass, "relative")}>
-          <p className="text-sm font-semibold uppercase tracking-wider text-sky">
-            {t("about.hero.eyebrow")}
-          </p>
-          <h1 className="mt-3 max-w-3xl font-display text-3xl font-bold leading-tight text-charcoal sm:text-4xl lg:text-5xl">
-            {t("about.hero.title")}
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate">{t("about.hero.subtitle")}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/tours" className={buttonVariants({ size: "lg" })}>
-              {t("about.hero.ctaTours")}
-            </Link>
-            <Link href="/contacts" className={buttonVariants({ variant: "outline", size: "lg" })}>
-              {t("about.hero.ctaContact")}
-            </Link>
+      <section
+        data-editorial-theme="city"
+        className="editorial-hero relative overflow-hidden py-10 sm:py-14 lg:py-16"
+      >
+        <div className={cn(siteContainerClass, "relative grid items-center gap-10 lg:grid-cols-[minmax(0,1.03fr)_minmax(420px,.97fr)] lg:gap-14")}>
+          <div>
+            <p className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
+              {t("about.hero.eyebrow")}
+            </p>
+            <div className="editorial-rule mt-6 h-1 w-12 rounded-full" aria-hidden />
+            <h1 className="mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.06] tracking-[-0.035em] text-charcoal sm:text-5xl lg:text-[3.6rem]">
+              {t("about.hero.title")}
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-[1.75] text-slate sm:text-lg">{t("about.hero.subtitle")}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/tours" className={buttonVariants({ size: "lg" })}>
+                {t("about.hero.ctaTours")}
+              </Link>
+              <Link href="/contacts" className={buttonVariants({ variant: "outline", size: "lg" })}>
+                {t("about.hero.ctaContact")}
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative min-h-[290px] sm:min-h-[360px] lg:min-h-[430px]" aria-label="Аргентина — города и природа">
+            <div className="editorial-media-frame absolute left-0 top-0 h-[84%] w-[76%] overflow-hidden rounded-[1.75rem] border bg-charcoal/5 shadow-elevated">
+              <SafeImage
+                src="/media/home/showcase-ba.jpg"
+                alt="Буэнос-Айрес — город, с которого начинается знакомство с Аргентиной"
+                fill
+                priority
+                placeholderVariant="destination"
+                className="object-cover"
+                sizes="(max-width: 1024px) 76vw, 420px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/35 via-transparent to-transparent" aria-hidden />
+            </div>
+            <div className="editorial-media-frame absolute bottom-0 right-0 h-[54%] w-[48%] overflow-hidden rounded-[1.5rem] border-4 border-white bg-charcoal/5 shadow-elevated">
+              <SafeImage
+                src="/media/home/showcase-patagonia.jpg"
+                alt="Патагония — ледники и большие маршруты"
+                fill
+                placeholderVariant="destination"
+                className="object-cover"
+                sizes="(max-width: 1024px) 48vw, 270px"
+              />
+            </div>
+            <p className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-charcoal/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm sm:bottom-8 sm:left-6">
+              Сделано людьми, которые живут Аргентиной
+            </p>
           </div>
         </div>
       </section>

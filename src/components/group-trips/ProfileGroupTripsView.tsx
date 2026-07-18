@@ -81,7 +81,9 @@ export default function ProfileGroupTripsView() {
       </p>
 
       {!isRemoteGroupTripsMode() ? (
-        <p className="mt-6 text-sm text-slate">Функция доступна при подключённом Supabase.</p>
+        <p className="mt-6 text-sm text-slate">
+          Совместные поездки сейчас отключены администратором сайта.
+        </p>
       ) : null}
 
       {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}

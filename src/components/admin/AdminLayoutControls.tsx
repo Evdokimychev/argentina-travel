@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Rows3, Search } from "lucide-react";
+import { ListTree, Moon, Rows3, Search } from "lucide-react";
 import { useAdminLayoutPrefs } from "@/context/AdminLayoutPrefsContext";
 import { cn } from "@/lib/cn";
 
@@ -61,6 +61,20 @@ export function AdminDarkSidebarToggle({ className }: { className?: string }) {
       onClick={toggleDarkSidebar}
       label="Тёмный сайдбар"
       icon={Moon}
+      className={className}
+    />
+  );
+}
+
+export function AdminSimpleNavigationToggle({ className }: { className?: string }) {
+  const { simpleNavigation, toggleSimpleNavigation } = useAdminLayoutPrefs();
+
+  return (
+    <ToggleButton
+      active={simpleNavigation}
+      onClick={toggleSimpleNavigation}
+      label={simpleNavigation ? "Простой режим" : "Все разделы"}
+      icon={ListTree}
       className={className}
     />
   );

@@ -1,0 +1,2 @@
+"entry_id","url","title","public","site_section_count","outbound_count","inbound_count","action","status","owner","evidence"
+"audit-scope:all-kb-entries","/baza-znaniy","Строгие сироты не обнаружены","not_applicable","0","0","0","KEEP","closed_no_strict_orphans","Content architect","all 689 entries checked against site_sections + related + wikilinks"

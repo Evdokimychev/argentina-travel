@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Clock, MapPin, Star } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceListing } from "@/types/place";
 import { placeHref } from "@/lib/places-urls";
@@ -60,11 +60,6 @@ export default function PlaceCard({
           <h3 className="mt-1 font-heading text-lg font-bold">{place.name}</h3>
           <p className="mt-1 line-clamp-2 text-xs text-white/85">{place.shortDescription}</p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-white/80">
-            {place.rating != null ? (
-              <OverlayMetaChip icon={Star} iconClassName="fill-sun text-sun">
-                {place.rating.toFixed(1)}
-              </OverlayMetaChip>
-            ) : null}
             {place.visitDuration ? (
               <OverlayMetaChip icon={Clock}>{place.visitDuration}</OverlayMetaChip>
             ) : null}

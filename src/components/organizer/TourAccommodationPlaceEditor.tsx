@@ -10,7 +10,6 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ACCOMMODATION_FILTER_OPTIONS } from "@/data/accommodation-options";
 import {
@@ -26,39 +25,26 @@ import {
 } from "@/data/tour-accommodation-defaults";
 import { isAllowedBookingUrl } from "@/lib/tour-accommodation-public";
 import TourAccommodationRoomTypesEditor from "@/components/organizer/TourAccommodationRoomTypesEditor";
-import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 import RichTextEditor from "@/components/editor/RichTextEditor";
 
 function PhotoUploadSection({
+  productId,
   images,
   onChange,
   inputId,
 }: {
+  productId: string;
   images: string[];
   onChange: (images: string[]) => void;
   inputId: string;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [urlInput, setUrlInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   async function uploadFile(file: File) {
-    if (!file.type.startsWith("image/")) throw new Error("Выберите файл изображения");
-    if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
-      throw new Error("Фото должно быть не больше 5 МБ");
-    }
-    return readFileAsDataUrl(file);
-  }
-
-  function normalizeUrl(value: string): string {
-    const trimmed = value.trim();
-    if (!trimmed) throw new Error("Вставьте ссылку на фото");
-    if (!/^https?:\/\//i.test(trimmed)) {
-      throw new Error("Ссылка должна начинаться с http:// или https://");
-    }
-    return trimmed;
+    return uploadOrganizerProductImage(productId, file);
   }
 
   async function addImage(src: string) {
@@ -76,7 +62,7 @@ function PhotoUploadSection({
         ref={fileInputRef}
         id={inputId}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
         className="sr-only"
         onChange={async (event) => {
           const file = event.target.files?.[0];
@@ -104,55 +90,6 @@ function PhotoUploadSection({
         <Camera className="h-4 w-4" />
         Загрузить фото с устройства
       </button>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Input
-          value={urlInput}
-          onChange={(event) => setUrlInput(event.target.value)}
-          placeholder="Или вставьте ссылку на фото"
-          disabled={uploading}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              void (async () => {
-                setUploading(true);
-                setError(null);
-                try {
-                  await addImage(normalizeUrl(urlInput));
-                  setUrlInput("");
-                } catch (uploadError) {
-                  setError(
-                    uploadError instanceof Error ? uploadError.message : "Не удалось загрузить фото"
-                  );
-                } finally {
-                  setUploading(false);
-                }
-              })();
-            }
-          }}
-        />
-        <Button
-          type="button"
-          disabled={uploading || !urlInput.trim()}
-          onClick={async () => {
-            setUploading(true);
-            setError(null);
-            try {
-              await addImage(normalizeUrl(urlInput));
-              setUrlInput("");
-            } catch (uploadError) {
-              setError(
-                uploadError instanceof Error ? uploadError.message : "Не удалось загрузить фото"
-              );
-            } finally {
-              setUploading(false);
-            }
-          }}
-          className="shrink-0 sm:min-w-[132px]"
-        >
-          <Camera className="h-4 w-4" />
-          Загрузить
-        </Button>
-      </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {images.length ? (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -176,6 +113,7 @@ function PhotoUploadSection({
 }
 
 interface TourAccommodationPlaceEditorProps {
+  productId: string;
   index: number;
   total: number;
   place: OrganizerTourAccommodationPlace;
@@ -186,6 +124,7 @@ interface TourAccommodationPlaceEditorProps {
 }
 
 export default function TourAccommodationPlaceEditor({
+  productId,
   index,
   total,
   place,
@@ -423,6 +362,7 @@ export default function TourAccommodationPlaceEditor({
       )}
 
       <PhotoUploadSection
+        productId={productId}
         inputId={`accommodation-place-photos-${place.id}`}
         images={place.images}
         onChange={(images) => onChange({ ...place, images })}

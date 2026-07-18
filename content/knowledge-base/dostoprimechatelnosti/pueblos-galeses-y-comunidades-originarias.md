@@ -1,7 +1,7 @@
 ---
 id: pueblos-galeses-y-comunidades-originarias
 type: attraction
-title: Welsh towns and native communities
+title: Валлийские поселения и коренные народы Чубута
 title_es: Pueblos galeses y comunidades originarias
 title_en: Welsh towns and native communities
 summary: "Валлийские посёлки и коренные общины Патагонии: традиции иммигрантов и первых жителей Чубута."

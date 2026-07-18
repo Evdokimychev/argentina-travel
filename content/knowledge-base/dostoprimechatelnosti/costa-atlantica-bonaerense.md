@@ -1,7 +1,7 @@
 ---
 id: costa-atlantica-bonaerense
 type: attraction
-title: Буэнос-Айрес Atlantic Coast
+title: Атлантическое побережье провинции Буэнос-Айрес
 title_es: Costa Atlántica Bonaerense
 title_en: Buenos Aires Atlantic Coast
 summary: "Атлантическое побережье провинции Буэнос-Айрес: длинные пляжи и курорты от Мар-дель-Платы до юга."

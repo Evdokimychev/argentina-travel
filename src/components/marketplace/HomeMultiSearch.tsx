@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { Suspense, use, useState } from "react";
 import type { TourListing } from "@/types";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { cn } from "@/lib/cn";
 import SearchBlock from "./SearchBlock";
-import HomeFlightSearchBlock from "./HomeFlightSearchBlock";
-import HomeExcursionSearchBlock from "./HomeExcursionSearchBlock";
-import HomeFlightPopularRoutes from "./HomeFlightPopularRoutes";
 import type { ExcursionCity } from "@/types/excursion";
+
+function SearchPanelSkeleton() {
+  return (
+    <div
+      className="h-20 w-full animate-pulse rounded-2xl bg-surface-muted motion-reduce:animate-none"
+      role="status"
+      aria-label="Загружаем форму поиска"
+    />
+  );
+}
+
+// Tours are the default tab and stay in the initial bundle. Alternative search
+// engines are downloaded only after the visitor asks for them.
+const HomeFlightSearchBlock = dynamic(() => import("./HomeFlightSearchBlock"), {
+  loading: SearchPanelSkeleton,
+});
+const HomeExcursionSearchBlock = dynamic(() => import("./HomeExcursionSearchBlock"), {
+  loading: SearchPanelSkeleton,
+});
+const HomeFlightPopularRoutes = dynamic(() => import("./HomeFlightPopularRoutes"), {
+  loading: () => null,
+});
 
 export type HomeSearchTab = "flights" | "tours" | "excursions";
 
 type HomeMultiSearchProps = {
   tours: TourListing[];
-  excursionCities: ExcursionCity[];
+  excursionCities: Promise<ExcursionCity[]>;
   query: string;
   dateFrom: Date | null;
   dateTo: Date | null;
@@ -24,9 +44,18 @@ type HomeMultiSearchProps = {
   onNearMe: (coords: { lat: number; lng: number } | null) => void;
   onToursSearch: () => void;
   onTabChange?: (tab: HomeSearchTab) => void;
+  enabledTabs?: HomeSearchTab[];
 };
 
 const TAB_ORDER: HomeSearchTab[] = ["tours", "excursions", "flights"];
+
+function HomeExcursionSearchData({
+  cities,
+}: {
+  cities: Promise<ExcursionCity[]>;
+}) {
+  return <HomeExcursionSearchBlock cities={use(cities)} />;
+}
 
 export default function HomeMultiSearch({
   tours,
@@ -40,9 +69,13 @@ export default function HomeMultiSearch({
   onNearMe,
   onToursSearch,
   onTabChange,
+  enabledTabs = TAB_ORDER,
 }: HomeMultiSearchProps) {
   const { t } = useLocaleCurrency();
-  const [activeTab, setActiveTab] = useState<HomeSearchTab>("tours");
+  const availableTabs = TAB_ORDER.filter((tab) => enabledTabs.includes(tab));
+  const [activeTab, setActiveTab] = useState<HomeSearchTab>(
+    () => availableTabs[0] ?? "flights",
+  );
   const [flightRoutePreset, setFlightRoutePreset] = useState<{
     origin: string;
     destination: string;
@@ -65,12 +98,13 @@ export default function HomeMultiSearch({
   ) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    const index = TAB_ORDER.indexOf(tab);
+    const index = availableTabs.indexOf(tab);
     const nextIndex =
       event.key === "ArrowRight"
-        ? (index + 1) % TAB_ORDER.length
-        : (index - 1 + TAB_ORDER.length) % TAB_ORDER.length;
-    const nextTab = TAB_ORDER[nextIndex];
+        ? (index + 1) % availableTabs.length
+        : (index - 1 + availableTabs.length) % availableTabs.length;
+    const nextTab = availableTabs[nextIndex];
+    if (!nextTab) return;
     selectTab(nextTab);
     document.getElementById(`home-search-tab-${nextTab}`)?.focus();
   };
@@ -82,7 +116,7 @@ export default function HomeMultiSearch({
         role="tablist"
         aria-label={t("home.search.tabsLabel")}
       >
-        {TAB_ORDER.map((tab) => (
+        {availableTabs.map((tab) => (
           <button
             key={tab}
             id={`home-search-tab-${tab}`}
@@ -131,7 +165,9 @@ export default function HomeMultiSearch({
         ) : null}
 
         {activeTab === "excursions" ? (
-          <HomeExcursionSearchBlock cities={excursionCities} />
+          <Suspense fallback={<SearchPanelSkeleton />}>
+            <HomeExcursionSearchData cities={excursionCities} />
+          </Suspense>
         ) : null}
       </div>
 

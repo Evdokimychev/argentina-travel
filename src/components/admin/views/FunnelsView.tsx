@@ -13,6 +13,7 @@ import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
 import type {
   AdminAnalyticsFunnelsPayload,
+  AnalyticsFunnelStepId,
   AnalyticsExportType,
   AnalyticsPeriod,
 } from "@/types/admin-analytics";
@@ -24,6 +25,19 @@ import {
 type FunnelsResponse = { funnels?: AdminAnalyticsFunnelsPayload };
 
 const EXPORT_TYPES: AnalyticsExportType[] = ["bookings", "reviews", "payments"];
+const METRIC_SOURCE_LABELS: Record<string, string> = {
+  controlled_analytics_events: "Проверенные события сайта",
+  bookings: "Заявки и бронирования",
+  payment_ledger: "Журнал проведённых оплат",
+  published_reviews: "Опубликованные отзывы",
+};
+const FUNNEL_ORDER: AnalyticsFunnelStepId[] = [
+  "tour_view",
+  "booking_started",
+  "confirmed",
+  "paid",
+  "review",
+];
 
 function FunnelSkeleton() {
   return (
@@ -54,7 +68,9 @@ export default function FunnelsView() {
     `/api/admin/analytics/funnels?period=${period}`
   );
   const funnels = data?.funnels;
-  const hasFunnelData = (funnels?.funnel ?? []).some((step) => step.count > 0);
+  const hasFunnelData =
+    funnels?.meta.trustedForKpi === true &&
+    (funnels?.funnel ?? []).some((step) => step.count > 0);
   const maxCohort = Math.max(1, ...(funnels?.cohorts ?? []).map((c) => c.bookings));
 
   return (
@@ -87,9 +103,9 @@ export default function FunnelsView() {
               : "Период: всё время"}
             {" · "}
             Обновлено {formatAdminWhen(funnels.generatedAt)}
-            {funnels.meta.tourViewsSource === "estimate" ? (
+            {!funnels.meta.trustedForKpi ? (
               <span className="ml-1 text-amber-700">
-                · Просмотры тура оценены по заявкам и вопросам (события пока не накоплены)
+                · Воронка скрыта: нет достоверных данных
               </span>
             ) : null}
           </p>
@@ -108,6 +124,14 @@ export default function FunnelsView() {
               <div className="mt-6">
                 <FunnelSkeleton />
               </div>
+            ) : funnels && !funnels.meta.trustedForKpi ? (
+              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+                <p className="text-sm font-semibold text-amber-950">Нет достоверных данных</p>
+                <p className="mt-2 text-sm text-amber-900">
+                  {funnels.meta.reason ??
+                    "Воронка появится после проверки источника событий. Заявки не используются как замена просмотров."}
+                </p>
+              </div>
             ) : hasFunnelData && funnels ? (
               <div className="mt-6">
                 <AdminFunnelChart steps={funnels.funnel} />
@@ -120,6 +144,39 @@ export default function FunnelsView() {
                 </p>
               </div>
             )}
+
+            {funnels ? (
+              <div className="mt-5 grid gap-2 sm:grid-cols-2" aria-label="Источники показателей">
+                {FUNNEL_ORDER.map((id) => {
+                  const metric = funnels.metrics[id];
+                  return (
+                    <div key={id} className="rounded-xl border border-gray-100 bg-white p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-medium text-charcoal">
+                          {metric.source === "controlled_analytics_events"
+                            ? "Просмотры"
+                            : metric.source === "payment_ledger"
+                              ? "Оплаты"
+                              : metric.source === "published_reviews"
+                                ? "Отзывы"
+                                : id === "confirmed"
+                                  ? "Подтверждения"
+                                  : "Заявки"}
+                        </p>
+                        <span className={`text-xs font-medium ${
+                          metric.status === "available" ? "text-emerald-700" : "text-amber-700"
+                        }`}>
+                          {metric.status === "available" ? "Подтверждено" : "Недоступно"}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate">
+                        {METRIC_SOURCE_LABELS[metric.source] ?? metric.source}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
 
           <div className={`${cabinetCardClass} p-5`}>
@@ -128,6 +185,13 @@ export default function FunnelsView() {
 
             {loading ? (
               <CohortSkeleton />
+            ) : funnels?.cohortsMetric.status === "unavailable" ? (
+              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+                <p className="text-sm font-semibold text-amber-950">Данные по месяцам недоступны</p>
+                <p className="mt-2 text-sm text-amber-900">
+                  Нулевые значения не показываются, пока источник не ответит корректно.
+                </p>
+              </div>
             ) : funnels && funnels.cohorts.some((c) => c.bookings > 0) ? (
               <>
                 <div className="mt-6 flex items-end gap-2" style={{ minHeight: 140 }}>
@@ -157,7 +221,8 @@ export default function FunnelsView() {
                   })}
                 </div>
                 <p className="mt-4 text-xs text-slate">
-                  Удержание по когортам — в разработке. Сейчас показано только число новых заявок.
+                  На графике показано число новых заявок по месяцам. Повторные покупки будут
+                  рассчитаны после накопления достаточного количества данных.
                 </p>
               </>
             ) : (

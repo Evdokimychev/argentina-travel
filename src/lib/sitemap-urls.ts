@@ -30,18 +30,36 @@ import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
-import { KB_SECTIONS, getAllEntryIds } from "@/lib/knowledge-base/content";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
+import { filterPublicPaths } from "@/lib/public-module-visibility";
+import { KB_SECTIONS } from "@/lib/knowledge-base/content";
+import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
+import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
+import {
+  filterRuSitemapPaths,
+  findRuUrlDecision,
+} from "@/lib/seo/publication-registry";
 import type { BlogPost } from "@/types";
 
-function isIndexableInternalPath(href: string): boolean {
-  if (!href.startsWith("/")) return false;
-  if (href.includes("?")) return false;
-  if (href.startsWith("/organizer")) return false;
-  if (href.startsWith("/profile")) return false;
-  if (href.startsWith("/booking/pay")) return false;
-  if (href.startsWith("/booking/travelers")) return false;
-  return true;
+/**
+ * Conservative compatibility guard for public paths whose stable,
+ * self-canonical response cannot be guaranteed for every sitemap request.
+ */
+export function isIndexableInternalPath(href: string): boolean {
+  if (!href.startsWith("/") || href.startsWith("//")) return false;
+  if (href.includes("?") || href.includes("#") || href.includes("\\")) return false;
+  if (href.startsWith("/organizer") || href.startsWith("/profile")) return false;
+  if (href === "/booking/find") return false;
+  if (href.startsWith("/booking/pay") || href.startsWith("/booking/travelers")) return false;
+  if (href === "/baza-znaniy/poisk") return false;
+
+  // Partner city availability changes independently from our publication
+  // catalog. City hubs stay discoverable through /excursions without being
+  // asserted as permanently indexable here.
+  if (href.startsWith("/excursions/city/")) return false;
+
+  return findRuUrlDecision(href) === null;
 }
 
 function uniquePaths(paths: string[]): string[] {
@@ -55,7 +73,7 @@ function toSitemapEntry(
 ): MetadataRoute.Sitemap[number] {
   return {
     url: absoluteUrl(path),
-    lastModified: lastModified ? new Date(lastModified) : new Date(),
+    ...(lastModified ? { lastModified: new Date(lastModified) } : {}),
     ...(priority !== undefined ? { priority } : {}),
   };
 }
@@ -72,13 +90,18 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   }
 }
 
+export const STABLE_TOUR_LANDING_PATHS = ["/tours/region/patagonia"] as const;
+
 export async function collectTourSitemapPaths(): Promise<string[]> {
   try {
     const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
     const slugs = await fetchCutoverPublishedTourSlugs();
-    return uniquePaths(slugs.map((slug) => `/tours/${slug}`));
+    return uniquePaths([...STABLE_TOUR_LANDING_PATHS, ...slugs.map((slug) => `/tours/${slug}`)]);
   } catch {
-    return marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+    return uniquePaths([
+      ...STABLE_TOUR_LANDING_PATHS,
+      ...marketplaceTours.map((tour) => `/tours/${tour.slug}`),
+    ]);
   }
 }
 
@@ -86,31 +109,69 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
   const paths = ["/excursions"];
 
   try {
-    const { fetchExcursionSlugsServer, fetchExcursionsServer } = await import(
-      "@/lib/tripster/excursion-server"
-    );
-    const [{ cities }, slugs] = await Promise.all([
-      fetchExcursionsServer({ pageSize: 1 }),
+    const {
+      fetchExcursionCityServer,
+      fetchExcursionSlugsServer,
+      fetchExcursionsServer,
+    } = await import("@/lib/tripster/excursion-server");
+    const [{ cities, items }, slugs] = await Promise.all([
+      fetchExcursionsServer({ pageSize: 500 }),
       fetchExcursionSlugsServer(),
     ]);
 
-    for (const city of cities) {
+    const citySlugsWithPublishedExcursions = new Set(
+      items.map((item) => normalizeExcursionCitySlug(item.citySlug, item.cityName).toLowerCase()),
+    );
+    const indexableCities = await Promise.all(
+      cities.map(async (city) => {
+        if (findRuUrlDecision(`/excursions/city/${city.slug}`)) return null;
+        if (!citySlugsWithPublishedExcursions.has(city.slug.toLowerCase())) return null;
+        return (await fetchExcursionCityServer(city.slug)) ? city : null;
+      }),
+    );
+
+    // Partners can expose the same city twice: once with a readable slug and
+    // once with a technical `city-123` alias. Only the readable canonical page
+    // belongs in sitemap, otherwise both pages compete for the same query.
+    const uniqueIndexableCities = new Map<
+      string,
+      NonNullable<(typeof indexableCities)[number]>
+    >();
+    for (const city of indexableCities) {
+      if (!city) continue;
+      const identity = city.name.trim().toLocaleLowerCase("ru-RU");
+      const current = uniqueIndexableCities.get(identity);
+      const isReadableSlug = !/^city-\d+$/i.test(city.slug);
+      const currentIsTechnical = current ? /^city-\d+$/i.test(current.slug) : false;
+      if (!current || (currentIsTechnical && isReadableSlug)) {
+        uniqueIndexableCities.set(identity, city);
+      }
+    }
+    for (const city of uniqueIndexableCities.values()) {
       paths.push(`/excursions/city/${city.slug}`);
     }
     for (const slug of slugs) {
       paths.push(`/excursions/${slug}`);
     }
 
-    const { fetchGuideIdsServer } = await import("@/lib/tripster/guide-server");
-    const guideIds = await fetchGuideIdsServer();
-    for (const guideId of guideIds) {
-      paths.push(`/excursions/guide/${guideId}`);
-    }
+    // Partner guide IDs currently resolve inconsistently and previously added
+    // stable 404s to sitemap. Re-enable only from a publication-aware detail source.
   } catch {
     // static /excursions only
   }
 
   return uniquePaths(paths);
+}
+
+export async function collectApartmentSitemapPaths(): Promise<string[]> {
+  try {
+    const { listPublishedApartments } = await import("@/lib/apartments/apartment-repository-server");
+    const { PRIMARY_PUBLIC_MARKET } = await import("@/lib/market-context");
+    const apartments = await listPublishedApartments(PRIMARY_PUBLIC_MARKET.id);
+    return ["/apartments", ...apartments.map((item) => `/apartments/${item.slug}`)];
+  } catch {
+    return [];
+  }
 }
 
 export async function collectPlacesSitemapPaths(): Promise<string[]> {
@@ -146,7 +207,7 @@ export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
     for (const section of KB_SECTIONS) {
       paths.push(sectionHref(section.slug));
     }
-    for (const id of getAllEntryIds()) {
+    for (const id of await listPublishedKnowledgeSlugs()) {
       paths.push(entryHref(id));
     }
     return uniquePaths(paths);
@@ -172,6 +233,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     tourPaths,
     excursionPaths,
     placesPaths,
+    apartmentPaths,
     guideSlugs,
     destinationSlugs,
     legalSlugs,
@@ -180,6 +242,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     collectTourSitemapPaths(),
     collectExcursionSitemapPaths(),
     collectPlacesSitemapPaths(),
+    collectApartmentSitemapPaths(),
     listPublishedGuideSlugs(),
     listPublishedDestinationSlugs(),
     listPublishedLegalSlugs(),
@@ -203,13 +266,14 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     (user) => `/organizers/${user.id}`
   );
 
-  return uniquePaths([
+  return filterRuSitemapPaths([
     ...YANDEX_PRIORITY_HUB_PATHS,
     ...navPaths,
     ...footerPaths,
     ...tourPaths,
     ...excursionPaths,
     ...placesPaths,
+    ...apartmentPaths,
     ...blogPaths,
     ...immigrationPaths,
     ...guidePaths,
@@ -220,7 +284,24 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
-  ]);
+  ]).filter(isIndexableInternalPath);
+}
+
+/**
+ * Final public-availability gate shared with middleware. Keeping it after all
+ * collectors prevents a disabled, 404 or noindex route from being reintroduced
+ * by navigation, footer or a future catalog source.
+ */
+export function filterSitemapPathsByPublicSettings(
+  paths: string[],
+  navigation: Parameters<typeof filterPublicPaths>[1],
+  modules: NonNullable<Parameters<typeof filterPublicPaths>[2]>,
+): string[] {
+  return filterPublicPaths(
+    filterRuSitemapPaths(paths).filter(isIndexableInternalPath),
+    navigation,
+    modules,
+  );
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
@@ -234,7 +315,13 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const paths = expandI18nSitemapPaths(await collectSitemapPaths({ blogCatalog }));
+  const controlPlane = await fetchSiteControlPlaneEdge();
+  const visiblePaths = filterSitemapPathsByPublicSettings(
+    await collectSitemapPaths({ blogCatalog }),
+    controlPlane.navigation,
+    controlPlane.modules,
+  );
+  const paths = expandI18nSitemapPaths(visiblePaths);
 
   return paths.map((path) => {
     const lastModified =

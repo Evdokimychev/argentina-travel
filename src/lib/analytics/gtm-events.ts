@@ -1,4 +1,9 @@
 import { hasAnalyticsConsent } from "@/lib/cookie-consent";
+import {
+  createAnalyticsEventPayload,
+  type BookingMode,
+  type BookingOutcome,
+} from "@/lib/analytics/event-contract";
 
 /** Custom dataLayer event names — map to GA4 in GTM; Metrika goals in Yandex UI. */
 export const GTM_EVENTS = {
@@ -42,7 +47,28 @@ export function trackGtmEvent(
   params?: Record<string, unknown>
 ): void {
   if (!hasAnalyticsConsent()) return;
-  pushDataLayer({ event, ...params });
+  pushDataLayer({ ...createAnalyticsEventPayload(params), event });
+}
+
+function bookingSubmitSemantics(input: {
+  partner?: string;
+  source?: string;
+  bookingMode?: BookingMode;
+  outcome?: BookingOutcome;
+}): { bookingMode: BookingMode; outcome: BookingOutcome } {
+  if (input.bookingMode && input.outcome) {
+    return { bookingMode: input.bookingMode, outcome: input.outcome };
+  }
+  const source = input.source?.toLowerCase() ?? "";
+  if (source.includes("fallback")) {
+    return { bookingMode: "affiliate_redirect", outcome: "fallback" };
+  }
+  const partner = input.partner?.trim().toLowerCase();
+  const isPlatformOwned = !partner || ["platform", "native", "internal"].includes(partner);
+  if (!isPlatformOwned) {
+    return { bookingMode: "partner_external", outcome: "partner_redirect" };
+  }
+  return { bookingMode: "native_request", outcome: "native_success" };
 }
 
 export function trackBookingSubmit(input: {
@@ -53,9 +79,13 @@ export function trackBookingSubmit(input: {
   guests?: number;
   valueUsd?: number;
   source?: string;
+  bookingMode?: BookingMode;
+  outcome?: BookingOutcome;
 }): void {
+  const semantics = bookingSubmitSemantics(input);
   trackGtmEvent(GTM_EVENTS.bookingSubmit, {
     product_type: input.productType,
+    product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     partner: input.partner,
@@ -63,6 +93,8 @@ export function trackBookingSubmit(input: {
     value: input.valueUsd,
     currency: "USD",
     source: input.source,
+    booking_mode: semantics.bookingMode,
+    outcome: semantics.outcome,
   });
 }
 
@@ -108,11 +140,22 @@ export function trackTourBookingClick(input: {
   action?: "checkout" | "external" | "partner_preview" | "waitlist";
   placement?: string;
 }): void {
+  const bookingMode: BookingMode =
+    input.action === "external" || input.action === "partner_preview"
+      ? "partner_external"
+      : input.action === "waitlist"
+        ? "information_only"
+        : "native_request";
   trackGtmEvent(GTM_EVENTS.tourBookingClick, {
+    product_type: "tour",
+    product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     booking_action: input.action ?? "checkout",
     placement: input.placement,
+    source: input.placement,
+    booking_mode: bookingMode,
+    outcome: "started",
   });
 }
 
@@ -122,11 +165,18 @@ export function trackExcursionBookingClick(input: {
   action?: "preview" | "affiliate";
   placement?: string;
 }): void {
+  const bookingMode: BookingMode =
+    input.action === "affiliate" ? "affiliate_redirect" : "partner_external";
   trackGtmEvent(GTM_EVENTS.excursionBookingClick, {
+    product_type: "excursion",
+    product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     booking_action: input.action ?? "preview",
     placement: input.placement,
+    source: input.placement,
+    booking_mode: bookingMode,
+    outcome: "started",
   });
 }
 
@@ -136,7 +186,10 @@ export function trackTourView(input: {
   priceUsd?: number;
   organizerId?: string;
 }): void {
-  trackGtmEvent(GTM_EVENTS.tourView, {
+  if (!hasAnalyticsConsent()) return;
+  const payload = createAnalyticsEventPayload({
+    product_type: "tour",
+    product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     item_category: "tour",
@@ -144,6 +197,25 @@ export function trackTourView(input: {
     currency: "USD",
     organizer_id: input.organizerId,
   });
+  pushDataLayer({ ...payload, event: GTM_EVENTS.tourView });
+  if (typeof fetch !== "function") return;
+  void fetch("/api/analytics/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+    body: JSON.stringify({
+      eventType: "tour_view",
+      eventId: payload.event_id,
+      sessionId: payload.session_id,
+      tourSlug: input.slug,
+      tourId: input.slug,
+      metadata: {
+        product_type: "tour",
+        source: "tour_detail",
+        event_version: payload.event_version,
+      },
+    }),
+  }).catch(() => undefined);
 }
 
 export function trackExcursionView(input: {
@@ -153,6 +225,8 @@ export function trackExcursionView(input: {
   cityName?: string;
 }): void {
   trackGtmEvent(GTM_EVENTS.excursionView, {
+    product_type: "excursion",
+    product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     item_category: "excursion",
@@ -261,7 +335,7 @@ export function trackSearchSubmit(input: {
   kind?: string;
 }): void {
   trackGtmEvent(GTM_EVENTS.searchSubmit, {
-    search_term: input.query,
+    search_query_length: input.query.trim().length,
     results_count: input.resultsCount,
     search_source: input.source,
     search_kind: input.kind ?? "all",
@@ -276,7 +350,7 @@ export function trackSearchResultClick(input: {
   source: "meilisearch" | "postgres" | "static";
 }): void {
   trackGtmEvent(GTM_EVENTS.searchResultClick, {
-    search_term: input.query,
+    search_query_length: input.query.trim().length,
     item_id: input.itemId,
     item_kind: input.itemKind,
     position: input.position,

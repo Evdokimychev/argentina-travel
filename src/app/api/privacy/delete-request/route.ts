@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { userHasAccountRole } from "@/types/user";
 
 type DeleteRequestBody = {
   reason?: string;
@@ -18,6 +19,12 @@ export async function POST(request: Request) {
 
     if (!sessionUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (userHasAccountRole(sessionUser, "admin")) {
+      return NextResponse.json(
+        { error: "Удаление административного аккаунта требует ручной передачи полномочий." },
+        { status: 409 },
+      );
     }
 
     let body: DeleteRequestBody = {};

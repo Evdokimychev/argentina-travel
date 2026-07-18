@@ -34,6 +34,12 @@ export type SiteBrandingTranslatable = Pick<SiteBrandingGlobalBase, "tagline" | 
 type SiteBrandingGlobalBase = {
   siteName: string;
   tagline: string;
+  /** Main public logo used in the site header. */
+  primaryLogoUrl: string;
+  /** Optional footer logo; falls back to primaryLogoUrl. */
+  footerLogoUrl?: string;
+  /** Accessible label for uploaded logo variants. */
+  logoAlt: string;
   defaultTitle: string;
   titleTemplate: string;
   defaultOgImage: string;
@@ -75,6 +81,10 @@ type SiteContactGlobalBase = {
   telegramUrl?: string;
   whatsAppUrl?: string;
   instagramUrl?: string;
+  youtubeUrl?: string;
+  tiktokUrl?: string;
+  facebookUrl?: string;
+  xUrl?: string;
   contactPageIntro?: string;
 };
 
@@ -108,12 +118,15 @@ export type SiteMaintenanceGlobal = SiteMaintenanceGlobalBase & {
 
 export type SiteNavigationGlobal = {
   showGeography: boolean;
+  showDestinations: boolean;
+  showPlaces: boolean;
   showTours: boolean;
   showExcursions: boolean;
   showGuide: boolean;
   showGallery: boolean;
   showImmigration: boolean;
   showKnowledgeBase: boolean;
+  showForum: boolean;
   showShop: boolean;
   showServices: boolean;
   showJournal: boolean;
@@ -124,6 +137,97 @@ export type SiteNavigationGlobal = {
   utilityOrganizerUrl: string;
   utilityContactLabel: string;
   utilityContactUrl: string;
+};
+
+export type SiteDesignGlobal = {
+  palettePreset: "argentina" | "patagonia" | "wine";
+  headingFont: "unbounded" | "serif" | "system";
+  typographyScale: "compact" | "balanced" | "editorial";
+  cornerStyle: "soft" | "rounded" | "expressive";
+  headerVariant: "floating" | "compact";
+  footerVariant: "light" | "mist";
+  showUtilityBar: boolean;
+  showHeaderMapButton: boolean;
+  showSiteSearch: boolean;
+  showThemeToggle: boolean;
+  showCustomCursor: boolean;
+  showScrollToTop: boolean;
+  showScrollToTopMobile: boolean;
+  showRouteProgress: boolean;
+  showFooterNewsletter: boolean;
+  showFooterRouteCta: boolean;
+};
+
+export type SiteBlogGlobal = {
+  showShare: boolean;
+  showComments: boolean;
+  showAuthor: boolean;
+  showRelatedPosts: boolean;
+  showPrevNext: boolean;
+  showNewsletter: boolean;
+  relatedPostsCount: "3" | "4" | "6";
+};
+
+export type SiteCommerceGlobal = {
+  catalogColumns: "2" | "3" | "4";
+  catalogPageSize: "6" | "9" | "12";
+  showCatalogIntro: boolean;
+  showProductFormat: boolean;
+  showProductPrice: boolean;
+  showProductQuestions: boolean;
+  showRelatedProducts: boolean;
+  relatedProductsCount: "2" | "3" | "4";
+};
+
+export type SiteFormsGlobal = {
+  contactEnabled: boolean;
+  newsletterEnabled: boolean;
+  captchaMode: "off" | "selected" | "all_guest_writes";
+  captchaContact: boolean;
+  captchaNewsletter: boolean;
+  captchaNativeBooking: boolean;
+  captchaWaitlist: boolean;
+  captchaShopOrder: boolean;
+  captchaPartnerBooking: boolean;
+};
+
+export type SiteEmailGlobal = {
+  senderName: string;
+  replyToEmail?: string;
+  footerText: string;
+  leadAlertsEnabled: boolean;
+  organizerAlertsEnabled: boolean;
+  dailyDigestEnabled: boolean;
+  contentFreshnessAlertsEnabled: boolean;
+};
+
+export type SiteMarketingGlobal = {
+  announcementEnabled: boolean;
+  announcementText: string;
+  announcementCtaLabel: string;
+  announcementHref: string;
+  announcementTone: "sky" | "wine" | "neutral";
+  announcementOnMobile: boolean;
+};
+
+export type ApartmentsModuleMode = "disabled" | "request" | "preparing_native" | "native_request";
+export type CarRentalModuleMode = "disabled" | "partner" | "preparing_hybrid";
+export type TransfersModuleMode = "disabled" | "request" | "partner" | "preparing_hybrid";
+export type HotelsModuleMode = "disabled" | "planned";
+
+/**
+ * Product strategy for travel verticals beyond tours and excursions.
+ * These values describe supported public entry points and the next safe product stage.
+ * They never grant organizer permissions or enable a checkout by themselves.
+ */
+export type SiteModulesGlobal = {
+  apartmentsMode: ApartmentsModuleMode;
+  carRentalMode: CarRentalModuleMode;
+  transfersMode: TransfersModuleMode;
+  hotelsMode: HotelsModuleMode;
+  showApartmentsInServices: boolean;
+  showCarRentalInServices: boolean;
+  showTransfersInServices: boolean;
 };
 
 /** Resolved public shapes — locales stripped after resolveSiteGlobalForLocale. */
@@ -140,6 +244,13 @@ export type SiteGlobalKey =
   | "site.seo"
   | "site.contact"
   | "site.navigation"
+  | "site.design"
+  | "site.blog"
+  | "site.commerce"
+  | "site.modules"
+  | "site.forms"
+  | "site.email"
+  | "site.marketing"
   | "site.maintenance";
 
 export type SiteGlobalsMap = {
@@ -149,6 +260,13 @@ export type SiteGlobalsMap = {
   "site.seo": SiteSeoGlobal;
   "site.contact": SiteContactGlobal;
   "site.navigation": SiteNavigationGlobal;
+  "site.design": SiteDesignGlobal;
+  "site.blog": SiteBlogGlobal;
+  "site.commerce": SiteCommerceGlobal;
+  "site.modules": SiteModulesGlobal;
+  "site.forms": SiteFormsGlobal;
+  "site.email": SiteEmailGlobal;
+  "site.marketing": SiteMarketingGlobal;
   "site.maintenance": SiteMaintenanceGlobal;
 };
 
@@ -157,6 +275,13 @@ export const SITE_GLOBAL_KEYS = [
   "site.seo",
   "site.contact",
   "site.navigation",
+  "site.design",
+  "site.blog",
+  "site.commerce",
+  "site.modules",
+  "site.forms",
+  "site.email",
+  "site.marketing",
   "site.legal",
   "site.features",
   "site.maintenance",

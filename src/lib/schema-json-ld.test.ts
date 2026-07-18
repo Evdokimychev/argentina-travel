@@ -76,6 +76,8 @@ describe("schema-json-ld", () => {
       authorName: "Редакция",
     });
     expect(schema.image).toBe("https://www.goargentina.ru/media/blog/test/hero.jpg");
+    expect(JSON.stringify(schema.publisher)).toContain("#organization");
+    expect(JSON.stringify(schema.publisher)).toContain("/icons/icon-512.png");
   });
 
   it("builds article schema for Yandex content analytics", () => {
@@ -125,5 +127,17 @@ describe("schema-json-ld", () => {
       buildWebPageSchema({ name: "Test", description: "Desc", path: "/test" })
     );
     expect(json).toContain('"@type":"WebPage"');
+  });
+
+  it("cannot close the JSON-LD script element", () => {
+    const serialized = serializeJsonLd({
+      name: "</script><script>window.__xss = true</script>",
+    });
+
+    expect(serialized).not.toContain("<script");
+    expect(serialized).not.toContain("</script>");
+    expect(JSON.parse(serialized).name).toBe(
+      "</script><script>window.__xss = true</script>"
+    );
   });
 });

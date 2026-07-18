@@ -4,6 +4,7 @@ export type ForumCategory = {
   title: string;
   description: string | null;
   publicRead: boolean;
+  isActive: boolean;
   sortOrder: number;
   threadCount?: number;
 };

@@ -2,13 +2,15 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ClipboardCheck, LogIn } from "lucide-react";
 import { DEFAULT_TRIP_PREP_ITEMS } from "@/data/trip-prep-defaults";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { TRIP_PREP_CATEGORY_LABELS, type TripPrepCategory } from "@/types/trip-prep";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPublicPageMetadata({
   title: "Подготовка к поездке в Аргентину",
   description:
     "Чек-лист перед вылетом: документы, связь, деньги, здоровье, багаж и контакты организатора. Войдите, чтобы сохранить прогресс.",
-};
+  path: "/trip-prep",
+});
 
 const PREVIEW_CATEGORIES: TripPrepCategory[] = [
   "documents",

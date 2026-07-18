@@ -162,6 +162,7 @@ export default function InfoModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
+        showClose={false}
         className="flex max-h-[85vh] max-w-md flex-col overflow-hidden border border-gray-100 p-0"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}

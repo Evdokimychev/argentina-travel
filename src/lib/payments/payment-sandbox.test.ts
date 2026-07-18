@@ -42,7 +42,9 @@ describe("Mercado Pago booking payment status mapping", () => {
 
 describe("commission split for sandbox charges", () => {
   it("computes percent commission snapshot amounts", () => {
-    const split = calculateCommissionSplit(1000, percentRule);
+    const split = calculateCommissionSplit(1000, "USD", percentRule);
+    expect(split.ok).toBe(true);
+    if (!split.ok) throw new Error(split.error);
     expect(split.commissionAmount).toBe(120);
     expect(split.organizerNetAmount).toBe(880);
     expect(split.commissionPercent).toBe(12);
@@ -51,6 +53,7 @@ describe("commission split for sandbox charges", () => {
   it("caps fixed commission at gross amount", () => {
     const split = calculateCommissionSplit(
       50,
+      "USD",
       {
         ...percentRule,
         id: "rule-fixed",
@@ -59,7 +62,21 @@ describe("commission split for sandbox charges", () => {
         fixedAmount: 80,
       }
     );
+    expect(split.ok).toBe(true);
+    if (!split.ok) throw new Error(split.error);
     expect(split.commissionAmount).toBe(50);
     expect(split.organizerNetAmount).toBe(0);
+  });
+
+  it("rejects a fixed commission in another currency", () => {
+    expect(
+      calculateCommissionSplit(100, "ARS", {
+        ...percentRule,
+        ruleType: "fixed",
+        percentValue: null,
+        fixedAmount: 10,
+        fixedCurrency: "USD",
+      }),
+    ).toEqual({ ok: false, error: "FIXED_CURRENCY_MISMATCH" });
   });
 });

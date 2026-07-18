@@ -4,6 +4,7 @@ import { getHomeTravelPrepFlightTeaser } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { formatTeaserPrice } from "@/lib/flights/teaser-format";
 import { siteContainerClass } from "@/lib/site-container";
+import { fetchSiteModuleControlSnapshot } from "@/lib/site-settings-server";
 import type { LocaleCode } from "@/types/locale";
 
 type TravelPrepStripProps = {
@@ -12,8 +13,13 @@ type TravelPrepStripProps = {
 
 export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStripProps) {
   const labels = getFlightTeaserLabels(locale);
-  const flightTeasers = await getHomeTravelPrepFlightTeaser(locale);
+  const [flightTeasers, moduleControl] = await Promise.all([
+    getHomeTravelPrepFlightTeaser(locale),
+    fetchSiteModuleControlSnapshot(),
+  ]);
   const mowBue = flightTeasers[0];
+  const transfersEnabled =
+    moduleControl.ok && moduleControl.modules.transfersMode !== "disabled";
 
   const prepLinks = [
     {
@@ -37,7 +43,7 @@ export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStrip
       title: labels.travelPrepEsim,
       description: labels.travelPrepEsimDesc,
     },
-  ] as const;
+  ].filter((item) => item.id !== "transfers" || transfersEnabled);
 
   return (
     <section className="border-b border-gray-100 bg-white py-8">

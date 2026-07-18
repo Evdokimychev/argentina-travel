@@ -1,7 +1,7 @@
 ---
 id: ciudad-de-corrientes
 type: attraction
-title: Город Corrientes
+title: Коррьентес
 title_es: Ciudad de Corrientes
 title_en: City of Corrientes
 summary: "Коррьентес — столица провинции на берегу Параны: четыре века истории, карнавал и чамаме."

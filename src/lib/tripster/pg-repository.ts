@@ -209,6 +209,7 @@ export async function pgFetchExcursionGuideIds(): Promise<number[]> {
       `select distinct (payload->'guide'->>'id')::int as guide_id
        from public.tripster_experiences
        where payload->'guide'->>'id' is not null
+         and ${TRIPSTER_EXCURSION_WHERE_SQL}
        order by guide_id`
     );
     return rows

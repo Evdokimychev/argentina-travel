@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
 import { isRemoteBookingsMode } from "@/lib/bookings-api";
@@ -34,6 +34,7 @@ export default function BookingRefundRequestSection({
   paidAmountUsd,
   role = "tourist",
 }: Props) {
+  const operationIdRef = useRef<string | null>(null);
   const [reason, setReason] = useState("");
   const [latest, setLatest] = useState<PaymentTransactionRow | null>(null);
   const [loading, setLoading] = useState(false);
@@ -81,6 +82,7 @@ export default function BookingRefundRequestSection({
     setError(null);
     setMessage(null);
     try {
+      operationIdRef.current ??= crypto.randomUUID();
       const endpoint =
         role === "organizer"
           ? "/api/organizer/payments/refund-request"
@@ -92,28 +94,20 @@ export default function BookingRefundRequestSection({
           bookingId,
           reason: reason.trim(),
           amountUsd: paidAmountUsd,
+          operationId: operationIdRef.current,
         }),
       });
       const payload = (await response.json().catch(() => ({}))) as {
         error?: string;
         transaction?: PaymentTransactionRow;
-        providerAttempt?: {
-          executed?: boolean;
-          skippedReason?: string | null;
-        };
       };
       if (!response.ok) {
         setError(payload.error ?? "Не удалось отправить запрос");
         return;
       }
       setLatest(payload.transaction ?? null);
-      if (payload.providerAttempt?.executed) {
-        setMessage("Запрос отправлен, возврат передан в платёжную систему");
-      } else if (payload.providerAttempt?.skippedReason) {
-        setMessage("Запрос отправлен, ожидается ручная обработка администратором");
-      } else {
-        setMessage("Запрос на возврат отправлен администратору");
-      }
+      operationIdRef.current = null;
+      setMessage("Запрос подготовлен и ожидает подтверждения финансовым контролёром");
       setReason("");
     } catch {
       setError("Не удалось отправить запрос");

@@ -164,7 +164,7 @@ export default function PodborTourMatchChat({ className, compact = false }: Podb
               <p className="whitespace-pre-wrap">{turn.text}</p>
               {turn.role === "assistant" && turn.mode === "rule_based" ? (
                 <p className="mt-2 text-xs text-slate">
-                  Подбор по правилам каталога — без генеративного ИИ.
+                  Рекомендации основаны на ваших ответах и предложениях каталога.
                 </p>
               ) : null}
             </div>

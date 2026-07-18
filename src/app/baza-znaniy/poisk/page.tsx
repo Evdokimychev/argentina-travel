@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbSearch from "@/components/knowledge-base/KbSearch";
-import { getSearchIndex } from "@/lib/knowledge-base/content";
+import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { getSearchIndexFrom } from "@/lib/knowledge-base/content";
 
 export const metadata: Metadata = {
   title: "Поиск по базе знаний об Аргентине",
@@ -18,7 +20,8 @@ interface PageProps {
 
 export default async function KnowledgeSearchPage({ searchParams }: PageProps) {
   const { q } = await searchParams;
-  const items = getSearchIndex();
+  const locale = await getServerI18nLocale();
+  const items = getSearchIndexFrom(await resolveKnowledgeCatalog(locale));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { PRIVATE_PAGE_ROBOTS } from "@/lib/private-page-metadata";
 
 export const metadata: Metadata = {
@@ -6,5 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function DevLayout({ children }: { children: React.ReactNode }) {
+  if (process.env.NODE_ENV === "production") notFound();
   return children;
 }

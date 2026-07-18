@@ -6,6 +6,20 @@ import { useAuth } from "@/context/AuthContext";
 import { isSupabaseForumEnabled } from "@/lib/auth-mode";
 import { cn } from "@/lib/cn";
 import { FORUM_REPORT_REASON_LABELS, type ForumReportReason } from "@/lib/forum/forum-types";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { FormField } from "@/components/ui/form-field";
+import { NativeSelect } from "@/components/ui/native-select";
+import { SmartTextarea } from "@/components/ui/smart-textarea";
 
 const REPORT_OPTIONS: Array<{ value: ForumReportReason; label: string }> = [
   { value: "spam", label: "Спам или реклама" },
@@ -31,7 +45,8 @@ export default function ForumReportButton({ postId, className }: ForumReportButt
 
   if (!isSupabaseForumEnabled()) return null;
 
-  async function handleSubmit() {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     if (!user) return;
     setSubmitting(true);
     setError(null);
@@ -46,8 +61,11 @@ export default function ForumReportButton({ postId, className }: ForumReportButt
       if (!res.ok) throw new Error(json.error ?? "Не удалось отправить жалобу");
       setMessage("Жалоба отправлена модераторам. Спасибо.");
       setOpen(false);
+      setDetails("");
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Ошибка");
+      setError(
+        submitError instanceof Error ? submitError.message : "Не удалось отправить жалобу"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -56,64 +74,83 @@ export default function ForumReportButton({ postId, className }: ForumReportButt
   if (!user) return null;
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn(className)}>
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
-        className="inline-flex items-center gap-1 text-xs text-slate transition-colors hover:text-sky"
+        onClick={() => {
+          setError(null);
+          setOpen(true);
+        }}
+        aria-haspopup="dialog"
+        className="-my-2 inline-flex min-h-11 items-center gap-1 rounded-lg px-2 text-xs text-slate transition-colors hover:bg-surface-muted hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/35"
       >
-        <Flag className="h-3.5 w-3.5" strokeWidth={1.75} />
+        <Flag className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden />
         Пожаловаться
       </button>
 
-      {open ? (
-        <div className="absolute right-0 z-10 mt-2 w-72 rounded-xl border border-border-subtle bg-surface-elevated p-4 shadow-lg">
-          <p className="text-sm font-medium text-charcoal">Жалоба на сообщение</p>
-          <label className="mt-3 block text-xs text-slate">
-            Причина
-            <select
-              value={reason}
-              onChange={(event) => setReason(event.target.value as ForumReportReason)}
-              className="mt-1 w-full rounded-lg border border-border-subtle bg-surface px-2 py-1.5 text-sm text-charcoal"
-            >
-              {REPORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {FORUM_REPORT_REASON_LABELS[option.value]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="mt-3 block text-xs text-slate">
-            Комментарий (необязательно)
-            <textarea
-              value={details}
-              onChange={(event) => setDetails(event.target.value)}
-              rows={3}
-              className="mt-1 w-full rounded-lg border border-border-subtle bg-surface px-2 py-1.5 text-sm text-charcoal"
-            />
-          </label>
-          <div className="mt-3 flex gap-2">
-            <button
-              type="button"
-              disabled={submitting}
-              onClick={() => void handleSubmit()}
-              className="rounded-lg bg-sky px-3 py-1.5 text-xs font-medium text-white hover:bg-sky/90 disabled:opacity-60"
-            >
-              Отправить
-            </button>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-1.5 text-xs text-slate hover:text-charcoal"
-            >
-              Отмена
-            </button>
-          </div>
-        </div>
-      ) : null}
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (!nextOpen) setError(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={(event) => void handleSubmit(event)} className="flex min-h-0 flex-1 flex-col">
+            <DialogHeader className="pr-16">
+              <DialogTitle>Жалоба на сообщение</DialogTitle>
+              <DialogDescription>
+                Выберите причину. Модератор проверит сообщение и примет решение.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogBody className="space-y-4">
+              <FormField id={`forum-report-reason-${postId}`} label="Причина" required>
+                <NativeSelect
+                  id={`forum-report-reason-${postId}`}
+                  value={reason}
+                  onChange={(event) => setReason(event.target.value as ForumReportReason)}
+                  required
+                >
+                  {REPORT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {FORUM_REPORT_REASON_LABELS[option.value]}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </FormField>
+              <SmartTextarea
+                id={`forum-report-details-${postId}`}
+                label="Комментарий"
+                value={details}
+                onValueChange={setDetails}
+                rows={4}
+                optional
+                hint="Добавьте детали, которые помогут модератору быстрее разобраться."
+                placeholder="Что именно нарушает правила?"
+              />
+              {error ? (
+                <InlineFeedback
+                  variant="error"
+                  title="Не удалось отправить жалобу"
+                  description={error}
+                />
+              ) : null}
+            </DialogBody>
+            <DialogFooter>
+              <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+                Отмена
+              </Button>
+              <Button type="submit" loading={submitting} loadingLabel="Отправляем…">
+                Отправить жалобу
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-      {message ? <p className="mt-1 text-xs text-success">{message}</p> : null}
-      {error ? <p className="mt-1 text-xs text-red-600">{error}</p> : null}
+      {message ? (
+        <InlineFeedback variant="success" title={message} className="mt-2" />
+      ) : null}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
 import type { TransferLocation } from "@/lib/intui/types";
 import { isTravelpayoutsConfigured, TravelpayoutsError } from "@/lib/travelpayouts";
 import type { CurrencyCode, LocaleCode } from "@/types/locale";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 const LOCALES = new Set<LocaleCode>(["ru", "en", "es", "pt"]);
 const CURRENCIES = new Set<CurrencyCode>([
@@ -72,6 +73,9 @@ function buildRouteKey(origin: TransferLocation, destination: TransferLocation):
 }
 
 export async function GET(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("transfers", "public_read");
+  if (moduleBlocked) return moduleBlocked;
+
   const { searchParams } = new URL(request.url);
   const localeParam = searchParams.get("locale")?.trim() ?? "ru";
   const locale = LOCALES.has(localeParam as LocaleCode) ? (localeParam as LocaleCode) : "ru";

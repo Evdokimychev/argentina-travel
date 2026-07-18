@@ -3,12 +3,23 @@ import type { Tour } from "@/types/tour";
 
 interface DraftSnapshotResponse {
   updatedAt: string | null;
+  rowVersion?: number;
   tour: Tour | null;
+  draft: OrganizerTourDraft | null;
+  moderationStatus?: OrganizerTourDraft["moderationStatus"];
+  moderationNotes?: string | null;
 }
 
 interface DraftPatchResponse {
   ok: true;
   updatedAt: string | null;
+  rowVersion?: number;
+  moderationStatus?: OrganizerTourDraft["moderationStatus"];
+  moderationNotes?: string | null;
+}
+
+interface DraftListResponse {
+  drafts: OrganizerTourDraft[];
 }
 
 interface ApiErrorPayload {
@@ -49,7 +60,6 @@ export async function patchOrganizerTourDraftRemote(input: {
   tourId: string;
   draft: OrganizerTourDraft;
   expectedUpdatedAt?: string | null;
-  force?: boolean;
 }): Promise<DraftPatchResponse> {
   const response = await fetch(`/api/organizer/tours/${encodeURIComponent(input.tourId)}/draft`, {
     method: "PATCH",
@@ -58,7 +68,6 @@ export async function patchOrganizerTourDraftRemote(input: {
     body: JSON.stringify({
       draft: input.draft,
       expectedUpdatedAt: input.expectedUpdatedAt ?? null,
-      force: Boolean(input.force),
     }),
   });
 
@@ -68,4 +77,24 @@ export async function patchOrganizerTourDraftRemote(input: {
   }
 
   return readJson<DraftPatchResponse>(response);
+}
+
+export async function fetchOrganizerTourDraftsRemote(): Promise<OrganizerTourDraft[]> {
+  const result = await readJson<DraftListResponse>(
+    await fetch("/api/organizer/tours", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store",
+    })
+  );
+  return result.drafts;
+}
+
+export async function deleteOrganizerTourRemote(tourId: string): Promise<void> {
+  await readJson<{ ok: true }>(
+    await fetch(`/api/organizer/tours/${encodeURIComponent(tourId)}/draft`, {
+      method: "DELETE",
+      credentials: "same-origin",
+    })
+  );
 }

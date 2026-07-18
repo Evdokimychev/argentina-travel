@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { executeSiteSearch } from "@/lib/search/search-query";
 import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 
 export async function GET(request: Request) {
   const startedAt = Date.now();
@@ -17,15 +19,22 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
   }
 
-  const payload = await executeSiteSearch(q, {
-    kind,
-    limit: Number.isFinite(limit) ? limit : undefined,
-  });
+  const [payload, navigation] = await Promise.all([
+    executeSiteSearch(q, {
+      kind,
+      limit: Number.isFinite(limit) ? limit : undefined,
+    }),
+    fetchSiteNavigation(),
+  ]);
+  const visiblePayload = {
+    ...payload,
+    results: payload.results.filter((result) => isPublicPathEnabled(result.url, navigation)),
+  };
 
   const tookMs = payload.tookMs ?? Date.now() - startedAt;
 
   return NextResponse.json(
-    { ...payload, tookMs },
+    { ...visiblePayload, tookMs },
     {
       headers: {
         "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120",

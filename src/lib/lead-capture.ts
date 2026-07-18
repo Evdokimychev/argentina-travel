@@ -1,6 +1,12 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { notifyLeadCaptured } from "@/lib/leads-notify";
+import { escapeHtml } from "@/lib/notifications/email-templates/utils";
+import {
+  LeadCaptureValidationError,
+  normalizeContactSubmission,
+  normalizeNewsletterSubmission,
+} from "@/lib/lead-capture-validation";
 import type {
   ContactSubmissionInsert,
   ContactSubmissionKind,
@@ -34,38 +40,40 @@ export class LeadCaptureError extends Error {
   }
 }
 
-function normalizeEmail(email: string): string {
-  return email.trim().toLowerCase();
-}
-
 export async function submitNewsletter(input: SubmitNewsletterInput): Promise<void> {
   if (!isSupabaseConfigured()) {
     throw new LeadCaptureError("Supabase is not configured.", "not_configured");
   }
 
-  const email = normalizeEmail(input.email);
-  if (!email || !email.includes("@")) {
-    throw new LeadCaptureError("Invalid email.", "validation");
+  let normalized: ReturnType<typeof normalizeNewsletterSubmission>;
+  try {
+    normalized = normalizeNewsletterSubmission(input);
+  } catch (error) {
+    if (error instanceof LeadCaptureValidationError) {
+      throw new LeadCaptureError(error.message, "validation");
+    }
+    throw error;
   }
 
   const row: NewsletterSubscriberInsert = {
-    email,
-    source: input.source ?? "footer",
-    locale: input.locale ?? null,
+    email: normalized.email,
+    source: normalized.source,
+    locale: normalized.locale,
   };
 
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("newsletter_subscribers").insert(row);
+  const { error } = await supabase
+    .from("newsletter_subscribers")
+    .upsert({ ...row, status: "active" }, { onConflict: "email" });
 
   if (error) {
-    if (error.code === "23505") return;
     throw new LeadCaptureError(error.message, "database");
   }
 
   void notifyLeadCaptured({
-    subject: `Новая подписка: ${email}`,
-    html: `<p>Email: <strong>${email}</strong></p><p>Источник: ${row.source ?? "footer"}</p>`,
-  });
+    subject: `Новая подписка: ${normalized.email}`,
+    html: `<p>Email: <strong>${escapeHtml(normalized.email)}</strong></p><p>Источник: ${escapeHtml(row.source ?? "footer")}</p>`,
+  }).catch(() => console.error("[lead-notification] Newsletter delivery failed"));
 }
 
 export async function submitContact(input: SubmitContactInput): Promise<void> {
@@ -73,26 +81,24 @@ export async function submitContact(input: SubmitContactInput): Promise<void> {
     throw new LeadCaptureError("Supabase is not configured.", "not_configured");
   }
 
-  const name = input.name.trim();
-  if (!name) {
-    throw new LeadCaptureError("Name is required.", "validation");
-  }
-
-  const email = input.email?.trim() ? normalizeEmail(input.email) : null;
-  const phone = input.phone?.trim() || null;
-
-  if (!email && !phone) {
-    throw new LeadCaptureError("Email or phone is required.", "validation");
+  let normalized: ReturnType<typeof normalizeContactSubmission>;
+  try {
+    normalized = normalizeContactSubmission(input);
+  } catch (error) {
+    if (error instanceof LeadCaptureValidationError) {
+      throw new LeadCaptureError(error.message, "validation");
+    }
+    throw error;
   }
 
   const row: ContactSubmissionInsert = {
-    kind: input.kind,
-    name,
-    email,
-    phone,
-    message: input.message?.trim() ?? "",
-    context: (input.context ?? {}) as Json,
-    page_url: input.pageUrl ?? null,
+    kind: normalized.kind,
+    name: normalized.name,
+    email: normalized.email,
+    phone: normalized.phone,
+    message: normalized.message,
+    context: normalized.context as Json,
+    page_url: normalized.pageUrl,
   };
 
   const supabase = createSupabaseAdminClient();
@@ -103,12 +109,12 @@ export async function submitContact(input: SubmitContactInput): Promise<void> {
   }
 
   void notifyLeadCaptured({
-    subject: `Новая заявка: ${input.kind}`,
-    html: `<p><strong>${name}</strong></p>
-<p>Email: ${email ?? "—"}<br/>Телефон: ${phone ?? "—"}</p>
-<p>${row.message}</p>
-<pre>${JSON.stringify(row.context, null, 2)}</pre>`,
-  });
+    subject: `Новая заявка: ${normalized.kind}`,
+    html: `<p><strong>${escapeHtml(normalized.name)}</strong></p>
+<p>Email: ${escapeHtml(normalized.email ?? "—")}<br/>Телефон: ${escapeHtml(normalized.phone ?? "—")}</p>
+<p>${escapeHtml(normalized.message)}</p>
+<pre>${escapeHtml(JSON.stringify(row.context, null, 2))}</pre>`,
+  }).catch(() => console.error("[lead-notification] Contact delivery failed"));
 }
 
 export function resolveContactKind(params: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import {
@@ -37,6 +37,8 @@ export default function AdminCommandPalette() {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const optionRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const listId = useId();
 
   const items = useMemo<PaletteItem[]>(() => {
     return filterAdminNavItems(capabilities).map((item) => ({
@@ -101,6 +103,10 @@ export default function AdminCommandPalette() {
     setActiveIndex(0);
   }, [query]);
 
+  useEffect(() => {
+    optionRefs.current[activeIndex]?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex]);
+
   function onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
@@ -128,7 +134,7 @@ export default function AdminCommandPalette() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className="max-w-lg gap-0 overflow-hidden p-0 sm:max-w-lg"
+        className="gap-0 overflow-hidden p-0 sm:max-w-lg"
         bottomSheet={false}
         showClose
       >
@@ -151,30 +157,39 @@ export default function AdminCommandPalette() {
               placeholder="Раздел, страница, путь…"
               className="w-full bg-transparent text-sm text-charcoal outline-none placeholder:text-slate/70"
               aria-label="Поиск разделов"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="true"
+              aria-controls={listId}
+              aria-activedescendant={filtered[activeIndex] ? `${listId}-option-${filtered[activeIndex].id}` : undefined}
             />
           </div>
         </div>
 
-        <ul className="max-h-72 overflow-y-auto py-2" role="listbox">
+        <ul id={listId} className="max-h-72 overflow-y-auto py-2" role="listbox" aria-label="Разделы админ-панели">
           {filtered.length === 0 ? (
             <li className="px-4 py-6 text-center text-sm text-slate">Ничего не найдено</li>
           ) : (
             filtered.map((item, index) => (
-              <li key={item.id} role="option" aria-selected={index === activeIndex}>
-                <button
-                  type="button"
-                  onClick={() => navigate(item.href)}
-                  className={cn(
-                    "flex w-full flex-col gap-0.5 px-4 py-2.5 text-left transition-colors",
-                    index === activeIndex ? "bg-sky/10" : "hover:bg-gray-50"
-                  )}
-                >
+              <li
+                key={item.id}
+                id={`${listId}-option-${item.id}`}
+                ref={(node) => { optionRefs.current[index] = node; }}
+                role="option"
+                aria-selected={index === activeIndex}
+                onMouseEnter={() => setActiveIndex(index)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => navigate(item.href)}
+                className={cn(
+                  "flex cursor-pointer flex-col gap-0.5 px-4 py-2.5 text-left transition-colors",
+                  index === activeIndex ? "bg-sky/10" : "hover:bg-gray-50"
+                )}
+              >
                   <span className="text-sm font-medium text-charcoal">{item.label}</span>
                   <span className="text-xs text-slate">
                     {item.sectionLabel}
                     {item.description ? ` · ${item.description}` : ""}
                   </span>
-                </button>
               </li>
             ))
           )}

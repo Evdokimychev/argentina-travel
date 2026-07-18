@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CollectionsIndexView from "@/components/collections/CollectionsIndexView";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
+import { getPlacesCatalogHeroImage } from "@/lib/media-resolver";
 import { fetchCollectionsServer } from "@/lib/places-repository";
 
 const PAGE_TITLE = "Подборки мест — тематические коллекции Аргентины";
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
     path: "/collections",
-    image: getServicePageHeroImage("places"),
+    image: getPlacesCatalogHeroImage(),
   }),
   alternates: buildHreflangAlternates("/collections"),
 };

@@ -35,7 +35,7 @@ const GUIDE_KB_LINKS: RelatedContentItem[] = [
   },
   {
     title: "Деньги и обмен валюты",
-    href: "/baza-znaniy/gid-po-dengam",
+    href: "/baza-znaniy/razdel/finansy",
     description: "Песо, наличные доллары, карты и реальные сценарии оплаты в поездке.",
     kind: "link",
   },
@@ -65,7 +65,7 @@ const GUIDE_KB_LINKS: RelatedContentItem[] = [
   },
 ];
 
-export default function GuideHubView() {
+export default function GuideHubView({ heroImage }: { heroImage: string }) {
   const { t } = useLocaleCurrency();
   const hub = GUIDE_HUB;
   const path = "/guide";
@@ -80,7 +80,8 @@ export default function GuideHubView() {
       <HubHero
         title={heroTitle}
         subtitle={heroSubtitle}
-        image={hub.heroImage}
+        image={heroImage}
+        theme="highland"
         eyebrow={{ label: t("guide.hub.hero.eyebrow") }}
         ctas={hub.heroCtas}
       />
@@ -132,7 +133,7 @@ export default function GuideHubView() {
                       {card.href && card.linkLabel ? (
                         <Link
                           href={card.href}
-                          className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+                          className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
                         >
                           {card.linkLabel}
                           <ArrowRight className="h-4 w-4" />
@@ -179,11 +180,11 @@ export default function GuideHubView() {
                           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
                             <Icon className="h-5 w-5" aria-hidden />
                           </span>
-                          <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
+                          <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky-ink">
                             {topic.title}
                           </h3>
                           <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
-                          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
+                          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky-ink">
                             {t("guide.hub.link.more")}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                           </span>
@@ -214,7 +215,7 @@ export default function GuideHubView() {
                           <Icon className="h-4 w-4" aria-hidden />
                         </span>
                         <span className="min-w-0">
-                          <span className="block font-medium text-charcoal group-hover:text-sky">
+                          <span className="block font-medium text-charcoal group-hover:text-sky-ink">
                             {topic.title}
                           </span>
                           <span className="mt-0.5 block text-xs text-slate">{topic.description}</span>
@@ -244,7 +245,7 @@ export default function GuideHubView() {
                       )}
                     >
                       <span>
-                        <span className="block font-medium text-charcoal group-hover:text-sky">
+                        <span className="block font-medium text-charcoal group-hover:text-sky-ink">
                           {link.title}
                         </span>
                         <span className="mt-0.5 block text-xs text-slate">{link.description}</span>

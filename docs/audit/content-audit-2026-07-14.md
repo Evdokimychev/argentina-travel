@@ -1,23 +1,23 @@
 # Контент-аудит — 14 июля 2026
 
-Сформирован: 2026-07-14T20:08:29.772Z
+Сформирован: 2026-07-17T11:59:32.030Z
 
 ## Исходное состояние
 
 - Проверено сущностей базы знаний: **689**.
-- Критических: **388**; высокий приоритет: **44**; средний: **2**.
-- Не допускаются в публичные индексы: **390**.
+- Критических: **396**; высокий приоритет: **67**; средний: **2**.
+- Не допускаются в публичные индексы: **465**.
 - Исходные Markdown-файлы не удаляются; карантин обратим и описан в `var/ops/content-fix-manifest.json`.
 
 ## Классы проблем
 
 - `non_russian_summary`: 226
-- `non_russian_title`: 224
-- `thin_content`: 163
-- `not_publication_ready`: 105
-- `missing_sensitive_source`: 29
+- `non_russian_title`: 202
+- `thin_content`: 165
+- `not_publication_ready`: 138
+- `missing_sensitive_source`: 28
 - `missing_hero`: 20
-- `mixed_script_word`: 9
+- `mixed_script_word`: 8
 - `verification_due`: 3
 - `placeholder_content`: 2
 
@@ -39,7 +39,7 @@
 - `aventura-submarina-en-puerto-madryn` — Submarine adventure in Puerto Madryn; non_russian_title, non_russian_summary
 - `aves-del-chaco` — Birds from Chaco; non_russian_title, non_russian_summary, placeholder_content
 - `avistaje-de-aves-en-formosa` — Bird watching in Formosa; non_russian_title, non_russian_summary, placeholder_content
-- `avistaje-de-aves-en-santa-cruz` — Bird watching in Santa Cruz; non_russian_title, thin_content
+- `banki-i-perevody` — Перевод денег в Аргентину: безопасная проверка каналов; not_publication_ready, mixed_script_word
 - `bebidas-y-gastronomia-en-cordoba` — Food and Drink in Córdoba; non_russian_title, non_russian_summary
 - `belen` — Belén; non_russian_title, non_russian_summary
 - `bezopasno-li-odnoj-zhenshchine` — null; missing_sensitive_source, thin_content
@@ -48,9 +48,9 @@
 - `bodega-submarina-en-las-grutas` — An underwater winery in Las Grutas; non_russian_title, non_russian_summary
 - `bosque-petrificado` — Национальный парк Окаменевшие леса Харамільо; not_publication_ready
 - `buceo-en-el-golfo-san-matias` — Scuba diving at the San Matías Gulf; non_russian_title, non_russian_summary
+- `byudzhet-poezdki` — Бюджет поездки по Аргентине; not_publication_ready
 - `cabalgata-en-el-lago-roca` — Horseback riding in the Roca lake; non_russian_title, non_russian_summary
 - `cabalgata-en-los-molles` — Horseback riding in Los Molles; non_russian_title, non_russian_summary
-- `cabalgatas-en-cerro-belvedere-y-cascada-inacayal` — Horseback rides in Belvedere Hill and Inacayal waterfall; non_russian_title, thin_content
 - `cabalgatas-en-tafi-del-valle` — Horseback riding in Tafí del Valle; non_russian_title, non_russian_summary
 - `cabalgatas-en-valle-chico` — Horseback riding in Valle Chico; non_russian_title, non_russian_summary
 - `cachi` — Cachi; non_russian_title, non_russian_summary
@@ -58,7 +58,6 @@
 - `caminos-de-la-fe-san-juan` — Paths of faith, San Juan; non_russian_title, non_russian_summary
 - `campo-del-cielo` — Campo del Cielo; non_russian_title, non_russian_summary
 - `campo-del-cielo-y-saenz-pena` — Field of the Sky [Campo del Cielo] and Sáenz Peña; non_russian_title, non_russian_summary
-- `canon-del-atuel` — Atuel Canyon; non_russian_title, thin_content
 - `capilla-del-monte` — Capilla del Monte; non_russian_title, non_russian_summary
 - `carcarana` — Carcarañá; non_russian_title, non_russian_summary
 - `carmen-del-sauce` — Carmen del Sauce; non_russian_title, non_russian_summary
@@ -67,12 +66,9 @@
 - `casa-de-san-martin-en-yapeyu` — San Martin’s home in Yapeyú; non_russian_title, non_russian_summary
 - `cascada-chachin` — Водопад Чачин; not_publication_ready, thin_content
 - `cascada-del-rio-noque` — Водопад на реке Ноке; not_publication_ready, thin_content
-- `cascada-nivinco-y-pichi-traful` — Ñivinco and Pichi Traful Waterfalls; non_russian_title, thin_content
 - `cascadas-santa-ana-y-dora` — Водопады Санта-Ана и Дора; not_publication_ready, thin_content
 - `catamaran-en-el-rio-parana` — Catamaran on the Paraná river; non_russian_title, non_russian_summary
-- `catamaran-en-la-triple-frontera` — Catamaran at the Triple Frontier; non_russian_title, thin_content
 - `caucete-san-juan` — Caucete, San Juan; non_russian_title, non_russian_summary
-- `caviahue-copahue` — Caviahue - Copahue; non_russian_title, thin_content
 - `centro-de-esqui-la-hoya` — La Hoya ski resort; non_russian_title, non_russian_summary
 - `centro-termal-bernardo-larroude` — Bernardo Larroudé Hot Spring Center; non_russian_title, non_russian_summary
 - `centros-de-esqui-en-neuquen` — Ski resorts in Neuquén; non_russian_title, non_russian_summary
@@ -80,6 +76,9 @@
 - `cerro-mercedario-y-grandes-cumbres-de-san-juan` — Серро-Меркедарио и большие вершины Сан-Хуана; not_publication_ready, thin_content
 - `cerro-tronador` — Серро-Тронадор; not_publication_ready, thin_content
 - `cholila` — Cholila; non_russian_title, non_russian_summary
+- `chto-delat-krome-dostoprimechatelnostej` — null; not_publication_ready
+- `chto-est-vegetariancu` — null; not_publication_ready
+- `chto-stoit-deneg-prioritety` — Что реально стоит ваших денег и дней: приоритеты по Аргентине; not_publication_ready
 - `chto-takoe-dni-i-cuil` — null; missing_sensitive_source, thin_content
 - `chto-takoe-mep` — null; missing_sensitive_source, thin_content
 - `circuito-callejero-de-potrero-de-los-funes` — Street circuit in Potrero de los Funes; non_russian_title, non_russian_summary
@@ -87,12 +86,12 @@
 - `circuito-de-cervecerias-en-rosario` — Brewers’ circuit in Rosario; non_russian_title, non_russian_summary
 - `circuito-gastronomico-en-el-rio-parana` — Food circuit on the Paraná river; non_russian_title, non_russian_summary
 - `ciudad-de-formosa` — Город Формоса; not_publication_ready, thin_content
+- `ciudad-de-salta` — Сальта; not_publication_ready, thin_content
 - `ciudad-de-san-juan` — Город Сан-Хуан; not_publication_ready, thin_content
 - `ciudad-de-santa-fe` — Город Санта-Фе; not_publication_ready, thin_content
 - `clorinda` — Clorinda; non_russian_title, non_russian_summary
 - `colon` — Colón; non_russian_title, non_russian_summary
 - `colonia-carlos-pellegrini` — Колония-Карлос-Пеллегрини; not_publication_ready, mixed_script_word, thin_content
-- `colonia-menonita-en-la-pampa` — Mennonite Colony in La Pampa; non_russian_title, thin_content
 - `colonia-suiza` — Колония-Суиса; not_publication_ready, thin_content
 - `colonias-judias-en-santa-fe` — Еврейские колонии в Санта-Фе; not_publication_ready, thin_content
 - `comandante-luis-piedrabuena` — Comandante Luis Piedrabuena; non_russian_title, non_russian_summary
@@ -119,9 +118,10 @@
 - `el-chaku` — Чаку; not_publication_ready, thin_content
 - `el-curanto` — Куранто; not_publication_ready, thin_content
 - `el-gaucho` — Гаучо; not_publication_ready, thin_content
-- `el-hoyo` — El Hoyo; non_russian_title, thin_content
 - `el-mate` — Мате; not_publication_ready, thin_content
 - `el-nihuil` — Эль-Ниуиль; not_publication_ready, thin_content
 - `el-obelisco-de-cafayate` — Обелиск Кафайяте; not_publication_ready, thin_content
+- `el-rodeo` — Эль-Родео; not_publication_ready, thin_content
+- `el-salitral-encantado` — Эль-Салитраль-Энкантадо; not_publication_ready, thin_content
 
 Полный реестр по каждой сущности находится в `var/ops/content-audit.json`.

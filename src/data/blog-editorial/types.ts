@@ -10,7 +10,15 @@ export type EditorialOverride = {
   relatedResources?: BlogRelatedResource[];
   dateModified?: string;
   image?: string;
+  /** Fail-closed publication switch for a manually written article awaiting factual review. */
+  publicationReady?: boolean;
+  /** Internal reason shown only in editorial tooling, never in the public article. */
+  publicationBlockReason?: string;
 };
+
+export function isEditorialOverridePublicationReady(override: EditorialOverride): boolean {
+  return override.publicationReady !== false;
+}
 
 export function editorialArticle(
   sections: Array<{ title: string; paragraphs: string[] }>,

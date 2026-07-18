@@ -6,6 +6,7 @@ import {
 import {
   GTM_EVENTS,
   pushDataLayer,
+  trackBookingSubmit,
   trackGtmEvent,
   trackLocaleSwitch,
   trackSearchSubmit,
@@ -17,6 +18,7 @@ import {
 export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   booking_submit: [
     "product_type",
+    "product_id",
     "item_id",
     "item_name",
     "partner",
@@ -24,15 +26,17 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
     "value",
     "currency",
     "source",
+    "booking_mode",
+    "outcome",
   ],
   contact_form_submit: ["form_name", "source", "tour_slug", "product_slug", "service_slug"],
   newsletter_subscribe: ["form_name", "source"],
   whatsapp_click: ["link_url", "link_text", "channel"],
   telegram_click: ["link_url", "link_text", "channel"],
-  tour_booking_click: ["item_id", "item_name", "booking_action", "placement"],
-  excursion_booking_click: ["item_id", "item_name", "booking_action", "placement"],
-  tour_view: ["item_id", "item_name", "item_category", "value", "currency", "organizer_id"],
-  excursion_view: ["item_id", "item_name", "item_category", "partner", "city_name"],
+  tour_booking_click: ["product_type", "product_id", "item_id", "item_name", "booking_action", "placement", "source", "booking_mode", "outcome"],
+  excursion_booking_click: ["product_type", "product_id", "item_id", "item_name", "booking_action", "placement", "source", "booking_mode", "outcome"],
+  tour_view: ["product_type", "product_id", "item_id", "item_name", "item_category", "value", "currency", "organizer_id"],
+  excursion_view: ["product_type", "product_id", "item_id", "item_name", "item_category", "partner", "city_name"],
   blog_article_save: ["item_id", "item_name", "save_action", "source"],
   blog_affiliate_click: ["item_id", "affiliate_service", "link_url"],
   blog_inline_related_click: ["source_slug", "item_id", "item_name", "placement"],
@@ -41,8 +45,8 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   blog_comment_post: ["item_id", "item_name"],
   blog_affiliate_embed_view: ["item_id", "affiliate_service"],
   locale_switch: ["locale_from", "locale_to", "page_path"],
-  search_submit: ["search_term", "results_count", "search_source", "search_kind"],
-  search_result_click: ["search_term", "item_id", "item_kind", "position", "search_source"],
+  search_submit: ["search_query_length", "results_count", "search_source", "search_kind"],
+  search_result_click: ["search_query_length", "item_id", "item_kind", "position", "search_source"],
 };
 
 describe("gtm-events", () => {
@@ -84,6 +88,7 @@ describe("gtm-events", () => {
       expect(value).toMatch(/^[a-z0-9_]+$/);
     }
     expect(Object.keys(GTM_EVENT_PARAM_SHAPE).sort()).toEqual(values.slice().sort());
+    expect(values).not.toContain("page_view");
   });
 
   it("pushDataLayer appends to window.dataLayer", () => {
@@ -92,7 +97,10 @@ describe("gtm-events", () => {
   });
 
   it("trackGtmEvent sends named event when analytics consent granted", () => {
-    trackGtmEvent(GTM_EVENTS.contactFormSubmit, { form_name: "contact" });
+    trackGtmEvent(GTM_EVENTS.contactFormSubmit, {
+      event: "attacker_override",
+      form_name: "contact",
+    });
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.contactFormSubmit,
       form_name: "contact",
@@ -104,9 +112,73 @@ describe("gtm-events", () => {
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.tourView,
       item_id: "patagonia-14",
+      product_id: "patagonia-14",
+      product_type: "tour",
       item_category: "tour",
       value: 1200,
     });
+  });
+
+  it("normalizes native, partner and fallback booking outcomes", () => {
+    trackBookingSubmit({
+      productType: "tour",
+      slug: "native-tour",
+      source: "checkout_modal",
+    });
+    trackBookingSubmit({
+      productType: "tour",
+      slug: "partner-tour",
+      partner: "tripster",
+      source: "partner_booking",
+    });
+    trackBookingSubmit({
+      productType: "excursion",
+      slug: "fallback-excursion",
+      partner: "tripster",
+      source: "excursion_affiliate_fallback",
+    });
+    trackBookingSubmit({
+      productType: "excursion",
+      slug: "platform-excursion",
+      partner: "platform",
+      source: "excursion_booking",
+    });
+    trackBookingSubmit({
+      productType: "tour",
+      slug: "explicit-error",
+      partner: "tripster",
+      source: "partner_booking",
+      bookingMode: "partner_external",
+      outcome: "error",
+    });
+
+    expect(window.dataLayer).toEqual([
+      expect.objectContaining({
+        product_id: "native-tour",
+        booking_mode: "native_request",
+        outcome: "native_success",
+      }),
+      expect.objectContaining({
+        product_id: "partner-tour",
+        booking_mode: "partner_external",
+        outcome: "partner_redirect",
+      }),
+      expect.objectContaining({
+        product_id: "fallback-excursion",
+        booking_mode: "affiliate_redirect",
+        outcome: "fallback",
+      }),
+      expect.objectContaining({
+        product_id: "platform-excursion",
+        booking_mode: "native_request",
+        outcome: "native_success",
+      }),
+      expect.objectContaining({
+        product_id: "explicit-error",
+        booking_mode: "partner_external",
+        outcome: "error",
+      }),
+    ]);
   });
 
   it("trackLocaleSwitch sends locale_switch after consent", () => {
@@ -128,10 +200,11 @@ describe("gtm-events", () => {
     });
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.searchSubmit,
-      search_term: "патагония",
+      search_query_length: 9,
       results_count: 3,
       search_source: "meilisearch",
       search_kind: "tour",
     });
+    expect(window.dataLayer?.[0]).not.toHaveProperty("search_term");
   });
 });

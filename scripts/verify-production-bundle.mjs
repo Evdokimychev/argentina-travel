@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const root = path.resolve(process.cwd(), ".next/static");
+const root = path.resolve(process.cwd(), process.env.NEXT_DIST_DIR || ".next", "static");
 const forbidden = ["demo123", "argentina-travel-auth-users"];
 const findings = [];
 

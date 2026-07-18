@@ -79,6 +79,7 @@ export type CmsTranslationCoverageByType = {
 const DOC_TYPE_COVERAGE_LABELS: Record<CmsDocType, string> = {
   legal: "Юридические",
   blog: "Статьи",
+  knowledge: "База знаний",
   guide: "Путеводитель",
   destination: "Направления",
   place: "Места",

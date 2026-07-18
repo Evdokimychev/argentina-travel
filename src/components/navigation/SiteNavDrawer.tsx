@@ -35,6 +35,7 @@ export function SiteNavFullScreenOverlay({
   const panelRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
   const mounted = typeof document !== "undefined";
 
   useSiteHeaderOverlayLock(open);
@@ -92,14 +93,19 @@ export function SiteNavFullScreenOverlay({
   }, [open, onClose]);
 
   useEffect(() => {
-    if (open || !returnFocusRef?.current) return;
+    if (open) {
+      wasOpenRef.current = true;
+      return;
+    }
+    if (!wasOpenRef.current || !returnFocusRef?.current) return;
+    wasOpenRef.current = false;
     returnFocusRef.current.focus();
   }, [open, returnFocusRef]);
 
   if (!open || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-nav-drawer lg:hidden">
+    <div className="fixed inset-0 z-nav-drawer xl:hidden">
       <div
         className="absolute inset-0 bg-charcoal/45 backdrop-blur-sm"
         aria-hidden
@@ -113,7 +119,7 @@ export function SiteNavFullScreenOverlay({
         aria-label={title}
         className="relative flex h-dvh max-h-dvh flex-col bg-surface-elevated"
       >
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border-subtle px-3 py-3 sm:px-4">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border-subtle px-3 pb-3 pt-[max(0.75rem,env(safe-area-inset-top,0px))] sm:px-4">
           <p className="min-w-0 truncate font-heading text-base font-semibold text-charcoal sm:text-lg">
             {title}
           </p>
@@ -123,7 +129,7 @@ export function SiteNavFullScreenOverlay({
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
               aria-label="Закрыть"
             >
               <X className="h-[18px] w-[18px]" strokeWidth={1.75} />

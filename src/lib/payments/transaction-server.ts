@@ -10,6 +10,15 @@ import type {
   PaymentTransactionType,
   PaymentReceiptMetadata,
 } from "@/types/payment-platform";
+import {
+  addMoney,
+  capRefundAmount,
+  moneyFromMajorUnits,
+  parseMoneyCurrency,
+  zeroMoney,
+  type Money,
+} from "@/lib/payments/money";
+import { createStablePaymentIdempotencyKey } from "@/lib/payments/payment-idempotency";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -34,6 +43,10 @@ function mapTransactionRow(
     sourceEventId: row.source_event_id,
     requestedBy: row.requested_by,
     approvedBy: row.approved_by,
+    requestIdempotencyKey: row.request_idempotency_key,
+    sourceTransactionId: row.source_transaction_id,
+    claimedBy: row.claimed_by,
+    claimedAt: row.claimed_at,
     requestReason: row.request_reason,
     adminNotes: row.admin_notes,
     metadata: asRecord(row.metadata),
@@ -192,6 +205,8 @@ export type CreateRefundRequestInput = {
   currency?: string;
   provider?: BookingPaymentWebhookPatch["provider"];
   requestedBy: string;
+  operationId: string;
+  sourceTransactionId?: string;
   reason?: string;
   metadata?: Record<string, unknown>;
 };
@@ -217,33 +232,52 @@ export async function createRefundRequest(
   supabase: DbClient,
   input: CreateRefundRequestInput
 ): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
-  const pending = await findPendingRefundForBooking(supabase, input.bookingId);
-  if (pending) {
-    return { error: "Запрос на возврат уже ожидает рассмотрения" };
+  const provider = input.provider ?? "manual";
+  let sourceTransactionId = input.sourceTransactionId?.trim();
+  if (!sourceTransactionId) {
+    const { data: charges, error: chargeError } = await supabase
+      .from("payment_transactions")
+      .select("id")
+      .eq("booking_id", input.bookingId)
+      .eq("type", "charge")
+      .eq("status", "completed")
+      .eq("provider", provider)
+      .order("created_at", { ascending: false })
+      .limit(2);
+
+    if (chargeError || !charges?.length) {
+      return { error: "Не найдено исходное завершённое списание для возврата" };
+    }
+    if (charges.length !== 1) {
+      return { error: "Найдено несколько списаний: выберите исходную операцию" };
+    }
+    sourceTransactionId = charges[0].id;
   }
 
-  const { data, error } = await supabase
-    .from("payment_transactions")
-    .insert({
-      booking_id: input.bookingId,
-      provider: input.provider ?? "manual",
-      amount: Math.max(0, input.amount),
-      currency: input.currency ?? "USD",
-      status: "pending",
-      type: "refund",
-      requested_by: input.requestedBy,
-      request_reason: input.reason?.trim() || null,
-      metadata: {
-        source: "refund_request",
-        requestCreatedAt: new Date().toISOString(),
-        ...(input.metadata ?? {}),
-      } as Json,
-    })
-    .select("*")
-    .single();
+  const { data, error } = await supabase.rpc("prepare_refund_request_atomic", {
+    p_booking_id: input.bookingId,
+    p_source_transaction_id: sourceTransactionId,
+    p_amount: input.amount,
+    p_currency: input.currency ?? "USD",
+    p_provider: provider,
+    p_requested_by: input.requestedBy,
+    p_request_reason: input.reason?.trim() || null,
+    p_request_idempotency_key: input.operationId,
+    p_metadata: {
+      source: "refund_request",
+      ...(input.metadata ?? {}),
+    } as Json,
+  });
 
   if (error || !data) {
-    return { error: error?.message ?? "Не удалось создать запрос на возврат" };
+    const message = error?.message ?? "Не удалось создать запрос на возврат";
+    if (message.includes("REFUND_EXCEEDS_REMAINING_CHARGE")) {
+      return { error: "Сумма возврата превышает доступный остаток по списанию" };
+    }
+    if (message.includes("payment_refund_active_source_idx")) {
+      return { error: "По этому списанию уже есть активный запрос на возврат" };
+    }
+    return { error: message };
   }
 
   return { transaction: mapTransactionRow(data) };
@@ -334,9 +368,10 @@ export async function listPaymentTransactions(
 
   return data.map((row) => {
     const bookingJoin = asRecord(row.bookings);
-    const { bookings: _bookings, ...txRow } = row as PaymentTransactionDbRow & {
+    const txRow = { ...(row as PaymentTransactionDbRow & {
       bookings?: { tour_title?: string; contact_email?: string };
-    };
+    }) };
+    delete txRow.bookings;
     return mapTransactionRow(txRow, {
       tour_title: typeof bookingJoin.tour_title === "string" ? bookingJoin.tour_title : undefined,
       contact_email:
@@ -357,7 +392,8 @@ export type ApproveRefundResult =
         | "MP_FAILED"
         | "STRIPE_NOT_CONFIGURED"
         | "STRIPE_FAILED"
-        | "CHARGE_NOT_FOUND";
+        | "CHARGE_NOT_FOUND"
+        | "INVALID_REFUND_AMOUNT";
     };
 
 export function isMercadoPagoRefundConfigured(): boolean {
@@ -370,27 +406,104 @@ export function isStripeRefundConfigured(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY?.trim());
 }
 
-async function resolveChargeExternalId(
-  supabase: DbClient,
-  bookingId: string,
-  provider?: PaymentTransactionRow["provider"]
-): Promise<string | null> {
-  let query = supabase
-    .from("payment_transactions")
-    .select("external_id")
-    .eq("booking_id", bookingId)
-    .eq("type", "charge")
-    .eq("status", "completed")
-    .order("created_at", { ascending: false })
-    .limit(1);
+export type RefundExecutionPlan = {
+  charge: PaymentTransactionRow;
+  captured: Money;
+  requested: Money;
+  remainingBeforeRefund: Money;
+  remainingAfterRefund: Money;
+};
 
-  if (provider) {
-    query = query.eq("provider", provider);
+export async function resolveRefundExecutionPlan(
+  supabase: DbClient,
+  refund: PaymentTransactionRow,
+): Promise<{ ok: true; plan: RefundExecutionPlan } | { ok: false; error: string }> {
+  let chargeQuery = supabase
+    .from("payment_transactions")
+    .select("*")
+    .eq("type", "charge")
+    .eq("status", "completed");
+
+  chargeQuery = refund.sourceTransactionId
+    ? chargeQuery.eq("id", refund.sourceTransactionId)
+    : chargeQuery
+        .eq("booking_id", refund.bookingId)
+        .eq("provider", refund.provider)
+        .order("created_at", { ascending: false })
+        .limit(2);
+  const { data: charges } = await chargeQuery;
+
+  if (!charges?.length) {
+    return { ok: false, error: "Не найдено исходное завершённое списание для возврата" };
+  }
+  if (charges.length > 1) {
+    return {
+      ok: false,
+      error: "Найдено несколько списаний: выберите исходное списание перед возвратом",
+    };
   }
 
-  const { data } = await query.maybeSingle();
+  const charge = mapTransactionRow(charges[0]);
+  if (!charge.externalId && charge.provider !== "manual") {
+    return { ok: false, error: "У исходного списания отсутствует идентификатор провайдера" };
+  }
 
-  return data?.external_id ?? null;
+  const chargeCurrency = parseMoneyCurrency(charge.currency);
+  const refundCurrency = parseMoneyCurrency(refund.currency);
+  if (!chargeCurrency || !refundCurrency || chargeCurrency !== refundCurrency) {
+    return { ok: false, error: "Валюта возврата не совпадает с валютой исходного списания" };
+  }
+
+  let captured: Money;
+  let requested: Money;
+  try {
+    captured = moneyFromMajorUnits(chargeCurrency, charge.amount);
+    requested = moneyFromMajorUnits(refundCurrency, refund.amount);
+  } catch {
+    return { ok: false, error: "Сумма списания или возврата имеет недопустимую точность" };
+  }
+
+  const { data: committedRows } = await supabase
+    .from("payment_transactions")
+    .select("amount, currency")
+    .eq("type", "refund")
+    .eq("source_transaction_id", charge.id)
+    .in("status", ["processing", "completed"]);
+
+  let committed = zeroMoney(chargeCurrency);
+  for (const row of committedRows ?? []) {
+    const currency = parseMoneyCurrency(row.currency);
+    if (!currency || currency !== chargeCurrency) {
+      return { ok: false, error: "В истории возвратов найдена несовместимая валюта" };
+    }
+    try {
+      committed = addMoney(committed, moneyFromMajorUnits(currency, Number(row.amount)));
+    } catch {
+      return { ok: false, error: "В истории возвратов найдена некорректная сумма" };
+    }
+  }
+
+  const cap = capRefundAmount({ captured, committedRefunds: committed, requested });
+  if (!cap.ok) {
+    return { ok: false, error: `Возврат заблокирован: ${cap.reason}` };
+  }
+  if (cap.wasCapped) {
+    return {
+      ok: false,
+      error: "Запрошенная сумма превышает остаток по исходному списанию",
+    };
+  }
+
+  return {
+    ok: true,
+    plan: {
+      charge,
+      captured,
+      requested,
+      remainingBeforeRefund: cap.remainingBeforeRefund,
+      remainingAfterRefund: cap.remainingAfterRefund,
+    },
+  };
 }
 
 function mapStripeRefundStatus(status: string): PaymentTransactionStatus {
@@ -434,7 +547,8 @@ export type ExecuteRefundAttemptResult =
         | "MP_FAILED"
         | "STRIPE_NOT_CONFIGURED"
         | "STRIPE_FAILED"
-        | "CHARGE_NOT_FOUND";
+        | "CHARGE_NOT_FOUND"
+        | "INVALID_REFUND_AMOUNT";
     };
 
 async function updateRefundAfterAttempt(
@@ -443,40 +557,30 @@ async function updateRefundAfterAttempt(
   input: {
     status: PaymentTransactionStatus;
     externalId?: string | null;
-    actorUserId?: string;
-    adminNotes?: string;
     providerAttempt: Record<string, unknown>;
+    refundPlan: RefundExecutionPlan;
+    bookingFullyRefunded: boolean;
   }
 ): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
-  const { data, error } = await supabase
-    .from("payment_transactions")
-    .update({
-      status: input.status,
-      approved_by: input.actorUserId ?? existing.approvedBy,
-      admin_notes: input.adminNotes?.trim() || existing.adminNotes,
-      external_id: input.externalId ?? existing.externalId,
-      metadata: {
-        ...existing.metadata,
-        refundAttempt: input.providerAttempt,
-      } as Json,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", existing.id)
-    .select("*")
-    .single();
+  const { data, error } = await supabase.rpc("finalize_refund_attempt", {
+    p_refund_id: existing.id,
+    p_status: input.status,
+    p_external_id: input.externalId ?? null,
+    p_metadata: {
+      ...existing.metadata,
+      sourceChargeTransactionId: input.refundPlan.charge.id,
+      sourceChargeExternalId: input.refundPlan.charge.externalId,
+      sourceChargeMinorUnits: input.refundPlan.captured.minorUnits,
+      sourceChargeCurrency: input.refundPlan.charge.currency,
+      remainingBeforeRefundMinorUnits: input.refundPlan.remainingBeforeRefund.minorUnits,
+      remainingAfterRefundMinorUnits: input.refundPlan.remainingAfterRefund.minorUnits,
+      refundAttempt: input.providerAttempt,
+    } as Json,
+    p_booking_fully_refunded: input.bookingFullyRefunded,
+  });
 
   if (error || !data) {
     return { error: error?.message ?? "Не удалось обновить транзакцию" };
-  }
-
-  if (input.status === "completed") {
-    await supabase
-      .from("bookings")
-      .update({
-        payment_status: "refunded",
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", existing.bookingId);
   }
 
   return { transaction: mapTransactionRow(data) };
@@ -495,6 +599,32 @@ export async function executeRefundAttempt(
     return { ok: false, error: "Запрос нельзя одобрить в текущем статусе", code: "INVALID_STATE" };
   }
 
+  const planResult = await resolveRefundExecutionPlan(supabase, existing);
+  if (!planResult.ok) {
+    return {
+      ok: false,
+      error: planResult.error,
+      code: "INVALID_REFUND_AMOUNT",
+    };
+  }
+  const refundPlan = planResult.plan;
+  const refundMoney = refundPlan.requested;
+  if (refundMoney.minorUnits === 0) {
+    return {
+      ok: false,
+      error: "Сумма возврата должна быть больше нуля",
+      code: "INVALID_REFUND_AMOUNT",
+    };
+  }
+
+  const refundIdempotencyKey = createStablePaymentIdempotencyKey({
+    providerId: existing.provider,
+    operation: "refund",
+    resourceId: existing.bookingId,
+    operationId: existing.id,
+    amount: refundMoney,
+  });
+
   if (existing.provider === "manual") {
     if (!input.allowManualCompletion) {
       return {
@@ -504,16 +634,70 @@ export async function executeRefundAttempt(
         skippedReason: "MANUAL_PROVIDER",
       };
     }
-    const updated = await updateRefundAfterAttempt(supabase, existing, {
+  } else if (existing.provider === "stripe" && !isStripeRefundConfigured()) {
+    return input.strictProviderConfig
+      ? {
+          ok: false,
+          error: "Возврат через Stripe недоступен: задайте STRIPE_SECRET_KEY",
+          code: "STRIPE_NOT_CONFIGURED",
+        }
+      : {
+          ok: true,
+          transaction: existing,
+          providerExecuted: false,
+          skippedReason: "STRIPE_NOT_CONFIGURED",
+        };
+  } else if (existing.provider === "mercadopago" && !isMercadoPagoRefundConfigured()) {
+    return input.strictProviderConfig
+      ? {
+          ok: false,
+          error:
+            "Возврат через Mercado Pago недоступен: задайте MERCADOPAGO_ACCESS_TOKEN и MERCADOPAGO_REFUNDS_ENABLED=true",
+          code: "MP_NOT_CONFIGURED",
+        }
+      : {
+          ok: true,
+          transaction: existing,
+          providerExecuted: false,
+          skippedReason: "MP_NOT_CONFIGURED",
+        };
+  }
+
+  if (!input.actorUserId) {
+    return { ok: false, error: "Не указан утверждающий сотрудник", code: "INVALID_STATE" };
+  }
+
+  const { data: claimedRow, error: claimError } = await supabase.rpc(
+    "claim_refund_for_execution",
+    {
+      p_refund_id: existing.id,
+      p_actor_user_id: input.actorUserId,
+      p_admin_notes: input.adminNotes?.trim() || null,
+    }
+  );
+  if (claimError || !claimedRow) {
+    const sameActor = claimError?.message.includes("REFUND_MAKER_CANNOT_APPROVE");
+    return {
+      ok: false,
+      error: sameActor
+        ? "Возврат должен утвердить другой сотрудник"
+        : "Запрос уже обрабатывается или был изменён другим сотрудником",
+      code: "INVALID_STATE",
+    };
+  }
+  const claimed = mapTransactionRow(claimedRow);
+
+  if (claimed.provider === "manual") {
+    const updated = await updateRefundAfterAttempt(supabase, claimed, {
       status: "completed",
-      actorUserId: input.actorUserId,
-      adminNotes: input.adminNotes,
       providerAttempt: {
         provider: "manual",
         executed: false,
         skippedReason: "MANUAL_PROVIDER",
         attemptedAt: new Date().toISOString(),
       },
+      refundPlan,
+      bookingFullyRefunded: refundPlan.remainingAfterRefund.minorUnits === 0,
     });
     if ("error" in updated) {
       return { ok: false, error: updated.error, code: "MP_FAILED" };
@@ -521,31 +705,8 @@ export async function executeRefundAttempt(
     return { ok: true, transaction: updated.transaction, providerExecuted: false };
   }
 
-  if (existing.provider === "stripe") {
-    if (!isStripeRefundConfigured()) {
-      if (input.strictProviderConfig) {
-        return {
-          ok: false,
-          error: "Возврат через Stripe недоступен: задайте STRIPE_SECRET_KEY",
-          code: "STRIPE_NOT_CONFIGURED",
-        };
-      }
-      return {
-        ok: true,
-        transaction: existing,
-        providerExecuted: false,
-        skippedReason: "STRIPE_NOT_CONFIGURED",
-      };
-    }
-
-    const paymentReference = await resolveChargeExternalId(supabase, existing.bookingId, "stripe");
-    if (!paymentReference) {
-      return {
-        ok: false,
-        error: "Не найдено исходное списание для возврата через Stripe",
-        code: "CHARGE_NOT_FOUND",
-      };
-    }
+  if (claimed.provider === "stripe") {
+    const paymentReference = refundPlan.charge.externalId!;
 
     try {
       const { createStripeRefund } = await import("@/lib/payments/stripe-client");
@@ -553,15 +714,14 @@ export async function executeRefundAttempt(
         secretKey: process.env.STRIPE_SECRET_KEY!.trim(),
         paymentIntentId: paymentReference.startsWith("pi_") ? paymentReference : undefined,
         chargeId: paymentReference.startsWith("ch_") ? paymentReference : undefined,
-        amount: existing.amount,
+        amount: claimed.amount,
         reason: "requested_by_customer",
+        idempotencyKey: refundIdempotencyKey,
       });
       const status = mapStripeRefundStatus(stripeRefund.status);
-      const updated = await updateRefundAfterAttempt(supabase, existing, {
+      const updated = await updateRefundAfterAttempt(supabase, claimed, {
         status,
         externalId: stripeRefund.id,
-        actorUserId: input.actorUserId,
-        adminNotes: input.adminNotes,
         providerAttempt: {
           provider: "stripe",
           executed: true,
@@ -569,12 +729,27 @@ export async function executeRefundAttempt(
           providerRefundId: stripeRefund.id,
           attemptedAt: new Date().toISOString(),
         },
+        refundPlan,
+        bookingFullyRefunded:
+          status === "completed" && refundPlan.remainingAfterRefund.minorUnits === 0,
       });
       if ("error" in updated) {
         return { ok: false, error: updated.error, code: "STRIPE_FAILED" };
       }
       return { ok: true, transaction: updated.transaction, providerExecuted: true };
     } catch (error) {
+      await updateRefundAfterAttempt(supabase, claimed, {
+        status: "processing",
+        providerAttempt: {
+          provider: "stripe",
+          executed: true,
+          outcome: "uncertain",
+          error: error instanceof Error ? error.message : "Stripe request failed",
+          attemptedAt: new Date().toISOString(),
+        },
+        refundPlan,
+        bookingFullyRefunded: false,
+      });
       return {
         ok: false,
         error: error instanceof Error ? error.message : "Не удалось выполнить возврат через Stripe",
@@ -583,44 +758,19 @@ export async function executeRefundAttempt(
     }
   }
 
-  if (!isMercadoPagoRefundConfigured()) {
-    if (input.strictProviderConfig) {
-      return {
-        ok: false,
-        error:
-          "Возврат через Mercado Pago недоступен: задайте MERCADOPAGO_ACCESS_TOKEN и MERCADOPAGO_REFUNDS_ENABLED=true",
-        code: "MP_NOT_CONFIGURED",
-      };
-    }
-    return {
-      ok: true,
-      transaction: existing,
-      providerExecuted: false,
-      skippedReason: "MP_NOT_CONFIGURED",
-    };
-  }
-
-  const paymentId = await resolveChargeExternalId(supabase, existing.bookingId, "mercadopago");
-  if (!paymentId) {
-    return {
-      ok: false,
-      error: "Не найдено исходное списание для возврата через Mercado Pago",
-      code: "CHARGE_NOT_FOUND",
-    };
-  }
+  const paymentId = refundPlan.charge.externalId!;
 
   try {
     const { createMercadoPagoRefund } = await import("@/lib/payments/mercadopago-client");
     const refund = await createMercadoPagoRefund({
       paymentId,
-      amount: existing.amount,
+      amount: claimed.amount,
+      idempotencyKey: refundIdempotencyKey,
     });
     const status = mapMercadoPagoRefundStatus(refund.status);
-    const updated = await updateRefundAfterAttempt(supabase, existing, {
+    const updated = await updateRefundAfterAttempt(supabase, claimed, {
       status,
       externalId: refund.refundId,
-      actorUserId: input.actorUserId,
-      adminNotes: input.adminNotes,
       providerAttempt: {
         provider: "mercadopago",
         executed: true,
@@ -628,12 +778,27 @@ export async function executeRefundAttempt(
         providerRefundId: refund.refundId,
         attemptedAt: new Date().toISOString(),
       },
+      refundPlan,
+      bookingFullyRefunded:
+        status === "completed" && refundPlan.remainingAfterRefund.minorUnits === 0,
     });
     if ("error" in updated) {
       return { ok: false, error: updated.error, code: "MP_FAILED" };
     }
     return { ok: true, transaction: updated.transaction, providerExecuted: true };
   } catch (error) {
+    await updateRefundAfterAttempt(supabase, claimed, {
+      status: "processing",
+      providerAttempt: {
+        provider: "mercadopago",
+        executed: true,
+        outcome: "uncertain",
+        error: error instanceof Error ? error.message : "Mercado Pago request failed",
+        attemptedAt: new Date().toISOString(),
+      },
+      refundPlan,
+      bookingFullyRefunded: false,
+    });
     return {
       ok: false,
       error:
@@ -664,22 +829,11 @@ export async function rejectRefundRequest(
   adminUserId: string,
   adminNotes?: string
 ): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
-  const existing = await fetchPaymentTransactionById(supabase, transactionId);
-  if (!existing || existing.type !== "refund" || existing.status !== "pending") {
-    return { error: "Запрос нельзя отклонить в текущем статусе" };
-  }
-
-  const { data, error } = await supabase
-    .from("payment_transactions")
-    .update({
-      status: "rejected",
-      approved_by: adminUserId,
-      admin_notes: adminNotes?.trim() || existing.adminNotes,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", transactionId)
-    .select("*")
-    .single();
+  const { data, error } = await supabase.rpc("reject_refund_request_atomic", {
+    p_refund_id: transactionId,
+    p_actor_user_id: adminUserId,
+    p_admin_notes: adminNotes?.trim() || null,
+  });
 
   if (error || !data) {
     return { error: error?.message ?? "Не удалось отклонить запрос" };

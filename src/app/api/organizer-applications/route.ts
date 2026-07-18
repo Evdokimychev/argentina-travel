@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
 import { notifyLeadCaptured } from "@/lib/leads-notify";
+import { escapeHtml } from "@/lib/notifications/email-templates";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -119,10 +120,10 @@ export async function POST(request: Request) {
 
     void notifyLeadCaptured({
       subject: "Новая заявка организатора",
-      html: `<p><strong>${applicantName}</strong></p>
-<p>Email: ${profile.email ?? "—"}<br/>Телефон: ${profile.phone ?? "—"}</p>
-<p>Компания: ${companyName}</p>
-<p>${description}</p>`,
+      html: `<p><strong>${escapeHtml(applicantName)}</strong></p>
+<p>Email: ${escapeHtml(profile.email ?? "—")}<br/>Телефон: ${escapeHtml(profile.phone ?? "—")}</p>
+<p>Компания: ${escapeHtml(companyName)}</p>
+<p>${escapeHtml(description)}</p>`,
     });
 
     return NextResponse.json({

@@ -26,7 +26,6 @@ export type GuideIndexTopicGroup = {
 export type GuideIndexHubContent = {
   heroTitle: string;
   heroSubtitle: string;
-  heroImage: string;
   heroCtas: GuidePillarHeroCta[];
   quickFacts30: TravelHubQuickFact[];
   toc: TravelHubTocItem[];

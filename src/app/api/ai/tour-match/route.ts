@@ -11,6 +11,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import type { Json } from "@/types/database";
 import type { TourMatchRequest, TourMatchResponse, TourMatchSessionMessage } from "@/types/tour-match";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 const QUERY_MIN = 3;
 const QUERY_MAX = 800;
@@ -35,6 +36,9 @@ async function resolveUserId(request: Request): Promise<string | null> {
 }
 
 export async function POST(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   let body: TourMatchRequest;
   try {
     body = (await request.json()) as TourMatchRequest;
@@ -130,6 +134,9 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_read");
+  if (moduleBlocked) return moduleBlocked;
+
   const { isGuideAssistantAiConfigured } = await import("@/lib/ai/guide-assistant");
   return NextResponse.json({
     endpoint: "/api/ai/tour-match",

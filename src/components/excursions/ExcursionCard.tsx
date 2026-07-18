@@ -27,16 +27,24 @@ import { resolveExcursionPriceUsd } from "@/lib/excursion-price-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
 import type { ExcursionListing, ExcursionPartner } from "@/types/excursion";
+import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
 
 function partnerBadgeVariant(partner: ExcursionPartner): "new" | "hit" {
-  return partner === "tripster" ? "new" : "hit";
+  return partner === "sputnik8" ? "hit" : "new";
 }
 
 function partnerBadgeLabel(partner: ExcursionPartner, t: (key: string) => string): string {
+  if (partner === "platform") return "Пора в Аргентину";
   return partner === "sputnik8" ? t("excursions.partner.sputnik8") : t("excursions.partner.tripster");
 }
 
-export default function ExcursionCard({ excursion }: { excursion: ExcursionListing }) {
+export default function ExcursionCard({
+  excursion,
+  imagePriority = false,
+}: {
+  excursion: ExcursionListing;
+  imagePriority?: boolean;
+}) {
   const { t } = useLocaleCurrency();
   const durationLabel = formatExcursionDuration(excursion.durationMinutes, t);
   const priceUsd = resolveExcursionPriceUsd(excursion);
@@ -51,7 +59,15 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
     <ContentCard>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
         <ContentCardMedia aspect="4/3" gradient="none">
-          <TourCardGallery images={galleryImages} alt={excursion.title} />
+          <TourCardGallery
+            images={galleryImages}
+            alt={excursion.title}
+            fallbackImage={resolveTourCardFallbackImage({
+              title: excursion.title,
+              destination: excursion.cityName,
+            })}
+            priority={imagePriority}
+          />
 
           <div className="absolute left-3 top-3 z-10">
             <Badge variant={partnerBadgeVariant(excursion.partner)}>

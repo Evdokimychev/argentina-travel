@@ -1,7 +1,7 @@
 ---
 id: rafting-en-el-rio-mendoza
 type: attraction
-title: Rafting en el río Мендоса
+title: Рафтинг по реке Мендоса
 title_es: Rafting en el río Mendoza
 title_en: Rafting in the Mendoza River
 summary: "Рафтинг по талой реке Мендоса с видами на Анды."

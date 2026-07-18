@@ -5,7 +5,6 @@ import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById, organizerCanAccessBooking } from "@/lib/bookings-server";
 import {
   createRefundRequest,
-  executeRefundAttempt,
 } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -13,11 +12,13 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { BookingPaymentGateway } from "@/types/booking-payment";
 import type { PaymentProviderId } from "@/types/payment-webhook";
 import { userHasAccountRole } from "@/types/user";
+import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   bookingId?: string;
   amountUsd?: number;
   reason?: string;
+  operationId?: string;
 };
 
 function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
@@ -35,6 +36,10 @@ export async function POST(request: Request) {
   const bookingId = body.bookingId?.trim();
   if (!bookingId) {
     return NextResponse.json({ error: "Укажите бронирование" }, { status: 400 });
+  }
+  const operationId = body.operationId?.trim();
+  if (!isUuid(operationId)) {
+    return NextResponse.json({ error: "Некорректный идентификатор операции" }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
@@ -63,7 +68,7 @@ export async function POST(request: Request) {
   const summary = resolveBookingPaymentSummary(booking);
   const amount = Math.max(
     0,
-    Math.round(body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0)
+    Math.round((body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
   );
   if (amount <= 0) {
     return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
@@ -76,6 +81,7 @@ export async function POST(request: Request) {
     currency: "USD",
     provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: sessionUser.id,
+    operationId,
     reason: body.reason,
     metadata: {
       source: "organizer_refund_request",
@@ -87,29 +93,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: created.error }, { status: 400 });
   }
 
-  const attempt = await executeRefundAttempt(admin, {
-    transactionId: created.transaction.id,
-    actorUserId: sessionUser.id,
-    strictProviderConfig: false,
-    allowManualCompletion: false,
-  });
-
-  const transaction = attempt.ok ? attempt.transaction : created.transaction;
-  const providerAttempt = attempt.ok
-    ? {
-        executed: attempt.providerExecuted,
-        skippedReason: attempt.skippedReason ?? null,
-      }
-    : {
-        executed: false,
-        error: attempt.error,
-        code: attempt.code,
-      };
-
   return NextResponse.json(
     {
-      transaction,
-      providerAttempt,
+      transaction: created.transaction,
+      nextStep: "approval_required",
     },
     { status: 201 }
   );

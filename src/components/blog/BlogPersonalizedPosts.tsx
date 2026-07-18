@@ -6,23 +6,26 @@ import { Sparkles } from "lucide-react";
 import BlogCard from "@/components/blog/BlogCard";
 import { getBlogReadingHistory } from "@/lib/blog-reading-history";
 import { getPersonalizedBlogPosts } from "@/lib/blog-personalized";
+import { hydrateBlogIndexPosts } from "@/lib/blog-index-payload";
 import { cn } from "@/lib/cn";
 import type { BlogPost } from "@/types";
 
 type BlogPersonalizedPostsProps = {
   catalog: BlogPost[];
-  initialPosts?: BlogPost[];
+  initialSlugs?: string[];
   variant?: "standard" | "compact";
   className?: string;
 };
 
 export default function BlogPersonalizedPosts({
   catalog,
-  initialPosts = [],
+  initialSlugs = [],
   variant = "standard",
   className,
 }: BlogPersonalizedPostsProps) {
-  const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
+  const [posts, setPosts] = useState<BlogPost[]>(() =>
+    hydrateBlogIndexPosts(catalog, initialSlugs, 4),
+  );
 
   useEffect(() => {
     const history = getBlogReadingHistory(8);
@@ -60,7 +63,7 @@ export default function BlogPersonalizedPosts({
   if (visiblePosts.length === 0) return null;
 
   const compactReserveClass =
-    variant === "compact" && initialPosts.length > 0 ? "min-h-[12rem]" : undefined;
+    variant === "compact" && initialSlugs.length > 0 ? "min-h-[12rem]" : undefined;
 
   if (variant === "compact") {
     return (

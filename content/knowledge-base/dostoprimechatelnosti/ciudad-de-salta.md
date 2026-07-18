@@ -1,7 +1,7 @@
 ---
 id: ciudad-de-salta
 type: attraction
-title: Город Salta
+title: Сальта
 title_es: Ciudad de Salta
 title_en: City of Salta
 summary: "Сальта «Ла Линда» — самая большая столица аргентинского северо-запада: колониальный центр и ворота в кальчакские долины."
@@ -15,7 +15,7 @@ tags:
 - северо-запад
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -24.7821269
   lng: -65.4231976

@@ -2,6 +2,7 @@ import { extractFaqFromBlogPost } from "@/lib/blog-faq";
 import { buildBlogFaqJsonLd } from "@/lib/content-json-ld";
 import { getBlogRichArticle } from "@/data/blog-articles";
 import type { BlogPost } from "@/types";
+import { serializeJsonLd } from "@/lib/schema-json-ld";
 
 export default function BlogFaqJsonLd({ post }: { post: BlogPost }) {
   const richFaq = post.richArticleId
@@ -15,7 +16,7 @@ export default function BlogFaqJsonLd({ post }: { post: BlogPost }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }

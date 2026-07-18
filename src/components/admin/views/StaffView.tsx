@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
@@ -20,6 +22,8 @@ type StaffRow = {
   isActive: boolean;
   notes: string | null;
   createdAt: string;
+  updatedAt: string;
+  rowVersion: number;
 };
 
 type PresetRow = {
@@ -34,15 +38,41 @@ type StaffResponse = {
   presets?: PresetRow[];
 };
 
+type StaffFeedback = {
+  variant: "success" | "error";
+  title: string;
+  description: string;
+};
+
+function validateEmail(value: string): string | undefined {
+  const normalized = value.trim();
+  if (!normalized) return "Укажите email пользователя.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+    return "Проверьте адрес: например, name@example.com.";
+  }
+  return undefined;
+}
+
 export default function StaffView() {
   const { data, loading, error, refresh } = useAdminApi<StaffResponse>("/api/admin/staff");
   const [email, setEmail] = useState("");
   const [preset, setPreset] = useState<AdminPresetId>("support_agent");
   const [busy, setBusy] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [togglingUserId, setTogglingUserId] = useState<string | null>(null);
+  const [changingUserId, setChangingUserId] = useState<string | null>(null);
+  const [selectedPresets, setSelectedPresets] = useState<Record<string, AdminPresetId>>({});
+  const [feedback, setFeedback] = useState<StaffFeedback | null>(null);
+
+  const emailError = emailTouched ? validateEmail(email) : undefined;
 
   async function assignStaff(event: React.FormEvent) {
     event.preventDefault();
-    if (!email.trim()) return;
+    setEmailTouched(true);
+    const validationError = validateEmail(email);
+    if (validationError) return;
+
+    setFeedback(null);
     setBusy(true);
     try {
       const res = await fetch("/api/admin/staff", {
@@ -53,26 +83,103 @@ export default function StaffView() {
       const json = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(json.error ?? "Ошибка");
       setEmail("");
+      setEmailTouched(false);
       await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Администратор добавлен",
+        description: "Права доступа назначены и уже доступны пользователю.",
+      });
     } catch (assignError) {
-      alert(assignError instanceof Error ? assignError.message : "Ошибка");
+      setFeedback({
+        variant: "error",
+        title: "Не удалось назначить доступ",
+        description: assignError instanceof Error ? assignError.message : "Попробуйте ещё раз.",
+      });
     } finally {
       setBusy(false);
     }
   }
 
-  async function toggleActive(userId: string, isActive: boolean) {
-    const res = await fetch(`/api/admin/staff/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isActive: !isActive }),
-    });
-    if (!res.ok) {
-      const json = (await res.json()) as { error?: string };
-      alert(json.error ?? "Ошибка");
+  async function toggleActive(row: StaffRow) {
+    const { userId, isActive } = row;
+    if (
+      !window.confirm(
+        isActive
+          ? "Приостановить доступ этого администратора? Он сразу потеряет доступ к админке."
+          : "Восстановить доступ этого администратора?",
+      )
+    ) {
       return;
     }
-    await refresh();
+    setFeedback(null);
+    setTogglingUserId(userId);
+    try {
+      const res = await fetch(`/api/admin/staff/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isActive: !isActive,
+          expectedVersion: row.rowVersion,
+        }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось изменить доступ");
+      await refresh();
+      setFeedback({
+        variant: "success",
+        title: isActive ? "Доступ приостановлен" : "Доступ восстановлен",
+        description: "Статус администратора обновлён.",
+      });
+    } catch (toggleError) {
+      setFeedback({
+        variant: "error",
+        title: "Не удалось изменить доступ",
+        description: toggleError instanceof Error ? toggleError.message : "Попробуйте ещё раз.",
+      });
+    } finally {
+      setTogglingUserId(null);
+    }
+  }
+
+  async function changePreset(row: StaffRow) {
+    const nextPreset = selectedPresets[row.userId] ?? row.preset;
+    if (!nextPreset || nextPreset === row.preset) return;
+    const label = presets.find((item) => item.id === nextPreset)?.label ?? nextPreset;
+    if (!window.confirm(`Назначить роль «${label}» пользователю ${row.fullName}?`)) return;
+
+    setFeedback(null);
+    setChangingUserId(row.userId);
+    try {
+      const res = await fetch(`/api/admin/staff/${row.userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        // The owner-facing role selector represents the complete assignment.
+        // Clear legacy per-user additions so an older permission cannot silently
+        // survive a move to a more restrictive role.
+        body: JSON.stringify({
+          preset: nextPreset,
+          capabilities: [],
+          expectedVersion: row.rowVersion,
+        }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось изменить роль");
+      await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Роль изменена",
+        description: `Теперь для ${row.fullName} действует роль «${label}».`,
+      });
+    } catch (changeError) {
+      setFeedback({
+        variant: "error",
+        title: "Не удалось изменить роль",
+        description: changeError instanceof Error ? changeError.message : "Попробуйте ещё раз.",
+      });
+    } finally {
+      setChangingUserId(null);
+    }
   }
 
   const staff = data?.staff ?? [];
@@ -91,27 +198,63 @@ export default function StaffView() {
           }
         />
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error ? (
+          <InlineFeedback variant="error" title="Не удалось загрузить команду" description={error} />
+        ) : null}
+        {feedback ? (
+          <InlineFeedback
+            variant={feedback.variant}
+            title={feedback.title}
+            description={feedback.description}
+          />
+        ) : null}
 
         <section className={`${cabinetCardClass} p-5`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Добавить администратора</h2>
-          <form onSubmit={(e) => void assignStaff(e)} className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email пользователя"
-              className="sm:max-w-xs"
-            />
-            <NativeSelect value={preset} onChange={(e) => setPreset(e.target.value as AdminPresetId)}>
-              {presets.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.label}
-                </option>
-              ))}
-            </NativeSelect>
-            <Button type="submit" disabled={busy}>
-              {busy ? "Назначаем…" : "Назначить"}
+          <form
+            onSubmit={(e) => void assignStaff(e)}
+            noValidate
+            className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-start"
+          >
+            <FormField
+              id="staff-email"
+              label="Email пользователя"
+              hint="Пользователь должен быть зарегистрирован на сайте."
+              error={emailError}
+              required
+            >
+              <Input
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setEmailTouched(true);
+                  setFeedback(null);
+                }}
+                onBlur={() => setEmailTouched(true)}
+                placeholder="name@example.com"
+                required
+              />
+            </FormField>
+            <FormField
+              id="staff-preset"
+              label="Роль доступа"
+              hint={presets.find((item) => item.id === preset)?.description ?? undefined}
+            >
+              <NativeSelect
+                value={preset}
+                onChange={(event) => setPreset(event.target.value as AdminPresetId)}
+              >
+                {presets.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </NativeSelect>
+            </FormField>
+            <Button type="submit" loading={busy} loadingLabel="Назначаем…" className="sm:mt-[26px]">
+              Назначить
             </Button>
           </form>
         </section>
@@ -136,15 +279,63 @@ export default function StaffView() {
                     ) : null}
                   </div>
                   <p className="text-slate">
-                    Пресет: {row.preset ?? "—"} · {formatAdminWhen(row.createdAt)}
+                    Добавлен {formatAdminWhen(row.createdAt)}
                   </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => void toggleActive(row.userId, row.isActive)}
-                  >
-                    {row.isActive ? "Деактивировать" : "Активировать"}
-                  </Button>
+                  {row.preset === "super_admin" ? (
+                    <p className="rounded-xl bg-sky-50 px-3 py-2 text-xs text-sky-800">
+                      Владелец проекта. Это назначение защищено от случайного изменения.
+                    </p>
+                  ) : (
+                    <div className="flex flex-wrap items-end gap-2">
+                      <FormField
+                        id={`staff-role-${row.userId}`}
+                        label="Роль доступа"
+                        hint={
+                          presets.find(
+                            (item) =>
+                              item.id === (selectedPresets[row.userId] ?? row.preset ?? "support_agent"),
+                          )?.description ?? undefined
+                        }
+                      >
+                        <NativeSelect
+                          value={selectedPresets[row.userId] ?? row.preset ?? "support_agent"}
+                          onChange={(event) =>
+                            setSelectedPresets((current) => ({
+                              ...current,
+                              [row.userId]: event.target.value as AdminPresetId,
+                            }))
+                          }
+                        >
+                          {presets
+                            .filter((item) => item.id !== "super_admin")
+                            .map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.label}
+                              </option>
+                            ))}
+                        </NativeSelect>
+                      </FormField>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void changePreset(row)}
+                        loading={changingUserId === row.userId}
+                        loadingLabel="Сохраняем…"
+                        disabled={(selectedPresets[row.userId] ?? row.preset) === row.preset}
+                      >
+                        Сохранить роль
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void toggleActive(row)}
+                        loading={togglingUserId === row.userId}
+                        loadingLabel="Обновляем…"
+                      >
+                        {row.isActive ? "Приостановить доступ" : "Восстановить доступ"}
+                      </Button>
+                    </div>
+                  )}
                 </li>
               ))
             )}

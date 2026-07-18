@@ -15,18 +15,68 @@ import {
   shouldBlockInternalRoute,
 } from "@/lib/internal-route-access";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteFeatures } from "@/lib/site-settings-server";
-import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
+import {
+  isPublicPathEnabled,
+  isTravelModulePathEnabled,
+} from "@/lib/public-module-visibility";
+import { matchUrlRedirectEdge } from "@/lib/redirects/url-redirect-edge";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import { getAppRuntimeMode } from "@/lib/runtime-mode";
 import {
   COOKIE_CONSENT_COOKIE_NAME,
   hasPersonalizationConsentFromCookieValue,
 } from "@/lib/cookie-consent";
+import { isCanonicalIndexingRequest } from "@/lib/robots-txt";
+import { matchPublicDetailPath } from "@/lib/public-detail-route";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 const TOUR_PRIVATE_ACCESS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+
+async function rejectMissingPublicDetail(
+  request: NextRequest,
+  routePathname: string,
+): Promise<NextResponse | null> {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const detail = matchPublicDetailPath(routePathname);
+  if (!detail) return null;
+
+  if (
+    (detail.kind === "tours" || detail.kind === "excursions") &&
+    (request.nextUrl.searchParams.has("access") ||
+      request.cookies.has(tourPrivateAccessCookieName(detail.slug)))
+  ) {
+    return null;
+  }
+
+  try {
+    const checkUrl = new URL(
+      `/api/public-detail-exists/${detail.kind}/${encodeURIComponent(detail.slug)}`,
+      request.url,
+    );
+    const response = await fetch(checkUrl, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(1_500),
+    });
+    if (response.status !== 404) return null;
+
+    const notFoundUrl = request.nextUrl.clone();
+    notFoundUrl.pathname = "/_not-found";
+    notFoundUrl.search = "";
+
+    return NextResponse.rewrite(notFoundUrl, {
+      status: 404,
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=600",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
+  } catch {
+    return null;
+  }
+}
 
 function applyFirstTouchAttributionCookie(
   request: NextRequest,
@@ -71,7 +121,7 @@ function applyTourPrivateAccessCookie(
   response: NextResponse,
 ): NextResponse {
   const pathname = stripLocalePrefix(request.nextUrl.pathname);
-  const tourMatch = pathname.match(/^\/tours\/([^/]+)$/);
+  const tourMatch = pathname.match(/^\/(?:tours|excursions)\/([^/]+)$/);
   if (!tourMatch) return response;
 
   const access = request.nextUrl.searchParams.get("access")?.trim();
@@ -92,10 +142,20 @@ function finalizeMiddlewareResponse(
   request: NextRequest,
   response: NextResponse,
 ): NextResponse {
-  return applyTourPrivateAccessCookie(
+  const finalized = applyTourPrivateAccessCookie(
     request,
     applyFirstTouchAttributionCookie(request, response),
   );
+
+  if (!isCanonicalIndexingRequest(request.url)) {
+    finalized.headers.set("X-Robots-Tag", "noindex, nofollow");
+  } else if (getLocaleFromPathname(request.nextUrl.pathname)) {
+    // /en and /es currently reuse fallback copy. Publish them only after the
+    // CMS exposes a locale-aware publication registry and hreflang entries.
+    finalized.headers.set("X-Robots-Tag", "noindex, follow");
+  }
+
+  return finalized;
 }
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
@@ -171,19 +231,49 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  if (request.method === "GET" || request.method === "HEAD") {
-    try {
-      const redirect = await matchUrlRedirect(routePathname);
-      if (redirect) {
-        const target = redirect.toPath.startsWith("http")
-          ? new URL(redirect.toPath)
-          : new URL(redirect.toPath, request.url);
-        target.search = request.nextUrl.search;
-        return NextResponse.redirect(target, redirect.statusCode);
-      }
-    } catch {
-      // Redirect lookup unavailable — continue request
-    }
+  const redirectLookup =
+    request.method === "GET" || request.method === "HEAD"
+      ? matchUrlRedirectEdge(routePathname).catch(() => null)
+      : Promise.resolve(null);
+  const missingPublicDetailLookup = rejectMissingPublicDetail(request, routePathname);
+  const needsPublicVisibility =
+    (request.method === "GET" || request.method === "HEAD") &&
+    !routePathname.startsWith("/api") &&
+    !routePathname.startsWith("/admin");
+  const controlPlaneLookup =
+    !isMaintenanceExempt(routePathname) || needsPublicVisibility
+      ? fetchSiteControlPlaneEdge()
+      : Promise.resolve(null);
+
+  const redirect = await redirectLookup;
+  if (redirect) {
+    const target = redirect.toPath.startsWith("http")
+      ? new URL(redirect.toPath)
+      : new URL(redirect.toPath, request.url);
+    target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, redirect.statusCode);
+  }
+
+  const missingPublicDetail = await missingPublicDetailLookup;
+  if (missingPublicDetail) return missingPublicDetail;
+
+  const controlPlane = await controlPlaneLookup;
+  if (
+    needsPublicVisibility &&
+    controlPlane &&
+    (!isPublicPathEnabled(routePathname, controlPlane.navigation) ||
+      !isTravelModulePathEnabled(routePathname, controlPlane.modules))
+  ) {
+    const notFoundUrl = request.nextUrl.clone();
+    notFoundUrl.pathname = "/_not-found";
+    notFoundUrl.search = "";
+    return NextResponse.rewrite(notFoundUrl, {
+      status: 404,
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
   }
 
   if (request.method === "POST" && pathname.startsWith("/api/webhooks/")) {
@@ -208,15 +298,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (!isMaintenanceExempt(routePathname)) {
-    try {
-      const features = await fetchSiteFeatures();
-      if (features.maintenanceMode) {
-        return NextResponse.redirect(new URL("/maintenance", request.url));
-      }
-    } catch {
-      // Settings unavailable — do not block public site
-    }
+  if (controlPlane?.features.maintenanceMode) {
+    return NextResponse.redirect(new URL("/maintenance", request.url));
   }
 
   const localeResponse = applyLocalePrefix(request);

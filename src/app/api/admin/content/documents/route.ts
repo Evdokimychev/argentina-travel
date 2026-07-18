@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
+import { clientIpFromRequest } from "@/lib/admin/audit";
+import {
+  cmsMutationHttpStatus,
+  createCmsDocument,
+  getCmsDocumentById,
+  listCmsDocuments,
+} from "@/lib/cms/content-server";
 import { groupCmsDocuments } from "@/lib/cms/cms-locale";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
@@ -15,6 +20,7 @@ import {
   guideBodyFromTs,
   destinationBodyFromTs,
   placeBodyFromTs,
+  cmsDocumentId,
   type CmsDocType,
   type CmsDocumentBody,
 } from "@/types/cms-content";
@@ -79,6 +85,21 @@ export async function POST(request: Request) {
     cmsBody = blogBodyFromTs(source);
   }
 
+  if (body.importFromSource && docType === "knowledge") {
+    const source = await getCmsDocumentById(
+      createSupabaseAdminClient(),
+      cmsDocumentId("knowledge", slug, "ru"),
+    );
+    if (!source || source.body.kind !== "blog") {
+      return NextResponse.json(
+        { error: "Исходный материал базы знаний не найден" },
+        { status: 404 },
+      );
+    }
+    title = title || source.title;
+    cmsBody = source.body;
+  }
+
   if (body.importFromSource && docType === "guide") {
     const source = getContentPage("guide", slug);
     if (!source) {
@@ -118,20 +139,15 @@ export async function POST(request: Request) {
     title,
     body: cmsBody,
     actorId: auth.actorId,
+    ipAddress: clientIpFromRequest(request),
   });
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json(
+      { error: result.error, code: result.code },
+      { status: cmsMutationHttpStatus(result.code) },
+    );
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.create",
-    entityType: "content_document",
-    entityId: result.document.id,
-    payload: { docType, slug },
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ document: result.document }, { status: 201 });
 }

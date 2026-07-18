@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -27,6 +26,15 @@ import {
   wrapTripsterUrlWithAffiliate,
 } from "@/lib/tripster/checkout-url-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import {
+  claimPartnerBookingOperation,
+  completePartnerBookingOperation,
+  fingerprintPartnerBookingRequest,
+  isValidBookingOperationKey,
+} from "@/lib/partner-booking/idempotency";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 
 type BookingRequestBody = {
   slug?: string;
@@ -39,6 +47,8 @@ type BookingRequestBody = {
   messageToGuide?: string;
   productType?: "excursion" | "tour";
   userId?: string;
+  captchaToken?: string;
+  company?: string;
 };
 
 function normalizeTimeForApi(time: string): string {
@@ -186,7 +196,33 @@ async function persistTripsterRequest(
 async function postTripsterBookingRequest(request: Request) {
   const body = (await request.json().catch(() => null)) as BookingRequestBody | null;
   if (!body) {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_INVALID_REQUEST"), { status: 400 });
+  }
+
+  const protection = await verifyGuestFormProtection({
+    request,
+    formId: "partner_booking",
+    captchaToken: body.captchaToken,
+    honeypot: body.company,
+  });
+  if (!protection.ok) {
+    if (protection.kind === "configuration") {
+      return NextResponse.json(
+        publicBookingError("BOOKING_VERIFICATION_UNAVAILABLE"),
+        { status: 503 },
+      );
+    }
+    return NextResponse.json(
+      publicBookingError("BOOKING_VERIFICATION_FAILED"),
+      { status: 400 },
+    );
+  }
+
+  const navigation = await fetchSiteNavigation();
+  const productEnabled =
+    body.productType === "tour" ? navigation.showTours : navigation.showExcursions;
+  if (!productEnabled) {
+    return NextResponse.json(publicBookingError("BOOKING_SECTION_UNAVAILABLE"), { status: 404 });
   }
 
   const slug = body.slug?.trim();
@@ -196,7 +232,7 @@ async function postTripsterBookingRequest(request: Request) {
   const messageToGuide = body.messageToGuide?.trim();
 
   if (!slug || !date || !time || personsCount < 1) {
-    return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_REQUIRED_FIELDS"), { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
@@ -204,7 +240,7 @@ async function postTripsterBookingRequest(request: Request) {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
-  const userId = authUser?.id ?? body.userId?.trim() ?? null;
+  const userId = authUser?.id ?? null;
   let profileCountry: string | null = null;
 
   if (authUser) {
@@ -238,7 +274,7 @@ async function postTripsterBookingRequest(request: Request) {
     });
 
     if ("error" in contact) {
-      return NextResponse.json({ error: contact.error }, { status: 400 });
+      return NextResponse.json(publicBookingError("BOOKING_CONTACT_INVALID"), { status: 400 });
     }
 
     ({ name, email, phone } = contact);
@@ -259,7 +295,7 @@ async function postTripsterBookingRequest(request: Request) {
   }
 
   if (!experienceId) {
-    return NextResponse.json({ error: "Tripster product not found." }, { status: 404 });
+    return NextResponse.json(publicBookingError("BOOKING_PRODUCT_NOT_FOUND"), { status: 404 });
   }
 
   let admin: ReturnType<typeof createSupabaseAdminClient> | null = null;
@@ -324,8 +360,7 @@ async function postTripsterBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "api_not_configured",
-      error:
-        "Сервис бронирования Tripster сейчас недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
@@ -351,12 +386,80 @@ async function postTripsterBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "contact_on_partner_site",
-      error:
-        "Контактные данные заполняются на сайте партнёра — открываем Tripster с выбранной датой, временем и числом туристов.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
-  const idempotencyKey = randomUUID();
+  const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
+  if (!isValidBookingOperationKey(idempotencyKey)) {
+    return NextResponse.json(
+      publicBookingError("BOOKING_REQUEST_KEY_INVALID"),
+      { status: 400 },
+    );
+  }
+
+  if (!admin) {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+    });
+  }
+  const operationStore = admin;
+  const operationKey = idempotencyKey;
+
+  const requestFingerprint = fingerprintPartnerBookingRequest({
+    experienceId,
+    date,
+    time: normalizeTimeForApi(time),
+    personsCount,
+    tickets,
+    name,
+    email,
+    phone,
+    messageToGuide: messageToGuide ?? null,
+  });
+  const claim = await claimPartnerBookingOperation(operationStore, {
+    provider: "tripster",
+    idempotencyKey: operationKey,
+    requestFingerprint,
+  });
+
+  if (claim.state === "replay") {
+    return NextResponse.json(claim.response.payload, {
+      status: claim.response.statusCode,
+      headers: { "X-Idempotent-Replay": "true" },
+    });
+  }
+  if (claim.state === "conflict") {
+    return NextResponse.json(publicBookingError("BOOKING_REQUEST_CONFLICT"), { status: 409 });
+  }
+  if (claim.state === "in_progress") {
+    return NextResponse.json(
+      publicBookingError("BOOKING_REQUEST_IN_PROGRESS"),
+      { status: 409, headers: { "Retry-After": "5" } },
+    );
+  }
+  if (claim.state === "unavailable") {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+    });
+  }
+
+  async function respond(payload: Record<string, unknown>, statusCode = 200) {
+    await completePartnerBookingOperation(operationStore, {
+      provider: "tripster",
+      idempotencyKey: operationKey,
+      response: { payload, statusCode },
+    });
+    return NextResponse.json(payload, { status: statusCode });
+  }
 
   try {
     const order = await createTripsterExternalOrder(
@@ -371,7 +474,7 @@ async function postTripsterBookingRequest(request: Request) {
         phone,
         message_to_guide: messageToGuide || undefined,
       },
-      idempotencyKey
+      operationKey
     );
 
     const rawOrderUrl = resolveTripsterCheckoutUrl(
@@ -404,7 +507,7 @@ async function postTripsterBookingRequest(request: Request) {
       priceSnapshot: order.price ?? null,
     });
 
-    return NextResponse.json({
+    return respond({
       ok: true,
       mode: "tripster_order",
       orderId: order.id,
@@ -443,20 +546,21 @@ async function postTripsterBookingRequest(request: Request) {
         priceSnapshot: error.details,
       });
 
-      return NextResponse.json({
-        ok: false,
-        mode: "affiliate_fallback",
-        fallbackUrl,
-        fallbackReason: isInfraError
-          ? resolveAffiliateFallbackReason(error.status)
-          : "api_booking_rejected",
-        tripsterStatus: error.status,
-        error: isInfraError
-          ? error.status === 403
-            ? "API создания заказов Tripster не подключён к партнёрскому аккаунту."
-            : "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с выбранной датой и числом туристов."
-          : "Не удалось создать заказ через API Tripster — переходим на сайт партнёра с заполненными данными.",
-      });
+      return respond(
+        {
+          ok: false,
+          mode: "affiliate_fallback",
+          fallbackUrl,
+          fallbackReason: isInfraError
+            ? resolveAffiliateFallbackReason(error.status)
+            : "api_booking_rejected",
+          tripsterStatus: error.status,
+          ...publicBookingError(
+            isInfraError ? "BOOKING_PARTNER_HANDOFF" : "BOOKING_PARTNER_REJECTED",
+          ),
+        },
+        error.status >= 400 && error.status < 600 ? error.status : 502,
+      );
     }
 
     await persistTripsterRequest({
@@ -474,13 +578,16 @@ async function postTripsterBookingRequest(request: Request) {
       status: "affiliate_fallback",
     });
 
-    return NextResponse.json({
-      ok: false,
-      mode: "affiliate_fallback",
-      fallbackUrl,
-      fallbackReason: "api_unavailable",
-      error: "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с заполненными данными.",
-    });
+    return respond(
+      {
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl,
+        fallbackReason: "api_unavailable",
+        ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+      },
+      502,
+    );
   }
 }
 
@@ -503,7 +610,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!authUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(publicBookingError("BOOKING_AUTH_REQUIRED"), { status: 401 });
   }
 
   const admin = createSupabaseAdminClient();

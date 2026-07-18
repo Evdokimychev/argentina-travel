@@ -99,7 +99,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
         {!isUser && message.sources ? <SourceLinks sources={message.sources} /> : null}
         {!isUser && message.mode === "search_fallback" ? (
           <p className="mt-2 text-xs text-muted">
-            Ответ составлен по результатам поиска по сайту.
+            Подобрано по материалам сайта.
           </p>
         ) : null}
       </div>
@@ -189,7 +189,7 @@ export default function GuideAssistantWidget() {
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "fixed right-3 z-floating-widget flex h-12 w-12 items-center justify-center rounded-full border border-sky/25",
+          "site-cookie-suppressible site-install-prompt-suppressible fixed right-3 z-floating-widget flex h-12 w-12 items-center justify-center rounded-full border border-sky/25",
           "bg-sky text-white shadow-elevated transition-transform hover:scale-[1.03] hover:bg-sky-dark",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
           "bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:bottom-6"
@@ -201,7 +201,7 @@ export default function GuideAssistantWidget() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
-          className="flex max-h-[min(92vh,720px)] w-full flex-col p-0 sm:max-w-lg"
+          className="flex w-full flex-col p-0 sm:max-h-[min(85dvh,720px)] sm:max-w-lg"
           showClose={false}
           aria-describedby={`${textareaId}-desc`}
         >
@@ -220,7 +220,7 @@ export default function GuideAssistantWidget() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
                 aria-label="Закрыть"
               >
                 <X className="h-4 w-4" aria-hidden />
@@ -231,7 +231,7 @@ export default function GuideAssistantWidget() {
           <DialogBody className="flex min-h-0 flex-1 flex-col gap-0 p-0">
             <div
               ref={listRef}
-              className="flex max-h-[min(52vh,420px)] flex-col gap-4 overflow-y-auto px-5 py-4 sm:px-6"
+              className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-5 py-4 sm:max-h-[min(52vh,420px)] sm:px-6"
               aria-live="polite"
             >
               {messages.length === 0 ? (

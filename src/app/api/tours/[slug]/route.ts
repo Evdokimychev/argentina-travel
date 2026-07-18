@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { fetchTourDetailBySlug } from "@/lib/tour-content-server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchTourDetailBySlugServer } from "@/lib/tour-content-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -12,8 +11,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
   try {
     const { slug } = await context.params;
-    const supabase = await createSupabaseServerClient();
-    const tour = await fetchTourDetailBySlug(supabase, slug);
+    const tour = await fetchTourDetailBySlugServer(slug);
 
     if (!tour) {
       return NextResponse.json({ error: "Тур не найден" }, { status: 404 });

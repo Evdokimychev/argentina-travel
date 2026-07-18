@@ -73,10 +73,14 @@ describe("map-argentina-url-state", () => {
     expect(params.get("tl")).toBe("patagonia,ruta_40");
   });
 
-  it("parses thematic layers from URL", () => {
-    const params = new URLSearchParams("tl=climate_zones,ba_neighborhoods");
+  it("parses only public thematic layers from URL", () => {
+    const params = new URLSearchParams(
+      "tl=climate_zones,biosphere,beaches,ba_neighborhoods",
+    );
     const state = parseMapArgentinaUrlState(params);
-    expect(state.thematic.climate_zones).toBe(true);
+    expect(state.thematic.climate_zones).toBe(false);
+    expect(state.thematic.biosphere).toBe(false);
+    expect(state.thematic.beaches).toBe(false);
     expect(state.thematic.ba_neighborhoods).toBe(true);
   });
 });

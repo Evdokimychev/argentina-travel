@@ -66,6 +66,10 @@ export type PaymentTransactionRow = {
   sourceEventId: string | null;
   requestedBy: string | null;
   approvedBy: string | null;
+  requestIdempotencyKey?: string | null;
+  sourceTransactionId?: string | null;
+  claimedBy?: string | null;
+  claimedAt?: string | null;
   requestReason: string | null;
   adminNotes: string | null;
   metadata: Record<string, unknown>;
@@ -86,11 +90,35 @@ export type PayoutRecordRow = {
   metadata: Record<string, unknown>;
   exportedAt: string | null;
   exportFileHash: string | null;
+  createdBy?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  exportedBy?: string | null;
+  completedBy?: string | null;
+  completedAt?: string | null;
+  cancelledBy?: string | null;
+  cancelledAt?: string | null;
   createdAt: string;
   updatedAt: string;
 };
 
-export type ReconciliationTotals = {
+export type PayoutCurrencySummary = {
+  currency: "RUB" | "ARS" | "USD" | "EUR";
+  totalPending: number;
+  totalApproved: number;
+  totalExported: number;
+  totalCompleted: number;
+  recordCount: number;
+};
+
+export type PayoutSummary = {
+  byCurrency: PayoutCurrencySummary[];
+  recordCount: number;
+  invalidRecordCount: number;
+};
+
+export type ReconciliationCurrencyTotals = {
+  currency: "RUB" | "ARS" | "USD" | "EUR";
   chargeCount: number;
   chargeAmount: number;
   refundCount: number;
@@ -99,6 +127,13 @@ export type ReconciliationTotals = {
   payoutAmount: number;
   netAmount: number;
   pendingRefundCount: number;
+};
+
+export type ReconciliationTotals = {
+  schemaVersion: 1 | 2;
+  byCurrency: ReconciliationCurrencyTotals[];
+  invalidRecordCount: number;
+  legacyUnknownCurrency?: boolean;
 };
 
 export type ReconciliationSnapshotRow = {

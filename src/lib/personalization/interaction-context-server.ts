@@ -11,6 +11,14 @@ function isSearchCrawler(userAgent: string): boolean {
   return SEARCH_CRAWLER_UA.test(userAgent);
 }
 
+export function hasSupabaseAuthSessionCookie(
+  requestCookies: ReadonlyArray<{ name: string }>,
+): boolean {
+  return requestCookies.some(
+    ({ name }) => name.startsWith("sb-") && name.includes("-auth-token"),
+  );
+}
+
 export async function resolveInteractionActor(): Promise<InteractionActor> {
   try {
     const requestHeaders = await headers();
@@ -20,6 +28,15 @@ export async function resolveInteractionActor(): Promise<InteractionActor> {
     }
   } catch {
     // вне request context — продолжаем обычный путь
+  }
+
+  const cookieStore = await cookies();
+  const anonymousId = cookieStore.get("pa_vid")?.value ?? null;
+
+  // Supabase getUser() is a remote verification call. Anonymous visitors have
+  // no auth-token cookie, so they can safely skip that network round trip.
+  if (!hasSupabaseAuthSessionCookie(cookieStore.getAll())) {
+    return { anonymousId };
   }
 
   let userId: string | null = null;
@@ -37,9 +54,6 @@ export async function resolveInteractionActor(): Promise<InteractionActor> {
   if (userId) {
     return { userId };
   }
-
-  const cookieStore = await cookies();
-  const anonymousId = cookieStore.get("pa_vid")?.value ?? null;
 
   return { anonymousId };
 }

@@ -10,6 +10,18 @@ export const touchTargetMinClass = "min-h-11 min-w-11";
 export const touchTargetIconClass =
   "inline-flex h-11 w-11 shrink-0 items-center justify-center";
 
+/** Shared height contract for the public mobile app navigation. */
+export const publicMobileNavHeightClass =
+  "[--public-mobile-nav-height:4.75rem] md:[--public-mobile-nav-height:0px]";
+
+/** Keeps public content and the footer clear of the fixed mobile navigation. */
+export const publicMobileNavInsetClass =
+  "pb-[calc(var(--public-mobile-nav-height,0px)+env(safe-area-inset-bottom,0px))] md:pb-0";
+
+/** Public mobile app navigation shell, coordinated with the cookie banner. */
+export const publicMobileBottomNavClass =
+  "fixed inset-x-0 [bottom:var(--cookie-consent-offset,0px)] z-30 border-t border-border-subtle bg-surface-elevated/95 px-[max(0.25rem,env(safe-area-inset-left,0px))] pt-1.5 pb-[calc(env(safe-area-inset-bottom,0px)+0.375rem)] shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-md transition-[bottom] duration-200 md:hidden";
+
 /** Popover / panel max width safe for 320px–430px viewports. */
 export const viewportSafePopoverWidthClass = "max-w-[min(100%,calc(100dvw-2rem))]";
 

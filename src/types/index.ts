@@ -103,6 +103,8 @@ export interface TourListing {
   id: string;
   slug: string;
   title: string;
+  /** Native platform product kind. Partner catalog items are always tours. */
+  productType?: import("@/types/organizer-tour").OrganizerTourType;
   shortDescription: string;
   image: string;
   gallery: string[];
@@ -176,6 +178,8 @@ export interface TourListing {
   partnerTourGuaranteed?: boolean;
   /** Тематические метки для каталога (до 4) */
   partnerThematicTags?: string[];
+  /** Единый источник поведения CTA, оплаты, сообщений и отмены. */
+  offerCapabilities?: import("@/types/product-capability").OfferCapabilities;
 }
 
 export interface TourFilters {
@@ -395,6 +399,8 @@ export interface TourDatePrice {
 
 export interface TourDetail {
   id: string;
+  /** Public product lane used by server-side module gates. */
+  productType?: "tour" | "excursion";
   slug: string;
   title: string;
   country: string;
@@ -483,6 +489,8 @@ export interface TourDetail {
   partnerGuideReviews?: TourReview[];
   /** Явные связи tour → places (slug справочника). */
   relatedPlaceSlugs?: string[];
+  /** Единый источник поведения CTA, оплаты, сообщений и отмены. */
+  offerCapabilities?: import("@/types/product-capability").OfferCapabilities;
 }
 
 /** @deprecated Use TourListing for marketplace */

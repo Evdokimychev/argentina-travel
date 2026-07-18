@@ -17,6 +17,12 @@ describe("media-cdn", () => {
     expect(mediaUrl("media/places/buenos-aires/hero.jpg")).toBe("/media/places/buenos-aires/hero.jpg");
   });
 
+  it("fails closed to bundled media for an invalid CDN placeholder", () => {
+    vi.stubEnv("NEXT_PUBLIC_MEDIA_CDN_URL", "replace-me");
+    expect(getMediaCdnOrigin()).toBeNull();
+    expect(mediaUrl("media/home/hero.jpg")).toBe("/media/home/hero.jpg");
+  });
+
   it("prefixes manifest paths with the external CDN origin", () => {
     vi.stubEnv("NEXT_PUBLIC_MEDIA_CDN_URL", "https://media.goargentina.ru");
     expect(getMediaCdnOrigin()).toBe("https://media.goargentina.ru");

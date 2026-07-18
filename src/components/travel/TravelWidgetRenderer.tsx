@@ -11,7 +11,7 @@ type Props = {
 };
 
 /** Рендер встроенных редакционных виджетов по ключу. */
-export default function TravelWidgetRenderer({ widgetKey, className, title }: Props) {
+export default function TravelWidgetRenderer({ widgetKey, className }: Props) {
   const key = widgetKey.trim();
 
   if (key === "season-matrix") {
@@ -26,12 +26,5 @@ export default function TravelWidgetRenderer({ widgetKey, className, title }: Pr
     return <ArgentinaTourismTimeline className={className} />;
   }
 
-  if (!key) return null;
-
-  return (
-    <div className="rounded-2xl border border-dashed border-gray-200 bg-surface-muted/40 px-4 py-5 text-sm">
-      <p className="font-medium text-charcoal">{title?.trim() || "Виджет"}</p>
-      <p className="mt-1 font-mono text-xs text-slate">widget: {key}</p>
-    </div>
-  );
+  return null;
 }

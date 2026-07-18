@@ -1,0 +1,60 @@
+
+> argentina-travel@0.1.0 seo-audit
+> node scripts/seo-audit.mjs
+
+SEO audit base URL: https://www.goargentina.ru
+✓ static: Tour Product JSON-LD component
+✓ static: Tour Product JSON-LD builder
+✓ static: Excursion JSON-LD builder
+✓ static: BreadcrumbList JSON-LD component
+✓ static: i18n sitemap expansion
+✓ robots.txt — valid sitemap directive
+✓ sitemap.xml — 1172 URLs
+✓ sitemap URLs — unique, canonical origin, no query/hash
+… crawling 1172 sitemap URLs (concurrency 8)
+✓ metadata: /
+✓ metadata: /tours
+✓ metadata: /excursions
+✓ JSON-LD (tour detail): /tours/mnogo-trekkinga-v-patagonii-kruizy-na-korablyah-ushuayya-i-iguasu-yt52537
+✓ JSON-LD (excursion detail): /excursions/glavnoe-v-buenos-ayrese-istoriya-i-arhitektura-t50900
+✓ JSON-LD (blog post): /blog/best-time-to-visit-argentina
+✓ hub page SEO: /destinations
+
+Report: var/ops/seo-audit-production-baseline-last.json
+✗ full sitemap crawl — 903 critical issue(s)
+  - /podbor: missing canonical link
+  - /booking/find: missing canonical link
+  - /join: missing canonical link
+  - /excursions/city/Puerto_Iguazu: HTTP 404
+  - /excursions/city/Puerto_Iguazu: missing canonical link
+  - /excursions/city/Puerto_Iguazu: sitemap URL is noindex
+  - /baza-znaniy/gid-relokanta: HTTP 404
+  - /baza-znaniy/gid-relokanta: missing canonical link
+  - /baza-znaniy/gid-relokanta: sitemap URL is noindex
+  - /baza-znaniy/poisk: sitemap URL is noindex
+  - /excursions/guide/470707: HTTP 404
+  - /excursions/guide/470707: missing canonical link
+  - /excursions/guide/470707: sitemap URL is noindex
+  - /excursions/guide/710517: HTTP 404
+  - /excursions/guide/710517: missing canonical link
+  - /excursions/guide/710517: sitemap URL is noindex
+  - /excursions/guide/951628: HTTP 404
+  - /excursions/guide/951628: missing canonical link
+  - /excursions/guide/951628: sitemap URL is noindex
+  - /excursions/guide/1052403: HTTP 404
+  - /excursions/guide/1052403: missing canonical link
+  - /excursions/guide/1052403: sitemap URL is noindex
+  - /excursions/guide/1174728: HTTP 404
+  - /excursions/guide/1174728: missing canonical link
+  - /excursions/guide/1174728: sitemap URL is noindex
+  - /excursions/guide/2030067: HTTP 404
+  - /excursions/guide/2030067: missing canonical link
+  - /excursions/guide/2030067: sitemap URL is noindex
+  - /organizers/ivan-evdokimychev: missing canonical link
+  - /es: canonical is not self-referencing (https://www.goargentina.ru)
+  … 873 more in the JSON report
+! content/metadata warnings: 2074 (see JSON report)
+✗ /en/places: untranslated locale fallback must stay noindex until explicitly published
+✗ /es/places: untranslated locale fallback must stay noindex until explicitly published
+
+SEO audit failed.

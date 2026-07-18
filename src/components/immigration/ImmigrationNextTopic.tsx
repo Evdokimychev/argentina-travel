@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { IMMIGRATION_TOPIC_ORDER, IMMIGRATION_TOPICS } from "@/data/immigration-topics";
 import { immigrationTopicHref } from "@/lib/immigration-topics";
-import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import type { ImmigrationTopicPage } from "@/types/immigration-topic";
 

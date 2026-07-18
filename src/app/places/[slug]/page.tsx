@@ -12,9 +12,11 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { placeHref } from "@/lib/places-urls";
 import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
-import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
-import { buildPlaceMetadata } from "@/lib/places-seo";
+import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
+import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
+import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -31,7 +33,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const place = await resolvePlacePage(slug, locale);
   if (!place) return { title: "Место не найдено" };
   const alternates = await buildCmsContentHreflangAlternates("place", slug, locale);
-  return { ...buildPlaceMetadata(place), alternates, robots: cmsFallbackRobots(place) };
+  return buildCmsPageMetadata({
+    content: place,
+    title: `${place.name} — места Аргентины`,
+    description: `Путеводитель по месту «${place.name}»: ${place.shortDescription}`,
+    path: placeHref(place.slug),
+    image: place.coverImage,
+    alternates,
+  });
 }
 
 export default async function PlaceDetailPage({ params }: PageProps) {
@@ -43,6 +52,7 @@ export default async function PlaceDetailPage({ params }: PageProps) {
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
   const initialTours = await fetchMarketplaceTours();
+  const relatedTours = resolveRelatedToursForPlace(place, initialTours);
 
   return (
     <>
@@ -59,7 +69,13 @@ export default async function PlaceDetailPage({ params }: PageProps) {
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />
       ) : null}
-      <PlaceDetailView place={place} knowledgeLinks={knowledgeLinks} initialTours={initialTours} />
+      <PlaceDetailView
+        place={place}
+        knowledgeLinks={knowledgeLinks}
+        initialTours={relatedTours}
+        coverImageAlt={getPlaceCoverAlt(place.slug)}
+        galleryAlts={getPlaceGalleryAlts(place.slug)}
+      />
       <SocialFeed placement={`place:${slug}`} compact />
     </>
   );

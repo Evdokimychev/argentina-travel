@@ -1,0 +1,18 @@
+
+> argentina-travel@0.1.0 sync-rich-articles:check
+> node scripts/sync-blog-rich-articles-from-md.mjs --check
+
+OK iguazu-national-park.ts
+OK tierra-del-fuego-national-park.ts
+OK nahuel-huapi-national-park.ts
+OK los-glaciares-national-park.ts
+OK ibera-national-park.ts
+OK lanin-national-park.ts
+OK los-alerces-national-park.ts
+OK los-cardones-national-park.ts
+OK patagonia-national-park.ts
+OK talampaya-national-park.ts
+OK banado-la-estrella.ts
+OK all-argentina-national-parks.ts
+OK ischigualasto-valley-of-the-moon.ts
+All rich articles in sync with MD sources.

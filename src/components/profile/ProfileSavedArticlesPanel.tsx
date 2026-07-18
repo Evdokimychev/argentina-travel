@@ -6,7 +6,7 @@ import { Bookmark, BookOpen } from "lucide-react";
 import { useSavedArticles } from "@/hooks/useSavedArticles";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetLinkClass } from "@/lib/cabinet-ui";
-import { mediaUrl } from "@/lib/media-resolver";
+import { mediaUrl } from "@/lib/media/media-cdn";
 
 type ProfileSavedArticlesPanelProps = {
   className?: string;
@@ -58,7 +58,13 @@ export default function ProfileSavedArticlesPanel({ className }: ProfileSavedArt
                   </Link>
                 </h3>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <Link href={`/blog/${article.slug}`} className={cn(cabinetLinkClass, "text-sm")}>
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className={cn(
+                      cabinetLinkClass,
+                      "inline-flex min-h-11 items-center rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:min-h-9",
+                    )}
+                  >
                     Читать статью
                   </Link>
                   <button
@@ -71,7 +77,7 @@ export default function ProfileSavedArticlesPanel({ className }: ProfileSavedArt
                         image: article.image,
                       })
                     }
-                    className="inline-flex items-center gap-1 text-xs font-medium text-slate transition-colors hover:text-sky"
+                    className="inline-flex min-h-11 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:min-h-9"
                   >
                     <Bookmark className="h-3.5 w-3.5 fill-current text-sky" aria-hidden />
                     Убрать

@@ -28,7 +28,7 @@ function ClearButton({ onClick, label }: { onClick: () => void; label: string })
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
     >
       <X className="h-4 w-4" />
     </button>
@@ -139,7 +139,7 @@ export default function ExcursionSearchPanel({
                   value={cityQuery}
                   onChange={(event) => setCityQuery(event.target.value)}
                   placeholder="Город…"
-                  className="h-9"
+                  className="h-11"
                 />
               </div>
               <ul className="max-h-64 overflow-y-auto p-2">
@@ -151,7 +151,7 @@ export default function ExcursionSearchPanel({
                       setCityOpen(false);
                     }}
                     className={cn(
-                      "w-full rounded-lg px-3 py-2 text-left text-sm transition hover:bg-gray-50",
+                      "min-h-11 w-full rounded-lg px-3 py-2 text-left text-sm transition hover:bg-gray-50",
                       !filters.citySlug && "bg-sky/10 font-medium text-sky",
                     )}
                   >
@@ -167,7 +167,7 @@ export default function ExcursionSearchPanel({
                         setCityOpen(false);
                       }}
                       className={cn(
-                        "flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition hover:bg-gray-50",
+                        "flex min-h-11 w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition hover:bg-gray-50",
                         filters.citySlug === city.slug && "bg-sky/10 font-medium text-sky",
                       )}
                     >

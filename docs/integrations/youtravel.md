@@ -124,6 +124,10 @@ createYouTravelAffiliateLink({
 | Sync | `scripts/youtravel-sync.mjs`, cron `/api/cron/youtravel-sync` |
 | E2E | `tests/e2e/youtravel-booking.spec.ts`, `youtravel-partner-invariants.spec.ts` |
 
+## Доставка фотографий
+
+Исходные фотографии `cf.youtravel.me` могут весить 5–7 МБ и нестабильно отображаться напрямую в браузере. Публичный UI пропускает только разрешённые HTTPS-пути этого хоста через `/api/media/partner-image`, где изображение ограничивается по размеру и преобразуется в WebP. Route не принимает произвольные домены и повторно проверяет конечный URL после redirect, чтобы не создавать SSRF-прокси.
+
 ## Slug convention
 
 `{transliterated-title}-yt{tourId}` — см. `buildYouTravelTourSlug`.

@@ -56,6 +56,7 @@ export default function ExcursionBookingPanel({
     hasListedPrice,
     canBookOnSite,
     submitButtonLabel,
+    offerCapabilities,
     openBookingPreview,
   } = useExcursionBooking();
 
@@ -67,8 +68,7 @@ export default function ExcursionBookingPanel({
       ? "excursions.partnerDisclaimer.sputnik8"
       : "excursions.partnerDisclaimer.tripster";
 
-  const affiliateButtonLabel =
-    excursion.partner === "tripster" ? "Забронировать на сайте" : t("excursions.book");
+  const affiliateButtonLabel = offerCapabilities.primaryActionLabel;
 
   function handleOpenPreview() {
     setFormError(null);
@@ -117,7 +117,17 @@ export default function ExcursionBookingPanel({
         <p className="mt-2 text-[11px] leading-relaxed text-slate/75">{partnerPriceFootnote}</p>
       ) : null}
 
-      {canBookOnSite ? (
+      {offerCapabilities.bookingMode === "disabled" ||
+      offerCapabilities.bookingMode === "information_only" ? (
+        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <p className="text-sm font-semibold text-charcoal">
+            {offerCapabilities.primaryActionLabel}
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-slate">
+            {offerCapabilities.disabledReason ?? offerCapabilities.disclosure}
+          </p>
+        </div>
+      ) : canBookOnSite ? (
         <div className="mt-5 space-y-4">
           {scheduleLoading ? (
             <ExcursionBookingPanelSkeleton />

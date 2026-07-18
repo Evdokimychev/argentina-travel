@@ -33,22 +33,50 @@ export default function ModerationView() {
   const [rejectNote, setRejectNote] = useState("");
   const [feedback, setFeedback] = useState<{ variant: "success" | "error"; message: string } | null>(null);
 
-  async function resolveItem(id: string, action: "approve" | "reject", note?: string) {
-    setBusyId(id);
+  async function resolveItem(
+    item: ModerationQueueItem,
+    action: "approve" | "reject" | "hide_comment" | "restore_comment" | "dismiss_report",
+    note?: string,
+  ) {
+    setBusyId(item.id);
     setFeedback(null);
     try {
-      const res = await fetch(`/api/admin/moderation/${id}`, {
+      const res = await fetch(`/api/admin/moderation/${item.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, note }),
+        body: JSON.stringify({
+          action,
+          note,
+          expectedQueueStatus: item.status,
+          expectedQueueVersion: item.queueVersion,
+          expectedEntityStatus: item.entityStatus,
+          expectedEntityVersion: item.entityVersion,
+          expectedRelatedStatus: item.relatedStatus,
+          expectedRelatedVersion: item.relatedVersion,
+          expectedReportStatus: item.blogCommentReport?.reportStatus,
+          expectedCommentStatus: item.blogCommentReport?.commentStatus,
+        }),
       });
       const json = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(json.error ?? "Ошибка модерации");
+      if (!res.ok) {
+        if (res.status === 409) await refresh();
+        throw new Error(json.error ?? "Ошибка модерации");
+      }
       setRejectingId(null);
       setRejectNote("");
+      const successMessage =
+        action === "hide_comment"
+          ? "Комментарий скрыт"
+          : action === "restore_comment"
+            ? "Комментарий восстановлен"
+            : action === "dismiss_report"
+              ? "Жалоба отклонена"
+              : action === "approve"
+                ? "Материал одобрен"
+                : "Материал возвращён автору";
       setFeedback({
         variant: "success",
-        message: action === "approve" ? "Материал одобрен" : "Материал возвращён автору",
+        message: successMessage,
       });
       await refresh();
     } catch (resolveError) {
@@ -66,7 +94,7 @@ export default function ModerationView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Модерация"
-          subtitle="Очередь проверки туров, статей, отзывов и сообщений форума"
+          subtitle="Туры, статьи, отзывы, форум и жалобы на комментарии — в одной очереди"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -87,6 +115,9 @@ export default function ModerationView() {
           <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
             Очередь ({items.length})
           </h2>
+          <p className="border-b border-gray-100 px-5 py-3 text-sm text-slate">
+            Недавно скрытые комментарии остаются здесь, чтобы решение можно было отменить.
+          </p>
           {loading ? (
             <AdminListSkeleton rows={4} />
           ) : items.length === 0 ? (
@@ -94,8 +125,12 @@ export default function ModerationView() {
               variant="admin"
               icon={ShieldCheck}
               title="Нет элементов на модерации"
-              description="Новые туры и отзывы появятся здесь автоматически."
-              action={{ label: "Каталог туров", href: "/admin/tours", variant: "outline" }}
+              description="Новые туры, отзывы, материалы и жалобы появятся здесь автоматически."
+              action={{
+                label: "Каталог туров",
+                href: "/admin/marketplace/tours",
+                variant: "outline",
+              }}
             />
           ) : (
             <ul className="divide-y divide-gray-100">
@@ -106,6 +141,15 @@ export default function ModerationView() {
                     <AdminStatusChip domain="moderation" value={item.status} />
                     <span className="text-slate">{formatAdminWhen(item.createdAt)}</span>
                   </div>
+
+                  {item.entityType !== "blog_comment_report" &&
+                  (item.entityVersion === null || item.entityStatus === null) ? (
+                    <InlineFeedback
+                      variant="info"
+                      title="Материал изменился или недоступен"
+                      description="Обновите очередь перед принятием решения."
+                    />
+                  ) : null}
 
                   {item.reviewReport ? (
                     <>
@@ -151,6 +195,33 @@ export default function ModerationView() {
                         Страница тура
                       </Link>
                     </>
+                  ) : item.blogCommentReport ? (
+                    <>
+                      <p className="font-medium text-charcoal">
+                        Комментарий к статье «{item.blogCommentReport.articleSlug}»
+                      </p>
+                      <p className="text-slate">
+                        Автор: {item.blogCommentReport.commentAuthorName} · статус: {item.blogCommentReport.commentStatus}
+                        {item.blogCommentReport.reporterName
+                          ? ` · жалоба от ${item.blogCommentReport.reporterName}`
+                          : ""}
+                      </p>
+                      <p className="text-slate">Причина: {item.blogCommentReport.reasonLabel}</p>
+                      {item.blogCommentReport.details ? (
+                        <p className="rounded-xl bg-amber-50 p-3 text-amber-900">
+                          {item.blogCommentReport.details}
+                        </p>
+                      ) : null}
+                      <p className="rounded-xl bg-gray-50 p-3 text-charcoal">
+                        {item.blogCommentReport.commentBody}
+                      </p>
+                      <Link
+                        href={`/blog/${encodeURIComponent(item.blogCommentReport.articleSlug)}#comments`}
+                        className="text-sky hover:underline"
+                      >
+                        Открыть статью
+                      </Link>
+                    </>
                   ) : item.forumPost ? (
                     <>
                       <p className="font-medium text-charcoal">{item.forumPost.threadTitle}</p>
@@ -178,7 +249,7 @@ export default function ModerationView() {
                     <>
                       <p className="font-medium text-charcoal">{item.tour.title}</p>
                       <p className="text-slate">
-                        {item.tour.slug} · организатор {item.tour.ownerUserId}
+                        {item.tour.productType === "excursion" ? "Экскурсия" : "Тур"} · {item.tour.slug} · организатор {item.tour.ownerUserId}
                       </p>
                       <p className="text-slate">
                         Статус каталога:{" "}
@@ -186,7 +257,7 @@ export default function ModerationView() {
                         · модерация:{" "}
                         <AdminStatusChip domain="moderation" value={item.tour.moderationStatus} />
                       </p>
-                      <Link href={`/tours/${item.tour.slug}`} className="text-sky hover:underline">
+                      <Link href={`/${item.tour.productType === "excursion" ? "excursions" : "tours"}/${item.tour.slug}`} className="text-sky hover:underline">
                         Открыть на сайте
                       </Link>
                     </>
@@ -211,33 +282,81 @@ export default function ModerationView() {
 
                   {item.reason ? <p className="text-slate">{item.reason}</p> : null}
 
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      size="sm"
-                      disabled={busyId === item.id}
-                      onClick={() => void resolveItem(item.id, "approve")}
-                    >
-                      {item.entityType === "review_report"
-                        ? "Скрыть отзыв"
-                        : item.entityType === "forum_post"
-                          ? "Скрыть сообщение"
-                          : "Одобрить"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={busyId === item.id}
-                      onClick={() => {
-                        setRejectingId(item.id);
-                        setRejectNote("");
-                      }}
-                    >
-                      {item.entityType === "review_report" || item.entityType === "forum_post"
-                        ? "Отклонить жалобу"
-                        : "Отклонить"}
-                    </Button>
-                  </div>
-                  {rejectingId === item.id ? (
+                  {item.blogCommentReport ? (
+                    <div className="flex flex-wrap gap-2">
+                      {item.blogCommentReport.commentStatus !== "hidden" ? (
+                        <Button
+                          size="sm"
+                          disabled={busyId === item.id}
+                          onClick={() => void resolveItem(item, "hide_comment")}
+                        >
+                          Скрыть комментарий
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          disabled={busyId === item.id}
+                          onClick={() => {
+                            if (window.confirm("Восстановить комментарий на публичной странице?")) {
+                              void resolveItem(item, "restore_comment");
+                            }
+                          }}
+                        >
+                          Восстановить комментарий
+                        </Button>
+                      )}
+                      {item.blogCommentReport.reportStatus === "pending" ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={busyId === item.id}
+                          onClick={() => {
+                            if (window.confirm("Отклонить жалобу без изменения комментария?")) {
+                              void resolveItem(item, "dismiss_report");
+                            }
+                          }}
+                        >
+                          Отклонить жалобу
+                        </Button>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        disabled={
+                          busyId === item.id ||
+                          item.entityVersion === null ||
+                          item.entityStatus === null
+                        }
+                        onClick={() => void resolveItem(item, "approve")}
+                      >
+                        {item.entityType === "review_report"
+                          ? "Скрыть отзыв"
+                          : item.entityType === "forum_post"
+                            ? "Скрыть сообщение"
+                            : "Одобрить"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={
+                          busyId === item.id ||
+                          item.entityVersion === null ||
+                          item.entityStatus === null
+                        }
+                        onClick={() => {
+                          setRejectingId(item.id);
+                          setRejectNote("");
+                        }}
+                      >
+                        {item.entityType === "review_report" || item.entityType === "forum_post"
+                          ? "Отклонить жалобу"
+                          : "Отклонить"}
+                      </Button>
+                    </div>
+                  )}
+                  {!item.blogCommentReport && rejectingId === item.id ? (
                     <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
                       <label className="text-sm font-medium text-charcoal" htmlFor={`reject-note-${item.id}`}>
                         Что нужно исправить
@@ -253,8 +372,13 @@ export default function ModerationView() {
                         <Button
                           size="sm"
                           variant="outline"
-                          disabled={rejectNote.trim().length < 8 || busyId === item.id}
-                          onClick={() => void resolveItem(item.id, "reject", rejectNote.trim())}
+                          disabled={
+                            rejectNote.trim().length < 8 ||
+                            busyId === item.id ||
+                            item.entityVersion === null ||
+                            item.entityStatus === null
+                          }
+                          onClick={() => void resolveItem(item, "reject", rejectNote.trim())}
                         >
                           Вернуть на доработку
                         </Button>

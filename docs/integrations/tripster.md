@@ -23,6 +23,7 @@
 | `TRIPSTER_PARTNER` | Идентификатор партнёра (например `travelpayoutsapi` через Travelpayouts) |
 | `TRIPSTER_SECRET` | Secret key (отдельно для теста и прода) |
 | `TRIPSTER_API_BASE` | База API, по умолчанию `https://experience.tripster.ru/api` |
+| `ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT` | Диагностическое live-обогащение карточки (`true`). В production по умолчанию выключено: карточка читает ночной синхронизированный снимок, а цена и наличие обновляются отдельными API-маршрутами. |
 
 Проверка: `node scripts/tripster-verify.mjs`
 

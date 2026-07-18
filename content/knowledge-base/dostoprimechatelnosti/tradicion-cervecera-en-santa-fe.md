@@ -1,7 +1,7 @@
 ---
 id: tradicion-cervecera-en-santa-fe
 type: attraction
-title: Brewing tradition in Santa Fe
+title: Пивные традиции Санта-Фе
 title_es: Tradición cervecera en Santa Fe
 title_en: Brewing tradition in Santa Fe
 summary: "Пивная традиция Санта-Фе: бокал «лисо» и уникальный «пивопровод» длиной 850 метров."

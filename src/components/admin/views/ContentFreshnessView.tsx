@@ -26,6 +26,7 @@ type ContentFreshnessResponse = {
 const DOC_TYPE_LABELS: Record<ContentFreshnessDocType, string> = {
   legal: "Юридические документы",
   blog: "Блог",
+  knowledge: "База знаний",
   guide: "Путеводители и иммиграция",
   destination: "Направления",
   place: "Места",

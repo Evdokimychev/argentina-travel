@@ -26,6 +26,7 @@ import {
 } from "@/lib/auth-mode";
 import { apiFetchPublishedTourListings } from "@/lib/tour-content-api";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import { isProductionRuntime } from "@/lib/runtime-mode";
 
 let seedToursCache: Tour[] | null = null;
 
@@ -121,7 +122,9 @@ function ensureSeedToursInStore(store: Record<string, Tour>): Record<string, Tou
     const needsWaitlist =
       Boolean(seed.booking.waitlistEnabled) && !existing.booking.waitlistEnabled;
 
-    const waitlistSeed = getWaitlistSeedForSlug(seed.slug);
+    const waitlistSeed = isProductionRuntime()
+      ? undefined
+      : getWaitlistSeedForSlug(seed.slug);
     const needsWaitlistDates =
       Boolean(waitlistSeed?.dateSpotsOverrides) &&
       seed.booking.groupDates.some((date) => {

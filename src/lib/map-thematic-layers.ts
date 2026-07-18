@@ -26,6 +26,29 @@ export const MAP_THEMATIC_LAYER_IDS = [
 
 export type MapThematicLayerId = (typeof MAP_THEMATIC_LAYER_IDS)[number];
 
+/**
+ * Схематичные слои остаются в реестре для будущей замены исходных данных,
+ * но не должны быть доступны в публичном интерфейсе или через URL.
+ */
+export const NON_PUBLIC_MAP_THEMATIC_LAYER_IDS = [
+  "climate_zones",
+  "biosphere",
+  "beaches",
+] as const satisfies readonly MapThematicLayerId[];
+
+const NON_PUBLIC_MAP_THEMATIC_LAYER_ID_SET = new Set<MapThematicLayerId>(
+  NON_PUBLIC_MAP_THEMATIC_LAYER_IDS,
+);
+
+export const PUBLIC_MAP_THEMATIC_LAYER_IDS: MapThematicLayerId[] =
+  MAP_THEMATIC_LAYER_IDS.filter((id) => !NON_PUBLIC_MAP_THEMATIC_LAYER_ID_SET.has(id));
+
+export function isPublicMapThematicLayerId(
+  layerId: MapThematicLayerId,
+): boolean {
+  return !NON_PUBLIC_MAP_THEMATIC_LAYER_ID_SET.has(layerId);
+}
+
 export type MapThematicLayerKind = "fill" | "line" | "circle";
 
 export interface MapThematicLayerMeta {
@@ -224,7 +247,7 @@ export const MAP_THEMATIC_LAYERS: Record<MapThematicLayerId, MapThematicLayerMet
   ski_resorts: {
     id: "ski_resorts",
     label: "Горнолыжные курорты",
-    description: "Барилоче, Лас-Леньяс, Кавiahue",
+    description: "Барилоче, Лас-Леньяс, Кавиауэ",
     group: "nature",
     kind: "circle",
     fillColor: "#6366f1",
@@ -297,13 +320,13 @@ export function parseMapThematicLayers(raw: string | null): MapThematicState {
   if (!raw?.trim()) return state;
   for (const part of raw.split(",")) {
     const id = part.trim().toLowerCase();
-    if (isMapThematicLayerId(id)) state[id] = true;
+    if (isMapThematicLayerId(id) && isPublicMapThematicLayerId(id)) state[id] = true;
   }
   return state;
 }
 
 export function serializeMapThematicLayers(state: MapThematicState): string {
-  return MAP_THEMATIC_LAYER_IDS.filter((id) => state[id]).join(",");
+  return PUBLIC_MAP_THEMATIC_LAYER_IDS.filter((id) => state[id]).join(",");
 }
 
 /** Слои с административными границами — только один активен (фильтр). */
@@ -317,6 +340,9 @@ export function toggleMapThematicLayer(
   state: MapThematicState,
   layerId: MapThematicLayerId
 ): MapThematicState {
+  if (!isPublicMapThematicLayerId(layerId)) {
+    return state[layerId] ? { ...state, [layerId]: false } : state;
+  }
   const turningOn = !state[layerId];
   const next: MapThematicState = { ...state, [layerId]: !state[layerId] };
   if (turningOn && EXCLUSIVE_ADMIN_BOUNDARY_LAYERS.includes(layerId)) {
@@ -335,7 +361,8 @@ export function getThematicLayersByGroup(): Record<
   for (const group of Object.keys(MAP_THEMATIC_GROUP_LABELS) as MapThematicLayerGroup[]) {
     groups[group] = [];
   }
-  for (const layer of Object.values(MAP_THEMATIC_LAYERS)) {
+  for (const id of PUBLIC_MAP_THEMATIC_LAYER_IDS) {
+    const layer = MAP_THEMATIC_LAYERS[id];
     groups[layer.group].push(layer);
   }
   return groups;

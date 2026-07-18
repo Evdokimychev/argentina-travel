@@ -18,7 +18,7 @@ export function useCheckoutCurrencyRates() {
       .then((payload: ExchangeRatesPayload | null) => {
         if (cancelled) return;
         if (payload?.rates) setRates(payload.rates);
-        setRatesUpdatedAt(payload?.updatedAt);
+        setRatesUpdatedAt(payload?.updatedAt ?? undefined);
         setRatesSource(payload?.source);
       })
       .catch(() => undefined)

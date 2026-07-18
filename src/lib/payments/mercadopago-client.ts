@@ -1,7 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { fetchLiveExchangeRates, resolveRateFromUsd } from "@/lib/exchange-rates";
+import { fetchLiveExchangeRates, requireLiveRateFromUsd } from "@/lib/exchange-rates";
 import {
-  convertUsdToDisplayCurrency,
   resolveChargeCurrency,
 } from "@/lib/payments/checkout-currency";
 import { absoluteUrl } from "@/lib/site-url";
@@ -165,10 +164,11 @@ export async function createPreference(
   const displayCurrency = booking.metadata?.checkoutCurrency ?? "USD";
   const chargeCurrency = resolveChargeCurrency("mercadopago", displayCurrency);
   const ratesPayload = await fetchLiveExchangeRates();
+  const chargeRate = requireLiveRateFromUsd(ratesPayload, chargeCurrency);
   const chargeAmount =
     chargeCurrency === "USD"
       ? amountUsd
-      : convertUsdToDisplayCurrency(amountUsd, chargeCurrency, ratesPayload.rates);
+      : amountUsd * chargeRate;
   const safeAmount = Number(chargeAmount.toFixed(chargeCurrency === "ARS" ? 0 : 2));
   if (!(safeAmount > 0)) {
     throw new Error("Booking amount must be greater than zero to create Mercado Pago preference.");
@@ -181,7 +181,6 @@ export async function createPreference(
   };
   const returnPath = link?.token ? `/booking/pay/${link.token}` : "/profile/bookings";
   const resultBase = link?.token ? `${returnPath}/result` : returnPath;
-  const returnUrl = toAbsoluteUrl(returnPath);
   const resultUrl = toAbsoluteUrl(resultBase);
 
   const body = {
@@ -204,7 +203,7 @@ export async function createPreference(
       paymentLinkToken: link?.token ?? null,
       displayCurrency,
       amountUsd,
-      rateFromUsd: resolveRateFromUsd(chargeCurrency, ratesPayload.rates),
+      rateFromUsd: chargeRate,
     },
     external_reference: booking.id,
     notification_url: input.notificationUrl ?? toAbsoluteUrl("/api/webhooks/payments/mercadopago"),
@@ -414,6 +413,7 @@ export type MercadoPagoRefundResult = {
 export async function createMercadoPagoRefund(input: {
   paymentId: string;
   amount?: number;
+  idempotencyKey: string;
 }): Promise<MercadoPagoRefundResult> {
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
   const refundsEnabled = process.env.MERCADOPAGO_REFUNDS_ENABLED?.trim().toLowerCase();
@@ -425,6 +425,8 @@ export async function createMercadoPagoRefund(input: {
 
   const paymentId = input.paymentId.trim();
   if (!paymentId) throw new Error("Missing Mercado Pago payment id.");
+  const idempotencyKey = input.idempotencyKey.trim();
+  if (!idempotencyKey) throw new Error("Mercado Pago refund idempotency key is missing.");
 
   const body: Record<string, unknown> = {};
   if (typeof input.amount === "number" && Number.isFinite(input.amount) && input.amount > 0) {
@@ -436,7 +438,7 @@ export async function createMercadoPagoRefund(input: {
     `${MERCADOPAGO_API_BASE}/v1/payments/${encodeURIComponent(paymentId)}/refunds`,
     {
       method: "POST",
-      headers: buildAuthHeaders(accessToken, `refund-${paymentId}-${Date.now()}`),
+      headers: buildAuthHeaders(accessToken, idempotencyKey),
       body: JSON.stringify(body),
       signal: controller.signal,
       cache: "no-store",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T20:08:29.772Z",
+  "generatedAt": "2026-07-17T11:59:32.030Z",
   "policy": "No source deletion; quarantine is reversible",
   "actions": [
     {
@@ -169,23 +169,32 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
     {
       "id": "bahia-blanca",
       "sourcePath": "content/knowledge-base/goroda/bahia-blanca.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
       ]
     },
     {
+      "id": "banki-i-perevody",
+      "sourcePath": "content/knowledge-base/dengi/banki-i-perevody.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready",
+        "mixed_script_word"
+      ]
+    },
+    {
       "id": "barreal",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/barreal.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -273,10 +282,19 @@
     {
       "id": "buceo-en-las-costas-de-ushuaia",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/buceo-en-las-costas-de-ushuaia.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "byudzhet-poezdki",
+      "sourcePath": "content/knowledge-base/dengi/byudzhet-poezdki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -305,14 +323,13 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
     {
       "id": "cabalgatas-en-la-estepa-de-bariloche",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cabalgatas-en-la-estepa-de-bariloche.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -321,7 +338,7 @@
     {
       "id": "cabalgatas-en-las-sierras-bonaerenses",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cabalgatas-en-las-sierras-bonaerenses.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -403,7 +420,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -493,7 +509,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -523,7 +538,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -543,7 +557,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -610,7 +623,7 @@
     {
       "id": "cerros-catedral-y-perito-moreno",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -624,6 +637,33 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "chto-delat-krome-dostoprimechatelnostej",
+      "sourcePath": "content/knowledge-base/faq/chto-delat-krome-dostoprimechatelnostej.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "chto-est-vegetariancu",
+      "sourcePath": "content/knowledge-base/faq/chto-est-vegetariancu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "chto-stoit-deneg-prioritety",
+      "sourcePath": "content/knowledge-base/puteshestvie/chto-stoit-deneg-prioritety.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -689,7 +729,7 @@
     {
       "id": "ciudad-de-corrientes",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ciudad-de-corrientes.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -708,9 +748,10 @@
     {
       "id": "ciudad-de-salta",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ciudad-de-salta.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
+        "not_publication_ready",
         "thin_content"
       ]
     },
@@ -757,7 +798,7 @@
     {
       "id": "colon-entre-rios",
       "sourcePath": "content/knowledge-base/goroda/colon-entre-rios.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -780,7 +821,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -867,7 +907,7 @@
     {
       "id": "costa-atlantica-bonaerense",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/costa-atlantica-bonaerense.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1055,7 +1095,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -1142,7 +1181,7 @@
     {
       "id": "el-tren-patagonico",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/el-tren-patagonico.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1174,7 +1213,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -1201,7 +1239,7 @@
     {
       "id": "esim-ili-lokalnaya-sim",
       "sourcePath": "content/knowledge-base/faq/esim-ili-lokalnaya-sim.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1210,7 +1248,7 @@
     {
       "id": "esquel",
       "sourcePath": "content/knowledge-base/goroda/esquel.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -1254,6 +1292,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "falshivye-policejskie-i-obmenniki",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/falshivye-policejskie-i-obmenniki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -1334,15 +1381,6 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
-      ]
-    },
-    {
-      "id": "futbol-kak-popast-bez-skama",
-      "sourcePath": "content/knowledge-base/lichnyy-opyt/futbol-kak-popast-bez-skama.md",
-      "action": "quarantine_and_review",
-      "reversible": true,
-      "issues": [
-        "mixed_script_word"
       ]
     },
     {
@@ -1492,15 +1530,6 @@
       ]
     },
     {
-      "id": "gid-po-zhilyu",
-      "sourcePath": "content/knowledge-base/zhile/gid-po-zhilyu.md",
-      "action": "quarantine_and_review",
-      "reversible": true,
-      "issues": [
-        "missing_sensitive_source"
-      ]
-    },
-    {
       "id": "gid-relokanta",
       "sourcePath": "content/knowledge-base/pereezd/gid-relokanta.md",
       "action": "quarantine_and_review",
@@ -1548,6 +1577,15 @@
       ]
     },
     {
+      "id": "grazhdanstvo",
+      "sourcePath": "content/knowledge-base/pereezd/grazhdanstvo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "gualeguaychu",
       "sourcePath": "content/knowledge-base/goroda/gualeguaychu.md",
       "action": "quarantine_and_review",
@@ -1570,7 +1608,7 @@
     {
       "id": "hornocal",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/hornocal.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -1709,7 +1747,7 @@
     {
       "id": "kak-kupit-aviabilety-deshevle",
       "sourcePath": "content/knowledge-base/faq/kak-kupit-aviabilety-deshevle.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1747,7 +1785,7 @@
     {
       "id": "kakie-rajony-ba-izbegat",
       "sourcePath": "content/knowledge-base/faq/kakie-rajony-ba-izbegat.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1764,9 +1802,18 @@
       ]
     },
     {
+      "id": "kakoj-mesyats-kuda-ehat",
+      "sourcePath": "content/knowledge-base/faq/kakoj-mesyats-kuda-ehat.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "kakoj-otrub-steika-zakazat",
       "sourcePath": "content/knowledge-base/faq/kakoj-otrub-steika-zakazat.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1775,7 +1822,7 @@
     {
       "id": "kayak-en-bariloche",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/kayak-en-bariloche.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1794,10 +1841,19 @@
     {
       "id": "kogda-luchshe-ehat-v-argentinu",
       "sourcePath": "content/knowledge-base/faq/kogda-luchshe-ehat-v-argentinu.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "kovorkingi-i-rabota-nomada",
+      "sourcePath": "content/knowledge-base/svyaz/kovorkingi-i-rabota-nomada.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -1853,7 +1909,7 @@
     {
       "id": "laberinto-patagonia",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/laberinto-patagonia.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1892,7 +1948,7 @@
     {
       "id": "lagos-de-tierra-del-fuego",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/lagos-de-tierra-del-fuego.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -1931,7 +1987,7 @@
     {
       "id": "las-lenas",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/las-lenas.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -1979,7 +2035,7 @@
     {
       "id": "lujan",
       "sourcePath": "content/knowledge-base/goroda/lujan.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -2017,7 +2073,7 @@
     {
       "id": "mar-de-las-pampas",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/mar-de-las-pampas.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content",
@@ -2044,6 +2100,15 @@
       ]
     },
     {
+      "id": "medicina-i-strahovka",
+      "sourcePath": "content/knowledge-base/medicina/medicina-i-strahovka.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "mendoza-best-of-wine-tourism",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/mendoza-best-of-wine-tourism.md",
       "action": "quarantine_and_review",
@@ -2065,10 +2130,19 @@
     {
       "id": "merlo",
       "sourcePath": "content/knowledge-base/goroda/merlo.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
+      ]
+    },
+    {
+      "id": "mify-ob-argentine",
+      "sourcePath": "content/knowledge-base/kultura/mify-ob-argentine.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2141,6 +2215,15 @@
       ]
     },
     {
+      "id": "mozhno-li-delat-vizaran",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-delat-vizaran.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "thin_content"
+      ]
+    },
+    {
       "id": "mozhno-li-otkryt-schet-nerezidentu",
       "sourcePath": "content/knowledge-base/faq/mozhno-li-otkryt-schet-nerezidentu.md",
       "action": "quarantine_and_review",
@@ -2151,9 +2234,18 @@
       ]
     },
     {
+      "id": "mozhno-li-uchitsya-v-universitete-besplatno",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-uchitsya-v-universitete-besplatno.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "thin_content"
+      ]
+    },
+    {
       "id": "mozhno-li-uvidet-lednik-bez-trekkinga",
       "sourcePath": "content/knowledge-base/faq/mozhno-li-uvidet-lednik-bez-trekkinga.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -2214,7 +2306,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -2243,14 +2334,13 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
     {
       "id": "necochea",
       "sourcePath": "content/knowledge-base/goroda/necochea.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -2272,7 +2362,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -2289,7 +2378,7 @@
     {
       "id": "nuzhen-li-4x4-ruta-40",
       "sourcePath": "content/knowledge-base/faq/nuzhen-li-4x4-ruta-40.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -2351,6 +2440,15 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source"
+      ]
+    },
+    {
+      "id": "otkrytie-biznesa",
+      "sourcePath": "content/knowledge-base/dengi/otkrytie-biznesa.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2504,6 +2602,15 @@
       ]
     },
     {
+      "id": "parque-nacional-los-cardones",
+      "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-los-cardones.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-los-glaciares-patrimonio-de-la-humanidad.md",
       "action": "quarantine_and_review",
@@ -2531,6 +2638,15 @@
       ]
     },
     {
+      "id": "parque-nacional-tierra-del-fuego",
+      "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-tierra-del-fuego.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "parque-natural-valle-fertil",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/parque-natural-valle-fertil.md",
       "action": "quarantine_and_review",
@@ -2543,7 +2659,7 @@
     {
       "id": "parque-provincial-cordon-del-plata",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-provincial-cordon-del-plata.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -2645,6 +2761,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "pereezd-s-minimalnym-byudzhetom",
+      "sourcePath": "content/knowledge-base/pereezd/pereezd-s-minimalnym-byudzhetom.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2756,6 +2881,15 @@
       ]
     },
     {
+      "id": "pokupka-nedvizhimosti",
+      "sourcePath": "content/knowledge-base/zhile/pokupka-nedvizhimosti.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "posadas",
       "sourcePath": "content/knowledge-base/goroda/posadas.md",
       "action": "quarantine_and_review",
@@ -2763,6 +2897,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "provoz-lekarstv",
+      "sourcePath": "content/knowledge-base/medicina/provoz-lekarstv.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2781,7 +2924,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -2821,7 +2963,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -2905,6 +3046,15 @@
       ]
     },
     {
+      "id": "rabota-i-poisk-raboty",
+      "sourcePath": "content/knowledge-base/pereezd/rabota-i-poisk-raboty.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "rafaela",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/rafaela.md",
       "action": "quarantine_and_review",
@@ -2940,7 +3090,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -2957,7 +3106,7 @@
     {
       "id": "rafting-en-el-rio-mendoza",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/rafting-en-el-rio-mendoza.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -2969,7 +3118,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -3166,6 +3314,15 @@
       ]
     },
     {
+      "id": "rody-i-beremennost",
+      "sourcePath": "content/knowledge-base/medicina/rody-i-beremennost.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "roque-saenz-pena",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/roque-saenz-pena.md",
       "action": "quarantine_and_review",
@@ -3176,9 +3333,18 @@
       ]
     },
     {
+      "id": "rossiya-vs-argentina",
+      "sourcePath": "content/knowledge-base/kultura/rossiya-vs-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "ruinas-de-quilmes",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ruinas-de-quilmes.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content",
@@ -3191,7 +3357,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -3231,7 +3396,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -3376,7 +3540,7 @@
     {
       "id": "samyj-yuzhnyj-gorod-mira",
       "sourcePath": "content/knowledge-base/faq/samyj-yuzhnyj-gorod-mira.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -3485,7 +3649,7 @@
     {
       "id": "sierra-de-la-ventana",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/sierra-de-la-ventana.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -3494,7 +3658,7 @@
     {
       "id": "sierra-de-las-quijadas",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/sierra-de-las-quijadas.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -3531,6 +3695,15 @@
       ]
     },
     {
+      "id": "sistema-zdravoohraneniya",
+      "sourcePath": "content/knowledge-base/medicina/sistema-zdravoohraneniya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "skam-s-falshivoj-policiej",
       "sourcePath": "content/knowledge-base/faq/skam-s-falshivoj-policiej.md",
       "action": "quarantine_and_review",
@@ -3553,7 +3726,7 @@
     {
       "id": "skolko-dnej-na-marshrut-2-nedeli",
       "sourcePath": "content/knowledge-base/faq/skolko-dnej-na-marshrut-2-nedeli.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -3562,7 +3735,7 @@
     {
       "id": "skolko-dnej-nuzhno-na-iguasu",
       "sourcePath": "content/knowledge-base/faq/skolko-dnej-nuzhno-na-iguasu.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -3598,9 +3771,54 @@
       ]
     },
     {
+      "id": "status-expediente-migraciones",
+      "sourcePath": "content/knowledge-base/pereezd/status-expediente-migraciones.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-ba",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-ba.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-semya-i-para",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-semya-i-para.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoit-li-ehat-v-argentinu",
+      "sourcePath": "content/knowledge-base/puteshestvie/stoit-li-ehat-v-argentinu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "studencheskaya-zhizn",
+      "sourcePath": "content/knowledge-base/pereezd/studencheskaya-zhizn.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "susques",
       "sourcePath": "content/knowledge-base/goroda/susques.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -3609,7 +3827,7 @@
     {
       "id": "tafi-del-valle",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/tafi-del-valle.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -3628,7 +3846,7 @@
     {
       "id": "tandil",
       "sourcePath": "content/knowledge-base/goroda/tandil.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -3730,7 +3948,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -3759,7 +3976,6 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -3798,14 +4014,13 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
     {
       "id": "tren-a-las-nubes",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/tren-a-las-nubes.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -3824,7 +4039,7 @@
     {
       "id": "trevelin",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/trevelin.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content",
@@ -3912,6 +4127,15 @@
       ]
     },
     {
+      "id": "udalyonnaya-rabota-i-oplata",
+      "sourcePath": "content/knowledge-base/dengi/udalyonnaya-rabota-i-oplata.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "ushuaia-la-ciudad-y-el-tren",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ushuaia-la-ciudad-y-el-tren.md",
       "action": "quarantine_and_review",
@@ -3953,7 +4177,7 @@
     {
       "id": "valle-de-uco",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/valle-de-uco.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_hero"
@@ -3962,7 +4186,7 @@
     {
       "id": "valle-de-uco-mendoza",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/valle-de-uco-mendoza.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content"
@@ -4140,7 +4364,7 @@
     {
       "id": "villavicencio",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/villavicencio.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "thin_content",
@@ -4207,12 +4431,29 @@
       ]
     },
     {
+      "id": "vnzh-argentina",
+      "sourcePath": "content/knowledge-base/pereezd/vnzh-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "voinskij-uchet-i-voennyj-bilet",
+      "sourcePath": "content/knowledge-base/pereezd/voinskij-uchet-i-voennyj-bilet.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "volcan-lanin",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/volcan-lanin.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_title",
         "thin_content"
       ]
     },
@@ -4224,6 +4465,15 @@
       "issues": [
         "not_publication_ready",
         "thin_content"
+      ]
+    },
+    {
+      "id": "vysokogorye-na-avto",
+      "sourcePath": "content/knowledge-base/transport/vysokogorye-na-avto.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -4247,12 +4497,21 @@
       ]
     },
     {
-      "id": "zhizn-bez-ispanskogo",
-      "sourcePath": "content/knowledge-base/kultura/zhizn-bez-ispanskogo.md",
+      "id": "zashchita-nakoplenij-ot-inflyacii",
+      "sourcePath": "content/knowledge-base/dengi/zashchita-nakoplenij-ot-inflyacii.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "mixed_script_word"
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "zhizn-na-pensii",
+      "sourcePath": "content/knowledge-base/pereezd/zhizn-na-pensii.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     }
   ]

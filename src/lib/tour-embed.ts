@@ -1,7 +1,7 @@
 import { getDestinationBySlug } from "@/lib/destinations";
 import { matchToursForDestination } from "@/lib/destinations";
-import { resolveListingOwnerUserId } from "@/lib/organizer-public";
-import { getRecommendedListings } from "@/lib/tour-recommendations";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
+import { getRecommendedListings } from "@/lib/tour-listing-ranking";
 import type { TourListing } from "@/types";
 import type {
   TourEmbedConfig,

@@ -243,7 +243,10 @@ export function parseExcursionFiltersFromSearchParams(
   const partners = params
     .get("partner")
     ?.split(",")
-    .filter((value): value is ExcursionPartner => value === "tripster" || value === "sputnik8") ?? [];
+    .filter(
+      (value): value is ExcursionPartner =>
+        value === "platform" || value === "tripster" || value === "sputnik8"
+    ) ?? [];
 
   const minRatingRaw = params.get("minRating");
   const maxPriceRaw = params.get("maxPrice");

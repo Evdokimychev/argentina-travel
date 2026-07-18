@@ -6,6 +6,10 @@ import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbCallout from "@/components/knowledge-base/KbCallout";
 import KbEditorialNotice from "@/components/knowledge-base/KbEditorialNotice";
 import KbFactPanel from "@/components/knowledge-base/KbFactPanel";
+import KbProvenance, {
+  buildKbPublicProvenance,
+  isKbSensitiveEntryStrictlyVerified,
+} from "@/components/knowledge-base/KbProvenance";
 import KbRelated from "@/components/knowledge-base/KbRelated";
 import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import KbSources from "@/components/knowledge-base/KbSources";
@@ -16,11 +20,16 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   getAllEntryIds,
   getBreadcrumbs,
-  getEntry,
   getEntrySection,
   getRelated,
   getSectionNeighbours,
 } from "@/lib/knowledge-base/content";
+import {
+  listPublishedKnowledgeSlugs,
+  resolveKnowledgeEntry,
+} from "@/lib/cms/knowledge-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { cmsFallbackRobots } from "@/lib/cms/content-resolver";
 import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
 import SocialFeed from "@/components/social-feed/SocialFeed";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
@@ -38,21 +47,26 @@ interface PageProps {
 export const revalidate = 86_400;
 export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return capBuildStaticParams(getAllEntryIds()).map((id) => ({ slug: id }));
+export async function generateStaticParams() {
+  return capBuildStaticParams(await listPublishedKnowledgeSlugs()).map((id) => ({ slug: id }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const entry = getEntry(slug);
+  const entry = await resolveKnowledgeEntry(slug);
   if (!entry) return {};
   const pageTitle = `${entry.title} — База знаний`;
   const description = entry.summary?.trim() || entry.title;
-  return buildPublicPageMetadata({
+  const metadata = buildPublicPageMetadata({
     title: pageTitle,
     description,
     path: `/baza-znaniy/${entry.id}`,
   });
+  return {
+    ...metadata,
+    alternates: await buildCmsContentHreflangAlternates("knowledge", entry.id),
+    ...(cmsFallbackRobots(entry) ? { robots: cmsFallbackRobots(entry) } : {}),
+  };
 }
 
 const CONFIDENCE_STYLE: Record<string, string> = {
@@ -81,15 +95,20 @@ function imageCredit(hero: NonNullable<KbEntry["media"]>["hero"]) {
 
 export default async function KnowledgeArticlePage({ params }: PageProps) {
   const { slug } = await params;
-  const entry = getEntry(slug);
+  const entry = await resolveKnowledgeEntry(slug);
   if (!entry) notFound();
 
-  const validIds = new Set(getAllEntryIds());
+  const validIds = new Set([...getAllEntryIds(), entry.id]);
   const headings = extractHeadings(entry.body);
   const related = getRelated(entry, 6);
   const { prev, next } = getSectionNeighbours(entry);
   const section = getEntrySection(entry);
   const hero = entry.media?.hero;
+  const publicProvenance = buildKbPublicProvenance(entry);
+  const maySayVerified = isKbSensitiveEntryStrictlyVerified(entry);
+  const editorialNoticeEntry = maySayVerified
+    ? entry
+    : { ...entry, last_verified: null };
 
   return (
     <>
@@ -120,11 +139,15 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               {entry.confidence && (
                 <span
                   className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-medium ${
-                    CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
+                    entry.confidence === "high" && !maySayVerified
+                      ? CONFIDENCE_STYLE.medium
+                      : CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
                   }`}
                 >
                   {entry.confidence === "high"
-                    ? "Проверено"
+                    ? maySayVerified
+                      ? "Проверено"
+                      : "Проверьте актуальность"
                     : entry.confidence === "medium"
                       ? "Проверяйте актуальность"
                       : "Ориентировочно"}
@@ -132,7 +155,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               )}
               {entry.last_verified && (
                 <span className="text-2xs text-slate">
-                  Обновлено: {entry.last_verified}
+                  Материал обновлён: {entry.last_verified}
                 </span>
               )}
               {entry.status === "stub" && (
@@ -151,7 +174,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               </p>
             )}
 
-            <KbEditorialNotice entry={entry} />
+            <KbEditorialNotice entry={editorialNoticeEntry} />
 
             {hero && (
               <figure className="mt-6">
@@ -183,9 +206,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
             <KbCallout variant="recommendation" items={entry.recommendations} />
 
             <div className="mt-4 text-base">
-              {renderMarkdown(entry.body, { validIds })}
+              {renderMarkdown(entry.body, { validIds, provenance: publicProvenance })}
             </div>
 
+            <KbProvenance data={publicProvenance} />
             <KbSources sources={entry.sources} />
 
             {/* Пред/след внутри раздела */}

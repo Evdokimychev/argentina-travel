@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 const PodborView = dynamic(() => import("@/components/podbor/PodborView"), {
   loading: () => (
@@ -11,11 +12,12 @@ const PodborView = dynamic(() => import("@/components/podbor/PodborView"), {
   ),
 });
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPublicPageMetadata({
   title: "Подбор маршрута по Аргентине",
   description:
     "Интерактивный подбор путешествия по Аргентине: регионы, туры и экскурсии под ваши цели, бюджет и темп.",
-};
+  path: "/podbor",
+});
 
 export default async function PodborPage() {
   const tours = await fetchMarketplaceTours();

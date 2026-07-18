@@ -9,6 +9,7 @@
 | **Travelpayouts** | [travelpayouts.md](./travelpayouts.md) | Партнёрские ссылки (Tripster, YouTravel, Sputnik8), whitelabel авиа/страхование |
 | **YouTravel.me** | [youtravel.md](./youtravel.md) | Партнёрские туры, booking API, Affise-статистика |
 | **Sputnik8** | [sputnik8.md](./sputnik8.md) | Экскурсии (affiliate-only в текущем UX) |
+| **Argentina Knowledge Collector** | [knowledge-collector.md](./knowledge-collector.md) | Отбор материалов и импорт CMS-черновиков |
 
 Дополнительно в коде (без отдельного справочника): **Intui** (трансферы), **Airalo** (eSIM), **WeGoTrip** — только affiliate/deep-link, без native booking.
 

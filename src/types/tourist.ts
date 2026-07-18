@@ -76,6 +76,8 @@ export interface FavoriteTour {
 export interface Booking {
   id: string;
   userId: string;
+  /** Immutable Supabase owner for authorization; legacy local records may omit it. */
+  organizerUserId?: string;
   organizerTourId?: string;
   tourId: string;
   tourSlug: string;

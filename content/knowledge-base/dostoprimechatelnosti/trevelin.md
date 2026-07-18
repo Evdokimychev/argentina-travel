@@ -32,4 +32,8 @@ confidence: medium
 seo_slug: trevelin-vallijskaya-patagoniya
 ---
 
-- **Провинция:** Чубут ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/trevelin) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Чубут
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/trevelin) (исп.; адаптировано 2026-07-07).

@@ -25,6 +25,7 @@ type TranslationInventoryItem = {
 const DOC_TYPE_LABELS: Record<CmsDocType, string> = {
   legal: "Юридический документ",
   blog: "Статья",
+  knowledge: "Материал базы знаний",
   guide: "Путеводитель",
   destination: "Направление",
   place: "Место",
@@ -34,6 +35,7 @@ const DOC_TYPE_LABELS: Record<CmsDocType, string> = {
 const DOC_TYPE_SEGMENTS: Record<CmsDocType, string> = {
   legal: "legal",
   blog: "blog",
+  knowledge: "baza-znaniy",
   guide: "guide",
   destination: "destinations",
   place: "places",

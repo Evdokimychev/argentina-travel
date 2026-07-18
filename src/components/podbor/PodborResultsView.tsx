@@ -112,7 +112,15 @@ export default function PodborResultsView({ result, onRestart }: PodborResultsVi
       {result.tours.length > 0 ? (
         <section className="mt-12">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-heading text-2xl font-bold text-charcoal">Подходящие туры</h2>
+            <div>
+              <h2 className="font-heading text-2xl font-bold text-charcoal">
+                Туры в указанном бюджете
+              </h2>
+              <p className="mt-1 text-sm text-slate">
+                Цена в карточке не превышает {formatUsd(result.budgetUsdRange[1])} на человека.
+                Дополнительные расходы проверяйте в условиях тура.
+              </p>
+            </div>
             <Link
               href="/tours"
               className="inline-flex items-center gap-1 text-sm font-semibold text-sky hover:text-sky-dark"
@@ -127,6 +135,49 @@ export default function PodborResultsView({ result, onRestart }: PodborResultsVi
             ))}
           </div>
         </section>
+      ) : (
+        <section className="mt-12 rounded-xl border border-amber-200 bg-amber-50 p-5">
+          <h2 className="font-heading text-xl font-bold text-charcoal">
+            В указанном бюджете подходящих туров не найдено
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate">
+            Мы не подмешиваем более дорогие туры в основную выдачу. Можно изменить бюджет или
+            посмотреть ближайшие варианты ниже.
+          </p>
+        </section>
+      )}
+
+      {result.tours.length === 0 && result.overBudgetTours.length > 0 ? (
+        <section className="mt-8">
+          <h2 className="font-heading text-2xl font-bold text-charcoal">
+            Ближайшие варианты выше бюджета
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate">
+            Эти туры не считаются совпадениями. Они показаны отдельно, чтобы разница в цене была
+            понятна до перехода в карточку.
+          </p>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {result.overBudgetTours.map((item) => (
+              <div key={item.tour.slug} className="space-y-2">
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-charcoal">
+                  <p>Ваш бюджет: {formatUsd(result.budgetUsdRange[1])}</p>
+                  <p>Стоимость: от {formatUsd(item.normalizedTotalUsd)}</p>
+                  <p className="font-semibold text-amber-900">
+                    Превышение: {formatUsd(item.overageUsd)} ({formatPercent(item.overagePercent)})
+                  </p>
+                </div>
+                <MarketplaceTourCard tour={item.tour} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {result.priceUnknownTourCount > 0 ? (
+        <p className="mt-5 text-sm text-slate">
+          Ещё {result.priceUnknownTourCount} {pluralizeTour(result.priceUnknownTourCount)} не
+          включено в совпадения: стоимость требует уточнения.
+        </p>
       ) : null}
 
       {result.excursions.length > 0 ? (
@@ -186,15 +237,15 @@ export default function PodborResultsView({ result, onRestart }: PodborResultsVi
         </h2>
         <p className="mt-3 max-w-2xl text-slate">
           {isRelocation
-            ? "Мы подключим материалы по иммиграции и предложим туры для знакомства со страной."
+            ? "Поможем выбрать ознакомительный маршрут и ответим на вопросы о поездке."
             : "Отправьте заявку — организатор уточнит даты, состав группы и финальную стоимость."}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
-            href={isRelocation ? "/immigration" : "/contacts"}
+            href="/contacts"
             className={buttonVariants()}
           >
-            {isRelocation ? "Раздел о переезде" : "Обсудить маршрут"}
+            {isRelocation ? "Задать вопрос" : "Обсудить маршрут"}
           </Link>
           <Link href="/tours" className={buttonVariants({ variant: "outline" })}>
             Смотреть туры
@@ -203,6 +254,23 @@ export default function PodborResultsView({ result, onRestart }: PodborResultsVi
       </section>
     </motion.div>
   );
+}
+
+function formatUsd(value: number): string {
+  return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value)} USD`;
+}
+
+function formatPercent(value: number): string {
+  return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
+function pluralizeTour(value: number): string {
+  const mod100 = value % 100;
+  const mod10 = value % 10;
+  if (mod100 >= 11 && mod100 <= 14) return "туров";
+  if (mod10 === 1) return "тур";
+  if (mod10 >= 2 && mod10 <= 4) return "тура";
+  return "туров";
 }
 
 function StatTile({

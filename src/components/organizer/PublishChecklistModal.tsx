@@ -44,7 +44,7 @@ export default function PublishChecklistModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg sm:max-w-xl" showClose>
+      <DialogContent className="sm:max-w-xl" showClose>
         <DialogHeader>
           <DialogTitle>Чек-лист перед публикацией</DialogTitle>
           <DialogDescription>

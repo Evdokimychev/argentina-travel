@@ -24,14 +24,24 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { isRemoteBookingsMode } from "@/lib/bookings-api";
+import {
+  apiFetchTravelersFormBooking,
+  apiSaveTravelersFormBooking,
+} from "@/lib/booking-travelers-api";
+import type { TravelersFormBookingView } from "@/lib/booking-travelers-server";
+import { cn } from "@/lib/cn";
 
 export default function BookingTravelersFormView({ token }: { token: string }) {
-  const [booking, setBooking] = useState<Booking | null>(null);
+  const remoteBookings = isRemoteBookingsMode();
+  const [booking, setBooking] = useState<TravelersFormBookingView | null>(null);
   const [travelers, setTravelers] = useState<BookingTraveler[]>([]);
-  const [consent, setConsent] = useState(true);
+  const [consent, setConsent] = useState(false);
+  const [dateErrors, setDateErrors] = useState<Record<string, string>>({});
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const feedback = useSiteFeedback();
 
   const setError = (value: string | SiteFeedbackMessage | null) => {
@@ -43,10 +53,14 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
   };
 
   useEffect(() => {
-    function load() {
-      const found = getBookingByTravelersToken(token);
-      setBooking(found ?? null);
-      if (found) {
+    async function load() {
+      setInitialLoading(true);
+      try {
+        const found = remoteBookings
+          ? await apiFetchTravelersFormBooking(token)
+          : getBookingByTravelersToken(token) ?? null;
+        setBooking(found);
+        if (found) {
         const initial = ensureTravelersSlotCount(
           found.travelers?.length ? found.travelers : [],
           found.guests
@@ -55,18 +69,35 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
         );
         setTravelers(initial);
         setSubmitted(Boolean(found.travelersCompletedAt));
+        }
+      } catch (loadError) {
+        setBooking(null);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Не удалось загрузить заявку. Обновите страницу и попробуйте ещё раз."
+        );
+      } finally {
+        setInitialLoading(false);
       }
     }
 
-    load();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, load);
-    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, load);
-  }, [token]);
+    void load();
+    const onUpdated = () => void load();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, onUpdated);
+  }, [remoteBookings, token]);
+
+  if (initialLoading) {
+    return <p className="py-16 text-center text-sm text-slate" role="status">Загружаем заявку…</p>;
+  }
 
   if (!booking) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <p className="text-sm text-slate">Ссылка недействительна или заявка не найдена.</p>
+        <p className="text-sm text-slate">
+          {error?.description ?? "Ссылка недействительна или заявка не найдена."}
+        </p>
         <Link href="/tours" className="mt-4 inline-block text-sm font-medium text-brand hover:underline">
           Перейти к турам
         </Link>
@@ -82,8 +113,25 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
     );
   }
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    const nextDateErrors = Object.fromEntries(
+      travelers
+        .filter((traveler) => !traveler.dateOfBirth.trim())
+        .map((traveler) => [traveler.id, "Укажите дату рождения"])
+    );
+
+    if (Object.keys(nextDateErrors).length > 0) {
+      setDateErrors(nextDateErrors);
+      const firstInvalidTraveler = travelers.find((traveler) => nextDateErrors[traveler.id]);
+      if (firstInvalidTraveler) {
+        document.getElementById(`dob-${firstInvalidTraveler.id}`)?.focus();
+      }
+      return;
+    }
+
+    setDateErrors({});
     if (!consent) {
       setError("Подтвердите согласие на обработку персональных данных");
       return;
@@ -92,26 +140,35 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
     setLoading(true);
     setError(null);
 
-    const result = submitBookingTravelers({ token, travelers });
-    setLoading(false);
-
-    if ("error" in result) {
-      const normalized = normalizeSiteError(result.error, {
+    try {
+      const nextBooking = remoteBookings
+        ? await apiSaveTravelersFormBooking(token, travelers)
+        : (() => {
+            const result = submitBookingTravelers({ token, travelers });
+            if ("error" in result) throw new Error(result.error);
+            return result.booking as Booking;
+          })();
+      setBooking(nextBooking);
+      setTravelers(nextBooking.travelers ?? []);
+      setSubmitted(true);
+      window.dispatchEvent(new CustomEvent(BOOKINGS_UPDATED_EVENT));
+      feedback.success({
+        title: "Данные отправлены",
+        description: "Информация о участниках передана организатору тура.",
+      });
+    } catch (submitError) {
+      const normalized = normalizeSiteError(
+        submitError instanceof Error ? submitError.message : "Не удалось отправить данные",
+        {
         title: "Не удалось отправить данные",
         steps: ["Проверьте ФИО, дату рождения и телефон каждого участника", "Подтвердите согласие на обработку данных"],
-      });
+        }
+      );
       setError(normalized);
       feedback.showError(normalized);
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    setBooking(result.booking);
-    setTravelers(result.booking.travelers ?? []);
-    setSubmitted(true);
-    feedback.success({
-      title: "Данные отправлены",
-      description: "Информация о участниках передана организатору тура.",
-    });
   }
 
   if (submitted && booking.travelersCompletedAt) {
@@ -166,44 +223,76 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
                 />
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1.5 block text-sm text-slate" htmlFor={`dob-${index}`}>
-                    Дата рождения
+              <div className={cn("grid gap-3", !remoteBookings && "sm:grid-cols-2")}>
+                <div
+                  role="group"
+                  aria-describedby={dateErrors[traveler.id] ? `dob-${traveler.id}-error` : undefined}
+                >
+                  <label className="mb-1.5 block text-sm text-slate" htmlFor={`dob-${traveler.id}`}>
+                    Дата рождения <span className="text-brand" aria-hidden="true">*</span>
+                    <span className="sr-only"> (обязательное поле)</span>
                   </label>
                   <SingleDatePicker
-                    id={`dob-${index}`}
+                    id={`dob-${traveler.id}`}
                     value={parseBookingTravelerDate(traveler.dateOfBirth)}
-                    onChange={(date) =>
-                      updateTraveler(index, { dateOfBirth: formatBookingTravelerDate(date) })
-                    }
+                    onChange={(date) => {
+                      updateTraveler(index, { dateOfBirth: formatBookingTravelerDate(date) });
+                      if (date) {
+                        setDateErrors((current) => {
+                          if (!current[traveler.id]) return current;
+                          const next = { ...current };
+                          delete next[traveler.id];
+                          return next;
+                        });
+                      }
+                    }}
                     min={minBirthDateIso()}
                     max={maxBirthDateIso()}
                     birthDatePicker
                     placeholder="ДД.ММ.ГГГГ"
-                    className="h-11 rounded-xl bg-gray-50"
+                    className={dateErrors[traveler.id]
+                      ? "h-11 rounded-xl border-error bg-error-muted ring-2 ring-error/20"
+                      : "h-11 rounded-xl bg-gray-50"}
                   />
+                  {dateErrors[traveler.id] ? (
+                    <p
+                      id={`dob-${traveler.id}-error`}
+                      role="alert"
+                      className="mt-1.5 text-xs font-medium text-error"
+                    >
+                      {dateErrors[traveler.id]}
+                    </p>
+                  ) : null}
                   {participantAgeLabel(parseBookingTravelerDate(traveler.dateOfBirth)) ? (
                     <p className="mt-1.5 text-xs text-slate">
                       Возраст: {participantAgeLabel(parseBookingTravelerDate(traveler.dateOfBirth))}
                     </p>
                   ) : null}
                 </div>
-                <div>
-                  <label className="mb-1.5 block text-sm text-slate" htmlFor={`passport-${index}`}>
-                    Номер и серия паспорта
-                  </label>
-                  <Input
-                    id={`passport-${index}`}
-                    value={traveler.passportNumber ?? ""}
-                    onChange={(event) =>
-                      updateTraveler(index, { passportNumber: event.target.value })
-                    }
-                    placeholder="4510 123456"
-                    className="h-11 rounded-xl bg-gray-50"
-                  />
-                </div>
+                {!remoteBookings ? (
+                  <div>
+                    <label className="mb-1.5 block text-sm text-slate" htmlFor={`passport-${index}`}>
+                      Номер и серия паспорта
+                    </label>
+                    <Input
+                      id={`passport-${index}`}
+                      value={traveler.passportNumber ?? ""}
+                      onChange={(event) =>
+                        updateTraveler(index, { passportNumber: event.target.value })
+                      }
+                      placeholder="4510 123456"
+                      className="h-11 rounded-xl bg-gray-50"
+                    />
+                  </div>
+                ) : null}
               </div>
+
+              {remoteBookings ? (
+                <p className="rounded-xl bg-sky-50 px-4 py-3 text-sm leading-relaxed text-slate">
+                  Паспортные данные на сайте не запрашиваются. Если они понадобятся для конкретной
+                  услуги, организатор отдельно объяснит безопасный способ передачи.
+                </p>
+              ) : null}
 
               <div>
                 <label className="mb-1.5 block text-sm text-slate" htmlFor={`diet-${index}`}>

@@ -40,7 +40,8 @@ export default function OrganizerBioExampleModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
-        className="flex max-h-[90vh] max-w-lg animate-fade-in-up flex-col overflow-hidden p-0"
+        showClose={false}
+        className="flex flex-col overflow-hidden p-0 animate-fade-in-up sm:max-h-[90vh] sm:max-w-lg"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}
       >

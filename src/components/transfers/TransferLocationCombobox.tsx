@@ -32,7 +32,10 @@ export default function TransferLocationCombobox({
   const [query, setQuery] = useState(value ? formatTransferLocationLabel(value) : "");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [options, setOptions] = useState<TransferLocation[]>([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const requestSequenceRef = useRef(0);
 
   useEffect(() => {
     setQuery(value ? formatTransferLocationLabel(value) : "");
@@ -40,16 +43,24 @@ export default function TransferLocationCombobox({
 
   const fetchLocations = useCallback(
     async (term: string) => {
+      const requestSequence = ++requestSequenceRef.current;
       setLoading(true);
+      setLoadFailed(false);
       try {
         const params = new URLSearchParams({ term, locale });
         const response = await fetch(`/api/transfers/autocomplete?${params}`);
         const payload = (await response.json()) as { locations?: TransferLocation[] };
-        setOptions(payload.locations ?? []);
+        if (requestSequence !== requestSequenceRef.current) return;
+        const nextOptions = payload.locations ?? [];
+        setOptions(nextOptions);
+        setActiveIndex(nextOptions.length ? 0 : -1);
       } catch {
+        if (requestSequence !== requestSequenceRef.current) return;
         setOptions([]);
+        setActiveIndex(-1);
+        setLoadFailed(true);
       } finally {
-        setLoading(false);
+        if (requestSequence === requestSequenceRef.current) setLoading(false);
       }
     },
     [locale]
@@ -78,12 +89,40 @@ export default function TransferLocationCombobox({
     onChange(location);
     setQuery(formatTransferLocationLabel(location));
     setOpen(false);
+    setActiveIndex(-1);
   }
 
   function handleClear() {
     onChange(null);
     setQuery("");
     setOptions([]);
+    setActiveIndex(-1);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape") {
+      if (open) event.preventDefault();
+      setOpen(false);
+      setActiveIndex(-1);
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      setOpen(true);
+      if (!options.length) return;
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      setActiveIndex((current) => {
+        if (current < 0) return direction > 0 ? 0 : options.length - 1;
+        return (current + direction + options.length) % options.length;
+      });
+      return;
+    }
+
+    if (event.key === "Enter" && open && activeIndex >= 0 && options[activeIndex]) {
+      event.preventDefault();
+      handleSelect(options[activeIndex]);
+    }
   }
 
   return (
@@ -100,8 +139,10 @@ export default function TransferLocationCombobox({
           placeholder={placeholder}
           autoComplete="off"
           role="combobox"
+          aria-autocomplete="list"
           aria-expanded={open}
           aria-controls={listId}
+          aria-activedescendant={open && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
           onFocus={() => setOpen(true)}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -110,6 +151,7 @@ export default function TransferLocationCombobox({
               onChange(null);
             }
           }}
+          onKeyDown={handleKeyDown}
           className={cn("pl-9", query || value ? "pr-9" : undefined)}
         />
         {loading ? (
@@ -126,19 +168,43 @@ export default function TransferLocationCombobox({
         ) : null}
       </div>
 
-      {open && options.length > 0 ? (
+      <div className="sr-only" role="status" aria-live="polite">
+        {loading
+          ? "Ищем варианты"
+          : loadFailed
+            ? "Не удалось загрузить варианты"
+            : open && query && options.length === 0
+              ? "Совпадений не найдено"
+              : open && options.length
+                ? `Найдено вариантов: ${options.length}`
+                : ""}
+      </div>
+
+      {open && (options.length > 0 || (!loading && query)) ? (
         <ul
           id={listId}
           role="listbox"
           className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white py-1 shadow-lg"
         >
-          {options.map((location) => (
-            <li key={location.id}>
-              <button
-                type="button"
+          {loadFailed ? (
+            <li className="px-4 py-3 text-sm text-error">
+              Не удалось загрузить варианты. Продолжите ввод или повторите позже.
+            </li>
+          ) : options.length === 0 ? (
+            <li className="px-4 py-3 text-sm text-muted">
+              Ничего не найдено. Попробуйте название города, аэропорта или вокзала.
+            </li>
+          ) : options.map((location, index) => (
+            <li
+                key={location.id}
+                id={`${listId}-option-${index}`}
                 role="option"
                 aria-selected={value?.id === location.id}
-                className="flex w-full items-start gap-2 px-3 py-2.5 text-left text-sm hover:bg-sky/5"
+                className={cn(
+                  "flex cursor-pointer items-start gap-2 px-3 py-2.5 text-left text-sm",
+                  index === activeIndex ? "bg-sky/10" : "hover:bg-sky/5",
+                )}
+                onMouseEnter={() => setActiveIndex(index)}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => handleSelect(location)}
               >
@@ -147,7 +213,6 @@ export default function TransferLocationCombobox({
                   {location.countryName ? `${location.countryName} · ` : ""}
                   {location.code ?? (location.type === "point" ? "точка" : "")}
                 </span>
-              </button>
             </li>
           ))}
         </ul>

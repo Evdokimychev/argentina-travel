@@ -1,7 +1,7 @@
 import type { TourListing } from "@/types";
 import type { PublicApiExcursionListing, PublicApiPagination, PublicApiTourListing } from "@/types/public-api";
 import type { ExcursionListing } from "@/types/excursion";
-import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 
 function siteOrigin(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.goargentina.ru").replace(/\/$/, "");

@@ -2,28 +2,28 @@
 
 export const cabinetShellClass = "min-h-dvh bg-surface-muted dark:bg-background";
 
-export const cabinetContentGapClass = "flex items-start gap-5 py-5 md:py-6";
+export const cabinetContentGapClass = "flex items-start gap-4 py-3 md:gap-5 md:py-6";
 
 export const cabinetPanelClass =
-  "rounded-3xl border border-border-subtle bg-surface-elevated p-5 shadow-card sm:p-6 dark:border-border-subtle dark:bg-surface-elevated";
+  "rounded-2xl border border-border-subtle bg-surface-elevated p-4 shadow-card sm:rounded-3xl sm:p-6 dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetCardClass =
-  "rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
+  "rounded-2xl border border-border-subtle bg-surface-elevated shadow-card sm:rounded-3xl dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetHeroClass =
-  "rounded-3xl border border-border-subtle bg-gradient-to-br from-surface-elevated via-surface-elevated to-sky/[0.06] p-5 shadow-card sm:p-6 dark:from-surface-elevated dark:via-surface-elevated dark:to-sky/[0.08]";
+  "rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-elevated via-surface-elevated to-sky/[0.06] p-4 shadow-card sm:rounded-3xl sm:p-6 dark:from-surface-elevated dark:via-surface-elevated dark:to-sky/[0.08]";
 
 export const cabinetLinkClass =
   "font-medium text-sky transition-colors hover:text-sky-dark hover:underline";
 
 export const cabinetSidebarClass =
-  "sticky top-5 hidden h-fit shrink-0 flex-col rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated";
+  "sticky top-5 hidden max-h-[calc(100dvh-2.5rem)] shrink-0 flex-col overflow-hidden rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetSidebarSkeletonClass =
-  "sticky top-5 h-fit rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
+  "sticky top-5 max-h-[calc(100dvh-2.5rem)] rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetMobileHeaderClass =
-  "flex items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-3 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
+  "flex min-h-14 items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-1.5 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
 /** Horizontal section nav — sticky below site header on mobile cabinets. */
 export const cabinetMobileNavClass =
@@ -35,6 +35,13 @@ export const cabinetMobileBottomNavClass =
 export const cabinetMobileBottomInsetClass =
   "pb-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:pb-0";
 
+/** Sticky workspace elements do not reserve space for the public site header. */
+export const cabinetWorkspaceStickyTopClass = "top-0";
+
+export const cabinetWorkspaceStickyTopInsetClass = "top-4";
+
+export const cabinetWorkspaceStickyMaxHeightClass = "max-h-[calc(100dvh-2rem)]";
+
 export const cabinetNavBadgeClass =
   "flex items-center justify-center rounded-full bg-sky font-bold text-white";
 
@@ -44,10 +51,10 @@ export const cabinetPageTitleClass =
 export const cabinetPageSubtitleClass = "mt-1 text-sm text-muted";
 
 export const cabinetStatCardClass =
-  "rounded-3xl border border-border-subtle bg-surface-elevated p-5 shadow-card transition-[border-color,box-shadow] hover:border-sky/30 hover:shadow-elevated motion-reduce:transition-none dark:border-border-subtle dark:bg-surface-elevated";
+  "rounded-2xl border border-border-subtle bg-surface-elevated p-4 shadow-card transition-[border-color,box-shadow] hover:border-sky/30 hover:shadow-elevated motion-reduce:transition-none sm:rounded-3xl sm:p-5 dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetWidgetCardClass =
-  "rounded-3xl border border-border-subtle bg-surface-elevated p-5 shadow-card transition-[border-color,box-shadow] hover:border-sky/25 hover:shadow-elevated motion-reduce:transition-none dark:border-border-subtle dark:bg-surface-elevated";
+  "rounded-2xl border border-border-subtle bg-surface-elevated p-4 shadow-card transition-[border-color,box-shadow] hover:border-sky/25 hover:shadow-elevated motion-reduce:transition-none sm:rounded-3xl sm:p-5 dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetQuickActionsClass =
   "flex gap-2 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:overflow-visible";
@@ -56,7 +63,7 @@ export const cabinetQuickActionClass =
   "inline-flex shrink-0 items-center gap-2 rounded-2xl border border-border-subtle bg-surface-elevated px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition-[border-color,box-shadow,background-color] hover:border-sky/25 hover:bg-sky/[0.04] hover:shadow-card motion-reduce:transition-none dark:border-border-subtle dark:bg-surface-elevated dark:hover:bg-sky/[0.06]";
 
 export const cabinetTableWrapClass =
-  "overflow-x-auto rounded-3xl border border-border-subtle dark:border-border-subtle";
+  "overflow-x-auto rounded-2xl border border-border-subtle sm:rounded-3xl dark:border-border-subtle";
 
 export const cabinetTableHeaderClass = "bg-surface-muted/70 dark:bg-surface-muted/50";
 

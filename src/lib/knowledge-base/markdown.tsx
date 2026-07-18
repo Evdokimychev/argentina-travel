@@ -8,11 +8,19 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import {
+  normalizeKbClaimText,
+  type KbPublicProvenance,
+} from "@/components/knowledge-base/KbProvenance";
+import { KbClaimSourceMarkers } from "@/components/knowledge-base/KbClaimSourceMarkers";
+
 import { entryHref } from "./urls";
 
 interface RenderOptions {
   /** id существующих (опубликованных) записей — для резолва [[вики-ссылок]]. */
   validIds: Set<string>;
+  /** Строгая публичная цепочка источников; диагностические данные сюда не попадают. */
+  provenance?: KbPublicProvenance | null;
 }
 
 // Разделы, которые на странице статьи показываются отдельными UI-блоками,
@@ -223,7 +231,7 @@ function renderTable(rows: string[], validIds: Set<string>, key: number): ReactN
 
 /** Основной рендер тела статьи. */
 export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
-  const { validIds } = opts;
+  const { validIds, provenance } = opts;
   const clean = stripRedundantSections(body);
   const lines = clean.split("\n");
   const blocks: ReactNode[] = [];
@@ -313,7 +321,14 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
       blocks.push(
         <ul key={key++} className="my-4 list-disc space-y-1.5 pl-5 text-muted">
           {items.map((item, idx) => (
-            <li key={idx}>{renderInline(item, validIds)}</li>
+            <li key={idx}>
+              {renderInline(item, validIds)}
+              {provenance?.claimsByText.get(normalizeKbClaimText(item)) ? (
+                <KbClaimSourceMarkers
+                  claim={provenance.claimsByText.get(normalizeKbClaimText(item))!}
+                />
+              ) : null}
+            </li>
           ))}
         </ul>,
       );
@@ -330,7 +345,14 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
       blocks.push(
         <ol key={key++} className="my-4 list-decimal space-y-1.5 pl-5 text-muted">
           {items.map((item, idx) => (
-            <li key={idx}>{renderInline(item, validIds)}</li>
+            <li key={idx}>
+              {renderInline(item, validIds)}
+              {provenance?.claimsByText.get(normalizeKbClaimText(item)) ? (
+                <KbClaimSourceMarkers
+                  claim={provenance.claimsByText.get(normalizeKbClaimText(item))!}
+                />
+              ) : null}
+            </li>
           ))}
         </ol>,
       );

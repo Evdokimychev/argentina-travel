@@ -1,21 +1,21 @@
-# E78: SEO v3 — structured data, sitemap i18n, performance hints
+# E78: SEO v4 — structured data, indexability and full sitemap crawl
 
 ## Scope
 
-- Structured data audit script (`scripts/seo-audit.mjs`)
-- Sitemap expansion with `/es/` and `/en/` for pilot i18n routes
+- Full-site SEO audit script (`scripts/seo-audit.mjs`)
+- Publication-aware sitemap: only indexable canonical URLs
 - Product JSON-LD on tour detail, TouristTrip + Event on excursion detail
 - BreadcrumbList JSON-LD on tours and excursions catalog
 - `metadata.alternates.languages` (hreflang) on homepage, `/tours`, `/excursions`
 - Core Web Vitals checklist and image lazy-loading notes (this document)
 
-## Sitemap i18n
+## Sitemap and locales
 
-Russian URLs stay unprefixed (canonical). For paths with pilot i18n, the sitemap also lists:
+Russian URLs stay unprefixed and canonical. Locale fallback pages are `noindex` and are not
+added to the sitemap. `/es/…` and `/en/…` may be added only after the CMS has an explicit
+publication-aware locale registry and the page contains a complete translation.
 
-- `/es/…` and `/en/…` variants
-
-Eligible paths (`src/lib/i18n/sitemap-locales.ts`):
+Potentially localizable paths (`src/lib/i18n/sitemap-locales.ts`):
 
 - `/`, `/tours`, `/excursions`
 - `/blog`, `/blog/{slug}`
@@ -23,7 +23,8 @@ Eligible paths (`src/lib/i18n/sitemap-locales.ts`):
 - `/places`, `/places/{slug}`
 - `/guide/{slug}`, `/legal/{slug}`
 
-Middleware rewrites prefixed URLs to the same route tree and sets the locale cookie (E39).
+Middleware rewrites prefixed URLs to the same route tree and sets the locale cookie (E39),
+but a rewrite alone does not make a fallback URL eligible for indexing.
 
 ## Structured data
 
@@ -33,7 +34,7 @@ Middleware rewrites prefixed URLs to the same route tree and sets the locale coo
 | `/tours` | BreadcrumbList |
 | `/tours/{slug}` | Product (+ Offer, AggregateRating when reviews exist) |
 | `/excursions` | BreadcrumbList |
-| `/excursions/{slug}` | TouristTrip + Event (when bookable) via `@graph` |
+| `/excursions/{slug}` | TouristTrip; Event only for a concrete dated slot with a real place |
 | `/blog/{slug}` | Article |
 
 ### Breadcrumbs (catalog)
@@ -45,12 +46,13 @@ Middleware rewrites prefixed URLs to the same route tree and sets the locale coo
 
 ## Hreflang
 
-`buildHreflangAlternates(path)` in `src/lib/i18n/hreflang.ts` sets:
+`buildHreflangAlternates(path)` in `src/lib/i18n/hreflang.ts` can set:
 
 - `ru` and `x-default` → unprefixed URL
 - `es`, `en` → `/es/…`, `/en/…`
 
-Applied on: homepage, tours catalog (via `buildCatalogMetadata`), excursions catalog.
+Hreflang must be emitted only between published, indexable equivalents. The audit treats a
+link to a `noindex` fallback or a missing reciprocal link as a critical error.
 
 ## SEO audit script
 
@@ -59,13 +61,22 @@ npm run dev          # in another terminal
 npm run seo-audit    # or: SEO_AUDIT_BASE_URL=https://www.goargentina.ru node scripts/seo-audit.mjs
 ```
 
+For a faster diagnostic run, set `SEO_AUDIT_MAX_URLS=50`. The release check intentionally
+leaves the limit unset and crawls every URL. `SEO_AUDIT_CONCURRENCY` defaults to `8`.
+Local and preview responses are fetched from `SEO_AUDIT_BASE_URL`, while canonical URLs are
+checked against `SEO_AUDIT_CANONICAL_ORIGIN` (default: `https://www.goargentina.ru`).
+The crawler still enforces page-level meta robots locally, but ignores the preview-wide
+`X-Robots-Tag`. Set `SEO_AUDIT_ENFORCE_RESPONSE_NOINDEX=1` to enforce that header as well.
+
 Checks:
 
-1. Static files for JSON-LD builders and i18n sitemap helper
-2. `/sitemap.xml` parse and sample URL HTTP 200
-3. i18n sitemap entries for `/`, `/tours`, `/excursions`
-4. Title, description, canonical, hreflang on homepage, tours, excursions
-5. JSON-LD types on sample tour, excursion, blog post
+1. `robots.txt`: response, content type and canonical sitemap directive
+2. Sitemap structure: non-empty, unique URLs on the production origin, no query/hash
+3. Full sitemap crawl: HTTP 200 without redirects, HTML response, indexable robots and self-canonical
+4. Title, description, Open Graph, one H1 and duplicate metadata report
+5. Parseability of every JSON-LD block plus expected types on tour, excursion and article samples
+6. Hreflang self-reference, indexability and reciprocal links
+7. Locale fallbacks remain `noindex` until explicitly published
 
 Report: `var/ops/seo-audit-last.json`
 
@@ -134,9 +145,9 @@ node scripts/audit-images.mjs   # external URL inventory → docs/image-audit-re
 - `src/components/excursions/ExcursionCard.tsx` (if present)
 - `src/components/blog/BlogCard.tsx`
 
-## Out of scope (future)
+## Remaining product work
 
-- Per-locale slugs and hreflang on tour/excursion detail (E39.2)
+- Publication-aware per-locale registry and per-locale slugs (E39.2)
 - Automatic Lighthouse in CI (optional follow-up)
 - `ItemList` JSON-LD on catalogs (breadcrumbs only in E78)
 

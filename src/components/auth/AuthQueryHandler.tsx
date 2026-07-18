@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { storeAuthNextPath } from "@/lib/auth-redirect";
+import { cleanAuthEntryUrl } from "@/lib/auth-flow";
 
 function AuthQueryHandlerInner() {
   const searchParams = useSearchParams();
@@ -53,14 +54,13 @@ function AuthQueryHandlerInner() {
       step === "forgot-password" ? "forgot-password" : "sign-in"
     );
 
-    const cleaned = new URLSearchParams(searchParams.toString());
-    cleaned.delete("auth");
-    cleaned.delete("role");
-    cleaned.delete("step");
-    cleaned.delete("next");
-    cleaned.delete("error");
-    const query = cleaned.toString();
-    router.replace(query ? `/?${query}` : "/", { scroll: false });
+    // Do not trigger an App Router navigation here: it can remount the provider
+    // and lose the auth-open state before the lazy modal finishes loading.
+    window.history.replaceState(
+      window.history.state,
+      "",
+      cleanAuthEntryUrl(searchParams.toString()),
+    );
   }, [isAuthenticated, logout, openAuth, router, searchParams, showError]);
 
   return null;

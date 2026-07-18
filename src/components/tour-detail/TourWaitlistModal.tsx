@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { X, ListOrdered } from "lucide-react";
 import { TourDetail } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
@@ -22,6 +27,7 @@ import { createInitialCheckoutForm } from "./checkout/types";
 import { WAITLIST_HINT } from "@/lib/tour-waitlist";
 import { tourDetailInsetMutedClass, tourDetailPromoHeadingClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 interface TourWaitlistModalProps {
   tour: TourDetail;
@@ -46,6 +52,10 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
   const [form, setForm] = useState(() => {
     const base = createInitialCheckoutForm(guests);
     return {
@@ -73,6 +83,7 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
     if (!waitlistOpen) {
       setSubmitted(false);
       setError(null);
+      setCaptchaToken("");
     }
   }, [waitlistOpen]);
 
@@ -95,6 +106,8 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
       slotDate: selectedDate?.startDate,
       guests,
       note: form.comments.trim() || undefined,
+      captchaToken,
+      honeypot: honeypotRef.current?.value ?? "",
     };
 
     let fallbackToLocalStore = false;
@@ -105,7 +118,7 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
         credentials: "same-origin",
         body: JSON.stringify(waitlistPayload),
       });
-      const body = (await response.json()) as { error?: string };
+      const body = (await response.json()) as { error?: string; code?: string };
 
       if (response.ok) {
         setSubmitted(true);
@@ -118,7 +131,10 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
         return;
       }
 
-      if (response.status === 404 || response.status === 503) {
+      if (
+        response.status === 404 ||
+        (response.status === 503 && body.code !== "FORM_PROTECTION_UNAVAILABLE")
+      ) {
         fallbackToLocalStore = true;
       } else {
         throw new Error(body.error ?? "Не удалось отправить заявку в лист ожидания");
@@ -131,6 +147,8 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
       feedback.showError(normalized);
       setSubmitting(false);
       return;
+    } finally {
+      setCaptchaResetSignal((signal) => signal + 1);
     }
 
     if (!fallbackToLocalStore) {
@@ -177,17 +195,19 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
 
   return (
     <Dialog open={waitlistOpen} onOpenChange={(open) => !open && closeWaitlist()}>
-      <DialogContent bottomSheet className="max-w-lg p-0">
+      <DialogContent bottomSheet showClose={false} className="max-w-lg p-0">
         <div className="border-b border-gray-100 px-5 py-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className={tourDetailPromoHeadingClass}>
                 Лист ожидания
               </p>
-              <h2 className="font-heading text-xl font-bold text-charcoal">
+              <DialogTitle className="font-heading text-xl font-bold text-charcoal">
                 Записаться в очередь
-              </h2>
-              <p className="mt-1 text-sm text-slate">{WAITLIST_HINT}</p>
+              </DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-slate">
+                {WAITLIST_HINT}
+              </DialogDescription>
             </div>
             <button
               type="button"
@@ -209,6 +229,13 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
             </div>
           ) : (
             <>
+              <label
+                className="absolute -left-[10000px] h-px w-px overflow-hidden"
+                aria-hidden="true"
+              >
+                Компания
+                <input ref={honeypotRef} name="company" tabIndex={-1} autoComplete="off" />
+              </label>
               {waitlistScenario.reason ? (
                 <div className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-sm text-amber-950">
                   <ListOrdered className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
@@ -272,6 +299,12 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
                   setForm((prev) => ({ ...prev, comments: event.target.value }))
                 }
                 rows={3}
+              />
+
+              <TurnstileField
+                formId="waitlist"
+                onToken={handleCaptchaToken}
+                resetSignal={captchaResetSignal}
               />
 
               {error ? (

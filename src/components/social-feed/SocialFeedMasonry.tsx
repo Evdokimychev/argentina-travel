@@ -22,7 +22,6 @@ export default function SocialFeedMasonry({
           <SocialFeedTile
             item={item}
             source={sourcesById.get(item.sourceId)}
-            priority={index < 2}
             className={index % 3 === 0 ? "[&_a]:aspect-[3/4]" : undefined}
           />
         </div>

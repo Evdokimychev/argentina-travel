@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-14T21:50:54.839Z",
+  "generatedAt": "2026-07-15T20:08:17.521Z",
   "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
   "counts": {
-    "routes": 358,
-    "pages": 132,
-    "apiRoutes": 226,
-    "critical": 69,
-    "withIssues": 37
+    "routes": 368,
+    "pages": 133,
+    "apiRoutes": 235,
+    "critical": 73,
+    "withIssues": 39
   },
   "routes": [
     {
@@ -19,7 +19,8 @@
       "authentication": "public_or_route_managed",
       "dataSources": [
         "tour_repository",
-        "tripster"
+        "tripster",
+        "youtravel"
       ],
       "dynamicMode": "framework_default",
       "cachePolicy": "implicit",
@@ -28,7 +29,8 @@
       "duplicateOf": null,
       "dependencies": [
         "tour_repository",
-        "tripster"
+        "tripster",
+        "youtravel"
       ],
       "analyticsEvents": [],
       "criticality": "high",
@@ -218,6 +220,26 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/admin/content/documents/[id]/preview/page.tsx"
+    },
+    {
+      "route": "/admin/content/map",
+      "title": "map",
+      "audience": "admin",
+      "primaryIntent": "admin",
+      "businessPurpose": "admin",
+      "domain": "admin",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "framework_default",
+      "cachePolicy": "implicit",
+      "owner": "admin",
+      "status": "internal",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/admin/content/map/page.tsx"
     },
     {
       "route": "/admin/content/social-feed",
@@ -1170,6 +1192,30 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/api/admin/content/documents/bulk-import/route.ts"
+    },
+    {
+      "route": "/api/admin/content/map",
+      "title": "map",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "request",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/api/admin/content/map/route.ts"
     },
     {
       "route": "/api/admin/content/translations",
@@ -2594,6 +2640,28 @@
       "sourcePath": "src/app/api/auth/ensure-profile/route.ts"
     },
     {
+      "route": "/api/auth/experience",
+      "title": "experience",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "request",
+      "cachePolicy": "no-store",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [
+        "auth_contract_not_obvious"
+      ],
+      "sourcePath": "src/app/api/auth/experience/route.ts"
+    },
+    {
       "route": "/api/auth/login-by-phone",
       "title": "login-by-phone",
       "audience": "system_or_client",
@@ -2648,18 +2716,14 @@
       "primaryIntent": "serve_domain_command_or_query",
       "businessPurpose": "api",
       "domain": "api",
-      "authentication": "authenticated",
-      "dataSources": [
-        "supabase"
-      ],
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
       "dynamicMode": "request",
       "cachePolicy": "implicit",
       "owner": "api",
       "status": "core",
       "duplicateOf": null,
-      "dependencies": [
-        "supabase"
-      ],
+      "dependencies": [],
       "analyticsEvents": [],
       "criticality": "critical",
       "issues": [],
@@ -2738,6 +2802,30 @@
       "sourcePath": "src/app/api/auth/request-password-reset/route.ts"
     },
     {
+      "route": "/api/auth/sign-in-phone",
+      "title": "sign-in-phone",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "request",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/api/auth/sign-in-phone/route.ts"
+    },
+    {
       "route": "/api/auth/update-password",
       "title": "update-password",
       "audience": "system_or_client",
@@ -2762,6 +2850,26 @@
       "sourcePath": "src/app/api/auth/update-password/route.ts"
     },
     {
+      "route": "/api/auth/workspace",
+      "title": "workspace",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "request",
+      "cachePolicy": "no-store",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/api/auth/workspace/route.ts"
+    },
+    {
       "route": "/api/blog/comments",
       "title": "comments",
       "audience": "system_or_client",
@@ -2773,7 +2881,7 @@
         "supabase"
       ],
       "dynamicMode": "request",
-      "cachePolicy": "implicit",
+      "cachePolicy": "no-store",
       "owner": "api",
       "status": "core",
       "duplicateOf": null,
@@ -3360,6 +3468,30 @@
       "sourcePath": "src/app/api/cron/affiliate-sync/route.ts"
     },
     {
+      "route": "/api/cron/bookings/expire-unpaid",
+      "title": "expire-unpaid",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "dynamic",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/api/cron/bookings/expire-unpaid/route.ts"
+    },
+    {
       "route": "/api/cron/cms/publish-scheduled",
       "title": "publish-scheduled",
       "audience": "system_or_client",
@@ -3474,6 +3606,26 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/api/cron/notifications/digest/route.ts"
+    },
+    {
+      "route": "/api/cron/notifications/email-retry",
+      "title": "email-retry",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "dynamic",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/api/cron/notifications/email-retry/route.ts"
     },
     {
       "route": "/api/cron/ops/backup-hint",
@@ -4394,6 +4546,30 @@
       "sourcePath": "src/app/api/map/objects/route.ts"
     },
     {
+      "route": "/api/media/partner-image",
+      "title": "partner-image",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "dynamic",
+      "cachePolicy": "2592000\",",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/api/media/partner-image/route.ts"
+    },
+    {
       "route": "/api/newsletter",
       "title": "newsletter",
       "audience": "system_or_client",
@@ -4410,7 +4586,9 @@
       "dependencies": [],
       "analyticsEvents": [],
       "criticality": "normal",
-      "issues": [],
+      "issues": [
+        "auth_contract_not_obvious"
+      ],
       "sourcePath": "src/app/api/newsletter/route.ts"
     },
     {
@@ -4654,6 +4832,30 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/api/organizer/articles/[id]/route.ts"
+    },
+    {
+      "route": "/api/organizer/articles/[id]/submit",
+      "title": "submit",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "authenticated",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "request",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/api/organizer/articles/[id]/submit/route.ts"
     },
     {
       "route": "/api/organizer/bookings",
@@ -5230,6 +5432,26 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/api/privacy/export/route.ts"
+    },
+    {
+      "route": "/api/public-detail-exists/[kind]/[slug]",
+      "title": "[slug]",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "isr",
+      "cachePolicy": "3600\",",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/api/public-detail-exists/[kind]/[slug]/route.ts"
     },
     {
       "route": "/api/quick-explore",
@@ -8461,6 +8683,21 @@
       "issues": []
     },
     {
+      "route": "/api/admin/content/map",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
       "route": "/api/admin/content/translations",
       "method": "inspect_source",
       "authRequired": false,
@@ -9373,6 +9610,23 @@
       "issues": []
     },
     {
+      "route": "/api/auth/experience",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": [
+        "auth_contract_not_obvious"
+      ]
+    },
+    {
       "route": "/api/auth/login-by-phone",
       "method": "inspect_source",
       "authRequired": false,
@@ -9405,8 +9659,8 @@
     {
       "route": "/api/auth/lookup-email",
       "method": "inspect_source",
-      "authRequired": true,
-      "role": "authenticated",
+      "authRequired": false,
+      "role": "public_or_route_managed",
       "inputSchema": "source_audit_required",
       "outputSchema": "source_audit_required",
       "rateLimit": "source_audit_required",
@@ -9463,10 +9717,40 @@
       "issues": []
     },
     {
+      "route": "/api/auth/sign-in-phone",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
       "route": "/api/auth/update-password",
       "method": "inspect_source",
       "authRequired": true,
       "role": "authenticated",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
+      "route": "/api/auth/workspace",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
       "inputSchema": "source_audit_required",
       "outputSchema": "source_audit_required",
       "rateLimit": "source_audit_required",
@@ -9861,6 +10145,21 @@
       "issues": []
     },
     {
+      "route": "/api/cron/bookings/expire-unpaid",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": true,
+      "owner": "api",
+      "issues": []
+    },
+    {
       "route": "/api/cron/cms/publish-scheduled",
       "method": "inspect_source",
       "authRequired": false,
@@ -9922,6 +10221,21 @@
     },
     {
       "route": "/api/cron/notifications/digest",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
+      "route": "/api/cron/notifications/email-retry",
       "method": "inspect_source",
       "authRequired": false,
       "role": "public_or_route_managed",
@@ -10545,7 +10859,7 @@
       ]
     },
     {
-      "route": "/api/newsletter",
+      "route": "/api/media/partner-image",
       "method": "inspect_source",
       "authRequired": false,
       "role": "public_or_route_managed",
@@ -10558,6 +10872,23 @@
       "pii": false,
       "owner": "api",
       "issues": []
+    },
+    {
+      "route": "/api/newsletter",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": [
+        "auth_contract_not_obvious"
+      ]
     },
     {
       "route": "/api/notifications",
@@ -10698,6 +11029,21 @@
     },
     {
       "route": "/api/organizer/articles/[id]",
+      "method": "inspect_source",
+      "authRequired": true,
+      "role": "authenticated",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
+      "route": "/api/organizer/articles/[id]/submit",
       "method": "inspect_source",
       "authRequired": true,
       "role": "authenticated",
@@ -11071,6 +11417,21 @@
       "method": "inspect_source",
       "authRequired": true,
       "role": "authenticated",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
+      "route": "/api/public-detail-exists/[kind]/[slug]",
+      "method": "inspect_source",
+      "authRequired": false,
+      "role": "public_or_route_managed",
       "inputSchema": "source_audit_required",
       "outputSchema": "source_audit_required",
       "rateLimit": "source_audit_required",

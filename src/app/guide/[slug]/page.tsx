@@ -8,7 +8,7 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
-import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import {
   getAllGuideTopics,
   getGuideTopicBySlug,
@@ -20,6 +20,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -63,12 +64,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = await resolveGuidePage(slug, locale);
   if (!page) return { title: "Путеводитель" };
   const alternates = await buildCmsContentHreflangAlternates("guide", slug, locale);
-  return {
+  return buildCmsPageMetadata({
+    content: page,
     title: page.title,
     description: page.description,
+    path: `/guide/${slug}`,
     alternates,
-    robots: cmsFallbackRobots(page),
-  };
+  });
 }
 
 export default async function GuideSlugPage({ params }: PageProps) {

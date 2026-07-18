@@ -1,5 +1,28 @@
-var/
-test-results/
-.playwright/
+# Local dependencies and build products
+node_modules
+.next
+.next-production
+out
+build
+
+# Repository and editor state
+.git
+.claude
+.cursor
+.vscode
+.idea
+
+# Local QA/operations artifacts are committed for traceability but are not
+# required to build or run the deployed application.
+var
+test-results
+playwright-report
+coverage
+.playwright
+
+# Local-only environment and logs
+.env*
+*.log
 *.tar
 *.tar.gz
+.DS_Store

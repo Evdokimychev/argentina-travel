@@ -5,16 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Camera, Eye, X } from "lucide-react";
 import { useHtml5ListReorder } from "@/hooks/useHtml5ListReorder";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   ORGANIZER_TOUR_PROGRAM_DAYS_MAX,
   createEmptyProgramDay,
   renumberProgramDays,
   type OrganizerProgramDay,
 } from "@/data/tour-program-defaults";
-import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 import { daysWord, formatDays } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourProgramDayEditor from "@/components/organizer/TourProgramDayEditor";
@@ -22,6 +19,8 @@ import TourRoutePointsEditor from "@/components/organizer/TourRoutePointsEditor"
 import type { TourRoutePoint } from "@/types";
 
 interface TourProgramBlockProps {
+  productId: string;
+  productType?: "tour" | "excursion";
   routeMapImage: string;
   routePoints: TourRoutePoint[];
   programDays: OrganizerProgramDay[];
@@ -33,6 +32,8 @@ interface TourProgramBlockProps {
 }
 
 export default function TourProgramBlock({
+  productId,
+  productType = "tour",
   routeMapImage,
   routePoints,
   programDays,
@@ -43,7 +44,6 @@ export default function TourProgramBlock({
   designExampleHref = "/tours/patagonia-glaciers#itinerary",
 }: TourProgramBlockProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [urlInput, setUrlInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -56,20 +56,7 @@ export default function TourProgramBlock({
   const reorder = useHtml5ListReorder(days, (next) => onProgramDaysChange(renumberProgramDays(next)));
 
   async function uploadFile(file: File) {
-    if (!file.type.startsWith("image/")) throw new Error("Выберите файл изображения");
-    if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
-      throw new Error("Фото должно быть не больше 5 МБ");
-    }
-    return readFileAsDataUrl(file);
-  }
-
-  function normalizeUrl(value: string): string {
-    const trimmed = value.trim();
-    if (!trimmed) throw new Error("Вставьте ссылку на фото");
-    if (!/^https?:\/\//i.test(trimmed)) {
-      throw new Error("Ссылка должна начинаться с http:// или https://");
-    }
-    return trimmed;
+    return uploadOrganizerProductImage(productId, file);
   }
 
   async function handleMapFile(file: File) {
@@ -77,19 +64,6 @@ export default function TourProgramBlock({
     setError(null);
     try {
       onRouteMapChange(await uploadFile(file));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось загрузить фото");
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  async function handleMapUrl() {
-    setUploading(true);
-    setError(null);
-    try {
-      onRouteMapChange(normalizeUrl(urlInput));
-      setUrlInput("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Не удалось загрузить фото");
     } finally {
@@ -127,10 +101,14 @@ export default function TourProgramBlock({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
             <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-              Карта маршрута и описание программы по дням
+              {productType === "excursion"
+                ? "Маршрут и программа экскурсии"
+                : "Карта маршрута и описание программы по дням"}
             </h2>
             <p className="text-sm text-slate">
-              Добавьте описание программы тура по дням.{" "}
+              {productType === "excursion"
+                ? "Опишите последовательность остановок и активностей экскурсии. "
+                : "Добавьте описание программы тура по дням. "}
               <Link href="/help/tour-program-formatting" className="font-medium text-brand hover:underline">
                 Общие советы по оформлению
               </Link>
@@ -177,7 +155,7 @@ export default function TourProgramBlock({
             ref={fileInputRef}
             id="tour-route-map-file"
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
             className="sr-only"
             onChange={(event) => {
               const file = event.target.files?.[0];
@@ -194,29 +172,6 @@ export default function TourProgramBlock({
             <Camera className="h-4 w-4" />
             Загрузить фото с устройства
           </button>
-
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Input
-              value={urlInput}
-              onChange={(event) => setUrlInput(event.target.value)}
-              placeholder="Или вставьте ссылку на фото"
-              disabled={uploading}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  void handleMapUrl();
-                }
-              }}
-            />
-            <Button
-              type="button"
-              disabled={uploading || !urlInput.trim()}
-              onClick={() => void handleMapUrl()}
-              className="shrink-0 sm:min-w-[132px]"
-            >
-              Загрузить
-            </Button>
-          </div>
 
           {error ? <p className="text-xs text-brand">{error}</p> : null}
         </div>
@@ -263,6 +218,7 @@ export default function TourProgramBlock({
             className={cn(reorder.rowClassName(index))}
           >
             <TourProgramDayEditor
+              productId={productId}
               day={day}
               index={index}
               total={days.length}

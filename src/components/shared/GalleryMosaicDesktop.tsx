@@ -66,6 +66,8 @@ export function GalleryMosaicDesktop({
               placeholderVariant="tour"
               className="object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none"
               priority={slotIndex === 0}
+              partnerImageWidth={cell.colEnd - cell.colStart >= 2 ? 1200 : 720}
+              partnerImageQuality={82}
               sizes="(min-width: 768px) 50vw, 100vw"
             />
             <span className="pointer-events-none absolute inset-0 bg-charcoal/0 transition-colors group-hover:bg-charcoal/[0.06]" />

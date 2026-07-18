@@ -11,6 +11,8 @@ import TourCardImageVignette from "./TourCardImageVignette";
 interface TourCardGalleryProps {
   images: string[];
   alt: string;
+  /** Bundled thematic image shown when a partner CDN photo is unavailable. */
+  fallbackImage?: string;
   /** @deprecated Используйте единый ImagePlaceholder без вариантов. */
   variant?: "tour" | "excursion";
   /** First visible catalog card — improves LCP on /tours. */
@@ -20,6 +22,7 @@ interface TourCardGalleryProps {
 export default function TourCardGallery({
   images,
   alt,
+  fallbackImage,
   variant = "tour",
   priority = false,
 }: TourCardGalleryProps) {
@@ -45,7 +48,19 @@ export default function TourCardGallery({
   )];
 
   if (displayImages.length === 0) {
-    return <ImagePlaceholder className="absolute inset-0" ariaLabel={alt} />;
+    return fallbackImage ? (
+      <SafeImage
+        src={fallbackImage}
+        alt={alt}
+        fill
+        priority={priority}
+        placeholderVariant={variant}
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+    ) : (
+      <ImagePlaceholder className="absolute inset-0" ariaLabel={alt} />
+    );
   }
 
   const count = displayImages.length;
@@ -65,7 +80,20 @@ export default function TourCardGallery({
         fill
         priority={priority}
         fetchPriority={priority ? "high" : undefined}
+        partnerImageWidth={960}
+        partnerImageQuality={76}
         placeholderVariant={variant}
+        fallback={fallbackImage ? (
+          <SafeImage
+            src={fallbackImage}
+            alt={alt}
+            fill
+            priority={priority}
+            placeholderVariant={variant}
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : undefined}
         className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
@@ -78,17 +106,17 @@ export default function TourCardGallery({
             type="button"
             onClick={(e) => goTo(index - 1, e)}
             aria-label="Предыдущее фото"
-            className="pointer-events-auto absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+            className="pointer-events-auto absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 sm:h-9 sm:w-9 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           >
-            <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />
+            <ChevronLeft aria-hidden className="h-4 w-4" strokeWidth={1.75} />
           </button>
           <button
             type="button"
             onClick={(e) => goTo(index + 1, e)}
             aria-label="Следующее фото"
-            className="pointer-events-auto absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+            className="pointer-events-auto absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 sm:h-9 sm:w-9 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
           >
-            <ChevronRight className="h-4 w-4" strokeWidth={1.75} />
+            <ChevronRight aria-hidden className="h-4 w-4" strokeWidth={1.75} />
           </button>
 
           <div

@@ -13,6 +13,7 @@ import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
 import {
   tourDetailCardBorderClass,
   tourDetailDayBadgeClass,
+  tourDetailSecondaryButtonClass,
   tourDetailTimelineClass,
 } from "@/lib/tour-detail-ui";
 import ItineraryDayDetails from "./ItineraryDayDetails";
@@ -36,6 +37,8 @@ const TourItineraryPdfButton = dynamic(() => import("./TourItineraryPdfButton"),
   ssr: false,
   loading: () => null,
 });
+
+const INITIAL_VISIBLE_DAYS = 4;
 
 function ItineraryDayCard({
   day,
@@ -170,6 +173,9 @@ export default function ItinerarySection({
   const [openDays, setOpenDays] = useState<Set<string>>(() =>
     firstDayId ? new Set([firstDayId]) : new Set()
   );
+  const [showAllDays, setShowAllDays] = useState(
+    itineraryDays.length <= INITIAL_VISIBLE_DAYS,
+  );
 
   useEffect(() => {
     if (itineraryDays.length === 0) return;
@@ -182,9 +188,16 @@ export default function ItinerarySection({
     });
   }, [itineraryDays]);
 
+  useEffect(() => {
+    setShowAllDays(itineraryDays.length <= INITIAL_VISIBLE_DAYS);
+  }, [itineraryDays.length]);
+
   const openCount = openDays.size;
   const totalDays = itineraryDays.length;
   const allExpanded = totalDays > 0 && openCount === totalDays;
+  const displayedDays = showAllDays
+    ? itineraryDays
+    : itineraryDays.slice(0, INITIAL_VISIBLE_DAYS);
 
   const openSegments = useMemo(
     () => itineraryDays.map((day) => openDays.has(day.id)),
@@ -209,6 +222,7 @@ export default function ItinerarySection({
     if (allExpanded) {
       setOpenDays(new Set());
     } else {
+      setShowAllDays(true);
       setOpenDays(new Set(itineraryDays.map((d) => d.id)));
     }
   }
@@ -238,7 +252,7 @@ export default function ItinerarySection({
       {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-5 sm:mb-6" /> : null}
       <div className="relative min-w-0 space-y-0 overflow-hidden">
         <div className={cn("absolute left-[15px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
-        {itineraryDays.map((day) => (
+        {displayedDays.map((day) => (
           <ItineraryDayCard
             key={day.id}
             day={day}
@@ -248,6 +262,16 @@ export default function ItinerarySection({
           />
         ))}
       </div>
+
+      {!showAllDays ? (
+        <button
+          type="button"
+          onClick={() => setShowAllDays(true)}
+          className={cn(tourDetailSecondaryButtonClass, "mt-5 w-full justify-center sm:w-auto")}
+        >
+          Показать всю программу · ещё {totalDays - INITIAL_VISIBLE_DAYS}
+        </button>
+      ) : null}
 
       {tour && !hideProgramFooter ? (
         <ItineraryProgramFooter

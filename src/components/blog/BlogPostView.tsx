@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import BlogPostSectionView from "@/components/blog/BlogPostSectionView";
 import BlogRelatedPosts from "@/components/blog/BlogRelatedPosts";
 import BlogPostFooterLinks from "@/components/blog/BlogPostFooterLinks";
@@ -29,7 +29,6 @@ import {
   blogPosts,
   sortBlogPostsByDate,
 } from "@/data/blog";
-import { resolveBlogCanonicalTarget } from "@/data/blog-canonical-map";
 import { blogHubPath, getBlogHubFreshPosts, getPrimaryBlogHubForPost } from "@/data/blog-hubs";
 import {
   buildBlogPostBreadcrumbJsonLd,
@@ -52,24 +51,58 @@ import { getBlogSectionKind } from "@/lib/blog-section-body";
 import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
 import { mapBlogRelatedResources } from "@/lib/content-related-links";
 import { getBlogKbLinks } from "@/data/blog-kb-links";
-import { getRichArticleGallery } from "@/lib/media-resolver";
+import {
+  getBlogPostHeroResolved,
+  getRichArticleGallery,
+  resolveBlogPostCardImage,
+} from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { BlogPost, TourListing } from "@/types";
+import type { TourEmbedConfig } from "@/types/tour-embed";
+import type { SiteBlogGlobal } from "@/types/site-globals";
+import { DEFAULT_SITE_BLOG } from "@/lib/cms/site-globals/normalize";
 
 type BlogPostViewProps = {
   post: BlogPost;
   /** Published catalog; defaults to TS seed for admin preview routes. */
   catalog?: BlogPost[];
-  initialTours?: TourListing[];
+  initialTours?: TourListing[] | Promise<TourListing[]>;
+  settings?: SiteBlogGlobal;
+  newsletterEnabled?: boolean;
 };
 
 const TOC_MIN_SECTIONS = 4;
+
+async function BlogPostTourEmbeds({
+  embeds,
+  initialTours,
+}: {
+  embeds: TourEmbedConfig[];
+  initialTours: TourListing[] | Promise<TourListing[]>;
+}) {
+  const tours = await initialTours;
+  if (tours.length === 0) return null;
+
+  return (
+    <div className="mt-10 space-y-8 border-t border-gray-100 pt-8">
+      {embeds.map((embed) => (
+        <TourEmbedSection
+          key={embed.id ?? `${embed.variant}-${embed.title}`}
+          config={{ ...embed, tone: embed.tone ?? "inline" }}
+          initialTours={tours}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function BlogPostView({
   post,
   catalog = filterIndexableBlogPosts(blogPosts),
   initialTours = [],
+  settings = DEFAULT_SITE_BLOG,
+  newsletterEnabled = true,
 }: BlogPostViewProps) {
   const publishedBlogSlugs = buildPublishedBlogSlugSet(catalog.map((entry) => entry.slug));
   const richArticle = post.richArticleId
@@ -95,16 +128,6 @@ export default function BlogPostView({
     ...getBlogKbLinks(post.slug),
   ];
   const footerLinks = getBlogPostFooterLinks(post, publishedBlogSlugs);
-
-  const canonicalTarget = post.canonicalSlug
-    ? {
-        canonicalSlug: post.canonicalSlug,
-        canonicalTitle:
-          resolveBlogCanonicalTarget(post.slug)?.canonicalTitle ??
-          catalog.find((p) => p.slug === post.canonicalSlug)?.title ??
-          post.canonicalSlug,
-      }
-    : undefined;
 
   const usedIds = new Set<string>();
   const sectionsWithIds = (post.sections ?? []).map((section) => ({
@@ -207,16 +230,16 @@ export default function BlogPostView({
             articleClassName="content-reading-prose--wide"
             footer={
               <footer className="space-y-8">
-                <BlogShareBar post={post} />
+                {settings.showShare ? <BlogShareBar post={post} /> : null}
                 {!post.noIndex ? (
                   <BlogArticleFeedback slug={post.slug} title={post.title} />
                 ) : null}
-                {!post.noIndex ? (
+                {!post.noIndex && settings.showComments ? (
                   <BlogCommentsSection slug={post.slug} title={post.title} />
                 ) : null}
-                <BlogAuthorCard post={post} />
+                {settings.showAuthor ? <BlogAuthorCard post={post} /> : null}
                 <BlogPostFooterLinks links={footerLinks} />
-                {!post.noIndex ? (
+                {!post.noIndex && settings.showNewsletter && newsletterEnabled ? (
                   <BlogNewsletterBlock source={`blog:${post.slug}`} />
                 ) : null}
               </footer>
@@ -230,26 +253,18 @@ export default function BlogPostView({
               <BlogTopicClusterNav post={post} catalog={catalog} className="mb-8" />
             ) : null}
             <div className="space-y-4">
-              {canonicalTarget ? (
-                <aside className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm leading-relaxed text-amber-950">
-                  <p className="font-medium">Это черновик из контент-плана.</p>
-                  <p className="mt-1">
-                    Актуальный материал по теме —{" "}
-                    <Link
-                      href={`/blog/${canonicalTarget.canonicalSlug}`}
-                      className="font-semibold text-sky hover:underline"
-                    >
-                      {canonicalTarget.canonicalTitle}
-                    </Link>
-                    .
-                  </p>
-                </aside>
-              ) : null}
               {richArticle ? (
                 <BlogRichArticle
                   article={richArticle}
                   galleryImages={
-                    post.richArticleId ? getRichArticleGallery(post.richArticleId) : undefined
+                    post.richArticleId
+                      ? getRichArticleGallery(post.richArticleId, {
+                          excludeSources: [
+                            getBlogPostHeroResolved(post).src,
+                            resolveBlogPostCardImage(post),
+                          ],
+                        })
+                      : undefined
                   }
                   inlineRelatedBySection={inlineRelatedRichBySection}
                   sourceSlug={post.slug}
@@ -280,20 +295,14 @@ export default function BlogPostView({
 
             {!post.noIndex ? <BlogAffiliateZone post={post} className="mt-10" /> : null}
 
-            {post.tourEmbeds?.length && initialTours.length > 0 ? (
-              <div className="mt-10 space-y-8 border-t border-gray-100 pt-8">
-                {post.tourEmbeds.map((embed) => (
-                  <TourEmbedSection
-                    key={embed.id ?? `${embed.variant}-${embed.title}`}
-                    config={{ ...embed, tone: embed.tone ?? "inline" }}
-                    initialTours={initialTours}
-                  />
-                ))}
-              </div>
+            {post.tourEmbeds?.length ? (
+              <Suspense fallback={null}>
+                <BlogPostTourEmbeds embeds={post.tourEmbeds} initialTours={initialTours} />
+              </Suspense>
             ) : null}
           </ContentReadingLayout>
 
-          {!post.noIndex ? (
+          {!post.noIndex && settings.showPrevNext ? (
             <BlogPostNav
               prev={adjacentPosts.prev}
               next={adjacentPosts.next}
@@ -301,8 +310,11 @@ export default function BlogPostView({
             />
           ) : null}
 
-          {!post.noIndex && relatedPosts.length > 0 ? (
-            <BlogRelatedPosts posts={relatedPosts} className="mt-10" />
+          {!post.noIndex && settings.showRelatedPosts && relatedPosts.length > 0 ? (
+            <BlogRelatedPosts
+              posts={relatedPosts.slice(0, Number(settings.relatedPostsCount))}
+              className="mt-10"
+            />
           ) : null}
 
           {!post.noIndex ? <BlogEngagementCta post={post} className="mt-8" /> : null}

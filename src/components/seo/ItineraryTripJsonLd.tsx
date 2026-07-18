@@ -1,5 +1,6 @@
 import type { PlaceItinerary } from "@/types/place";
 import { buildItineraryTripJsonLd } from "@/lib/content-json-ld";
+import { serializeJsonLd } from "@/lib/schema-json-ld";
 
 export default function ItineraryTripJsonLd({ itinerary }: { itinerary: PlaceItinerary }) {
   const jsonLd = buildItineraryTripJsonLd(itinerary);
@@ -7,7 +8,7 @@ export default function ItineraryTripJsonLd({ itinerary }: { itinerary: PlaceIti
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }

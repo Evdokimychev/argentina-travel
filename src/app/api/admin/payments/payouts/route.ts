@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { parseAnalyticsPeriod } from "@/lib/admin/analytics-period";
 import { buildCommissionReport } from "@/lib/payments/commission-server";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@/lib/payments/payout-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PayoutRecordStatus } from "@/types/payment-platform";
+import { parseMoneyCurrency } from "@/lib/payments/money";
 
 function parseStatus(value: string | null): PayoutRecordStatus | "all" {
   if (
@@ -31,7 +31,7 @@ function parseStatus(value: string | null): PayoutRecordStatus | "all" {
 }
 
 export async function GET(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.view");
   if (!auth.ok) return auth.response;
 
   const url = new URL(request.url);
@@ -62,13 +62,28 @@ type PostBody = {
   payoutId?: string;
   adminNotes?: string;
   period?: string;
+  currency?: string;
 };
 
 export async function POST(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
-  if (!auth.ok) return auth.response;
-
   const body = (await request.json().catch(() => ({}))) as PostBody;
+  const requiredCapability =
+    body.action === "create_batch"
+      ? "finance.payouts.create"
+      : body.action === "approve" || body.action === "cancel"
+        ? "finance.payouts.approve"
+        : body.action === "complete"
+          ? "finance.payouts.complete"
+          : null;
+  if (!requiredCapability) {
+    return NextResponse.json({ error: "Неизвестное действие" }, { status: 400 });
+  }
+  const auth = await authorizeAdminRequest(request, requiredCapability);
+  if (!auth.ok) return auth.response;
+  if (auth.via !== "session") {
+    return NextResponse.json({ error: "Финансовые операции требуют личную сессию" }, { status: 403 });
+  }
+
   const supabase = createSupabaseAdminClient();
   const adminUserId = auth.actorId;
 
@@ -77,25 +92,22 @@ export async function POST(request: Request) {
     if (!organizerUserId) {
       return NextResponse.json({ error: "Укажите organizerUserId" }, { status: 400 });
     }
+    const currency = parseMoneyCurrency(body.currency ?? "");
+    if (!currency) {
+      return NextResponse.json({ error: "Выберите валюту выплаты" }, { status: 400 });
+    }
 
     const result = await createPayoutBatch(supabase, {
       organizerUserId,
+      currency,
       period: body.period,
       adminNotes: body.adminNotes,
+      actorUserId: adminUserId,
     });
 
     if (!result.ok) {
       return NextResponse.json({ error: result.error, code: result.code }, { status: 400 });
     }
-
-    await writeAdminAuditLog({
-      actorUserId: adminUserId,
-      action: "payout.batch_created",
-      entityType: "payout_record",
-      entityId: result.payout.id,
-      payload: { organizerUserId, snapshotCount: result.snapshotCount, amount: result.payout.amount },
-      ipAddress: clientIpFromRequest(request),
-    });
 
     return NextResponse.json({
       payout: result.payout,
@@ -116,15 +128,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error, code: result.code }, { status });
     }
 
-    await writeAdminAuditLog({
-      actorUserId: adminUserId,
-      action: "payout.approved",
-      entityType: "payout_record",
-      entityId: payoutId,
-      payload: { amount: result.payout.amount, organizerUserId: result.payout.organizerUserId },
-      ipAddress: clientIpFromRequest(request),
-    });
-
     return NextResponse.json({ payout: result.payout });
   }
 
@@ -141,15 +144,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error, code: result.code }, { status });
     }
 
-    await writeAdminAuditLog({
-      actorUserId: adminUserId,
-      action: "payout.completed",
-      entityType: "payout_record",
-      entityId: payoutId,
-      payload: { amount: result.payout.amount, organizerUserId: result.payout.organizerUserId },
-      ipAddress: clientIpFromRequest(request),
-    });
-
     return NextResponse.json({ payout: result.payout });
   }
 
@@ -165,14 +159,6 @@ export async function POST(request: Request) {
       const status = result.code === "NOT_FOUND" ? 404 : 400;
       return NextResponse.json({ error: result.error, code: result.code }, { status });
     }
-
-    await writeAdminAuditLog({
-      actorUserId: adminUserId,
-      action: "payout.cancelled",
-      entityType: "payout_record",
-      entityId: payoutId,
-      ipAddress: clientIpFromRequest(request),
-    });
 
     return NextResponse.json({ payout: result.payout });
   }

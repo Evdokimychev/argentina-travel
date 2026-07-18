@@ -43,8 +43,12 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   if (password.length < 8) {
     return validationError("Пароль должен содержать не менее 8 символов");
   }
-  if (input.role === "admin") {
-    return validationError("Роль администратора назначается вручную");
+  if (input.role !== "tourist") {
+    // Public registration never grants elevated roles. Organizer access is
+    // assigned only after the separate, moderated application flow.
+    return validationError(
+      "Публичная регистрация создаёт аккаунт туриста. Роль организатора назначается после проверки заявки.",
+    );
   }
 
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
@@ -76,8 +80,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
     return { ok: false, error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" };
   }
 
-  const roles: AccountRole[] =
-    input.role === "organizer" ? ["tourist", "organizer"] : [input.role];
+  const roles: AccountRole[] = ["tourist"];
 
   const signupClient = await createSupabaseServerClient();
   const { data: created, error: createError } = await signupClient.auth.signUp({
@@ -89,7 +92,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
         first_name: firstName,
         last_name: lastName,
         phone: normalizedPhone,
-        role: input.role,
+        role: "tourist",
         country: "Россия",
       },
     },
@@ -119,7 +122,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
       last_name: lastName,
       phone: normalizedPhone,
       roles,
-      active_role: input.role,
+      active_role: "tourist",
       country: "Россия",
     });
 
@@ -138,7 +141,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
         last_name: lastName,
         phone: normalizedPhone,
         roles,
-        active_role: input.role,
+        active_role: "tourist",
       })
       .eq("id", userId);
 

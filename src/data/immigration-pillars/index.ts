@@ -1,4 +1,4 @@
-import type { GuidePillarContent } from "@/types/guide-pillar";
+import type { GuidePillarContent, GuidePillarSection } from "@/types/guide-pillar";
 import {
   IMMIGRATION_BIRTH,
   IMMIGRATION_CITIZENSHIP,
@@ -8,6 +8,7 @@ import {
   IMMIGRATION_RESIDENCY,
   IMMIGRATION_USEFUL_LINKS,
 } from "@/data/immigration-topic-content";
+
 function topicHref(slug: string) {
   return `/immigration/${slug}`;
 }
@@ -16,6 +17,36 @@ function hubCta(label: string, href: string) {
   return { label, href, variant: "secondary" as const };
 }
 
+function sourceSection(...sources: string[]): GuidePillarSection {
+  return {
+    id: "official-sources",
+    title: "Официальные источники и дата проверки",
+    content: `Проверено 17.07.2026. ${sources.join(" · ")}`,
+    infoBoxes: [
+      {
+        variant: "warning",
+        title: "Проверьте ещё раз перед действием",
+        body: "Формы, сборы и регламенты меняются. Этот материал помогает подготовиться, но не заменяет решение DNM или консультацию по конкретному делу.",
+      },
+    ],
+  };
+}
+
+const RESIDENCIAS =
+  "DNM, Residencias: https://www.argentina.gob.ar/migraciones/residencias";
+const RESIDENCIAS_FAQ =
+  "DNM, preguntas frecuentes: https://www.argentina.gob.ar/migraciones/preguntas-frecuentes-residencias";
+const LEY_MIGRACIONES =
+  "Ley 25.871, texto actualizado: https://www.argentina.gob.ar/normativa/nacional/92016/actualizacion";
+const DNU_366 =
+  "Decreto 366/2025: https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto";
+const LEY_CIUDADANIA =
+  "Ley 346, texto actualizado: https://www.argentina.gob.ar/normativa/nacional/ley-346-48854/actualizacion";
+const CIUDADANIA_DNM =
+  "DNM, procedimiento digital (06.10.2025): https://www.argentina.gob.ar/noticias/ahora-el-tramite-de-ciudadania-argentina-se-podra-hacer-de-forma-digital-en-migraciones";
+const NOMADA =
+  "Disposición 758/2022: https://www.argentina.gob.ar/normativa/nacional/disposici%C3%B3n-758-2022-364601/texto";
+
 export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
   "zhizn-v-strane": {
     heroTitle: "Жизнь в Аргентине",
@@ -23,95 +54,86 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     heroCtas: [
       { label: "Где жить", href: "/guide/gde-zhit", variant: "primary" },
       hubCta("Процесс иммиграции", topicHref("protsess-immigratsii")),
-      { label: "Полный справочник", href: "/immigration", variant: "tertiary" },
+      { label: "Иммиграционный справочник", href: "/immigration", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "🏙", label: "Буэнос-Айрес", headline: "Мегаполис с инфраструктурой", detail: "Palermo, Recoleta, Belgrano — популярны у экспатов" },
-      { emoji: "🌡", label: "Климат", headline: "От субтропиков до Патагонии", detail: "Можно выбрать свой микроклимат по всей стране" },
-      { emoji: "🏥", label: "Медицина", headline: "Экстренная помощь бесплатна", detail: "Плановая — через prepaga или частные клиники" },
-      { emoji: "🌐", label: "Сообщество", headline: "Активные чаты экспатов", detail: "Русско- и англоязычные группы, коворкинги, школы" },
+      { emoji: "🏙", label: "Выбор города", headline: "Сравнивайте районы", detail: "Транспорт, медицина, школы, безопасность и аренда" },
+      { emoji: "🌡", label: "Климат", headline: "Большие различия по регионам", detail: "Сезонность и высота влияют на повседневную жизнь" },
+      { emoji: "🏥", label: "Экстренная помощь", headline: "Отказать из-за статуса нельзя", detail: "Для обычной помощи проверьте статус, учреждение и страховку" },
+      { emoji: "🪪", label: "Документы", headline: "DNI следует за residencia", detail: "Категорию проживания сначала одобряет DNM" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Почему Аргентина для жизни",
-        content: IMMIGRATION_LIFE_IN_COUNTRY.intro,
-      },
+      { id: "overview", title: "Что проверить до переезда", content: IMMIGRATION_LIFE_IN_COUNTRY.intro },
+      sourceSection(DNU_366, RESIDENCIAS),
     ],
     faq: [
       {
-        question: "Нужен ли DNI и как его получить?",
+        question: "Гарантирует ли residencia доступ ко всем услугам?",
         answer:
-          "DNI выдаёт Renaper после одобрения residencia. Нужен для банков, аренды, медицины и контрактов. Запись — через портал Renaper, отдельно от Migraciones.",
+          "Нет. Права зависят от категории и конкретной услуги. Для медицины дополнительно важны юрисдикция учреждения и страховка.",
       },
       {
-        question: "Подходит ли Аргентина цифровым кочевникам?",
+        question: "Когда оформляют DNI иностранца?",
         answer:
-          "Да, есть отдельное основание для remote workers с подтверждённым доходом из-за рубежа. Требования включают контракт или справку о работе, минимальный доход и страховку.",
+          "DNM указывает DNI для temporaria и permanente. После одобрения следуйте актуальной инструкции DNM/RENAPER; transitoria обычно DNI не предусматривает.",
       },
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Где жить", href: "/guide/gde-zhit", description: "Районы, аренда, быт" },
+      { title: "Где жить", href: "/guide/gde-zhit", description: "Города, районы и аренда" },
       { title: "Погода и сезоны", href: "/guide/pogoda-i-sezonnost" },
       { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi" },
     ],
   },
+
   "protsess-immigratsii": {
     heroTitle: "Процесс иммиграции",
     heroSubtitle: IMMIGRATION_PROCESS.intro,
     heroCtas: [
       { label: "Открыть RADEX", href: IMMIGRATION_PROCESS.radexPortalUrl, variant: "primary", external: true },
       hubCta("ВНЖ и ПМЖ", topicHref("vnzh-i-pmzh")),
-      { label: "Документы для въезда", href: "/immigration/dokumenty-dlya-vyezda", variant: "tertiary" },
+      { label: "Документы для поездки", href: "/immigration/dokumenty-dlya-vyezda", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Подача radicación в Migraciones без обязательного выезда" },
-      { emoji: "⚠️", label: "Decreto 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
-      { emoji: "📋", label: "RADEX", headline: "Онлайн-портал Migraciones", detail: "Запись, подача документов и precaria" },
-      { emoji: "📜", label: "Апостиль", headline: "2–8 недель на легализацию", detail: "Закладывайте срок до истечения туристического штампа" },
+      { emoji: "📋", label: "RADEX", headline: "Старт radicación в стране", detail: "Заявление начинается через официальный портал DNM" },
+      { emoji: "⚠️", label: "Результат", headline: "Не гарантирован", detail: "DNM проверяет категорию, документы и обстоятельства" },
+      { emoji: "⏳", label: "Precaria", headline: "До 90 дней", detail: "Может продлеваться, но не считается стажем" },
+      { emoji: "🏥", label: "Страховка", headline: "Практически необходима", detail: "Пограничная обязательность зависит от введения регламента" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Типичный сценарий",
-        content: IMMIGRATION_PROCESS.intro,
-      },
+      { id: "overview", title: "Порядок без обещаний", content: IMMIGRATION_PROCESS.intro },
+      sourceSection(RESIDENCIAS, RESIDENCIAS_FAQ, DNU_366, LEY_MIGRACIONES),
     ],
     faq: [
       {
-        question: "Можно ли получить ВНЖ в Аргентине, приехав как турист?",
+        question: "Можно ли начать radicación после туристического въезда?",
         answer:
-          "Да — большинство оснований для residencia temporaria оформляют уже в стране через RADEX, без консульской визы. Важно легально въехать, не нарушать срок туристического пребывания и собрать пакет по выбранному основанию.",
+          "Для заявлений внутри Аргентины DNM использует RADEX. Возможность смены категории и решение зависят от применимого основания; туристический въезд не гарантирует residencia.",
       },
       {
-        question: "Что такое Decreto 366/2025 и как он влияет на въезд?",
+        question: "Уже обязательно показывать страховку на границе?",
         answer:
-          "Decreto 366/2025 закрепил требование медстраховки и декларации о цели поездки; на границе их пока не всегда проверяют. Для подачи на residencia требования строже.",
+          "Decreto 366/2025 предусмотрел страховку и декларацию цели, но статья 123 bis связывает обязательность с введением регламента. Перед поездкой проверьте, не опубликован ли он; полис всё равно разумно оформить.",
       },
       {
-        question: "Что такое RADEX и как им пользоваться?",
+        question: "Что даёт precaria?",
         answer:
-          "RADEX — онлайн-портал Migraciones для записи на приём, подачи заявлений на residencia, precaria и продлений. Нужна регистрация, загрузка сканов и оплата пошлин. Слоты на запись бывают дефицитными.",
+          "Действующая precaria разрешает пребывание, выезд и въезд, работу и учёбу. Она не гарантирует одобрение и не считается стажем для permanente или гражданства.",
       },
       {
-        question: "Что такое precaria?",
+        question: "Можно ли работать как турист?",
         answer:
-          "Временное разрешение на пребывание после подачи на residencia, пока рассматривается заявление. Даёт право легально находиться в стране; условия зависят от типа дела.",
-      },
-      {
-        question: "Можно ли работать на туристическом статусе?",
-        answer:
-          "Нет. Туристический штамп не даёт права на оплачиваемую работу. Для легальной занятости нужен соответствующий тип residencia или разрешение через работодателя.",
+          "Туристическая категория сама по себе не разрешает оплачиваемую или приносящую доход деятельность. Нужен статус, который допускает конкретную работу.",
       },
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Документы для въезда", href: "/immigration/dokumenty-dlya-vyezda" },
-      { title: "Визы для туристов", href: "/immigration/vizy-dlya-turistov" },
-      { title: "Документы на границе", href: "/guide/kak-dobratsya#entry-docs" },
+      { title: "Документы для поездки", href: "/immigration/dokumenty-dlya-vyezda" },
+      { title: "Туристический въезд", href: "/immigration/vizy-dlya-turistov" },
+      { title: "Категории residencia", href: topicHref("vnzh-i-pmzh") },
     ],
   },
+
   "rody-v-argentine": {
     heroTitle: "Роды в Аргентине",
     heroSubtitle: IMMIGRATION_BIRTH.intro,
@@ -121,92 +143,72 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Процесс иммиграции", href: topicHref("protsess-immigratsii"), variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "👶", label: "Jus soli", headline: "Гражданство ребёнку при рождении", detail: "Независимо от гражданства родителей" },
-      { emoji: "👨‍👩‍👧", label: "Родители", headline: "Residencia по padre/madre de argentino", detail: "Ускоренный путь к permanente" },
-      { emoji: "🏥", label: "Роды", headline: "Гос. и частные клиники", detail: "BA, Córdoba, Mendoza — плановые роды в частных центрах" },
-      { emoji: "📄", label: "Документы", headline: "Acta de nacimiento → DNI → Migraciones", detail: "Регистрация в Registro Civil и Renaper" },
+      { emoji: "👶", label: "Ребёнок", headline: "Гражданство по рождению", detail: "Статья 1 Ley 346; есть дипломатическое исключение" },
+      { emoji: "👨‍👩‍👧", label: "Родители", headline: "Отдельное заявление", detail: "Автоматического ПМЖ из факта рождения нет" },
+      { emoji: "📄", label: "Документы", headline: "Registro Civil и RENAPER", detail: "Сначала регистрация рождения, затем документы ребёнка" },
+      { emoji: "🏥", label: "Медицина", headline: "Планируйте заранее", detail: "Врач, учреждение, стоимость и страховка" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Jus soli и residencia родителям",
-        content: IMMIGRATION_BIRTH.intro,
-      },
+      { id: "overview", title: "Гражданство ребёнка и статус родителей", content: IMMIGRATION_BIRTH.intro },
+      sourceSection(LEY_CIUDADANIA, DNU_366, RESIDENCIAS),
     ],
     faq: [
       {
-        question: "Даёт ли рождение ребёнка в Аргентине гражданство?",
+        question: "Получает ли ребёнок гражданство Аргентины?",
         answer:
-          "Да — по принципу jus soli ребёнок, рождённый на территории Аргентины, получает гражданство. Родители могут оформить residencia по основанию padre/madre de argentino — это одно из популярных семейных оснований.",
+          "Рождённый в Аргентине ребёнок является гражданином по рождению, кроме предусмотренного Ley 346 исключения для детей иностранных дипломатов.",
+      },
+      {
+        question: "Получают ли родители ПМЖ автоматически?",
+        answer:
+          "Нет. Для родителей действует отдельная миграционная процедура. Статья 23 ñ предусматривает temporaria reunificación familiar, а permanente требует отдельного применимого критерия и решения DNM.",
       },
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), Decreto 366/2025" },
+      { title: "Гражданство", href: topicHref("grazhdanstvo") },
       { title: "ВНЖ и ПМЖ", href: topicHref("vnzh-i-pmzh") },
     ],
   },
+
   grazhdanstvo: {
     heroTitle: "Гражданство Аргентины",
     heroSubtitle: IMMIGRATION_CITIZENSHIP.intro,
     heroCtas: [
       hubCta("ВНЖ и ПМЖ", topicHref("vnzh-i-pmzh")),
-      { label: "Полный справочник", href: "/immigration", variant: "secondary" },
-      { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
+      { label: "Официальные источники", href: topicHref("poleznye-ssylki"), variant: "secondary" },
+      { label: "Иммиграционный справочник", href: "/immigration", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 направлений", detail: "Шенген, Япония и большинство стран Латинской Америки" },
-      { emoji: "⏱", label: "Резиденция", headline: "2 года без выезда", detail: "Любой выезд обнуляет срок (366/2025)" },
-      { emoji: "🏛", label: "Подача", headline: "DNM / Migraciones", detail: "Административно с окт. 2025; не PJN" },
-      { emoji: "🗳", label: "Срок дела", headline: "Не фиксирован", detail: "От месяцев до нескольких лет — уточняйте на migraciones.gob.ar" },
+      { emoji: "⏱", label: "Натурализация", headline: "2 года законного проживания", detail: "Непосредственно перед заявлением" },
+      { emoji: "🧳", label: "Непрерывность", headline: "Без выездов", detail: "Выезд прерывает двухлетний период" },
+      { emoji: "🏛", label: "Подача", headline: "Цифровая процедура DNM", detail: "Для новых заявлений с октября 2025" },
+      { emoji: "⏳", label: "Precaria", headline: "Не считается", detail: "Не входит в двухлетний период" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Натурализация",
-        content: IMMIGRATION_CITIZENSHIP.intro,
-      },
+      { id: "overview", title: "Условия натурализации", content: IMMIGRATION_CITIZENSHIP.intro },
+      sourceSection(LEY_CIUDADANIA, DNU_366, CIUDADANIA_DNM),
     ],
     faq: [
       {
-        question: "Через сколько можно подать на гражданство?",
+        question: "Через сколько можно подать на натурализацию?",
         answer:
-          "При натурализации — 2 года непрерывной легальной резиденции без выездов. Супруг(а) аргентинца по рождению и родители ребёнка-аргентинца могут подать без периода ожидания — уточняйте на migraciones.gob.ar.",
+          "После двух лет непрерывного законного проживания непосредственно перед заявлением. Действующая Ley 346 определяет непрерывность как отсутствие выездов в этот период.",
       },
       {
-        question: "Нужен ли ПМЖ перед подачей на гражданство?",
+        question: "Считается ли precaria?",
         answer:
-          "Для граждан стран вне Mercosur ПМЖ обычно оформляют после 3 лет temporaria, но на гражданство можно подать раньше — при 2 годах резиденции. Это разные процедуры.",
+          "Нет. Decreto 366/2025 прямо исключает precaria из срока натурализации.",
       },
       {
-        question: "Как подать документы на гражданство?",
+        question: "Куда подают новые заявления?",
         answer:
-          "С октября 2025 новые дела — административно в DNM (не суд). Канал и формы — migraciones.gob.ar. Дела до 29.05.2025 могли идти через федеральный суд.",
+          "DNM сообщила 06.10.2025 о цифровой подаче новых заявлений. Используйте актуальную инструкцию DNM, а не старый судебный чек-лист.",
       },
       {
-        question: "Сколько длится рассмотрение дела?",
+        question: "Есть ли гарантированный срок решения?",
         answer:
-          "Законом срок может не быть ограничен; на практике — от нескольких месяцев до нескольких лет. Уточняйте на migraciones.gob.ar.",
-      },
-      {
-        question: "Нужны ли экзамены по испанскому или «Conocer Argentina»?",
-        answer:
-          "Языковые проверки и экзамены по конституции в административном порядке могут применяться — практика после реформы уточняется.",
-      },
-      {
-        question: "Что такое Carta de Ciudadanía?",
-        answer:
-          "Документ об одобрении naturalización; с ним обращаются в RENAPER за DNI гражданина Аргентины, затем оформляют pasaporte argentino.",
-      },
-      {
-        question: "Даёт ли аргентинский паспорт безвизовый режим?",
-        answer:
-          "Да — паспорт открывает безвиз, визу по прилёте или электронное разрешение примерно в 170 направлений, включая Шенген, Великобританию, Японию и большинство Латинской Америки.",
-      },
-      {
-        question: "Как Decreto 366/2025 влияет на гражданство?",
-        answer:
-          "Перевод натурализации в DNM, 2 года строго без выезда, отмена присяги для новых дел. Декрет оспаривается в судах — следите за migraciones.gob.ar.",
+          "Нет универсального срока для каждого дела. Ориентируйтесь только на официальные уведомления по своему trámite.",
       },
     ],
     partnerServices: [],
@@ -215,161 +217,96 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
     ],
   },
+
   "vnzh-i-pmzh": {
     heroTitle: "ВНЖ и ПМЖ Аргентины",
     heroSubtitle: IMMIGRATION_RESIDENCY.intro,
     heroCtas: [
-      { label: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh", variant: "primary" },
+      { label: "Открыть RADEX", href: "https://www.migraciones.gob.ar/radex/", variant: "primary", external: true },
       hubCta("Процесс иммиграции", topicHref("protsess-immigratsii")),
       hubCta("Гражданство", topicHref("grazhdanstvo")),
-      hubCta("Возможности", topicHref("vozmozhnosti")),
     ],
     quickFacts: [
-      {
-        emoji: "🌎",
-        label: "15 оснований",
-        headline: "Temporaria по Ley 25.871",
-        detail: "Ст. 23 incisos a–ñ, включая reunificación familiar",
-      },
-      {
-        emoji: "📄",
-        label: "ВНЖ",
-        labelEs: "residencia temporaria",
-        headline: "До 3 лет",
-        detail: "Prórroga, DNI, arraigo 2–3 года → ПМЖ",
-      },
-      {
-        emoji: "🏡",
-        label: "ПМЖ",
-        labelEs: "residencia permanente",
-        headline: "После arraigo или по семье",
-        detail: "Доход и antecedentes — обязательны с 366/2025",
-      },
-      {
-        emoji: "⏳",
-        label: "Прекария",
-        labelEs: "residencia precaria",
-        headline: "До 90 дней",
-        detail: "Не засчитывается в срок ПМЖ и гражданства",
-      },
+      { emoji: "🌎", label: "Статья 23", headline: "15 подкатегорий a–ñ", detail: "Соответствие и документы проверяет DNM" },
+      { emoji: "📄", label: "Temporaria", headline: "До 3 лет", detail: "Срок зависит от подкатегории" },
+      { emoji: "🏡", label: "Permanente", headline: "Без даты окончания", detail: "Но статус может быть отменён по статье 62" },
+      { emoji: "⏳", label: "Precaria", headline: "До 90 дней", detail: "Работа разрешена, стаж не идёт" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "ВНЖ и ПМЖ",
-        content: IMMIGRATION_RESIDENCY.intro,
-      },
-      {
-        id: "dnu-note",
-        title: "Decreto 366/2025",
-        content: IMMIGRATION_RESIDENCY.dnuWarning,
-      },
+      { id: "overview", title: "Категории проживания", content: IMMIGRATION_RESIDENCY.intro },
+      { id: "dnu-note", title: "Изменения 2025 года", content: IMMIGRATION_RESIDENCY.dnuWarning },
+      sourceSection(RESIDENCIAS, RESIDENCIAS_FAQ, LEY_MIGRACIONES, DNU_366),
     ],
     faq: IMMIGRATION_RESIDENCY.extendedFaq,
     partnerServices: [],
     blogLinks: [
-      { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh" },
+      { title: "Краткий обзор ВНЖ", href: "/immigration/obzor-vnzh" },
       { title: "Процесс иммиграции", href: topicHref("protsess-immigratsii") },
-      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), Decreto 366/2025" },
+      { title: "Гражданство", href: topicHref("grazhdanstvo") },
       { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
     ],
   },
+
   vozmozhnosti: {
-    heroTitle: "Возможности иммиграции",
+    heroTitle: "Как выбрать миграционную категорию",
     heroSubtitle: IMMIGRATION_OPPORTUNITIES.intro,
     heroCtas: [
       hubCta("ВНЖ и ПМЖ", topicHref("vnzh-i-pmzh")),
-      { label: "Обзор ВНЖ", href: "/immigration/obzor-vnzh", variant: "secondary" },
-      { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
+      { label: "Официальный список DNM", href: "https://www.argentina.gob.ar/migraciones/residencias", variant: "primary", external: true },
+      { label: "Процесс подачи", href: topicHref("protsess-immigratsii"), variant: "tertiary" },
     ],
     quickFacts: [
-      {
-        emoji: "💰",
-        label: "Рантье",
-        labelEs: "rentista",
-        headline: "Пассивный доход из-за рубежа",
-        detail: "Популярный путь для релокантов",
-      },
-      {
-        emoji: "💻",
-        label: "Цифровой кочевник",
-        labelEs: "nómada digital",
-        headline: "Удалённая работа + страховка",
-        detail: "Отдельное основание для кочевников",
-      },
-      {
-        emoji: "👶",
-        label: "Родитель ребёнка-аргентинца",
-        labelEs: "padre/madre de argentino",
-        headline: "Рождение ребёнка в AR",
-        detail: "Ускоренный путь к ПМЖ",
-      },
-      {
-        emoji: "🌎",
-        label: "Гражданин Mercosur",
-        labelEs: "mercosur",
-        headline: "Упрощённый режим",
-        detail: "Для граждан стран Mercosur",
-      },
+      { emoji: "💰", label: "Rentista", headline: "Нужен подтверждённый доход", detail: "Критерии берите из действующей карточки DNM" },
+      { emoji: "💻", label: "Цифровой кочевник", headline: "Transitoria, не ВНЖ", detail: "До 180 дней и одна возможная prórroga" },
+      { emoji: "👨‍👩‍👧", label: "Семья", headline: "Категория статьи 23 ñ", detail: "Только для перечисленных законом связей" },
+      { emoji: "🌎", label: "MERCOSUR", headline: "Категория по гражданству", detail: "Применимость проверяется по закону и соглашениям" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Выбор основания",
-        content: IMMIGRATION_OPPORTUNITIES.intro,
-      },
+      { id: "overview", title: "Выбор по реальной цели", content: IMMIGRATION_OPPORTUNITIES.intro },
+      sourceSection(RESIDENCIAS, LEY_MIGRACIONES, DNU_366, NOMADA),
     ],
     faq: [
       {
-        question: "Подходит ли Аргентина цифровым кочевникам?",
+        question: "Цифровой кочевник — это temporaria?",
         answer:
-          "Да, есть отдельное основание для remote workers с подтверждённым доходом из-за рубежа. Требования включают контракт или справку о работе, минимальный доход и страховку.",
+          "Нет. Disposición 758/2022 устанавливает transitoria до 180 дней с одной возможной prórroga на срок первоначального разрешения.",
       },
       {
-        question: "Rentista — сколько нужно дохода?",
+        question: "Можно ли заранее назвать минимальный доход rentista?",
         answer:
-          "Требуется доказать стабильный пассивный доход из-за рубежа (аренда, дивиденды, пенсия). Порог устанавливает Migraciones и пересматривается — сверяйте актуальную сумму на момент подачи.",
+          "Надёжно — только после открытия текущей карточки trámite DNM. Порог и способ подтверждения могут меняться, поэтому старые суммы публиковать опасно.",
       },
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh" },
-      { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
+      { title: "Категории ВНЖ и ПМЖ", href: topicHref("vnzh-i-pmzh") },
+      { title: "Краткий обзор ВНЖ", href: "/immigration/obzor-vnzh" },
     ],
   },
+
   "poleznye-ssylki": {
-    heroTitle: "Полезные ссылки",
+    heroTitle: "Официальные источники по иммиграции",
     heroSubtitle: IMMIGRATION_USEFUL_LINKS.intro,
     heroCtas: [
-      { label: "Migraciones", href: "https://www.migraciones.gob.ar", variant: "primary", external: true },
-      { label: "RADEX", href: "https://tramites.migraciones.gob.ar", variant: "secondary", external: true },
-      { label: "Полный справочник", href: "/immigration", variant: "tertiary" },
+      { label: "Категории DNM", href: "https://www.argentina.gob.ar/migraciones/residencias", variant: "primary", external: true },
+      { label: "RADEX", href: "https://www.migraciones.gob.ar/radex/", variant: "secondary", external: true },
+      { label: "Иммиграционный справочник", href: "/immigration", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "🏛", label: "Migraciones", headline: "Официальные правила", detail: "migraciones.gob.ar — первоисточник" },
-      { emoji: "📋", label: "RADEX", headline: "Онлайн-оформление (trámites en línea)", detail: "tramites.migraciones.gob.ar" },
-      { emoji: "🪪", label: "Renaper", headline: "DNI после residencia", detail: "argentina.gob.ar/interior/renaper" },
-      { emoji: "📰", label: "Boletín Oficial", headline: "Декреты и нормы", detail: "boletinoficial.gob.ar" },
+      { emoji: "🏛", label: "DNM", headline: "Категории и процедуры", detail: "Главный источник перед подачей" },
+      { emoji: "📋", label: "RADEX", headline: "Заявления о radicación", detail: "Официальный портал запуска процедуры" },
+      { emoji: "⚖️", label: "Normativa", headline: "Актуальные тексты законов", detail: "Ley 25.871, Ley 346 и Decreto 366/2025" },
+      { emoji: "📅", label: "Дата сверки", headline: "17.07.2026", detail: "Перед действием откройте источники заново" },
     ],
     sections: [
-      {
-        id: "overview",
-        title: "Где проверять правила",
-        content: IMMIGRATION_USEFUL_LINKS.intro,
-        infoBoxes: [
-          {
-            variant: "warning",
-            title: "Не заменяет юриста",
-            body: "Официальные порталы — первоисточник. Перед подачей проконсультируйтесь с abogado migratorio.",
-          },
-        ],
-      },
+      { id: "overview", title: "Где проверять правила", content: IMMIGRATION_USEFUL_LINKS.intro },
+      sourceSection(RESIDENCIAS, RESIDENCIAS_FAQ, LEY_MIGRACIONES, LEY_CIUDADANIA, DNU_366),
     ],
     faq: [
       {
-        question: "Где проверить актуальные правила?",
+        question: "Как понять, что информация актуальна?",
         answer:
-          "Официально: migraciones.gob.ar, tramites.migraciones.gob.ar, boletín oficial, консульство Аргентины. Наш справочник не заменяет юриста — перед решениями сверяйтесь с первоисточниками.",
+          "Проверьте дату обновления, откройте актуальный текст нормы и карточку trámite DNM. Не полагайтесь только на статью, форум или опыт другого заявителя.",
       },
     ],
     partnerServices: [],

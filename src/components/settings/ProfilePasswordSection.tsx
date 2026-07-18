@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SmartInput } from "@/components/ui/smart-input";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { changePasswordWithCurrentCredential } from "@/lib/auth-password-change";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { cabinetPanelClass } from "@/lib/cabinet-ui";
-import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { validatePassword, validatePasswordConfirmation } from "@/lib/form-validation";
 
 export default function ProfilePasswordSection() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -27,46 +29,17 @@ export default function ProfilePasswordSection() {
     setError(null);
     setSaved(false);
 
-    if (newPassword.length < 6) {
-      setError(siteFormError("Новый пароль должен содержать не менее 6 символов"));
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError(siteFormError("Пароли не совпадают"));
-      return;
-    }
-
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user?.email) {
-      setLoading(false);
-      setError(siteFormError("Не удалось определить аккаунт"));
-      return;
-    }
-
-    if (currentPassword.trim()) {
-      const { error: reauthError } = await supabase.auth.signInWithPassword({
-        email: user.email,
-        password: currentPassword,
-      });
-      if (reauthError) {
-        setLoading(false);
-        setError(normalizeSiteError("Неверный текущий пароль"));
-        return;
-      }
-    }
-
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const result = await changePasswordWithCurrentCredential(supabase, {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
     setLoading(false);
 
-    if (updateError) {
-      setError(normalizeSiteError(updateError.message, { title: "Не удалось сменить пароль" }));
+    if (!result.ok) {
+      setError(siteFormError(result.message));
       return;
     }
 
@@ -84,58 +57,55 @@ export default function ProfilePasswordSection() {
       </p>
 
       <div className="mt-5 space-y-4">
-        <div>
-          <label htmlFor="current-password" className="mb-2 block text-xs font-medium text-slate">
-            Текущий пароль
-          </label>
-          <Input
+        <SmartInput
             id="current-password"
+            label="Текущий пароль"
             type="password"
             autoComplete="current-password"
             value={currentPassword}
-            onChange={(event) => {
-              setCurrentPassword(event.target.value);
+            onValueChange={setCurrentPassword}
+            onChange={() => {
               setSaved(false);
               setError(null);
             }}
-            placeholder="Для подтверждения"
+            placeholder="Введите текущий пароль"
+            hint="Нужен для безопасного подтверждения смены пароля."
+            required
           />
-        </div>
 
-        <div>
-          <label htmlFor="settings-new-password" className="mb-2 block text-xs font-medium text-slate">
-            Новый пароль
-          </label>
-          <Input
+        <SmartInput
             id="settings-new-password"
+            label="Новый пароль"
             type="password"
             autoComplete="new-password"
             value={newPassword}
-            onChange={(event) => {
-              setNewPassword(event.target.value);
+            onValueChange={setNewPassword}
+            onChange={() => {
               setSaved(false);
               setError(null);
             }}
-            placeholder="Не менее 6 символов"
+            placeholder="Не менее 8 символов"
+            hint="Минимум 8 символов. Можно использовать фразу, которую легко запомнить."
+            validate={validatePassword(8)}
+            minLength={8}
+            required
           />
-        </div>
 
-        <div>
-          <label htmlFor="settings-confirm-password" className="mb-2 block text-xs font-medium text-slate">
-            Повторите новый пароль
-          </label>
-          <Input
+        <SmartInput
             id="settings-confirm-password"
+            label="Повторите новый пароль"
             type="password"
             autoComplete="new-password"
             value={confirmPassword}
-            onChange={(event) => {
-              setConfirmPassword(event.target.value);
+            onValueChange={setConfirmPassword}
+            onChange={() => {
               setSaved(false);
               setError(null);
             }}
+            validate={validatePasswordConfirmation(newPassword)}
+            minLength={8}
+            required
           />
-        </div>
       </div>
 
       {error ? (

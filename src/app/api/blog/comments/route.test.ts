@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   listComments: vi.fn(),
+  fetchSiteNavigation: vi.fn(),
   warn: vi.fn(),
 }));
 
@@ -20,11 +21,17 @@ vi.mock("@/lib/blog-comments-server", () => ({
   listBlogArticleComments: mocks.listComments,
 }));
 
-import { GET } from "./route";
+vi.mock("@/lib/site-settings-server", () => ({
+  fetchSiteNavigation: mocks.fetchSiteNavigation,
+}));
+
+import { GET, POST } from "./route";
 
 describe("blog comments API", () => {
   beforeEach(() => {
     mocks.listComments.mockReset();
+    mocks.fetchSiteNavigation.mockReset();
+    mocks.fetchSiteNavigation.mockResolvedValue({ showJournal: true });
     mocks.warn.mockReset();
     vi.spyOn(console, "warn").mockImplementation(mocks.warn);
   });
@@ -44,5 +51,21 @@ describe("blog comments API", () => {
     expect(response.headers.get("x-goargentina-degraded")).toBe("blog-comments");
     await expect(response.json()).resolves.toEqual({ comments: [] });
     expect(mocks.warn).toHaveBeenCalledOnce();
+  });
+
+  it("rejects a new comment before auth or storage when the blog is disabled", async () => {
+    mocks.fetchSiteNavigation.mockResolvedValue({ showJournal: false });
+
+    const response = await POST(
+      new Request("https://www.goargentina.ru/api/blog/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: "buenos-aires-rajony", body: "Комментарий" }),
+      }),
+    );
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toEqual({ error: "Блог отключён" });
+    expect(mocks.listComments).not.toHaveBeenCalled();
   });
 });

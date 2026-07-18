@@ -189,7 +189,7 @@ async function registerByApi(input: {
     return { confirmationRequired: true, email: normalizedEmail };
   }
 
-  return loginWithCredentials(normalizedEmail, password, input.role);
+  return loginWithCredentials(normalizedEmail, password, "tourist");
 }
 
 export const supabaseAuthProvider: AuthProvider = {
@@ -279,19 +279,9 @@ export const supabaseAuthProvider: AuthProvider = {
       return { user: profileToSessionUser(profile, "organizer") };
     }
 
-    const nextRoles: AccountRole[] = [...roles, "organizer"];
-    const { error } = await getClient()
-      .from("profiles")
-      .update({ roles: nextRoles, active_role: "organizer" })
-      .eq("id", userId);
-
-    if (error) {
-      return { error: error.message };
-    }
-
-    const updated = await fetchProfile(userId);
-    if (!updated) return { error: "Профиль не найден" };
-    return { user: profileToSessionUser(updated, "organizer") };
+    return {
+      error: "Роль организатора появится после одобрения заявки. Заполните анкету на странице «Стать организатором».",
+    };
   },
 
   async updateProfile(userId, input) {

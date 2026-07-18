@@ -79,6 +79,7 @@ export default function ExcursionFilterBar({
   const partnerLabel = useMemo(() => {
     if (draft.partners.length === 0) return "Партнёр";
     if (draft.partners.length === 1) {
+      if (draft.partners[0] === "platform") return "Пора в Аргентину";
       return draft.partners[0] === "sputnik8" ? "Sputnik8" : "Tripster";
     }
     return `Партнёр · ${draft.partners.length}`;
@@ -235,10 +236,11 @@ export default function ExcursionFilterBar({
 
       <FilterPopover label={partnerLabel} active={draft.partners.length > 0} width="sm:min-w-[260px]" inline={inline}>
         <div className="p-4">
-          <p className="text-sm font-semibold text-charcoal">Площадка партнёра</p>
+          <p className="text-sm font-semibold text-charcoal">Источник предложения</p>
           <div className="mt-3 space-y-2">
             {(
               [
+                { id: "platform" as ExcursionPartner, label: "Пора в Аргентину" },
                 { id: "tripster" as ExcursionPartner, label: "Tripster" },
                 { id: "sputnik8" as ExcursionPartner, label: "Sputnik8" },
               ] as const
