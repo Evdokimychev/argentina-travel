@@ -85,7 +85,9 @@ export default async function MapaArgentinaPage({ searchParams }: PageProps) {
       <WebPageJsonLd name={pageTitle} description={pageDescription} path="/mapa-argentina" />
       <Suspense
         fallback={
-          <div className="flex h-[60vh] items-center justify-center text-slate">Загрузка карты…</div>
+          <div className="flex h-[calc(100dvh-var(--site-header-full-height,72px)-var(--public-mobile-nav-height,0px))] min-h-[320px] items-center justify-center text-slate md:h-[calc(100dvh-var(--site-header-full-height,72px))] md:min-h-[520px]">
+            Загрузка карты…
+          </div>
         }
       >
         <MapaArgentinaData kinds={kinds} urlState={urlState} />

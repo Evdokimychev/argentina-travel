@@ -7,6 +7,14 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+// Metadata is operational content on this portal: titles, descriptions and
+// indexing rules can come from the admin control plane. Keep it in the real
+// document <head> for every user agent instead of streaming it into <body>.
+// This also makes mobile Lighthouse and less common search crawlers observe
+// the same metadata as Google/Yandex. The root layout already awaits the same
+// settings, so streaming metadata does not buy us an earlier usable shell.
+const htmlLimitedBots = /.*/;
+
 const imageOptimizationOverride =
   process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION?.trim();
 const disableNextImageOptimization =
@@ -37,6 +45,7 @@ const isDemoBuild =
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  htmlLimitedBots,
   // Local production previews use a dedicated directory so an IDE-managed
   // `next dev` process cannot overwrite the production bundle in `.next`.
   distDir: process.env.NEXT_DIST_DIR?.trim() || ".next",
