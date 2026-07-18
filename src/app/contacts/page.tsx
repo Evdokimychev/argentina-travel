@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import ContactsPageClient from "@/components/contacts/ContactsPageClient";
+import ContactsPageClient, {
+  type ContactFormContext,
+} from "@/components/contacts/ContactsPageClient";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { getShopProductBySlug } from "@/data/shop-products";
+import { getServiceBySlug } from "@/data/services-hub";
+import { getTourBySlug } from "@/data/tours";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -9,6 +14,7 @@ import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { fetchSiteContact, fetchSiteForms } from "@/lib/site-settings-server";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
+import { formatShopMoney } from "@/types/shop-product";
 
 const PAGE_TITLE_FALLBACK = "Контакты — связаться с командой";
 const PAGE_DESCRIPTION_FALLBACK =
@@ -43,6 +49,28 @@ type PageProps = {
   }>;
 };
 
+function resolveContactFormContext(
+  params: Awaited<PageProps["searchParams"]>,
+): ContactFormContext {
+  const tour = params.tour ? getTourBySlug(params.tour) : undefined;
+  const product = params.product ? getShopProductBySlug(params.product) : undefined;
+  const service = params.service ? getServiceBySlug(params.service) : undefined;
+
+  return {
+    tourSlug: params.tour,
+    productSlug: params.product,
+    serviceSlug: params.service,
+    topic: params.topic,
+    tourTitle: tour?.title,
+    productTitle: product?.title,
+    productFormat: product?.format,
+    productPriceLabel: product
+      ? formatShopMoney(product.priceMinor, product.currency)
+      : undefined,
+    serviceTitle: service?.title,
+  };
+}
+
 export default async function ContactsPage({ searchParams }: PageProps) {
   const locale = await getServerI18nLocale();
   const [contact, forms] = await Promise.all([
@@ -50,6 +78,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
     fetchSiteForms(),
   ]);
   const params = await searchParams;
+  const formContext = resolveContactFormContext(params);
   const pageTitle = resolveStaticPageCopy("contacts.meta.title", PAGE_TITLE_FALLBACK, locale);
   const pageDescription = resolveStaticPageCopy(
     "contacts.meta.description",
@@ -76,12 +105,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
         xUrl={contact.xUrl}
         supportEmail={contact.supportEmail}
         formEnabled={forms.contactEnabled}
-        formContext={{
-          tourSlug: params.tour,
-          productSlug: params.product,
-          serviceSlug: params.service,
-          topic: params.topic,
-        }}
+        formContext={formContext}
       />
     </>
   );

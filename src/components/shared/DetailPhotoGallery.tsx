@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Maximize2 } from "lucide-react";
-import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import type { ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
+
+const DetailGalleryLightbox = dynamic(
+  () =>
+    import("@/components/shared/DetailGalleryLightbox").then(
+      (module) => module.DetailGalleryLightbox,
+    ),
+  { ssr: false },
+);
 
 type DetailPhotoGalleryProps = {
   images: string[];

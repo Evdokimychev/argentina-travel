@@ -2,6 +2,8 @@ import { SafeImage } from "@/components/ui/safe-image";
 import type { ResolvedImage } from "@/lib/image-provider/types";
 import { cn } from "@/lib/cn";
 
+const MOBILE_HERO_SRC = "/media/home/hero-mobile.webp";
+
 interface HomeHeroCollageProps {
   heroSrc: string;
   heroAlt: string;
@@ -29,17 +31,20 @@ export default function HomeHeroCollage({
       <div className="grid h-full grid-cols-12 items-stretch gap-2.5 sm:gap-3 lg:h-auto">
         <figure className="editorial-media-frame group relative col-span-12 h-full overflow-hidden border-0 bg-charcoal/5 lg:h-auto lg:rounded-[1.75rem] lg:border sm:col-span-12 lg:col-span-8">
           <div className="relative h-full w-full lg:aspect-square lg:h-auto">
-            <SafeImage
-              src={heroSrc}
-              alt={heroAlt}
-              fill
-              priority
-              quality={60}
-              preferLocalMedia
-              placeholderVariant="destination"
-              sizes="(max-width: 1023px) 100vw, 430px"
-              className="editorial-media-zoom object-cover object-[62%_center] motion-reduce:transform-none lg:object-center"
-            />
+            <picture>
+              <source media="(max-width: 1023px)" srcSet={MOBILE_HERO_SRC} />
+              {/* The production image pipeline is intentionally unoptimized, so
+                  the picture source preserves a purpose-built mobile crop while
+                  the desktop fallback keeps its wider composition. */}
+              <img
+                src={heroSrc}
+                alt={heroAlt}
+                fetchPriority="high"
+                loading="eager"
+                decoding="async"
+                className="editorial-media-zoom absolute inset-0 h-full w-full object-cover object-[62%_center] motion-reduce:transform-none lg:object-center"
+              />
+            </picture>
             <div
               className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_24_36/0.48),rgb(10_24_36/0.76)_52%,rgb(10_24_36/0.94))] lg:editorial-media-overlay"
               aria-hidden

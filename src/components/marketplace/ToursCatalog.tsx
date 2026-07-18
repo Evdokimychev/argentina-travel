@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
-import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
 import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
 import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
@@ -25,10 +24,13 @@ import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
-import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
+import {
+  buildTourFilterChips,
+  resolveCatalogOrganizerIdentity,
+} from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
 import { formatCatalogBrowseHint } from "@/lib/catalog-stats";
-import { buildPublicOrganizerProfile, type PlatformStats } from "@/lib/organizer-public";
+import type { PlatformStats } from "@/lib/organizer-public";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
 import { MapPin, RefreshCw } from "lucide-react";
@@ -59,6 +61,10 @@ const FilterBar = dynamic(() => import("@/components/marketplace/FilterBar"), {
 const CatalogFiltersSheet = dynamic(() => import("@/components/marketplace/CatalogFiltersSheet"), {
   loading: () => <div className={cn(catalogFilterShellClass, "h-11 w-11 shrink-0")} aria-hidden />,
 });
+
+const MarketplaceTourListCard = dynamic(
+  () => import("@/components/marketplace/MarketplaceTourListCard"),
+);
 
 function readStoredViewMode(): CatalogViewMode {
   if (typeof window === "undefined") return "grid";
@@ -193,9 +199,10 @@ export default function ToursCatalog({
           organizerCount: platformStats.organizerCount,
         })
       : null;
-  const organizerProfile = filters.organizerSlug.trim()
-    ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
-    : null;
+  const organizerProfile = useMemo(
+    () => resolveCatalogOrganizerIdentity(filters.organizerSlug, tours),
+    [filters.organizerSlug, tours],
+  );
   const youtravelExpertLabel = filters.organizerSlug.trim()
     ? resolveYouTravelExpertOrganizerLabel(filters.organizerSlug.trim(), tours)
     : null;
@@ -262,7 +269,7 @@ export default function ToursCatalog({
               src="/media/destinations/patagonia/cover.jpg"
               alt={heroImageAlt}
               fill
-              priority
+              loading="lazy"
               sizes="288px"
               className="editorial-media-zoom object-cover"
             />

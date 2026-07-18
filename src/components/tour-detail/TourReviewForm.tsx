@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
@@ -14,7 +15,11 @@ import { getUserBookings } from "@/lib/bookings-store";
 import { getUserReviews } from "@/lib/reviews-store";
 import type { TouristReview } from "@/types/tourist";
 import { StarRatingInput } from "@/components/ui/star-rating-input";
-import ReviewPhotoUpload from "@/components/tour-detail/ReviewPhotoUpload";
+
+const ReviewPhotoUpload = dynamic(
+  () => import("@/components/tour-detail/ReviewPhotoUpload"),
+  { ssr: false },
+);
 
 type TourReviewFormProps = {
   tourId: string;
@@ -43,6 +48,9 @@ export default function TourReviewForm({
   const [rating, setRating] = useState(initialEligibility?.existingReview?.rating ?? 5);
   const [text, setText] = useState(initialEligibility?.existingReview?.text ?? "");
   const [photos, setPhotos] = useState<string[]>(initialEligibility?.existingReview?.photos ?? []);
+  const [photoUploadOpen, setPhotoUploadOpen] = useState(
+    (initialEligibility?.existingReview?.photos.length ?? 0) > 0,
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -310,7 +318,7 @@ export default function TourReviewForm({
         />
       </div>
 
-      {user ? (
+      {user && (photoUploadOpen || photos.length > 0) ? (
         <ReviewPhotoUpload
           userId={user.id}
           photos={photos}
@@ -318,6 +326,14 @@ export default function TourReviewForm({
           disabled={submitting}
           className="mt-4"
         />
+      ) : user ? (
+        <button
+          type="button"
+          onClick={() => setPhotoUploadOpen(true)}
+          className="mt-4 min-h-11 rounded-xl border border-sky/25 bg-white px-4 py-2 text-sm font-medium text-sky transition-colors hover:bg-sky/5"
+        >
+          Добавить фотографии
+        </button>
       ) : null}
 
       {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}

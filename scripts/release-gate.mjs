@@ -30,7 +30,9 @@ const groups = {
       [
         "--test",
         "scripts/lib/candidate-evidence.test.mjs",
+        "scripts/lib/critical-public-media.test.mjs",
         "scripts/lib/data-api-grants.test.mjs",
+        "scripts/lib/lighthouse-budget-policy.test.mjs",
         "scripts/lib/migration-journal.test.mjs",
         "scripts/kb-source-health.test.mjs",
         "scripts/lib/release-gate-content-contract.test.mjs",
@@ -60,6 +62,7 @@ const groups = {
     ["content-lint", "npm", ["run", "content:audit"], true],
     ["seo-live-baseline", "npm", ["run", "seo-audit"], false],
     ["media", "npm", ["run", "media:integrity"], true],
+    ["critical-public-media", "npm", ["run", "media:critical:check"], true],
     ["media-rights", "npm", ["run", "media:rights:check"], true],
   ],
   security: [

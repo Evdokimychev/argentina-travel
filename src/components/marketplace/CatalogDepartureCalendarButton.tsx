@@ -1,11 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { CalendarDays } from "lucide-react";
 import type { TourListing } from "@/types";
 import { Button } from "@/components/ui/button";
-import CatalogDepartureCalendarModal from "@/components/marketplace/CatalogDepartureCalendarModal";
 import { buildMarketplaceDepartureIndex } from "@/lib/marketplace-departure-calendar";
+
+const CatalogDepartureCalendarModal = dynamic(
+  () => import("@/components/marketplace/CatalogDepartureCalendarModal"),
+);
 
 interface CatalogDepartureCalendarButtonProps {
   tours: TourListing[];
@@ -39,7 +43,9 @@ export default function CatalogDepartureCalendarButton({
         ) : null}
       </Button>
 
-      <CatalogDepartureCalendarModal tours={tours} open={open} onOpenChange={setOpen} />
+      {open ? (
+        <CatalogDepartureCalendarModal tours={tours} open onOpenChange={setOpen} />
+      ) : null}
     </>
   );
 }

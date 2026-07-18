@@ -60,6 +60,12 @@ const HomeTestimonialsSection = dynamic(() => import("./HomeTestimonialsSection"
 
 const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
+function homeDestinationCardImage(src: string): string {
+  return src.endsWith("/section.jpg")
+    ? src.replace(/\/section\.jpg$/, "/section-card.webp")
+    : src;
+}
+
 export interface MarketplaceHomeCatalogData {
   tours: TourListing[];
   platformStats: PlatformStats;
@@ -342,7 +348,7 @@ function MarketplaceHomeBody({
               )}
             >
               <Image
-                src={dest.image}
+                src={homeDestinationCardImage(dest.image)}
                 alt={dest.imageAlt ?? dest.name}
                 fill
                 className="editorial-media-zoom object-cover"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
@@ -8,8 +9,15 @@ import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
-import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 import { GalleryMosaicDesktop } from "@/components/shared/GalleryMosaicDesktop";
+
+const DetailGalleryLightbox = dynamic(
+  () =>
+    import("@/components/shared/DetailGalleryLightbox").then(
+      (module) => module.DetailGalleryLightbox,
+    ),
+  { ssr: false },
+);
 
 interface TourDetailGalleryProps {
   images: string[];

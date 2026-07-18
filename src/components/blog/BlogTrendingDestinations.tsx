@@ -3,6 +3,7 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { destinationHref } from "@/lib/destinations";
 import { SafeImage } from "@/components/ui/safe-image";
+import { blogDestinationCardImage } from "@/components/blog/blog-destination-image-delivery";
 import { cn } from "@/lib/cn";
 
 const FEATURED = POPULAR_DESTINATIONS.slice(0, 6);
@@ -44,7 +45,7 @@ export default function BlogTrendingDestinations({ className }: BlogTrendingDest
             >
               <div className="relative aspect-[3/2]">
                 <SafeImage
-                  src={dest.image}
+                  src={blogDestinationCardImage(dest.id, dest.image)}
                   alt={dest.imageAlt ?? dest.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transform-none"

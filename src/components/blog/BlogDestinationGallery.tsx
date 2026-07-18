@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { SafeImage } from "@/components/ui/safe-image";
+import { blogDestinationCardImage } from "@/components/blog/blog-destination-image-delivery";
 import { destinationHref } from "@/lib/destinations";
 import { cn } from "@/lib/cn";
 import type { Destination } from "@/types";
@@ -39,7 +40,7 @@ export default function BlogDestinationGallery({
             >
               <div className="relative aspect-[3/2] w-28 shrink-0 sm:w-32">
                 <SafeImage
-                  src={dest.image}
+                  src={blogDestinationCardImage(dest.id, dest.image)}
                   alt={dest.imageAlt ?? dest.name}
                   fill
                   className="object-cover"

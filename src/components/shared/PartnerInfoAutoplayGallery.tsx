@@ -1,12 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { prefersReducedMotion } from "@/lib/motion";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
-import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
+
+const DetailGalleryLightbox = dynamic(
+  () =>
+    import("@/components/shared/DetailGalleryLightbox").then(
+      (module) => module.DetailGalleryLightbox,
+    ),
+  { ssr: false },
+);
 
 type PartnerInfoAutoplayGalleryProps = {
   images: string[];

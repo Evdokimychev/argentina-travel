@@ -13,7 +13,7 @@ export default function TourReviewPanel({ tour, organizerTourId }: TourReviewPan
   if (isPartnerTourDetail(tour)) return null;
 
   return (
-    <div id="leave-review" className="scroll-mt-24">
+    <div>
       <TourReviewForm
         tourId={tour.id}
         tourSlug={tour.slug}
