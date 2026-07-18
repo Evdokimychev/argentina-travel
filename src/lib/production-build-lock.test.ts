@@ -17,6 +17,7 @@ describe("production build lock", () => {
     expect(start).toContain("writeProductionBuildLock(root)");
     expect(start).toContain('spawn("npx", ["next", "start"');
     expect(start).toContain("PRODUCTION_LOCK_OWNER_PID");
+    expect(start).toContain('process.env.CI ? ".next" : ".next-production"');
     expect(build).toContain("usesInheritedLock");
   });
 });
