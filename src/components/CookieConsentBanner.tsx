@@ -134,14 +134,14 @@ export default function CookieConsentBanner() {
           ) : null}
 
           <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
-            <Button type="button" size="sm" variant="outline" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptAll}>
+            <Button type="button" size="sm" variant="outline" aria-label="Принять все" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptAll}>
               <span className="sm:hidden">Все</span><span className="hidden sm:inline">Принять все</span>
             </Button>
-            <Button type="button" size="sm" variant="outline" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptNecessary}><span className="sm:hidden">Только нужные</span><span className="hidden sm:inline">Только необходимые</span></Button>
+            <Button type="button" size="sm" variant="outline" aria-label="Только необходимые" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptNecessary}><span className="sm:hidden">Только нужные</span><span className="hidden sm:inline">Только необходимые</span></Button>
             {customizing ? (
               <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={saveCustom}>Сохранить выбор</Button>
             ) : (
-              <Button type="button" size="sm" variant="ghost" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={() => setCustomizing(true)}><span className="sm:hidden">Выбор</span><span className="hidden sm:inline">Настроить</span></Button>
+              <Button type="button" size="sm" variant="ghost" aria-label="Настроить" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={() => setCustomizing(true)}><span className="sm:hidden">Выбор</span><span className="hidden sm:inline">Настроить</span></Button>
             )}
           </div>
         </div>
