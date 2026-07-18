@@ -120,13 +120,19 @@ test("[mobile-readiness] tour detail owns the bottom action", async ({ page }, t
     timeout: 60_000,
   });
   expect(catalogResponse?.status()).toBeLessThan(400);
-  const catalogDetailHref = await page
-    .locator('a[href^="/tours/"]')
-    .evaluateAll((links) =>
-      links
-        .map((link) => link.getAttribute("href"))
-        .find((href) => href && !href.startsWith("/tours/region/")),
-    );
+  const detailLink = page
+    .locator('a[href^="/tours/"]:not([href^="/tours/region/"])')
+    .first();
+  const isProductionAcceptance = /^https:\/\/www\.goargentina\.ru\/?$/i.test(
+    process.env.PLAYWRIGHT_BASE_URL?.trim() || process.env.SMOKE_BASE_URL?.trim() || "",
+  );
+  await detailLink
+    .waitFor({ state: "attached", timeout: isProductionAcceptance ? 15_000 : 2_000 })
+    .catch(() => undefined);
+  const catalogDetailHref = await detailLink.getAttribute("href").catch(() => null);
+  if (isProductionAcceptance) {
+    expect(catalogDetailHref, "Production catalog must expose a real tour detail").toBeTruthy();
+  }
   // CI intentionally runs without production partner credentials, so its
   // catalog can be empty. The production acceptance run exercises a real
   // listing; do not invent a bookable tour in the isolated CI environment.
