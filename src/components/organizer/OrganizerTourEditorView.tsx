@@ -38,9 +38,10 @@ import { getCatalogSlug } from "@/lib/tour-slug";
 import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
 import {
-  siteStickyBelowHeaderInset075Class,
-  siteStickyBelowHeaderInsetClass,
-} from "@/lib/site-container";
+  cabinetWorkspaceStickyMaxHeightClass,
+  cabinetWorkspaceStickyTopClass,
+  cabinetWorkspaceStickyTopInsetClass,
+} from "@/lib/cabinet-ui";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourTravelRisksBlock from "@/components/organizer/TourTravelRisksBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
@@ -611,7 +612,13 @@ function TourEditorSidebar({
         : "Черновик";
 
   return (
-    <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
+    <aside
+      className={cn(
+        "hidden xl:sticky xl:block xl:h-fit xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto",
+        cabinetWorkspaceStickyTopInsetClass,
+        cabinetWorkspaceStickyMaxHeightClass,
+      )}
+    >
       <div className="space-y-4">
         <TourProfileProgress draft={draft} compact />
 
@@ -1392,7 +1399,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         aria-label={draft.type === "excursion" ? "Разделы редактора экскурсии" : "Разделы редактора тура"}
         className={cn(
           "sticky z-30 w-full transition-[max-width] duration-300 ease-out",
-          siteStickyBelowHeaderInset075Class,
+          cabinetWorkspaceStickyTopClass,
           navStuck && "xl:max-w-[calc(100%-19rem)]"
         )}
       >
@@ -2197,8 +2204,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
         <aside
           className={cn(
-            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] 2xl:self-start 2xl:overflow-y-auto",
-            siteStickyBelowHeaderInsetClass
+            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:self-start 2xl:overflow-y-auto",
+            cabinetWorkspaceStickyTopInsetClass,
+            cabinetWorkspaceStickyMaxHeightClass,
           )}
         >
           <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />

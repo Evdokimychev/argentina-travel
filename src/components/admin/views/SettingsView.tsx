@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import SiteGlobalForm from "@/components/admin/site-globals/SiteGlobalForm";
@@ -528,7 +530,7 @@ export default function SettingsView() {
           />
         ) : null}
 
-        <section className={`${cabinetCardClass} flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between`}>
+        <section className={`${cabinetCardClass} flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between`}>
           <div>
             <p className="text-sm font-semibold text-foreground">
               {changedKeys.length
@@ -540,7 +542,7 @@ export default function SettingsView() {
               сохранения; каждое действие записывается в журнал администратора.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="hidden flex-wrap gap-2 sm:flex">
             <button
               type="button"
               onClick={exportSettings}
@@ -555,17 +557,6 @@ export default function SettingsView() {
             >
               Загрузить копию
             </button>
-            <input
-              ref={importInputRef}
-              type="file"
-              accept="application/json,.json"
-              className="sr-only"
-              onChange={(event) => {
-                const file = event.currentTarget.files?.[0];
-                if (file) void importSettings(file);
-                event.currentTarget.value = "";
-              }}
-            />
             <button
               type="button"
               onClick={resetAll}
@@ -583,9 +574,68 @@ export default function SettingsView() {
               {savingAll ? "Сохраняем…" : changedKeys.length ? "Сохранить всё" : "Всё сохранено"}
             </button>
           </div>
+
+          <details className="rounded-xl border border-border-subtle bg-surface-muted/40 sm:hidden">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-4 text-sm font-semibold text-foreground marker:hidden">
+              Ещё действия
+              <span aria-hidden>＋</span>
+            </summary>
+            <div className="grid gap-2 border-t border-border-subtle p-3">
+              <button
+                type="button"
+                onClick={exportSettings}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground"
+              >
+                Скачать копию
+              </button>
+              <button
+                type="button"
+                onClick={() => importInputRef.current?.click()}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground"
+              >
+                Загрузить копию
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                disabled={changedKeys.length === 0 || savingAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Отменить изменения
+              </button>
+            </div>
+          </details>
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+              if (file) void importSettings(file);
+              event.currentTarget.value = "";
+            }}
+          />
         </section>
 
-        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="rounded-2xl border border-border-subtle bg-surface-elevated p-3 shadow-sm sm:hidden">
+          <label htmlFor="mobile-settings-section" className="text-xs font-semibold text-slate">
+            Раздел настроек
+          </label>
+          <NativeSelect
+            id="mobile-settings-section"
+            value={tab}
+            onChange={(event) => setTab(event.target.value as SettingsTab)}
+            className="mt-1"
+          >
+            {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
+              <option key={tabKey} value={tabKey}>{TAB_LABELS[tabKey]}</option>
+            ))}
+          </NativeSelect>
+          <p className="mt-2 text-xs leading-5 text-slate">{TAB_DESCRIPTIONS[tab]}</p>
+        </div>
+
+        <div className="hidden gap-2 sm:grid sm:grid-cols-2 xl:grid-cols-3">
           {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
             <button
               key={tabKey}
@@ -798,6 +848,31 @@ export default function SettingsView() {
             </>
           ) : null}
         </div>
+
+        {changedKeys.length > 0 ? (
+          <>
+            <div className="h-20 sm:hidden" aria-hidden />
+            <div
+              className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] z-40 flex items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-surface-elevated/95 p-3 shadow-elevated backdrop-blur-md sm:hidden"
+              data-mobile-settings-save-bar
+            >
+              <p className="min-w-0 text-xs font-semibold text-foreground" aria-live="polite">
+                Изменений: {changedKeys.length}
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => void saveAll()}
+                disabled={savingAll || loading}
+                loading={savingAll}
+                loadingLabel="Сохраняем…"
+                className="shrink-0"
+              >
+                Сохранить всё
+              </Button>
+            </div>
+          </>
+        ) : null}
       </AdminPageShell>
     </CapabilityGate>
   );

@@ -3,28 +3,64 @@ import { formatSpots, spotsWord } from "@/lib/pluralize";
 
 export type BookingDateMode = "scheduled" | "custom";
 
+function utcDateKey(now: Date): string {
+  return now.toISOString().slice(0, 10);
+}
+
+/**
+ * Mirrors the server booking boundary: a departure is selectable until its
+ * calendar date has passed in UTC. Date-only strings remain stable across SSR
+ * and the browser, while malformed values fail closed.
+ */
+export function isTourDateCurrentOrFuture(
+  date: Pick<TourDatePrice, "startDate">,
+  now: Date = new Date()
+): boolean {
+  const startDate = date.startDate.trim().slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) return false;
+  const parsedStart = new Date(`${startDate}T00:00:00.000Z`);
+  if (
+    Number.isNaN(parsedStart.getTime()) ||
+    parsedStart.toISOString().slice(0, 10) !== startDate
+  ) {
+    return false;
+  }
+  return startDate >= utcDateKey(now);
+}
+
 export function dateFitsGuestCount(
   date: TourDatePrice,
   guests: number,
-  groupMin: number
+  groupMin: number,
+  now: Date = new Date()
 ): boolean {
-  return date.spotsLeft >= guests && date.spotsLeft >= groupMin;
+  return (
+    isTourDateCurrentOrFuture(date, now) &&
+    date.spotsLeft >= guests &&
+    date.spotsLeft >= groupMin
+  );
 }
 
 export function findBookableDates(
   dates: TourDatePrice[],
   guests: number,
-  groupMin: number
+  groupMin: number,
+  now: Date = new Date()
 ): TourDatePrice[] {
-  return dates.filter((d) => dateFitsGuestCount(d, guests, groupMin));
+  return dates.filter((d) => dateFitsGuestCount(d, guests, groupMin, now));
 }
 
 export function pickInitialDateId(
   dates: TourDatePrice[],
   guests: number,
-  groupMin: number
+  groupMin: number,
+  now: Date = new Date()
 ): string {
-  return findBookableDates(dates, guests, groupMin)[0]?.id ?? dates[0]?.id ?? "";
+  return (
+    findBookableDates(dates, guests, groupMin, now)[0]?.id ??
+    dates.find((date) => isTourDateCurrentOrFuture(date, now))?.id ??
+    ""
+  );
 }
 
 export function getGuestLimits(
@@ -45,11 +81,16 @@ export function getGuestLimits(
 export function validateGuestsForScheduledBooking(
   tour: Pick<TourDetail, "groupMin" | "dates">,
   guests: number,
-  selectedDateId: string
+  selectedDateId: string,
+  now: Date = new Date()
 ): string | null {
   const date = tour.dates.find((d) => d.id === selectedDateId);
   if (!date) {
     return "Выберите дату заезда";
+  }
+
+  if (!isTourDateCurrentOrFuture(date, now)) {
+    return "Дата поездки уже прошла. Выберите новую дату.";
   }
 
   if (date.spotsLeft < tour.groupMin) {
@@ -70,9 +111,10 @@ export function validateGuestsForScheduledBooking(
 export function suggestBookableDatesMessage(
   dates: TourDatePrice[],
   guests: number,
-  groupMin: number
+  groupMin: number,
+  now: Date = new Date()
 ): string | null {
-  const alternatives = findBookableDates(dates, guests, groupMin);
+  const alternatives = findBookableDates(dates, guests, groupMin, now);
   if (alternatives.length === 0) {
     return "Сейчас нет дат с достаточным количеством мест для вашей группы. Попробуйте уменьшить число туристов или выберите индивидуальный формат.";
   }
@@ -96,8 +138,12 @@ function formatDateRangeLabel(date: TourDatePrice): string {
 export function dateOptionSuffix(
   date: TourDatePrice,
   guests: number,
-  groupMin: number
+  groupMin: number,
+  now: Date = new Date()
 ): string {
+  if (!isTourDateCurrentOrFuture(date, now)) {
+    return " · дата прошла";
+  }
   if (date.spotsLeft < groupMin) {
     return " · мало мест для группы";
   }

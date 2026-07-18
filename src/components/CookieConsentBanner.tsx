@@ -109,7 +109,7 @@ export default function CookieConsentBanner() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-charcoal sm:text-base">Настройки cookie</p>
           <p className="mt-1 text-xs leading-snug text-slate sm:text-sm sm:leading-relaxed">
-            <span className="sm:hidden">Необходимые cookie работают всегда. Аналитика и рекомендации — только с вашего согласия. </span>
+            <span className="sm:hidden">Нужные cookie работают всегда. Аналитика — только с согласия. </span>
             <span className="hidden sm:inline">Необходимые cookie обеспечивают вход и бронирование. Аналитику и персональные рекомендации включаем только с вашего согласия. </span>
             <Link href="/legal/cookies" className="font-medium text-sky-ink hover:underline">
               Подробнее
@@ -134,14 +134,14 @@ export default function CookieConsentBanner() {
           ) : null}
 
           <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
-            <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={acceptAll}>
-              Принять все
+            <Button type="button" size="sm" variant="outline" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptAll}>
+              <span className="sm:hidden">Все</span><span className="hidden sm:inline">Принять все</span>
             </Button>
-            <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={acceptNecessary}>Только необходимые</Button>
+            <Button type="button" size="sm" variant="outline" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={acceptNecessary}><span className="sm:hidden">Только нужные</span><span className="hidden sm:inline">Только необходимые</span></Button>
             {customizing ? (
               <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={saveCustom}>Сохранить выбор</Button>
             ) : (
-              <Button type="button" size="sm" variant="ghost" className="min-h-11 px-2 text-xs sm:px-3" onClick={() => setCustomizing(true)}>Настроить</Button>
+              <Button type="button" size="sm" variant="ghost" className="min-h-11 px-1.5 text-xs sm:px-3" onClick={() => setCustomizing(true)}><span className="sm:hidden">Выбор</span><span className="hidden sm:inline">Настроить</span></Button>
             )}
           </div>
         </div>

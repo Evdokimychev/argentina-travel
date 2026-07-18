@@ -33,7 +33,7 @@
 2. На чистой установке Node 22 выполнить `npm ci` и `npm run release:gate`.
 3. Выполнить `npm run publish:verify:pre-deploy`.
 4. Убедиться, что GitHub Actions для того же SHA завершён успешно; скачать `release-gate-<sha>` и visual artifacts.
-5. Проверить, что Vercel build использует тот же SHA. Его `buildCommand` последовательно запускает `quality:static`, `quality:contracts`, `quality:content`, `quality:security`, `quality:commerce`, `quality:production`.
+5. Проверить, что Vercel build использует тот же SHA. Полный gate выполняется обязательным GitHub CI, а Vercel `buildCommand` запускает только `npm run build`, чтобы не дублировать сетевые и браузерные проверки внутри упаковщика.
 
 ## 3. Staging-репетиция
 

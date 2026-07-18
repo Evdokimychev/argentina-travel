@@ -77,6 +77,10 @@ const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
 
 const MOBILE_PRIMARY_NAV_IDS: OrganizerNavId[] = ["bookings", "messages", "tours"];
 
+export function isOrganizerEditorRoute(pathname: string): boolean {
+  return /^\/organizer\/tours\/[^/]+\/edit(?:\/|$)/.test(pathname);
+}
+
 function isNavItemActive(pathname: string, href: string): boolean {
   return href === "/organizer" ? pathname === "/organizer" : pathname.startsWith(href);
 }
@@ -444,7 +448,11 @@ export function OrganizerMobileNav() {
 
   return (
     <>
-      <nav className={cn(cabinetMobileBottomNavClass, "grid grid-cols-4 items-center")} aria-label="Навигация кабинета организатора">
+      <nav
+        className={cn(cabinetMobileBottomNavClass, "grid grid-cols-4 items-center")}
+        aria-label="Навигация кабинета организатора"
+        data-mobile-action-slot="organizer-primary"
+      >
         {primaryItems.map(renderPrimaryItem)}
         <button
           type="button"

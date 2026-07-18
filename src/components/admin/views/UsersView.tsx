@@ -11,6 +11,7 @@ import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { USER_MANAGEABLE_ROLES } from "@/lib/admin/user-identity-management";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import { cn } from "@/lib/cn";
 import type { AccountRoleDb } from "@/types/database";
 
 type AdminUserRow = {
@@ -186,6 +187,91 @@ function UserManagePanel({
   );
 }
 
+function UserMobileCard({
+  user,
+  canManage,
+  expanded,
+  onToggle,
+  onDone,
+}: {
+  user: AdminUserRow;
+  canManage: boolean;
+  expanded: boolean;
+  onToggle: () => void;
+  onDone: () => void;
+}) {
+  const isStaffIdentity = user.roles.includes("admin");
+
+  return (
+    <article className="rounded-2xl border border-border-subtle bg-surface-elevated p-4 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="break-words text-sm font-semibold text-charcoal">{user.fullName}</h2>
+          <p className="mt-0.5 break-all text-xs text-slate">{user.email ?? "Email не указан"}</p>
+        </div>
+        <span
+          className={cn(
+            "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+            user.isBlocked
+              ? "bg-red-50 text-red-700"
+              : "bg-emerald-50 text-emerald-700",
+          )}
+        >
+          {user.isBlocked ? "Заблокирован" : "Активен"}
+        </span>
+      </div>
+
+      <dl className="mt-3 space-y-2 text-xs text-slate">
+        <div>
+          <dt className="font-medium text-charcoal">Роли</dt>
+          <dd className="mt-1 flex flex-wrap gap-1.5">
+            {user.roles.map((role) => (
+              <span key={role} className="rounded-full bg-surface-muted px-2.5 py-1">
+                {ROLE_LABELS[role] ?? role}
+              </span>
+            ))}
+          </dd>
+        </div>
+        <div className="flex items-start justify-between gap-3">
+          <dt>Активная роль</dt>
+          <dd className="text-right font-medium text-charcoal">
+            {ROLE_LABELS[user.activeRole] ?? user.activeRole}
+          </dd>
+        </div>
+        <div className="flex items-start justify-between gap-3">
+          <dt>Регистрация</dt>
+          <dd className="text-right text-charcoal">{formatAdminWhen(user.createdAt)}</dd>
+        </div>
+      </dl>
+
+      {user.adminNotes ? (
+        <p className="mt-3 rounded-xl bg-surface-muted px-3 py-2 text-xs leading-relaxed text-slate">
+          Заметка: {user.adminNotes}
+        </p>
+      ) : null}
+
+      {canManage && !isStaffIdentity ? (
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Button size="sm" variant="outline" onClick={onToggle} aria-expanded={expanded}>
+            {expanded ? "Скрыть роли" : "Роли и доступ"}
+          </Button>
+          <UserBlockButton userId={user.id} isBlocked={user.isBlocked} onDone={onDone} />
+        </div>
+      ) : null}
+
+      {isStaffIdentity ? (
+        <p className="mt-3 text-xs text-slate">Доступ администратора меняется в разделе «Команда».</p>
+      ) : null}
+
+      {expanded && canManage && !isStaffIdentity ? (
+        <div className="mt-4 border-t border-border-subtle pt-4">
+          <UserManagePanel user={user} onDone={onDone} />
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
 export default function UsersView() {
   const { hasCapability } = useAdminContext();
   const canManage = hasCapability("users.manage");
@@ -235,7 +321,8 @@ export default function UsersView() {
               <NativeSelect
                 value={roleFilter}
                 onChange={(e) => { setRoleFilter(e.target.value as AccountRoleDb | ""); setPage(0); setManageId(null); }}
-                className="sm:max-w-[180px]"
+                className="sm:w-[180px]"
+                wrapperClassName="w-full sm:w-auto"
                 aria-label="Фильтр по роли"
               >
                 <option value="">Все роли</option>
@@ -248,7 +335,8 @@ export default function UsersView() {
               <NativeSelect
                 value={statusFilter}
                 onChange={(e) => { setStatusFilter(e.target.value as "" | "active" | "blocked"); setPage(0); setManageId(null); }}
-                className="sm:max-w-[180px]"
+                className="sm:w-[180px]"
+                wrapperClassName="w-full sm:w-auto"
                 aria-label="Фильтр по статусу"
               >
                 <option value="">Все статусы</option>
@@ -257,7 +345,29 @@ export default function UsersView() {
               </NativeSelect>
             </div>
 
-            <div className={cabinetTableWrapClass}>
+            <div className="space-y-3 md:hidden" data-mobile-user-directory>
+              {users.length === 0 ? (
+                <p className="rounded-2xl border border-dashed border-border-subtle px-4 py-8 text-center text-sm text-slate">
+                  {loading ? "Загрузка…" : "Пользователи не найдены"}
+                </p>
+              ) : (
+                users.map((user) => (
+                  <UserMobileCard
+                    key={user.id}
+                    user={user}
+                    canManage={canManage}
+                    expanded={manageId === user.id}
+                    onToggle={() => setManageId(user.id === manageId ? null : user.id)}
+                    onDone={() => {
+                      void refresh();
+                      setManageId(null);
+                    }}
+                  />
+                ))
+              )}
+            </div>
+
+            <div className={cn(cabinetTableWrapClass, "hidden md:block")}>
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead className={cabinetTableHeaderClass}>
                   <tr>
@@ -337,7 +447,7 @@ export default function UsersView() {
           </section>
 
           {canManage && managedUser && !managedUser.roles.includes("admin") ? (
-            <aside>
+            <aside className="hidden md:block">
               <UserManagePanel
                 user={managedUser}
                 onDone={() => {

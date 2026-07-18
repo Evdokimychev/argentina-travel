@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
@@ -10,7 +10,18 @@ describe("partner image proxy", () => {
   const youtravel =
     "https://cf.youtravel.me/public/images/tour/media/2024/08/16/example.JPG";
 
-  it("proxies and bounds trusted YouTravel images", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("uses direct trusted YouTravel delivery by default", () => {
+    expect(buildPartnerImageProxyUrl(youtravel, { width: 9999, quality: 12 })).toBe(
+      youtravel,
+    );
+  });
+
+  it("proxies and bounds trusted YouTravel images when explicitly enabled", () => {
+    vi.stubEnv("NEXT_PUBLIC_PARTNER_IMAGE_PROXY", "true");
     const result = buildPartnerImageProxyUrl(youtravel, { width: 9999, quality: 12 });
     expect(result).toContain("/api/media/partner-image?");
     expect(result).toContain("w=1800");
@@ -26,6 +37,7 @@ describe("partner image proxy", () => {
   });
 
   it("serves small catalog avatars without the 1440px default", () => {
+    vi.stubEnv("NEXT_PUBLIC_PARTNER_IMAGE_PROXY", "true");
     const result = buildPartnerImageProxyUrl(youtravel, { width: 160, quality: 60 });
     expect(result).toContain("w=160");
     expect(result).toContain("q=60");

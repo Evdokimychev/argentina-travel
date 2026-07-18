@@ -22,7 +22,7 @@
     "runtime-text:audit": "node scripts/runtime-text-audit.mjs",
     "production-smoke": "node scripts/production-smoke.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts",
+    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts tests/e2e/mobile-readiness.spec.ts",
     "test:e2e:visual": "playwright test tests/e2e/visual-smoke.spec.ts",
     "test:e2e:stage2-visual": "playwright test -c playwright.stage2-visual.config.ts",
     "test:e2e:ux-audit": "playwright test -c playwright.ux-audit.config.ts",

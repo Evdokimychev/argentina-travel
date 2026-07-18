@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth, useCanAccessOrganizerPanel } from "@/context/AuthContext";
 import AccessGate from "@/components/auth/AccessGate";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import { userHasAccountRole } from "@/types/user";
 import OrganizerSidebar, {
+  isOrganizerEditorRoute,
   OrganizerMobileHeader,
   OrganizerMobileNav,
 } from "@/components/organizer/OrganizerSidebar";
@@ -21,6 +22,7 @@ import { siteContainerClass } from "@/lib/site-container";
 
 export default function OrganizerShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isAuthenticated, authHydrated, openAuth } = useAuth();
   const hasOrganizerAccess = useCanAccessOrganizerPanel(user);
 
@@ -78,7 +80,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
     <AccessGate allowed={hasOrganizerAccess} fallback={connectRoleFallback}>
       <div className={cn(cabinetShellClass, cabinetMobileBottomInsetClass)}>
         <OrganizerMobileHeader />
-        <OrganizerMobileNav />
+        {!isOrganizerEditorRoute(pathname) ? <OrganizerMobileNav /> : null}
 
         <div className={cn(siteContainerClass, cabinetContentGapClass)}>
           <OrganizerSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />

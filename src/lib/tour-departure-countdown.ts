@@ -59,7 +59,9 @@ export function findNextUpcomingDeparture(
 
   if (!upcoming.length) return null;
 
-  const bookable = upcoming.filter((date) => dateFitsGuestCount(date, guests, groupMin));
+  const bookable = upcoming.filter((date) =>
+    dateFitsGuestCount(date, guests, groupMin, now)
+  );
   return bookable[0] ?? upcoming[0];
 }
 

@@ -7,8 +7,11 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const imageOptimizationOverride =
+  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION?.trim();
 const disableNextImageOptimization =
-  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true";
+  imageOptimizationOverride === "true" ||
+  (process.env.VERCEL === "1" && imageOptimizationOverride !== "false");
 const mediaCdnRemotePattern = (() => {
   const raw = process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim();
   if (!raw) return null;
@@ -166,8 +169,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    // Keep optimization enabled for both local files and the configured media CDN.
-    // Emergency bypass remains available through the explicit env flag.
+    // Vercel's metered optimizer returns 402 after the project quota is spent.
+    // Serve responsive source images directly there; an explicit false opt-in
+    // can restore the optimizer after a paid quota or custom loader is ready.
     unoptimized: disableNextImageOptimization,
     qualities: [60, 75],
     formats: ["image/avif", "image/webp"],

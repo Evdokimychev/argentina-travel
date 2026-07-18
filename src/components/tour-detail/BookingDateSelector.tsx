@@ -94,7 +94,7 @@ export default function BookingDateSelector({
     scheduleLoading,
   } = useTourBooking();
 
-  const availableDates = isPartnerTour ? scheduleDates : tour.dates;
+  const availableDates = scheduleDates;
   const effectiveBookingMode =
     isPartnerTour && availableDates.length > 0 ? "scheduled" : bookingMode;
   const hasScheduledDates = availableDates.length > 0;
@@ -180,7 +180,7 @@ export default function BookingDateSelector({
                 type="button"
                 onClick={() => setDateMode("scheduled")}
                 className={cn(
-                  "flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                  "min-h-11 flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
                   dateMode === "scheduled"
                     ? "bg-white text-charcoal shadow-sm"
                     : "text-slate hover:text-charcoal"
@@ -192,7 +192,7 @@ export default function BookingDateSelector({
                 type="button"
                 onClick={() => setDateMode("custom")}
                 className={cn(
-                  "flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                  "min-h-11 flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
                   dateMode === "custom"
                     ? "bg-white text-charcoal shadow-sm"
                     : "text-slate hover:text-charcoal"
@@ -276,7 +276,7 @@ export default function BookingDateSelector({
                           key={d.id}
                           type="button"
                           onClick={() => setSelectedDateId(d.id)}
-                          className="rounded-lg border border-amber-200 bg-white px-2.5 py-1 text-xs font-medium text-charcoal transition-colors hover:border-brand hover:text-brand"
+                          className="min-h-11 rounded-lg border border-amber-200 bg-white px-2.5 py-2 text-xs font-medium text-charcoal transition-colors hover:border-brand hover:text-brand"
                         >
                           {formatDateRange(d.startDate, d.endDate)}
                         </button>

@@ -1,10 +1,29 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, ChevronUp, Map, Search, Share2, X } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Map,
+  Search,
+  Share2,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
 import MapLegend from "@/components/map/MapLegend";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { MapSearchSuggestion } from "@/lib/map-search";
 import type { MapMarkerKind } from "@/lib/map-types";
 
@@ -41,7 +60,8 @@ export default function MapControlsPanel({
   onResetKinds,
   loading = false,
 }: Props) {
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [desktopPanelOpen, setDesktopPanelOpen] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const shareResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -64,8 +84,56 @@ export default function MapControlsPanel({
   }
 
   return (
-    <div className="rounded-2xl border border-white/60 bg-white/88 shadow-md backdrop-blur-md">
-      <div className="flex items-center gap-2 px-3 py-2 sm:px-3.5">
+    <>
+      <div className="rounded-2xl border border-white/60 bg-white/92 shadow-md backdrop-blur-md md:hidden">
+        <div className="flex min-h-14 items-center gap-1.5 px-2 py-1.5">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
+            <Map className="h-4 w-4" aria-hidden />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate font-display text-sm font-bold leading-tight text-charcoal">
+              Карта Аргентины
+            </h1>
+            <p className="truncate text-[11px] text-slate" aria-live="polite">
+              {loading
+                ? "Обновляем карту…"
+                : activeKinds.length === 0
+                  ? "Метки скрыты"
+                  : `${objectCount} объектов`}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            aria-label={shareCopied ? "Ссылка скопирована" : "Поделиться картой"}
+            title={shareCopied ? "Ссылка скопирована" : "Поделиться картой"}
+          >
+            {shareCopied ? (
+              <Check className="h-5 w-5 text-emerald-600" aria-hidden />
+            ) : (
+              <Share2 className="h-5 w-5" aria-hidden />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileSheetOpen(true)}
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky text-white shadow-sm transition-colors hover:bg-sky-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            aria-label="Поиск и фильтры карты"
+            aria-haspopup="dialog"
+          >
+            <SlidersHorizontal className="h-5 w-5" aria-hidden />
+            {activeKinds.length > 0 ? (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-charcoal px-1 text-[9px] font-bold text-white">
+                {activeKinds.length}
+              </span>
+            ) : null}
+          </button>
+        </div>
+      </div>
+
+      <div className="hidden rounded-2xl border border-white/60 bg-white/88 shadow-md backdrop-blur-md md:block">
+        <div className="flex items-center gap-2 px-3 py-2 sm:px-3.5">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
           <Map className="h-4 w-4" aria-hidden />
         </span>
@@ -101,11 +169,11 @@ export default function MapControlsPanel({
 
         <button
           type="button"
-          onClick={() => setPanelOpen((open) => !open)}
+          onClick={() => setDesktopPanelOpen((open) => !open)}
           className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-sky hover:bg-sky/5"
-          aria-expanded={panelOpen}
+          aria-expanded={desktopPanelOpen}
         >
-          {panelOpen ? (
+          {desktopPanelOpen ? (
             <>
               Свернуть
               <ChevronUp className="h-3.5 w-3.5" aria-hidden />
@@ -119,7 +187,7 @@ export default function MapControlsPanel({
         </button>
       </div>
 
-      {panelOpen ? (
+      {desktopPanelOpen ? (
         <div className="space-y-2 border-t border-gray-100/80 px-3 pb-3 pt-2 sm:px-3.5">
           <MapSearchPanel
             value={searchDraft}
@@ -179,7 +247,117 @@ export default function MapControlsPanel({
         {legendOpen ? (
           <MapLegend activeKinds={activeKinds} className="mt-1 border-0 bg-transparent p-0 shadow-none" />
         ) : null}
+        </div>
       </div>
-    </div>
+
+      <Dialog open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
+        <DialogContent
+          bottomSheet
+          className="max-sm:!inset-x-0 max-sm:!bottom-0 max-sm:!top-auto max-sm:!h-auto max-sm:!max-h-[min(78dvh,40rem)] max-sm:!w-full max-sm:!rounded-t-3xl md:hidden"
+        >
+          <DialogHeader className="pr-16">
+            <DialogTitle>Поиск и фильтры</DialogTitle>
+            <DialogDescription>
+              {loading ? "Обновляем карту…" : `${objectCount} объектов по выбранным условиям`}
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogBody className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-4">
+            <section aria-labelledby="mobile-map-search-title">
+              <h2 id="mobile-map-search-title" className="mb-2 text-sm font-semibold text-charcoal">
+                Найти место
+              </h2>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  onSearchSubmit();
+                }}
+                className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-sm"
+              >
+                <Search className="ml-2 h-4 w-4 shrink-0 text-slate" aria-hidden />
+                <input
+                  type="search"
+                  value={searchDraft}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  placeholder="Барилоче, Игуасу…"
+                  className="min-h-11 min-w-0 flex-1 bg-transparent text-base text-charcoal outline-none placeholder:text-slate"
+                  aria-label="Поиск на карте"
+                />
+                <button
+                  type="submit"
+                  className="min-h-11 shrink-0 rounded-xl bg-sky px-4 text-sm font-semibold text-white hover:bg-sky-dark"
+                >
+                  Найти
+                </button>
+              </form>
+              {suggestions.length > 0 && searchDraft.trim() ? (
+                <ul className="mt-2 max-h-48 divide-y divide-gray-100 overflow-y-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
+                  {suggestions.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        className="flex min-h-11 w-full flex-col justify-center px-4 py-2 text-left hover:bg-gray-50"
+                        onClick={() => onSelectSuggestion(item.id)}
+                      >
+                        <span className="text-sm font-medium text-charcoal">{item.label}</span>
+                        {item.subtitle ? (
+                          <span className="text-xs text-slate">{item.subtitle}</span>
+                        ) : null}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {activeQuery ? (
+                <div className="mt-2 flex min-h-11 items-center gap-2 rounded-xl bg-sky/5 px-3 text-sm text-charcoal">
+                  <Search className="h-4 w-4 shrink-0 text-sky" aria-hidden />
+                  <span className="min-w-0 flex-1 truncate">Фильтр: «{activeQuery}»</span>
+                  <button
+                    type="button"
+                    onClick={onSearchClear}
+                    className="flex min-h-11 items-center gap-1 rounded-lg px-2 font-semibold text-sky"
+                  >
+                    <X className="h-4 w-4" aria-hidden />
+                    Сбросить
+                  </button>
+                </div>
+              ) : null}
+            </section>
+
+            <section aria-labelledby="mobile-map-categories-title">
+              <h2 id="mobile-map-categories-title" className="mb-2 text-sm font-semibold text-charcoal">
+                Что показать
+              </h2>
+              <MapCategoryFilters
+                activeKinds={activeKinds}
+                onToggle={onToggleKind}
+                onSelectAll={onSelectAllKinds}
+                onClearAll={onClearAllKinds}
+                onReset={onResetKinds}
+                compact
+              />
+            </section>
+
+            <section aria-labelledby="mobile-map-legend-title">
+              <h2 id="mobile-map-legend-title" className="mb-2 text-sm font-semibold text-charcoal">
+                Обозначения
+              </h2>
+              <MapLegend activeKinds={activeKinds} className="border-gray-100 bg-gray-50 shadow-none" />
+            </section>
+          </DialogBody>
+
+          <DialogFooter className="shrink-0 bg-white px-4 py-3">
+            <DialogClose asChild>
+              <button
+                type="button"
+                className="min-h-11 w-full rounded-xl bg-sky px-5 text-sm font-semibold text-white hover:bg-sky-dark"
+              >
+                Показать на карте
+              </button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

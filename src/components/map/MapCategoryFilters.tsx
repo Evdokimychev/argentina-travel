@@ -41,7 +41,7 @@ export default function MapCategoryFilters({
           type="button"
           onClick={onSelectAll}
           disabled={allActive}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40"
+          className="min-h-11 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-xs font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40 sm:min-h-8 sm:px-2 sm:py-0.5 sm:text-[10px]"
         >
           Все метки
         </button>
@@ -49,14 +49,14 @@ export default function MapCategoryFilters({
           type="button"
           onClick={onClearAll}
           disabled={noneActive}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40"
+          className="min-h-11 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-xs font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40 sm:min-h-8 sm:px-2 sm:py-0.5 sm:text-[10px]"
         >
           Скрыть все
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-slate transition hover:border-sky/30 hover:text-sky"
+          className="min-h-11 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-xs font-semibold text-slate transition hover:border-sky/30 hover:text-sky sm:min-h-8 sm:px-2 sm:py-0.5 sm:text-[10px]"
         >
           По умолчанию
         </button>
@@ -73,7 +73,9 @@ export default function MapCategoryFilters({
               onClick={() => onToggle(kind)}
               className={cn(
                 "inline-flex items-center gap-1 rounded-full border font-semibold transition",
-                compact ? "px-2 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
+                compact
+                  ? "min-h-11 px-3 py-1.5 text-xs sm:min-h-9 sm:px-2 sm:py-1 sm:text-[11px]"
+                  : "min-h-11 px-3 py-1.5 text-xs",
                 active
                   ? "border-transparent text-white shadow-sm"
                   : "border-gray-200/90 bg-white/90 text-charcoal hover:border-sky/30"
@@ -95,7 +97,9 @@ export default function MapCategoryFilters({
           onClick={() => onToggle("route")}
           className={cn(
             "inline-flex items-center gap-1 rounded-full border font-semibold transition",
-            compact ? "px-2 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
+            compact
+              ? "min-h-11 px-3 py-1.5 text-xs sm:min-h-9 sm:px-2 sm:py-1 sm:text-[11px]"
+              : "min-h-11 px-3 py-1.5 text-xs",
             activeKinds.includes("route")
               ? "border-transparent text-white shadow-sm"
               : "border-gray-200/90 bg-white/90 text-charcoal hover:border-sky/30"

@@ -4,7 +4,7 @@
  * - stops running Next.js dev servers for this repo
  * - clears .next to avoid mixed dev/production artifacts
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nextEnv from "@next/env";
@@ -25,6 +25,16 @@ const { loadEnvConfig } = nextEnv;
 loadEnvConfig(root, false);
 const isCiBuild = Boolean(process.env.VERCEL || process.env.CI);
 process.env.BUILD_TARGET = "production";
+const checkedOutSha = spawnSync("git", ["rev-parse", "HEAD"], {
+  cwd: root,
+  encoding: "utf8",
+}).stdout?.trim();
+process.env.NEXT_PUBLIC_RELEASE_GIT_SHA =
+  process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
+  process.env.GITHUB_SHA?.trim() ||
+  process.env.GIT_SHA?.trim() ||
+  checkedOutSha ||
+  "";
 if (!isCiBuild && !process.env.NEXT_DIST_DIR?.trim()) {
   process.env.NEXT_DIST_DIR = ".next-production";
 }

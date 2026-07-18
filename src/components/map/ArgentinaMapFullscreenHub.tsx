@@ -339,7 +339,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
       : null;
 
   return (
-    <div className="relative h-[calc(100dvh-var(--site-header-full-height,72px))] min-h-[520px] w-full">
+    <div className="relative h-[calc(100dvh-var(--site-header-full-height,72px)-var(--public-mobile-nav-height,0px))] min-h-[320px] w-full md:h-[calc(100dvh-var(--site-header-full-height,72px))] md:min-h-[520px]">
       <ArgentinaMapLibreCanvas
         objects={visibleObjects}
         routes={visibleRoutes}
@@ -353,8 +353,24 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         className="absolute inset-0"
       />
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 p-3 sm:p-4">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 p-2 md:p-4">
         <div className="pointer-events-auto mx-auto w-full max-w-6xl space-y-2">
+          <MapControlsPanel
+            objectCount={visibleItemCount}
+            searchDraft={searchDraft}
+            activeQuery={state.q}
+            onSearchChange={setSearchDraft}
+            onSearchSubmit={handleSearchSubmit}
+            onSearchClear={handleSearchClear}
+            suggestions={suggestions}
+            onSelectSuggestion={handleSelectSuggestion}
+            activeKinds={state.kinds}
+            onToggleKind={handleToggleKind}
+            onSelectAllKinds={handleSelectAllKinds}
+            onClearAllKinds={handleClearAllKinds}
+            onResetKinds={handleResetKinds}
+            loading={loading}
+          />
           {loadError ? (
             <InlineFeedback
               variant="error"
@@ -375,22 +391,6 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
               action={emptyFeedback.action}
             />
           ) : null}
-          <MapControlsPanel
-            objectCount={visibleItemCount}
-            searchDraft={searchDraft}
-            activeQuery={state.q}
-            onSearchChange={setSearchDraft}
-            onSearchSubmit={handleSearchSubmit}
-            onSearchClear={handleSearchClear}
-            suggestions={suggestions}
-            onSelectSuggestion={handleSelectSuggestion}
-            activeKinds={state.kinds}
-            onToggleKind={handleToggleKind}
-            onSelectAllKinds={handleSelectAllKinds}
-            onClearAllKinds={handleClearAllKinds}
-            onResetKinds={handleResetKinds}
-            loading={loading}
-          />
         </div>
       </div>
 
@@ -399,7 +399,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         layerAvailability={layerAvailability}
         onToggleThematic={handleToggleThematic}
         onClearThematic={handleClearThematic}
-        className="absolute left-2.5 top-[248px] z-20 sm:left-[9px]"
+        className="absolute left-2 top-[72px] z-20 [&>button]:!h-11 [&>button]:!w-11 md:left-[9px] md:top-[248px]"
       />
 
       <MapStyleLayersControl
@@ -407,7 +407,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         onThemeChange={handleThemeChange}
         overlays={state.overlays}
         onToggleOverlay={handleToggleOverlay}
-        className="absolute right-2.5 top-[248px] z-20 sm:right-[9px]"
+        className="absolute right-2 top-[72px] z-20 [&>button]:!h-11 [&>button]:!w-11 md:right-[9px] md:top-[248px]"
       />
 
       <MapObjectPopup
@@ -428,7 +428,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
           aria-controls="map-location-panel"
           aria-label="Моё местоположение"
           title="Моё местоположение"
-          className="flex min-h-11 items-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-charcoal shadow-md hover:bg-gray-50"
+          className="flex h-11 w-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal shadow-md hover:bg-gray-50 sm:w-auto sm:px-3"
         >
           <LocateFixed className="h-4 w-4" aria-hidden />
           <span className="hidden sm:inline">Моё местоположение</span>
@@ -443,7 +443,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
           aria-controls="map-accessible-list"
           aria-label="Показать объекты списком"
           title="Показать объекты списком"
-          className="flex min-h-11 items-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-charcoal shadow-md hover:bg-gray-50"
+          className="flex h-11 w-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal shadow-md hover:bg-gray-50 sm:w-auto sm:px-3"
         >
           <List className="h-4 w-4" aria-hidden />
           <span className="hidden sm:inline">Показать списком</span>
@@ -454,7 +454,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         <section
           id="map-location-panel"
           aria-label="Использование местоположения"
-          className="absolute bottom-28 right-3 z-30 w-[min(calc(100%-1.5rem),22rem)] rounded-md border border-gray-200 bg-white p-4 shadow-lg sm:right-4"
+          className="absolute inset-x-3 bottom-24 z-30 max-h-[calc(100%-5rem)] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-lg sm:inset-x-auto sm:bottom-28 sm:right-4 sm:w-[22rem] sm:rounded-md"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -468,7 +468,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
               type="button"
               onClick={() => setLocationPanelOpen(false)}
               aria-label="Закрыть"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate hover:bg-gray-100"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate hover:bg-gray-100"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>
@@ -507,7 +507,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         <section
           id="map-accessible-list"
           aria-label="Объекты карты списком"
-          className="absolute inset-x-0 bottom-0 z-30 max-h-[65dvh] overflow-y-auto border-t border-gray-200 bg-white shadow-xl sm:bottom-4 sm:left-auto sm:right-4 sm:w-[26rem] sm:rounded-md sm:border"
+          className="absolute inset-x-0 bottom-0 z-30 max-h-[calc(100%-4.5rem)] overflow-y-auto overscroll-contain rounded-t-3xl border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom,0px)] shadow-xl sm:bottom-4 sm:left-auto sm:right-4 sm:max-h-[65dvh] sm:w-[26rem] sm:rounded-md sm:border sm:pb-0"
         >
           <div className="sticky top-0 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 py-3">
             <div>
@@ -518,7 +518,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
               type="button"
               onClick={() => setListOpen(false)}
               aria-label="Закрыть список"
-              className="flex h-10 w-10 items-center justify-center rounded-md text-slate hover:bg-gray-100"
+              className="flex h-11 w-11 items-center justify-center rounded-xl text-slate hover:bg-gray-100"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>
