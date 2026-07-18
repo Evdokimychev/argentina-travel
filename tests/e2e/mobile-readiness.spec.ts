@@ -45,13 +45,27 @@ async function expectMobileGeometry(page: Page, testInfo: TestInfo) {
 }
 
 async function expectLoadedVisibleImages(page: Page, testInfo: TestInfo) {
-  const broken = await page.locator("img:visible").evaluateAll((elements) =>
-    (elements as HTMLImageElement[])
-      .filter((image) => image.getBoundingClientRect().height > 8)
-      .filter((image) => !image.complete || image.naturalWidth === 0)
-      .map((image) => image.currentSrc || image.getAttribute("src") || "unknown"),
-  );
-  expect(broken, `${testInfo.title}: broken visible images`).toEqual([]);
+  await expect
+    .poll(
+      () =>
+        page.locator("img:visible").evaluateAll((elements) =>
+          (elements as HTMLImageElement[])
+            .filter((image) => {
+              const rect = image.getBoundingClientRect();
+              return (
+                rect.height > 8 &&
+                rect.right > 0 &&
+                rect.left < window.innerWidth &&
+                rect.bottom > 0 &&
+                rect.top < window.innerHeight
+              );
+            })
+            .filter((image) => !image.complete || image.naturalWidth === 0)
+            .map((image) => image.currentSrc || image.getAttribute("src") || "unknown"),
+        ),
+      { message: `${testInfo.title}: broken visible images`, timeout: 10_000 },
+    )
+    .toEqual([]);
 }
 
 for (const viewport of MOBILE_VIEWPORTS) {

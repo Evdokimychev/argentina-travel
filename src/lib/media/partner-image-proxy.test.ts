@@ -14,9 +14,9 @@ describe("partner image proxy", () => {
     vi.unstubAllEnvs();
   });
 
-  it("uses direct trusted YouTravel delivery by default", () => {
+  it("uses the trusted YouTravel width transform by default", () => {
     expect(buildPartnerImageProxyUrl(youtravel, { width: 9999, quality: 12 })).toBe(
-      youtravel,
+      "https://cf.youtravel.me/tr:w-1800/public/images/tour/media/2024/08/16/example.JPG",
     );
   });
 

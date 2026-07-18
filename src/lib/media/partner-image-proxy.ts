@@ -20,13 +20,18 @@ export function buildPartnerImageProxyUrl(
 ): string {
   if (!isAllowedPartnerImageUrl(src)) return src;
 
-  // The partner CDN is safe for direct <img> delivery. Keep the server proxy
-  // as an explicit fallback only: some Vercel runtimes cannot initialize its
-  // native image transformer and would turn otherwise valid photos into 500s.
-  if (process.env.NEXT_PUBLIC_PARTNER_IMAGE_PROXY !== "true") return src;
-
   const width = Math.min(1800, Math.max(160, Math.round(options.width ?? 1440)));
   const quality = Math.min(90, Math.max(55, Math.round(options.quality ?? 80)));
+
+  // Prefer the partner CDN's own width transform. Original tour photos can be
+  // several megabytes, which is especially expensive on mobile. Keeping the
+  // transformation on the trusted source also avoids Vercel image/proxy quotas.
+  if (process.env.NEXT_PUBLIC_PARTNER_IMAGE_PROXY !== "true") {
+    const url = new URL(src);
+    url.pathname = `/tr:w-${width}${url.pathname}`;
+    return url.toString();
+  }
+
   const params = new URLSearchParams({ src, w: String(width), q: String(quality) });
   return `/api/media/partner-image?${params.toString()}`;
 }
