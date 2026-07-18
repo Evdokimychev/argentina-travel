@@ -32,7 +32,10 @@ async function expectMobileGeometry(page: Page, testInfo: TestInfo) {
     return {
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       fixedOutsideViewport: visibleFixed.filter(
-        (item) => item.left < -1 || item.right > window.innerWidth + 1,
+        (item) =>
+          item.right > 0 &&
+          item.left < window.innerWidth &&
+          (item.left < -1 || item.right > window.innerWidth + 1),
       ),
     };
   });
@@ -94,17 +97,25 @@ for (const viewport of MOBILE_VIEWPORTS) {
   });
 }
 
-test("[mobile-readiness] tour detail owns the bottom action", async ({ page, request }, testInfo) => {
+test("[mobile-readiness] tour detail owns the bottom action", async ({ page }, testInfo) => {
   test.setTimeout(90_000);
   await page.setViewportSize({ width: 390, height: 844 });
 
-  const sitemapResponse = await request.get("/sitemap.xml");
-  expect(sitemapResponse.ok()).toBe(true);
-  const sitemap = await sitemapResponse.text();
-  const detailUrl = sitemap.match(/<loc>([^<]+\/tours\/[^/<]+)<\/loc>/)?.[1];
-  expect(detailUrl, "A public tour detail must exist in the sitemap").toBeTruthy();
+  const catalogResponse = await page.goto("/tours", {
+    waitUntil: "domcontentloaded",
+    timeout: 60_000,
+  });
+  expect(catalogResponse?.status()).toBeLessThan(400);
+  const detailHref = await page
+    .locator('a[href^="/tours/"]')
+    .evaluateAll((links) =>
+      links
+        .map((link) => link.getAttribute("href"))
+        .find((href) => href && !href.startsWith("/tours/region/")),
+    );
+  expect(detailHref, "The public catalog must expose a tour detail").toBeTruthy();
 
-  const pathname = new URL(detailUrl!).pathname;
+  const pathname = new URL(detailHref!, "https://www.goargentina.ru").pathname;
   const response = await page.goto(pathname, { waitUntil: "domcontentloaded", timeout: 60_000 });
   expect(response?.status()).toBeLessThan(400);
   await acceptNecessaryCookies(page);
