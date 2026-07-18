@@ -15,6 +15,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveLighthouseStartTimeout } from "./lib/lighthouse-runtime.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -25,7 +26,9 @@ const isExternalBase =
 const BASE_URL = envBase ?? `http://127.0.0.1:${PORT}`;
 const evidenceScope =
   process.env.LIGHTHOUSE_EVIDENCE_SCOPE ?? (isExternalBase ? "production-baseline" : "candidate");
-const START_TIMEOUT_MS = 90_000;
+const START_TIMEOUT_MS = resolveLighthouseStartTimeout(
+  process.env.LIGHTHOUSE_START_TIMEOUT_MS,
+);
 
 export const LIGHTHOUSE_PHASE2_PATHS = [
   "/",
@@ -80,6 +83,7 @@ function runAudit() {
 
 let auditStatus = 1;
 let server = null;
+let serverLog = "";
 
 if (process.env.SKIP_LIGHTHOUSE === "1") {
   console.log("SKIP_LIGHTHOUSE=1 — skipping Lighthouse phase2 audit.");
@@ -98,13 +102,23 @@ try {
   } else {
     server = spawn("npm", ["run", "start", "--", "-p", String(PORT)], {
       cwd: root,
-      stdio: "ignore",
+      stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, PORT: String(PORT) },
+    });
+    server.stdout?.on("data", (chunk) => {
+      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
+    });
+    server.stderr?.on("data", (chunk) => {
+      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
     });
 
     const ready = await waitForServer(`${BASE_URL}/`);
     if (!ready) {
       console.error(`Server did not become ready at ${BASE_URL}/ within ${START_TIMEOUT_MS}ms`);
+      if (serverLog.trim()) {
+        console.error("--- next start log (tail) ---");
+        console.error(serverLog.trim());
+      }
       process.exit(1);
     }
 
