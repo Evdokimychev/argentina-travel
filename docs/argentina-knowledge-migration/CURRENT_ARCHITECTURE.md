@@ -1,23 +1,22 @@
 # Current Architecture
 
-## Argentina Knowledge
+## До миграции
+
+### Argentina Knowledge
 
 - Python 3.14, Telethon, requests, Trafilatura, feedparser, yt-dlp.
-- CLI без web UI, локальные JSON/Markdown/raw/media каталоги.
-- Один активный Telegram-источник `vista_argentina`; примеры website и YouTube выключены.
-- Инкрементальный Telegram checkpoint, редакционная оценка, fingerprint/near-duplicate, экспорт CMS-пакета.
-- Нет отдельной БД, очереди, scheduler, worker deployment, AI provider, ролей или audit log.
+- CLI и локальные JSON/Markdown/raw/media; web UI, DB, scheduler, roles и deployment отсутствуют.
+- Один реальный Telegram source `vista_argentina`; website и YouTube entries являются disabled placeholders.
+- Локальные processors: summary, location/category/tag extraction, quality scoring, fingerprint/shingle deduplication и CMS package export.
 
-Baseline 2026-07-19: 69 raw-файлов, 24 article JSON, 24 Markdown, 2 run reports.
+### Argentina Travel
 
-## Argentina Travel
+- Next.js 15 App Router, React 19, TypeScript, Supabase/Postgres, Prisma и Vercel.
+- Нативные admin shell, capability authorization, audit log, cron authorization, CMS revisions/search outbox и content governance.
+- Существующие partner imports и content sources не образовывали общего ingestion control plane.
 
-- Next.js 15 App Router, React 19, TypeScript, Supabase/Postgres, Prisma, Vercel.
-- Нативные admin shell, capability authorization, audit log, cron authorization и operational status.
-- CMS `content_documents`, revisions, search outbox, knowledge governance (`content_sources`, claims, facts, relations, media rights).
-- Существующие партнёрские sync jobs и place-ingestion adapters.
-- Baseline: TypeScript, lint и 1850 unit/integration tests проходят.
+## После кодовой миграции
 
-## Временная связка
+Argentina Travel содержит один operational source registry и pipeline. `ingestion_sources` отвечает за получение, а существующий `content_sources` остаётся реестром цитирования. Raw data хранится в закрытых таблицах и private bucket `ingestion-raw`; редактор создаёт новый CMS draft либо update proposal к существующей странице. Runtime-вызовов старого Collector нет.
 
-API-пакет `argentina-travel-knowledge-v2` существовал как переходный механизм. В целевой архитектуре он остаётся только форматом одноразового импорта/rollback и не является runtime-зависимостью.
+Тяжёлая работа ограничена небольшими batches в Vercel route; cron выбирает не более трёх due/retry sources за вызов. Unique partial index исключает два активных run одного source.

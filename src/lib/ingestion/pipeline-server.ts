@@ -9,7 +9,8 @@ import { contentSimilarity, evaluateEditorial } from "@/lib/ingestion/content-in
 import { INGESTION_EDITORIAL_POLICY } from "@/lib/ingestion/policy";
 import { getIngestionSource } from "@/lib/ingestion/repository-server";
 import { nextSourceRunAt } from "@/lib/ingestion/schedule";
-import { createCmsDocument } from "@/lib/cms/content-server";
+import { createCmsDocument, getCmsDocumentById } from "@/lib/cms/content-server";
+import type { CmsDocType, CmsDocumentBody } from "@/types/cms-content";
 
 type Db = SupabaseClient<Database>;
 type Counts = { fetched: number; rawStored: number; normalized: number; candidates: number; duplicates: number; rejected: number; failed: number };
@@ -72,6 +73,16 @@ async function activePrompt(db: Db) {
   return data ? { id: data.id, model: data.model, systemPrompt: data.system_prompt } : null;
 }
 
+async function findRelatedCmsDocument(db: Db, document: NormalizedIngestionDocument) {
+  const { data } = await db.from("content_documents").select("id,title,body").neq("status", "archived").order("updated_at", { ascending: false }).limit(150);
+  let best: { id: string; score: number } | null = null;
+  for (const row of data ?? []) {
+    const score = contentSimilarity(`${document.title} ${document.summary} ${document.body}`, `${row.title} ${JSON.stringify(row.body)}`);
+    if (score >= 0.3 && (!best || score > best.score)) best = { id: row.id, score };
+  }
+  return best;
+}
+
 export async function enqueueIngestionRun(db: Db, sourceId: string, input: { triggerKind: string; actorId: string | null; retryOfRunId?: string | null; idempotencyKey?: string }) {
   const source = await getIngestionSource(db, sourceId);
   if (!source) throw new Error("SOURCE_NOT_FOUND");
@@ -114,6 +125,7 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
         counts.rawStored += 1;
         const document = await step(db, { runId, name: "normalize", rawId: raw.id }, () => adapter.normalize(item, source));
         const duplicate = await step(db, { runId, name: "deduplicate", rawId: raw.id }, () => findDuplicate(db, document));
+        const relatedCms = duplicate ? null : await findRelatedCmsDocument(db, document);
         const { data: normalized, error: normalizedError } = await db.from("ingestion_normalized_documents").insert({ raw_document_id: raw.id, source_id: source.id, source_run_id: runId, title: document.title, body: document.body, summary: document.summary, language: document.language, category: document.category, province: document.province, city: document.city, tags: document.tags, fingerprint: document.fingerprint, metadata: document.metadata as Json }).select("id").single();
         if (normalizedError) throw normalizedError;
         counts.normalized += 1;
@@ -129,14 +141,15 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
         const analysis = ai?.analysis;
         const { data: candidate, error: candidateError } = await db.from("ingestion_candidates").insert({
           normalized_document_id: normalized.id, source_id: source.id, source_run_id: runId, status,
-          title: document.title, summary: analysis?.summary ?? document.summary, processed_content: document.body,
+          title: analysis?.translatedTitle || document.title, summary: analysis?.summary ?? document.summary, processed_content: analysis?.translatedBody || document.body,
           language: document.language, category: analysis?.category ?? document.category, province: analysis?.province ?? document.province,
           city: analysis?.city ?? document.city, tags: analysis?.tags ?? document.tags, quality_score: decision.score,
           freshness_score: analysis?.freshnessScore ?? decision.freshnessScore, trust_score: source.trustLevel,
-          decision_reasons: decision.reasons, flags: [...decision.flags, ...aiFlags, ...(analysis?.flags ?? [])],
+          decision_reasons: decision.reasons, flags: [...decision.flags, ...aiFlags, ...(analysis?.flags ?? []), ...(analysis?.translationApplied ? ["machine_translation_requires_review"] : [])],
           extracted_entities: (analysis?.entities ?? []) as Json, suggested_target: analysis?.suggestedTarget ?? "knowledge",
           ai_result: ai?.raw ?? null, ai_prompt_version: ai?.promptVersion, ai_model: ai?.model, ai_latency_ms: ai?.latencyMs,
           ai_input_tokens: ai?.inputTokens, ai_output_tokens: ai?.outputTokens,
+          related_cms_document_id: relatedCms?.id ?? null, related_content_score: relatedCms?.score ?? null,
         }).select("id").single();
         if (candidateError) throw candidateError;
         if (duplicate && duplicateCandidate?.data) await db.from("ingestion_duplicate_links").insert({ candidate_id: candidate.id, related_candidate_id: duplicateCandidate.data.id, relation_type: duplicate.relation, similarity: duplicate.similarity });
@@ -166,6 +179,32 @@ function slugForCandidate(title: string, id: string): string {
   return `${value || "argentina-material"}-${id.slice(0, 8)}`;
 }
 
+function draftSpec(candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], normalized: Database["public"]["Tables"]["ingestion_normalized_documents"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"]): { docType: CmsDocType; body: CmsDocumentBody } {
+  if (candidate.suggested_target === "source_only") throw new Error("SOURCE_ONLY_CANDIDATE_CANNOT_CREATE_DOCUMENT");
+  if (candidate.suggested_target === "place") return { docType: "place", body: { kind: "place", shortDescription: candidate.summary, fullDescription: candidate.processed_content } };
+  if (["city", "region"].includes(candidate.suggested_target)) return { docType: "destination", body: { kind: "destination", description: candidate.summary, intro: candidate.processed_content } };
+  if (["route", "map"].includes(candidate.suggested_target)) return { docType: "guide", body: { kind: "guide", description: candidate.summary, category: candidate.category ?? "travel", sections: [{ heading: candidate.title, paragraphs: candidate.processed_content.split(/\n\n+/).filter(Boolean) }] } };
+  const docType: CmsDocType = ["blog", "news", "event"].includes(candidate.suggested_target) ? "blog" : "knowledge";
+  return { docType, body: { kind: "blog", excerpt: candidate.summary, content: candidate.processed_content, sections: [{ title: candidate.title, body: candidate.processed_content }], collector: { schemaVersion: 2, identity: candidate.id, source: "argentina-travel-ingestion", sourceId: candidate.source_id, sourceItemId: raw.external_id, sourceUrl: raw.canonical_url ?? raw.source_url ?? undefined, fingerprint: normalized.fingerprint, qualityScore: candidate.quality_score, scoreBreakdown: {}, flags: candidate.flags, category: candidate.category ?? undefined, province: candidate.province ?? undefined, city: candidate.city ?? undefined, tags: candidate.tags, media: Array.isArray(raw.media) ? raw.media.flatMap((item) => typeof item === "string" ? [item] : item && typeof item === "object" && !Array.isArray(item) && typeof item.storagePath === "string" ? [item.storagePath] : []) : [], collectedAt: raw.fetched_at } } };
+}
+
+function proposedBody(current: Json, candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"]): Json | null {
+  if (!current || typeof current !== "object" || Array.isArray(current)) return null;
+  const body = { ...current } as Record<string, Json | undefined>; const addition = candidate.processed_content;
+  if (body.kind === "blog") { body.content = `${String(body.content ?? "")}\n\n${addition}`.trim(); const sections = Array.isArray(body.sections) ? body.sections : []; body.sections = [...sections, { title: candidate.title, body: addition }]; return body; }
+  if (body.kind === "guide") { const sections = Array.isArray(body.sections) ? body.sections : []; body.sections = [...sections, { heading: candidate.title, paragraphs: addition.split(/\n\n+/).filter(Boolean) }]; return body; }
+  if (body.kind === "place") { body.fullDescription = `${String(body.fullDescription ?? "")}\n\n${addition}`.trim(); return body; }
+  if (body.kind === "destination") { body.intro = `${String(body.intro ?? "")}\n\n${addition}`.trim(); return body; }
+  if (body.kind === "author_article") { const sections = Array.isArray(body.sections) ? body.sections : []; body.sections = [...sections, { title: candidate.title, body: addition }]; return body; }
+  return null;
+}
+
+async function linkCandidateCitation(db: Db, documentId: string, candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"]) {
+  const sourceUrl = raw.canonical_url ?? raw.source_url; if (!sourceUrl?.startsWith("https://")) return;
+  const { data: citation } = await db.from("content_sources").upsert({ title: raw.title ?? candidate.title, authority: "third_party", url: sourceUrl, source_type: raw.raw_format, jurisdiction: "Argentina", language: raw.language ?? candidate.language, published_at: raw.source_published_at, checked_at: raw.fetched_at, accessed_at: raw.fetched_at, content_hash: raw.content_hash, trust_level: candidate.trust_score >= 75 ? "high" : candidate.trust_score >= 50 ? "medium" : "low", status: "active", notes: `Imported by ingestion source ${candidate.source_id}` }, { onConflict: "url" }).select("id").single();
+  if (citation) await db.from("content_source_links").upsert({ content_document_id: documentId, source_id: citation.id, section_id: "source", purpose: "origin", is_primary: true }, { onConflict: "content_document_id,source_id,section_id" });
+}
+
 export async function publishIngestionCandidateAsDraft(db: Db, candidateId: string, actorId: string, ipAddress?: string | null) {
   const { data: candidate, error } = await db.from("ingestion_candidates").select("*").eq("id", candidateId).single();
   if (error) throw error;
@@ -174,18 +213,24 @@ export async function publishIngestionCandidateAsDraft(db: Db, candidateId: stri
   const { data: raw } = normalized ? await db.from("ingestion_raw_documents").select("*").eq("id", normalized.raw_document_id).single() : { data: null };
   if (!normalized || !raw) throw new Error("CANDIDATE_PROVENANCE_MISSING");
   await db.from("ingestion_candidates").update({ status: "publishing" }).eq("id", candidateId);
+  if (candidate.related_cms_document_id) {
+    const current = await getCmsDocumentById(db, candidate.related_cms_document_id); if (!current) throw new Error("RELATED_CMS_DOCUMENT_NOT_FOUND");
+    const body = proposedBody(current.body as Json, candidate); if (!body) throw new Error("RELATED_CMS_DOCUMENT_UPDATE_UNSUPPORTED");
+    const { error: proposalError } = await db.from("ingestion_update_proposals").upsert({ candidate_id: candidate.id, content_document_id: current.id, base_version: current.rowVersion, proposed_title: current.title, proposed_body: body, diff: { addedSourceCandidateId: candidate.id, addedCharacters: candidate.processed_content.length, sourceTitle: candidate.title }, status: "pending" }, { onConflict: "candidate_id" });
+    if (proposalError) throw proposalError;
+    await linkCandidateCitation(db, current.id, candidate, raw);
+    await db.from("ingestion_candidates").update({ status: "published", cms_document_id: current.id, publication_target: "cms_update_proposal", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: new Date().toISOString() }).eq("id", candidateId);
+    return current;
+  }
+  const spec = draftSpec(candidate, normalized, raw);
   const result = await createCmsDocument(db, {
-    docType: candidate.suggested_target === "blog" ? "blog" : "knowledge", slug: slugForCandidate(candidate.title, candidate.id),
+    docType: spec.docType, slug: slugForCandidate(candidate.title, candidate.id),
     title: candidate.title, status: "draft", actorId, ipAddress,
-    body: { kind: "blog", excerpt: candidate.summary, content: candidate.processed_content, sections: [{ title: candidate.title, body: candidate.processed_content }], collector: { schemaVersion: 2, identity: candidate.id, source: "argentina-travel-ingestion", sourceId: candidate.source_id, sourceItemId: raw.external_id, sourceUrl: raw.canonical_url ?? raw.source_url ?? undefined, fingerprint: normalized.fingerprint, qualityScore: candidate.quality_score, scoreBreakdown: {}, flags: candidate.flags, category: candidate.category ?? undefined, province: candidate.province ?? undefined, city: candidate.city ?? undefined, tags: candidate.tags, media: Array.isArray(raw.media) ? raw.media.filter((item): item is string => typeof item === "string") : [], collectedAt: raw.fetched_at } },
+    body: spec.body,
     seo: { description: candidate.summary.slice(0, 160), noIndex: true },
   });
   if ("error" in result) { await db.from("ingestion_candidates").update({ status: "approved", moderation_notes: result.error }).eq("id", candidateId); throw new Error(result.error); }
-  const sourceUrl = raw.canonical_url ?? raw.source_url;
-  if (sourceUrl?.startsWith("https://")) {
-    const { data: citation } = await db.from("content_sources").upsert({ title: raw.title ?? candidate.title, authority: "third_party", url: sourceUrl, source_type: raw.raw_format, jurisdiction: "Argentina", language: raw.language ?? candidate.language, published_at: raw.source_published_at, checked_at: raw.fetched_at, accessed_at: raw.fetched_at, content_hash: raw.content_hash, trust_level: candidate.trust_score >= 75 ? "high" : candidate.trust_score >= 50 ? "medium" : "low", status: "active", notes: `Imported by ingestion source ${candidate.source_id}` }, { onConflict: "url" }).select("id").single();
-    if (citation) await db.from("content_source_links").upsert({ content_document_id: result.document.id, source_id: citation.id, section_id: "source", purpose: "origin", is_primary: true }, { onConflict: "content_document_id,source_id,section_id" });
-  }
+  await linkCandidateCitation(db, result.document.id, candidate, raw);
   await db.from("ingestion_candidates").update({ status: "published", cms_document_id: result.document.id, publication_target: "cms_draft", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: new Date().toISOString() }).eq("id", candidateId);
   return result.document;
 }

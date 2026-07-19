@@ -74,6 +74,13 @@ export type ContentFactoryItemRow = {
   scheduled_at: string | null;
   published_at: string | null;
   metadata: Json;
+  campaign_id: string | null;
+  source_candidate_id: string | null;
+  review_status: string;
+  reviewer_id: string | null;
+  review_notes: string | null;
+  approved_at: string | null;
+  due_at: string | null;
   created_by: string | null;
   updated_by: string | null;
   created_at: string;
@@ -91,6 +98,12 @@ export type ContentFactoryVariantRow = {
   target: string | null;
   status: string;
   provider_options: Json;
+  headline: string;
+  alt_text: string;
+  hashtags: string[];
+  first_comment: string | null;
+  review_status: string;
+  generation_run_id: string | null;
   published_at: string | null;
   external_url: string | null;
   created_at: string;
@@ -113,6 +126,9 @@ export type ContentPublicationJobRow = {
   error_code: string | null;
   error_summary: string | null;
   response_metadata: Json;
+  provider_delivery_status: string | null;
+  delivered_at: string | null;
+  read_at: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -130,6 +146,11 @@ export type SocialInboxThreadRow = {
   unread_count: number;
   last_message_preview: string | null;
   last_message_at: string | null;
+  assigned_to: string | null;
+  contact_submission_id: string | null;
+  booking_id: string | null;
+  last_inbound_at: string | null;
+  last_outbound_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -146,6 +167,80 @@ export type SocialInboxMessageRow = {
   provider_timestamp: string | null;
   raw_event: Json;
   created_at: string;
+};
+
+export type ContentFactoryCampaignRow = {
+  id: string;
+  project_key: string;
+  name: string;
+  objective: string;
+  audience: string;
+  content_pillars: string[];
+  status: string;
+  starts_at: string | null;
+  ends_at: string | null;
+  target_metrics: Json;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentFactoryTemplateRow = {
+  id: string;
+  project_key: string;
+  name: string;
+  channel: string;
+  format: string;
+  content_pillar: string | null;
+  body_template: string;
+  default_options: Json;
+  active: boolean;
+  usage_count: number;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentFactoryGenerationRunRow = {
+  id: string;
+  project_key: string;
+  item_id: string | null;
+  source_document_id: string | null;
+  source_candidate_id: string | null;
+  provider: string;
+  model: string;
+  prompt_version: string;
+  status: string;
+  requested_channels: string[];
+  input_snapshot: Json;
+  output_snapshot: Json;
+  quality_report: Json;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  latency_ms: number | null;
+  error_code: string | null;
+  created_by: string | null;
+  created_at: string;
+  completed_at: string | null;
+};
+
+export type ContentFactoryMetricSnapshotRow = {
+  id: string;
+  variant_id: string;
+  provider: string;
+  captured_at: string;
+  impressions: number | null;
+  reach: number | null;
+  reactions: number | null;
+  comments: number | null;
+  shares: number | null;
+  saves: number | null;
+  clicks: number | null;
+  replies: number | null;
+  followers_delta: number | null;
+  raw_metrics: Json;
 };
 
 type ContentSourceRow = {
@@ -319,7 +414,14 @@ type IngestionCandidateRow = {
   ai_model: string | null; ai_latency_ms: number | null; ai_input_tokens: number | null;
   ai_output_tokens: number | null; assigned_to: string | null; moderation_notes: string | null;
   moderated_by: string | null; moderated_at: string | null; cms_document_id: string | null;
+  related_cms_document_id: string | null; related_content_score: number | null;
   publication_target: string | null; published_at: string | null; created_at: string; updated_at: string;
+};
+
+type IngestionUpdateProposalRow = {
+  id: string; candidate_id: string; content_document_id: string; base_version: number;
+  proposed_title: string; proposed_body: Json; diff: Json; status: string; reviewed_by: string | null;
+  reviewed_at: string | null; applied_revision_id: string | null; created_at: string; updated_at: string;
 };
 
 type IngestionDuplicateLinkRow = {
@@ -3351,6 +3453,26 @@ export interface Database {
         Partial<ContentFactoryItemRow> & Pick<ContentFactoryItemRow, "title">,
         Partial<ContentFactoryItemRow>
       >;
+      content_factory_campaigns: DatabaseTable<
+        ContentFactoryCampaignRow,
+        Partial<ContentFactoryCampaignRow> & Pick<ContentFactoryCampaignRow, "name">,
+        Partial<ContentFactoryCampaignRow>
+      >;
+      content_factory_templates: DatabaseTable<
+        ContentFactoryTemplateRow,
+        Partial<ContentFactoryTemplateRow> & Pick<ContentFactoryTemplateRow, "name" | "channel" | "format">,
+        Partial<ContentFactoryTemplateRow>
+      >;
+      content_factory_generation_runs: DatabaseTable<
+        ContentFactoryGenerationRunRow,
+        Partial<ContentFactoryGenerationRunRow> & Pick<ContentFactoryGenerationRunRow, "model" | "prompt_version">,
+        Partial<ContentFactoryGenerationRunRow>
+      >;
+      content_factory_metric_snapshots: DatabaseTable<
+        ContentFactoryMetricSnapshotRow,
+        Partial<ContentFactoryMetricSnapshotRow> & Pick<ContentFactoryMetricSnapshotRow, "variant_id" | "provider">,
+        Partial<ContentFactoryMetricSnapshotRow>
+      >;
       content_factory_variants: DatabaseTable<
         ContentFactoryVariantRow,
         Partial<ContentFactoryVariantRow> & Pick<ContentFactoryVariantRow, "item_id" | "channel">,
@@ -3410,6 +3532,11 @@ export interface Database {
         IngestionCandidateRow,
         Partial<IngestionCandidateRow> & Pick<IngestionCandidateRow, "normalized_document_id" | "source_id" | "source_run_id" | "title" | "processed_content">,
         Partial<IngestionCandidateRow>
+      >;
+      ingestion_update_proposals: DatabaseTable<
+        IngestionUpdateProposalRow,
+        Partial<IngestionUpdateProposalRow> & Pick<IngestionUpdateProposalRow, "candidate_id" | "content_document_id" | "base_version" | "proposed_title" | "proposed_body">,
+        Partial<IngestionUpdateProposalRow>
       >;
       ingestion_duplicate_links: DatabaseTable<
         IngestionDuplicateLinkRow,

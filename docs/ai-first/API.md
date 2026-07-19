@@ -43,6 +43,8 @@ Route handlers в `src/app/api/`. Основные группы:
 
 Meta-вебхуки контент-завода и инструкции подключения: [integrations/content-factory-social.md](../integrations/content-factory-social.md).
 
+`POST /api/admin/content-factory` с действием `generate_variants` подготавливает отдельные версии Telegram, Instagram и WhatsApp из проверенного CMS-документа, одобренного кандидата Argentina Knowledge или замысла владельца. Требуется право `content.edit`; ответ не содержит API-ключей и включает оценку качества и список фактов для ручной проверки.
+
 ## Environment variables (API keys)
 
 Server-only (never `NEXT_PUBLIC_*`):

@@ -2,21 +2,21 @@
 
 ## Цель
 
-Argentina Travel становится единственной рабочей системой для реестра источников, сбора, обработки, модерации и публикации. Старый Python-репозиторий используется только как зафиксированный источник миграции до завершения окна проверки.
+Argentina Travel становится единственной рабочей системой реестра источников, сбора, обработки, модерации и передачи материала в CMS. Python Collector после cutover не участвует в runtime и сохраняется только как read-only Git/filesystem archive на время rollback window.
 
-## Этапы
+## Выполненная реализация
 
-1. Зафиксировать baseline, инвентаризацию и контрольные суммы.
-2. Создать единую Supabase-модель ingestion с закрытым доступом и журналом этапов.
-3. Перенести адаптеры Telegram, HTML, RSS, sitemap, JSON API, YouTube и ручную загрузку.
-4. Перенести нормализацию, дедупликацию, географию и объяснимую редакционную оценку.
-5. Подключить необязательную версионированную AI-обработку без автопубликации.
-6. Добавить ручные и cron-запуски, блокировку параллельной обработки, retries и checkpoints.
-7. Добавить нативный раздел админки для источников, запусков, кандидатов и модерации.
-8. Выполнить идемпотентную миграцию данных Collector, dry run и сверку.
-9. Провести regression, E2E, production build и shadow verification.
-10. Перевести Collector в read-only, сохранить backup и закрыть runtime-интеграцию.
+1. Зафиксирован baseline двух репозиториев и полная инвентаризация.
+2. Создана закрытая Supabase-модель источников, запусков, raw/normalized документов, кандидатов, дублей, шагов, prompt-версий, update proposals и migration ledger.
+3. Реализованы адаптеры Telegram MTProto, HTML, RSS/Atom, sitemap, JSON API, YouTube и ручного текста.
+4. Реализованы SSRF/robots/path/timeout/size/rate-limit ограничения, private raw storage, checkpoints и блокировка параллельных запусков.
+5. Перенесены нормализация, география, категории, fingerprint, near-duplicate и объяснимая редакционная оценка.
+6. Добавлен версионированный OpenAI Responses API analysis с structured output, переводом, fallback-моделью, latency/token telemetry и запретом автопубликации.
+7. Добавлены retry/backoff/dead-letter, cancellation, stuck-job detection и Vercel cron.
+8. Добавлен верхнеуровневый раздел админки: состояние, источники, карточка/preview, запуски, модерация/дубли и prompts.
+9. Добавлены granular backend capabilities, audit events и интеграция с существующими CMS, source governance и search workflow.
+10. Подготовлен идемпотентный migration pipeline; dry-run сверил 3 источника, 22 raw objects, 2 содержательных кандидата и 20 media files.
 
-## Правило cutover
+## Оставшийся controlled cutover
 
-Старый runtime не отключается до двух успешных полных циклов новой системы и сверки checkpoint. Производственные действия без доступных credentials помечаются `BLOCKED EXTERNALLY`, но код, команды и проверки должны быть готовы заранее.
+Production-действия выполняются только после отдельного staging: применить миграцию, запустить перенос, провести минимум два shadow cycles, сверить checkpoints/counts/errors, создать backup и лишь затем назначить Argentina Travel primary. Текущий `.env.local` указывает на production project, поэтому запись из локальной задачи запрещена.

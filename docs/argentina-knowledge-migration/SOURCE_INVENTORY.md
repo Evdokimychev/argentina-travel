@@ -1,19 +1,18 @@
 # Source Inventory
 
-| ID | Тип | Endpoint | Статус | Языки | Лимит | Trust | Credentials | Checkpoint | Назначение |
-|---|---|---|---|---|---:|---:|---|---|---|
-| `telegram:vista_argentina` | Telegram public channel | `https://t.me/vista_argentina` | active | ru | 20 | 70 | `TELEGRAM_COLLECTOR_*` env reference | отсутствует в текущем state | moderation queue |
-| `website:argentina_web_example` | RSS/HTML example | example.com | disabled, placeholder | ru/es | 10 | 70 | none | none | configuration example only |
-| `youtube:argentina_youtube_example` | YouTube example | placeholder channel | disabled, placeholder | ru/es/en | 10 | 65 | optional YouTube API key ref | none | configuration example only |
+| Legacy ID | Тип | Endpoint | Legacy status | Язык | Limit | Trust | Новый credential ref | Новый status |
+|---|---|---|---|---|---:|---:|---|---|
+| `telegram:vista_argentina` | Telegram public channel | `https://t.me/vista_argentina` | active | ru | 20 | 70 | `ARGENTINA_TELEGRAM` | paused until connection test |
+| `website:argentina_web_example` | website/RSS placeholder | example.com | disabled | ru/es | 10 | 70 | none | paused/archive candidate |
+| `youtube:argentina_youtube_example` | YouTube placeholder | placeholder URL | disabled | ru/es/en | 10 | 65 | optional env ref | paused/archive candidate |
 
-## Накопленные данные
+## Legacy data inventory
 
-- 69 файлов raw storage.
-- 24 normalized article records.
-- 24 Markdown-файла.
-- 2 migration/run reports.
-- 2 кандидата со статусом `review` в последнем CMS-пакете.
+- 69 files under `raw/`, including duplicated legacy layouts and one HTML fixture.
+- 22 canonical Telegram article JSON files; only 2 have at least 120 characters of publishable text.
+- 20 canonical Telegram message JSON files.
+- 20 media files, 4,338,870 bytes total.
+- 24 Markdown files, including checks/test artifacts.
+- 2 migration/run reports and 2 review candidates in the latest knowledge package.
 
-## Правовые настройки
-
-Каждый новый источник обязан иметь `legal_notes`, trust level, allowed/blocked paths и режим атрибуции. Полный чужой текст сохраняется только как закрытый raw material; публикация возможна лишь после редакционной переработки и проверки источника.
+All 22 canonical raw objects are retained. Empty album parts are marked `skipped` in the ledger and do not become empty CMS candidates. Media is uploaded only to private `ingestion-raw`; publication rights must be reviewed separately.

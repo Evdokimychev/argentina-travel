@@ -92,6 +92,11 @@ function mapVariant(row: ContentFactoryVariantRow): ContentFactoryVariant | null
     target: row.target,
     status: row.status,
     providerOptions: objectValue(row.provider_options),
+    headline: row.headline,
+    altText: row.alt_text,
+    hashtags: row.hashtags,
+    firstComment: row.first_comment,
+    reviewStatus: row.review_status,
     publishedAt: row.published_at,
     externalUrl: row.external_url,
   };
@@ -108,6 +113,12 @@ function mapItem(row: ContentFactoryItemRow, variants: ContentFactoryVariant[]):
     goal: row.goal,
     status: row.status as ContentFactoryItemStatus,
     priority: row.priority,
+    campaignId: row.campaign_id,
+    sourceCandidateId: row.source_candidate_id,
+    reviewStatus: row.review_status,
+    reviewNotes: row.review_notes,
+    approvedAt: row.approved_at,
+    dueAt: row.due_at,
     scheduledAt: row.scheduled_at,
     publishedAt: row.published_at,
     updatedAt: row.updated_at,
@@ -117,7 +128,7 @@ function mapItem(row: ContentFactoryItemRow, variants: ContentFactoryVariant[]):
 
 export async function fetchContentFactorySnapshot(): Promise<ContentFactorySnapshot> {
   const supabase = createSupabaseAdminClient();
-  const [connectionResult, secretResult, itemResult, variantResult, jobResult, inboxResult] = await Promise.all([
+  const [connectionResult, secretResult, itemResult, variantResult, jobResult, inboxResult, campaignResult, templateResult, cmsResult, candidateResult, mediaResult, metricResult] = await Promise.all([
     supabase
       .from("social_channel_connections")
       .select("*")
@@ -142,9 +153,16 @@ export async function fetchContentFactorySnapshot(): Promise<ContentFactorySnaps
       .eq("project_key", CONTENT_FACTORY_PROJECT_KEY)
       .order("last_message_at", { ascending: false })
       .limit(50),
+    supabase.from("content_factory_campaigns").select("*").eq("project_key", CONTENT_FACTORY_PROJECT_KEY).order("created_at", { ascending: false }),
+    supabase.from("content_factory_templates").select("*").eq("project_key", CONTENT_FACTORY_PROJECT_KEY).eq("active", true).order("usage_count", { ascending: false }),
+    supabase.from("content_documents").select("id,title,status,updated_at,seo").neq("status", "archived").order("updated_at", { ascending: false }).limit(100),
+    supabase.from("ingestion_candidates").select("id,title,summary,status,quality_score,updated_at").in("status", ["approved", "published"]).order("updated_at", { ascending: false }).limit(100),
+    supabase.from("cms_media_assets").select("id,title,public_url,alt,rights_status,mime_type,width,height").eq("rights_status", "verified").order("created_at", { ascending: false }).limit(100),
+    supabase.from("content_factory_metric_snapshots").select("*").order("captured_at", { ascending: false }).limit(1000),
   ]);
   const error = connectionResult.error ?? secretResult.error ?? itemResult.error
-    ?? variantResult.error ?? jobResult.error ?? inboxResult.error;
+    ?? variantResult.error ?? jobResult.error ?? inboxResult.error ?? campaignResult.error
+    ?? templateResult.error ?? cmsResult.error ?? candidateResult.error ?? mediaResult.error ?? metricResult.error;
   if (error) throw error;
 
   const secretNames = new Map<string, string[]>();
@@ -194,7 +212,89 @@ export async function fetchContentFactorySnapshot(): Promise<ContentFactorySnaps
       unreadCount: row.unread_count,
       lastMessagePreview: row.last_message_preview,
       lastMessageAt: row.last_message_at,
+      assignedTo: row.assigned_to,
+      lastInboundAt: row.last_inbound_at,
+      lastOutboundAt: row.last_outbound_at,
     }];
+  });
+  const campaigns = (campaignResult.data ?? []).map((row) => ({
+    id: row.id,
+    name: row.name,
+    objective: row.objective,
+    audience: row.audience,
+    contentPillars: row.content_pillars,
+    status: row.status,
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+  }));
+  const templates = (templateResult.data ?? []).flatMap((row) => {
+    if (!isContentChannel(row.channel) || !isContentFactoryFormat(row.format)) return [];
+    return [{
+      id: row.id,
+      name: row.name,
+      channel: row.channel,
+      format: row.format,
+      contentPillar: row.content_pillar,
+      bodyTemplate: row.body_template,
+      defaultOptions: objectValue(row.default_options),
+      usageCount: row.usage_count,
+    }];
+  });
+  const knowledgeSources = [
+    ...(cmsResult.data ?? []).map((row) => ({
+      id: row.id,
+      kind: "cms" as const,
+      title: row.title,
+      summary: "Материал сайта Argentina Travel",
+      status: row.status,
+      qualityScore: null,
+      updatedAt: row.updated_at,
+    })),
+    ...(candidateResult.data ?? []).map((row) => ({
+      id: row.id,
+      kind: "candidate" as const,
+      title: row.title,
+      summary: row.summary,
+      status: row.status,
+      qualityScore: row.quality_score,
+      updatedAt: row.updated_at,
+    })),
+  ];
+  const mediaAssets = (mediaResult.data ?? []).map((row) => ({
+    id: row.id,
+    title: row.title,
+    publicUrl: row.public_url,
+    alt: row.alt,
+    rightsStatus: row.rights_status,
+    mimeType: row.mime_type,
+    width: row.width,
+    height: row.height,
+  }));
+  const metricsByVariant = new Map<string, typeof metricResult.data>();
+  for (const metric of metricResult.data ?? []) {
+    const current = metricsByVariant.get(metric.variant_id) ?? [];
+    current.push(metric);
+    metricsByVariant.set(metric.variant_id, current);
+  }
+  const analytics = (["telegram", "instagram", "whatsapp"] as const).map((channel) => {
+    const channelJobs = jobs.filter((job) => job.channel === channel);
+    const channelVariants = [...variantById.values()].filter((variant) => variant.channel === channel);
+    const latestMetrics = channelVariants.flatMap((variant) => (metricsByVariant.get(variant.id) ?? []).slice(0, 1));
+    const sum = (key: "reach" | "reactions" | "comments" | "shares" | "clicks" | "replies") => latestMetrics.reduce((total, row) => total + (row[key] ?? 0), 0);
+    const accepted = channelJobs.filter((job) => job.status === "succeeded").length;
+    return {
+      channel,
+      totalJobs: channelJobs.length,
+      accepted,
+      failed: channelJobs.filter((job) => job.status === "failed").length,
+      successRate: channelJobs.length ? Math.round((accepted / channelJobs.length) * 100) : 0,
+      reach: sum("reach"),
+      reactions: sum("reactions"),
+      comments: sum("comments"),
+      shares: sum("shares"),
+      clicks: sum("clicks"),
+      replies: sum("replies"),
+    };
   });
 
   return {
@@ -211,6 +311,17 @@ export async function fetchContentFactorySnapshot(): Promise<ContentFactorySnaps
     items,
     jobs,
     inbox,
+    campaigns,
+    templates,
+    knowledgeSources,
+    mediaAssets,
+    analytics,
+    readiness: {
+      aiConfigured: Boolean(process.env.OPENAI_API_KEY?.trim()),
+      verifiedChannels: connections.filter((connection) => connection.status === "verified").length,
+      verifiedMedia: mediaAssets.length,
+      pendingReviews: items.filter((item) => item.reviewStatus === "requested").length,
+    },
   };
 }
 
@@ -341,6 +452,10 @@ export async function createContentFactoryItem(
       target: variant.target?.trim() || null,
       status: "draft",
       provider_options: (variant.providerOptions ?? {}) as Json,
+      headline: variant.headline?.trim() ?? "",
+      alt_text: variant.altText?.trim() ?? "",
+      hashtags: (variant.hashtags ?? []).map((tag) => tag.trim()).filter(Boolean).slice(0, 30),
+      first_comment: variant.firstComment?.trim() || null,
     };
   });
   const supabase = createSupabaseAdminClient();
@@ -354,6 +469,9 @@ export async function createContentFactoryItem(
       audience: input.audience?.trim() || "Путешественники по Аргентине",
       content_pillar: input.contentPillar?.trim() || "Практическая Аргентина",
       goal: input.goal?.trim() || "Польза и доверие",
+      campaign_id: input.campaignId?.trim() || null,
+      source_candidate_id: input.sourceCandidateId?.trim() || null,
+      due_at: input.dueAt ? new Date(input.dueAt).toISOString() : null,
       status: "draft",
       created_by: actorUuid(actorId),
       updated_by: actorUuid(actorId),

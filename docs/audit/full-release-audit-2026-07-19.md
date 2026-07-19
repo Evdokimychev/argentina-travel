@@ -32,10 +32,10 @@
 - Созданы 8 governance-таблиц, 7 полей управления документом, 17 полей media-rights, 2 publication-gate trigger и 2 security-invoker функции.
 - Для всех 8 новых таблиц включён RLS. У `anon` нет DML; публичный `select` открыт только там, где он ограничен status/expiry policy. `authenticated` ограничен staff-policy, `service_role` имеет необходимые операции.
 - Функции publication gate недоступны `anon/authenticated`, доступны только `service_role`; feature flag `content_governance_v1` оставлен выключенным.
-- Миграции `20260719173719_argentina_knowledge_native_ingestion.sql` и `20260719174112_content_factory_control_plane.sql` применены к тому же production-проекту отдельными атомарными транзакциями.
-- Созданы 9 ingestion-таблиц и 7 таблиц Content Factory/social inbox. На всех 16 включён RLS, созданы 16 service-role policy; у `anon` и `authenticated` прямых table privileges нет. Две RPC для секретов каналов доступны только `service_role`, сами секреты хранятся в Supabase Vault.
-- Статический RLS-аудит не нашёл критичных проблем.
-- В проекте исторически отсутствует единый DB migration journal для уже существующей production-схемы. Скрипт правильно отказывается слепо replay-ить весь каталог. До следующей серии миграций следует отдельно зафиксировать доказанный production baseline, а не запускать все 99 файлов поверх живой базы.
+- Миграции `20260719173719_argentina_knowledge_native_ingestion.sql`, `20260719174112_content_factory_control_plane.sql`, `20260719182000_ingestion_update_proposals.sql` и `20260719182515_content_factory_operating_system.sql` применены к тому же production-проекту отдельными атомарными транзакциями. Финальный совместимый слой `20260719182600_explicit_data_api_grants.sql` повторно свёл Data API grants старой и новой схемы; опциональные legacy-таблицы обрабатываются только при наличии.
+- Созданы 10 ingestion-таблиц и 11 таблиц Content Factory/social inbox/operations. На всех 21 включён RLS и создана service-role policy; у `anon` и `authenticated` прямых table privileges нет. Две RPC для секретов каналов доступны только `service_role`, сами секреты хранятся в Supabase Vault. Локальная полная последовательность миграций также прошла в одной транзакции с откатом; несовместимость `bookings.id` (`text`, не `uuid`) была обнаружена и исправлена до production.
+- Статический RLS-аудит проверил 153 таблицы и не нашёл критичных проблем.
+- В проекте исторически отсутствует единый DB migration journal для уже существующей production-схемы. Скрипт правильно отказывается слепо replay-ить весь каталог. До следующей серии миграций следует отдельно зафиксировать доказанный production baseline, а не запускать все 102 файла поверх живой базы.
 
 ## Дизайн, UX, mobile и accessibility
 
@@ -60,8 +60,9 @@
 - Туристический профиль, кабинет организатора и админская платформа входят в общую production-сборку, а права разделены server-side проверками и RLS.
 - Governance API/типы/тесты синхронизированы с новой схемой; feature выключена до отдельного операционного включения редакцией.
 - Отдельный CMS cutover guard не позволяет включить неполный lane. Публичный блог теперь дополнительно не превращается в пустой экран при временном bulk-timeout.
-- В админку добавлен native ingestion: реестр источников, запуски и retry, очередь модерации, версии AI-промптов и передача одобренного материала в CMS только как редакционного draft. Источники выключены по умолчанию, секретные значения запрещены в `connection_config`, сетевые адаптеры защищены от SSRF.
-- Добавлен первый целостный срез Content Factory: один редакционный item, варианты для сайта/Telegram/Instagram/WhatsApp, durable publication queue, пятиминутный планировщик, защищённые подключения через Vault и подписанные Meta webhooks. Административные API используют существующие capabilities и audit log.
+- В админку добавлен native ingestion: реестр и детальная страница источника, ручная загрузка, запуски и retry, очередь модерации, предложения обновления существующих CMS-документов, версии AI-промптов и передача одобренного материала в CMS только как редакционного draft. Источники выключены по умолчанию, секретные значения запрещены в `connection_config`, сетевые адаптеры защищены от SSRF, лимитов и зависших запусков.
+- Dry-run переноса Collector выполнил 0 записей и нашёл 3 источника, 22 исходных документа, 2 пригодных кандидата, 20 пропущенных legacy-записей и 20 медиафайлов (4 338 870 байт).
+- Добавлен целостный срез Content Factory: редакционный item, кампании, варианты для сайта/Telegram/Instagram/WhatsApp, AI-подготовка через Responses API со строгой схемой и безопасным fallback, согласование, проверенная медиатека, durable publication queue, пятиминутный планировщик, защищённые подключения через Vault, подписанные Meta webhooks и модель метрик. Административные API используют существующие capabilities и audit log.
 - Проверка без администраторской сессии подтверждает, что новые закрытые маршруты перенаправляют на вход. Полное визуальное принятие внутренних экранов требует реальной staff-сессии.
 
 ## Интеграции и платежи
@@ -82,7 +83,7 @@
 
 - TypeScript: pass.
 - ESLint: pass с существующими warnings.
-- Unit/integration/contracts: 1872 теста прошли после интеграции CMS P0-fix, native ingestion и Content Factory.
+- Unit/integration/contracts: 1873 теста прошли после интеграции CMS P0-fix, native ingestion и Content Factory.
 - Production build: pass; 887 static/dynamic routes generated после восстановления blog catalog.
 - Release gate: static, contracts, content, security, commerce, production и journeys — pass на интегрированном кандидате; точный финальный commit повторно проверяется перед push.
 - Manual browser: desktop home, mobile home, mobile blog, mobile tour detail, auth modal — pass.
@@ -94,7 +95,7 @@
 3. Native Tripster External Orders и YouTravel booking API недоступны по текущим партнёрским правам; внешний checkout работает.
 4. GTM/GA4/Метрика/Search Console требуют действий владельца в Vercel и кабинетах провайдеров.
 5. Исторический migration journal production нужно формализовать отдельной baseline-процедурой до массового применения будущих миграций.
-6. Content Factory пока подтверждает принятие публикации внешним API, но не полную доставку/охват. Delivery-status webhooks, полноценный операторский inbox, CRM-воронка, AI-генерация и Instagram-карусели остаются следующими слоями.
+6. Content Factory пока подтверждает принятие публикации внешним API, но не полную доставку/охват. Delivery-status webhooks, полноценный операторский inbox, CRM-воронка и Instagram-карусели остаются следующими слоями; реальный AI-вызов требует `OPENAI_API_KEY`, без него работает безопасный черновой fallback.
 
 ## Решение о релизе
 

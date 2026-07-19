@@ -34,6 +34,8 @@ type Candidate = {
   decision_reasons: string[];
   suggested_target: string;
   cms_document_id: string | null;
+  related_cms_document_id: string | null;
+  related_content_score: number | null;
   ingestion_sources?: { name: string; source_type: string } | null;
   duplicates?: Duplicate[];
 };
@@ -147,6 +149,7 @@ export default function IngestionModerationView() {
                   <p className="mt-2 text-sm text-muted">
                     {[selected.province, selected.city, selected.category].filter(Boolean).join(" · ") || "География не определена"}
                   </p>
+                  {selected.related_cms_document_id ? <a href={`/admin/content/documents/${selected.related_cms_document_id}`} className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky">Связанная страница · сходство {Math.round((selected.related_content_score ?? 0) * 100)}%<ExternalLink className="h-3.5 w-3.5" /></a> : null}
                 </div>
 
                 {duplicate?.related ? (
@@ -174,7 +177,7 @@ export default function IngestionModerationView() {
                   {selected.status === "awaiting_moderation" ? (
                     <><Button disabled={busy} onClick={() => void act("approve")}><Check className="h-4 w-4" />Одобрить</Button><Button variant="outline" disabled={busy} onClick={() => void act("reject")}><X className="h-4 w-4" />Отклонить</Button></>
                   ) : null}
-                  {selected.status === "approved" || selected.status === "awaiting_moderation" ? <Button variant="outline" disabled={busy} onClick={() => void act("publish")}><FilePlus2 className="h-4 w-4" />Создать черновик в CMS</Button> : null}
+                  {selected.status === "approved" || selected.status === "awaiting_moderation" ? <Button variant="outline" disabled={busy} onClick={() => void act("publish")}><FilePlus2 className="h-4 w-4" />{selected.related_cms_document_id ? "Подготовить обновление" : "Создать черновик в CMS"}</Button> : null}
                   {selected.cms_document_id ? <a href={`/admin/content/documents/${selected.cms_document_id}`} className="inline-flex min-h-10 items-center gap-2 px-3 text-sm font-medium text-sky">Открыть в CMS<ExternalLink className="h-4 w-4" /></a> : null}
                 </div>
               </div>

@@ -16,6 +16,7 @@ import {
   type ContentItemDraftInput,
 } from "@/lib/content-factory/types";
 import { ContentProviderError } from "@/lib/content-factory/provider-clients";
+import { generateContentVariants } from "@/lib/content-factory/ai-generator";
 import type { Json } from "@/types/database";
 
 export const dynamic = "force-dynamic";
@@ -74,6 +75,12 @@ function parseItem(body: Record<string, unknown>): ContentItemDraftInput {
       linkUrl: stringValue(variant.linkUrl, 2000),
       target: stringValue(variant.target, 500),
       providerOptions: jsonRecord(variant.providerOptions),
+      headline: stringValue(variant.headline, 240),
+      altText: stringValue(variant.altText, 1000),
+      hashtags: Array.isArray(variant.hashtags)
+        ? variant.hashtags.flatMap((value) => typeof value === "string" ? [value.slice(0, 120)] : []).slice(0, 30)
+        : [],
+      firstComment: stringValue(variant.firstComment, 2200),
     };
   });
   return {
@@ -83,6 +90,9 @@ function parseItem(body: Record<string, unknown>): ContentItemDraftInput {
     contentPillar: stringValue(body.contentPillar, 240),
     goal: stringValue(body.goal, 240),
     sourceDocumentId: stringValue(body.sourceDocumentId, 500),
+    sourceCandidateId: stringValue(body.sourceCandidateId, 100),
+    campaignId: stringValue(body.campaignId, 100),
+    dueAt: stringValue(body.dueAt, 100),
     variants,
   };
 }
@@ -167,6 +177,37 @@ export async function POST(request: Request) {
     }
   }
 
+  if (action === "generate_variants") {
+    const auth = await authorizeAdminRequest(request, "content.edit");
+    if (!auth.ok) return auth.response;
+    try {
+      const rawChannels = Array.isArray(body.channels) ? body.channels : [];
+      const channels = rawChannels.flatMap((value) => isContentChannel(value) ? [value] : []);
+      const result = await generateContentVariants({
+        title: stringValue(body.title, 240),
+        brief: stringValue(body.brief, 5000),
+        audience: stringValue(body.audience, 240) || "Путешественники по Аргентине",
+        contentPillar: stringValue(body.contentPillar, 240) || "Практическая Аргентина",
+        goal: stringValue(body.goal, 240) || "Польза и доверие",
+        channels,
+        sourceDocumentId: stringValue(body.sourceDocumentId, 500) || undefined,
+        sourceCandidateId: stringValue(body.sourceCandidateId, 100) || undefined,
+        actorId: auth.actorId,
+      });
+      await writeAdminAuditLog({
+        actorUserId: auth.actorId === "service-role" ? null : auth.actorId,
+        action: "content_factory.variants_generated",
+        entityType: "content_factory_generation_run",
+        entityId: result.runId ?? "fallback",
+        payload: { mode: result.mode, model: result.model, channels, qualityScore: result.quality.score },
+        ipAddress: clientIpFromRequest(request),
+      });
+      return NextResponse.json({ ok: true, generation: result });
+    } catch (error) {
+      return actionError(error);
+    }
+  }
+
   if (action === "schedule_item" || action === "publish_now") {
     const auth = await authorizeAdminRequest(request, "content.publish");
     if (!auth.ok) return auth.response;
@@ -201,4 +242,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ error: "Неизвестное действие." }, { status: 400 });
 }
-

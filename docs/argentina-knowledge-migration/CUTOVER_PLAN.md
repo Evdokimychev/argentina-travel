@@ -1,13 +1,35 @@
 # Cutover Plan
 
-1. Apply schema in staging and run migration dry-run.
-2. Migrate sources, raw documents, candidates and checkpoints.
-3. Run new ingestion in shadow mode with publication disabled.
-4. Compare two full cycles: counts, failures, duplicates, latency and checkpoints.
-5. Freeze source editing and scheduler in old Collector.
-6. Enable Argentina Travel scheduler as sole ingestion owner.
-7. Observe two more cycles and reconcile every discrepancy.
-8. Revoke temporary M2M key, keep rollback credentials during the retention window.
-9. Mark old repository read-only and archive its backup.
+## Preconditions
 
-Cutover is not authorized by code completion alone; it requires production evidence and an identified operator.
+- Verified staging project and environment fingerprint distinct from production.
+- Database backup plus restore rehearsal.
+- Migration applied and migration script run twice successfully.
+- Telegram credential reference tested in the new admin; OpenAI optional path tested.
+- Named operator, rollback owner and observation window.
+
+## Phase 1: shadow
+
+1. Keep migrated sources paused, test each connection, then enable only in staging/shadow.
+2. Run at least two complete source cycles with CMS publication disabled by process.
+3. Compare source counts, external IDs, raw hashes, duplicates, failures, latency and checkpoints with the Collector.
+4. Acceptance: no unexplained misses/duplicates, no stuck runs, checkpoint delta zero, all errors categorized.
+
+## Phase 2: old system read-only
+
+1. Create final Collector filesystem/Git backup and checksum manifest.
+2. Prevent new source/config changes in Collector.
+3. Stop its manual/operator collection window only after the new scheduler is ready.
+
+## Phase 3: Argentina Travel primary
+
+1. Apply `20260719173719_argentina_knowledge_native_ingestion.sql` through the canonical migration journal.
+2. Run `npm run kb:migrate-collector`, verify counts, then test/enable real sources.
+3. Confirm `/api/cron/ingestion` heartbeat and no old process is collecting.
+4. Observe two additional cycles before decommission approval.
+
+## Rollback trigger and procedure
+
+Trigger on unexplained data loss, checkpoint regression, repeated credential failure, duplicate storm or inability to moderate. Disable new sources first; record current checkpoints and runs; stop new cron; re-enable exactly one old Collector operator path from the backup checkpoint; never run both schedulers. New raw rows remain retained. CMS drafts/update proposals created after cutover are reviewed individually and are not deleted automatically.
+
+Recommended rollback window: 14 days after primary cutover. Owner: production operator designated in the change record.

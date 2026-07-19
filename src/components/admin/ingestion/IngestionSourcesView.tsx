@@ -61,7 +61,7 @@ export default function IngestionSourcesView() {
   }
 
   async function create() {
-    const connectionConfig = type === "telegram" ? { channel: address, telegramMode: "mtproto" } : type === "youtube" ? (address.startsWith("http") ? { feedUrl: address } : { channelId: address }) : type === "rss" ? { feedUrl: address } : type === "sitemap" ? { sitemapUrl: address } : { url: address };
+    const connectionConfig = type === "manual" ? {} : type === "telegram" ? { channel: address, telegramMode: "mtproto" } : type === "youtube" ? (address.startsWith("http") ? { feedUrl: address } : { channelId: address }) : type === "rss" ? { feedUrl: address } : type === "sitemap" ? { sitemapUrl: address } : { url: address };
     const ok = await action("/api/admin/ingestion/sources", { method: "POST", body: JSON.stringify({ name, sourceType: type, connectionConfig, credentialRef: credentialRef || null, scheduleKind: "cron", scheduleExpression: schedule, enabled: false, status: "draft", language: "ru", region: "Argentina", categories: ["travel"] }) }, "create");
     if (ok) { setOpen(false); setName(""); setAddress(""); }
   }
@@ -80,11 +80,11 @@ export default function IngestionSourcesView() {
             <div className="grid gap-4 md:grid-cols-2">
               <label className="space-y-1 text-sm font-medium">Название<Input value={name} onChange={(event) => setName(event.target.value)} /></label>
               <label className="space-y-1 text-sm font-medium">Тип<NativeSelect value={type} onChange={(event) => setType(event.target.value as IngestionSourceType)}>{Object.entries(INGESTION_SOURCE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</NativeSelect></label>
-              <label className="space-y-1 text-sm font-medium">{type === "telegram" ? "Канал" : type === "youtube" ? "ID канала или адрес ленты" : "Адрес"}<Input value={address} onChange={(event) => setAddress(event.target.value)} placeholder={type === "telegram" ? "@vista_argentina" : "https://…"} /></label>
+              {type !== "manual" ? <label className="space-y-1 text-sm font-medium">{type === "telegram" ? "Канал" : type === "youtube" ? "ID канала или адрес ленты" : "Адрес"}<Input value={address} onChange={(event) => setAddress(event.target.value)} placeholder={type === "telegram" ? "@vista_argentina" : "https://…"} /></label> : <div className="text-sm text-muted">Текст добавляется в карточке источника после его сохранения.</div>}
               <label className="space-y-1 text-sm font-medium">Защищённое подключение<Input value={credentialRef} onChange={(event) => setCredentialRef(event.target.value.toUpperCase())} placeholder="ARGENTINA_TELEGRAM" /><span className="block text-xs font-normal text-muted">Только имя набора секретов, без токенов и паролей</span></label>
               <label className="space-y-1 text-sm font-medium">Расписание<Input value={schedule} onChange={(event) => setSchedule(event.target.value)} /></label>
             </div>
-            <div className="flex gap-2"><Button disabled={busy === "create" || !name.trim() || !address.trim()} onClick={() => void create()}>Сохранить выключенным</Button><Button variant="outline" onClick={() => setOpen(false)}>Отмена</Button></div>
+            <div className="flex gap-2"><Button disabled={busy === "create" || !name.trim() || (type !== "manual" && !address.trim())} onClick={() => void create()}>Сохранить выключенным</Button><Button variant="outline" onClick={() => setOpen(false)}>Отмена</Button></div>
           </section>
         ) : null}
 

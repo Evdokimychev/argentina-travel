@@ -56,6 +56,11 @@ export type ContentFactoryVariant = {
   target: string | null;
   status: string;
   providerOptions: Record<string, Json | undefined>;
+  headline: string;
+  altText: string;
+  hashtags: string[];
+  firstComment: string | null;
+  reviewStatus: string;
   publishedAt: string | null;
   externalUrl: string | null;
 };
@@ -70,6 +75,12 @@ export type ContentFactoryItem = {
   goal: string;
   status: ContentFactoryItemStatus;
   priority: number;
+  campaignId: string | null;
+  sourceCandidateId: string | null;
+  reviewStatus: string;
+  reviewNotes: string | null;
+  approvedAt: string | null;
+  dueAt: string | null;
   scheduledAt: string | null;
   publishedAt: string | null;
   updatedAt: string;
@@ -96,6 +107,66 @@ export type SocialInboxThreadSummary = {
   unreadCount: number;
   lastMessagePreview: string | null;
   lastMessageAt: string | null;
+  assignedTo: string | null;
+  lastInboundAt: string | null;
+  lastOutboundAt: string | null;
+};
+
+export type ContentFactoryCampaign = {
+  id: string;
+  name: string;
+  objective: string;
+  audience: string;
+  contentPillars: string[];
+  status: string;
+  startsAt: string | null;
+  endsAt: string | null;
+};
+
+export type ContentFactoryTemplate = {
+  id: string;
+  name: string;
+  channel: ContentChannel;
+  format: ContentFactoryFormat;
+  contentPillar: string | null;
+  bodyTemplate: string;
+  defaultOptions: Record<string, Json | undefined>;
+  usageCount: number;
+};
+
+export type ContentFactoryKnowledgeSource = {
+  id: string;
+  kind: "cms" | "candidate";
+  title: string;
+  summary: string;
+  status: string;
+  qualityScore: number | null;
+  updatedAt: string;
+};
+
+export type ContentFactoryMediaAsset = {
+  id: string;
+  title: string;
+  publicUrl: string;
+  alt: string;
+  rightsStatus: string;
+  mimeType: string | null;
+  width: number | null;
+  height: number | null;
+};
+
+export type ChannelAnalytics = {
+  channel: ContentChannel;
+  totalJobs: number;
+  accepted: number;
+  failed: number;
+  successRate: number;
+  reach: number;
+  reactions: number;
+  comments: number;
+  shares: number;
+  clicks: number;
+  replies: number;
 };
 
 export type ContentFactorySnapshot = {
@@ -112,6 +183,17 @@ export type ContentFactorySnapshot = {
   items: ContentFactoryItem[];
   jobs: PublicationJobSummary[];
   inbox: SocialInboxThreadSummary[];
+  campaigns: ContentFactoryCampaign[];
+  templates: ContentFactoryTemplate[];
+  knowledgeSources: ContentFactoryKnowledgeSource[];
+  mediaAssets: ContentFactoryMediaAsset[];
+  analytics: ChannelAnalytics[];
+  readiness: {
+    aiConfigured: boolean;
+    verifiedChannels: number;
+    verifiedMedia: number;
+    pendingReviews: number;
+  };
 };
 
 export type ConnectionSetupInput = {
@@ -131,6 +213,10 @@ export type VariantDraftInput = {
   linkUrl?: string;
   target?: string;
   providerOptions?: Record<string, Json | undefined>;
+  headline?: string;
+  altText?: string;
+  hashtags?: string[];
+  firstComment?: string;
 };
 
 export type ContentItemDraftInput = {
@@ -140,7 +226,34 @@ export type ContentItemDraftInput = {
   contentPillar?: string;
   goal?: string;
   sourceDocumentId?: string;
+  sourceCandidateId?: string;
+  campaignId?: string;
+  dueAt?: string;
   variants: VariantDraftInput[];
+};
+
+export type GeneratedContentVariant = {
+  channel: ContentChannel;
+  format: ContentFactoryFormat;
+  headline: string;
+  body: string;
+  hashtags: string[];
+  altText: string;
+  firstComment: string | null;
+  mediaBrief: string;
+  callToAction: string;
+};
+
+export type ContentGenerationResult = {
+  runId: string | null;
+  mode: "ai" | "fallback";
+  model: string;
+  variants: GeneratedContentVariant[];
+  quality: {
+    score: number;
+    warnings: string[];
+    factsNeedReview: string[];
+  };
 };
 
 export function isContentChannel(value: unknown): value is ContentChannel {
@@ -150,4 +263,3 @@ export function isContentChannel(value: unknown): value is ContentChannel {
 export function isContentFactoryFormat(value: unknown): value is ContentFactoryFormat {
   return typeof value === "string" && CONTENT_FORMATS.includes(value as ContentFactoryFormat);
 }
-

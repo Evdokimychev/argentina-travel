@@ -246,6 +246,10 @@ export default function ContentFactoryView() {
   const [audience, setAudience] = useState("Путешественники по Аргентине");
   const [pillar, setPillar] = useState("Практическая Аргентина");
   const [goal, setGoal] = useState("Польза и доверие");
+  const [sourceRef, setSourceRef] = useState("");
+  const [campaignId, setCampaignId] = useState("");
+  const [dueAt, setDueAt] = useState("");
+  const [generationBusy, setGenerationBusy] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState<ContentChannel[]>(["telegram", "instagram"]);
   const [channelBodies, setChannelBodies] = useState<Record<ContentChannel, string>>({ telegram: "", instagram: "", whatsapp: "" });
   const [channelFormats, setChannelFormats] = useState<Record<ContentChannel, ContentFactoryFormat>>({ telegram: "post", instagram: "post", whatsapp: "message" });
@@ -284,6 +288,7 @@ export default function ContentFactoryView() {
   }
 
   async function createDraft() {
+    const [sourceKind, sourceId] = sourceRef.split(":", 2);
     const ok = await runAction({
       action: "create_item",
       title,
@@ -291,6 +296,10 @@ export default function ContentFactoryView() {
       audience,
       contentPillar: pillar,
       goal,
+      sourceDocumentId: sourceKind === "cms" ? sourceId : "",
+      sourceCandidateId: sourceKind === "candidate" ? sourceId : "",
+      campaignId,
+      dueAt: dueAt ? new Date(dueAt).toISOString() : "",
       variants: selectedChannels.map((channel) => ({
         channel,
         format: channelFormats[channel],
@@ -300,6 +309,9 @@ export default function ContentFactoryView() {
         providerOptions: channel === "whatsapp" && channelFormats.whatsapp === "template"
           ? { templateName: whatsappTemplateName, languageCode: whatsappTemplateLanguage }
           : {},
+        headline: title,
+        altText: "",
+        hashtags: [],
       })),
     });
     if (ok) {
@@ -308,6 +320,56 @@ export default function ContentFactoryView() {
       setChannelBodies({ telegram: "", instagram: "", whatsapp: "" });
       setMediaUrls({ telegram: "", instagram: "", whatsapp: "" });
       setMode("overview");
+    }
+  }
+
+  async function generateDrafts() {
+    const [sourceKind, sourceId] = sourceRef.split(":", 2);
+    setGenerationBusy(true);
+    setFeedback(null);
+    try {
+      const response = await fetch("/api/admin/content-factory", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "generate_variants",
+          title,
+          brief,
+          audience,
+          contentPillar: pillar,
+          goal,
+          channels: selectedChannels,
+          sourceDocumentId: sourceKind === "cms" ? sourceId : "",
+          sourceCandidateId: sourceKind === "candidate" ? sourceId : "",
+        }),
+      });
+      const result = await response.json() as {
+        error?: string;
+        generation?: {
+          mode: "ai" | "fallback";
+          model: string;
+          variants: Array<{ channel: ContentChannel; format: ContentFactoryFormat; body: string; hashtags: string[]; altText: string }>;
+          quality: { score: number; warnings: string[]; factsNeedReview: string[] };
+        };
+      };
+      if (!response.ok || !result.generation) throw new Error(result.error ?? "Не удалось подготовить версии.");
+      const nextBodies = { ...channelBodies };
+      const nextFormats = { ...channelFormats };
+      for (const variant of result.generation.variants) {
+        nextBodies[variant.channel] = variant.body;
+        nextFormats[variant.channel] = variant.format;
+      }
+      setChannelBodies(nextBodies);
+      setChannelFormats(nextFormats);
+      const reviewCount = result.generation.quality.factsNeedReview.length;
+      setFeedback({
+        variant: "success",
+        message: `${result.generation.mode === "ai" ? "AI-версии" : "Безопасные черновики"} подготовлены. Оценка ${result.generation.quality.score}/100${reviewCount ? ` · фактов на проверку: ${reviewCount}` : ""}.`,
+      });
+    } catch (generationError) {
+      setFeedback({ variant: "error", message: generationError instanceof Error ? generationError.message : "Не удалось подготовить версии." });
+    } finally {
+      setGenerationBusy(false);
     }
   }
 
@@ -494,6 +556,30 @@ export default function ContentFactoryView() {
                 Цель
                 <Input value={goal} onChange={(event) => setGoal(event.target.value)} />
               </label>
+              <label className="block space-y-1.5 text-sm font-medium text-foreground">
+                Проверенный источник
+                <NativeSelect value={sourceRef} onChange={(event) => setSourceRef(event.target.value)}>
+                  <option value="">Замысел владельца — факты проверить вручную</option>
+                  {(factory?.knowledgeSources ?? []).map((source) => (
+                    <option key={`${source.kind}:${source.id}`} value={`${source.kind}:${source.id}`}>
+                      {source.kind === "cms" ? "Сайт" : "Argentina Knowledge"}: {source.title}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </label>
+              <label className="block space-y-1.5 text-sm font-medium text-foreground">
+                Кампания
+                <NativeSelect value={campaignId} onChange={(event) => setCampaignId(event.target.value)}>
+                  <option value="">Без кампании</option>
+                  {(factory?.campaigns ?? []).filter((campaign) => campaign.status !== "archived").map((campaign) => (
+                    <option key={campaign.id} value={campaign.id}>{campaign.name}</option>
+                  ))}
+                </NativeSelect>
+              </label>
+              <label className="block space-y-1.5 text-sm font-medium text-foreground">
+                Редакционный срок
+                <Input type="datetime-local" value={dueAt} onChange={(event) => setDueAt(event.target.value)} />
+              </label>
             </div>
             <label className="block space-y-1.5 text-sm font-medium text-foreground">
               Краткий замысел и польза
@@ -532,7 +618,7 @@ export default function ContentFactoryView() {
                   {channel !== "whatsapp" ? (
                     <label className="block space-y-1.5 text-sm font-medium text-foreground">
                       Публичная HTTPS-ссылка на изображение или видео
-                      <Input value={mediaUrls[channel]} onChange={(event) => setMediaUrls((current) => ({ ...current, [channel]: event.target.value }))} placeholder="https://…" />
+                      <Input list="content-factory-media" value={mediaUrls[channel]} onChange={(event) => setMediaUrls((current) => ({ ...current, [channel]: event.target.value }))} placeholder="https://…" />
                     </label>
                   ) : (
                     <div className="space-y-3">
@@ -559,7 +645,14 @@ export default function ContentFactoryView() {
                 </article>
               ))}
             </div>
+            <datalist id="content-factory-media">
+              {(factory?.mediaAssets ?? []).map((asset) => <option key={asset.id} value={asset.publicUrl}>{asset.title}</option>)}
+            </datalist>
             <div className="flex flex-wrap gap-2">
+              <Button variant="outline" disabled={generationBusy || busy || !title.trim() || !brief.trim() || selectedChannels.length === 0} onClick={() => void generateDrafts()}>
+                <Sparkles className="h-4 w-4" aria-hidden />
+                {generationBusy ? "Готовим версии…" : "Подготовить версии с AI"}
+              </Button>
               <Button disabled={busy || !title.trim() || selectedChannels.length === 0 || selectedChannels.some((channel) => !channelBodies[channel].trim())} onClick={() => void createDraft()}>
                 Сохранить черновик
               </Button>

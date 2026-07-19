@@ -1,21 +1,35 @@
 # Feature Matrix
 
-| Возможность | Argentina Knowledge | Argentina Travel | Дублирование | Лучший вариант | Итоговая реализация | Статус переноса |
-|---|---|---|---|---|---|---|
-| Источники | JSON config | content governance | частичное | Travel DB/admin | ingestion source registry | IN PROGRESS |
-| Telegram | Telethon MTProto | нет ingestion | нет | адаптированный MTProto/Bot adapter | server adapter + env secret ref | TODO |
-| HTML/RSS | Trafilatura/feedparser | отдельные scripts | частичное | общий TS adapter contract | HTTP/RSS/sitemap adapters | TODO |
-| YouTube | yt-dlp/transcript | нет | нет | API/feed adapter | YouTube adapter | TODO |
-| Ручной запуск | CLI | admin/cron patterns | да | Travel admin API | source run endpoint | TODO |
-| Расписания | отсутствуют | Vercel cron | нет | Travel cron | due-source dispatcher | TODO |
-| Checkpoint | JSON | DB patterns | нет | Supabase | per-source JSON checkpoint | TODO |
-| Run log/errors/retry | JSON report | ops/audit | частичное | Supabase + ops | runs and processing steps | TODO |
-| Нормализация | Python Article | CMS bodies | частичное | shared TS document model | normalized documents | TODO |
-| Дедупликация | fingerprint/shingles | content inventory tools | частичное | canonical/hash + similarity | duplicate relations, no auto-delete | TODO |
-| География/категории | rule dictionaries | KB/place taxonomy | частичное | Travel taxonomy | deterministic classifier | TODO |
-| AI-анализ | отсутствует | OpenAI integrations | нет | central ingestion prompt | optional structured analysis | TODO |
-| Модерация | statuses/reports | CMS/admin | частичное | Travel admin | candidate queue | TODO |
-| Публикация | export only | CMS workflow/search | нет | Travel CMS | draft/knowledge/blog targets | TODO |
-| Аудит/права | отсутствуют | capabilities/audit | нет | Travel authorization | granular ingestion capabilities | TODO |
-| Monitoring | reports only | health/cron ops | частичное | Travel ops | ingestion health summary | TODO |
-| Миграция | Markdown/JSON | importer | временное | idempotent migration ledger | one-time migration script | TODO |
+| Возможность | Knowledge | Travel до | Итоговая реализация | Статус |
+|---|---|---|---|---|
+| Source registry | JSON | evidence sources | operational `ingestion_sources` + admin | DONE |
+| Telegram | Telethon | отсутствовал | Teleproto MTProto, albums/media/checkpoint | DONE |
+| HTML | requests/Trafilatura | scripts | Cheerio adapter + selectors/canonical | DONE |
+| RSS/Atom | feedparser | частично | typed XML adapter | DONE |
+| Sitemap | prototype | scripts | discovery + bounded HTML fetch | DONE |
+| JSON API | prototype | partner-specific | field-mapped generic adapter | DONE |
+| YouTube | yt-dlp prototype | отсутствовал | RSS/oEmbed with graceful transcript status | DONE |
+| Manual input | CLI/file | CMS direct | manual source through shared pipeline | DONE |
+| Browser rendering | отсутствовал | Playwright dev only | use only as future custom adapter when a proven source requires it | NOT APPLICABLE |
+| Scheduling | отсутствовал | Vercel cron | due-source dispatcher every 15 minutes | DONE |
+| Locks/idempotency | file state | job patterns | active-run unique index + idempotency keys | DONE |
+| Cancel/retry/DLQ | partial | ops patterns | cancel flag, exponential backoff, retry cap, dead letter | DONE |
+| Checkpoints | JSON | mixed | source/run JSON checkpoints | DONE |
+| Raw/media | filesystem | Storage | immutable rows + private Storage bucket | DONE |
+| Normalization | Python Article | CMS bodies | one normalized TS document | DONE |
+| HTML cleanup | Trafilatura | mixed | DOM extraction to plain normalized text | DONE |
+| Language/translation | language field | AI integrations | source language + reviewed structured translation | DONE |
+| Geography/category/tags | Python rules | KB taxonomy | deterministic rules + AI enrichment | DONE |
+| Entity extraction | отсутствовал | mixed | structured AI entities | DONE |
+| Quality/freshness | Python score | freshness checks | explainable score + sensitive stale flags | DONE |
+| Exact/near dedupe | SHA/shingles | inventory tools | hashes, shingles, duplicate links and comparison UI | DONE |
+| Existing content update | отсутствовал | CMS revisions | related-page detection + versioned update proposal | DONE |
+| Prompts/models | отсутствовали | env/code | version table + admin + fallback model | DONE |
+| Moderation | status files | CMS admin | candidate queue, edit/approve/reject/defer/reprocess | DONE |
+| Publication | package export | CMS | draft only, target mapping, source links/search workflow | DONE |
+| Knowledge/blog/place/map | export knowledge | separate entities | knowledge/blog/place/destination/guide mapping | DONE |
+| Roles | отсутствовали | broad capabilities | 20 granular ingestion capabilities + backend checks | DONE |
+| Audit | reports | admin log | source/run/prompt/moderation/publication audit | DONE |
+| Monitoring | JSON report | health/cron | overview, heartbeat, stuck jobs, provider readiness | DONE |
+| Data migration | manual exports | bridge importer | idempotent ledger/checksum script | DONE |
+| Production shadow/cutover | none | production | controlled runbook | BLOCKED EXTERNALLY |

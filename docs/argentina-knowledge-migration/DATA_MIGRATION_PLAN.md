@@ -2,20 +2,33 @@
 
 ## Mapping
 
-- `config/sources.json` -> `ingestion_sources` with stable `legacy_key`.
-- `database/import_state.json` -> `ingestion_sources.checkpoint`.
-- `raw/**` and article JSON -> `ingestion_raw_documents` and `ingestion_candidates`.
-- selected Markdown -> candidate processed content; publication remains a moderator action.
-- export package CMS IDs -> candidate publication metadata when present.
+| Legacy | Target | Identity |
+|---|---|---|
+| `config/sources.json` | `ingestion_sources` | `legacy_key` |
+| Telegram messages/articles | `ingestion_raw_documents` | source + external ID + content hash |
+| Content-bearing articles | `ingestion_normalized_documents`, `ingestion_candidates` | raw ID / normalized ID |
+| Local media | private Storage bucket `ingestion-raw` | SHA-256 + legacy relative path |
+| Editorial metadata | candidate score/reasons/flags | legacy identity |
+| Migration state | `ingestion_migration_ledger` | source system + entity type + legacy ID |
 
-## Guarantees
+## Commands
 
-- Migration ledger key: `argentina-knowledge:<kind>:<legacy-id>`.
-- Upsert by `legacy_key`, `(source_id, external_id)` and content hash.
-- Dry run performs parsing, grouped counts, duplicate and orphan checks without mutation.
-- Partial failure is recorded per record; rerun resumes safely.
-- Secret values and Telegram sessions are never read into migration output.
+```bash
+npm run kb:migrate-collector:dry
+npm run kb:migrate-collector
+```
 
-## Verification
+`kb:migrate-collector` is allowed only after the new migration has been applied to staging and environment variables point to staging. It must not be run with the current production `.env.local` during development.
 
-Compare source count, raw count, candidate statuses, checkpoints, fingerprints and orphan references. Store machine-readable evidence under `var/ops/argentina-knowledge-migration/`.
+## Dry-run result, 2026-07-19
+
+- Sources discovered: 3.
+- Canonical raw documents: 22.
+- Valid moderation candidates: 2.
+- Raw-only/skipped candidates: 20.
+- Media: 20 files / 4,338,870 bytes.
+- Script performed no writes and emitted SHA-256 inventory.
+
+## Verification queries
+
+Compare ledger grouped counts, orphan raw/normalized/candidate references, unique source/external/hash identities, source checkpoints, media checksums and run counts. A second `--apply` must migrate zero new candidates and verify existing checksums.

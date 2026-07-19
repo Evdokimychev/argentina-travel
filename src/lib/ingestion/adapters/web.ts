@@ -3,6 +3,7 @@ import { XMLParser } from "fast-xml-parser";
 import { assertRobotsAllowed, respectSourceRateLimit, safeFetchText } from "@/lib/ingestion/safe-fetch";
 import { getPath, validation, withCommonAdapterMethods } from "@/lib/ingestion/adapters/common";
 import type { AdapterRawItem, IngestionSourceRecord, SourceAdapter } from "@/types/ingestion";
+import { normalizeRawItem } from "@/lib/ingestion/content-intelligence";
 
 function htmlItem(html: string, url: string, source: IngestionSourceRecord): AdapterRawItem {
   const $ = load(html);
@@ -85,11 +86,16 @@ export const jsonApiAdapter: SourceAdapter = withCommonAdapterMethods({
   },
 });
 
-export const manualAdapter: SourceAdapter = withCommonAdapterMethods({
+export const manualAdapter: SourceAdapter = {
   type: "manual",
-  validateConfig: (source) => validation([!source.connectionConfig.manualItems?.length && "Добавьте хотя бы один материал"]),
+  validateConfig: () => ({ ok: true }),
+  testConnection: async () => ({ ok: true, message: "Ручной приём материалов готов" }),
+  healthCheck: async () => ({ ok: true, message: "Ручной приём материалов готов" }),
   fetch: async (source) => ({
     items: (source.connectionConfig.manualItems ?? []).map((item) => ({ externalId: item.id, sourceUrl: item.url, rawFormat: "text", rawContent: item.body, title: item.title, publishedAt: item.publishedAt })),
     checkpoint: { fetchedAt: new Date().toISOString(), count: source.connectionConfig.manualItems?.length ?? 0 },
   }),
-});
+  parse: async (item) => item,
+  normalize: async (item, source) => normalizeRawItem(item, source),
+  checkpoint: (result) => result.checkpoint,
+};
