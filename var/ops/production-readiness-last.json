@@ -1,14 +1,14 @@
 {
   "ok": false,
-  "ranAt": "2026-07-19T16:58:28.738Z",
-  "gitSha": "39e4ccbdde8187f868996a895436e4b9c519ca58",
+  "ranAt": "2026-07-19T22:43:41.363Z",
+  "gitSha": "3b78ef632b8c25e1c2a3d32ca17c04972e32a919",
   "gitShaSource": "git-head",
   "checks": [
     {
       "id": "env:NEXT_PUBLIC_SITE_URL",
       "label": "Переменная NEXT_PUBLIC_SITE_URL",
-      "status": "warn",
-      "message": "Не задана",
+      "status": "ok",
+      "message": "Задана",
       "category": "env"
     },
     {
@@ -42,35 +42,35 @@
     {
       "id": "env:DEPLOY_ENV",
       "label": "Переменная DEPLOY_ENV",
-      "status": "warn",
-      "message": "Не задана",
+      "status": "ok",
+      "message": "DEPLOY_ENV=production",
       "category": "env"
     },
     {
       "id": "env:CRON_SECRET",
       "label": "Переменная CRON_SECRET",
-      "status": "warn",
+      "status": "fail",
       "message": "Не задана",
       "category": "env"
     },
     {
       "id": "env:recommended:GIT_SHA",
       "label": "Рекомендуется: GIT_SHA",
-      "status": "skip",
-      "message": "Не задана",
+      "status": "ok",
+      "message": "Задана",
       "category": "env"
     },
     {
       "id": "env:recommended:SENTRY_DSN",
       "label": "Рекомендуется: SENTRY_DSN",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана",
       "category": "env"
     },
     {
       "id": "env:recommended:NEXT_PUBLIC_SENTRY_DSN",
       "label": "Рекомендуется: NEXT_PUBLIC_SENTRY_DSN",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана",
       "category": "env"
     },
@@ -84,29 +84,29 @@
     {
       "id": "env:recommended:LEADS_NOTIFY_EMAIL",
       "label": "Рекомендуется: LEADS_NOTIFY_EMAIL",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана",
       "category": "env"
     },
     {
       "id": "env:recommended:NEXT_PUBLIC_GTM_ID",
       "label": "Рекомендуется: NEXT_PUBLIC_GTM_ID",
-      "status": "skip",
-      "message": "Не задана",
+      "status": "warn",
+      "message": "Не задана — GTM не загрузится на staging/production",
       "category": "env"
     },
     {
       "id": "env:recommended:NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
       "label": "Рекомендуется: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана",
       "category": "env"
     },
     {
       "id": "env:forbidden:NEXT_PUBLIC_ENABLE_DEMO_SEED",
       "label": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false",
-      "status": "fail",
-      "message": "Демо-данные включены",
+      "status": "ok",
+      "message": "Отключено",
       "category": "security"
     },
     {
@@ -119,28 +119,28 @@
     {
       "id": "env:payment:MERCADOPAGO_ACCESS_TOKEN",
       "label": "Платежи: MERCADOPAGO_ACCESS_TOKEN",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана — live checkout/webhooks недоступны",
       "category": "env"
     },
     {
       "id": "env:payment:MERCADOPAGO_WEBHOOK_SECRET",
       "label": "Платежи: MERCADOPAGO_WEBHOOK_SECRET",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана — live checkout/webhooks недоступны",
       "category": "env"
     },
     {
       "id": "env:payment:STRIPE_SECRET_KEY",
       "label": "Платежи: STRIPE_SECRET_KEY",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана — live checkout/webhooks недоступны",
       "category": "env"
     },
     {
       "id": "env:payment:STRIPE_WEBHOOK_SECRET",
       "label": "Платежи: STRIPE_WEBHOOK_SECRET",
-      "status": "skip",
+      "status": "warn",
       "message": "Не задана — live checkout/webhooks недоступны",
       "category": "env"
     },
@@ -148,28 +148,28 @@
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "97 файлов, последняя: 20260717090234_explicit_data_api_grants",
+      "message": "102 файлов, последняя: 20260719182600_explicit_data_api_grants",
       "category": "database"
     },
     {
       "id": "security:rls-audit",
       "label": "Статический RLS-аудит",
       "status": "ok",
-      "message": "103 таблиц, критичных проблем нет",
+      "message": "112 таблиц, критичных проблем нет",
       "category": "security"
     },
     {
       "id": "migrations:db-count",
-      "label": "Миграции в БД",
-      "status": "warn",
-      "message": "Таблиц public: 86. schema_migrations недоступна — сверьте вручную с 97 файлами (последняя: 20260717090234_explicit_data_api_grants)",
+      "label": "Миграции в БД vs файлы",
+      "status": "ok",
+      "message": "В app_migrations 102 записей, в репозитории 102. Последняя: 20260719182600_explicit_data_api_grants",
       "category": "database"
     },
     {
       "id": "smoke:supabase-verify",
       "label": "Smoke /api/health",
-      "status": "warn",
-      "message": "Сервер недоступен на http://127.0.0.1:3000. Запустите npm run dev или задайте SMOKE_BASE_URL",
+      "status": "ok",
+      "message": "OK. migrationVersion=20260719182600_explicit_data_api_grants, deployEnv=production",
       "category": "smoke"
     },
     {
@@ -189,8 +189,8 @@
     {
       "id": "search:meili-env",
       "label": "Meilisearch (MEILISEARCH_HOST + API_KEY)",
-      "status": "skip",
-      "message": "Не заданы (локально допустимо)",
+      "status": "warn",
+      "message": "Не заданы — поиск через Postgres/static; npm run search:readiness",
       "category": "search"
     },
     {
@@ -209,9 +209,9 @@
     }
   ],
   "summary": {
-    "ok": 11,
-    "warn": 6,
+    "ok": 17,
+    "warn": 11,
     "fail": 1,
-    "skip": 11
+    "skip": 0
   }
 }

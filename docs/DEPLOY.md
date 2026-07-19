@@ -11,7 +11,7 @@ npm run supabase:migrate
 ```
 
 Команда ведёт собственный журнал с SHA-256 каждого SQL-файла: на чистой базе
-применяет 95 миграций, повторный запуск пропускает уже применённые.
+применяет 102 baseline-миграции и все следующие за ними, повторный запуск пропускает уже применённые.
 Если в `public` уже есть таблицы, но нет канонического журнала, команда
 останавливается до любого SQL. Сначала нужно создать и доказать production-like
 baseline. Прямой replay поверх production запрещён.
@@ -41,6 +41,7 @@ npm run backup:full
 - **Аналитика (I2):** `NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_YANDEX_METRIKA_ID` (`110458660`, прямая загрузка в коде, не GTM), токены верификации GSC/Bing/Ahrefs — см. [`docs/i2-analytics-gsc-runbook.md`](./i2-analytics-gsc-runbook.md)
 - `NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY`, `WEB_PUSH_VAPID_PRIVATE_KEY`, `WEB_PUSH_VAPID_SUBJECT` — для web push (E83)
 - `GIT_SHA` — commit SHA (CI и Vercel подставляют автоматически)
+- `CRON_SECRET` — обязательная случайная строка не короче 32 символов для всех `/api/cron/*`; без неё cron-маршруты намеренно отвечают `401`
 - `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` — по желанию, для мониторинга ошибок
 
 ### Staging (отдельный Supabase-проект)
@@ -58,9 +59,9 @@ npm run backup:full
 Чек-лист staging-проекта:
 
 - [ ] Создан отдельный проект в [Supabase Dashboard](https://supabase.com/dashboard)
-- [ ] Применены 95 миграций с журналом: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
+- [ ] Применены 102 baseline-миграции и все последующие с журналом: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
 - [ ] RLS-аудит пройден: `npm run rls-audit`
-- [ ] Data API grants проверены: 121/121 таблиц доступны `service_role`, у `anon` нет DML
+- [ ] Data API grants проверены: все необходимые таблицы доступны `service_role`, у `anon` нет непредусмотренного DML
 - [ ] `NEXT_PUBLIC_ENABLE_DEMO_SEED=false`
 - [ ] `NEXT_PUBLIC_APP_MODE=production` (локальная авторизация и демо-данные исключены из сборки)
 

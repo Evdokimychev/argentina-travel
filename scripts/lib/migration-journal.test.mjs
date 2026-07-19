@@ -8,7 +8,13 @@ import {
   buildMigrationPlan,
   databaseProjectRef,
   migrationChecksum,
+  migrationSetChecksum,
+  validateBaselineManifest,
 } from "./migration-journal.mjs";
+import {
+  fingerprintSchemaInventory,
+  normalizeSchemaInventory,
+} from "./database-schema-fingerprint.mjs";
 
 const productionUrl = `postgresql://postgres:secret@db.${PRODUCTION_PROJECT_REF}.supabase.co:5432/postgres`;
 const stagingRef = "abcdefghijklmnopqrst";
@@ -69,5 +75,88 @@ test("journal plan resumes cleanly and rejects drift or blind replay", () => {
         1,
       ),
     /checksum changed/,
+  );
+});
+
+test("schema and migration fingerprints are deterministic and drift-sensitive", () => {
+  const rows = [
+    { object_kind: "table", object_identity: "profiles", definition: "{}" },
+    { object_kind: "column", object_identity: "profiles.id", definition: "uuid" },
+  ];
+  assert.deepEqual(normalizeSchemaInventory([...rows].reverse()), normalizeSchemaInventory(rows));
+  assert.equal(
+    fingerprintSchemaInventory([...rows].reverse()).fingerprint,
+    fingerprintSchemaInventory(rows).fingerprint,
+  );
+  assert.notEqual(
+    fingerprintSchemaInventory([{ ...rows[0], definition: "changed" }, rows[1]]).fingerprint,
+    fingerprintSchemaInventory(rows).fingerprint,
+  );
+
+  const migrations = [
+    { id: "001_first", checksum: migrationChecksum("select 1") },
+    { id: "002_second", checksum: migrationChecksum("select 2") },
+  ];
+  assert.equal(migrationSetChecksum([...migrations].reverse()), migrationSetChecksum(migrations));
+  assert.notEqual(
+    migrationSetChecksum([{ ...migrations[0], checksum: "changed" }, migrations[1]]),
+    migrationSetChecksum(migrations),
+  );
+});
+
+test("baseline manifests fail closed on project, migration, or schema drift", () => {
+  const migrations = [
+    { id: "001_first", checksum: migrationChecksum("select 1") },
+    { id: "002_second", checksum: migrationChecksum("select 2") },
+  ];
+  const schema = fingerprintSchemaInventory([
+    { object_kind: "table", object_identity: "profiles", definition: "{}" },
+  ]);
+  const manifest = {
+    version: 1,
+    projectRef: PRODUCTION_PROJECT_REF,
+    migrations: {
+      count: migrations.length,
+      latestId: migrations.at(-1).id,
+      setChecksum: migrationSetChecksum(migrations),
+    },
+    schema,
+  };
+  assert.equal(
+    validateBaselineManifest(manifest, {
+      projectRef: PRODUCTION_PROJECT_REF,
+      migrations,
+      schema,
+    }),
+    manifest,
+  );
+  assert.equal(
+    validateBaselineManifest(manifest, {
+      projectRef: PRODUCTION_PROJECT_REF,
+      migrations: [...migrations, { id: "003_pending", checksum: migrationChecksum("select 3") }],
+    }),
+    manifest,
+  );
+  assert.throws(
+    () => validateBaselineManifest(manifest, { projectRef: stagingRef, migrations, schema }),
+    /project ref mismatch/,
+  );
+  assert.throws(
+    () =>
+      validateBaselineManifest(manifest, {
+        projectRef: PRODUCTION_PROJECT_REF,
+        migrations: migrations.slice(0, 1),
+        schema,
+      }),
+    /migration count mismatch/,
+  );
+  assert.throws(
+    () =>
+      validateBaselineManifest(manifest, {
+        projectRef: PRODUCTION_PROJECT_REF,
+        migrations,
+        schema: { ...schema, fingerprint: "changed" },
+      }),
+    /schema fingerprint/,
   );
 });

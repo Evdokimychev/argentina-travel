@@ -1,6 +1,6 @@
 # ADR: долговечный журнал cron
 
-Статус: **implementation blocked — schema canonicalization required**  
+Статус: **baseline готов; implementation blocked до staging rehearsal**
 Дата: 2026-07-16
 
 ## Решение
@@ -71,7 +71,7 @@
 
 1. Назначен единственный владелец migration sequence.
 2. Повторяющиеся timestamps разрешены каноническим планом без переименования уже применённых production-миграций вслепую.
-3. Доступна достоверная remote migration history или создан подписанный baseline manifest.
+3. Доступна достоверная remote migration history или создан подписанный baseline manifest. **Выполнено:** `production-2026-07-19-v1`.
 4. Полный набор миграций воспроизводится на чистой disposable базе.
 5. Явные grants/RLS проверены на актуальном поведении Supabase Data API.
 6. Есть отдельный staging для apply, fault injection, missed/stale run и retention проверки.
@@ -86,4 +86,3 @@
 - admin видит `last run`, duration, release SHA и безопасную причину;
 - retention удаляет только записи старше установленного окна;
 - production не объявляется зелёным при отсутствии durable данных.
-

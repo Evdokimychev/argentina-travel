@@ -17,6 +17,7 @@
 ```bash
 # Supabase
 npm run supabase:migrate      # apply migration
+npm run supabase:baseline:verify # read-only production baseline check
 npm run supabase:verify       # integrity check
 npm run rls-audit             # RLS policy audit
 npm run backup:schema         # backup before major changes
@@ -28,6 +29,8 @@ npm run db:push               # dev only
 npm run supabase:seed-tours
 npm run supabase:seed-cms
 ```
+
+Production использует checksum-журнал `app_migrations`, а не стандартный blind `supabase db push`. Процедура и fail-closed подтверждения описаны в [production-migration-baseline.md](../ops/production-migration-baseline.md).
 
 ## RLS checklist (новая таблица)
 

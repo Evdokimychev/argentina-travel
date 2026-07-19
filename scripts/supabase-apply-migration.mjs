@@ -83,21 +83,38 @@ async function main() {
     buildMigrationPlan(migrations, [], inventory.public_table_count);
   }
 
-  if (!inventory.journal_exists) {
-    await client.query(`
-      create schema app_migrations;
+  await client.query(`
+      create schema if not exists app_migrations;
       revoke all on schema app_migrations from public, anon, authenticated;
       grant usage on schema app_migrations to service_role;
-      create table app_migrations.schema_migrations (
+
+      create table if not exists app_migrations.baselines (
+        baseline_id text primary key,
+        project_ref text not null,
+        schema_fingerprint text not null check (schema_fingerprint ~ '^[a-f0-9]{64}$'),
+        migration_set_checksum text not null check (migration_set_checksum ~ '^[a-f0-9]{64}$'),
+        manifest jsonb not null,
+        applied_at timestamptz not null default now()
+      );
+
+      create table if not exists app_migrations.schema_migrations (
         migration_id text primary key,
         checksum text not null check (checksum ~ '^[a-f0-9]{64}$'),
         applied_at timestamptz not null default now(),
-        git_sha text null
+        git_sha text null,
+        source text not null default 'migration' check (source in ('baseline', 'migration')),
+        baseline_id text null references app_migrations.baselines(baseline_id)
       );
+
+      alter table app_migrations.schema_migrations
+        add column if not exists source text not null default 'migration',
+        add column if not exists baseline_id text null;
+
+      revoke all on app_migrations.baselines from public, anon, authenticated;
       revoke all on app_migrations.schema_migrations from public, anon, authenticated;
+      grant select on app_migrations.baselines to service_role;
       grant select, insert on app_migrations.schema_migrations to service_role;
-    `);
-  }
+  `);
 
   const { rows: appliedRows } = await client.query(
     "select migration_id, checksum from app_migrations.schema_migrations order by migration_id",
@@ -113,8 +130,8 @@ async function main() {
     try {
       await client.query(migration.sql);
       await client.query(
-        `insert into app_migrations.schema_migrations (migration_id, checksum, git_sha)
-         values ($1, $2, $3)`,
+        `insert into app_migrations.schema_migrations (migration_id, checksum, git_sha, source)
+         values ($1, $2, $3, 'migration')`,
         [migration.id, migration.checksum, process.env.GIT_SHA?.trim() || null],
       );
       await client.query("commit");

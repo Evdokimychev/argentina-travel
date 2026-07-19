@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 export const PRODUCTION_PROJECT_REF = "uooxrypocahomoqzdvzy";
 export const PRODUCTION_CONFIRMATION = "BACKUP_RESTORE_AND_STAGING_ACCEPTANCE_PASSED";
+export const BASELINE_CONFIRMATION = "PRODUCTION_SCHEMA_FINGERPRINT_VERIFIED";
 
 export function databaseProjectRef(connectionString) {
   try {
@@ -25,6 +26,36 @@ export function isLocalDatabaseUrl(connectionString) {
 
 export function migrationChecksum(sql) {
   return createHash("sha256").update(sql).digest("hex");
+}
+
+export function migrationSetChecksum(migrations) {
+  const canonical = migrations
+    .map(({ id, checksum }) => `${id}:${checksum}`)
+    .sort()
+    .join("\n");
+  return createHash("sha256").update(canonical).digest("hex");
+}
+
+export function validateBaselineManifest(manifest, context) {
+  if (!manifest || manifest.version !== 1) throw new Error("Unsupported migration baseline manifest");
+  if (manifest.projectRef !== context.projectRef) throw new Error("Baseline project ref mismatch");
+  if (!Number.isInteger(manifest.migrations?.count) || context.migrations.length < manifest.migrations.count) {
+    throw new Error("Baseline migration count mismatch");
+  }
+  const baselineMigrations = context.migrations.slice(0, manifest.migrations.count);
+  if (manifest.migrations?.latestId !== baselineMigrations.at(-1)?.id) {
+    throw new Error("Baseline latest migration mismatch");
+  }
+  if (manifest.migrations?.setChecksum !== migrationSetChecksum(baselineMigrations)) {
+    throw new Error("Baseline migration set checksum mismatch");
+  }
+  if (context.schema && manifest.schema?.fingerprint !== context.schema.fingerprint) {
+    throw new Error("Production schema fingerprint does not match the reviewed baseline");
+  }
+  if (context.schema && manifest.schema?.objectCount !== context.schema.objectCount) {
+    throw new Error("Production schema object count does not match the reviewed baseline");
+  }
+  return manifest;
 }
 
 export function assertMigrationTarget(env, connectionString) {

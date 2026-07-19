@@ -56,21 +56,20 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=   # publishable key из Dashboard
 
 ### 2. Применить миграцию
 
-**Рекомендуется (локально):**
+**Единственный канонический runner:**
 
 ```bash
-# DATABASE_URL должен быть в .env.local
+# DATABASE_URL и явный MIGRATION_TARGET_ENVIRONMENT должны быть заданы
 npm run supabase:migrate
 ```
 
-**Dashboard:** SQL Editor → вставить `supabase/migrations/20250611000000_lead_capture.sql` → Run
-
-**CLI** (если установлен Supabase CLI):
+Для production перед любыми новыми миграциями обязательна read-only проверка baseline:
 
 ```bash
-supabase link --project-ref ejseeuszipxwvdeuqamc
-supabase db push
+npm run supabase:baseline:verify
 ```
+
+Не используйте `supabase db push` и не вставляйте весь каталог в Dashboard: историческая production-схема закреплена checksum-журналом `app_migrations`. Полная процедура: `docs/ops/production-migration-baseline.md`.
 
 ### 2.1. Проверка после миграции
 

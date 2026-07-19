@@ -177,14 +177,25 @@ async function checkDatabaseMigrations(fileCount, latestId) {
     let dbCount = null;
     let dbLatest = null;
 
+    let journalSource = null;
     try {
       const { rows } = await client.query(
-        "select count(*)::int as count, max(version) as latest from supabase_migrations.schema_migrations"
+        "select count(*)::int as count, max(migration_id) as latest from app_migrations.schema_migrations"
       );
       dbCount = rows[0]?.count ?? null;
       dbLatest = rows[0]?.latest ?? null;
+      journalSource = "app_migrations";
     } catch {
-      // schema_migrations may be absent when migrations applied via npm run supabase:migrate
+      try {
+        const { rows } = await client.query(
+          "select count(*)::int as count, max(version) as latest from supabase_migrations.schema_migrations"
+        );
+        dbCount = rows[0]?.count ?? null;
+        dbLatest = rows[0]?.latest ?? null;
+        journalSource = "supabase_migrations";
+      } catch {
+        // Both journals may be absent on an existing project awaiting a reviewed baseline.
+      }
     }
 
     if (dbCount == null) {
@@ -214,7 +225,7 @@ async function checkDatabaseMigrations(fileCount, latestId) {
       label: "Миграции в БД vs файлы",
       status: countOk && latestOk ? "ok" : "fail",
       message: countOk
-        ? `В БД ${dbCount} записей, в репозитории ${fileCount}. Последняя: ${dbLatest ?? latestId}`
+        ? `В ${journalSource} ${dbCount} записей, в репозитории ${fileCount}. Последняя: ${dbLatest ?? latestId}`
         : `Несовпадение: БД ${dbCount}, файлов ${fileCount}. Последняя в БД: ${dbLatest ?? "—"}, в репо: ${latestId}`,
       category: "database",
     };

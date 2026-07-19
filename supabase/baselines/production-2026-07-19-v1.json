@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "baselineId": "production-2026-07-19-v1",
+  "projectRef": "uooxrypocahomoqzdvzy",
+  "capturedAt": "2026-07-19T22:38:31.053Z",
+  "gitSha": "3b78ef632b8c25e1c2a3d32ca17c04972e32a919",
+  "postgresVersion": "17.6",
+  "migrations": {
+    "count": 102,
+    "latestId": "20260719182600_explicit_data_api_grants",
+    "setChecksum": "2c7803d77cf165c270d4bd2af855a69de4e89a54825cc1c00ebf61cd04a478fd"
+  },
+  "schema": {
+    "fingerprint": "fcf40e92134f64c156cd4cfd442d0755884400ca2e270aacbd2ef72416e81538",
+    "objectCount": 3634,
+    "counts": {
+      "column": 1368,
+      "constraint": 519,
+      "function": 16,
+      "grant": 947,
+      "index": 392,
+      "policy": 210,
+      "table": 115,
+      "trigger": 67
+    }
+  },
+  "evidence": {
+    "encryptedBackups": [
+      "/Users/Study/.codex/private-archives/argentina-travel/production-backup-before-governance-2026-07-19",
+      "/Users/Study/.codex/private-archives/argentina-travel/production-backup-before-content-factory-2026-07-19"
+    ],
+    "releaseAudit": "docs/audit/full-release-audit-2026-07-19.md"
+  }
+}
