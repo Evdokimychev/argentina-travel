@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-07-17T08:41:37.861Z",
-  "overall": 6.6,
-  "grade": "C+",
+  "ranAt": "2026-07-18T04:54:34.534Z",
+  "overall": 7,
+  "grade": "B",
   "dimensions": {
     "code": {
       "score": 4.4,
@@ -21,8 +21,8 @@
       "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
     },
     "performance": {
-      "score": 5.9,
-      "note": "median perf 49, a11y 97, worst CLS 0.668 (prod CDN)"
+      "score": 10,
+      "note": "median perf 86, a11y 99, worst CLS 0.150 (prod CDN)"
     }
   },
   "blockers": [

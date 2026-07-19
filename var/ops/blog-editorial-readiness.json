@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-17T11:59:07.998Z",
+  "generatedAt": "2026-07-17T13:36:34.266Z",
   "scope": "public-indexable-blog",
   "status": "passed",
   "summary": {
@@ -121,7 +121,7 @@
     },
     {
       "slug": "el-chalten-i-fitts-roy",
-      "title": "Эль-Чалтен и Фицрой: треккинг для первого раза",
+      "title": "Эль-Чальтен: маршруты к Фицрою и первый треккинг",
       "category": "Горы и треккинг",
       "sensitive": false,
       "dateModified": "2026-07-17",

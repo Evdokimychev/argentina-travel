@@ -1,0 +1,145 @@
+{
+  "at": "2026-07-18T04:23:02.807Z",
+  "gitSha": "71f1b5c9a35755b41b019355b35b805c6a34565e",
+  "dirty": true,
+  "evidenceScope": "invalid-candidate",
+  "evidenceEnvironment": "local-production",
+  "evidenceBaseUrl": "http://127.0.0.1:3000",
+  "deploymentId": null,
+  "deployedTree": null,
+  "baseUrl": "http://127.0.0.1:3000",
+  "categories": [
+    "performance",
+    "accessibility",
+    "seo"
+  ],
+  "runsPerPath": 1,
+  "device": "Lighthouse mobile / simulated throttling / cold Chrome process per run",
+  "budget": {
+    "performance": 55,
+    "accessibility": 95,
+    "seo": 95,
+    "lcpMs": 8000,
+    "cls": 0.1,
+    "tbtMs": 2500,
+    "inpMs": 200,
+    "homeTransferBytes": 2500000,
+    "contentTransferBytes": 1500000,
+    "scriptTransferBytes": 1000000
+  },
+  "medianPerformance": 79,
+  "medianAccessibility": 100,
+  "medianSeo": 58,
+  "results": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:3000/",
+      "run": 1,
+      "performance": 72,
+      "accessibility": 100,
+      "seo": 58,
+      "lcpMs": 7424,
+      "cls": 0,
+      "tbtMs": 171,
+      "transferBytes": 1163277,
+      "transferBudgetBytes": 2500000,
+      "scriptTransferBytes": 639265,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/mapa-argentina",
+      "url": "http://127.0.0.1:3000/mapa-argentina",
+      "run": 1,
+      "performance": 79,
+      "accessibility": 99,
+      "seo": 58,
+      "lcpMs": 4849,
+      "cls": 0.008,
+      "tbtMs": 113,
+      "transferBytes": 549158,
+      "transferBudgetBytes": 1500000,
+      "scriptTransferBytes": 405484,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "aggregation": "per-route median across complete cold runs",
+  "seoBlocking": false,
+  "pathSummaries": [
+    {
+      "path": "/",
+      "runsCompleted": 1,
+      "runsRequired": 1,
+      "performance": 72,
+      "accessibility": 100,
+      "seo": null,
+      "lcpMs": 7424,
+      "cls": 0,
+      "tbtMs": 171,
+      "transferBytes": 1163277,
+      "scriptTransferBytes": 639265,
+      "inpMs": null,
+      "budget": {
+        "performance": 55,
+        "accessibility": 95,
+        "seo": 95,
+        "lcpMs": 8000,
+        "cls": 0.1,
+        "tbtMs": 2500,
+        "inpMs": 200,
+        "homeTransferBytes": 2500000,
+        "contentTransferBytes": 1500000,
+        "scriptTransferBytes": 1000000,
+        "transferBytes": 2500000
+      },
+      "pass": true
+    },
+    {
+      "path": "/mapa-argentina",
+      "runsCompleted": 1,
+      "runsRequired": 1,
+      "performance": 79,
+      "accessibility": 99,
+      "seo": null,
+      "lcpMs": 4849,
+      "cls": 0.008,
+      "tbtMs": 113,
+      "transferBytes": 549158,
+      "scriptTransferBytes": 405484,
+      "inpMs": null,
+      "budget": {
+        "performance": 55,
+        "accessibility": 85,
+        "seo": 95,
+        "lcpMs": 8000,
+        "cls": 0.1,
+        "tbtMs": 3500,
+        "inpMs": 200,
+        "homeTransferBytes": 2500000,
+        "contentTransferBytes": 1500000,
+        "scriptTransferBytes": 1000000,
+        "transferBytes": 1500000
+      },
+      "pass": true
+    }
+  ],
+  "pass": false,
+  "candidateTree": null,
+  "evidenceRunId": "182f8484-3078-4ae1-9261-f7d3dd04b2da",
+  "evidenceStartedAt": "2026-07-18T04:22:24.346Z",
+  "evidenceGeneratedAt": "2026-07-18T04:23:02.909Z",
+  "evidenceIntegrity": {
+    "status": "rejected",
+    "reasons": [
+      "dirty-candidate-at-start",
+      "dirty-candidate-at-end"
+    ],
+    "dirtyPaths": [
+      "docs/bundle-report.md",
+      "next.config.ts",
+      "src/app/mapa-argentina/page.tsx",
+      "src/lib/seo/lighthouse-mobile-metadata.test.ts"
+    ]
+  }
+}
