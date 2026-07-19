@@ -1,7 +1,7 @@
 {
-  "ok": true,
-  "ranAt": "2026-07-16T20:07:24.944Z",
-  "gitSha": "ec5d30e6f533dbd3b620f673541664acfef7526d",
+  "ok": false,
+  "ranAt": "2026-07-19T16:58:28.738Z",
+  "gitSha": "39e4ccbdde8187f868996a895436e4b9c519ca58",
   "gitShaSource": "git-head",
   "checks": [
     {
@@ -105,8 +105,8 @@
     {
       "id": "env:forbidden:NEXT_PUBLIC_ENABLE_DEMO_SEED",
       "label": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false",
-      "status": "ok",
-      "message": "Отключено",
+      "status": "fail",
+      "message": "Демо-данные включены",
       "category": "security"
     },
     {
@@ -148,21 +148,21 @@
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "69 файлов, последняя: 20260716195954_lock_shop_orders_to_idempotent_server_api",
+      "message": "97 файлов, последняя: 20260717090234_explicit_data_api_grants",
       "category": "database"
     },
     {
       "id": "security:rls-audit",
       "label": "Статический RLS-аудит",
       "status": "ok",
-      "message": "86 таблиц, критичных проблем нет",
+      "message": "103 таблиц, критичных проблем нет",
       "category": "security"
     },
     {
       "id": "migrations:db-count",
       "label": "Миграции в БД",
       "status": "warn",
-      "message": "Таблиц public: 86. schema_migrations недоступна — сверьте вручную с 69 файлами (последняя: 20260716195954_lock_shop_orders_to_idempotent_server_api)",
+      "message": "Таблиц public: 86. schema_migrations недоступна — сверьте вручную с 97 файлами (последняя: 20260717090234_explicit_data_api_grants)",
       "category": "database"
     },
     {
@@ -175,8 +175,8 @@
     {
       "id": "build:tsc",
       "label": "TypeScript (tsc --noEmit)",
-      "status": "skip",
-      "message": "SKIP_TSC=1",
+      "status": "ok",
+      "message": "Компиляция без ошибок",
       "category": "build"
     },
     {
@@ -204,14 +204,14 @@
       "id": "perf:lighthouse-phase2",
       "label": "Lighthouse phase2 (последний отчёт)",
       "status": "warn",
-      "message": "median perf 59, a11y 94; 8 URL ниже бюджета — npm run lighthouse:phase2:prod",
+      "message": "median perf 76, a11y 99; 0 URL ниже бюджета — npm run lighthouse:phase2:prod",
       "category": "perf"
     }
   ],
   "summary": {
     "ok": 11,
     "warn": 6,
-    "fail": 0,
-    "skip": 12
+    "fail": 1,
+    "skip": 11
   }
 }

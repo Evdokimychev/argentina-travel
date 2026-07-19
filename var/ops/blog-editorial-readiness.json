@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-17T13:36:34.266Z",
+  "generatedAt": "2026-07-19T17:11:14.982Z",
   "scope": "public-indexable-blog",
   "status": "passed",
   "summary": {
-    "total": 79,
-    "passed": 79,
+    "total": 75,
+    "passed": 75,
     "failed": 0,
-    "sensitive": 11,
-    "sensitivePassed": 11
+    "sensitive": 9,
+    "sensitivePassed": 9
   },
   "entries": [
     {
@@ -33,15 +33,6 @@
       "slug": "tango-beginners-guide",
       "title": "Танго для начинающих: милонга и первые шаги",
       "category": "Буэнос-Айрес",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-packing-list",
-      "title": "Что взять в Патагонию: полный список вещей для путешествия",
-      "category": "Патагония",
       "sensitive": false,
       "dateModified": "2026-07-17",
       "status": "passed",
@@ -78,15 +69,6 @@
       "slug": "iguazu-за-3-дня",
       "title": "Водопады Игуасу за 3 дня: готовый маршрут по дням",
       "category": "Водопады Игуасу",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-whale-watching",
-      "title": "Наблюдение за китами в Аргентине: полуостров Вальдес, сезоны и бронирование",
-      "category": "Патагония",
       "sensitive": false,
       "dateModified": "2026-07-17",
       "status": "passed",
@@ -310,10 +292,10 @@
     },
     {
       "slug": "argentina-2-nedeli-marshrut",
-      "title": "Маршрут по Аргентине на 2 недели: классика за один трип (2026)",
+      "title": "Самостоятельный маршрут по Аргентине на 14 дней: Буэнос-Айрес, Игуасу и Патагония",
       "category": "Маршруты",
       "sensitive": false,
-      "dateModified": "2026-06-21",
+      "dateModified": "2026-07-17",
       "status": "passed",
       "issues": []
     },
@@ -399,15 +381,6 @@
       "issues": []
     },
     {
-      "slug": "vnzh-argentina-rezidenciya",
-      "title": "ВНЖ Аргентины 2026: все легальные пути резиденции и визы",
-      "category": "Иммиграция",
-      "sensitive": true,
-      "dateModified": "2026-06-21",
-      "status": "passed",
-      "issues": []
-    },
-    {
       "slug": "viza-cifrovogo-kochevnika-argentina",
       "title": "Виза цифрового кочевника Аргентины: полный гид 2026",
       "category": "Иммиграция",
@@ -422,15 +395,6 @@
       "category": "Иммиграция",
       "sensitive": true,
       "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "grazhdanstvo-argentiny",
-      "title": "Гражданство Аргентины за 2 года: натурализация и новые правила (гид 2026)",
-      "category": "Иммиграция",
-      "sensitive": true,
-      "dateModified": "2026-06-21",
       "status": "passed",
       "issues": []
     },

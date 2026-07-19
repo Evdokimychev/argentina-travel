@@ -20,6 +20,7 @@ import {
 export type CmsDbClient = SupabaseClient<Database>;
 
 const CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500;
+const CMS_CUTOVER_CATALOG_QUERY_TIMEOUT_MS = 8_000;
 
 export type CmsResolverMetadata = {
   requestedLocale: I18nLocale;
@@ -113,7 +114,8 @@ export async function fetchPublishedCmsDocument(
 export async function fetchPublishedCmsDocumentsByType(
   supabase: CmsDbClient,
   docType: CmsDocType,
-  locale = "ru"
+  locale = "ru",
+  timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
 ): Promise<CmsDocument[]> {
   const { data, error } = await supabase
     .from("content_documents")
@@ -121,7 +123,7 @@ export async function fetchPublishedCmsDocumentsByType(
     .eq("doc_type", docType)
     .eq("locale", locale)
     .eq("status", "published")
-    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .abortSignal(AbortSignal.timeout(timeoutMs))
     .retry(false);
 
   if (error || !data) return [];
@@ -135,12 +137,15 @@ export async function fetchPublishedCmsDocumentsByType(
 export async function fetchPublishedCmsDocumentsMergedByLocaleChain(
   supabase: CmsDbClient,
   docType: CmsDocType,
-  locale = "ru"
+  locale = "ru",
+  timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
 ): Promise<CmsDocument[]> {
   const bySlug = new Map<string, CmsDocument>();
   const chain = [...cmsLocaleFallbackChain(locale)].reverse();
   const docsByLocale = await Promise.all(
-    chain.map((tryLocale) => fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale)),
+    chain.map((tryLocale) =>
+      fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale, timeoutMs),
+    ),
   );
 
   for (const docs of docsByLocale) {
@@ -150,6 +155,19 @@ export async function fetchPublishedCmsDocumentsMergedByLocaleChain(
   }
 
   return [...bySlug.values()];
+}
+
+export function fetchPublishedCmsDocumentsMergedForCutover(
+  supabase: CmsDbClient,
+  docType: CmsDocType,
+  locale = "ru",
+): Promise<CmsDocument[]> {
+  return fetchPublishedCmsDocumentsMergedByLocaleChain(
+    supabase,
+    docType,
+    locale,
+    CMS_CUTOVER_CATALOG_QUERY_TIMEOUT_MS,
+  );
 }
 
 /** Published CMS slug per locale for hreflang (same logical document, locale-specific slug). */

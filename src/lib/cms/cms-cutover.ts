@@ -15,7 +15,7 @@ import type { ContentPage } from "@/types/content-page";
 import type { Json } from "@/types/database";
 import type { PlaceListing } from "@/types/place";
 import {
-  fetchPublishedCmsDocumentsMergedByLocaleChain,
+  fetchPublishedCmsDocumentsMergedForCutover,
   getCmsServerClient,
 } from "@/lib/cms/content-resolver";
 import { isCmsDocumentComplete } from "@/lib/cms/translation-status";
@@ -274,5 +274,5 @@ export async function fetchPublishedCmsDocumentsForCutover(
 ): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
   if (!supabase) return [];
-  return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, docType, locale);
+  return fetchPublishedCmsDocumentsMergedForCutover(supabase, docType, locale);
 }

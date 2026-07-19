@@ -1,0 +1,5 @@
+
+> argentina-travel@0.1.0 media:critical:check
+> node scripts/critical-public-media-check.mjs
+
+Critical public media budget PASS (16 fallbacks, mobile derivatives <= 260 KB).

@@ -13,8 +13,25 @@ import { BLOG_CONTENT_PLAN } from "@/data/blog-content-plan";
 import { isEditorialOverridePublicationReady } from "@/data/blog-editorial/types";
 import { EDITORIAL_OVERRIDES, getEditorialOverride } from "@/data/blog-editorial";
 import { getBlogEditorialIssues } from "@/lib/blog-editorial-readiness";
+import fs from "node:fs";
+import path from "node:path";
 
 describe("public blog catalog", () => {
+  it("keeps the reviewed catalog available when CMS cutover cannot return documents", () => {
+    const resolver = fs.readFileSync(
+      path.join(process.cwd(), "src/lib/cms/blog-resolver.ts"),
+      "utf8",
+    );
+    const contentResolver = fs.readFileSync(
+      path.join(process.cwd(), "src/lib/cms/content-resolver.ts"),
+      "utf8",
+    );
+
+    expect(resolver).toContain("if (!supabase) return fallback");
+    expect(resolver).toContain("cutoverCatalog.length > 0 ? cutoverCatalog : fallback");
+    expect(contentResolver).toContain("CMS_CUTOVER_CATALOG_QUERY_TIMEOUT_MS = 8_000");
+  });
+
   it("TS catalog has auto-generated drafts separated from indexable posts", () => {
     const indexable = filterIndexableBlogPosts(blogPosts);
     expect(indexable.length).toBeGreaterThan(0);

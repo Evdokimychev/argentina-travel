@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-17T13:36:34.803Z",
+  "generatedAt": "2026-07-19T17:11:15.522Z",
   "scope": "knowledge-base",
   "counts": {
     "total": 689,
-    "critical": 396,
+    "critical": 398,
     "high": 67,
-    "medium": 2,
+    "medium": 0,
     "low": 0,
     "none": 224,
     "notIndexable": 465
@@ -10447,7 +10447,7 @@
       "sourceUrl": null,
       "title": "Любимая паррилья или место для асадо у Ивана",
       "summary": "Слот для личной рекомендации — конкретное место, куда Иван сам ходит за асадо, а не общий совет «попробуйте стейк в паррилье».",
-      "publicationStatus": "backlog",
+      "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
         "title": "ru",
@@ -10460,11 +10460,11 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "",
-      "severity": "medium",
+      "severity": "critical",
       "issues": [
         {
           "code": "verification_due",
-          "severity": "medium"
+          "severity": "critical"
         }
       ]
     },
@@ -10647,7 +10647,7 @@
       "sourceUrl": null,
       "title": "Авторский маршрут выходного дня от Ивана",
       "summary": "Слот для личного маршрута — куда Иван сам поехал бы на выходные из Буэнос-Айреса (или из другой своей базы) без оглядки на типовые туристические списки.",
-      "publicationStatus": "backlog",
+      "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
         "title": "ru",
@@ -10660,11 +10660,11 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "",
-      "severity": "medium",
+      "severity": "critical",
       "issues": [
         {
           "code": "verification_due",
-          "severity": "medium"
+          "severity": "critical"
         }
       ]
     },
@@ -11782,7 +11782,7 @@
         },
         {
           "code": "verification_due",
-          "severity": "medium"
+          "severity": "critical"
         }
       ]
     },

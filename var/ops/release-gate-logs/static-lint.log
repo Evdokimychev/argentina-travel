@@ -1,3 +1,4 @@
+
 > argentina-travel@0.1.0 lint
 > next lint
 
@@ -24,9 +25,6 @@
 ./src/components/blog/BlogPostBreadcrumbs.tsx
 1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/blog/BlogPostSectionView.tsx
-7:10  Warning: 'hasContentSlotImage' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/components/blog/BlogReadingHistoryRecorder.tsx
 25:6  Warning: React Hook useEffect has a missing dependency: 'post'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
 
@@ -38,19 +36,6 @@
 
 ./src/components/flights/FlightsWhitelabelWidget.tsx
 5:41  Warning: 'ParsedFlightsSearch' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/guide/GuidePillarView.tsx
-1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/guide/GuideWidgetSlot.tsx
-4:3  Warning: 'ArgentinaSeasonMatrixSkeleton' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/guide/hub/HubDataTable.tsx
-39:32  Warning: '_isFirst' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/guide/hub/KakDobratsyaHubView.tsx
-5:3  Warning: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
-6:3  Warning: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/marketplace/CatalogDepartureCalendarModal.tsx
 18:33  Warning: 'DialogDescription' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -131,7 +116,7 @@
 
 ./src/lib/blog-post-ux.test.ts
 17:31  Warning: 'sortBlogPostsByUpdated' is defined but never used.  @typescript-eslint/no-unused-vars
-19:3  Warning: 'getBlogPostFooterLinks' is defined but never used.  @typescript-eslint/no-unused-vars
+23:3  Warning: 'getBlogPostFooterLinks' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/bookings-demo-seeds-active.ts
 4:37  Warning: '_now' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -150,7 +135,7 @@
 
 ./src/lib/media-resolver.ts
 9:3  Warning: 'GUIDE_TOPIC_PLACE_MAP' is defined but never used.  @typescript-eslint/no-unused-vars
-325:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
+348:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/organizer/inbox-server.ts
 7:3  Warning: 'OrganizerInboxCategory' is defined but never used.  @typescript-eslint/no-unused-vars

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T13:36:34.803Z",
+  "generatedAt": "2026-07-19T17:11:15.522Z",
   "policy": "No source deletion; quarantine is reversible",
   "actions": [
     {
@@ -2044,7 +2044,7 @@
     {
       "id": "lyubimoe-asado-mesto",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/lyubimoe-asado-mesto.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "verification_due"
@@ -2083,7 +2083,7 @@
     {
       "id": "marshrut-vyhodnogo-dnya-ivana",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/marshrut-vyhodnogo-dnya-ivana.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "verification_due"

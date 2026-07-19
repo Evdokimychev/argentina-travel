@@ -3,10 +3,9 @@
 > node scripts/auth-readiness.mjs
 
 Auth environment: local
-Supabase project ref: ci-placeholder
+Supabase project ref: uooxrypocahomoqzdvzy
 Expected project ref: uooxrypocahomoqzdvzy
 Canonical site URL: https://www.goargentina.ru
 Release SHA: local
 Supabase Auth: enabled
-ERROR: Не определены: anonKey, serviceRole, database
-ERROR: Supabase project ref должен быть uooxrypocahomoqzdvzy
+Auth readiness: OK

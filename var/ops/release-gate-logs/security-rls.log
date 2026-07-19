@@ -2,6 +2,6 @@
 > argentina-travel@0.1.0 rls-audit
 > node scripts/rls-audit.mjs
 
-RLS audit (static): 124 tables
+RLS audit (static): 132 tables
 ✓ No critical RLS issues.
 Audit log: var/ops/rls-audit-last.json

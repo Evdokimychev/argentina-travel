@@ -3,10 +3,10 @@
 > tsx scripts/blog-editorial-readiness.ts --strict
 
 {
-  "total": 79,
-  "passed": 79,
+  "total": 75,
+  "passed": 75,
   "failed": 0,
-  "sensitive": 11,
-  "sensitivePassed": 11
+  "sensitive": 9,
+  "sensitivePassed": 9
 }
 Blog editorial readiness: passed. Report: var/ops/blog-editorial-readiness.json
