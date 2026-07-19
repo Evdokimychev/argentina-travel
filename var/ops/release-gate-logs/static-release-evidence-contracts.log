@@ -1,20 +1,35 @@
-✔ accepts fresh evidence for the exact candidate tree and allowed environment (1.003709ms)
+✔ accepts only successful and redirected HTTP responses (0.509375ms)
+✔ selects migrated sources by default and deduplicates URLs (10.546083ms)
+✔ ignores relative and non-http source references (0.550208ms)
+✔ accepts fresh evidence for the exact candidate tree and allowed environment (1.132375ms)
 ✔ rejects production baselines, another tree, missing run id, and wrong environment (0.128875ms)
-✔ rejects stale, undated, and canonical production reports (0.131042ms)
-✔ dirty path parser ignores staged-only and runtime outputs but rejects live inputs (0.263333ms)
-✔ finalization rejects a changed tree or dirty candidate (1.361625ms)
-✔ staging candidate evidence must be bound to the deployed tree (0.152708ms)
-✔ readiness routes every scored slot through the fail-closed selector (0.527542ms)
-✔ isolates the live production SEO baseline from candidate evidence (0.928583ms)
-✔ ignores the canonical candidate report variable for the live baseline (0.101375ms)
-✔ does not add SEO report settings to unrelated checks (0.075625ms)
-✔ accepts BlogPosting as a specialized Article schema (0.546167ms)
-✔ keeps unrelated schema expectations exact (0.13825ms)
-ℹ tests 12
+✔ rejects stale, undated, and canonical production reports (0.120333ms)
+✔ dirty path parser ignores staged-only and runtime outputs but rejects live inputs (0.293417ms)
+✔ local candidate integrity remains strict for packaging-only directories (0.097541ms)
+✔ Vercel ignores only tracked packaging deletions and still blocks source or config drift (0.099875ms)
+✔ capture and finalization preserve the Vercel packaging exception (2.605416ms)
+✔ finalization rejects a changed tree or dirty candidate (0.1785ms)
+✔ staging candidate evidence must be bound to the deployed tree (0.148833ms)
+✔ readiness routes every scored slot through the fail-closed selector (1.855125ms)
+✔ every public table enables RLS and the explicit grant migration is last (2.738125ms)
+✔ new and legacy Supabase projects converge on explicit grants (0.342ms)
+✔ client grants never exceed an RLS policy and anonymous access is read-only (2.721375ms)
+✔ anonymous booking and waitlist mutations stay behind trusted server clients (0.544459ms)
+✔ project refs are derived without exposing credentials (1.528542ms)
+✔ migration targets fail closed around production (0.890041ms)
+✔ journal plan resumes cleanly and rejects drift or blind replay (0.524792ms)
+✔ content release gate blocks on strict knowledge provenance before publication audits (0.654125ms)
+✔ CI installs the pinned knowledge validator dependency before the release gate (0.100333ms)
+✔ isolates the live production SEO baseline from candidate evidence (1.131417ms)
+✔ ignores the canonical candidate report variable for the live baseline (0.115625ms)
+✔ does not add SEO report settings to unrelated checks (0.075334ms)
+✔ accepts BlogPosting as a specialized Article schema (0.532958ms)
+✔ keeps unrelated schema expectations exact (0.096ms)
+ℹ tests 27
 ℹ suites 0
-ℹ pass 12
+ℹ pass 27
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 64.713708
+ℹ duration_ms 81.501333
