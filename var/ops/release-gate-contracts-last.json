@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 3,
+  "evidenceScope": "candidate",
+  "candidateTree": "64086cfcee6c7ef1f90e63f210d782135ba2874d",
+  "evidenceRunId": "584d344e-c97e-4976-8290-cb7153b5790f",
+  "evidenceStartedAt": "2026-07-18T00:57:36.462Z",
+  "evidenceGeneratedAt": "2026-07-18T00:57:59.289Z",
+  "evidenceEnvironment": "local-production",
+  "evidenceBaseUrl": "http://127.0.0.1:3000",
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "commitSha": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+  "commitShaSource": "git-head",
+  "sourceFingerprint": {
+    "commitSha": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+    "source": "git-head",
+    "gitHead": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+    "branch": null,
+    "dirtyTree": {
+      "isDirty": true,
+      "entryCount": 3,
+      "fingerprint": "774f8cc58c8d80d88877448d28f819e0c8e92b5c3503ba4f9ff2a5a3c67c54d9",
+      "entries": [
+        "M var/ops/release-gate-logs/static-lint.log",
+        " M var/ops/release-gate-logs/static-release-evidence-contracts.log",
+        "?? var/ops/release-gate-static-last.json"
+      ]
+    },
+    "lockfile": {
+      "path": "package-lock.json",
+      "sha256": "7500c3199cc2f8f6b88ad8f18044773edee455a07a5996f9f739bba5dc105301"
+    },
+    "migrations": {
+      "count": 96,
+      "latestId": "20260717090234_explicit_data_api_grants",
+      "sha256": "7fc1702a7a1e6e37d506b9e0fa7d81120125165170377c27752fe4394963464d"
+    }
+  },
+  "timestamp": "2026-07-18T00:57:59.290Z",
+  "environment": "production",
+  "requestedGroup": "contracts",
+  "status": "failed",
+  "checks": [
+    {
+      "id": "contracts:unit-integration-contracts",
+      "group": "contracts",
+      "status": "failed",
+      "durationMs": 22492,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/contracts-unit-integration-contracts.log",
+      "command": "npm test"
+    }
+  ]
+}

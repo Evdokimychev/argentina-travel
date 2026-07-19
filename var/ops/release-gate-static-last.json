@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 3,
+  "evidenceScope": "candidate",
+  "candidateTree": "64086cfcee6c7ef1f90e63f210d782135ba2874d",
+  "evidenceRunId": "7059d8d9-db98-48af-b700-1d826e91b394",
+  "evidenceStartedAt": "2026-07-18T00:56:43.579Z",
+  "evidenceGeneratedAt": "2026-07-18T00:57:36.242Z",
+  "evidenceEnvironment": "local-production",
+  "evidenceBaseUrl": "http://127.0.0.1:3000",
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "commitSha": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+  "commitShaSource": "git-head",
+  "sourceFingerprint": {
+    "commitSha": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+    "source": "git-head",
+    "gitHead": "3e2955cb7fbeba5cc7c2c88fd5e6621d2a85e49a",
+    "branch": null,
+    "dirtyTree": {
+      "isDirty": false,
+      "entryCount": 0,
+      "fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "entries": []
+    },
+    "lockfile": {
+      "path": "package-lock.json",
+      "sha256": "7500c3199cc2f8f6b88ad8f18044773edee455a07a5996f9f739bba5dc105301"
+    },
+    "migrations": {
+      "count": 96,
+      "latestId": "20260717090234_explicit_data_api_grants",
+      "sha256": "7fc1702a7a1e6e37d506b9e0fa7d81120125165170377c27752fe4394963464d"
+    }
+  },
+  "timestamp": "2026-07-18T00:57:36.242Z",
+  "environment": "production",
+  "requestedGroup": "static",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "static:environment",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 41,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-environment.log",
+      "command": "node scripts/validate-build-mode.mjs"
+    },
+    {
+      "id": "static:secrets",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 693,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-secrets.log",
+      "command": "node scripts/audit-secrets.mjs"
+    },
+    {
+      "id": "static:release-evidence-contracts",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 123,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-release-evidence-contracts.log",
+      "command": "node --test scripts/lib/candidate-evidence.test.mjs scripts/lib/data-api-grants.test.mjs scripts/lib/migration-journal.test.mjs scripts/kb-source-health.test.mjs scripts/lib/release-gate-content-contract.test.mjs scripts/lib/release-gate-env.test.mjs scripts/lib/seo-schema-contract.test.mjs"
+    },
+    {
+      "id": "static:typescript",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 31108,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-typescript.log",
+      "command": "npx tsc --noEmit"
+    },
+    {
+      "id": "static:lint",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 20345,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-lint.log",
+      "command": "npm run lint"
+    }
+  ]
+}
