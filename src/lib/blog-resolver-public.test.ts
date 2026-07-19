@@ -17,7 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 describe("public blog catalog", () => {
-  it("keeps the reviewed catalog available when CMS cutover cannot return documents", () => {
+  it("keeps the reviewed catalog available when CMS cutover is unavailable or incomplete", () => {
     const resolver = fs.readFileSync(
       path.join(process.cwd(), "src/lib/cms/blog-resolver.ts"),
       "utf8",
@@ -28,7 +28,10 @@ describe("public blog catalog", () => {
     );
 
     expect(resolver).toContain("if (!supabase) return fallback");
-    expect(resolver).toContain("cutoverCatalog.length > 0 ? cutoverCatalog : fallback");
+    expect(resolver).toContain(
+      "fallback.every((post) => cutoverSlugs.has(post.slug))",
+    );
+    expect(resolver).toContain("preservesPublishedCatalog ? cutoverCatalog : fallback");
     expect(contentResolver).toContain("CMS_CUTOVER_CATALOG_QUERY_TIMEOUT_MS = 8_000");
   });
 

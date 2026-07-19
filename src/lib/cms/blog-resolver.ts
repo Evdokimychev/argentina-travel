@@ -62,7 +62,9 @@ async function resolveBlogCatalogUncached(locale: string): Promise<BlogPost[]> {
     if (!supabase) return fallback;
     const cmsPosts = await fetchPublishedCmsDocumentsForCutover("blog", locale);
     const cutoverCatalog = filterPublicBlogCatalog(blogPostsFromCmsDocuments(cmsPosts));
-    return cutoverCatalog.length > 0 ? cutoverCatalog : fallback;
+    const cutoverSlugs = new Set(cutoverCatalog.map((post) => post.slug));
+    const preservesPublishedCatalog = fallback.every((post) => cutoverSlugs.has(post.slug));
+    return preservesPublishedCatalog ? cutoverCatalog : fallback;
   }
 
   const fallback = filterPublicBlogCatalog(blogPosts);
