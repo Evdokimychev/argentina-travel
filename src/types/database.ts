@@ -32,6 +32,122 @@ type DatabaseTable<Row, Insert, Update> = {
   Relationships: [];
 };
 
+export type SocialChannelConnectionRow = {
+  id: string;
+  project_key: string;
+  provider: string;
+  label: string;
+  external_account_id: string | null;
+  handle: string | null;
+  status: string;
+  capabilities: string[];
+  config: Json;
+  last_verified_at: string | null;
+  last_used_at: string | null;
+  last_error_code: string | null;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SocialChannelSecretRow = {
+  id: string;
+  connection_id: string;
+  secret_name: string;
+  vault_secret_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentFactoryItemRow = {
+  id: string;
+  project_key: string;
+  source_document_id: string | null;
+  title: string;
+  brief: string;
+  audience: string;
+  content_pillar: string;
+  goal: string;
+  status: string;
+  priority: number;
+  scheduled_at: string | null;
+  published_at: string | null;
+  metadata: Json;
+  created_by: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentFactoryVariantRow = {
+  id: string;
+  item_id: string;
+  channel: string;
+  format: string;
+  body: string;
+  media_urls: string[];
+  link_url: string | null;
+  target: string | null;
+  status: string;
+  provider_options: Json;
+  published_at: string | null;
+  external_url: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentPublicationJobRow = {
+  id: string;
+  variant_id: string;
+  connection_id: string | null;
+  idempotency_key: string;
+  status: string;
+  scheduled_for: string;
+  started_at: string | null;
+  finished_at: string | null;
+  attempt_count: number;
+  max_attempts: number;
+  external_publication_id: string | null;
+  external_url: string | null;
+  error_code: string | null;
+  error_summary: string | null;
+  response_metadata: Json;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SocialInboxThreadRow = {
+  id: string;
+  project_key: string;
+  connection_id: string;
+  provider: string;
+  external_user_id: string;
+  display_name: string | null;
+  contact_phone: string | null;
+  status: string;
+  unread_count: number;
+  last_message_preview: string | null;
+  last_message_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SocialInboxMessageRow = {
+  id: string;
+  thread_id: string;
+  external_message_id: string;
+  direction: string;
+  message_type: string;
+  body: string;
+  media: Json;
+  delivery_status: string;
+  provider_timestamp: string | null;
+  raw_event: Json;
+  created_at: string;
+};
+
 type ContentSourceRow = {
   id: string;
   title: string;
@@ -154,6 +270,79 @@ type ContentMediaUsageRow = {
   role: string;
   section_id: string;
   created_at: string;
+};
+
+type IngestionSourceRow = {
+  id: string; legacy_key: string | null; name: string; source_type: string; status: string;
+  description: string | null; language: string; region: string | null; categories: string[];
+  connection_config: Json; credential_ref: string | null; schedule_kind: string;
+  schedule_expression: string | null; enabled: boolean; priority: number; trust_level: number;
+  legal_notes: string | null; rate_limit_per_minute: number; retry_policy: Json;
+  timeout_seconds: number; checkpoint: Json; owner_user_id: string | null;
+  last_run_at: string | null; last_success_at: string | null; next_run_at: string | null;
+  last_error: string | null; last_tested_at: string | null; last_test_ok: boolean | null;
+  created_at: string; updated_at: string;
+};
+
+type IngestionSourceRunRow = {
+  id: string; source_id: string; trigger_kind: string; status: string; idempotency_key: string;
+  retry_of_run_id: string | null; attempt: number; max_attempts: number; next_retry_at: string | null;
+  dead_lettered_at: string | null; actor_user_id: string | null; checkpoint_before: Json;
+  checkpoint_after: Json; counts: Json; error_category: string | null; error_message: string | null;
+  cancel_requested_at: string | null; heartbeat_at: string | null; started_at: string | null;
+  completed_at: string | null; created_at: string;
+};
+
+type IngestionRawDocumentRow = {
+  id: string; source_id: string; source_run_id: string; parent_document_id: string | null;
+  external_id: string; version: number; source_url: string | null; canonical_url: string | null;
+  raw_format: string; raw_content: string | null; raw_payload: Json; content_hash: string;
+  media: Json; title: string | null; author: string | null; language: string | null;
+  source_published_at: string | null; source_updated_at: string | null; fetched_at: string;
+  status: string; archived_at: string | null; created_at: string;
+};
+
+type IngestionNormalizedDocumentRow = {
+  id: string; raw_document_id: string; source_id: string; source_run_id: string;
+  title: string; body: string; summary: string; language: string; category: string | null;
+  province: string | null; city: string | null; tags: string[]; fingerprint: string;
+  metadata: Json; normalized_at: string; created_at: string;
+};
+
+type IngestionCandidateRow = {
+  id: string; normalized_document_id: string; source_id: string; source_run_id: string;
+  status: string; title: string; summary: string; processed_content: string; language: string;
+  category: string | null; province: string | null; city: string | null; tags: string[];
+  quality_score: number; freshness_score: number; trust_score: number;
+  decision_reasons: string[]; flags: string[]; extracted_entities: Json;
+  suggested_target: string; ai_result: Json | null; ai_prompt_version: string | null;
+  ai_model: string | null; ai_latency_ms: number | null; ai_input_tokens: number | null;
+  ai_output_tokens: number | null; assigned_to: string | null; moderation_notes: string | null;
+  moderated_by: string | null; moderated_at: string | null; cms_document_id: string | null;
+  publication_target: string | null; published_at: string | null; created_at: string; updated_at: string;
+};
+
+type IngestionDuplicateLinkRow = {
+  candidate_id: string; related_candidate_id: string; relation_type: string; similarity: number;
+  resolution: string; resolved_by: string | null; resolved_at: string | null; created_at: string;
+};
+
+type IngestionProcessingStepRow = {
+  id: string; source_run_id: string; raw_document_id: string | null; candidate_id: string | null;
+  step_name: string; status: string; attempt: number; max_attempts: number; input_summary: Json;
+  output_summary: Json; error_category: string | null; error_message: string | null;
+  started_at: string | null; completed_at: string | null; latency_ms: number | null; created_at: string;
+};
+
+type IngestionPromptVersionRow = {
+  id: string; task: string; version: number; provider: string; model: string; system_prompt: string;
+  output_schema: Json; status: string; created_by: string | null; created_at: string; activated_at: string | null;
+};
+
+type IngestionMigrationLedgerRow = {
+  id: string; migration_id: string; source_system: string; entity_type: string; legacy_id: string;
+  target_table: string | null; target_id: string | null; checksum: string; status: string;
+  error_message: string | null; migrated_at: string;
 };
 
 export interface Database {
@@ -3157,10 +3346,90 @@ export interface Database {
         };
         Relationships: [];
       };
+      content_factory_items: DatabaseTable<
+        ContentFactoryItemRow,
+        Partial<ContentFactoryItemRow> & Pick<ContentFactoryItemRow, "title">,
+        Partial<ContentFactoryItemRow>
+      >;
+      content_factory_variants: DatabaseTable<
+        ContentFactoryVariantRow,
+        Partial<ContentFactoryVariantRow> & Pick<ContentFactoryVariantRow, "item_id" | "channel">,
+        Partial<ContentFactoryVariantRow>
+      >;
+      content_publication_jobs: DatabaseTable<
+        ContentPublicationJobRow,
+        Partial<ContentPublicationJobRow> & Pick<ContentPublicationJobRow, "variant_id">,
+        Partial<ContentPublicationJobRow>
+      >;
+      social_channel_connections: DatabaseTable<
+        SocialChannelConnectionRow,
+        Partial<SocialChannelConnectionRow> & Pick<SocialChannelConnectionRow, "provider" | "label">,
+        Partial<SocialChannelConnectionRow>
+      >;
+      social_channel_secrets: DatabaseTable<
+        SocialChannelSecretRow,
+        Partial<SocialChannelSecretRow> & Pick<SocialChannelSecretRow, "connection_id" | "secret_name" | "vault_secret_id">,
+        Partial<SocialChannelSecretRow>
+      >;
+      social_inbox_threads: DatabaseTable<
+        SocialInboxThreadRow,
+        Partial<SocialInboxThreadRow> & Pick<SocialInboxThreadRow, "connection_id" | "provider" | "external_user_id">,
+        Partial<SocialInboxThreadRow>
+      >;
+      social_inbox_messages: DatabaseTable<
+        SocialInboxMessageRow,
+        Partial<SocialInboxMessageRow> & Pick<SocialInboxMessageRow, "thread_id" | "external_message_id" | "direction">,
+        Partial<SocialInboxMessageRow>
+      >;
       content_sources: DatabaseTable<
         ContentSourceRow,
         Partial<ContentSourceRow> & Pick<ContentSourceRow, "title" | "authority" | "url" | "source_type" | "checked_at">,
         Partial<ContentSourceRow>
+      >;
+      ingestion_sources: DatabaseTable<
+        IngestionSourceRow,
+        Partial<IngestionSourceRow> & Pick<IngestionSourceRow, "name" | "source_type">,
+        Partial<IngestionSourceRow>
+      >;
+      ingestion_source_runs: DatabaseTable<
+        IngestionSourceRunRow,
+        Partial<IngestionSourceRunRow> & Pick<IngestionSourceRunRow, "source_id" | "idempotency_key">,
+        Partial<IngestionSourceRunRow>
+      >;
+      ingestion_raw_documents: DatabaseTable<
+        IngestionRawDocumentRow,
+        Partial<IngestionRawDocumentRow> & Pick<IngestionRawDocumentRow, "source_id" | "source_run_id" | "external_id" | "raw_format" | "content_hash">,
+        Partial<IngestionRawDocumentRow>
+      >;
+      ingestion_normalized_documents: DatabaseTable<
+        IngestionNormalizedDocumentRow,
+        Partial<IngestionNormalizedDocumentRow> & Pick<IngestionNormalizedDocumentRow, "raw_document_id" | "source_id" | "source_run_id" | "title" | "body" | "fingerprint">,
+        Partial<IngestionNormalizedDocumentRow>
+      >;
+      ingestion_candidates: DatabaseTable<
+        IngestionCandidateRow,
+        Partial<IngestionCandidateRow> & Pick<IngestionCandidateRow, "normalized_document_id" | "source_id" | "source_run_id" | "title" | "processed_content">,
+        Partial<IngestionCandidateRow>
+      >;
+      ingestion_duplicate_links: DatabaseTable<
+        IngestionDuplicateLinkRow,
+        Partial<IngestionDuplicateLinkRow> & Pick<IngestionDuplicateLinkRow, "candidate_id" | "related_candidate_id" | "relation_type">,
+        Partial<IngestionDuplicateLinkRow>
+      >;
+      ingestion_processing_steps: DatabaseTable<
+        IngestionProcessingStepRow,
+        Partial<IngestionProcessingStepRow> & Pick<IngestionProcessingStepRow, "source_run_id" | "step_name">,
+        Partial<IngestionProcessingStepRow>
+      >;
+      ingestion_prompt_versions: DatabaseTable<
+        IngestionPromptVersionRow,
+        Partial<IngestionPromptVersionRow> & Pick<IngestionPromptVersionRow, "id" | "task" | "version" | "model" | "system_prompt">,
+        Partial<IngestionPromptVersionRow>
+      >;
+      ingestion_migration_ledger: DatabaseTable<
+        IngestionMigrationLedgerRow,
+        Partial<IngestionMigrationLedgerRow> & Pick<IngestionMigrationLedgerRow, "migration_id" | "source_system" | "entity_type" | "legacy_id" | "checksum">,
+        Partial<IngestionMigrationLedgerRow>
       >;
       content_source_links: DatabaseTable<
         ContentSourceLinkRow,
@@ -4846,6 +5115,30 @@ export interface Database {
       content_publication_gate: {
         Args: { p_document_id: string };
         Returns: Json;
+      };
+      content_factory_upsert_connection: {
+        Args: {
+          p_project_key: string;
+          p_provider: string;
+          p_label: string;
+          p_external_account_id: string;
+          p_handle: string;
+          p_config: Json;
+          p_secret_values: Json;
+          p_actor_user_id: string | null;
+        };
+        Returns: Json;
+      };
+      content_factory_get_connection_credentials: {
+        Args: { p_provider: string; p_project_key?: string };
+        Returns: {
+          connection_id: string;
+          provider: string;
+          external_account_id: string | null;
+          handle: string | null;
+          config: Json;
+          secrets: Json;
+        }[];
       };
     };
     Enums: Record<string, never>;

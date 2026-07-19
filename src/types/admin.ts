@@ -29,6 +29,26 @@ export const ADMIN_CAPABILITIES = [
   "analytics.view",
   "system.settings",
   "system.audit",
+  "sources.view",
+  "sources.create",
+  "sources.edit",
+  "sources.enable",
+  "sources.disable",
+  "sources.run",
+  "sources.delete",
+  "source_credentials.manage",
+  "ingestion_runs.view",
+  "ingestion_runs.retry",
+  "processing_queue.view",
+  "processing_queue.manage",
+  "moderation.view",
+  "moderation.approve",
+  "moderation.reject",
+  "moderation.publish",
+  "prompts.view",
+  "prompts.manage",
+  "system_ingestion.manage",
+  "ingestion_audit.view",
 ] as const;
 
 export type AdminCapability = (typeof ADMIN_CAPABILITIES)[number];
@@ -50,6 +70,7 @@ export type AdminNavSectionId =
   | "operations"
   | "marketplace"
   | "content"
+  | "ingestion"
   | "marketing"
   | "users"
   | "analytics"
@@ -83,10 +104,16 @@ export type AdminNavItemId =
   | "content-social-feed"
   | "content-translations"
   | "content-freshness"
+  | "ingestion-overview"
+  | "ingestion-sources"
+  | "ingestion-runs"
+  | "ingestion-moderation"
+  | "ingestion-prompts"
   | "users-list"
   | "analytics-overview"
   | "analytics-funnels"
   | "marketing-search-visibility"
+  | "marketing-content-factory"
   | "marketing-email-templates"
   | "system-redirects"
   | "system-settings"

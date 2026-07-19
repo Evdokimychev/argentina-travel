@@ -2,7 +2,7 @@
 
 ## Итог
 
-Проект собран в одну каноническую историю без потери прежней работы. Все именованные ветки и пять найденных detached-worktree включены в текущую релизную ветку; незакоммиченных пользовательских изменений в старых worktree не осталось. Релизный кандидат проходит TypeScript, lint, unit/integration/contract tests, контентные и SEO-проверки, production build и критические Playwright-сценарии.
+Проект собран в одну каноническую историю без потери прежней работы. Все именованные ветки и пять найденных detached-worktree включены в текущую релизную ветку; незакоммиченных пользовательских изменений в старых worktree не осталось. Дополнительный пользовательский срез Argentina Knowledge, native ingestion и Content Factory принят из общего worktree после завершения параллельной задачи, независимо проверен и включён в тот же релиз. Релизный кандидат проходит TypeScript, lint, unit/integration/contract tests, контентные и SEO-проверки, production build и критические Playwright-сценарии.
 
 Во время ручной мобильной проверки найден и исправлен P0: при включённом `cmsBlogCutover` массовый запрос 290 CMS-документов мог превысить общий лимит 1,5 секунды, после чего `/blog` показывал пустой каталог. Для bulk-cutover введён отдельный лимит и безопасный возврат к проверенному редакционному каталогу при недоступности CMS. Повторная проверка показала 69 публичных материалов, 14 категорий и 20 карточек в первом рендере.
 
@@ -27,12 +27,15 @@
 
 - Production health подтверждает доступность приложения, прямого Postgres и поиска.
 - Перед DDL создана полная зашифрованная logical-копия schema+data с SHA-256: `/Users/Study/.codex/private-archives/argentina-travel/production-backup-before-governance-2026-07-19`. Дамп зашифрован `age`, identity хранится отдельно с правами `0600`.
+- Перед второй серией DDL создан ещё один актуальный полный зашифрованный backup: `/Users/Study/.codex/private-archives/argentina-travel/production-backup-before-content-factory-2026-07-19` (зашифрованный артефакт 4,37 МБ, каталог исходного dump проверен до шифрования).
 - Миграция `20260715041742_content_knowledge_governance.sql` применена к каноническому production-проекту `uooxrypocahomoqzdvzy` одной транзакцией.
 - Созданы 8 governance-таблиц, 7 полей управления документом, 17 полей media-rights, 2 publication-gate trigger и 2 security-invoker функции.
 - Для всех 8 новых таблиц включён RLS. У `anon` нет DML; публичный `select` открыт только там, где он ограничен status/expiry policy. `authenticated` ограничен staff-policy, `service_role` имеет необходимые операции.
 - Функции publication gate недоступны `anon/authenticated`, доступны только `service_role`; feature flag `content_governance_v1` оставлен выключенным.
+- Миграции `20260719173719_argentina_knowledge_native_ingestion.sql` и `20260719174112_content_factory_control_plane.sql` применены к тому же production-проекту отдельными атомарными транзакциями.
+- Созданы 9 ingestion-таблиц и 7 таблиц Content Factory/social inbox. На всех 16 включён RLS, созданы 16 service-role policy; у `anon` и `authenticated` прямых table privileges нет. Две RPC для секретов каналов доступны только `service_role`, сами секреты хранятся в Supabase Vault.
 - Статический RLS-аудит не нашёл критичных проблем.
-- В проекте исторически отсутствует единый DB migration journal для уже существующей production-схемы. Скрипт правильно отказывается слепо replay-ить весь каталог. До следующей серии миграций следует отдельно зафиксировать доказанный production baseline, а не запускать все 97 файлов поверх живой базы.
+- В проекте исторически отсутствует единый DB migration journal для уже существующей production-схемы. Скрипт правильно отказывается слепо replay-ить весь каталог. До следующей серии миграций следует отдельно зафиксировать доказанный production baseline, а не запускать все 99 файлов поверх живой базы.
 
 ## Дизайн, UX, mobile и accessibility
 
@@ -57,6 +60,9 @@
 - Туристический профиль, кабинет организатора и админская платформа входят в общую production-сборку, а права разделены server-side проверками и RLS.
 - Governance API/типы/тесты синхронизированы с новой схемой; feature выключена до отдельного операционного включения редакцией.
 - Отдельный CMS cutover guard не позволяет включить неполный lane. Публичный блог теперь дополнительно не превращается в пустой экран при временном bulk-timeout.
+- В админку добавлен native ingestion: реестр источников, запуски и retry, очередь модерации, версии AI-промптов и передача одобренного материала в CMS только как редакционного draft. Источники выключены по умолчанию, секретные значения запрещены в `connection_config`, сетевые адаптеры защищены от SSRF.
+- Добавлен первый целостный срез Content Factory: один редакционный item, варианты для сайта/Telegram/Instagram/WhatsApp, durable publication queue, пятиминутный планировщик, защищённые подключения через Vault и подписанные Meta webhooks. Административные API используют существующие capabilities и audit log.
+- Проверка без администраторской сессии подтверждает, что новые закрытые маршруты перенаправляют на вход. Полное визуальное принятие внутренних экранов требует реальной staff-сессии.
 
 ## Интеграции и платежи
 
@@ -64,6 +70,7 @@
 - YouTravel catalog/detail/offers и партнёрские Affise-ссылки отвечают. Booking endpoints возвращают `405`, поэтому используется предусмотренный внешний партнёрский переход. Affise reporting API optional и не настроен.
 - 42 проверки booking/payment state machine, idempotency, webhook и provider contracts проходят.
 - `npm audit --omit=dev`: 0 известных уязвимостей.
+- Для фактической публикации Content Factory ещё нужны внешние Telegram/Meta credentials, права канала, approved WhatsApp templates и callback URL. Код и schema готовы; секреты намеренно не добавлялись.
 
 ## Аналитика
 
@@ -75,7 +82,7 @@
 
 - TypeScript: pass.
 - ESLint: pass с существующими warnings.
-- Unit/integration/contracts: 1849 тестов прошли до финального P0-fix; 30 целевых CMS/blog/latency тестов после исправления прошли, добавлен новый regression contract.
+- Unit/integration/contracts: 1872 теста прошли после интеграции CMS P0-fix, native ingestion и Content Factory.
 - Production build: pass; 887 static/dynamic routes generated после восстановления blog catalog.
 - Release gate: static, contracts, content, security, commerce, production и journeys — pass на интегрированном кандидате; точный финальный commit повторно проверяется перед push.
 - Manual browser: desktop home, mobile home, mobile blog, mobile tour detail, auth modal — pass.
@@ -87,6 +94,7 @@
 3. Native Tripster External Orders и YouTravel booking API недоступны по текущим партнёрским правам; внешний checkout работает.
 4. GTM/GA4/Метрика/Search Console требуют действий владельца в Vercel и кабинетах провайдеров.
 5. Исторический migration journal production нужно формализовать отдельной baseline-процедурой до массового применения будущих миграций.
+6. Content Factory пока подтверждает принятие публикации внешним API, но не полную доставку/охват. Delivery-status webhooks, полноценный операторский inbox, CRM-воронка, AI-генерация и Instagram-карусели остаются следующими слоями.
 
 ## Решение о релизе
 

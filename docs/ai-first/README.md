@@ -13,6 +13,8 @@
 | [TASKS.md](./TASKS.md) | Текущие задачи |
 | [AI_RULES.md](./AI_RULES.md) | Правила для AI |
 | [PROMPTS.md](./PROMPTS.md) | Готовые промпты |
+| [CONTENT_FACTORY_PROMPT.md](./CONTENT_FACTORY_PROMPT.md) | Мастер-промпт контент-завода |
+| [CONTENT_FACTORY_ARCHITECTURE.md](./CONTENT_FACTORY_ARCHITECTURE.md) | Архитектура контента и социальных каналов |
 | [DECISIONS.md](./DECISIONS.md) | Архитектурные решения |
 | [API.md](./API.md) | API и интеграции |
 | [DATABASE.md](./DATABASE.md) | БД, миграции, RLS |

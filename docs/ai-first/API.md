@@ -13,6 +13,8 @@ Route handlers в `src/app/api/`. Основные группы:
 | CMS governance | `/api/admin/content/documents/:id/governance` |
 | Official Argentina FX | `/api/exchange-rates/argentina` |
 | Webhooks | `/api/webhooks/` |
+| Контент-завод | `/api/admin/content-factory` |
+| Публикация по расписанию | `/api/cron/content-factory-publish` |
 
 Подробнее: [public-api-e70.md](../public-api-e70.md)
 
@@ -38,6 +40,8 @@ Route handlers в `src/app/api/`. Основные группы:
 ## Webhooks
 
 См. [partner-webhooks-e88.md](../partner-webhooks-e88.md)
+
+Meta-вебхуки контент-завода и инструкции подключения: [integrations/content-factory-social.md](../integrations/content-factory-social.md).
 
 ## Environment variables (API keys)
 
