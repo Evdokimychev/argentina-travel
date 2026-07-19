@@ -40,4 +40,16 @@ describe("tour mobile booking contract", () => {
     expect(calendar).toContain("disabled={!currentOrFuture}");
     expect(selector.match(/min-h-11 flex-1/g)).toHaveLength(2);
   });
+
+  it("uses a solid modal-like mobile booking layer and compact action copy", () => {
+    const mobileBar = source("MobileBookingBar.tsx");
+    const ui = readFileSync(join(process.cwd(), "src/lib/tour-detail-ui.ts"), "utf8");
+
+    expect(mobileBar).toContain("bg-charcoal/25 lg:hidden");
+    expect(mobileBar).toContain("data-mobile-booking-bar");
+    expect(mobileBar).toContain('? "Продолжить"');
+    expect(mobileBar).toContain("ariaLabel={primaryLabel}");
+    expect(ui).toContain("bg-surface-elevated shadow-elevated");
+    expect(ui).not.toContain("bg-surface-elevated/95");
+  });
 });

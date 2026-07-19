@@ -1,0 +1,12 @@
+
+> argentina-travel@0.1.0 blog:editorial-readiness:check
+> tsx scripts/blog-editorial-readiness.ts --strict
+
+{
+  "total": 79,
+  "passed": 79,
+  "failed": 0,
+  "sensitive": 11,
+  "sensitivePassed": 11
+}
+Blog editorial readiness: passed. Report: var/ops/blog-editorial-readiness.json

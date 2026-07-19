@@ -61,6 +61,17 @@ describe("homepage client bundle boundaries", () => {
     expect(search).toContain("<Suspense fallback={<SearchPanelSkeleton />}>");
   });
 
+  it("allows the home search grid item to shrink to a mobile viewport", () => {
+    const search = readFileSync(join(componentRoot, "HomeMultiSearch.tsx"), "utf8");
+    const hero = readFileSync(join(componentRoot, "MarketplaceHomeHero.tsx"), "utf8");
+    const flights = readFileSync(join(componentRoot, "HomeFlightSearchBlock.tsx"), "utf8");
+
+    expect(hero).toContain("order-2 min-w-0 w-full max-w-full");
+    expect(search).toContain("min-w-0 w-full max-w-full space-y-3");
+    expect(search).toContain("overflow-x-hidden rounded-3xl");
+    expect(flights).toContain("flex min-w-0 w-full max-w-full flex-col");
+  });
+
   it("loads independent excursion city sources in parallel", () => {
     const source = readFileSync(
       join(process.cwd(), "src/lib/excursion-server.ts"),

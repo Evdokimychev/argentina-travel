@@ -21,8 +21,8 @@
       "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
     },
     "performance": {
-      "score": 5.9,
-      "note": "median perf 49, a11y 97, worst CLS 0.668 (prod CDN)"
+      "score": 10,
+      "note": "median perf 86, a11y 99, worst CLS 0.150 (prod CDN)"
     }
   },
   "blockers": [

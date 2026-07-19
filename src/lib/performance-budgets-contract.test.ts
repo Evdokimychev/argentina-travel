@@ -41,6 +41,12 @@ describe("Sprint 3 performance budgets", () => {
     expect(budgetStep.split("- name: Upload performance evidence")[0]).not.toContain(
       "continue-on-error",
     );
+    expect(budgetStep.split("- name: Upload performance evidence")[0]).not.toContain(
+      "LIGHTHOUSE_PERF_BUDGET",
+    );
+    expect(budgetStep.split("- name: Upload performance evidence")[0]).not.toContain(
+      "LIGHTHOUSE_LCP_BUDGET_MS",
+    );
     expect(budgetStep).toContain("lighthouse-phase2-sample-last.json");
   });
 });

@@ -77,7 +77,7 @@ export function FlightPopularRoutesGrouped({
   return (
     <div
       className={cn(
-        "scrollbar-hide flex flex-nowrap items-stretch overflow-x-auto pb-1",
+        "scrollbar-hide min-w-0 max-w-full flex flex-nowrap items-stretch overflow-x-auto pb-1",
         className,
         routesClassName,
       )}

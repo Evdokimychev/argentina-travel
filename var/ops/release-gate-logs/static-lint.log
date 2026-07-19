@@ -120,9 +120,6 @@
 15:7  Warning: 'CASH' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 19:7  Warning: 'CHECKLIST' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 
-./src/data/blog.ts
-2:30  Warning: 'filterIndexableBlogPosts' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/data/tour-guides-defaults.ts
 89:25  Warning: '_ignored' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 
@@ -153,7 +150,7 @@
 
 ./src/lib/media-resolver.ts
 9:3  Warning: 'GUIDE_TOPIC_PLACE_MAP' is defined but never used.  @typescript-eslint/no-unused-vars
-266:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
+325:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/organizer/inbox-server.ts
 7:3  Warning: 'OrganizerInboxCategory' is defined but never used.  @typescript-eslint/no-unused-vars

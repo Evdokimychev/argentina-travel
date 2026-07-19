@@ -90,6 +90,15 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   }, [partnerPreviewOpen]);
 
   useEffect(() => {
+    if (!expanded) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [expanded]);
+
+  useEffect(() => {
     if (!partnerEditRequest) return;
     if (!window.matchMedia("(max-width: 1023px)").matches) return;
     setExpanded(true);
@@ -198,6 +207,10 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       : canJoinWaitlist && bookingValidationError
         ? "Лист ожидания"
         : offerCapabilities.primaryActionLabel;
+  const compactPrimaryLabel =
+    primaryLabel.length > 20
+      ? "Продолжить"
+      : primaryLabel;
 
   const showFromPrefix = resolveTourPriceFromPrefix({
     priceUsd: tour.priceUsd,
@@ -214,7 +227,16 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     : null;
 
   return (
-    <div className={tourDetailMobileBarClass}>
+    <>
+      {expanded ? (
+        <button
+          type="button"
+          className="fixed inset-0 z-[39] bg-charcoal/25 lg:hidden"
+          aria-label="Свернуть выбор даты и туристов"
+          onClick={() => setExpanded(false)}
+        />
+      ) : null}
+      <div className={tourDetailMobileBarClass} data-mobile-booking-bar>
       {expanded ? (
         <div id="mobile-booking-controls" className="border-b border-gray-100 py-3">
           <div className={cn(siteContainerClass, "space-y-3")}>
@@ -314,7 +336,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
-                label={offerCapabilities.primaryActionLabel}
+                label={compactPrimaryLabel}
+                ariaLabel={primaryLabel}
                 className="min-h-12 min-w-0 flex-[1.15] rounded-xl px-2 py-2 text-xs font-semibold leading-tight sm:text-sm"
                 onClick={handleExternalBookingClick}
               />
@@ -329,12 +352,13 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                     "cursor-not-allowed bg-gray-300 text-slate hover:bg-gray-300",
                 )}
               >
-                {primaryLabel}
+                {compactPrimaryLabel}
               </button>
             )}
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

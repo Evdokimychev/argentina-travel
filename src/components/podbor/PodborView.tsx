@@ -170,7 +170,8 @@ export default function PodborView({ tours }: PodborViewProps) {
             </Button>
             {Object.keys(answers).length > 0 ? (
               <Button type="button" size="lg" variant="outline" onClick={() => setPhase("quiz")}>
-                Продолжить с сохранённого
+                <span className="sm:hidden">Продолжить</span>
+                <span className="hidden sm:inline">Продолжить с сохранённого</span>
               </Button>
             ) : null}
           </div>

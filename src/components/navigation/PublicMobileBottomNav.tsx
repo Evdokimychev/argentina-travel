@@ -43,7 +43,7 @@ export default function PublicMobileBottomNav({
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative flex min-h-14 min-w-11 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+                "relative flex min-h-14 min-w-11 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[10px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
                 active ? "text-sky-ink" : "text-muted hover:text-foreground",
               )}
             >
