@@ -25,6 +25,7 @@ function baseDoc(overrides: Partial<CmsDocument>): CmsDocument {
     createdAt: "2026-01-01T00:00:00.000Z",
     updatedAt: "2026-01-15T10:00:00.000Z",
     ...overrides,
+    rowVersion: overrides.rowVersion ?? 1,
   };
 }
 
@@ -181,7 +182,10 @@ describe("destinationsFromCmsDocuments", () => {
 
     expect(page?.image).toContain("/media/destinations/iguazu/");
     expect(page?.image).not.toBe("/logo-light.svg");
-    expect(page?.gallery).toHaveLength(5);
+    const gallery = page?.gallery ?? [];
+    expect(gallery).toHaveLength(4);
+    expect(new Set(gallery).size).toBe(gallery.length);
+    expect(gallery).not.toContain(page?.image);
     expect(page?.imageAlt).toMatch(/Игуасу|водопад/i);
   });
 

@@ -90,7 +90,14 @@ export async function PATCH(request: Request, context: RouteContext) {
     seo?: CmsDocumentSeo;
     articleType?: CmsAuthorArticleType;
     relations?: CmsAuthorArticleRelations;
+    expectedVersion?: number;
   };
+  if (!Number.isInteger(input.expectedVersion) || (input.expectedVersion ?? 0) < 1) {
+    return NextResponse.json(
+      { error: "Статья уже могла измениться. Обновите страницу и повторите сохранение." },
+      { status: 409 },
+    );
+  }
 
   const nextBody: CmsAuthorArticleBody = {
     ...existing.body,
@@ -107,10 +114,11 @@ export async function PATCH(request: Request, context: RouteContext) {
     body: nextBody,
     seo: input.seo ?? existing.seo,
     actorId: auth.user.id,
+    expectedVersion: input.expectedVersion!,
   });
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json({ error: result.error, code: result.code }, { status: result.code === "STALE_VERSION" ? 409 : 400 });
   }
 
   return NextResponse.json({ document: result.document });

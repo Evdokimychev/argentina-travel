@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import {
+  cmsMutationHttpStatus,
   deleteCmsDocument,
   getCmsDocumentById,
   updateCmsDocument,
@@ -15,6 +16,7 @@ type PatchBody = {
   body?: CmsDocumentBody;
   seo?: CmsDocumentSeo;
   status?: CmsDocumentStatus;
+  expectedVersion?: number;
 };
 
 export async function GET(
@@ -45,38 +47,45 @@ export async function PATCH(
 
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
-  const body = (await request.json()) as PatchBody;
+  const body = (await request.json().catch(() => null)) as PatchBody | null;
+  if (!body || !Number.isInteger(body.expectedVersion) || (body.expectedVersion ?? 0) < 1) {
+    return NextResponse.json({ error: "Обновите страницу и повторите сохранение" }, { status: 409 });
+  }
   const validatedSeo = body.seo === undefined ? null : validateAndNormalizeCmsSeo(body.seo);
   if (validatedSeo && !validatedSeo.ok) {
     return NextResponse.json({ error: validatedSeo.error }, { status: 400 });
   }
 
-  if (body.status === "published" || body.status === "scheduled") {
+  const supabase = createSupabaseAdminClient();
+  const current = await getCmsDocumentById(supabase, decodedId);
+  if (!current) return NextResponse.json({ error: "Документ не найден" }, { status: 404 });
+  const requiresPublish =
+    current.status === "published" ||
+    current.status === "scheduled" ||
+    body.status === "published" ||
+    body.status === "scheduled";
+  if (requiresPublish) {
     const publishAuth = await authorizeAdminRequest(request, "content.publish");
     if (!publishAuth.ok) return publishAuth.response;
   }
 
-  const supabase = createSupabaseAdminClient();
   const result = await updateCmsDocument(supabase, decodedId, {
     title: body.title,
     body: body.body,
     seo: validatedSeo?.seo,
     status: body.status,
     actorId: auth.actorId,
+    expectedVersion: body.expectedVersion!,
+    allowPublish: requiresPublish,
+    ipAddress: clientIpFromRequest(request),
   });
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json(
+      { error: result.error, code: result.code },
+      { status: cmsMutationHttpStatus(result.code) },
+    );
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.update",
-    entityType: "content_document",
-    entityId: decodedId,
-    payload: { status: body.status ?? result.document.status },
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ document: result.document });
 }

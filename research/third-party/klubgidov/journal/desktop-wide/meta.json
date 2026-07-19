@@ -1,0 +1,16 @@
+{
+  "sourceUrl": "https://klubgidov.ru/journal",
+  "finalUrl": "https://klubgidov.ru/journal",
+  "title": "Блог | Клуб Гидов",
+  "researchedAt": "2026-07-18T15:17:55.370Z",
+  "httpStatus": 200,
+  "viewport": {
+    "id": "desktop-wide",
+    "width": 1440,
+    "height": 1100
+  },
+  "pageType": "journal",
+  "interactiveStates": [
+    "default"
+  ]
+}

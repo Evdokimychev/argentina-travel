@@ -69,8 +69,8 @@ npm run publish:verify:pre-deploy   # code-ready: build + stale /map на prod �
 ## 2. Supabase Production
 
 ```bash
-# 1. Убедиться что DATABASE_URL → production
-npm run supabase:migrate   # staging, затем production
+# 1. Сначала отдельный staging; production только после backup/restore и acceptance
+MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL="$STAGING_DATABASE_URL" npm run supabase:migrate
 
 # F3: scheduled publish (миграция 20250627000010_cms_scheduled_publish.sql)
 # Cron публикации: /api/cron/cms/publish-scheduled (вызывается из platform-maintenance)

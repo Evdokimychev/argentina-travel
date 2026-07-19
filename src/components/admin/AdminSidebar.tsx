@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
+  CarFront,
   ClipboardList,
   Clock3,
   Languages,
@@ -38,6 +39,7 @@ import {
   AdminCommandPaletteButton,
   AdminDarkSidebarToggle,
   AdminDenseTableToggle,
+  AdminSimpleNavigationToggle,
 } from "@/components/admin/AdminLayoutControls";
 import AdminNotificationsMenu from "@/components/admin/AdminNotificationsMenu";
 import { useAuth } from "@/context/AuthContext";
@@ -50,6 +52,7 @@ import {
   groupAdminNavItems,
 } from "@/lib/admin/nav-config";
 import type { AdminNavItemId } from "@/types/admin";
+import { filterAdminNavForMode } from "@/lib/admin/admin-navigation-mode";
 import {
   Dialog,
   DialogBody,
@@ -73,6 +76,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   "operations-payments": Wallet,
   "operations-shop": ShoppingBag,
   "marketplace-tours": MapPin,
+  "marketplace-mobility": CarFront,
   "marketplace-excursions": MapPin,
   "marketplace-organizers": Users,
   "marketplace-experts": Users,
@@ -162,7 +166,9 @@ export function AdminMobileHeader({ buildVersionChip }: { buildVersionChip?: Rea
 export function AdminMobileNav() {
   const pathname = usePathname();
   const { capabilities } = useAdminContext();
-  const items = filterAdminNavItems(capabilities);
+  const { simpleNavigation } = useAdminLayoutPrefs();
+  const authorizedItems = filterAdminNavItems(capabilities);
+  const items = filterAdminNavForMode(authorizedItems, simpleNavigation, pathname);
   const [moreOpen, setMoreOpen] = useState(false);
   const activeItem = items.find((item) => isNavActive(pathname, item.href));
   const defaultPrimaryItems = items.filter((item) => MOBILE_PRIMARY_NAV_IDS.includes(item.id));
@@ -208,6 +214,14 @@ export function AdminMobileNav() {
             <DialogDescription>Управление продажами, контентом и настройками сайта</DialogDescription>
           </DialogHeader>
           <DialogBody className="space-y-6 overflow-y-auto pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
+              <p className="text-xs text-slate">
+                {simpleNavigation
+                  ? "Показаны основные задачи владельца"
+                  : "Показаны все профессиональные инструменты"}
+              </p>
+              <AdminSimpleNavigationToggle className="shrink-0 bg-white" />
+            </div>
             {Array.from(groups.entries()).map(([sectionId, sectionItems]) => (
               <section key={sectionId} aria-labelledby={`admin-mobile-section-${sectionId}`}>
                 <h2
@@ -235,10 +249,12 @@ export function AdminMobileNav() {
 }
 
 export default function AdminSidebar({ buildVersionChip }: { buildVersionChip?: React.ReactNode }) {
+  const pathname = usePathname();
   const { user } = useAuth();
   const { capabilities } = useAdminContext();
-  const { darkSidebar } = useAdminLayoutPrefs();
-  const items = filterAdminNavItems(capabilities);
+  const { darkSidebar, simpleNavigation } = useAdminLayoutPrefs();
+  const authorizedItems = filterAdminNavItems(capabilities);
+  const items = filterAdminNavForMode(authorizedItems, simpleNavigation, pathname);
   const groups = groupAdminNavItems(items);
 
   return (
@@ -268,6 +284,7 @@ export default function AdminSidebar({ buildVersionChip }: { buildVersionChip?: 
       <div className="mb-4 space-y-2">
         <AdminCommandPaletteButton />
         <div className="flex flex-wrap gap-1">
+          <AdminSimpleNavigationToggle />
           <AdminDenseTableToggle />
           <AdminDarkSidebarToggle />
         </div>

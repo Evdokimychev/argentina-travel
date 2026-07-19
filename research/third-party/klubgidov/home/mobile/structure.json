@@ -1,0 +1,4996 @@
+{
+  "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+  "url": "https://klubgidov.ru/",
+  "lang": "ru",
+  "documentSize": {
+    "width": 390,
+    "height": 8836
+  },
+  "landmarks": [
+    {
+      "tag": "header",
+      "text": "Избранное Войти",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 72
+      }
+    },
+    {
+      "tag": "aside",
+      "text": "Туры Избранное Направления Виды отдыха Войдите, чтобы использовать все возможности Клуба Гидов Войти Контакты Заказать звонок По будням с 08:00 до 20:00 По выходным с 08:00 до 19:00 О Клубе Гидов О насПодарочные сертификатыЖурнал о путешест",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "main",
+      "text": "Авторские туры от прямых организаторов 6404 тура Смотреть все Горящий тур Комбинированные туры Кирилл К. 4.9 (189) Сахалин и Курильские острова, Дальний Восток Знакомство с Сахалином 115 000 ₽ 7 дней 19 – 25 июл. +9 дат Обзорные туры Татьян",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 212,
+        "width": 358,
+        "height": 6493.625
+      }
+    },
+    {
+      "tag": "footer",
+      "text": "Маркетплейс авторских туров от независимых гидов Авторам путешествий Организуйте собственный тур вместе с Клубом Гидов Стать автором Туры напрямую от авторов Бронируй без наценок и посредников Проверенные авторы Все авторы подтверждают свою",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 6705.625,
+        "width": 390,
+        "height": 2130.8125
+      }
+    }
+  ],
+  "headings": [
+    {
+      "tag": "h1",
+      "text": "Авторские туры от прямых организаторов",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 212,
+        "width": 358,
+        "height": 52.8125
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Коллекции туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 1966.5,
+        "width": 358,
+        "height": 31.1875
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Популярные направления",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2309.6875,
+        "width": 358,
+        "height": 31.1875
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Читайте в нашем блоге",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 5183.90625,
+        "width": 358,
+        "height": 41.59375
+      }
+    }
+  ],
+  "buttons": [
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "toggle menu",
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 8,
+        "y": 12,
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Поиск",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 226,
+        "y": 12,
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Войти",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 274,
+        "y": 12,
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Войти",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Заказать звонок",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 334,
+        "y": 16,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Войти",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Заказать звонок",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Найти туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Даты",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 156,
+        "width": 70.265625,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Виды отдыха",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 94.265625,
+        "y": 156,
+        "width": 121.578125,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Цена",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 223.84375,
+        "y": 156,
+        "width": 69.25,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Продолжительность",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 301.09375,
+        "y": 156,
+        "width": 170.890625,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Проживание",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 479.984375,
+        "y": 156,
+        "width": 120,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Комфорт проживания",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 607.984375,
+        "y": 156,
+        "width": 181.890625,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Физическая нагрузка",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 797.875,
+        "y": 156,
+        "width": 177.6875,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Язык",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 983.5625,
+        "y": 156,
+        "width": 69.375,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Можно с детьми",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 1060.9375,
+        "y": 156,
+        "width": 145.171875,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Размер группы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 1214.109375,
+        "y": 156,
+        "width": 135.5625,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 325.109375,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+9 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 695.875,
+        "width": 49.484375,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 325.109375,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+5 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 676.28125,
+        "width": 49.25,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 741.875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+12 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 1073.453125,
+        "width": 52.765625,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 334,
+        "y": 741.875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+59 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 1094.75,
+        "width": 56.140625,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 145,
+        "y": 1140.75,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+16 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 1491.921875,
+        "width": 53.46875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 1140.75,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+197 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 1493.625,
+        "width": 59.328125,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 1539.625,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+3 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 1892.5,
+        "width": 57.671875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 1539.625,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+9 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 1892.5,
+        "width": 49.484375,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 2660.875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+16 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 3013.75,
+        "width": 53.46875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 2660.875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+3 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 3013.75,
+        "width": 57.671875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 3059.75,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+10 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 3412.625,
+        "width": 53.96875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 334,
+        "y": 3059.75,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+5 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 311.90625,
+        "y": 3387.03125,
+        "width": 49.25,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 145,
+        "y": 3458.625,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+9 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 137.234375,
+        "y": 3803.796875,
+        "width": 49.484375,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 334,
+        "y": 3458.625,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 145,
+        "y": 3849.796875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 3849.796875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+4 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 4202.671875,
+        "width": 58.171875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 145,
+        "y": 4248.671875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+3 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 4601.546875,
+        "width": 57.671875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 334,
+        "y": 4248.671875,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+3 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 4640.734375,
+        "width": 57.671875,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 149,
+        "y": 4686.734375,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+84 даты",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 5018.3125,
+        "width": 65.078125,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Добавить в избранное",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 330,
+        "y": 4686.734375,
+        "width": 36,
+        "height": 26
+      }
+    },
+    {
+      "tag": "button",
+      "text": "+15 дат",
+      "role": null,
+      "ariaLabel": "Открыть все даты",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 201,
+        "y": 5037.90625,
+        "width": 53.15625,
+        "height": 22
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Загрузить еще",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 5087.90625,
+        "width": 358,
+        "height": 48
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Поиск",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 159.18124389648438,
+        "y": 795.4884643554688,
+        "width": 71.63751220703125,
+        "height": 32.51153564453125
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "info",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 337.03125,
+        "y": 6899.625,
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Заказать звонок",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 7927.25,
+        "width": 145.109375,
+        "height": 40
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Посмотреть все страны",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 16,
+        "y": 8720.4375,
+        "width": 358,
+        "height": 24
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "ОК",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 28,
+        "y": 788,
+        "width": 60,
+        "height": 32
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "Служба поддержки",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 326,
+        "y": 780,
+        "width": 48,
+        "height": 48
+      }
+    }
+  ],
+  "links": [
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "На главную",
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 64,
+        "y": 12,
+        "width": 95,
+        "height": 48
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Избранное",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/favorites",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "На главную",
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Избранное",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/favorites",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Направления",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/destinations",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Виды отдыха",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/collections",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "vk",
+      "href": "https://vk.com/klubgidov",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "telegram",
+      "href": "https://t.me/klubgidov",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "О нас",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/about",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подарочные сертификаты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/podarochnye-sertifikaty",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Достопримечательности мира",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/dostoprimechatelnosti",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Частые вопросы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help-center/about",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Поддержка и контакты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/contacts",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Стать автором",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/join",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Оферта",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/agreement",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Политика конфиденциальности",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/privacy",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Смотреть все",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 113.25,
+        "y": 276.8125,
+        "width": 144.21875,
+        "height": 24.296875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/sahalin-i-kurilskie-ostrova/znakomstvo-s-sahalinom-17592",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 400.765625
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Знакомство с Сахалином",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/sahalin-i-kurilskie-ostrova/znakomstvo-s-sahalinom-17592",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 593.890625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/yuar/yuar-vodopad-viktoriya-safari-v-botsvane-373547",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 317.109375,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "ЮАР. Водопад Виктория. Сафари в Ботсване",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/yuar/yuar-vodopad-viktoriya-safari-v-botsvane-373547",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 574.296875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/sochi/otdyh-na-krasnoj-polyane-16400",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 361.578125
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отдых на Красной Поляне",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/sochi/otdyh-na-krasnoj-polyane-16400",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 971.46875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/azerbaijan/vip-tur-staryj-i-sovremennyj-baku-405694",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 733.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "ВИП-тур: старый и современный Баку, Розовое озеро, Агатовые горы и Бешбармаг",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/azerbaijan/vip-tur-staryj-i-sovremennyj-baku-405694",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 992.765625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kavkaz/puteshestvie-s-poseshcheniem-groznogo-401408",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 1132.75,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Дагестан и Чечня: путешествие с посещением Грозного",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kavkaz/puteshestvie-s-poseshcheniem-groznogo-401408",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 1389.9375,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/uzbekistan/zolotaya-osen-vostoka-393025",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1132.75,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Золотая осень Востока: Ташкент, Самарканд и Бухара",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/uzbekistan/zolotaya-osen-vostoka-393025",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1391.640625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/armenia/kombinirovannyj-tur-v-armeniyu-i-gruziyu-388913",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 1531.625,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Комбинированный тур в Армению и Грузию: по следам героев Мимино за 7 дней",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/armenia/kombinirovannyj-tur-v-armeniyu-i-gruziyu-388913",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 1790.515625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/gruziya/tur-iz-tbilisi-v-batumi-392774",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1531.625,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отпускотерапия за 5 дней в Грузии. Тур из Тбилиси в Батуми",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/gruziya/tur-iz-tbilisi-v-batumi-392774",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1790.515625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры выходного дня",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tury-vyhodnogo-dnya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Рыболовные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rybolovnye-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 252,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Джип-туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/dzhip-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 488,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры в горы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tury-v-gory",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 724,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Пешие туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/peshie-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 960,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Сплавы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/splavy",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1196,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Авто туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/avto-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1432,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Семейные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/semejnye-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1668,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Смотреть все",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/collections",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2213.6875,
+        "width": 358,
+        "height": 48
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Алтай",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/altaj",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Китай",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kitaj",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 252,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Грузия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/gruziya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 488,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Россия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 724,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Кавказ",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kavkaz",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 960,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Армения",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/armenia",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1196,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Сибирь",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/sibir",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1432,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Узбекистан",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/uzbekistan",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1668,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Смотреть все",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/destinations",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2556.875,
+        "width": 358,
+        "height": 48
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/belarus/obzornyj-tur-po-belarusi-254797",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2652.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Обзорный тур по Беларуси",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/belarus/obzornyj-tur-po-belarusi-254797",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2911.765625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/mongoliya/tropoj-kochevnika-trekking-v-mongolii-190877",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 2652.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Тропой кочевника. Треккинг в Монголии",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/mongoliya/tropoj-kochevnika-trekking-v-mongolii-190877",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 2911.765625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kirgiziya/tyan-shan/kyrgyzstan-strana-nebesnyh-gor-za-7-dnej-367264",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3051.75,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Кыргызстан: страна небесных гор за 7 дней",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kirgiziya/tyan-shan/kyrgyzstan-strana-nebesnyh-gor-za-7-dnej-367264",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3310.640625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/turciya/stambul-dvorcy-mecheti-ostrova-princev-chukur-sokrovishcha-turcii-384121",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3051.75,
+        "width": 173,
+        "height": 357.28125
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Стамбул, дворцы, мечети, острова Принцев, Чукур — сокровища Турции!",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/turciya/stambul-dvorcy-mecheti-ostrova-princev-chukur-sokrovishcha-turcii-384121",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3310.640625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/indoneziya/bali/indoneziya-ty-prosto-priezzhaesh-my-delaem-magiyu-376593",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3450.625,
+        "width": 173,
+        "height": 375.171875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Индонезия. Ты просто приезжаешь — мы делаем магию!",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/indoneziya/bali/indoneziya-ty-prosto-priezzhaesh-my-delaem-magiyu-376593",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3727.40625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kitaj/kitaj-siyanie-vostoka-399197",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3450.625,
+        "width": 173,
+        "height": 334.078125
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Китай: сияние востока",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kitaj/kitaj-siyanie-vostoka-399197",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3709.515625,
+        "width": 173,
+        "height": 20.796875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/montenegro/hajking-tur-po-chernogorii-392863",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 354.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Хайкинг-тур по Черногории: горы Дурмитора и Проклетия, средневековые города и море",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/montenegro/hajking-tur-po-chernogorii-392863",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4100.6875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kazakhstan/zolotoe-kolco-semirechya-378776",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Золотое кольцо Семиречья. Путешествие по юго-востоку Казахстана",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kazakhstan/zolotoe-kolco-semirechya-378776",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4100.6875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/marokko/marokko-imperskie-goroda-i-sinij-gorod-379579",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Марокко. Имперские города и синий город",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/marokko/marokko-imperskie-goroda-i-sinij-gorod-379579",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4499.5625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kitaj/pekin/polnoe-pogruzhenie-v-klassicheskij-kitaj-ot-pekina-do-shanhaya-273747",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 422.0625
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Полное погружение в классический Китай: от Пекина до Шанхая",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/kitaj/pekin/polnoe-pogruzhenie-v-klassicheskij-kitaj-ot-pekina-do-shanhaya-273747",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4538.75,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/kareliya/puteshestvie-ot-onegi-do-ladogi-403663",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 361.578125
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Индивидуальное путешествие от Онеги до Ладоги в любые даты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/kareliya/puteshestvie-ot-onegi-do-ladogi-403663",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4916.328125,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/kaliningradskaya-oblast/ya-edu-ciklichnyj-velotur-na-9-dnej-po-kaliningradskoj-oblasti-398173",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Я еду! Цикличный велотур на 9 дней по Калининградской области",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/rossiya/kaliningradskaya-oblast/ya-edu-ciklichnyj-velotur-na-9-dnej-po-kaliningradskoj-oblasti-398173",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4935.921875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "26 июня 2026 Что купить в Стамбуле: лучшие сувениры и подарки В этом обзоре рассказываем, что привезти из Стамбула: к каким продуктам, косметическим средствам, текстильным и ремесленным изделиям стоит присмотреться и где их искать. От арома",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal/chto-privezti-iz-stambula-587",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 5249.5,
+        "width": 358,
+        "height": 429.375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "22 июня 2026 Норвежские фьорды: мир отвесных скал, водопадов и ледников Норвежские фьорды формировались миллионы лет, а сегодня входят в число самых впечатляющих природных ландшафтов мира. Рассказываем, как возникли эти удивительные морские",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal/fordy-norvegii-585",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 5702.875,
+        "width": 358,
+        "height": 429.375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "2 июня 2026 Озёра Казахстана: самые красивые и необычные водоёмы страны Озёра Казахстана многочисленны и не похожи друг на друга. Некоторые из них сравнимы с морями, другие прячутся среди горных вершин — их красота доступна любителям трекки",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal/ozera-kazahstana-581",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 6156.25,
+        "width": 358,
+        "height": 429.375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Смотреть все статьи",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 6609.625,
+        "width": 358,
+        "height": 48
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "На главную",
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 6738.625,
+        "width": 95,
+        "height": 48
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Стать автором",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/join",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7126.015625,
+        "width": 37.484375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Виды отдыха",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/collections",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7160.40625,
+        "width": 97.796875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Организаторы туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tour-providers",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7194.796875,
+        "width": 158.0625,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отзывы о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/reviews",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7229.1875,
+        "width": 182.953125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Частые вопросы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help-center/about",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7263.578125,
+        "width": 124.515625,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Мы в СМИ",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/press",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7297.96875,
+        "width": 79.828125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "О нас",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/about",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7332.359375,
+        "width": 43.28125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подарочные сертификаты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/podarochnye-sertifikaty",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7366.75,
+        "width": 199.375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/journal",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7401.140625,
+        "width": 182.734375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Достопримечательности мира",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/dostoprimechatelnosti",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7435.53125,
+        "width": 230.375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Поддержка и контакты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/contacts",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7469.921875,
+        "width": 174.21875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Стать автором",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/join",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 33,
+        "y": 7601.484375,
+        "width": 123.765625,
+        "height": 18.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "vk",
+      "href": "https://vk.com/klubgidov",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7694.078125,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": "telegram",
+      "href": "https://t.me/klubgidov",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 68,
+        "y": 7694.078125,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "tag": "a",
+      "text": "4.8 Рейтинг организации в Google",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://maps.app.goo.gl/DG7ruZoeJB8dYN157",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7758.078125,
+        "width": 158,
+        "height": 46.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "4.6 Рейтинг организации в Яндекс",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://yandex.ru/maps/-/CPAlV60C",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 190,
+        "y": 7758.078125,
+        "width": 158,
+        "height": 46.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "4.8 Рейтинг организации в 2ГИС",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://go.2gis.com/7F7O4",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 7820.265625,
+        "width": 158,
+        "height": 46.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "4.5 Рейтинг организации в ВКонтакте",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://vk.com/reviews-197000825",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 190,
+        "y": 7820.265625,
+        "width": 158,
+        "height": 46.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Оферта",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/agreement",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8096.25,
+        "width": 44.515625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Политика конфиденциальности",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/privacy",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 75.78125,
+        "y": 8096.25,
+        "width": 180.0625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "klubgidov.ru",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8163.25,
+        "width": 66.34375,
+        "height": 15
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Европа",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/evropa",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8312.84375,
+        "width": 54.59375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Азия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/aziya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8348.84375,
+        "width": 36.640625,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Африка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/afrika",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8384.84375,
+        "width": 58.71875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Северная Америка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/severnaya-amerika",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8420.84375,
+        "width": 144.25,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Австралия и Океания",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/avstraliya-i-okeaniya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 203,
+        "y": 8312.84375,
+        "width": 163.703125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Центральная Америка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/centralnaya-amerika",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 203,
+        "y": 8348.84375,
+        "width": 168.71875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Южная Америка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/yuzhnaya-amerika",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 203,
+        "y": 8384.84375,
+        "width": 125.3125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Абхазия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/abhaziya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8506.4375,
+        "width": 61.546875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Австралия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/avstraliya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8542.4375,
+        "width": 79.984375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Австрия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/avstriya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8578.4375,
+        "width": 62.828125,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Азербайджан",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/azerbaijan",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8614.4375,
+        "width": 103.84375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Алжир",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/alzhir",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8650.4375,
+        "width": 51.46875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Аргентина",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/argentina",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8686.4375,
+        "width": 79.609375,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Армения",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/armenia",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8722.4375,
+        "width": 67.546875,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Багамы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/bagamy",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8758.4375,
+        "width": 55.265625,
+        "height": 20
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Беларусь",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/belarus",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 8794.4375,
+        "width": 69.40625,
+        "height": 20
+      }
+    }
+  ],
+  "forms": [
+    {
+      "tag": "form",
+      "text": "Куда поедем? Когда? Найти туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 88,
+        "width": 358,
+        "height": 56
+      }
+    }
+  ],
+  "controls": [
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 66,
+        "y": 112,
+        "width": 170,
+        "height": 27.984375
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    }
+  ],
+  "dialogs": [],
+  "accordions": [
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 963.46875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1362.34375,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 65.0625,
+        "y": 1761.21875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 1761.21875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 2882.46875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 2882.46875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 3281.34375,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3281.34375,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 3680.21875,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4071.390625,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4071.390625,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 16,
+        "y": 4470.265625,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "span",
+      "text": "Без визы",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 201,
+        "y": 4509.453125,
+        "width": 79.421875,
+        "height": 19.203125
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": "info",
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 337.03125,
+        "y": 6899.625,
+        "width": 18,
+        "height": 18
+      }
+    }
+  ],
+  "images": [
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/guidesclub.Yg_1Bd49.svg",
+      "alt": "Logo",
+      "width": 95,
+      "height": 48,
+      "box": {
+        "x": 64,
+        "y": 12,
+        "width": 95,
+        "height": 48
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/guidesclub.Yg_1Bd49.svg",
+      "alt": "Logo",
+      "width": 95,
+      "height": 48,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/pointer.BF4Ls2yO.svg",
+      "alt": "home page icon",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/like.Cw3LDQ7P.svg",
+      "alt": "home page icon",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/explore.Dc0eujVD.svg",
+      "alt": "home page icon",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/magic-stars.025z05L8.svg",
+      "alt": "home page icon",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/visa.BrwAcX4f.svg",
+      "alt": "visa",
+      "width": 42,
+      "height": 20,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/mastercard.ZXPiqdkd.svg",
+      "alt": "mastercard",
+      "width": 32,
+      "height": 20,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/maestro.DMxPqv73.svg",
+      "alt": "maestro",
+      "width": 32,
+      "height": 20,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/unionpay.DqjuNaa2.svg",
+      "alt": "unionpay",
+      "width": 45,
+      "height": 28,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/mir.kw-CeSS0.svg",
+      "alt": "mir",
+      "width": 59,
+      "height": 16,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/fire.DSFX7C_T.png",
+      "alt": "Горящий тур",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 30,
+        "y": 328.109375,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_b4ce6be9f677ac9b9970d5912472095f0a106f0c6ee0eb51f10bafaad41024b1.jpeg",
+      "alt": "Photo Кирилл К.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 24,
+        "y": 469.109375,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_8c5c71f06a8676fe82195ddd70b3a92d23db2edd043d97f09619bef203272053.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_127b42d1192b3bd77c8a91d024a01e8b4a353c6348a1790d8a425ccb06e91ba9.jpeg",
+      "alt": "Photo Татьяна Т.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 209,
+        "y": 469.109375,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_93b2518d907e9ac97eb2508e0dd9b4c594b24e3ad86f93ec32946772a4b6d5e6.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 201,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/fire.DSFX7C_T.png",
+      "alt": "Горящий тур",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 30,
+        "y": 744.875,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_f000603dd0c253d0c86f6dac51fb6aae93c22882f7f18db3e86a299d19ac6d91.jpeg",
+      "alt": "Photo Анна С.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 24,
+        "y": 885.875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_eb8e4f1bf19200fb00cc4a949461698d151eb03ea2e4c8f33823a1ddb5fb10c9.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_b17ac7dac57fd4e890826e10bd12e38850aea1cf2819ea49f5c7f3503ae60f3b.jpeg",
+      "alt": "Photo Анар  Р.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 885.875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_8f4b6f4499c58bfb43d8a1bb3595ae42ddf62af9c1bdc6e31d8c2464020155ac.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 201,
+        "y": 733.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_e876277f17781d15407f48af53c7c414aa71e57e08359faa62a726277ff71259.jpeg",
+      "alt": "Photo Расим Г.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 24,
+        "y": 1284.75,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_d1833fd297902371eb618450f47b9859e4dd70e41e7c8164cb4d0026d1764ea6.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 16,
+        "y": 1132.75,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_4bcb951135889090838abf21d9f364b641486242a88aae1f1d01b9084888ccff.jpeg",
+      "alt": "Photo Улугбек А.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 1284.75,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_fc0be3e33c3a6507e9f32c3568228b5f7d7c4cc3e2535264b1898a30cce1d662.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 201,
+        "y": 1132.75,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_360ac6106929b5f4722d91c2bd1f2490be5c89a1bf42c5933469c89fae8d3fdf.jpeg",
+      "alt": "Photo Наира Т.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 24,
+        "y": 1683.625,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_13a2d9df008fa5b3bea63d7b5cf931e3c5a44f7079cc68338cde8bc21121e5e1.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 16,
+        "y": 1531.625,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_4a6f98fd31769411fe4d1a037343d416253df89fa50739186ec1d1e6887943c4.jpeg",
+      "alt": "Photo Анна Б.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 209,
+        "y": 1683.625,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/400x400/GC_2eda6ebfc81c35ff86954f30cc26d68dbe1ce6815a7c590ae78ea71e9ff04162.webp",
+      "alt": "",
+      "width": 200,
+      "height": 200,
+      "box": {
+        "x": 201,
+        "y": 1531.625,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/rocket.Bdc5YIuG.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/check.AlEww-ZN.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/shield.DqeKlLn9.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/tinkoff.WhCtsTJ2.svg",
+      "alt": "tinkoff",
+      "width": 65,
+      "height": 20,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/star.BaxtuoiE.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/440x300/GC_159357450578bff40d1efe8326be08997fac4cbf8f3674ffa9f7f22f9c49cb98.webp",
+      "alt": "",
+      "width": 220,
+      "height": 150,
+      "box": {
+        "x": 16,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/440x300/GC_e178f5058cae6bce4ba761bfeef4f5d6ac91d7ca21f490adc256c5170e06cf62.webp",
+      "alt": "",
+      "width": 220,
+      "height": 150,
+      "box": {
+        "x": 252,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_ee724dafe7b1c80e4ef37905ed7b48c98eb9cb9de8868496cc04c26988a23085.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 488,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_42e6335723b022dc3b2d58dcd050f45b7cea5af9a027a28455b59fe313ba39e8.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 724,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_8c783db7028813f4e4661e98180c7f8e4ddd8de82bf0681c11715a19043a2802.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 960,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_757dce5e828d79a619fb15e4a1e525c846616ce1554a4e8c7baa839dc005d6e4.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1196,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_129f84a7f3e9ef3f36fd54b45da716f5200a3c513d11e46b1e3a768c101b7bb5.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1432,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_3a732f64f5c4f29718a83f339f3166a5c0579468cf810b54509cb6ac5e8e6e32.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1668,
+        "y": 2021.6875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_6a3bffb7ff13cd8e4717385bb88fb894fafa59ca63dc289dbdb4a803e1deee72.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_4ab144a6ff7e28c8cf3b2eefd8cbed7e92e87e6e873b7b431e91175836d81f04.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 252,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_891a8f76fd1129d65bec773c40117aa8845538ad34a77706cb14aa983bde7cf2.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 488,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_9fe7ff8c6d9edda9f37042f2dac8987fc4bac9e4a22de2538f978db8ab61d246.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 724,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_1b4e0b39720f1ad60aceba9b463695713f10edc20c1786148406e3ff149b4951.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 960,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_50f1ab63bfeaef7ad9a25beecf79d83837ba6c9f1691c51886394fd035b1c5a4.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1196,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_e5a2c139dd7784703bd2742f8f0793b7846761c52f0ae5de320cf0c5f13e1e52.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1432,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_d1dba98b976434b68ec0d06f2a5f657c9d859c2cb7b70eae952fd62c9c6f4c54.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1668,
+        "y": 2364.875,
+        "width": 224,
+        "height": 168
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_9dcd9256babaabe32557ac6b7a2773fc39cf649d68160e6ba8a4ec0a0c02c69c.jpeg",
+      "alt": "Photo Татьяна Ш.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 24,
+        "y": 2804.875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_2e046110c2b52d804f3723641467032083c095f044d907c309f3ef42b4509277.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 2652.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_73a0e5a4c94f1755bc62c03a39f5be2d4d38c0582fa0c1f8ebcc400bf087a8fb.jpeg",
+      "alt": "Photo Алексей К.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 2804.875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_1c4c9642e34340544fa4adaaa4a6e5ffd3fa30f93b69ba670a20850f8c44cde9.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 2652.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_0ecd7ddbd86c925b4dea6b7d46eb9a0f719763234cad7a96833f47c7b62920c9.jpeg",
+      "alt": "Photo Александр  М.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 24,
+        "y": 3203.75,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_f3227da79c90e20aab90ea941a9b0bb880f411f527fe1334098f9ea73fe37140.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 3051.75,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_4a259d0469345b565ccf2bb66ff4aa34c6ac62e2cdf87c672c9fc15d972a2632.jpeg",
+      "alt": "Photo Атамурат Т.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 3203.75,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_bb8c377d4b285d250c4ac5d79f81f547e589a4db7a7287eb4e2a402e39056492.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 3051.75,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_fa56d941bafd1171ac488b5a9f0b5a902fd76f7e6a74532977e1c669e4e95fce.jpeg",
+      "alt": "Photo Никита Б.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 24,
+        "y": 3602.625,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_669d6922708cb722a9ed91c0b6b6be211bcf49a2a7f9883e87aee9838fc23303.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 3450.625,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_640907b36d2e62b6405c01e5101e02a4b8900a9c44708b871be4a486017ff4e9.jpeg",
+      "alt": "Photo Татьяна Ш.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 3602.625,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_ccf1f99e9be4f14417befb24211d118a0f7bb478fea3502660fb3cea1df6eba2.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 3450.625,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_ba8274b543094b605eb8d4bca09548a09b9ee2cd57af5e66dc90b7f0fc052efb.jpeg",
+      "alt": "Photo Оля Р.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 24,
+        "y": 3993.796875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_70c28444c915f5eb5bd4e27b4503fb241d2ce13247151a12368afb197286db9e.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/40x40/GC_decaf42d48e81f68d8fc7b793cbd66f8faf9feb69d23589ff6209e67e766739e.jpeg",
+      "alt": "Photo Алексей Г.",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 209,
+        "y": 3993.796875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_008b2d305663401093739a0785a1257c00153d3d4a1ed23c467b49fc879eb041.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_fe66519bccb59d666aea2378934c220ffee11b3c47564583192e95a67498be34.jpeg",
+      "alt": "Photo Адиль Ж.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 24,
+        "y": 4392.671875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_0504a2748a860661ee13042901b25b5ed5f176dd690cd263d15a21f66a4c4e0b.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_db48ef929e2372ce363ec9baceeeaa41a798fd5bae57b53697be64dfdaac1e2c.jpeg",
+      "alt": "Photo Никита А.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 209,
+        "y": 4392.671875,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_a07e5700b913266ebd6c1f3aae9f44d9990b1bd98af50e9121a9927e98706f60.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_6b02427db361004362e6a78b4765bc31fc9ef6024d5149fe500807168c0dbe59.jpeg",
+      "alt": "Photo Екатерина Б.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 24,
+        "y": 4830.734375,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_97910516d3f07d6f4afb4a838923ce4dcb257919584089401fb36095201e4669.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/80x80/GC_40a0463446f40a33edc9c97d4375f017c150afe0c8d162d452f5a6561ed957bb.jpeg",
+      "alt": "Photo Марина Т.",
+      "width": 40,
+      "height": 40,
+      "box": {
+        "x": 209,
+        "y": 4830.734375,
+        "width": 40,
+        "height": 40
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/360x250/GC_0afd41c0c6a53e2e6e22ada436947439ecfe83776e38680f420081ea23f15a09.jpeg",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 201,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/854x472/GC_7b94c9eb1f8563e91fe2d741f7dab73c1ca062723806d7f2ba87285b241db30a.jpeg",
+      "alt": "Что купить в Стамбуле: лучшие сувениры и подарки",
+      "width": 427,
+      "height": 236,
+      "box": {
+        "x": 16,
+        "y": 5249.5,
+        "width": 358,
+        "height": 236
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/427x236/GC_1f2da01052250c3839c2d16be5cf0da8b3700212e7343963cb4ae2b0aa1e08ae.jpeg",
+      "alt": "Норвежские фьорды: мир отвесных скал, водопадов и ледников",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 5702.875,
+        "width": 358,
+        "height": 236
+      }
+    },
+    {
+      "src": "https://imcdn.klubgidov.ru/427x236/GC_28f1e2eb1d945f7e4e0df66c658186b9b45ee22719e78e43ddf180075e9828a6.jpeg",
+      "alt": "Озёра Казахстана: самые красивые и необычные водоёмы страны",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 16,
+        "y": 6156.25,
+        "width": 358,
+        "height": 236
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/guidesclub.Yg_1Bd49.svg",
+      "alt": "Logo",
+      "width": 95,
+      "height": 48,
+      "box": {
+        "x": 16,
+        "y": 6738.625,
+        "width": 95,
+        "height": 48
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/rocket.Bdc5YIuG.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 16,
+        "y": 6810.625,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/check.AlEww-ZN.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 16,
+        "y": 6872.625,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/shield.DqeKlLn9.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 16,
+        "y": 6934.625,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/tinkoff.WhCtsTJ2.svg",
+      "alt": "tinkoff",
+      "width": 65,
+      "height": 20,
+      "box": {
+        "x": 296.28125,
+        "y": 6962.21875,
+        "width": 65,
+        "height": 20
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/star.BaxtuoiE.png",
+      "alt": "",
+      "width": 160,
+      "height": 160,
+      "box": {
+        "x": 16,
+        "y": 6998.21875,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/google.D79yt0W1.svg",
+      "alt": "",
+      "width": 20,
+      "height": 20,
+      "box": {
+        "x": 24,
+        "y": 7767.171875,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/yandex.BJmavNob.svg",
+      "alt": "",
+      "width": 16,
+      "height": 16,
+      "box": {
+        "x": 198,
+        "y": 7767.171875,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/2gis.CfEMP1ck.svg",
+      "alt": "",
+      "width": 16,
+      "height": 16,
+      "box": {
+        "x": 24,
+        "y": 7829.359375,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/vk.BUR_Cl3X.svg",
+      "alt": "",
+      "width": 25,
+      "height": 24,
+      "box": {
+        "x": 198,
+        "y": 7829.359375,
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/visa.BrwAcX4f.svg",
+      "alt": "visa",
+      "width": 42,
+      "height": 20,
+      "box": {
+        "x": 16,
+        "y": 8204.25,
+        "width": 42,
+        "height": 20
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/mastercard.ZXPiqdkd.svg",
+      "alt": "mastercard",
+      "width": 32,
+      "height": 20,
+      "box": {
+        "x": 74,
+        "y": 8204.25,
+        "width": 32,
+        "height": 20
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/maestro.DMxPqv73.svg",
+      "alt": "maestro",
+      "width": 32,
+      "height": 20,
+      "box": {
+        "x": 122,
+        "y": 8204.25,
+        "width": 32,
+        "height": 20
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/unionpay.DqjuNaa2.svg",
+      "alt": "unionpay",
+      "width": 45,
+      "height": 28,
+      "box": {
+        "x": 170,
+        "y": 8204.25,
+        "width": 32.140625,
+        "height": 19.984375
+      }
+    },
+    {
+      "src": "https://static.klubgidov.ru/_nuxt/mir.kw-CeSS0.svg",
+      "alt": "mir",
+      "width": 59,
+      "height": 16,
+      "box": {
+        "x": 218.140625,
+        "y": 8206.25,
+        "width": 59,
+        "height": 16
+      }
+    }
+  ],
+  "cards": [
+    {
+      "tag": "article",
+      "text": "Горящий тур Комбинированные туры Кирилл К. 4.9 (189) Сахалин и Курильские острова, Дальний Восток Знакомство с Сахалином 115 000 ₽ 7 дней 19 – 25 июл. +9 дат",
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 400.765625
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Обзорные туры Татьяна Т. 5.0 (23) Ботсвана, Зимбабве, ЮАР ЮАР. Водопад Виктория. Сафари в Ботсване 267 771 ₽ 10 дней 11 – 20 сент. +5 дат",
+      "box": {
+        "x": 201,
+        "y": 317.109375,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Горящий тур Комбинированные туры Анна С. 4.9 (41) Сочи Отдых на Красной Поляне 78 000 ₽ 7 дней 19 – 25 июл. +12 дат",
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 361.578125
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Анар Р. 5.0 (26) Азербайджан Без визы ВИП-тур: старый и современный Баку, Розовое озеро, Агатовые горы и Бешбармаг 10 711 ₽ 2 дня 19 – 20 июл. +59 дат",
+      "box": {
+        "x": 201,
+        "y": 733.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Туры в горы Расим Г. 5.0 (14) Кавказ, Дагестан, Чечня Дагестан и Чечня: путешествие с посещением Грозного 44 000 ₽ 6 дней 19 – 24 июл. +16 дат",
+      "box": {
+        "x": 16,
+        "y": 1132.75,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Обзорные туры Улугбек А. 5.0 (38) Узбекистан Без визы Золотая осень Востока: Ташкент, Самарканд и Бухара 49 999 ₽ 7 дней 19 – 25 июл. +197 дат",
+      "box": {
+        "x": 201,
+        "y": 1132.75,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Наира Т. 4.9 (19) Армения, Грузия Без визы Комбинированный тур в Армению и Грузию: по следам героев Мимино за 7 дней 65 320 ₽ 7 дней 19 – 25 июл. +3 даты",
+      "box": {
+        "x": 16,
+        "y": 1531.625,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Обзорные туры Анна Б. 4.9 (31) Грузия Без визы Отпускотерапия за 5 дней в Грузии. Тур из Тбилиси в Батуми 60 000 ₽ 5 дней 20 – 24 июл. +9 дат",
+      "box": {
+        "x": 201,
+        "y": 1531.625,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Татьяна Ш. 4.9 (48) Беларусь Без визы Обзорный тур по Беларуси 65 000 ₽ 6 дней 20 – 25 июл. +16 дат",
+      "box": {
+        "x": 16,
+        "y": 2652.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Туры в горы Алексей К. 5.0 (64) Монголия Без визы Тропой кочевника. Треккинг в Монголии 91 650 ₽ 11 дней 20 – 30 июл. +3 даты",
+      "box": {
+        "x": 201,
+        "y": 2652.875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Александр М. 5.0 (11) Тянь-Шань Без визы Кыргызстан: страна небесных гор за 7 дней 76 900 ₽ 7 дней 25 – 31 июл. +10 дат",
+      "box": {
+        "x": 16,
+        "y": 3051.75,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Атамурат Т. 5.0 (16) Турция Без визы Стамбул, дворцы, мечети, острова Принцев, Чукур — сокровища Турции! 79 000 ₽ 6 дней 1 – 6 авг. +5 дат",
+      "box": {
+        "x": 201,
+        "y": 3051.75,
+        "width": 173,
+        "height": 357.28125
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Обзорные туры Никита Б. 5.0 (14) Бали, Остров Нуса Пенида, Полуостров Букит, Остров Ява Индонезия. Ты просто приезжаешь — мы делаем магию! 154 172 ₽ 14 дней 1 – 14 авг. +9 дат",
+      "box": {
+        "x": 16,
+        "y": 3450.625,
+        "width": 173,
+        "height": 375.171875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Татьяна Ш. 4.9 (346) Китай Без визы Китай: сияние востока 136 000 ₽ 7 дней 7 – 13 авг.",
+      "box": {
+        "x": 201,
+        "y": 3450.625,
+        "width": 173,
+        "height": 334.078125
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Туры в горы Оля Р. 5.0 (10) Черногория Без визы Хайкинг-тур по Черногории: горы Дурмитора и Проклетия, средневековые города и море 92 116 ₽ 7 дней 8 – 14 авг.",
+      "box": {
+        "x": 16,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 354.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Авто туры Алексей Г. 5.0 (8) Казахстан Без визы Золотое кольцо Семиречья. Путешествие по юго-востоку Казахстана 58 500 ₽ 5 дней 8 – 12 авг. +4 даты",
+      "box": {
+        "x": 201,
+        "y": 3841.796875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Обзорные туры Адиль Ж. 5.0 (25) Марокко Без визы Марокко. Имперские города и синий город 99 500 ₽ 7 дней 15 – 21 сент. +3 даты",
+      "box": {
+        "x": 16,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 382.875
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Никита А. 5.0 (35) Сучжоу, Сиань, Пекин, Шанхай, Чжанцзяцзе, Лоян Без визы Полное погружение в классический Китай: от Пекина до Шанхая 231 257 ₽ 13 дней 18 – 30 сент. +3 даты",
+      "box": {
+        "x": 201,
+        "y": 4240.671875,
+        "width": 173,
+        "height": 422.0625
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Экскурсионные туры Екатерина Б. 5.0 (13) Карелия Индивидуальное путешествие от Онеги до Ладоги в любые даты 75 600 ₽ 4 дня 19 – 22 июл. +84 даты",
+      "box": {
+        "x": 16,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 361.578125
+      }
+    },
+    {
+      "tag": "article",
+      "text": "Велотуры Марина Т. 5.0 (122) Калининградская область Я еду! Цикличный велотур на 9 дней по Калининградской области 104 000 ₽ 9 дней 19 – 27 июл. +15 дат",
+      "box": {
+        "x": 201,
+        "y": 4678.734375,
+        "width": 173,
+        "height": 381.171875
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры Кирилл К.",
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры Кирилл К.",
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры",
+      "box": {
+        "x": 16,
+        "y": 317.109375,
+        "width": 173,
+        "height": 68
+      }
+    },
+    {
+      "tag": "div",
+      "text": "4.9 (189) Сахалин и Курильские острова, Дальний Восток Знакомство с Сахалином 115 000 ₽ 7 дней 19 – 25 июл. +9 дат",
+      "box": {
+        "x": 16,
+        "y": 527.109375,
+        "width": 173,
+        "height": 190.765625
+      }
+    },
+    {
+      "tag": "div",
+      "text": "4.9 (189) Сахалин и Курильские острова, Дальний Восток",
+      "box": {
+        "x": 16,
+        "y": 527.109375,
+        "width": 173,
+        "height": 58.78125
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Сахалин и Курильские острова, Дальний Восток",
+      "box": {
+        "x": 16,
+        "y": 527.109375,
+        "width": 150.5625,
+        "height": 57.1875
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Знакомство с Сахалином",
+      "box": {
+        "x": 16,
+        "y": 593.890625,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "div",
+      "text": "7 дней 19 – 25 июл. +9 дат",
+      "box": {
+        "x": 16,
+        "y": 670.28125,
+        "width": 173,
+        "height": 47.59375
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Обзорные туры Татьяна Т.",
+      "box": {
+        "x": 201,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Обзорные туры Татьяна Т.",
+      "box": {
+        "x": 201,
+        "y": 317.109375,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "5.0 (23) Ботсвана, Зимбабве, ЮАР ЮАР. Водопад Виктория. Сафари в Ботсване 267 771 ₽ 10 дней 11 – 20 сент. +5 дат",
+      "box": {
+        "x": 201,
+        "y": 527.109375,
+        "width": 173,
+        "height": 171.171875
+      }
+    },
+    {
+      "tag": "div",
+      "text": "5.0 (23) Ботсвана, Зимбабве, ЮАР",
+      "box": {
+        "x": 201,
+        "y": 527.109375,
+        "width": 173,
+        "height": 39.1875
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Ботсвана, Зимбабве, ЮАР",
+      "box": {
+        "x": 201,
+        "y": 527.109375,
+        "width": 140.03125,
+        "height": 37.59375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "ЮАР. Водопад Виктория. Сафари в Ботсване",
+      "box": {
+        "x": 201,
+        "y": 574.296875,
+        "width": 173,
+        "height": 41.59375
+      }
+    },
+    {
+      "tag": "div",
+      "text": "10 дней 11 – 20 сент. +5 дат",
+      "box": {
+        "x": 201,
+        "y": 650.6875,
+        "width": 173,
+        "height": 47.59375
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры Анна С.",
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры Анна С.",
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 200
+      }
+    },
+    {
+      "tag": "div",
+      "text": "Горящий тур Комбинированные туры",
+      "box": {
+        "x": 16,
+        "y": 733.875,
+        "width": 173,
+        "height": 68
+      }
+    },
+    {
+      "tag": "div",
+      "text": "4.9 (41) Сочи Отдых на Красной Поляне 78 000 ₽ 7 дней 19 – 25 июл. +12 дат",
+      "box": {
+        "x": 16,
+        "y": 943.875,
+        "width": 173,
+        "height": 151.578125
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отдых на Красной Поляне",
+      "box": {
+        "x": 16,
+        "y": 971.46875,
+        "width": 173,
+        "height": 41.59375
+      }
+    }
+  ]
+}

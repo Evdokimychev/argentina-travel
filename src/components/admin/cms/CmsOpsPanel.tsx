@@ -19,8 +19,8 @@ type Props = {
 function formatCronRoute(report: CronHealthReport | undefined, route: string): string {
   const entry = report?.latestByRoute[route];
   if (!entry) return "Ещё не запускался";
-  const status = entry.ok ? "OK" : "ошибка";
-  return `${entry.ranAt} — ${status}: ${entry.message}`;
+  const status = entry.ok ? "выполнено успешно" : "завершилось с ошибкой";
+  return `${entry.ranAt} — ${status}`;
 }
 
 export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }: Props) {
@@ -42,9 +42,9 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
       if (!res.ok) throw new Error(json.error ?? "Ошибка переиндексации");
       const meiliNote =
         json.meilisearch?.ok === false
-          ? ` Meili: ${json.meilisearch.error ?? "ошибка синхронизации"}.`
+          ? " Дополнительный поисковый индекс пока не обновлён."
           : json.meilisearch?.synced
-            ? ` Meili: ${json.meilisearch.synced} док.`
+            ? ` Дополнительный индекс: ${json.meilisearch.synced} документов.`
             : "";
       setMessage(`Поиск обновлён: ${json.indexed ?? 0} документов.${meiliNote}`);
       onRefresh?.();
@@ -65,9 +65,9 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
         updated?: number;
         error?: string;
       };
-      if (!res.ok) throw new Error(json.error ?? "Ошибка синхронизации manifest");
+      if (!res.ok) throw new Error(json.error ?? "Не удалось обновить медиатеку");
       setMessage(
-        `Manifest: добавлено ${json.added ?? 0}, обновлено ${json.updated ?? 0}.`
+        `Медиатека обновлена: добавлено ${json.added ?? 0}, обновлено ${json.updated ?? 0}.`
       );
       onRefresh?.();
     } catch (error) {
@@ -86,9 +86,9 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
       <div className="flex items-start gap-3">
         <Wrench className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
         <div>
-          <h2 className="font-heading text-lg font-bold text-charcoal">CMS и поиск</h2>
+          <h2 className="font-heading text-lg font-bold text-charcoal">Публикации и поиск</h2>
           <p className="mt-1 text-sm text-slate">
-            Эксплуатационные действия: индексация поиска, manifest медиатеки, отложенная публикация.
+            Обновление поиска, медиатеки и материалов, запланированных на будущее время.
           </p>
         </div>
       </div>
@@ -99,19 +99,20 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
           <div>
             <p className="font-medium">Режим обслуживания включён</p>
             <p className="mt-0.5 text-xs text-amber-800">
-              Публичный сайт перенаправляется на{" "}
+              Посетители видят{" "}
               <Link href="/maintenance" className="underline" target="_blank" rel="noopener noreferrer">
-                /maintenance
+                страницу временного закрытия
               </Link>
-              . Текст и таймер — в блоке «Заглушка при работах» ниже. Админка и API доступны.
+              . Текст и таймер — в блоке «Страница временного закрытия» ниже. Панель управления
+              остаётся доступной.
             </p>
           </div>
         </div>
       ) : (
         <p className="text-xs text-slate">
-          Предпросмотр заглушки:{" "}
+          Предпросмотр страницы временного закрытия:{" "}
           <Link href="/maintenance" className="text-sky underline" target="_blank" rel="noopener noreferrer">
-            /maintenance
+            открыть
           </Link>
           . Включите «Режим обслуживания» в разделе «Юридическое и функции», чтобы закрыть публичный сайт.
         </p>
@@ -119,45 +120,45 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
 
       <dl className="grid gap-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-slate">Meilisearch</dt>
+          <dt className="text-slate">Дополнительный поисковый индекс</dt>
           <dd className="mt-1 font-medium text-charcoal">
-            {meiliConfigured ? "Настроен (MEILISEARCH_*)" : "Не настроен — Postgres/static"}
+            {meiliConfigured ? "Подключён" : "Не подключён — используется встроенный поиск"}
           </dd>
         </div>
         <div>
           <dt className="text-slate">Последняя переиндексация</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {lastReindex
-              ? `${lastReindex.ranAt} — ${lastReindex.ok ? "OK" : "ошибка"} (${lastReindex.indexed} док.)`
+              ? `${lastReindex.ranAt} — ${lastReindex.ok ? "выполнено успешно" : "ошибка"} (${lastReindex.indexed} материалов)`
               : "—"}
           </dd>
         </div>
         {readiness?.documentCount != null ? (
           <div>
-            <dt className="text-slate">Документов в Meili</dt>
+            <dt className="text-slate">Документов в дополнительном индексе</dt>
             <dd className="mt-1 font-medium text-charcoal">{readiness.documentCount}</dd>
           </div>
         ) : null}
         <div>
           <dt className="text-slate">Запланировано к публикации</dt>
           <dd className="mt-1 font-medium text-charcoal">
-            {cmsOps?.scheduledPublishCount ?? "—"} док.
+            {cmsOps?.scheduledPublishCount ?? "—"} материалов
           </dd>
         </div>
         <div>
-          <dt className="text-slate">CMS-медиа без manifest</dt>
+          <dt className="text-slate">Новые файлы, ожидающие обновления медиатеки</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {cmsOps?.cmsMediaPendingManifest ?? "—"} файлов
           </dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="text-slate">Cron: отложенная публикация CMS</dt>
+          <dt className="text-slate">Автопубликация по расписанию</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {formatCronRoute(cronHealth, "/api/cron/cms/publish-scheduled")}
           </dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="text-slate">Cron: переиндексация поиска</dt>
+          <dt className="text-slate">Автоматическое обновление поиска</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {formatCronRoute(cronHealth, "/api/cron/search/reindex")}
           </dd>
@@ -183,16 +184,15 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }
           onClick={() => void runManifestSync()}
         >
           <RefreshCw className="mr-1.5 h-3.5 w-3.5" aria-hidden />
-          {syncingManifest ? "Синхронизация…" : "Sync manifest медиа"}
+          {syncingManifest ? "Обновление…" : "Обновить медиатеку"}
         </Button>
       </div>
 
       {message ? <p className="text-xs text-slate">{message}</p> : null}
 
       <p className="text-xs text-slate">
-        Поиск обновляется автоматически при публикации CMS-документов и ежедневно через platform-maintenance.
-        Полная переиндексация нужна после cutover Meilisearch или массового импорта. Проверка:{" "}
-        <code className="rounded bg-muted/10 px-1">npm run search:readiness</code>.
+        Обычно поиск обновляется автоматически. Ручное обновление нужно после массового импорта
+        или если опубликованный материал не находится на сайте.
       </p>
     </section>
   );

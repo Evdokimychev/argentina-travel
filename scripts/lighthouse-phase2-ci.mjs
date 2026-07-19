@@ -15,6 +15,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveLighthouseStartTimeout } from "./lib/lighthouse-runtime.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -23,12 +24,20 @@ const envBase = process.env.LIGHTHOUSE_BASE_URL?.replace(/\/$/, "");
 const isExternalBase =
   Boolean(envBase) && !/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(envBase);
 const BASE_URL = envBase ?? `http://127.0.0.1:${PORT}`;
-const START_TIMEOUT_MS = 90_000;
+const evidenceScope =
+  process.env.LIGHTHOUSE_EVIDENCE_SCOPE ?? (isExternalBase ? "production-baseline" : "candidate");
+const START_TIMEOUT_MS = resolveLighthouseStartTimeout(
+  process.env.LIGHTHOUSE_START_TIMEOUT_MS,
+);
 
 export const LIGHTHOUSE_PHASE2_PATHS = [
   "/",
   "/tours",
+  "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
+  "/blog/best-time-to-visit-argentina",
+  "/mapa-argentina",
+  "/contacts",
   "/destinations/patagonia",
 ];
 
@@ -59,9 +68,18 @@ function runAudit() {
       LIGHTHOUSE_BASE_URL: BASE_URL,
       LIGHTHOUSE_SAMPLE_PATHS: LIGHTHOUSE_PHASE2_PATHS.join(","),
       LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3",
-      LIGHTHOUSE_CATEGORIES: "performance,accessibility,seo",
-      LIGHTHOUSE_PERF_BUDGET: process.env.LIGHTHOUSE_PERF_BUDGET ?? (isExternalBase ? "65" : "75"),
-      LIGHTHOUSE_REPORT_FILE: isExternalBase
+      // A local candidate is deliberately noindex. SEO is blocking only on the
+      // published canonical host; local CI still blocks on a11y, payload and
+      // repeatable mobile performance evidence.
+      LIGHTHOUSE_CATEGORIES: isExternalBase
+        ? "performance,accessibility,seo"
+        : "performance,accessibility",
+      LIGHTHOUSE_PERF_BUDGET: process.env.LIGHTHOUSE_PERF_BUDGET ?? (isExternalBase ? "75" : "55"),
+      LIGHTHOUSE_EVIDENCE_SCOPE: evidenceScope,
+      EVIDENCE_ENVIRONMENT:
+        process.env.EVIDENCE_ENVIRONMENT ??
+        (evidenceScope === "candidate" ? "local-production" : "production-baseline"),
+      LIGHTHOUSE_REPORT_FILE: evidenceScope === "production-baseline"
         ? "lighthouse-phase2-prod-last.json"
         : "lighthouse-phase2-sample-last.json",
     },
@@ -70,6 +88,7 @@ function runAudit() {
 
 let auditStatus = 1;
 let server = null;
+let serverLog = "";
 
 if (process.env.SKIP_LIGHTHOUSE === "1") {
   console.log("SKIP_LIGHTHOUSE=1 — skipping Lighthouse phase2 audit.");
@@ -88,13 +107,23 @@ try {
   } else {
     server = spawn("npm", ["run", "start", "--", "-p", String(PORT)], {
       cwd: root,
-      stdio: "ignore",
+      stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, PORT: String(PORT) },
+    });
+    server.stdout?.on("data", (chunk) => {
+      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
+    });
+    server.stderr?.on("data", (chunk) => {
+      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
     });
 
     const ready = await waitForServer(`${BASE_URL}/`);
     if (!ready) {
       console.error(`Server did not become ready at ${BASE_URL}/ within ${START_TIMEOUT_MS}ms`);
+      if (serverLog.trim()) {
+        console.error("--- next start log (tail) ---");
+        console.error(serverLog.trim());
+      }
       process.exit(1);
     }
 

@@ -4,10 +4,8 @@ import {
   summarizeAdminPaymentOverview,
 } from "@/lib/admin/payments-server";
 import { countUnreadNotifications } from "@/lib/admin/notifications-server";
-import { syncPendingToursToQueue } from "@/lib/admin/moderation-server";
 import { countPendingOrganizerApplications } from "@/lib/admin/organizer-applications-server";
 import { fetchAdminHealthSnapshot } from "@/lib/admin/health-server";
-import { syncPendingReviewsToQueue } from "@/lib/reviews-server";
 import type { AdminOperationsSummary } from "@/types/admin";
 import type { Database } from "@/types/database";
 
@@ -25,8 +23,6 @@ function resolveAgeMinutes(timestamp: string | null): number | null {
 async function fetchModerationSummary(
   supabase: DbClient
 ): Promise<AdminOperationsSummary["moderation"]> {
-  await Promise.all([syncPendingToursToQueue(supabase), syncPendingReviewsToQueue(supabase)]);
-
   const [countRes, oldestRes] = await Promise.all([
     supabase
       .from("moderation_queue")

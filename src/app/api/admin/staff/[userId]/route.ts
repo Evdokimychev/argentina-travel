@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import {
   assertStaffTargetMutationAllowed,
   authorizeStaffManagementRequest,
@@ -8,14 +8,33 @@ import {
   isAdminPresetId,
   parseAdminCapabilities,
 } from "@/lib/admin/staff-management";
-import type { Database } from "@/types/database";
 
 type PatchBody = {
   preset?: unknown;
   capabilities?: unknown;
   isActive?: unknown;
   notes?: unknown;
+  expectedVersion?: unknown;
 };
+
+function mutationError(error: { message: string }) {
+  if (error.message.includes("STAFF_CONFLICT")) {
+    return NextResponse.json(
+      { error: "Доступ уже изменён в другой вкладке. Обновите список." },
+      { status: 409 },
+    );
+  }
+  if (error.message.includes("OWNER_STAFF_MUTATION_FORBIDDEN")) {
+    return NextResponse.json(
+      { error: "Назначение владельца защищено от изменения." },
+      { status: 409 },
+    );
+  }
+  return NextResponse.json(
+    { error: "Не удалось изменить доступ. Действующие права сохранены." },
+    { status: 409 },
+  );
+}
 
 export async function PATCH(
   request: Request,
@@ -25,7 +44,10 @@ export async function PATCH(
   if (!access.ok) return access.response;
 
   const { userId } = await context.params;
-  const body = (await request.json()) as PatchBody;
+  const body = (await request.json().catch(() => null)) as PatchBody | null;
+  if (!body) {
+    return NextResponse.json({ error: "Проверьте данные формы" }, { status: 400 });
+  }
   const { auth, supabase } = access;
   const current = await fetchStaffSecurityRecord(supabase, userId);
   if (!current) {
@@ -39,12 +61,18 @@ export async function PATCH(
     );
   }
 
-  const update: Database["public"]["Tables"]["admin_staff"]["Update"] = {};
+  if (!Number.isSafeInteger(body.expectedVersion) || body.expectedVersion !== current.rowVersion) {
+    return NextResponse.json(
+      { error: "Доступ уже изменён. Обновите список и повторите действие." },
+      { status: 409 },
+    );
+  }
+  let nextPreset = current.preset ?? "support_agent";
   if (body.preset !== undefined) {
     if (!isAdminPresetId(body.preset)) {
       return NextResponse.json({ error: "Неизвестный preset" }, { status: 400 });
     }
-    update.preset = body.preset;
+    nextPreset = body.preset;
   }
   let nextCapabilities = current.capabilities;
   if (body.capabilities !== undefined) {
@@ -53,29 +81,38 @@ export async function PATCH(
       return NextResponse.json({ error: parsedCapabilities.error }, { status: 400 });
     }
     nextCapabilities = parsedCapabilities.capabilities;
-    update.capabilities = nextCapabilities;
   }
+  let nextIsActive = current.isActive;
   if (body.isActive !== undefined) {
     if (typeof body.isActive !== "boolean") {
-      return NextResponse.json({ error: "isActive must be boolean" }, { status: 400 });
+      return NextResponse.json({ error: "Статус доступа должен быть указан явно" }, { status: 400 });
     }
-    update.is_active = body.isActive;
+    nextIsActive = body.isActive;
   }
+  let nextNotes = current.notes;
   if (body.notes !== undefined) {
     if (typeof body.notes !== "string") {
-      return NextResponse.json({ error: "notes must be a string" }, { status: 400 });
+      return NextResponse.json({ error: "Заметка должна быть текстом" }, { status: 400 });
     }
-    update.notes = body.notes.trim() || null;
+    if (body.notes.trim().length > 5000) {
+      return NextResponse.json({ error: "Заметка не должна превышать 5000 символов" }, { status: 400 });
+    }
+    nextNotes = body.notes.trim() || null;
   }
 
-  if (Object.keys(update).length === 0) {
+  if (
+    body.preset === undefined &&
+    body.capabilities === undefined &&
+    body.isActive === undefined &&
+    body.notes === undefined
+  ) {
     return NextResponse.json({ error: "Нет данных для обновления" }, { status: 400 });
   }
   const nextRecord = {
     ...current,
-    preset: body.preset === undefined ? current.preset : body.preset,
+    preset: nextPreset,
     capabilities: nextCapabilities,
-    isActive: typeof body.isActive === "boolean" ? body.isActive : current.isActive,
+    isActive: nextIsActive,
   };
   if (!hasConsistentOwnerGrant(nextRecord)) {
     return NextResponse.json(
@@ -84,20 +121,17 @@ export async function PATCH(
     );
   }
 
-  const { error } = await supabase.from("admin_staff").update(update).eq("user_id", userId);
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "staff.update",
-    entityType: "admin_staff",
-    entityId: userId,
-    payload: update,
-    ipAddress: clientIpFromRequest(request),
+  const { error } = await supabase.rpc("admin_update_staff_atomic", {
+    p_actor_user_id: auth.actorId,
+    p_target_user_id: userId,
+    p_expected_version: current.rowVersion,
+    p_preset: nextPreset,
+    p_capabilities: nextCapabilities,
+    p_is_active: nextIsActive,
+    p_notes: nextNotes,
+    p_ip_address: clientIpFromRequest(request),
   });
+  if (error) return mutationError(error);
 
   return NextResponse.json({ ok: true });
 }
@@ -123,36 +157,13 @@ export async function DELETE(
     );
   }
 
-  const { error } = await supabase.from("admin_staff").delete().eq("user_id", userId);
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("roles, active_role")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (profile?.roles.includes("admin")) {
-    const nextRoles = profile.roles.filter((r) => r !== "admin");
-    await supabase
-      .from("profiles")
-      .update({
-        roles: nextRoles.length ? nextRoles : ["tourist"],
-        active_role: profile.active_role === "admin" ? "tourist" : profile.active_role,
-      })
-      .eq("id", userId);
-  }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "staff.remove",
-    entityType: "admin_staff",
-    entityId: userId,
-    payload: { preset: current.preset, capabilities: current.capabilities },
-    ipAddress: clientIpFromRequest(request),
+  const { error } = await supabase.rpc("admin_remove_staff_atomic", {
+    p_actor_user_id: auth.actorId,
+    p_target_user_id: userId,
+    p_expected_version: current.rowVersion,
+    p_ip_address: clientIpFromRequest(request),
   });
+  if (error) return mutationError(error);
 
   return NextResponse.json({ ok: true });
 }

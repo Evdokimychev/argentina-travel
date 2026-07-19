@@ -28,13 +28,14 @@ import {
 import { apiFetchOrganizerBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
-import FormattedPrice from "@/components/FormattedPrice";
 import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import OrganizerWaitlistView from "@/components/organizer/OrganizerWaitlistView";
 import OrganizerBookingsKanban from "@/components/organizer/OrganizerBookingsKanban";
 import { getOrganizerCabinetWaitlistStats } from "@/lib/organizer-waitlist";
+import { apiFetchOrganizerWaitlist } from "@/lib/waitlist-api";
+import { isActiveWaitlistStatus } from "@/data/waitlist-statuses";
 import { WAITLIST_UPDATED_EVENT } from "@/types/waitlist";
 import { OrganizerCreateExternalBookingButton } from "@/components/organizer/OrganizerCreateExternalBookingDialog";
 import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
@@ -107,12 +108,22 @@ export default function OrganizerBookingsView() {
 
   useEffect(() => {
     if (!user) return;
-    function refreshWaitlistStats() {
+    async function refreshWaitlistStats() {
+      if (isRemoteBookingsMode()) {
+        try {
+          const entries = await apiFetchOrganizerWaitlist();
+          setWaitlistActiveCount(entries.filter((entry) => isActiveWaitlistStatus(entry.status)).length);
+        } catch {
+          setWaitlistActiveCount(0);
+        }
+        return;
+      }
       setWaitlistActiveCount(getOrganizerCabinetWaitlistStats(user!.id).activeCount);
     }
-    refreshWaitlistStats();
-    window.addEventListener(WAITLIST_UPDATED_EVENT, refreshWaitlistStats);
-    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, refreshWaitlistStats);
+    void refreshWaitlistStats();
+    const onUpdated = () => void refreshWaitlistStats();
+    window.addEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
   }, [user]);
 
   const sourceCounts = useMemo(() => {

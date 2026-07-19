@@ -18,6 +18,10 @@ function needsAttribution(hero: ReturnType<typeof getBlogPostHeroResolved>): boo
 export default function BlogPostHeroImage({ post, className }: BlogPostHeroImageProps) {
   const hero = getBlogPostHeroResolved(post);
   const caption = needsAttribution(hero) ? hero.attributionHtml : null;
+  const deliveredHero =
+    post.slug === "best-time-to-visit-argentina"
+      ? { ...hero, src: "/media/blog/best-time-to-visit-argentina/hero-mobile.webp" }
+      : hero;
 
   return (
     <figure
@@ -28,7 +32,7 @@ export default function BlogPostHeroImage({ post, className }: BlogPostHeroImage
     >
       <div className="relative aspect-[4/3] w-full">
         <PageImage
-          image={hero}
+          image={deliveredHero}
           role="hero"
           fill
           priority

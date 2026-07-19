@@ -3,7 +3,6 @@ import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import {
   CmsCutoverNotReadyError,
-  fetchCmsCutoverReadiness,
   setCmsCutoverFlags,
 } from "@/lib/cms/cms-cutover";
 

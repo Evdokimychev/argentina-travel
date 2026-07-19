@@ -22,6 +22,8 @@ type StaffRow = {
   isActive: boolean;
   notes: string | null;
   createdAt: string;
+  updatedAt: string;
+  rowVersion: number;
 };
 
 type PresetRow = {
@@ -58,6 +60,8 @@ export default function StaffView() {
   const [busy, setBusy] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
   const [togglingUserId, setTogglingUserId] = useState<string | null>(null);
+  const [changingUserId, setChangingUserId] = useState<string | null>(null);
+  const [selectedPresets, setSelectedPresets] = useState<Record<string, AdminPresetId>>({});
   const [feedback, setFeedback] = useState<StaffFeedback | null>(null);
 
   const emailError = emailTouched ? validateEmail(email) : undefined;
@@ -97,14 +101,27 @@ export default function StaffView() {
     }
   }
 
-  async function toggleActive(userId: string, isActive: boolean) {
+  async function toggleActive(row: StaffRow) {
+    const { userId, isActive } = row;
+    if (
+      !window.confirm(
+        isActive
+          ? "Приостановить доступ этого администратора? Он сразу потеряет доступ к админке."
+          : "Восстановить доступ этого администратора?",
+      )
+    ) {
+      return;
+    }
     setFeedback(null);
     setTogglingUserId(userId);
     try {
       const res = await fetch(`/api/admin/staff/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isActive: !isActive }),
+        body: JSON.stringify({
+          isActive: !isActive,
+          expectedVersion: row.rowVersion,
+        }),
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(json.error ?? "Не удалось изменить доступ");
@@ -122,6 +139,46 @@ export default function StaffView() {
       });
     } finally {
       setTogglingUserId(null);
+    }
+  }
+
+  async function changePreset(row: StaffRow) {
+    const nextPreset = selectedPresets[row.userId] ?? row.preset;
+    if (!nextPreset || nextPreset === row.preset) return;
+    const label = presets.find((item) => item.id === nextPreset)?.label ?? nextPreset;
+    if (!window.confirm(`Назначить роль «${label}» пользователю ${row.fullName}?`)) return;
+
+    setFeedback(null);
+    setChangingUserId(row.userId);
+    try {
+      const res = await fetch(`/api/admin/staff/${row.userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        // The owner-facing role selector represents the complete assignment.
+        // Clear legacy per-user additions so an older permission cannot silently
+        // survive a move to a more restrictive role.
+        body: JSON.stringify({
+          preset: nextPreset,
+          capabilities: [],
+          expectedVersion: row.rowVersion,
+        }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось изменить роль");
+      await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Роль изменена",
+        description: `Теперь для ${row.fullName} действует роль «${label}».`,
+      });
+    } catch (changeError) {
+      setFeedback({
+        variant: "error",
+        title: "Не удалось изменить роль",
+        description: changeError instanceof Error ? changeError.message : "Попробуйте ещё раз.",
+      });
+    } finally {
+      setChangingUserId(null);
     }
   }
 
@@ -180,7 +237,11 @@ export default function StaffView() {
                 required
               />
             </FormField>
-            <FormField id="staff-preset" label="Роль доступа">
+            <FormField
+              id="staff-preset"
+              label="Роль доступа"
+              hint={presets.find((item) => item.id === preset)?.description ?? undefined}
+            >
               <NativeSelect
                 value={preset}
                 onChange={(event) => setPreset(event.target.value as AdminPresetId)}
@@ -218,17 +279,63 @@ export default function StaffView() {
                     ) : null}
                   </div>
                   <p className="text-slate">
-                    Пресет: {row.preset ?? "—"} · {formatAdminWhen(row.createdAt)}
+                    Добавлен {formatAdminWhen(row.createdAt)}
                   </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => void toggleActive(row.userId, row.isActive)}
-                    loading={togglingUserId === row.userId}
-                    loadingLabel="Обновляем…"
-                  >
-                    {row.isActive ? "Деактивировать" : "Активировать"}
-                  </Button>
+                  {row.preset === "super_admin" ? (
+                    <p className="rounded-xl bg-sky-50 px-3 py-2 text-xs text-sky-800">
+                      Владелец проекта. Это назначение защищено от случайного изменения.
+                    </p>
+                  ) : (
+                    <div className="flex flex-wrap items-end gap-2">
+                      <FormField
+                        id={`staff-role-${row.userId}`}
+                        label="Роль доступа"
+                        hint={
+                          presets.find(
+                            (item) =>
+                              item.id === (selectedPresets[row.userId] ?? row.preset ?? "support_agent"),
+                          )?.description ?? undefined
+                        }
+                      >
+                        <NativeSelect
+                          value={selectedPresets[row.userId] ?? row.preset ?? "support_agent"}
+                          onChange={(event) =>
+                            setSelectedPresets((current) => ({
+                              ...current,
+                              [row.userId]: event.target.value as AdminPresetId,
+                            }))
+                          }
+                        >
+                          {presets
+                            .filter((item) => item.id !== "super_admin")
+                            .map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.label}
+                              </option>
+                            ))}
+                        </NativeSelect>
+                      </FormField>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void changePreset(row)}
+                        loading={changingUserId === row.userId}
+                        loadingLabel="Сохраняем…"
+                        disabled={(selectedPresets[row.userId] ?? row.preset) === row.preset}
+                      >
+                        Сохранить роль
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void toggleActive(row)}
+                        loading={togglingUserId === row.userId}
+                        loadingLabel="Обновляем…"
+                      >
+                        {row.isActive ? "Приостановить доступ" : "Восстановить доступ"}
+                      </Button>
+                    </div>
+                  )}
                 </li>
               ))
             )}

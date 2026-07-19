@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import FormattedPrice from "@/components/FormattedPrice";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
+import { formatLedgerAmount } from "@/lib/payments/format-money";
 import type { AdminPaymentPeriodFilter } from "@/types/admin-payments";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import type {
   PayoutRecordRow,
+  PayoutSummary,
   ReconciliationDiscrepancy,
   ReconciliationSnapshotRow,
   ReconciliationTotals,
@@ -18,13 +19,7 @@ import { PAYOUT_RECORD_STATUS_LABELS } from "@/types/payment-platform";
 type ReconciliationResponse = {
   totals?: ReconciliationTotals;
   discrepancies?: ReconciliationDiscrepancy[];
-  payoutSummary?: {
-    totalPending: number;
-    totalApproved: number;
-    totalExported: number;
-    totalCompleted: number;
-    recordCount: number;
-  };
+  payoutSummary?: PayoutSummary;
   payouts?: PayoutRecordRow[];
   snapshots?: ReconciliationSnapshotRow[];
 };
@@ -103,23 +98,56 @@ export function AdminReconciliationPanel() {
       {snapshotMessage ? <p className="text-sm text-charcoal">{snapshotMessage}</p> : null}
 
         {totals ? (
-          <section className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-success-muted px-3 py-1 text-xs font-medium text-success">
-              Списания: {totals.chargeCount} · <FormattedPrice priceUsd={totals.chargeAmount} />
-            </span>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-charcoal">
-              Возвраты: {totals.refundCount} · <FormattedPrice priceUsd={totals.refundAmount} />
-            </span>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-charcoal">
-              Выплаты: {totals.payoutCount} · <FormattedPrice priceUsd={totals.payoutAmount} />
-            </span>
-            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
-              Чистый итог: <FormattedPrice priceUsd={totals.netAmount} />
-            </span>
-            {totals.pendingRefundCount > 0 ? (
-              <span className="rounded-full bg-warning-muted px-3 py-1 text-xs font-medium text-warning">
-                Ожидают возврата: {totals.pendingRefundCount}
-              </span>
+          <section className="space-y-3">
+            {totals.byCurrency.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {totals.byCurrency.map((bucket) => (
+                  <article key={bucket.currency} className={`${cabinetCardClass} p-4`}>
+                    <h2 className="font-heading text-base font-bold text-charcoal">
+                      {bucket.currency}
+                    </h2>
+                    <dl className="mt-3 space-y-2 text-sm text-slate">
+                      <div className="flex justify-between gap-3">
+                        <dt>Списания · {bucket.chargeCount}</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatLedgerAmount(bucket.chargeAmount, bucket.currency)}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Возвраты · {bucket.refundCount}</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatLedgerAmount(bucket.refundAmount, bucket.currency)}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Выплаты · {bucket.payoutCount}</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatLedgerAmount(bucket.payoutAmount, bucket.currency)}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-3 border-t border-gray-100 pt-2">
+                        <dt>Чистый итог</dt>
+                        <dd className="font-semibold text-sky-ink">
+                          {formatLedgerAmount(bucket.netAmount, bucket.currency)}
+                        </dd>
+                      </div>
+                    </dl>
+                    {bucket.pendingRefundCount > 0 ? (
+                      <p className="mt-3 text-xs font-medium text-warning">
+                        Ожидают возврата: {bucket.pendingRefundCount}
+                      </p>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate">Денежных операций за период нет.</p>
+            )}
+            {totals.invalidRecordCount > 0 ? (
+              <p className="rounded-xl bg-error-muted px-3 py-2 text-sm text-error">
+                Не включено некорректных записей: {totals.invalidRecordCount}. Проверьте журнал
+                расхождений.
+              </p>
             ) : null}
           </section>
         ) : null}
@@ -127,19 +155,30 @@ export function AdminReconciliationPanel() {
         {payoutSummary ? (
           <section className={`${cabinetCardClass} p-4 sm:p-6`}>
             <h2 className="font-heading text-base font-bold text-charcoal">Выплаты организаторам</h2>
-            <p className="mt-2 text-sm text-slate">
-              Записей: {payoutSummary.recordCount}. Ожидают:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalPending} />, одобрено:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalApproved} />, экспортировано:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalExported} />, завершено:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalCompleted} />.
-            </p>
+            <p className="mt-2 text-sm text-slate">Записей: {payoutSummary.recordCount}.</p>
+            <ul className="mt-3 space-y-2 text-sm text-slate">
+              {payoutSummary.byCurrency.map((bucket) => (
+                <li key={bucket.currency} className="rounded-lg bg-gray-50 px-3 py-2">
+                  <span className="font-semibold text-charcoal">{bucket.currency}</span> · ожидают{" "}
+                  {formatLedgerAmount(bucket.totalPending, bucket.currency)} · одобрено{" "}
+                  {formatLedgerAmount(bucket.totalApproved, bucket.currency)} · экспортировано{" "}
+                  {formatLedgerAmount(bucket.totalExported, bucket.currency)} · завершено{" "}
+                  {formatLedgerAmount(bucket.totalCompleted, bucket.currency)}
+                </li>
+              ))}
+            </ul>
+            {payoutSummary.invalidRecordCount > 0 ? (
+              <p className="mt-3 rounded-xl bg-error-muted px-3 py-2 text-sm text-error">
+                Не включено некорректных выплат: {payoutSummary.invalidRecordCount}. Проверьте
+                исходные записи перед формированием пакета выплат.
+              </p>
+            ) : null}
             {payouts.length > 0 ? (
               <ul className="mt-4 space-y-2 text-sm text-charcoal">
                 {payouts.slice(0, 10).map((row) => (
                   <li key={row.id} className="rounded-lg bg-gray-50 px-3 py-2">
                     {row.period} · организатор {row.organizerUserId} ·{" "}
-                    <FormattedPrice priceUsd={row.amount} /> ·{" "}
+                    {formatLedgerAmount(row.amount, row.currency)} ·{" "}
                     {PAYOUT_RECORD_STATUS_LABELS[row.status]}
                   </li>
                 ))}
@@ -176,8 +215,15 @@ export function AdminReconciliationPanel() {
             <ul className="mt-4 space-y-2 text-sm text-charcoal">
               {snapshots.map((row) => (
                 <li key={row.id} className="rounded-lg bg-gray-50 px-3 py-2">
-                  {row.snapshotDate} · период {row.period ?? "—"} · чистый итог{" "}
-                  <FormattedPrice priceUsd={row.totals.netAmount} />
+                  {row.snapshotDate} · период {row.period ?? "—"} ·{" "}
+                  {row.totals.legacyUnknownCurrency
+                    ? "валютная разбивка старого снимка неизвестна"
+                    : row.totals.byCurrency
+                        .map(
+                          (bucket) =>
+                            `${bucket.currency}: ${formatLedgerAmount(bucket.netAmount, bucket.currency)}`,
+                        )
+                        .join(" · ") || "операций нет"}
                   {row.notes ? ` · ${row.notes}` : ""}
                 </li>
               ))}

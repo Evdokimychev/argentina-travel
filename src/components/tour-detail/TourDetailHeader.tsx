@@ -93,7 +93,6 @@ export default function TourDetailHeader({
 
       <div className={cn(siteContainerClass, "relative py-6 md:py-8 lg:py-10")}>
         <PageBreadcrumbs
-          compactOnMobile
           items={[
             { label: "Главная", href: "/" },
             {
@@ -114,22 +113,18 @@ export default function TourDetailHeader({
           )}
         >
           <div className="min-w-0">
-            <Link
-              href={catalogKind === "excursion" ? "/excursions" : "/tours"}
-              className="group inline-flex min-h-11 items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
-            >
-              {cityDisplay}
-              <ArrowUpRight
-                className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden
-              />
-            </Link>
-
-            <div className="relative mt-4 flex items-start justify-between gap-4">
-              <h1 className="min-w-0 flex-1 font-display text-[1.75rem] font-bold leading-[1.08] tracking-[-0.025em] text-charcoal sm:text-4xl sm:leading-[1.12] lg:text-[2.35rem]">
-                {tour.title}
-              </h1>
-              <div className="absolute -top-[3.75rem] right-0 flex shrink-0 items-center gap-1.5 sm:static">
+            <div className="flex items-center justify-between gap-3">
+              <Link
+                href={catalogKind === "excursion" ? "/excursions" : "/tours"}
+                className="group inline-flex min-h-11 min-w-0 items-center gap-1.5 truncate rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
+              >
+                <span className="truncate">{cityDisplay}</span>
+                <ArrowUpRight
+                  className="h-3 w-3 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden
+                />
+              </Link>
+              <div className="flex shrink-0 items-center gap-1.5">
                 <FavoriteButton
                   tourId={tour.id}
                   tourSlug={tour.slug}
@@ -152,8 +147,12 @@ export default function TourDetailHeader({
               </div>
             </div>
 
+            <h1 className="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+              {tour.title}
+            </h1>
+
             {tour.shortDescription?.trim() ? (
-              <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-relaxed text-slate sm:text-[1.05rem]">
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
                 {plainTextFromRichContent(tour.shortDescription)}
               </p>
             ) : null}

@@ -2,36 +2,81 @@
 id: kogda-uchebnyj-god-v-argentine
 type: faq
 question: "Когда начинается учебный год в Аргентине?"
-short_answer: "Учебный год идёт с марта по декабрь: Аргентина в Южном полушарии, поэтому летние каникулы у школьников — январь и февраль. Семье с детьми лучше планировать переезд к февралю-марту, чтобы ребёнок начал год вместе со сверстниками."
+short_answer: "Даты зависят от провинции или CABA. В 2026 году занятия начались в разных юрисдикциях с 18 февраля по 2 марта, а завершатся с 17 по 23 декабря. Зимние каникулы проходят в июле, но их даты тоже различаются."
 topic: deti
 status: published
+site_ready: true
 site_sections: [pereezd-v-argentinu]
 tags: [семьи с детьми, релокация]
 related: [shkola-dlya-detey]
-last_verified: "2026-07-01"
+last_verified: "2026-07-17"
 confidence: high
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "childrenworld.club — Образование детей в Аргентине"
-    url: "https://childrenworld.club/blog/obrazovania-v-argentine"
-    lang: ru
-    type: ru_blog
-    note: "учебный календарь март-декабрь, структура ступеней"
-  - title: "vhod.world — Аргентина: дети"
-    url: "https://vhod.world/countries/argentina/wiki/kids/"
-    lang: ru
-    type: ru_blog
-    note: "сроки записи в госсады и школы: основной набор в октябре-ноябре, добор в феврале"
+  - id: argentina-school-calendar-2026
+    title: "Secretaría de Educación — Calendario Escolar 2026"
+    url: "https://www.argentina.gob.ar/capital-humano/educacion/calendario-escolar-2026"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-12-31"
+    note: "Официальные даты начала, зимних каникул и окончания занятий по всем 24 образовательным юрисдикциям."
+  - id: national-education-law-26206
+    title: "Ley de Educación Nacional 26.206"
+    url: "https://www.argentina.gob.ar/normativa/nacional/ley-26206-123542/texto"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2027-07-17"
+    note: "Подтверждает полномочия провинций и CABA организовывать свои образовательные системы."
+  - id: caba-school-enrollment-2026
+    title: "Buenos Aires Ciudad — дополнительная запись в школы на 2026 год"
+    url: "https://buenosaires.gob.ar/gcaba_historico/noticias/abrio-un-nuevo-periodo-de-inscripcion-escolar-para-el-ciclo-lectivo-2026"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-12-31"
+    note: "Пример юрисдикционного календаря: дополнительный период записи в государственные школы CABA проходил с 26 января по 8 февраля 2026 года."
+claims:
+  - id: school-calendar-varies-by-jurisdiction
+    text: "Календарь занятий устанавливается по образовательным юрисдикциям, поэтому единой даты начала учебного года для всей страны нет."
+    sensitive: true
+    source_ids: [national-education-law-26206, argentina-school-calendar-2026]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: school-calendar-2026-date-ranges
+    text: "В календаре 2026 года начало занятий по юрисдикциям приходится на период с 18 февраля по 2 марта, окончание — с 17 по 23 декабря, а зимние каникулы различаются по датам июля."
+    sensitive: true
+    source_ids: [argentina-school-calendar-2026]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: caba-additional-enrollment-2026
+    text: "Дополнительная запись в государственные школы CABA на 2026 год проходила с 26 января по 8 февраля для школ с оставшимися местами."
+    sensitive: true
+    source_ids: [caba-school-enrollment-2026]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
 ## Ответ
 
-Учебный год в аргентинских школах начинается в **марте** и заканчивается в **декабре** — календарь перевёрнут относительно российского, потому что страна находится в Южном полушарии. Большие летние каникулы приходятся на январь-февраль, а в июле есть двухнедельные зимние каникулы.
+В Аргентине нет одной даты начала занятий для всей страны. Календарь утверждает каждая провинция и город Буэнос-Айрес. В 2026 году учебный год начался в разных юрисдикциях **с 18 февраля по 2 марта**, а завершится **с 17 по 23 декабря**. Зимние каникулы проходят в июле и также начинаются в разные даты.
 
-Для планирования переезда семьи это ключевая деталь. Если переехать «летом» по российской привычке — в июне-августе, — ребёнок попадёт не в начало учебного года, а в его разгар: придётся вливаться в середину программы и в уже сложившийся класс, что удваивает стресс адаптации (особенно без испанского). Оптимальное окно для переезда с детьми школьного возраста — **к февралю-марту**: ребёнок стартует вместе со сверстниками с чистого листа.
+Семье с ребёнком полезно ориентироваться на февраль, но план переезда лучше строить не по общему совету, а по календарю выбранной юрисдикции и правилам конкретной школы. Запись, распределение мест и дополнительный набор тоже различаются. Например, в CABA дополнительная запись на 2026 год проходила с 26 января по 8 февраля и охватывала только школы, где оставались места.
 
-Второй момент — запись: основной набор в государственные сады и школы на следующий год идёт в **октябре-ноябре**, с добором в феврале; места в середине года зависят от конкретной школы. Частные школы обычно гибче со сроками зачисления. И заложите время на подготовку документов о предыдущем образовании — апостиль ставится ещё дома, а перевод делается в Аргентине присяжным переводчиком.
+Если ребёнок переезжает в середине года, сначала обратитесь в образовательное ведомство провинции или CABA и в выбранную школу. Там уточнят наличие места, класс и комплект документов. Требования к документам о предыдущем обучении также нужно проверять именно для выбранной юрисдикции.
 
 ## Источники
 
-- [childrenworld.club — образование детей в Аргентине](https://childrenworld.club/blog/obrazovania-v-argentine) — календарь и структура, ru.
-- [vhod.world — Аргентина: дети](https://vhod.world/countries/argentina/wiki/kids/) — сроки записи, ru.
+- [Официальный школьный календарь Аргентины на 2026 год](https://www.argentina.gob.ar/capital-humano/educacion/calendario-escolar-2026).
+- [Ley de Educación Nacional 26.206](https://www.argentina.gob.ar/normativa/nacional/ley-26206-123542/texto).
+- [Дополнительная запись в государственные школы CABA на 2026 год](https://buenosaires.gob.ar/gcaba_historico/noticias/abrio-un-nuevo-periodo-de-inscripcion-escolar-para-el-ciclo-lectivo-2026).

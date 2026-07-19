@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,13 @@ import {
   scheduledPublishAtToDatetimeLocalValue,
 } from "@/lib/cms/cms-scheduled-publish";
 import { normalizeGuideSectionForCms } from "@/lib/content-section-body";
+import { useUnsavedChangesGuard } from "@/hooks/useUnsavedChangesGuard";
+import {
+  buildSessionDraftKey,
+  readSessionDraft,
+  writeSessionDraft,
+  type SessionDraftEnvelope,
+} from "@/lib/admin/local-draft-recovery";
 
 type Props = {
   documentId: string;
@@ -52,6 +59,13 @@ type CmsRevisionListItem = CmsRevision & { authorName?: string | null };
 type RevisionsResponse = { revisions?: CmsRevisionListItem[]; error?: string };
 type RevisionResponse = { revision?: CmsRevision; error?: string };
 type RestoreResponse = { document?: CmsDocument; error?: string };
+type CmsEditorDraft = {
+  title: string;
+  status: CmsDocument["status"];
+  seo: CmsDocumentSeo;
+  scheduleAtLocal: string;
+  body: CmsDocumentBody;
+};
 type GroupedDocumentsResponse = {
   grouped?: Array<{
     docType: CmsDocument["docType"];
@@ -110,12 +124,82 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [creatingLocale, setCreatingLocale] = useState<I18nLocale | null>(null);
   const [seo, setSeo] = useState<CmsDocumentSeo>({});
   const [scheduleAtLocal, setScheduleAtLocal] = useState("");
+  const [baselineFingerprint, setBaselineFingerprint] = useState<string | null>(null);
+  const [recoveryDraft, setRecoveryDraft] = useState<SessionDraftEnvelope<CmsEditorDraft> | null>(null);
+  const [recoverySafetyNotice, setRecoverySafetyNotice] = useState<string | null>(null);
+  const recoveryCheckedRef = useRef(false);
+  const recoveryDraftRef = useRef<SessionDraftEnvelope<CmsEditorDraft> | null>(null);
 
   const parsedId = useMemo(() => parseCmsDocumentId(documentId), [documentId]);
   const currentLocale: I18nLocale =
     parsedId?.locale && isI18nLocale(parsedId.locale) ? parsedId.locale : "ru";
 
   const encodedId = encodeURIComponent(documentId);
+  const recoveryStorageKey = useMemo(() => buildSessionDraftKey(documentId), [documentId]);
+
+  const applyDraftState = useCallback((draft: CmsEditorDraft) => {
+    setTitle(draft.title);
+    setStatus(draft.status);
+    setSeo(draft.seo);
+    setScheduleAtLocal(draft.scheduleAtLocal);
+    setDescription("");
+    setGuideCategory("");
+    setSections([]);
+    setExcerpt("");
+    setBlogSections([]);
+    setBlogFeatured(false);
+    setBlogRelatedDestinations("");
+    setDestinationIntro("");
+    setDestinationRegionGroup("");
+    setDestinationBestSeason("");
+    setDestinationIdealDuration("");
+    setDestinationHowToGetThere("");
+    setDestinationHighlights([]);
+    setDestinationTravelTips([]);
+    setPlaceShortDescription("");
+    setPlaceFullDescription("");
+    setPlaceHowToGetThere("");
+    setPlaceInterestingFacts([]);
+    setPlaceRelatedTourSlugs("");
+
+    if (draft.body.kind === "legal") {
+      setDescription(draft.body.description);
+      setSections(draft.body.sections);
+    } else if (draft.body.kind === "guide") {
+      setDescription(draft.body.description);
+      setGuideCategory(draft.body.category ?? "");
+      setSections(draft.body.sections);
+    } else if (draft.body.kind === "blog") {
+      setExcerpt(draft.body.excerpt ?? "");
+      setBlogFeatured(draft.body.featured ?? false);
+      setBlogRelatedDestinations((draft.body.relatedDestinations ?? []).join(", "));
+      setBlogSections(
+        draft.body.sections ?? [
+          { title: "Основной текст", body: draft.body.content ?? "", blocks: [] },
+        ],
+      );
+    } else if (draft.body.kind === "author_article") {
+      setExcerpt(draft.body.excerpt ?? "");
+      setBlogSections(
+        draft.body.sections ?? [{ title: "Основной текст", body: "", blocks: [] }],
+      );
+    } else if (draft.body.kind === "destination") {
+      setDescription(draft.body.description);
+      setDestinationIntro(draft.body.intro ?? "");
+      setDestinationRegionGroup(draft.body.regionGroup ?? "");
+      setDestinationBestSeason(draft.body.bestSeason ?? "");
+      setDestinationIdealDuration(draft.body.idealDuration ?? "");
+      setDestinationHowToGetThere(draft.body.howToGetThere ?? "");
+      setDestinationHighlights(draft.body.highlights ?? []);
+      setDestinationTravelTips(draft.body.travelTips ?? []);
+    } else if (draft.body.kind === "place") {
+      setPlaceShortDescription(draft.body.shortDescription ?? "");
+      setPlaceFullDescription(draft.body.fullDescription ?? "");
+      setPlaceHowToGetThere(draft.body.howToGetThere ?? "");
+      setPlaceInterestingFacts(draft.body.interestingFacts ?? []);
+      setPlaceRelatedTourSlugs((draft.body.relatedTourSlugs ?? []).join(", "));
+    }
+  }, []);
 
   const loadLocaleCoverage = useCallback(async (docType: CmsDocument["docType"], slug: string) => {
     try {
@@ -147,48 +231,18 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
       const document = docJson.document;
       setDoc(document);
-      setTitle(document.title);
-      setStatus(document.status);
-      setSeo(document.seo ?? {});
-      setScheduleAtLocal(scheduledPublishAtToDatetimeLocalValue(document.scheduledPublishAt));
-
-      if (document.body.kind === "legal") {
-        setDescription(document.body.description);
-        setSections(document.body.sections);
-      } else if (document.body.kind === "guide") {
-        setDescription(document.body.description);
-        setGuideCategory(document.body.category ?? "");
-        setSections(document.body.sections);
-      } else if (document.body.kind === "blog") {
-        setExcerpt(document.body.excerpt ?? "");
-        setBlogFeatured(document.body.featured ?? false);
-        setBlogRelatedDestinations((document.body.relatedDestinations ?? []).join(", "));
-        setBlogSections(
-          document.body.sections ?? [
-            { title: "Основной текст", body: document.body.content ?? "", blocks: [] },
-          ]
-        );
-      } else if (document.body.kind === "author_article") {
-        setExcerpt(document.body.excerpt ?? "");
-        setBlogSections(
-          document.body.sections ?? [{ title: "Основной текст", body: "", blocks: [] }]
-        );
-      } else if (document.body.kind === "destination") {
-        setDescription(document.body.description);
-        setDestinationIntro(document.body.intro ?? "");
-        setDestinationRegionGroup(document.body.regionGroup ?? "");
-        setDestinationBestSeason(document.body.bestSeason ?? "");
-        setDestinationIdealDuration(document.body.idealDuration ?? "");
-        setDestinationHowToGetThere(document.body.howToGetThere ?? "");
-        setDestinationHighlights(document.body.highlights ?? []);
-        setDestinationTravelTips(document.body.travelTips ?? []);
-      } else if (document.body.kind === "place") {
-        setPlaceShortDescription(document.body.shortDescription ?? "");
-        setPlaceFullDescription(document.body.fullDescription ?? "");
-        setPlaceHowToGetThere(document.body.howToGetThere ?? "");
-        setPlaceInterestingFacts(document.body.interestingFacts ?? []);
-        setPlaceRelatedTourSlugs((document.body.relatedTourSlugs ?? []).join(", "));
-      }
+      applyDraftState({
+        title: document.title,
+        status: document.status,
+        seo: document.seo ?? {},
+        scheduleAtLocal: scheduledPublishAtToDatetimeLocalValue(document.scheduledPublishAt),
+        body: document.body,
+      });
+      setBaselineFingerprint(null);
+      recoveryCheckedRef.current = false;
+      recoveryDraftRef.current = null;
+      setRecoveryDraft(null);
+      setRecoverySafetyNotice(null);
 
       setRevisions(revJson.revisions ?? []);
       setSelectedRevision(null);
@@ -199,7 +253,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [encodedId, loadLocaleCoverage]);
+  }, [applyDraftState, encodedId, loadLocaleCoverage]);
 
   useEffect(() => {
     void load();
@@ -207,6 +261,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
   async function createLocaleVariant(locale: I18nLocale) {
     if (!doc) return;
+    if (!confirmNavigation()) return;
     setCreatingLocale(locale);
     try {
       const res = await fetch("/api/admin/content/documents", {
@@ -304,45 +359,118 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     };
   }
 
-  const revisionDiff = useMemo(() => {
-    if (!selectedRevision || !doc) return null;
-    return buildCmsRevisionDiff(
-      {
-        title: title.trim(),
-        body: buildBody(),
-        seo: buildSeo(),
-      },
-      {
-        title: selectedRevision.title,
-        body: selectedRevision.body,
-        seo: selectedRevision.seo ?? {},
+  const editorDraft: CmsEditorDraft = {
+    title: title.trim(),
+    status,
+    seo: buildSeo(),
+    scheduleAtLocal,
+    body: buildBody(),
+  };
+  const editorDraftRef = useRef(editorDraft);
+  editorDraftRef.current = editorDraft;
+  const draftFingerprint = JSON.stringify(editorDraft);
+  const isDirty = baselineFingerprint !== null && draftFingerprint !== baselineFingerprint;
+  const { confirmNavigation } = useUnsavedChangesGuard(isDirty);
+
+  useEffect(() => {
+    if (!doc || baselineFingerprint !== null) return;
+    setBaselineFingerprint(draftFingerprint);
+  }, [baselineFingerprint, doc, draftFingerprint]);
+
+  useEffect(() => {
+    if (!doc || baselineFingerprint === null || recoveryCheckedRef.current) return;
+    recoveryCheckedRef.current = true;
+    try {
+      const stored = readSessionDraft<CmsEditorDraft>(sessionStorage, recoveryStorageKey);
+      if (
+        stored &&
+        stored.serverUpdatedAt === doc.updatedAt &&
+        JSON.stringify(stored.draft) !== baselineFingerprint
+      ) {
+        recoveryDraftRef.current = stored;
+        setRecoveryDraft(stored);
+      } else {
+        sessionStorage.removeItem(recoveryStorageKey);
       }
-    );
-  }, [
-    blogSections,
-    blogFeatured,
-    blogRelatedDestinations,
-    description,
-    destinationBestSeason,
-    destinationHighlights,
-    destinationHowToGetThere,
-    destinationIdealDuration,
-    destinationIntro,
-    destinationRegionGroup,
-    destinationTravelTips,
-    doc,
-    excerpt,
-    guideCategory,
-    placeFullDescription,
-    placeHowToGetThere,
-    placeInterestingFacts,
-    placeRelatedTourSlugs,
-    placeShortDescription,
-    sections,
-    selectedRevision,
-    seo,
-    title,
-  ]);
+    } catch {
+      setRecoverySafetyNotice(
+        "Браузер запретил локальное восстановление. Используйте «Сохранить черновик» чаще.",
+      );
+    }
+  }, [baselineFingerprint, doc, recoveryStorageKey]);
+
+  useEffect(() => {
+    if (!doc || baselineFingerprint === null || !recoveryCheckedRef.current) return;
+    if (!isDirty) {
+      if (!recoveryDraftRef.current) {
+        try {
+          sessionStorage.removeItem(recoveryStorageKey);
+        } catch {
+          // Session storage can be unavailable in hardened browser modes.
+        }
+      }
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      try {
+        const written = writeSessionDraft(sessionStorage, recoveryStorageKey, {
+          version: 1,
+          savedAt: new Date().toISOString(),
+          serverUpdatedAt: doc.updatedAt,
+          draft: editorDraftRef.current,
+        });
+        if (written) {
+          setRecoverySafetyNotice(null);
+        } else {
+          sessionStorage.removeItem(recoveryStorageKey);
+          setRecoverySafetyNotice(
+            "Локальная копия не создаётся: в тексте обнаружены контактные или секретные данные либо черновик слишком большой. Сохраните его на сервере.",
+          );
+        }
+      } catch {
+        setRecoverySafetyNotice(
+          "Браузер запретил локальное восстановление. Используйте «Сохранить черновик» чаще.",
+        );
+      }
+    }, 700);
+
+    return () => window.clearTimeout(timeout);
+  }, [baselineFingerprint, doc, draftFingerprint, isDirty, recoveryStorageKey]);
+
+  function restoreLocalDraft() {
+    if (!recoveryDraft) return;
+    applyDraftState(recoveryDraft.draft);
+    recoveryDraftRef.current = null;
+    setRecoveryDraft(null);
+    setRecoverySafetyNotice(null);
+  }
+
+  function dismissLocalDraft() {
+    try {
+      sessionStorage.removeItem(recoveryStorageKey);
+    } catch {
+      // The in-memory dismissal still works when storage is unavailable.
+    }
+    recoveryDraftRef.current = null;
+    setRecoveryDraft(null);
+  }
+
+  const revisionDiff =
+    selectedRevision && doc
+      ? buildCmsRevisionDiff(
+          {
+            title: editorDraft.title,
+            body: editorDraft.body,
+            seo: editorDraft.seo,
+          },
+          {
+            title: selectedRevision.title,
+            body: selectedRevision.body,
+            seo: selectedRevision.seo ?? {},
+          },
+        )
+      : null;
 
   async function openRevision(revision: CmsRevisionListItem) {
     if (selectedRevisionMeta?.id === revision.id) {
@@ -371,6 +499,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   async function restoreRevision(revision: CmsRevisionListItem, publish = false) {
+    if (!confirmNavigation()) return;
     const message = publish
       ? "Восстановить эту ревизию и сразу опубликовать?"
       : "Восстановить эту ревизию как черновик?";
@@ -385,7 +514,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ publish }),
+          body: JSON.stringify({ publish, expectedVersion: doc?.rowVersion }),
         }
       );
       const json = (await res.json()) as RestoreResponse;
@@ -400,12 +529,27 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   async function saveDraft() {
+    if (!doc) return;
+    if (
+      (doc.status === "published" || doc.status === "scheduled") &&
+      !window.confirm(
+        doc.status === "published"
+          ? "Снять материал с публикации и сохранить как черновик?"
+          : "Отменить запланированную публикацию и сохранить материал как черновик?",
+      )
+    ) return;
     setSaving(true);
     try {
       const res = await fetch(`/api/admin/content/documents/${encodedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: buildBody(), seo: buildSeo(), status: "draft" }),
+        body: JSON.stringify({
+          title: title.trim(),
+          body: buildBody(),
+          seo: buildSeo(),
+          status: "draft",
+          expectedVersion: doc.rowVersion,
+        }),
       });
       const json = (await res.json()) as DocumentResponse;
       if (!res.ok) throw new Error(json.error ?? "Ошибка сохранения");
@@ -418,13 +562,19 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   async function publish() {
-    if (!canPublish) return;
+    if (!canPublish || !doc) return;
+    if (!window.confirm("Опубликовать текущую редакцию на сайте?")) return;
     setSaving(true);
     try {
       const saveResponse = await fetch(`/api/admin/content/documents/${encodedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: buildBody(), seo: buildSeo() }),
+        body: JSON.stringify({
+          title: title.trim(),
+          body: buildBody(),
+          seo: buildSeo(),
+          expectedVersion: doc.rowVersion,
+        }),
       });
       const saved = (await saveResponse.json()) as DocumentResponse;
       if (!saveResponse.ok) {
@@ -432,6 +582,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       }
       const res = await fetch(`/api/admin/content/documents/${encodedId}/publish`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expectedVersion: saved.document?.rowVersion }),
       });
       const json = (await res.json()) as DocumentResponse;
       if (!res.ok) throw new Error(json.error ?? "Ошибка публикации");
@@ -457,12 +609,13 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   async function schedulePublication() {
-    if (!canPublish) return;
+    if (!canPublish || !doc) return;
     const scheduledPublishAt = datetimeLocalValueToScheduledPublishAt(scheduleAtLocal);
     if (!scheduledPublishAt) {
       alert("Укажите дату и время публикации");
       return;
     }
+    if (!window.confirm(`Запланировать публикацию на ${formatScheduledPublishLabel(scheduledPublishAt)}?`)) return;
 
     setSaving(true);
     try {
@@ -474,6 +627,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           title: title.trim(),
           body: buildBody(),
           seo: buildSeo(),
+          expectedVersion: doc.rowVersion,
         }),
       });
       const json = (await res.json()) as DocumentResponse;
@@ -487,13 +641,16 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   async function cancelSchedule() {
-    if (!canPublish) return;
+    if (!canPublish || !doc) return;
+    if (!confirmNavigation()) return;
     if (!window.confirm("Отменить запланированную публикацию?")) return;
 
     setSaving(true);
     try {
       const res = await fetch(`/api/admin/content/documents/${encodedId}/schedule`, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expectedVersion: doc.rowVersion }),
       });
       const json = (await res.json()) as DocumentResponse;
       if (!res.ok) throw new Error(json.error ?? "Не удалось отменить публикацию");
@@ -507,6 +664,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
   async function removeOverride() {
     if (!canPublish) return;
+    if (!confirmNavigation()) return;
     if (!window.confirm("Удалить CMS-версию? На сайте снова будет файл из репозитория.")) return;
     setSaving(true);
     try {
@@ -622,6 +780,48 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
             </div>
           }
         />
+
+        <section
+          aria-live="polite"
+          className={`rounded-2xl border px-4 py-3 text-sm ${
+            isDirty
+              ? "border-amber-200 bg-amber-50 text-amber-900"
+              : "border-emerald-200 bg-emerald-50 text-emerald-900"
+          }`}
+        >
+          <p className="font-semibold">
+            {isDirty ? "Есть несохранённые изменения" : "Все изменения сохранены"}
+          </p>
+          <p className="mt-1 text-xs leading-5">
+            {isDirty
+              ? "Перед уходом со страницы браузер попросит подтверждение. Локальная копия помогает восстановиться после случайной перезагрузки."
+              : "Редактор синхронизирован с последней серверной версией."}
+          </p>
+        </section>
+
+        {recoveryDraft ? (
+          <section className="rounded-2xl border border-sky/30 bg-sky/5 p-4 text-sm text-charcoal">
+            <p className="font-semibold">Найдена локальная копия черновика</p>
+            <p className="mt-1 text-xs leading-5 text-slate">
+              Сохранена {formatAdminWhen(recoveryDraft.savedAt)} до закрытия вкладки. Восстановление
+              вернёт текст в форму, но не опубликует его.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button size="sm" onClick={restoreLocalDraft}>
+                Восстановить в редактор
+              </Button>
+              <Button size="sm" variant="outline" onClick={dismissLocalDraft}>
+                Удалить локальную копию
+              </Button>
+            </div>
+          </section>
+        ) : null}
+
+        {recoverySafetyNotice ? (
+          <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900">
+            {recoverySafetyNotice}
+          </p>
+        ) : null}
 
         <CmsLocaleTabs
           docType={doc.docType}

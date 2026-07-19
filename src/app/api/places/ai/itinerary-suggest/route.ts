@@ -25,19 +25,14 @@ export type ItinerarySuggestStop = {
 };
 
 export type ItinerarySuggestResponse = {
-  /** Placeholder flag — full AI generation not implemented */
-  aiGenerated: false;
-  method: "rule-based";
+  method: "route-graph";
   title: string;
   durationDays: number;
   stops: ItinerarySuggestStop[];
   message: string;
 };
 
-/**
- * Rule-based itinerary suggestion stub for future AI integration.
- * Uses Place database + relation graph; returns structured JSON for clients.
- */
+/** Uses the places database and relation graph to build a practical route. */
 export async function POST(request: Request) {
   let body: ItinerarySuggestRequest;
   try {
@@ -112,15 +107,13 @@ export async function POST(request: Request) {
   });
 
   const response: ItinerarySuggestResponse = {
-    aiGenerated: false,
-    method: "rule-based",
+    method: "route-graph",
     title: body.region
       ? `Маршрут по региону «${body.region}» на ${durationDays} дней`
       : `Маршрут от ${start.name} на ${durationDays} дней`,
     durationDays,
     stops,
-    message:
-      "Заглушка API: правила на основе графа связей. Полная AI-генерация — в следующих итерациях.",
+    message: "Маршрут собран по географической близости и связям между местами.",
   };
 
   return NextResponse.json(response);
@@ -130,6 +123,6 @@ export async function GET() {
   return NextResponse.json({
     endpoint: "/api/places/ai/itinerary-suggest",
     method: "POST",
-    description: "Rule-based itinerary suggestion stub. Accepts ItinerarySuggestRequest JSON.",
+    description: "Подбор маршрута по местам, длительности и интересам путешественника.",
   });
 }

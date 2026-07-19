@@ -14,7 +14,7 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 if (!process.env.NEXT_DIST_DIR?.trim()) {
-  process.env.NEXT_DIST_DIR = ".next-production";
+  process.env.NEXT_DIST_DIR = process.env.CI ? ".next" : ".next-production";
 }
 const existingLock = readProductionBuildLock(root);
 

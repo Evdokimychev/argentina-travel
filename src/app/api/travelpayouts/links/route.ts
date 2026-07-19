@@ -4,8 +4,10 @@ import {
   isTravelpayoutsConfigured,
   TravelpayoutsError,
 } from "@/lib/travelpayouts";
-import { isAllowedTravelpayoutsTargetUrl } from "@/lib/travelpayouts/target-url";
+import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import { isAllowedTravelpayoutsTargetUrl } from "@/lib/travelpayouts/target-url";
+import { publicApiError } from "@/lib/public-api/safe-error";
 
 type CreateLinksBody = {
   links?: Array<{ url?: string; subId?: string }>;
@@ -17,18 +19,18 @@ async function postPartnerLinks(request: Request) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  const auth = await authorizeAdminRequest(request, "system.settings");
+  if (!auth.ok) return auth.response;
+
   if (!isTravelpayoutsConfigured()) {
-    return NextResponse.json(
-      { error: "Travelpayouts is not configured on the server" },
-      { status: 503 }
-    );
+    return NextResponse.json(publicApiError("PARTNER_DATA_UNAVAILABLE"), { status: 503 });
   }
 
   let body: CreateLinksBody;
   try {
     body = (await request.json()) as CreateLinksBody;
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
   }
 
   const links = (body.links ?? [])
@@ -39,15 +41,25 @@ async function postPartnerLinks(request: Request) {
     .filter((item) => item.url.length > 0);
 
   if (!links.length) {
-    return NextResponse.json({ error: "At least one valid url is required" }, { status: 400 });
+    return NextResponse.json({
+      ...publicApiError("INVALID_REQUEST"),
+      error: "Добавьте хотя бы одну корректную ссылку.",
+    }, { status: 400 });
   }
 
   if (links.length > 20) {
-    return NextResponse.json({ error: "Maximum 20 links per request" }, { status: 400 });
+    return NextResponse.json({
+      ...publicApiError("INVALID_REQUEST"),
+      error: "За один раз можно обработать не более 20 ссылок.",
+    }, { status: 400 });
   }
+
   if (links.some((item) => !isAllowedTravelpayoutsTargetUrl(item.url))) {
     return NextResponse.json(
-      { error: "Partner URL is not allowed" },
+      {
+        ...publicApiError("INVALID_REQUEST"),
+        error: "Разрешены только официальные защищённые ссылки партнёров.",
+      },
       { status: 400 },
     );
   }
@@ -57,9 +69,12 @@ async function postPartnerLinks(request: Request) {
     return NextResponse.json({ links: result });
   } catch (error) {
     if (error instanceof TravelpayoutsError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      return NextResponse.json(
+        publicApiError("PARTNER_DATA_UNAVAILABLE"),
+        { status: error.status },
+      );
     }
-    return NextResponse.json({ error: "Failed to create partner links" }, { status: 500 });
+    return NextResponse.json(publicApiError("PARTNER_DATA_UNAVAILABLE"), { status: 500 });
   }
 }
 

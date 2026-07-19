@@ -1,0 +1,16 @@
+{
+  "sourceUrl": "https://klubgidov.ru/tours",
+  "finalUrl": "https://klubgidov.ru/tours",
+  "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+  "researchedAt": "2026-07-18T15:15:57.156Z",
+  "httpStatus": 200,
+  "viewport": {
+    "id": "desktop",
+    "width": 1280,
+    "height": 900
+  },
+  "pageType": "catalog",
+  "interactiveStates": [
+    "default"
+  ]
+}

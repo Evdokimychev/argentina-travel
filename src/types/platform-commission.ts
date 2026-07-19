@@ -32,24 +32,36 @@ export type BookingCommissionSnapshotRow = {
   tourTitle?: string;
 };
 
-export type OrganizerFinanceSummary = {
+export type OrganizerFinanceCurrencySummary = {
+  currency: "RUB" | "ARS" | "USD" | "EUR";
   earnedNet: number;
   commissionTotal: number;
   grossTotal: number;
   paidOut: number;
   pendingPayout: number;
   availableBalance: number;
-  currency: string;
   snapshotCount: number;
   unpaidSnapshotCount: number;
+  payoutCount: number;
+};
+
+export type OrganizerFinanceSummary = {
+  byCurrency: OrganizerFinanceCurrencySummary[];
+  invalidRecordCount: number;
 };
 
 export type CommissionReportTotals = {
-  grossTotal: number;
-  commissionTotal: number;
-  organizerNetTotal: number;
+  byCurrency: Array<{
+    currency: "RUB" | "ARS" | "USD" | "EUR";
+    grossTotal: number;
+    commissionTotal: number;
+    organizerNetTotal: number;
+    snapshotCount: number;
+    organizerCount: number;
+  }>;
   snapshotCount: number;
   organizerCount: number;
+  invalidRecordCount: number;
 };
 
 export const COMMISSION_RULE_TYPE_LABELS: Record<CommissionRuleType, string> = {

@@ -7,6 +7,12 @@ import {
 import { fetchSiteFeatures, fetchSiteForms } from "@/lib/site-settings-server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { ContactSubmissionKind } from "@/types/database";
+import {
+  CONTACT_REQUEST_MAX_BYTES,
+  LeadCaptureValidationError,
+  normalizeContactRequest,
+  readLimitedJson,
+} from "@/lib/lead-capture-validation";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
 export async function POST(request: Request) {
@@ -28,47 +34,37 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as {
-      kind?: ContactSubmissionKind;
-      name?: string;
-      email?: string | null;
-      phone?: string | null;
-      message?: string;
-      context?: Record<string, unknown>;
-      pageUrl?: string | null;
-      tourSlug?: string | null;
-      productSlug?: string | null;
-      serviceSlug?: string | null;
-      organizerApplication?: boolean;
-      captchaToken?: string | null;
-      honeypot?: string | null;
-    };
-
+    const rawBody = await readLimitedJson(request, CONTACT_REQUEST_MAX_BYTES);
+    const rawFields =
+      rawBody && typeof rawBody === "object" && !Array.isArray(rawBody)
+        ? (rawBody as Record<string, unknown>)
+        : {};
     const protection = await verifyGuestFormProtection({
       request,
       formId: "contact",
-      captchaToken: body.captchaToken,
-      honeypot: body.honeypot,
+      captchaToken:
+        typeof rawFields.captchaToken === "string" ? rawFields.captchaToken : null,
+      honeypot: typeof rawFields.honeypot === "string" ? rawFields.honeypot : null,
     });
     if (!protection.ok) {
       if (protection.kind === "configuration") {
-        return NextResponse.json({ error: "Защита формы временно недоступна." }, { status: 503 });
+        return NextResponse.json(
+          { error: "Защита формы временно недоступна." },
+          { status: 503 },
+        );
       }
       return NextResponse.json({ ok: true });
     }
 
-    if (!body.name?.trim()) {
-      return NextResponse.json({ error: "Name is required." }, { status: 400 });
-    }
-
-    const kind =
-      body.kind ??
-      resolveContactKind({
-        tourSlug: body.tourSlug,
-        productSlug: body.productSlug,
-        serviceSlug: body.serviceSlug,
-        organizerApplication: body.organizerApplication,
-      });
+    const body = normalizeContactRequest(rawBody, request.url);
+    const inferredKind = resolveContactKind({
+      tourSlug: body.tourSlug,
+      productSlug: body.productSlug,
+      serviceSlug: body.serviceSlug,
+      organizerApplication: body.organizerApplication,
+    });
+    const kind: ContactSubmissionKind =
+      inferredKind === "general" ? body.kind ?? "general" : inferredKind;
 
     if (kind === "organizer_application") {
       const features = await fetchSiteFeatures();
@@ -99,12 +95,22 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
+    if (error instanceof LeadCaptureValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     if (error instanceof LeadCaptureError) {
       const status =
         error.code === "validation" ? 400 : error.code === "not_configured" ? 503 : 500;
-      return NextResponse.json({ error: error.message }, { status });
+      const message =
+        error.code === "database"
+          ? "Не удалось сохранить обращение. Попробуйте позже."
+          : error.message;
+      return NextResponse.json({ error: message }, { status });
     }
 
-    return NextResponse.json({ error: "Unexpected error." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось сохранить обращение. Попробуйте позже." },
+      { status: 500 }
+    );
   }
 }

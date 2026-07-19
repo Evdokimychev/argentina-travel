@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -67,6 +67,8 @@ export default function RouteMapSection({
   const [fitToken, setFitToken] = useState(0);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [mapResizeToken, setMapResizeToken] = useState(0);
+  const progressRef = useRef(progress);
+  progressRef.current = progress;
 
   useSiteHeaderOverlayLock(isMapFullscreen);
 
@@ -122,7 +124,7 @@ export default function RouteMapSection({
   useEffect(() => {
     if (!isPlaying || points.length < 2) return;
 
-    const startProgress = progress;
+    const startProgress = progressRef.current;
     const remaining = 1 - startProgress;
     if (remaining <= 0) {
       setIsPlaying(false);
@@ -149,7 +151,6 @@ export default function RouteMapSection({
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-    // progress intentionally omitted — captured when playback starts
   }, [isPlaying, points]);
 
   const hasRouteImage = Boolean(routeMapImage?.trim());

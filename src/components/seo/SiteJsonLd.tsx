@@ -1,4 +1,3 @@
-import { fetchSiteBranding, fetchSiteContact } from "@/lib/site-settings-server";
 import {
   buildOrganizationSchema,
   buildSiteSearchUrlTemplate,
@@ -7,6 +6,7 @@ import {
 } from "@/lib/schema-json-ld";
 import JsonLdScript from "@/components/seo/JsonLdScript";
 import { absoluteUrl } from "@/lib/site-url";
+import type { SiteBrandingGlobalResolved, SiteContactGlobalResolved } from "@/types/site-globals";
 
 const DEFAULT_OG_IMAGE = "/media/destinations/ba/cover.jpg";
 
@@ -14,8 +14,13 @@ export function getDefaultOgImageUrl(): string {
   return absoluteUrl(DEFAULT_OG_IMAGE);
 }
 
-export default async function SiteJsonLd() {
-  const [branding, contact] = await Promise.all([fetchSiteBranding(), fetchSiteContact()]);
+export default function SiteJsonLd({
+  branding,
+  contact,
+}: {
+  branding: SiteBrandingGlobalResolved;
+  contact: SiteContactGlobalResolved;
+}) {
   const siteUrl = absoluteUrl("/");
   const sameAs = [
     contact.telegramUrl,

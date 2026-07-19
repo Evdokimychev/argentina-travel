@@ -51,6 +51,7 @@ const FLAG_LABELS: Record<string, string> = {
 
 export default function KnowledgeImportView() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const operationIdRef = useRef<string | null>(null);
   const [rawPackage, setRawPackage] = useState<unknown>(null);
   const [data, setData] = useState<PreviewResponse | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -99,6 +100,7 @@ export default function KnowledgeImportView() {
       if (!response.ok) throw new Error(payload.error ?? "Пакет не прошёл проверку");
 
       setRawPackage(parsed);
+      operationIdRef.current = null;
       setData(payload);
       setSelected(
         new Set(
@@ -120,6 +122,7 @@ export default function KnowledgeImportView() {
   }
 
   function toggle(id: string) {
+    operationIdRef.current = null;
     setSelected((current) => {
       const next = new Set(current);
       if (next.has(id)) next.delete(id);
@@ -128,8 +131,22 @@ export default function KnowledgeImportView() {
     });
   }
 
+  function selectAvailable() {
+    operationIdRef.current = null;
+    setSelected(
+      new Set(
+        (data?.preview ?? [])
+          .filter((item) => !item.alreadyImported)
+          .slice(0, 100)
+          .map((item) => item.id),
+      ),
+    );
+  }
+
   async function importSelected() {
     if (selected.size === 0) return;
+    if (!window.confirm(`Создать черновики из выбранных материалов (${selected.size})?`)) return;
+    operationIdRef.current ??= `knowledge:${crypto.randomUUID()}`;
     setBusy(true);
     setError(null);
     try {
@@ -138,8 +155,17 @@ export default function KnowledgeImportView() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
           rawPackage
-            ? { action: "import", package: rawPackage, selectedIds: [...selected] }
-            : { action: "import_static", selectedIds: [...selected] },
+            ? {
+                action: "import",
+                package: rawPackage,
+                selectedIds: [...selected],
+                operationId: operationIdRef.current,
+              }
+            : {
+                action: "import_static",
+                selectedIds: [...selected],
+                operationId: operationIdRef.current,
+              },
         ),
       });
       const payload = (await response.json()) as ImportResponse;
@@ -159,6 +185,7 @@ export default function KnowledgeImportView() {
           : current
       );
       setSelected(new Set());
+      operationIdRef.current = null;
       if (payload.skipped?.length) setError(`Пропущено материалов: ${payload.skipped.length}`);
     } catch (importError) {
       setError(importError instanceof Error ? importError.message : "Ошибка импорта");
@@ -247,16 +274,7 @@ export default function KnowledgeImportView() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() =>
-                  setSelected(
-                    new Set(
-                      data.preview
-                        .filter((item) => !item.alreadyImported)
-                        .slice(0, 100)
-                        .map((item) => item.id),
-                    ),
-                  )
-                }
+                onClick={selectAvailable}
               >
                 Выбрать до 100 новых
               </Button>

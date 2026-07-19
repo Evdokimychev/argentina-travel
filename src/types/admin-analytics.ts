@@ -15,22 +15,22 @@ export type AdminAnalyticsV2Payload = {
   period: AnalyticsPeriod;
   periodStart: string | null;
   operations: {
-    newsletterCount: number;
-    contactCount: number;
-    shopOrderCount: number;
-    bookingCount: number;
-    bookingsByStatus: Record<string, number>;
-    contactsByKind: Record<string, number>;
-    bookingPipelineUsd: number;
-    shopPaidUsd: number;
-    shopOrderUsd: number;
-    topAttributionSources: TopAttributionSourceRow[];
+    newsletterCount: number | null;
+    contactCount: number | null;
+    shopOrderCount: number | null;
+    bookingCount: number | null;
+    bookingsByStatus: Record<string, number> | null;
+    contactsByKind: Record<string, number> | null;
+    bookingPipelineUsd: number | null;
+    shopPaidUsd: number | null;
+    shopOrderUsd: number | null;
+    topAttributionSources: TopAttributionSourceRow[] | null;
   };
   marketplace: {
-    tourCount: number;
-    pendingModerationCount: number;
-    excursionExperienceCount: number;
-    newToursInPeriod: number;
+    tourCount: number | null;
+    pendingModerationCount: number | null;
+    excursionExperienceCount: number | null;
+    newToursInPeriod: number | null;
   };
   content: {
     blogPublished: number;
@@ -40,10 +40,15 @@ export type AdminAnalyticsV2Payload = {
     places: number;
   };
   trends: {
-    bookingsByDay: DailyCountPoint[];
-    contactsByDay: DailyCountPoint[];
-    shopOrdersByDay: DailyCountPoint[];
-    newsletterByDay: DailyCountPoint[];
+    bookingsByDay: DailyCountPoint[] | null;
+    contactsByDay: DailyCountPoint[] | null;
+    shopOrdersByDay: DailyCountPoint[] | null;
+    newsletterByDay: DailyCountPoint[] | null;
+  };
+  dataQuality: {
+    status: "ok" | "partial";
+    checkedAt: string;
+    unavailableMetrics: string[];
   };
 };
 
@@ -78,6 +83,20 @@ export type AnalyticsFunnelStep = {
   rateFromFirst: number | null;
 };
 
+export type AnalyticsMetricStatus = "available" | "unavailable" | "untrusted";
+export type AnalyticsMetricSource =
+  | "controlled_analytics_events"
+  | "bookings"
+  | "payment_ledger"
+  | "published_reviews";
+
+export type AnalyticsMetric<T> = {
+  value: T | null;
+  status: AnalyticsMetricStatus;
+  source: AnalyticsMetricSource;
+  message: string | null;
+};
+
 export type AnalyticsCohortMonth = {
   month: string;
   label: string;
@@ -92,9 +111,9 @@ export type AdminAnalyticsFunnelsPayload = {
   generatedAt: string;
   funnel: AnalyticsFunnelStep[];
   cohorts: AnalyticsCohortMonth[];
+  metrics: Record<AnalyticsFunnelStepId, AnalyticsMetric<number>>;
+  cohortsMetric: AnalyticsMetric<number>;
   meta: {
-    tourViewsSource: "events" | "unavailable";
-    hasTourViewData: boolean;
     dataStatus: "trusted" | "untrusted_direct_insert" | "unavailable";
     trustedForKpi: boolean;
     reason: string | null;

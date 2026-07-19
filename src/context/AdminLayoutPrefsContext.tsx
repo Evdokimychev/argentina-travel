@@ -11,18 +11,23 @@ import {
 import {
   readAdminDarkSidebar,
   readAdminDenseTables,
+  readAdminSimpleNavigation,
   writeAdminDarkSidebar,
   writeAdminDenseTables,
+  writeAdminSimpleNavigation,
 } from "@/lib/admin/layout-prefs";
 import { cn } from "@/lib/cn";
 
 type AdminLayoutPrefsValue = {
   denseTables: boolean;
   darkSidebar: boolean;
+  simpleNavigation: boolean;
   setDenseTables: (value: boolean) => void;
   setDarkSidebar: (value: boolean) => void;
+  setSimpleNavigation: (value: boolean) => void;
   toggleDenseTables: () => void;
   toggleDarkSidebar: () => void;
+  toggleSimpleNavigation: () => void;
   tableClass: string;
   thClass: string;
   tdClass: string;
@@ -33,11 +38,13 @@ const AdminLayoutPrefsContext = createContext<AdminLayoutPrefsValue | null>(null
 export function AdminLayoutPrefsProvider({ children }: { children: React.ReactNode }) {
   const [denseTables, setDenseTablesState] = useState(false);
   const [darkSidebar, setDarkSidebarState] = useState(false);
+  const [simpleNavigation, setSimpleNavigationState] = useState(true);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setDenseTablesState(readAdminDenseTables());
     setDarkSidebarState(readAdminDarkSidebar());
+    setSimpleNavigationState(readAdminSimpleNavigation());
     setHydrated(true);
   }, []);
 
@@ -49,6 +56,11 @@ export function AdminLayoutPrefsProvider({ children }: { children: React.ReactNo
   const setDarkSidebar = useCallback((value: boolean) => {
     setDarkSidebarState(value);
     writeAdminDarkSidebar(value);
+  }, []);
+
+  const setSimpleNavigation = useCallback((value: boolean) => {
+    setSimpleNavigationState(value);
+    writeAdminSimpleNavigation(value);
   }, []);
 
   const toggleDenseTables = useCallback(() => {
@@ -67,6 +79,14 @@ export function AdminLayoutPrefsProvider({ children }: { children: React.ReactNo
     });
   }, []);
 
+  const toggleSimpleNavigation = useCallback(() => {
+    setSimpleNavigationState((prev) => {
+      const next = !prev;
+      writeAdminSimpleNavigation(next);
+      return next;
+    });
+  }, []);
+
   const tableClass = denseTables ? "text-xs" : "text-sm";
   const thClass = cn("font-medium text-slate", denseTables ? "px-3 py-2" : "px-4 py-3");
   const tdClass = denseTables ? "px-3 py-1.5" : "px-4 py-3";
@@ -75,10 +95,13 @@ export function AdminLayoutPrefsProvider({ children }: { children: React.ReactNo
     () => ({
       denseTables: hydrated ? denseTables : false,
       darkSidebar: hydrated ? darkSidebar : false,
+      simpleNavigation: hydrated ? simpleNavigation : true,
       setDenseTables,
       setDarkSidebar,
+      setSimpleNavigation,
       toggleDenseTables,
       toggleDarkSidebar,
+      toggleSimpleNavigation,
       tableClass,
       thClass,
       tdClass,
@@ -87,10 +110,13 @@ export function AdminLayoutPrefsProvider({ children }: { children: React.ReactNo
       hydrated,
       denseTables,
       darkSidebar,
+      simpleNavigation,
       setDenseTables,
       setDarkSidebar,
+      setSimpleNavigation,
       toggleDenseTables,
       toggleDarkSidebar,
+      toggleSimpleNavigation,
       tableClass,
       thClass,
       tdClass,

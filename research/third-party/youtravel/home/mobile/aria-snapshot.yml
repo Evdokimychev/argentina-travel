@@ -1,0 +1,434 @@
+- banner:
+  - navigation:
+    - link:
+      - /url: /
+      - img
+    - text: Вход
+  - list:
+    - listitem:
+      - link "Вход":
+        - /url: /lk/
+    - listitem:
+      - link "Регистрация":
+        - /url: /lk/?register=yes&backurl=%2F
+  - list:
+    - listitem:
+      - img
+      - text: ₽ (RUB)
+      - img
+    - listitem:
+      - img
+      - text: Рус
+      - img
+  - img
+  - paragraph: ₽ (RUB)
+  - list:
+    - listitem: Доллар США $ (USD)
+    - listitem: Российский рубль ₽ (RUB)
+    - listitem: Евро € (EUR)
+  - img
+  - paragraph: Рус
+  - list:
+    - listitem:
+      - listitem: Рус
+    - listitem:
+      - listitem: Eng
+  - img
+  - paragraph
+  - list
+  - list:
+    - listitem:
+      - img
+      - text: Путешествия
+      - img
+    - listitem:
+      - img
+      - text: Компаниям
+      - img
+    - listitem:
+      - img
+      - text: Организаторам туров
+      - img
+    - listitem:
+      - img
+      - text: Помощь
+      - img
+  - list:
+    - listitem: Подберите мне тур
+    - listitem: Как это работает
+  - link "+7 (495) 120-41-60":
+    - /url: tel:+74951204160
+  - link "Скачайте приложение:":
+    - /url: https://apps.apple.com/ru/app/youtravel-me/id1538329605
+    - paragraph: "Скачайте приложение:"
+    - img
+- heading "Авторские туры — новый формат насыщенных путешествий" [level=1]
+- img
+- textbox
+- text: Куда вы хотите?
+- img
+- textbox "Месяц или даты"
+- button "Найти":
+  - text: Найти
+  - img
+- link "Смотреть все туры":
+  - /url: /tours/
+- main:
+  - heading [level=1]
+  - main:
+    - text: Безопасная оплата Продуманная спонтанность Проверенные тревел-эксперты Гарантированные туры Небольшие группы
+    - heading "Места для вдохновения" [level=2]
+    - link "Туры месяца Туры месяца":
+      - /url: /tours/specials/tours-month
+      - img "Туры месяца"
+      - text: Туры месяца
+    - link "Майские праздники Майские праздники":
+      - /url: /tours/specials/%D0%BC%D0%B0%D0%B9%D1%81%D0%BA%D0%B8%D0%B5_%D0%BF%D1%80%D0%B0%D0%B7%D0%B4%D0%BD%D0%B8%D0%BA%D0%B8
+      - img "Майские праздники"
+      - text: Майские праздники
+    - link "Окунуться в таинственную культуру Востока Окунуться в таинственную культуру Востока":
+      - /url: /tours/specials/okunutsya_v_yarkie_kraski_i_ritm_otkrytoy_azii
+      - img "Окунуться в таинственную культуру Востока"
+      - text: Окунуться в таинственную культуру Востока
+    - link "Отправиться на охоту за северным сиянием Отправиться на охоту за северным сиянием":
+      - /url: /tours/specials/otpravitsya_na_ohotu_za_severnym_siyaniyem
+      - img "Отправиться на охоту за северным сиянием"
+      - text: Отправиться на охоту за северным сиянием
+    - link "Прикоснуться к великой природе Алтая Прикоснуться к великой природе Алтая":
+      - /url: /tours/specials/prikosnutsya_k_chistoy_i_velikoy_prirode_altaya
+      - img "Прикоснуться к великой природе Алтая"
+      - text: Прикоснуться к великой природе Алтая
+    - link "Вырваться из города на выходные Вырваться из города на выходные":
+      - /url: /tours/specials/weekend
+      - img "Вырваться из города на выходные"
+      - text: Вырваться из города на выходные
+    - link "Познакомиться с гостеприимством Кавказа Познакомиться с гостеприимством Кавказа":
+      - /url: /tours/specials/poznakomitsya_s_gostepriimstvom_kavkaza
+      - img "Познакомиться с гостеприимством Кавказа"
+      - text: Познакомиться с гостеприимством Кавказа
+    - link "Ощутить силу вулканов России Ощутить силу вулканов России":
+      - /url: /tours/specials/vulkani
+      - img "Ощутить силу вулканов России"
+      - text: Ощутить силу вулканов России
+    - link "Посмотреть на китов Посмотреть на китов":
+      - /url: /tours/specials/tury-k-kitam
+      - img "Посмотреть на китов"
+      - text: Посмотреть на китов
+    - link "Погрузиться в мир дикой природы Погрузиться в мир дикой природы":
+      - /url: /tours/specials/pogruzitsya_v_mir_dikoy_prirody
+      - img "Погрузиться в мир дикой природы"
+      - text: Погрузиться в мир дикой природы
+    - link "Исследовать морские глубины и отдохнуть на пляже Исследовать морские глубины и отдохнуть на пляже":
+      - /url: /tours/specials/kogda_otdykh_bez_morya_ne_otdykh
+      - img "Исследовать морские глубины и отдохнуть на пляже"
+      - text: Исследовать морские глубины и отдохнуть на пляже
+    - link "Сделать фото уникальных мест Сделать фото уникальных мест":
+      - /url: /tours/specials/sdelat_fotografii_samykh_redkikh_mest
+      - img "Сделать фото уникальных мест"
+      - text: Сделать фото уникальных мест
+    - heading "Новый способ путешествовать" [level=2]
+    - link "Подарочный сертификат Подарочный сертификат Более 3500 туров":
+      - /url: /gift/
+      - img "Подарочный сертификат"
+      - text: Подарочный сертификат Более 3500 туров
+    - link "Авторский Авторский 5877 туров":
+      - /url: /tours/type/%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+      - img "Авторский"
+      - text: Авторский 5877 туров
+    - link "Йога и ретриты Йога и ретриты 254 тура":
+      - /url: /tours/type/%D0%B9%D0%BE%D0%B3%D0%B0_%D1%82%D1%83%D1%80%D1%8B
+      - img "Йога и ретриты"
+      - text: Йога и ретриты 254 тура
+    - link "Горнолыжный Горнолыжный 60 туров":
+      - /url: /tours/type/%D0%B3%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+      - img "Горнолыжный"
+      - text: Горнолыжный 60 туров
+    - link "Тур в горы Тур в горы 2440 туров":
+      - /url: /tours/type/%D1%82%D1%83%D1%80_%D0%B2_%D0%B3%D0%BE%D1%80%D1%8B
+      - img "Тур в горы"
+      - text: Тур в горы 2440 туров
+    - link "Рыбалка Рыбалка 176 туров":
+      - /url: /tours/type/%D1%80%D1%8B%D0%B1%D0%B0%D0%BB%D0%BA%D0%B0
+      - img "Рыбалка"
+      - text: Рыбалка 176 туров
+    - link "Фитнес тур Фитнес тур 120 туров":
+      - /url: /tours/type/%D1%84%D0%B8%D1%82%D0%BD%D0%B5%D1%81_%D1%82%D1%83%D1%80%D1%8B
+      - img "Фитнес тур"
+      - text: Фитнес тур 120 туров
+    - link "Семейный Семейный 2027 туров":
+      - /url: /tours/type/%D1%81%D0%B5%D0%BC%D0%B5%D0%B9%D0%BD%D1%8B%D0%B9_%D1%82%D1%83%D1%80
+      - img "Семейный"
+      - text: Семейный 2027 туров
+    - link "Экскурсионный Экскурсионный 5879 туров":
+      - /url: /tours/type/%D1%8D%D0%BA%D1%81%D0%BA%D1%83%D1%80%D1%81%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+      - img "Экскурсионный"
+      - text: Экскурсионный 5879 туров
+    - link "Гастрономический Гастрономический 1237 туров":
+      - /url: /tours/type/%D0%B3%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%BD%D0%BE%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+      - img "Гастрономический"
+      - text: Гастрономический 1237 туров
+    - link "Поход Поход 1396 туров":
+      - /url: /tours/type/%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3_%D1%82%D1%83%D1%80%D1%8B
+      - img "Поход"
+      - text: Поход 1396 туров
+    - link "ПОСМОТРЕТЬ ВСЕ":
+      - /url: /tours/type
+    - link "logos/google Rating 4.7 168 reviews":
+      - /url: https://www.google.com/search?newwindow=1&safe=active&sxsrf=ALiCzsY-cwSQ6tdpjTLs9n_3uRqzMkJwtQ:1652343710515&q=You+Travel.me&si=AC1wQDAjJ8oRvNXHnN4UeD0TNg1RI9jH_YrDo7Xn4YuANY1GXGcZGcV63-yKjwCYrtMGXzxqfc0vaS1uEG848yR_jg8u1Unf1i7NQbZFPanqzuJYuz5JsvEac24riMciPINU0p5dkun_7RmLFjGtpoZSQCPSeF7m4vPuHh_KXRg1BmFK6-l2N-OBRCKloY6b7gktYd4lwGY3UCyv7So_oIVJwySWXbJ3jg%3D%3D&sa=X&ved=2ahUKEwj-0qX_w9n3AhWHuYsKHTL-BEEQ6RN6BAg1EAE&cshid=1652343857031169&biw=1536&bih=746&dpr=1.25#lrd=0x46b54b59c4c7cb35:0x191b7bee006a88de,1
+      - img "logos/google"
+      - text: Rating 4.7
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - text: 168 reviews
+    - link "Rating 5 345 reviews":
+      - /url: https://yandex.ru/maps/org/youtravel_me/51654836007/reviews/?ll=37.574387%2C55.739528&z=11.26
+      - img
+      - text: Rating 5
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - img
+      - text: 345 reviews
+    - heading "Как тут все устроено" [level=2]
+    - text: Используйте фильтры, чтобы найти идеальное путешествие Задайте вопросы тревел-эксперту через чат на сайте Бронируйте тур через безопасную платежную систему Получайте тревел-предложения по лучшей цене
+    - heading "Персональные рекомендации" [level=2]
+    - link "-22% ":
+      - /url: /tours/17952/%D0%BA%D1%80%D0%B0%D1%81%D0%BE%D1%82%D1%8B_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D0%B0_%D0%B7%D0%B0_5_%D0%B4%D0%BD%D0%B5%D0%B9_-_%D0%B2%D1%81%D1%91_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE_
+      - img
+      - text: "-22% "
+    - link "Красоты Дагестана за 5 дней - Всё включено!":
+      - /url: /tours/17952/%D0%BA%D1%80%D0%B0%D1%81%D0%BE%D1%82%D1%8B_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D0%B0_%D0%B7%D0%B0_5_%D0%B4%D0%BD%D0%B5%D0%B9_-_%D0%B2%D1%81%D1%91_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE_
+    - text: На внедорожниках Россия 5 дн. (20 – 24 июля и ещё 49 дат)
+    - link "Шамиль":
+      - /url: /expert/44733/шамиль
+    - text: 4.8  (307) от 35 000 ₽ (45 000 ₽)
+    - link "Доступен Индивидуальный тур -37% ":
+      - /url: /tours/25392/%D0%B2%D0%BE%D0%BB%D1%88%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD_5_%D0%B4%D0%BD%D0%B5%D0%B9_%D0%B2%D1%81%D0%B5_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE
+      - img
+      - text: Доступен Индивидуальный тур -37% 
+    - link "Волшебный Дагестан 5 Дней Все Включено":
+      - /url: /tours/25392/%D0%B2%D0%BE%D0%BB%D1%88%D0%B5%D0%B1%D0%BD%D1%8B%D0%B9_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD_5_%D0%B4%D0%BD%D0%B5%D0%B9_%D0%B2%D1%81%D0%B5_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE
+    - text: Экскурсионный Россия 5 дн. (20 – 24 июля и ещё 21 дата)
+    - link "Мурад":
+      - /url: /expert/49249/мурад
+    - text: 4.9  (698) 34 900 ₽ (55 000 ₽)
+    - link "Доступен Индивидуальный тур ":
+      - /url: /tours/22856/%D0%BE%D1%82_%D0%B0%D0%BB%D1%82%D0%B0%D1%8F_%D0%B4%D0%BE_%D0%BC%D0%BE%D0%BD%D0%B3%D0%BE%D0%BB%D0%B8%D0%B8_%D0%B8_%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D0%BE
+      - img
+      - text: Доступен Индивидуальный тур 
+    - link "От Алтая до Монголии и обратно":
+      - /url: /tours/22856/%D0%BE%D1%82_%D0%B0%D0%BB%D1%82%D0%B0%D1%8F_%D0%B4%D0%BE_%D0%BC%D0%BE%D0%BD%D0%B3%D0%BE%D0%BB%D0%B8%D0%B8_%D0%B8_%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D0%BE
+    - text: Автотур Россия 6 дн. (16 – 21 августа и ещё 17 дат)
+    - link "Лена":
+      - /url: /expert/12648/лена
+    - text: 5.0  (203) 72 000 ₽
+    - link "Доступен Индивидуальный тур -41% ":
+      - /url: /tours/23607/%D0%BC%D0%B5%D0%BB%D0%BE%D0%B4%D0%B8%D1%8F_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D0%B0_5_%D0%B4%D0%BD%D0%B5%D0%B9_%D0%B2%D1%81%D1%91_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE_
+      - img
+      - text: Доступен Индивидуальный тур -41% 
+    - 'link "Мелодия Дагестана: 5 дней Всё включено!"':
+      - /url: /tours/23607/%D0%BC%D0%B5%D0%BB%D0%BE%D0%B4%D0%B8%D1%8F_%D0%B4%D0%B0%D0%B3%D0%B5%D1%81%D1%82%D0%B0%D0%BD%D0%B0_5_%D0%B4%D0%BD%D0%B5%D0%B9_%D0%B2%D1%81%D1%91_%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%BE_
+    - text: На внедорожниках 1 место Россия 5 дн. (20 – 24 июля и ещё 36 дат)
+    - link "Заур":
+      - /url: /expert/69962/заур
+    - text: 5.0  (700) от 39 000 ₽ (66 000 ₽)
+    - heading "Мир большой, сделайте первый шаг к его покорению" [level=2]
+    - link "Азия":
+      - /url: /tours/continent/%D0%B0%D0%B7%D0%B8%D1%8F
+    - link "Африка":
+      - /url: /tours/continent/%D0%B0%D1%84%D1%80%D0%B8%D0%BA%D0%B0
+    - link "Северная Америка":
+      - /url: /tours/continent/%D1%81%D0%B5%D0%B2%D0%B5%D1%80%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0
+    - link "Южная Америка":
+      - /url: /tours/continent/%D1%8E%D0%B6%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0
+    - link "Австралия и Океания":
+      - /url: /tours/continent/%D0%B0%D0%B2%D1%81%D1%82%D1%80%D0%B0%D0%BB%D0%B8%D1%8F_%D0%B8_%D0%BE%D0%BA%D0%B5%D0%B0%D0%BD%D0%B8%D1%8F
+    - link "Ближний Восток":
+      - /url: /tours/continent/%D0%B1%D0%BB%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9_%D0%B2%D0%BE%D1%81%D1%82%D0%BE%D0%BA
+    - link "Европа":
+      - /url: /tours/continent/%D0%B5%D0%B2%D1%80%D0%BE%D0%BF%D0%B0
+    - heading "Журнал о путешествиях" [level=2]:
+      - link "Журнал о путешествиях":
+        - /url: /blog/
+    - 'link "Архипелаг Шпицберген: как туда попасть простому путешественнику 16 июл 2026 Читать 9 мин. Читать статью"':
+      - /url: /blog/strany/shpitsbergen
+      - 'heading "Архипелаг Шпицберген: как туда попасть простому путешественнику" [level=3]'
+      - text: 16 июл 2026 Читать 9 мин. Читать статью
+    - 'link "Новая Зеландия: что посмотреть и чем заняться на краю света 15 июл 2026 Читать 12 мин. Читать статью"':
+      - /url: /blog/strany/novaya-zelandiya-gde-nakhoditsya-chto-posmotret-i-chem-zanyatsya-na-krayu-sveta
+      - 'heading "Новая Зеландия: что посмотреть и чем заняться на краю света" [level=3]'
+      - text: 15 июл 2026 Читать 12 мин. Читать статью
+    - 'link "Достопримечательности Рязани: где искать грибы с глазами и есенинские пейзажи 14 июл 2026 Читать 9 мин. Читать статью"':
+      - /url: /blog/russia-tours/dostoprimechatelnosti-ryazani
+      - 'heading "Достопримечательности Рязани: где искать грибы с глазами и есенинские пейзажи" [level=3]'
+      - text: 14 июл 2026 Читать 9 мин. Читать статью
+    - 'link "Кровь дракона и песчаные дюны: что посмотреть на Сокотре 13 июл 2026 Читать 9 мин. Читать статью"':
+      - /url: /blog/strany/ostrov-sokotra
+      - 'heading "Кровь дракона и песчаные дюны: что посмотреть на Сокотре" [level=3]'
+      - text: 13 июл 2026 Читать 9 мин. Читать статью
+    - text: Пресса о нас
+    - link "Rusbase":
+      - /url: https://rb.ru/news/youtravelme-new-round/
+      - img "Rusbase"
+    - link "IncRussia":
+      - /url: https://incrussia.ru/concoct/pandemic-tourism/
+      - img "IncRussia"
+    - link "РБК":
+      - /url: https://pro.rbc.ru/news/60a67ae59a794731f96d3669
+      - img "РБК"
+    - link "ЛентаРу":
+      - /url: https://lenta.ru/news/2021/07/09/alternativa/
+      - img "ЛентаРу"
+    - link "Секрет Фирмы":
+      - /url: https://secretmag.ru/selfie/ogranicheniya-v-golove-kak-zapustit-startap-dlya-puteshestvennikov.htm
+      - img "Секрет Фирмы"
+    - link "VC.ru":
+      - /url: https://vc.ru/services/289203-rossiyskiy-servis-bronirovaniya-avtorskih-turov-youtravel-me-privlek-1-mln
+      - img "VC.ru"
+- contentinfo:
+  - text: YouTravel.me — это маркетплейс авторских туров от тревел-экспертов и частных независимых гидов. Авторские туры — это спонтанные и яркие возможности, предлагающие взять максимум от каждой точки маршрута. Мы за непринужденный подход к групповым путешествиям, который больше похож на встречу со старыми друзьями.
+  - list:
+    - listitem:
+      - link "Как забронировать тур":
+        - /url: /how-it-works/
+    - listitem:
+      - link "Подход сообщества YouTravel.me":
+        - /url: /about/
+    - listitem:
+      - link "Журнал о путешествиях":
+        - /url: /blog/
+    - listitem:
+      - link "Преимущества авторских туров":
+        - /url: /support/authors-tour
+    - listitem:
+      - link "Отзывы путешественников":
+        - /url: /reviews/
+    - listitem:
+      - link "FAQ":
+        - /url: /support/
+    - listitem:
+      - link "Связаться с нами":
+        - /url: /contact/
+    - listitem:
+      - link "Организуйте авторский тур":
+        - /url: https://en.youtravel.me/travelexpert
+    - listitem:
+      - link "Корпоративные туры":
+        - /url: /corporatetours/
+    - listitem:
+      - link "Работа у нас":
+        - /url: https://ytme.atlassian.net/wiki/spaces/TM/overview
+  - link "vk-footer":
+    - /url: https://vk.com/youtravelme
+  - link "instagram":
+    - /url: https://www.instagram.com/youtravel.me/
+  - link "facebook-footer":
+    - /url: https://www.facebook.com/youtravel.me/
+  - link "max":
+    - /url: https://max.ru/u/f9LHodD0cOJ4aevIndK50x_2fp_6iR186aEVONgyJytZ4Bkj79bZuUqJFBc
+  - text: © 2026 YouTravel.me. Все права защищены |
+  - link "Публичная оферта":
+    - /url: /help/public-offer/
+  - text: "|"
+  - link "Политика конфиденциальности":
+    - /url: /help/privacy/
+  - text: "|"
+  - link "Рекомендательные технологии":
+    - /url: /help/recommendation-technologies/
+  - text: "|"
+  - link "Реквизиты и информация":
+    - /url: /help/requisites/
+  - text: По типам
+  - list:
+    - listitem:
+      - link "Авторский":
+        - /url: /tours/type/%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+    - listitem:
+      - link "Йога и ретриты":
+        - /url: /tours/type/%D0%B9%D0%BE%D0%B3%D0%B0_%D1%82%D1%83%D1%80%D1%8B
+    - listitem:
+      - link "Горнолыжный":
+        - /url: /tours/type/%D0%B3%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B
+    - listitem:
+      - link "Тур в горы":
+        - /url: /tours/type/%D1%82%D1%83%D1%80_%D0%B2_%D0%B3%D0%BE%D1%80%D1%8B
+    - listitem:
+      - link "Рыбалка":
+        - /url: /tours/type/%D1%80%D1%8B%D0%B1%D0%B0%D0%BB%D0%BA%D0%B0
+    - listitem:
+      - link "Посмотреть все типы":
+        - /url: "#"
+  - text: Туры по континентам
+  - list:
+    - listitem:
+      - link "Европа":
+        - /url: /tours/continent/%D0%B5%D0%B2%D1%80%D0%BE%D0%BF%D0%B0
+    - listitem:
+      - link "Азия":
+        - /url: /tours/continent/%D0%B0%D0%B7%D0%B8%D1%8F
+    - listitem:
+      - link "Африка":
+        - /url: /tours/continent/%D0%B0%D1%84%D1%80%D0%B8%D0%BA%D0%B0
+    - listitem:
+      - link "Северная Америка":
+        - /url: /tours/continent/%D1%81%D0%B5%D0%B2%D0%B5%D1%80%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0
+    - listitem:
+      - link "Южная Америка":
+        - /url: /tours/continent/%D1%8E%D0%B6%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0
+    - listitem:
+      - link "Посмотреть все континенты":
+        - /url: "#"
+  - text: Туры по странам
+  - list:
+    - listitem:
+      - link "Шри-Ланка":
+        - /url: /tours/country/%D1%88%D1%80%D0%B8-%D0%BB%D0%B0%D0%BD%D0%BA%D0%B0
+    - listitem:
+      - link "Марокко":
+        - /url: /tours/country/%D0%BC%D0%B0%D1%80%D0%BE%D0%BA%D0%BA%D0%BE
+    - listitem:
+      - link "Индонезия":
+        - /url: /tours/country/%D0%B8%D0%BD%D0%B4%D0%BE%D0%BD%D0%B5%D0%B7%D0%B8%D1%8F
+    - listitem:
+      - link "Австралия":
+        - /url: /tours/country/%D0%B0%D0%B2%D1%81%D1%82%D1%80%D0%B0%D0%BB%D0%B8%D1%8F
+    - listitem:
+      - link "Индия":
+        - /url: /tours/country/%D0%B8%D0%BD%D0%B4%D0%B8%D1%8F
+    - listitem:
+      - link "Посмотреть все страны":
+        - /url: "#"
+  - text: Туры по России
+  - list:
+    - listitem:
+      - link "Алтай":
+        - /url: /tours/region/%D0%B0%D0%BB%D1%82%D0%B0%D0%B9
+    - listitem:
+      - link "Дагестан":
+        - /url: /tours/region/dagestan
+    - listitem:
+      - link "Байкал":
+        - /url: /tours/region/%D0%B1%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB
+    - listitem:
+      - link "Камчатка":
+        - /url: /tours/region/%D0%BA%D0%B0%D0%BC%D1%87%D0%B0%D1%82%D0%BA%D0%B0
+    - listitem:
+      - link "Карелия":
+        - /url: /tours/region/%D0%BA%D0%B0%D1%80%D0%B5%D0%BB%D0%B8%D1%8F
+    - listitem:
+      - link "Посмотреть все туры по России":
+        - /url: "#"

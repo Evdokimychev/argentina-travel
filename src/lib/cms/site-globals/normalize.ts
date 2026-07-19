@@ -471,7 +471,7 @@ export function normalizeSiteModules(value: unknown): SiteModulesGlobal {
   return {
     apartmentsMode: asAllowedValue(
       row.apartmentsMode,
-      ["disabled", "request", "preparing_native"] as const,
+      ["disabled", "request", "preparing_native", "native_request"] as const,
       DEFAULT_SITE_MODULES.apartmentsMode,
     ),
     carRentalMode: asAllowedValue(

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
-import type { ShopProduct } from "@/data/shop-products";
+import { formatShopMoney, type ShopProduct } from "@/types/shop-product";
 import { useAuth } from "@/context/AuthContext";
 import { apiCreateShopOrder } from "@/lib/shop-order-api";
 import type { ShopOrder } from "@/types/shop-order";
@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import FormattedPrice from "@/components/FormattedPrice";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
@@ -119,7 +118,9 @@ export default function ShopCheckoutModal({
                 Оформление заказа PDF-материала «{product.title}»
               </DialogDescription>
               <p className="mt-2 text-sm text-slate">{product.format}</p>
-              <FormattedPrice priceUsd={product.price} className="mt-3 text-lg font-bold" />
+              <p className="mt-3 text-lg font-bold text-charcoal">
+                {formatShopMoney(product.priceMinor, product.currency)}
+              </p>
             </div>
 
             <div className="space-y-4 px-6 py-5">

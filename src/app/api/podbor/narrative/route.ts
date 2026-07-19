@@ -1,18 +1,15 @@
 import { NextResponse } from "next/server";
-import {
-  buildPodborNarrative,
-  PODBOR_AI_SYSTEM_PROMPT,
-} from "@/lib/podbor/narrative";
+import { buildPodborNarrative } from "@/lib/podbor/narrative";
 import { buildPodborMatchResult } from "@/lib/podbor/matching";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import type { PodborAiNarrativeRequest } from "@/types/podbor";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
-/**
- * POST /api/podbor/narrative
- * Сейчас — шаблонный текст. Для OpenAI: передайте body.aiPayload в chat.completions
- * с system = PODBOR_AI_SYSTEM_PROMPT и user = JSON.stringify(aiPayload).
- */
+/** Builds a deterministic recommendation from the submitted answers. */
 export async function POST(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   let payload: PodborAiNarrativeRequest | null = null;
 
   try {
@@ -34,12 +31,5 @@ export async function POST(request: Request) {
     aiPayload: payload,
   });
 
-  return NextResponse.json({
-    narrative,
-    source: "template" as const,
-    openAiReady: true,
-    systemPrompt: PODBOR_AI_SYSTEM_PROMPT,
-    hint:
-      "Подключите OPENAI_API_KEY и замените template на chat.completions с переданным aiPayload.",
-  });
+  return NextResponse.json({ narrative });
 }

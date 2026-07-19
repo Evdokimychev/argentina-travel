@@ -167,11 +167,11 @@ export function getSectionCountFrom(entries: KbEntry[], sectionId: string): numb
 /** Порядок хабов: сначала journey-хабы, затем тематические. */
 export const KB_HUB_ORDER: string[] = [
   "gid-puteshestvennika",
-  "gid-relokanta",
-  "gid-po-dengam",
-  "gid-po-dokumentam",
+  "chek-list-pereezda",
+  "byudzhet-poezdki",
+  "kakie-dokumenty-vezti-s-soboj",
   "gid-po-zhilyu",
-  "gid-po-medicine",
+  "medicina-i-strahovka",
   "gid-po-transportu",
   "gid-po-kulture",
 ];

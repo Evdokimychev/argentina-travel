@@ -1,0 +1,472 @@
+- banner:
+  - button "toggle menu"
+  - link "На главную":
+    - /url: /
+    - img "Logo"
+  - link "Избранное":
+    - /url: /favorites
+    - img
+    - text: Избранное
+  - button "Войти"
+  - button "Заказать звонок":
+    - img
+- img "logo"
+- img "Гид Анна Г."
+- text: Гид Анна Г.
+- img
+- paragraph: Участник Клуба Гидов с 2022 года
+- button "Позвонить":
+  - img
+  - text: Позвонить
+- button "Написать в чат":
+  - img
+  - text: Написать в чат
+- text: Личность подтверждена
+- img
+- text: В реестре туроператоров
+- button:
+  - img
+- img
+- text: Паспорт подтвержден
+- button:
+  - img
+- img
+- text: Телефон подтвержден
+- img
+- text: Почта подтверждена
+- heading "Привет, я Анна" [level=1]
+- paragraph: Правильные туры в Петербург
+- img
+- strong: "4.9"
+- img
+- text: 925 отзывов
+- paragraph: "В туризме работаю более 15 лет. Развиваясь эти годы «шаг за шагом», мы стали одним из ведущих туроператоров Санкт-Петербурга. Опыт и профессиональная команда, приобретенные за это время, позволяют нам максимально качественно осуществлять прием российских и иностранных туристов в Санкт-Петербурге и Ленинградской области, а также организовывать туры по всему Северо-Западу России: в Карелию, Великий Новгород, Псков, Калининград, Мурманск."
+- text: География туров Россия Языки Русский
+- heading "Туры организатора" [level=2]
+- 'group "Тур: Сияние северной зимы в Санкт-Петербурге. Тур на 5 дней. Автор: Анна Г.. Рейтинг 4.9 из 5, 554 отзыва. Цена от 28400 RUB."':
+  - text: Туры на Новый год
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img
+  - strong: "4.9"
+  - text: (554) Санкт-Петербург
+  - link "Сияние северной зимы в Санкт-Петербурге. Тур на 5 дней":
+    - /url: /rossiya/sankt-peterburg/siyanie-severnoj-zimy-v-sankt-peterburge-407265
+  - text: 28 400 ₽ 5 дней 29 дек. 2026 – 2 янв. 2027
+- 'group "Тур: Новогодняя петербургская коллекция на 3 дня. Автор: Анна Г.. Рейтинг 4.9 из 5, 562 отзыва. Цена от 12150 RUB."':
+  - text: Туры на Новый год
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img "Царское село"
+  - img
+  - strong: "4.9"
+  - text: (562) Санкт-Петербург, Кронштадт, Петергоф
+  - link "Новогодняя петербургская коллекция на 3 дня":
+    - /url: /rossiya/sankt-peterburg/novogodnyaya-peterburgskaya-kollekciya-3-dnya-407268
+  - text: 12 150 ₽ 3 дня 23 – 25 июл.
+  - button "Открыть все даты": +47 дат
+- 'group "Тур: Зимние истории дворцов Петербурга. Автор: Анна Г.. Рейтинг 4.9 из 5, 552 отзыва. Цена от 12550 RUB."':
+  - text: Туры на Новый год
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img
+  - strong: "4.9"
+  - text: (552) Санкт-Петербург
+  - link "Зимние истории дворцов Петербурга":
+    - /url: /rossiya/sankt-peterburg/zimnie-istorii-dvorcov-peterburga-344749
+  - text: 12 550 ₽ 3 дня 31 дек. 2026 – 2 янв. 2027
+- 'group "Тур: Новогодняя петербургская коллекция на 5 дней. Автор: Анна Г.. Рейтинг 4.9 из 5, 557 отзывов. Цена от 21550 RUB."':
+  - text: Туры на Новый год
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img
+  - strong: "4.9"
+  - text: (557) Санкт-Петербург, Кронштадт, Петергоф
+  - link "Новогодняя петербургская коллекция на 5 дней":
+    - /url: /rossiya/sankt-peterburg/novogodnyaya-peterburgskaya-kollekciya-na-5-dnej-407273
+  - text: 21 550 ₽ 5 дней 31 дек. 2026 – 4 янв. 2027
+  - button "Открыть все даты": +7 дат
+- 'group "Тур: Петербургская коллекция. Тур на 3 дня. Осень-весна. Автор: Анна Г.. Рейтинг 4.9 из 5, 553 отзыва. Цена от 11500 RUB."':
+  - text: Экскурсионные туры
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img "Фаберже"
+  - img
+  - strong: "4.9"
+  - text: (553) Санкт-Петербург, Кронштадт
+  - link "Петербургская коллекция. Тур на 3 дня. Осень-весна":
+    - /url: /rossiya/sankt-peterburg/peterburgskaya-kollekciya-na-3-dnya-239428
+  - text: 11 500 ₽ 3 дня 23 – 25 июл.
+  - button "Открыть все даты": +47 дат
+- 'group "Тур: Петербургская коллекция. Тур на 5 дней. Осень-весна. Автор: Анна Г.. Рейтинг 4.9 из 5, 551 отзыв. Цена от 20300 RUB."':
+  - text: Экскурсионные туры
+  - button "Добавить в избранное":
+    - img
+  - img "Photo Анна Г."
+  - text: Анна Г.
+  - img
+  - strong: "4.9"
+  - text: (551) Санкт-Петербург, Кронштадт
+  - link "Петербургская коллекция. Тур на 5 дней. Осень-весна":
+    - /url: /rossiya/sankt-peterburg/peterburgskaya-kollekciya-tur-na-5-dnej-239431
+  - text: 20 300 ₽ 5 дней 21 – 25 окт.
+  - button "Открыть все даты": +26 дат
+- link "Показать все туры":
+  - /url: /tours?organizerId=2458
+- heading "Отзывы" [level=2]
+- list:
+  - listitem:
+    - text: Е Екатерина о туре -
+    - link "Незабываемые дни на берегах Невы. Неделя в Санкт-Петербурге":
+      - /url: /rossiya/leningradskaya-oblast/nezabyvaemye-dni-na-beregah-nevy-239443
+    - text: 21 авг. 2025 Добрый день! Поезда прошла отлично. Нам все очень понравилось. Вокруг была такая красота не описать словами. Мы получили большое число эмоций 😁. Отличная идея в программе связанна с поездкой в Карелию, такая смена программы очень клевая идея. ☺️ Марианна, отдельное спасибо вам за помощь с подбором программы, за сопровождение с момента выбора до самого путешествия 🙂
+  - listitem:
+    - text: А Анна о туре -
+    - link "Классический летний Петербург на 5 дней":
+      - /url: /rossiya/leningradskaya-oblast/klassicheskij-peterburg-248907
+    - text: 16 июн. 2024 Добрый день. Нашей поездкой мы остались очень довольны. Гостиница, экскурсовод, сама программа оправдали наши ожидания. Очень переживала, так как впервые бронировала тур таким образом, но все сложилось отлично! Спасибо за организацию нашего путешествия и за вашу работу Питер безусловно покорил наши сердца ❤️
+  - listitem: М Максим об организаторе 7 мая 2025 Все прошло хорошо.
+- button "Показать больше отзывов"
+- contentinfo:
+  - link "На главную":
+    - /url: /
+    - img "Logo"
+  - text: Маркетплейс авторских туров от независимых гидов
+  - list:
+    - listitem: Туры напрямую от авторов Бронируй без наценок и посредников
+    - listitem:
+      - text: Проверенные авторы Все авторы подтверждают свою личность
+      - button "info":
+        - img
+    - listitem:
+      - text: Безопасная оплата Оплата через безопасную сделку от
+      - img "tinkoff"
+    - listitem: Реальные отзывы После каждого путешествия мы собираем отзыв туриста
+  - text: Клуб Гидов
+  - list:
+    - listitem:
+      - link "Туры":
+        - /url: /tours
+    - listitem:
+      - link "Виды отдыха":
+        - /url: /collections
+    - listitem:
+      - link "Организаторы туров":
+        - /url: /tour-providers
+    - listitem:
+      - link "Отзывы о путешествиях":
+        - /url: /reviews
+    - listitem:
+      - link "Частые вопросы":
+        - /url: /help-center/about
+    - listitem:
+      - link "Мы в СМИ":
+        - /url: /press
+    - listitem:
+      - link "О нас":
+        - /url: /about
+    - listitem:
+      - link "Подарочные сертификаты":
+        - /url: /podarochnye-sertifikaty
+    - listitem:
+      - link "Журнал о путешествиях":
+        - /url: /journal
+    - listitem:
+      - link "Достопримечательности мира":
+        - /url: /dostoprimechatelnosti
+    - listitem:
+      - link "Поддержка и контакты":
+        - /url: /contacts
+  - text: Давайте дружить
+  - link "vk":
+    - /url: https://vk.com/klubgidov?roistat_visit=53422429
+    - img
+  - link "telegram":
+    - /url: https://t.me/klubgidov?roistat_visit=53422429
+    - img
+  - link "4.8 Рейтинг организации в Google":
+    - /url: https://maps.app.goo.gl/DG7ruZoeJB8dYN157?roistat_visit=53422429
+    - text: "4.8"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в Google
+  - link "4.6 Рейтинг организации в Яндекс":
+    - /url: https://yandex.ru/maps/-/CPAlV60C?roistat_visit=53422429
+    - text: "4.6"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в Яндекс
+  - link "4.8 Рейтинг организации в 2ГИС":
+    - /url: https://go.2gis.com/7F7O4?roistat_visit=53422429
+    - text: "4.8"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в 2ГИС
+  - link "4.5 Рейтинг организации в ВКонтакте":
+    - /url: https://vk.com/reviews-197000825?roistat_visit=53422429
+    - text: "4.5"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в ВКонтакте
+  - text: Позвонить нам
+  - button "Заказать звонок"
+  - text: По будням с 08:00 до 20:00 По выходным с 08:00 до 19:00 © 2026 ООО «ВАУТРИП»
+  - link "Оферта":
+    - /url: /agreement
+  - link "Политика конфиденциальности":
+    - /url: /privacy
+  - text: Полное или частичное копирование изображений и текстов возможно только с указанием активной ссылки на сайт
+  - link "klubgidov.ru":
+    - /url: /
+  - img "visa"
+  - img "mastercard"
+  - img "maestro"
+  - img "unionpay"
+  - img "mir"
+  - text: Туры по континентам
+  - list:
+    - listitem:
+      - link "Европа":
+        - /url: /evropa
+    - listitem:
+      - link "Азия":
+        - /url: /aziya
+    - listitem:
+      - link "Африка":
+        - /url: /afrika
+    - listitem:
+      - link "Северная Америка":
+        - /url: /severnaya-amerika
+    - listitem:
+      - link "Австралия и Океания":
+        - /url: /avstraliya-i-okeaniya
+    - listitem:
+      - link "Центральная Америка":
+        - /url: /centralnaya-amerika
+    - listitem:
+      - link "Южная Америка":
+        - /url: /yuzhnaya-amerika
+  - text: Туры по странам
+  - link "Абхазия":
+    - /url: /abhaziya
+  - link "Австралия":
+    - /url: /avstraliya
+  - link "Австрия":
+    - /url: /avstriya
+  - link "Азербайджан":
+    - /url: /azerbaijan
+  - link "Алжир":
+    - /url: /alzhir
+  - link "Аргентина":
+    - /url: /argentina
+  - link "Армения":
+    - /url: /armenia
+  - link "Багамы":
+    - /url: /bagamy
+  - link "Беларусь":
+    - /url: /belarus
+  - link "Бельгия":
+    - /url: /belgiya
+  - link "Боливия":
+    - /url: /boliviya
+  - link "Босния и Герцеговина":
+    - /url: /bosniya-i-gercegovina
+  - link "Ботсвана":
+    - /url: /botswana
+  - link "Бразилия":
+    - /url: /braziliya
+  - link "Бруней":
+    - /url: /brunej
+  - link "Бутан":
+    - /url: /butan
+  - link "Великобритания":
+    - /url: /velikobritaniya
+  - link "Венгрия":
+    - /url: /vengriya
+  - link "Вьетнам":
+    - /url: /vetnam
+  - link "Гватемала":
+    - /url: /gvatemala
+  - link "Германия":
+    - /url: /germaniya
+  - link "Гондурас":
+    - /url: /gonduras
+  - link "Греция":
+    - /url: /greece
+  - link "Грузия":
+    - /url: /gruziya
+  - link "Египет":
+    - /url: /egipet
+  - link "Замбия":
+    - /url: /zambiya
+  - link "Зимбабве":
+    - /url: /zimbabwe
+  - link "Индия":
+    - /url: /india
+  - link "Индонезия":
+    - /url: /indoneziya
+  - link "Иордания":
+    - /url: /iordaniya
+  - link "Исландия":
+    - /url: /islandiya
+  - link "Испания":
+    - /url: /ispaniya
+  - link "Италия":
+    - /url: /italiya
+  - link "Йемен":
+    - /url: /yemen
+  - link "Казахстан":
+    - /url: /kazakhstan
+  - link "Камбоджа":
+    - /url: /kambodzha
+  - link "Канада":
+    - /url: /kanada
+  - link "Кения":
+    - /url: /kenia
+  - link "Кипр":
+    - /url: /kipr
+  - link "Киргизия":
+    - /url: /kirgiziya
+  - link "Китай":
+    - /url: /kitaj
+  - link "Колумбия":
+    - /url: /kolumbiya
+  - link "Коста-Рика":
+    - /url: /kosta-rika
+  - link "Лаос":
+    - /url: /laos
+  - link "Лихтенштейн":
+    - /url: /lihtenshtejn
+  - link "Маврикий":
+    - /url: /mauritius
+  - link "Мадагаскар":
+    - /url: /madagaskar
+  - link "Макао":
+    - /url: /makao
+  - link "Малайзия":
+    - /url: /malajziya
+  - link "Мальдивы":
+    - /url: /maldives
+  - link "Марокко":
+    - /url: /marokko
+  - link "Мартиника":
+    - /url: /martinika
+  - link "Мексика":
+    - /url: /meksika
+  - link "Монако":
+    - /url: /monako
+  - link "Монголия":
+    - /url: /mongoliya
+  - link "Мьянма":
+    - /url: /myanma
+  - link "Намибия":
+    - /url: /namibia
+  - link "Непал":
+    - /url: /nepal
+  - link "Новая Зеландия":
+    - /url: /novaya-zelandiya
+  - link "Норвегия":
+    - /url: /norvegiya
+  - link "ОАЭ":
+    - /url: /oae
+  - link "Оман":
+    - /url: /oman
+  - link "Пакистан":
+    - /url: /pakistan
+  - link "Палау":
+    - /url: /palau
+  - link "Парагвай":
+    - /url: /paragvaj
+  - link "Перу":
+    - /url: /peru
+  - link "Португалия":
+    - /url: /portugaliya
+  - link "Россия":
+    - /url: /rossiya
+  - link "Сальвадор":
+    - /url: /salvador
+  - link "Сейшельские Острова":
+    - /url: /sejshelskie-ostrova
+  - link "Сент-Винсент и Гренадины":
+    - /url: /sent-vinsent-i-grenadiny
+  - link "Сент-Люсия":
+    - /url: /sent-lyusiya
+  - link "Сербия":
+    - /url: /serbia
+  - link "Сингапур":
+    - /url: /singapur
+  - link "Словения":
+    - /url: /sloveniya
+  - link "США":
+    - /url: /ssha
+  - link "Таджикистан":
+    - /url: /tadzhikistan
+  - link "Таиланд":
+    - /url: /thailand
+  - link "Танзания":
+    - /url: /tanzania
+  - link "Туркменистан":
+    - /url: /turkmenistan
+  - link "Турция":
+    - /url: /turciya
+  - link "Узбекистан":
+    - /url: /uzbekistan
+  - link "Фарерские острова":
+    - /url: /farerskie-ostrova
+  - link "Фиджи":
+    - /url: /fidzhi
+  - link "Филиппины":
+    - /url: /filippiny
+  - link "Франция":
+    - /url: /franciya
+  - link "Хорватия":
+    - /url: /horvatiya
+  - link "Черногория":
+    - /url: /montenegro
+  - link "Чили":
+    - /url: /chili
+  - link "Швейцария":
+    - /url: /shvejcariya
+  - link "Шри-Ланка":
+    - /url: /srilanka
+  - link "Эквадор":
+    - /url: /ehkvador
+  - link "Эфиопия":
+    - /url: /ethiopia
+  - link "ЮАР":
+    - /url: /yuar
+  - link "Южная Корея":
+    - /url: /yuzhnaya-koreya
+  - link "Южная Осетия":
+    - /url: /yuzhnaya-osetiya
+  - link "Япония":
+    - /url: /yaponiya
+  - button "Посмотреть все страны"
+- text: Используя данный сайт, вы даете согласие на использование
+- link "файлов куки (cookie)":
+  - /url: /privacy
+- button "ОК"
+- button "Служба поддержки":
+  - img

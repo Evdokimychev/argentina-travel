@@ -67,11 +67,11 @@ export default function PushNotificationsSection({ className }: PushNotification
   const [message, setMessage] = useState<string | null>(null);
 
   const supportIssue = useMemo(() => {
-    if (!remoteEnabled) return "Push-канал доступен только в режиме Supabase Auth.";
-    if (!vapidPublicKey) return "Push-канал пока не настроен на сервере.";
+    if (!remoteEnabled) return "Уведомления для этого аккаунта пока недоступны.";
+    if (!vapidPublicKey) return "Уведомления на этом устройстве пока не подключены.";
     if (typeof window !== "undefined") {
       const secureContextAllowed = window.isSecureContext || isLocalhost(window.location.hostname);
-      if (!secureContextAllowed) return "Push работает только по HTTPS.";
+      if (!secureContextAllowed) return "Для защиты данных уведомления доступны только на опубликованном сайте.";
       if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
         return "Ваш браузер не поддерживает web push.";
       }

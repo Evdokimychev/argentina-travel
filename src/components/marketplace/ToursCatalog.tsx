@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
-import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
 import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
 import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
@@ -25,10 +24,13 @@ import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
-import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
+import {
+  buildTourFilterChips,
+  resolveCatalogOrganizerIdentity,
+} from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
 import { formatCatalogBrowseHint } from "@/lib/catalog-stats";
-import { buildPublicOrganizerProfile, type PlatformStats } from "@/lib/organizer-public";
+import type { PlatformStats } from "@/lib/organizer-public";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
 import { MapPin, RefreshCw } from "lucide-react";
@@ -60,6 +62,10 @@ const CatalogFiltersSheet = dynamic(() => import("@/components/marketplace/Catal
   loading: () => <div className={cn(catalogFilterShellClass, "h-11 w-11 shrink-0")} aria-hidden />,
 });
 
+const MarketplaceTourListCard = dynamic(
+  () => import("@/components/marketplace/MarketplaceTourListCard"),
+);
+
 function readStoredViewMode(): CatalogViewMode {
   if (typeof window === "undefined") return "grid";
   try {
@@ -86,9 +92,24 @@ const CatalogMapView = dynamic(
 interface ToursCatalogProps {
   tours: TourListing[];
   platformStats?: PlatformStats;
+  catalogBasePath?: string;
+  title?: string;
+  subtitle?: string;
+  kicker?: string;
+  heroCaption?: string;
+  heroImageAlt?: string;
 }
 
-export default function ToursCatalog({ tours: initialTours, platformStats }: ToursCatalogProps) {
+export default function ToursCatalog({
+  tours: initialTours,
+  platformStats,
+  catalogBasePath = "/tours",
+  title = "Туры в Аргентину: авторские маршруты по стране",
+  subtitle = "Сравнивайте программы, даты и формат поездки — от Игуасу до ледников Патагонии.",
+  kicker = "Маршруты по стране",
+  heroCaption = "Патагония · Анды · Игуасу",
+  heroImageAlt = "Горный маршрут по Патагонии",
+}: ToursCatalogProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tours = useRepositoryTourListings(initialTours);
@@ -142,8 +163,8 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
     if (catalogFilterParamsMatch(nextParams, currentParams)) return;
 
     const qs = nextParams.toString();
-    router.replace(qs ? `/tours?${qs}` : "/tours", { scroll: false });
-  }, [filters, sort, viewMode, currency, tours, router, searchParams]);
+    router.replace(qs ? `${catalogBasePath}?${qs}` : catalogBasePath, { scroll: false });
+  }, [catalogBasePath, filters, sort, viewMode, currency, tours, router, searchParams]);
 
   const handleFiltersChange = useCallback((next: TourFilters) => {
     setFilters(next);
@@ -178,9 +199,10 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
           organizerCount: platformStats.organizerCount,
         })
       : null;
-  const organizerProfile = filters.organizerSlug.trim()
-    ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
-    : null;
+  const organizerProfile = useMemo(
+    () => resolveCatalogOrganizerIdentity(filters.organizerSlug, tours),
+    [filters.organizerSlug, tours],
+  );
   const youtravelExpertLabel = filters.organizerSlug.trim()
     ? resolveYouTravelExpertOrganizerLabel(filters.organizerSlug.trim(), tours)
     : null;
@@ -232,28 +254,28 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
         <div className={cn(siteContainerClass, "relative grid items-center gap-6 pb-9 pt-8 sm:pb-10 sm:pt-9 md:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10 lg:pb-12 lg:pt-10")}>
           <div>
             <p className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
-              Маршруты по стране
+              {kicker}
             </p>
             <div className="editorial-rule mt-4 h-1 w-12 rounded-full" aria-hidden />
             <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-charcoal sm:text-4xl lg:text-[2.65rem]">
-              Найдите своё путешествие по Аргентине
+              {title}
             </h1>
             <p className="mt-3 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
-              Сравнивайте программы, даты и формат поездки — от Игуасу до ледников Патагонии.
+              {subtitle}
             </p>
           </div>
           <div className="editorial-media-frame group relative hidden aspect-[4/3] overflow-hidden rounded-[1.5rem] border md:block">
             <Image
               src="/media/destinations/patagonia/cover.jpg"
-              alt="Горный маршрут по Патагонии"
+              alt={heroImageAlt}
               fill
-              priority
+              loading="lazy"
               sizes="288px"
               className="editorial-media-zoom object-cover"
             />
             <div className="editorial-media-overlay absolute inset-0 opacity-60" aria-hidden />
             <p className="absolute inset-x-0 bottom-0 p-5 text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
-              Патагония · Анды · Игуасу
+              {heroCaption}
             </p>
           </div>
         </div>

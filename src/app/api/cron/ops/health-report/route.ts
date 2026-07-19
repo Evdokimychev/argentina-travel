@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { authorizeCronRequest } from "@/lib/cron/authorize-cron";
-import { readCronHealthReport } from "@/lib/ops/ops-status";
+import { fetchCronHealthReport } from "@/lib/ops/ops-status";
 import { fetchOutboxHealthSnapshot } from "@/lib/ops/outbox-health-server";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     if (!adminAuth.ok) return adminAuth.response;
   }
 
-  const report = readCronHealthReport();
+  const report = await fetchCronHealthReport();
   try {
     const outbox = await fetchOutboxHealthSnapshot();
     const ok = report.ok && outbox.ok;

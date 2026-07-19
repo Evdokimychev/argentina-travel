@@ -1,4 +1,5 @@
 import type { PlaceFaqItem } from "@/types/place";
+import { isEditoriallyCleanRussianText } from "@/lib/editorial-text";
 
 export type PlaceEnrichment = {
   history?: string;
@@ -704,5 +705,27 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
 };
 
 export function getPlaceEnrichment(slug: string): PlaceEnrichment | undefined {
-  return PLACE_ENRICHMENTS[slug];
+  const enrichment = PLACE_ENRICHMENTS[slug];
+  if (!enrichment) return undefined;
+  const history =
+    enrichment.history && isEditoriallyCleanRussianText(enrichment.history)
+      ? enrichment.history
+      : undefined;
+  const howToGetThere =
+    enrichment.howToGetThere && isEditoriallyCleanRussianText(enrichment.howToGetThere)
+      ? enrichment.howToGetThere
+      : undefined;
+  const interestingFacts = enrichment.interestingFacts?.filter(isEditoriallyCleanRussianText);
+  const nearbyHighlights = enrichment.nearbyHighlights?.filter(isEditoriallyCleanRussianText);
+  const faq = enrichment.faq?.filter(
+    (item) =>
+      isEditoriallyCleanRussianText(item.question) &&
+      isEditoriallyCleanRussianText(item.answer),
+  );
+  const clean = { history, howToGetThere, interestingFacts, nearbyHighlights, faq };
+  return Object.values(clean).some((value) =>
+    Array.isArray(value) ? value.length > 0 : Boolean(value),
+  )
+    ? clean
+    : undefined;
 }

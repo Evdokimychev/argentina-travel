@@ -8,7 +8,9 @@ const root = join(process.cwd(), "src");
 describe("Sprint 6 — premium homepage", () => {
   it("MarketplaceHome wires hero collage, SectionShell and testimonials", () => {
     const source = readFileSync(join(root, "components/marketplace/MarketplaceHome.tsx"), "utf8");
+    const hero = readFileSync(join(root, "components/marketplace/MarketplaceHomeHero.tsx"), "utf8");
     expect(source).toContain("heroCollage");
+    expect(hero).toContain("heroCollage");
     expect(source).toContain("HomeTestimonialsSection");
     expect(source).toContain("SectionShell");
     expect(source).toContain("HOME_FEATURED_REGIONS");
@@ -54,7 +56,7 @@ describe("Sprint 6 — premium homepage", () => {
   });
 
   it("sticky search block on desktop homepage", () => {
-    const source = readFileSync(join(root, "components/marketplace/MarketplaceHome.tsx"), "utf8");
+    const source = readFileSync(join(root, "components/marketplace/MarketplaceHomeHero.tsx"), "utf8");
     expect(source).toContain("lg:sticky");
     expect(source).toContain("--site-header-height");
   });

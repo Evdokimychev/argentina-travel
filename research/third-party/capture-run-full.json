@@ -1,0 +1,1849 @@
+{
+  "runStartedAt": "2026-07-18T15:03:05.227Z",
+  "runFinishedAt": "2026-07-18T15:18:24.698Z",
+  "results": [
+    {
+      "sourceUrl": "https://youtravel.me/",
+      "finalUrl": "https://youtravel.me/",
+      "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:03:05.457Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/",
+      "finalUrl": "https://youtravel.me/",
+      "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:03:13.397Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/",
+      "finalUrl": "https://youtravel.me/",
+      "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:03:20.406Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/",
+      "finalUrl": "https://youtravel.me/",
+      "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:03:27.624Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/",
+      "finalUrl": "https://youtravel.me/",
+      "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:03:37.776Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/",
+      "finalUrl": "https://youtravel.me/tours/",
+      "title": "Поиск туров онлайн для путешествий 2026 ⭐ Подбор и бронирование туров для отдыха",
+      "researchedAt": "2026-07-18T15:03:46.146Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/",
+      "finalUrl": "https://youtravel.me/tours/",
+      "title": "Поиск туров онлайн для путешествий 2026 ⭐ Подбор и бронирование туров для отдыха",
+      "researchedAt": "2026-07-18T15:03:58.827Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/",
+      "finalUrl": "https://youtravel.me/tours/",
+      "title": "Поиск туров онлайн для путешествий 2026 ⭐ Подбор и бронирование туров для отдыха",
+      "researchedAt": "2026-07-18T15:04:07.264Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/",
+      "finalUrl": "https://youtravel.me/tours/",
+      "title": "Поиск туров онлайн для путешествий 2026 ⭐ Подбор и бронирование туров для отдыха",
+      "researchedAt": "2026-07-18T15:04:16.285Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/",
+      "finalUrl": "https://youtravel.me/tours/",
+      "title": "Поиск туров онлайн для путешествий 2026 ⭐ Подбор и бронирование туров для отдыха",
+      "researchedAt": "2026-07-18T15:04:30.821Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "finalUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "title": "Туры в Аргентину 2026 - Цены на авторские туры из Москвы и других городов",
+      "researchedAt": "2026-07-18T15:04:44.866Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "finalUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "title": "Туры в Аргентину 2026 - Цены на авторские туры из Москвы и других городов",
+      "researchedAt": "2026-07-18T15:04:52.568Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "finalUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "title": "Туры в Аргентину 2026 - Цены на авторские туры из Москвы и других городов",
+      "researchedAt": "2026-07-18T15:05:00.639Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "finalUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "title": "Туры в Аргентину 2026 - Цены на авторские туры из Москвы и других городов",
+      "researchedAt": "2026-07-18T15:05:08.609Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "finalUrl": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0",
+      "title": "Туры в Аргентину 2026 - Цены на авторские туры из Москвы и других городов",
+      "researchedAt": "2026-07-18T15:05:22.564Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "finalUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "title": "Горящие туры по России и миру в 2026 году: ближайшие путевки от прямых туроператоров по низким ценам",
+      "researchedAt": "2026-07-18T15:05:36.762Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "special-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "last-minute",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "finalUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "title": "Горящие туры по России и миру в 2026 году: ближайшие путевки от прямых туроператоров по низким ценам",
+      "researchedAt": "2026-07-18T15:05:44.066Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "special-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "last-minute",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "finalUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "title": "Горящие туры по России и миру в 2026 году: ближайшие путевки от прямых туроператоров по низким ценам",
+      "researchedAt": "2026-07-18T15:05:54.436Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "special-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "last-minute",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "finalUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "title": "Горящие туры по России и миру в 2026 году: ближайшие путевки от прямых туроператоров по низким ценам",
+      "researchedAt": "2026-07-18T15:06:04.830Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "special-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "last-minute",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "finalUrl": "https://youtravel.me/tours/specials/goryashchie-tury",
+      "title": "Горящие туры по России и миру в 2026 году: ближайшие путевки от прямых туроператоров по низким ценам",
+      "researchedAt": "2026-07-18T15:06:17.949Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "special-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "last-minute",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/days-1",
+      "finalUrl": "https://youtravel.me/tours/days-1",
+      "title": "Однодневные туры 2026: Экскурсии на 1 день по цене от 1300 рублей из Москвы",
+      "researchedAt": "2026-07-18T15:06:32.946Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "duration-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "one-day",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/days-1",
+      "finalUrl": "https://youtravel.me/tours/days-1",
+      "title": "Однодневные туры 2026: Экскурсии на 1 день по цене от 1300 рублей из Москвы",
+      "researchedAt": "2026-07-18T15:06:43.890Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "duration-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "one-day",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/days-1",
+      "finalUrl": "https://youtravel.me/tours/days-1",
+      "title": "Однодневные туры 2026: Экскурсии на 1 день по цене от 1300 рублей из Москвы",
+      "researchedAt": "2026-07-18T15:06:54.558Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "duration-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "one-day",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/days-1",
+      "finalUrl": "https://youtravel.me/tours/days-1",
+      "title": "Однодневные туры 2026: Экскурсии на 1 день по цене от 1300 рублей из Москвы",
+      "researchedAt": "2026-07-18T15:07:02.998Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "duration-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "one-day",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/days-1",
+      "finalUrl": "https://youtravel.me/tours/days-1",
+      "title": "Однодневные туры 2026: Экскурсии на 1 день по цене от 1300 рублей из Москвы",
+      "researchedAt": "2026-07-18T15:07:17.879Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "duration-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "one-day",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "finalUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "title": "Много треккинга в Патагонии, круизы на кораблях, Ушуайя и Игуасу 22 фев – 06 мар 2027 по цене от 275 885 ₽",
+      "researchedAt": "2026-07-18T15:07:32.168Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "finalUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "title": "Много треккинга в Патагонии, круизы на кораблях, Ушуайя и Игуасу 22 фев – 06 мар 2027 по цене от 275 885 ₽",
+      "researchedAt": "2026-07-18T15:07:41.373Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "finalUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "title": "Много треккинга в Патагонии, круизы на кораблях, Ушуайя и Игуасу 22 фев – 06 мар 2027 по цене от 275 885 ₽",
+      "researchedAt": "2026-07-18T15:07:48.072Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "finalUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "title": "Много треккинга в Патагонии, круизы на кораблях, Ушуайя и Игуасу 22 фев – 06 мар 2027 по цене от 275 885 ₽",
+      "researchedAt": "2026-07-18T15:07:54.910Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "finalUrl": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83",
+      "title": "Много треккинга в Патагонии, круизы на кораблях, Ушуайя и Игуасу 22 фев – 06 мар 2027 по цене от 275 885 ₽",
+      "researchedAt": "2026-07-18T15:08:04.397Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "finalUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "title": "Автор туров - Николай З. · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:12.339Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "expert-nikolay",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "finalUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "title": "Автор туров - Николай З. · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:20.815Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "expert-nikolay",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "finalUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "title": "Автор туров - Николай З. · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:27.055Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "expert-nikolay",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "finalUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "title": "Автор туров - Николай З. · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:32.492Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "expert-nikolay",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "finalUrl": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9",
+      "title": "Автор туров - Николай З. · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:38.752Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "expert-nikolay",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/reviews/",
+      "finalUrl": "https://youtravel.me/reviews/",
+      "title": "Отзывы · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:45.269Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "reviews",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "reviews",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/reviews/",
+      "finalUrl": "https://youtravel.me/reviews/",
+      "title": "Отзывы · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:08:55.033Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "reviews",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "reviews",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/reviews/",
+      "finalUrl": "https://youtravel.me/reviews/",
+      "title": "Отзывы · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:09:04.651Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "reviews",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "reviews",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/reviews/",
+      "finalUrl": "https://youtravel.me/reviews/",
+      "title": "Отзывы · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:09:10.914Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "reviews",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "reviews",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/reviews/",
+      "finalUrl": "https://youtravel.me/reviews/",
+      "title": "Отзывы · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:09:21.326Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "reviews",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "reviews",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/",
+      "finalUrl": "https://youtravel.me/blog/",
+      "title": "Журнал о путешествиях, отдыхе и туризме · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:09:27.830Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "blog",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/",
+      "finalUrl": "https://youtravel.me/blog/",
+      "title": "Журнал о путешествиях, отдыхе и туризме · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:09:46.426Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "blog",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/",
+      "finalUrl": "https://youtravel.me/blog/",
+      "title": "Журнал о путешествиях, отдыхе и туризме · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:10:10.310Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "blog",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/",
+      "finalUrl": "https://youtravel.me/blog/",
+      "title": "Журнал о путешествиях, отдыхе и туризме · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:10:34.853Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "blog",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/",
+      "finalUrl": "https://youtravel.me/blog/",
+      "title": "Журнал о путешествиях, отдыхе и туризме · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:11:09.913Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "blog",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "finalUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "title": "Буэнос-Айрес (столица Аргентины): что посмотреть и куда сходить · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:11:49.673Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "buenos-aires-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "finalUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "title": "Буэнос-Айрес (столица Аргентины): что посмотреть и куда сходить · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:12:02.193Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "buenos-aires-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "finalUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "title": "Буэнос-Айрес (столица Аргентины): что посмотреть и куда сходить · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:12:15.059Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "buenos-aires-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "finalUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "title": "Буэнос-Айрес (столица Аргентины): что посмотреть и куда сходить · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:12:26.708Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "buenos-aires-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "finalUrl": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa",
+      "title": "Буэнос-Айрес (столица Аргентины): что посмотреть и куда сходить · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:12:43.322Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "buenos-aires-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "finalUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "title": "Достопримечательности Аргентины: где находятся, как добраться и что стоит увидеть · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:12:59.963Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina-places-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "finalUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "title": "Достопримечательности Аргентины: где находятся, как добраться и что стоит увидеть · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:13:14.127Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina-places-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "finalUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "title": "Достопримечательности Аргентины: где находятся, как добраться и что стоит увидеть · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:13:28.550Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina-places-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "finalUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "title": "Достопримечательности Аргентины: где находятся, как добраться и что стоит увидеть · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:13:42.271Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina-places-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "finalUrl": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina",
+      "title": "Достопримечательности Аргентины: где находятся, как добраться и что стоит увидеть · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:13:59.435Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "argentina-places-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "finalUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "title": "Водопады Игуасу — путеводитель для путешественников · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:14:17.382Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "iguazu-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "finalUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "title": "Водопады Игуасу — путеводитель для путешественников · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:14:28.254Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "iguazu-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "finalUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "title": "Водопады Игуасу — путеводитель для путешественников · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:14:39.720Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "iguazu-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "finalUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "title": "Водопады Игуасу — путеводитель для путешественников · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:14:50.448Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "iguazu-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "finalUrl": "https://youtravel.me/blog/strany/vodopady-iguasu",
+      "title": "Водопады Игуасу — путеводитель для путешественников · YouTravel.Me",
+      "researchedAt": "2026-07-18T15:15:03.952Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "article",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "youtravel",
+      "id": "iguazu-article",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/",
+      "finalUrl": "https://klubgidov.ru/",
+      "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:18.331Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/",
+      "finalUrl": "https://klubgidov.ru/",
+      "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:29.677Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/",
+      "finalUrl": "https://klubgidov.ru/",
+      "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:34.401Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/",
+      "finalUrl": "https://klubgidov.ru/",
+      "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:39.512Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/",
+      "finalUrl": "https://klubgidov.ru/",
+      "title": "Клуб Гидов — авторские путешествия по всему миру | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:45.049Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "home",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "home",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tours",
+      "finalUrl": "https://klubgidov.ru/tours",
+      "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:51.199Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tours",
+      "finalUrl": "https://klubgidov.ru/tours",
+      "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:15:57.156Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tours",
+      "finalUrl": "https://klubgidov.ru/tours",
+      "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:01.700Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tours",
+      "finalUrl": "https://klubgidov.ru/tours",
+      "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:05.436Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tours",
+      "finalUrl": "https://klubgidov.ru/tours",
+      "title": "Авторские туры 2026 — 92 страны 🌍 | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:10.395Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "tours",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina",
+      "finalUrl": "https://klubgidov.ru/argentina",
+      "title": "Туры в Аргентину 2026—2027: цены на авторский отдых | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:15.207Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina",
+      "finalUrl": "https://klubgidov.ru/argentina",
+      "title": "Туры в Аргентину 2026—2027: цены на авторский отдых | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:21.336Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina",
+      "finalUrl": "https://klubgidov.ru/argentina",
+      "title": "Туры в Аргентину 2026—2027: цены на авторский отдых | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:26.158Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina",
+      "finalUrl": "https://klubgidov.ru/argentina",
+      "title": "Туры в Аргентину 2026—2027: цены на авторский отдых | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:30.530Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina",
+      "finalUrl": "https://klubgidov.ru/argentina",
+      "title": "Туры в Аргентину 2026—2027: цены на авторский отдых | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:38.301Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "country-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "argentina",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "finalUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "title": "Одиссея по Патагонии с перелетами | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:47.397Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "finalUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "title": "Одиссея по Патагонии с перелетами | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:52.483Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "finalUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "title": "Одиссея по Патагонии с перелетами | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:16:58.223Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "finalUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "title": "Одиссея по Патагонии с перелетами | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:02.651Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "finalUrl": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784",
+      "title": "Одиссея по Патагонии с перелетами | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:08.715Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "tour-detail",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "patagonia-tour",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-providers",
+      "finalUrl": "https://klubgidov.ru/tour-providers",
+      "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:15.126Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "organizer-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "providers",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-providers",
+      "finalUrl": "https://klubgidov.ru/tour-providers",
+      "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:17.967Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "organizer-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "providers",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-providers",
+      "finalUrl": "https://klubgidov.ru/tour-providers",
+      "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:21.068Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "organizer-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "providers",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-providers",
+      "finalUrl": "https://klubgidov.ru/tour-providers",
+      "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:24.937Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "organizer-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "providers",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-providers",
+      "finalUrl": "https://klubgidov.ru/tour-providers",
+      "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:29.628Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "organizer-catalog",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "providers",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-provider/2458",
+      "finalUrl": "https://klubgidov.ru/tour-provider/2458",
+      "title": "Автор туров Анна | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:34.197Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "provider-2458",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-provider/2458",
+      "finalUrl": "https://klubgidov.ru/tour-provider/2458",
+      "title": "Автор туров Анна | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:37.688Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "provider-2458",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-provider/2458",
+      "finalUrl": "https://klubgidov.ru/tour-provider/2458",
+      "title": "Автор туров Анна | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:41.441Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "provider-2458",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-provider/2458",
+      "finalUrl": "https://klubgidov.ru/tour-provider/2458",
+      "title": "Автор туров Анна | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:45.779Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "provider-2458",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/tour-provider/2458",
+      "finalUrl": "https://klubgidov.ru/tour-provider/2458",
+      "title": "Автор туров Анна | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:50.231Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "organizer",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "provider-2458",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/journal",
+      "finalUrl": "https://klubgidov.ru/journal",
+      "title": "Блог | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:17:55.370Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop-wide",
+        "width": 1440,
+        "height": 1100
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "journal",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/journal",
+      "finalUrl": "https://klubgidov.ru/journal",
+      "title": "Блог | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:18:00.043Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "journal",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/journal",
+      "finalUrl": "https://klubgidov.ru/journal",
+      "title": "Блог | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:18:05.985Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "journal",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/journal",
+      "finalUrl": "https://klubgidov.ru/journal",
+      "title": "Блог | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:18:10.810Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "mobile",
+        "width": 390,
+        "height": 844,
+        "mobile": true
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "journal",
+      "ok": true
+    },
+    {
+      "sourceUrl": "https://klubgidov.ru/journal",
+      "finalUrl": "https://klubgidov.ru/journal",
+      "title": "Блог | Клуб Гидов",
+      "researchedAt": "2026-07-18T15:18:18.186Z",
+      "httpStatus": 200,
+      "viewport": {
+        "id": "small-mobile",
+        "width": 360,
+        "height": 800,
+        "mobile": true
+      },
+      "pageType": "journal",
+      "interactiveStates": [
+        "default"
+      ],
+      "site": "klubgidov",
+      "id": "journal",
+      "ok": true
+    }
+  ]
+}

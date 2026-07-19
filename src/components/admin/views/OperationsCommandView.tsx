@@ -120,6 +120,9 @@ export default function OperationsCommandView() {
             <Link href="/admin/operations/bookings" className="mt-3 inline-block text-sm text-sky hover:underline">
               Открыть бронирования
             </Link>
+            <Link href="/admin/operations/waitlist" className="ml-3 mt-3 inline-block text-sm text-sky hover:underline">
+              Лист ожидания
+            </Link>
           </article>
 
           <article className={cabinetStatCardClass}>
@@ -166,6 +169,18 @@ export default function OperationsCommandView() {
               className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
             >
               Лиды
+            </Link>
+            <Link
+              href="/admin/operations/email"
+              className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+            >
+              Очередь писем
+            </Link>
+            <Link
+              href="/admin/operations/waitlist"
+              className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+            >
+              Лист ожидания
             </Link>
             <Link
               href="/admin/operations/shop-orders"

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, FileText, MessageCircle, ShoppingBag } from "lucide-react";
-import { SHOP_PRODUCTS, type ShopProduct } from "@/data/shop-products";
+import { formatShopMoney, type ShopProduct } from "@/types/shop-product";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import { siteContainerClass } from "@/lib/site-container";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
@@ -14,9 +14,10 @@ import type { SiteCommerceGlobal } from "@/types/site-globals";
 interface ShopProductDetailViewProps {
   product: ShopProduct;
   settings: SiteCommerceGlobal;
+  relatedProducts: ShopProduct[];
 }
 
-export default function ShopProductDetailView({ product, settings }: ShopProductDetailViewProps) {
+export default function ShopProductDetailView({ product, settings, relatedProducts }: ShopProductDetailViewProps) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const shopCheckoutEnabled = isSupabaseShopEnabled();
 
@@ -35,7 +36,7 @@ export default function ShopProductDetailView({ product, settings }: ShopProduct
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-card">
             <Image
               src={product.image}
-              alt={product.title}
+              alt={product.imageAlt}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -56,8 +57,7 @@ export default function ShopProductDetailView({ product, settings }: ShopProduct
             <p className="mt-4 text-base leading-relaxed text-slate">{product.description}</p>
             {settings.showProductPrice ? (
               <p className="mt-6 font-heading text-3xl font-bold text-charcoal">
-                ${product.price}{" "}
-                <span className="text-lg font-normal text-slate">{product.currency}</span>
+                {formatShopMoney(product.priceMinor, product.currency)}
               </p>
             ) : null}
 
@@ -108,7 +108,7 @@ export default function ShopProductDetailView({ product, settings }: ShopProduct
               Гиды и списки, которые помогут подготовить поездку.
             </p>
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {SHOP_PRODUCTS.filter((item) => item.id !== product.id)
+              {relatedProducts.filter((item) => item.id !== product.id)
                 .slice(0, Number(settings.relatedProductsCount))
                 .map((item) => (
                   <ShopProductCard key={item.id} product={item} settings={settings} />

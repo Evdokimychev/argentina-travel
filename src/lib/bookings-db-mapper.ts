@@ -32,6 +32,7 @@ export type BookingRow = {
   start_date: string | null;
   end_date: string | null;
   payment_status: string | null;
+  operation_version?: number;
   payload: Json;
   created_at: string;
   updated_at: string;
@@ -70,6 +71,7 @@ function parsePayload(raw: Json): BookingPayload {
 }
 
 function resolveOrganizerUserId(booking: Booking): string {
+  if (booking.organizerUserId?.trim()) return booking.organizerUserId.trim();
   if (booking.organizerTourId) {
     return getOrganizerTourOwnerId(booking.organizerTourId) ?? DEFAULT_ORGANIZER_OWNER_ID;
   }
@@ -139,6 +141,7 @@ export function rowToBooking(row: BookingRow): Booking {
   return {
     id: row.id,
     userId,
+    organizerUserId: row.organizer_user_id ?? undefined,
     organizerTourId: payload.organizerTourId,
     tourId: row.tour_id,
     tourSlug: row.tour_slug,

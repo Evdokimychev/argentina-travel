@@ -12,10 +12,10 @@ import TransferSearchForm, {
 import { buttonVariants } from "@/components/ui/button";
 import { getTransferLocationById } from "@/data/transfer-locations";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { resolvePublicApiErrorMessage } from "@/lib/public-api/safe-error";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import type { TransferLocation, TransferOffer } from "@/lib/intui/types";
@@ -61,7 +61,7 @@ function buildRouteKey(origin: TransferLocation, destination: TransferLocation):
   return `${origin.code ?? origin.id}-${destination.code ?? destination.id}`;
 }
 
-export default function TransfersSearchView() {
+export default function TransfersSearchView({ heroImage }: { heroImage: string }) {
   const searchParams = useSearchParams();
   const { t, locale, currency } = useLocaleCurrency();
   const [formState, setFormState] = useState<TransferSearchFormState>(() => ({
@@ -129,12 +129,17 @@ export default function TransfersSearchView() {
       const payload = (await response.json()) as {
         offers?: TransferOffer[];
         source?: string;
+        code?: string;
         error?: string;
         affiliateUrl?: string;
       };
 
       if (!response.ok) {
-        throw new Error(payload.error || t("transfers.errors.loadFailed"));
+        throw new Error(
+          payload.code
+            ? resolvePublicApiErrorMessage(payload.code)
+            : t("transfers.errors.loadFailed"),
+        );
       }
 
       setOffers(payload.offers ?? []);
@@ -148,7 +153,7 @@ export default function TransfersSearchView() {
 
       if (payload.error) {
         setError(
-          siteFormError(payload.error, {
+          siteFormError(resolvePublicApiErrorMessage(payload.code), {
             title: "Поиск трансферов",
             steps: ["Измените дату или маршрут", "Попробуйте поиск на партнёрской странице"],
           })
@@ -208,7 +213,7 @@ export default function TransfersSearchView() {
         title={t("transfers.title")}
         subtitle={t("transfers.subtitle")}
         description={t("transfers.intro")}
-        image={getServicePageHeroImage("transfers")}
+        image={heroImage}
         compact
       >
         <TransferSearchForm

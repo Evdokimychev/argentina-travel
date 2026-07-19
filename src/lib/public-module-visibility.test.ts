@@ -74,7 +74,13 @@ describe("public module visibility", () => {
     expect(isTravelModulePathEnabled("/car-rental/partner", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/transfers", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/transfers/airport", modules)).toBe(false);
+    expect(isTravelModulePathEnabled("/apartments", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/services", modules)).toBe(true);
+  });
+
+  it("indexes apartment routes only for the real native request mode", () => {
+    expect(isTravelModulePathEnabled("/apartments/palermo-loft", { ...DEFAULT_SITE_MODULES, apartmentsMode: "request" })).toBe(false);
+    expect(isTravelModulePathEnabled("/apartments/palermo-loft", { ...DEFAULT_SITE_MODULES, apartmentsMode: "native_request" })).toBe(true);
   });
 
   it("filters nested service navigation using travel module availability", () => {

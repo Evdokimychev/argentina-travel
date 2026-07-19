@@ -155,6 +155,7 @@ export function rowToCmsDocument(row: ContentDocumentRow): CmsDocument {
     scheduledPublishAt: row.scheduled_publish_at ?? null,
     createdBy: row.created_by,
     updatedBy: row.updated_by,
+    rowVersion: row.row_version,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

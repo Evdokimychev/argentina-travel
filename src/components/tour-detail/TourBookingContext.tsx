@@ -14,6 +14,7 @@ import {
   dateFitsGuestCount,
   findBookableDates,
   getGuestLimits,
+  isTourDateCurrentOrFuture,
   pickInitialDateId,
   validateGuestsForScheduledBooking,
   type BookingDateMode,
@@ -124,7 +125,13 @@ export function TourBookingProvider({
     affiliateFallback: scheduleAffiliateFallback,
     configured: scheduleConfigured,
   } = usePartnerTourSchedule(tour);
-  const effectiveDates = scheduleDates.length > 0 ? scheduleDates : tour.dates;
+  const effectiveDates = useMemo(
+    () => {
+      const candidates = scheduleDates.length > 0 ? scheduleDates : tour.dates;
+      return candidates.filter((date) => isTourDateCurrentOrFuture(date));
+    },
+    [scheduleDates, tour.dates]
+  );
   const effectiveBookingMode =
     isPartnerTour && effectiveDates.length > 0 ? "scheduled" : bookingMode;
   const requiresManualDate = isPartnerTour;
@@ -134,10 +141,18 @@ export function TourBookingProvider({
     tour.groupMin
   );
   const [guests, setGuests] = useState(() => initialGuests);
-  const [selectedDateId, setSelectedDateId] = useState(() =>
+  const [selectedDateId, setSelectedDateIdState] = useState(() =>
     requiresManualDate
       ? ""
       : pickInitialDateId(effectiveDates, initialGuests, tour.groupMin)
+  );
+  const setSelectedDateId = useCallback(
+    (id: string) => {
+      if (!id || effectiveDates.some((date) => date.id === id)) {
+        setSelectedDateIdState(id);
+      }
+    },
+    [effectiveDates]
   );
   const [dateMode, setDateMode] = useState<BookingDateMode>(() =>
     resolveInitialDateMode(effectiveBookingMode, effectiveDates.length)
@@ -173,7 +188,7 @@ export function TourBookingProvider({
 
   useEffect(() => {
     if (requiresManualDate) {
-      setSelectedDateId("");
+      setSelectedDateIdState("");
       setCustomDate(null);
     }
     setPartnerPreviewOpen(false);
@@ -189,16 +204,16 @@ export function TourBookingProvider({
     if (!normalizedInitialDeparture || scheduleLoading) return;
     const match = effectiveDates.find((date) => date.startDate === normalizedInitialDeparture);
     if (!match) return;
-    setSelectedDateId(match.id);
+    setSelectedDateIdState(match.id);
     setDateMode("scheduled");
     setCustomDate(null);
   }, [normalizedInitialDeparture, scheduleLoading, effectiveDates]);
 
   useEffect(() => {
-    if (requiresManualDate || scheduleLoading || effectiveDates.length === 0) return;
+    if (requiresManualDate || scheduleLoading) return;
     if (selectedDateId && effectiveDates.some((date) => date.id === selectedDateId)) return;
     const next = pickInitialDateId(effectiveDates, guests, tour.groupMin);
-    if (next) setSelectedDateId(next);
+    if (next !== selectedDateId) setSelectedDateIdState(next);
   }, [requiresManualDate, scheduleLoading, effectiveDates, selectedDateId, guests, tour.groupMin]);
 
   useEffect(() => {
@@ -207,7 +222,7 @@ export function TourBookingProvider({
     if (current && dateFitsGuestCount(current, guests, tour.groupMin)) return;
     const next = findBookableDates(effectiveDates, guests, tour.groupMin)[0];
     if (next && next.id !== selectedDateId) {
-      setSelectedDateId(next.id);
+      setSelectedDateIdState(next.id);
     }
   }, [guests, dateMode, requiresManualDate, effectiveDates, tour.groupMin, selectedDateId]);
 
@@ -474,6 +489,7 @@ export function TourBookingProvider({
     scheduleAffiliateHref,
     scheduleConfigured,
     selectedDateId,
+    setSelectedDateId,
     guests,
     dateMode,
     customDate,

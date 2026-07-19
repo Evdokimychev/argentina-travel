@@ -31,7 +31,7 @@ describe("operational email security", () => {
     const organizerRoute = source("src/app/api/organizer-applications/route.ts");
     const moderation = source("src/lib/admin/moderation-notify.ts");
 
-    expect(leadCapture).toContain('escapeHtml(row.message ?? "")');
+    expect(leadCapture).toContain("escapeHtml(normalized.message)");
     expect(leadCapture).toContain("escapeHtml(JSON.stringify(row.context");
     expect(shop).toContain("escapeHtml(order.notes)");
     expect(shop).toContain("escapeHtml(order.customerName)");

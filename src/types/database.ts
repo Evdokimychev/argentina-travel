@@ -16,6 +16,13 @@ export type ContactSubmissionKind =
 
 export type NewsletterSubscriberStatus = "active" | "unsubscribed";
 
+export type ContactSubmissionStatus =
+  | "new"
+  | "in_progress"
+  | "waiting"
+  | "resolved"
+  | "spam";
+
 export type AccountRoleDb = "tourist" | "organizer" | "admin";
 
 export interface Database {
@@ -38,6 +45,7 @@ export interface Database {
           admin_notes: string | null;
           deleted_at: string | null;
           anonymized_at: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -57,6 +65,7 @@ export interface Database {
           admin_notes?: string | null;
           deleted_at?: string | null;
           anonymized_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -76,6 +85,7 @@ export interface Database {
           admin_notes?: string | null;
           deleted_at?: string | null;
           anonymized_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -100,6 +110,7 @@ export interface Database {
           start_date: string | null;
           end_date: string | null;
           payment_status: string | null;
+          operation_version: number;
           payload: Json;
           created_at: string;
           updated_at: string;
@@ -122,6 +133,7 @@ export interface Database {
           start_date?: string | null;
           end_date?: string | null;
           payment_status?: string | null;
+          operation_version?: number;
           payload?: Json;
           created_at?: string;
           updated_at?: string;
@@ -144,6 +156,7 @@ export interface Database {
           start_date?: string | null;
           end_date?: string | null;
           payment_status?: string | null;
+          operation_version?: number;
           payload?: Json;
           created_at?: string;
           updated_at?: string;
@@ -451,6 +464,7 @@ export interface Database {
           moderation_notes: string | null;
           moderated_by: string | null;
           moderated_at: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -475,6 +489,7 @@ export interface Database {
           moderation_notes?: string | null;
           moderated_by?: string | null;
           moderated_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -499,6 +514,7 @@ export interface Database {
           moderation_notes?: string | null;
           moderated_by?: string | null;
           moderated_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -514,6 +530,7 @@ export interface Database {
           status: string;
           resolved_by: string | null;
           resolved_at: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -526,6 +543,7 @@ export interface Database {
           status?: string;
           resolved_by?: string | null;
           resolved_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -538,6 +556,7 @@ export interface Database {
           status?: string;
           resolved_by?: string | null;
           resolved_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -546,6 +565,7 @@ export interface Database {
       tours: {
         Row: {
           id: string;
+          market_code: string;
           slug: string;
           owner_user_id: string;
           status: string;
@@ -562,11 +582,13 @@ export interface Database {
           moderation_notes: string | null;
           moderated_by: string | null;
           moderated_at: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
+          market_code?: string;
           slug: string;
           owner_user_id: string;
           status?: string;
@@ -583,11 +605,13 @@ export interface Database {
           moderation_notes?: string | null;
           moderated_by?: string | null;
           moderated_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
+          market_code?: string;
           slug?: string;
           owner_user_id?: string;
           status?: string;
@@ -604,6 +628,7 @@ export interface Database {
           moderation_notes?: string | null;
           moderated_by?: string | null;
           moderated_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -626,6 +651,7 @@ export interface Database {
           customer_phone: string;
           delivery_url: string | null;
           notes: string | null;
+          operation_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -645,6 +671,7 @@ export interface Database {
           customer_phone?: string;
           delivery_url?: string | null;
           notes?: string | null;
+          operation_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -664,6 +691,52 @@ export interface Database {
           customer_phone?: string;
           delivery_url?: string | null;
           notes?: string | null;
+          operation_version?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      operations_transition_outbox: {
+        Row: {
+          id: string;
+          entity_type: "booking" | "shop_order";
+          entity_id: string;
+          event_key: "booking.status_changed" | "shop_order.status_changed";
+          recipient_kind: "customer" | "organizer" | "admin";
+          status: "pending" | "processing" | "delivered" | "failed" | "dead";
+          payload: Json;
+          dedupe_key: string;
+          attempts: number;
+          next_attempt_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          entity_type: "booking" | "shop_order";
+          entity_id: string;
+          event_key: "booking.status_changed" | "shop_order.status_changed";
+          recipient_kind: "customer" | "organizer" | "admin";
+          status?: "pending" | "processing" | "delivered" | "failed" | "dead";
+          payload?: Json;
+          dedupe_key: string;
+          attempts?: number;
+          next_attempt_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          entity_type?: "booking" | "shop_order";
+          entity_id?: string;
+          event_key?: "booking.status_changed" | "shop_order.status_changed";
+          recipient_kind?: "customer" | "organizer" | "admin";
+          status?: "pending" | "processing" | "delivered" | "failed" | "dead";
+          payload?: Json;
+          dedupe_key?: string;
+          attempts?: number;
+          next_attempt_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1789,7 +1862,12 @@ export interface Database {
           message: string;
           context: Json;
           page_url: string | null;
+          status: ContactSubmissionStatus;
+          assigned_to: string | null;
+          admin_notes: string;
+          next_action_at: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -1800,7 +1878,12 @@ export interface Database {
           message?: string;
           context?: Json;
           page_url?: string | null;
+          status?: ContactSubmissionStatus;
+          assigned_to?: string | null;
+          admin_notes?: string;
+          next_action_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
@@ -1811,7 +1894,12 @@ export interface Database {
           message?: string;
           context?: Json;
           page_url?: string | null;
+          status?: ContactSubmissionStatus;
+          assigned_to?: string | null;
+          admin_notes?: string;
+          next_action_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -1901,6 +1989,7 @@ export interface Database {
           is_active: boolean;
           invited_by: string | null;
           notes: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -1911,6 +2000,7 @@ export interface Database {
           is_active?: boolean;
           invited_by?: string | null;
           notes?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -1921,6 +2011,7 @@ export interface Database {
           is_active?: boolean;
           invited_by?: string | null;
           notes?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2128,7 +2219,9 @@ export interface Database {
       analytics_events: {
         Row: {
           id: string;
+          event_id: string | null;
           event_type: string;
+          ingestion_source: string;
           tour_slug: string | null;
           tour_id: string | null;
           user_id: string | null;
@@ -2138,7 +2231,9 @@ export interface Database {
         };
         Insert: {
           id?: string;
+          event_id?: string | null;
           event_type: string;
+          ingestion_source?: string;
           tour_slug?: string | null;
           tour_id?: string | null;
           user_id?: string | null;
@@ -2148,7 +2243,9 @@ export interface Database {
         };
         Update: {
           id?: string;
+          event_id?: string | null;
           event_type?: string;
+          ingestion_source?: string;
           tour_slug?: string | null;
           tour_id?: string | null;
           user_id?: string | null;
@@ -2285,6 +2382,7 @@ export interface Database {
           metadata: Json;
           resolved_at: string | null;
           resolved_by: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -2300,6 +2398,7 @@ export interface Database {
           metadata?: Json;
           resolved_at?: string | null;
           resolved_by?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2315,6 +2414,52 @@ export interface Database {
           metadata?: Json;
           resolved_at?: string | null;
           resolved_by?: string | null;
+          row_version?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      moderation_delivery_outbox: {
+        Row: {
+          id: string;
+          entity_type: string;
+          entity_id: string;
+          event_key: string;
+          status: string;
+          payload: Json;
+          dedupe_key: string;
+          attempts: number;
+          next_attempt_at: string | null;
+          delivered_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          entity_type: string;
+          entity_id: string;
+          event_key?: string;
+          status?: string;
+          payload?: Json;
+          dedupe_key: string;
+          attempts?: number;
+          next_attempt_at?: string | null;
+          delivered_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          entity_type?: string;
+          entity_id?: string;
+          event_key?: string;
+          status?: string;
+          payload?: Json;
+          dedupe_key?: string;
+          attempts?: number;
+          next_attempt_at?: string | null;
+          delivered_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -2326,17 +2471,47 @@ export interface Database {
           value: Json;
           updated_by: string | null;
           updated_at: string;
+          row_version: number;
         };
         Insert: {
           key: string;
           value?: Json;
           updated_by?: string | null;
           updated_at?: string;
+          row_version?: number;
         };
         Update: {
           key?: string;
           value?: Json;
           updated_by?: string | null;
+          updated_at?: string;
+          row_version?: number;
+        };
+        Relationships: [];
+      };
+      site_settings_control_plane: {
+        Row: {
+          singleton: boolean;
+          revision: number;
+          features: Json;
+          navigation: Json;
+          modules: Json;
+          updated_at: string;
+        };
+        Insert: {
+          singleton?: boolean;
+          revision?: number;
+          features?: Json;
+          navigation?: Json;
+          modules?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          singleton?: boolean;
+          revision?: number;
+          features?: Json;
+          navigation?: Json;
+          modules?: Json;
           updated_at?: string;
         };
         Relationships: [];
@@ -2384,6 +2559,7 @@ export interface Database {
           related_tour_href: string | null;
           related_airport_iata: string | null;
           updated_by: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -2408,6 +2584,7 @@ export interface Database {
           related_tour_href?: string | null;
           related_airport_iata?: string | null;
           updated_by?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2432,6 +2609,7 @@ export interface Database {
           related_tour_href?: string | null;
           related_airport_iata?: string | null;
           updated_by?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2526,6 +2704,7 @@ export interface Database {
           body: string;
           status: string;
           edited_at: string | null;
+          row_version: number;
           created_at: string;
         };
         Insert: {
@@ -2535,6 +2714,7 @@ export interface Database {
           body: string;
           status?: string;
           edited_at?: string | null;
+          row_version?: number;
           created_at?: string;
         };
         Update: {
@@ -2544,6 +2724,7 @@ export interface Database {
           body?: string;
           status?: string;
           edited_at?: string | null;
+          row_version?: number;
           created_at?: string;
         };
         Relationships: [
@@ -2573,6 +2754,7 @@ export interface Database {
           status: string;
           resolved_by: string | null;
           resolved_at: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -2585,6 +2767,7 @@ export interface Database {
           status?: string;
           resolved_by?: string | null;
           resolved_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2597,6 +2780,7 @@ export interface Database {
           status?: string;
           resolved_by?: string | null;
           resolved_at?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2730,6 +2914,7 @@ export interface Database {
           scheduled_publish_at: string | null;
           created_by: string | null;
           updated_by: string | null;
+          row_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -2746,6 +2931,7 @@ export interface Database {
           scheduled_publish_at?: string | null;
           created_by?: string | null;
           updated_by?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2762,6 +2948,7 @@ export interface Database {
           scheduled_publish_at?: string | null;
           created_by?: string | null;
           updated_by?: string | null;
+          row_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -2797,6 +2984,76 @@ export interface Database {
           seo?: Json;
           created_by?: string | null;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      cms_search_outbox: {
+        Row: {
+          id: string;
+          document_id: string;
+          document_version: number;
+          intent: "upsert" | "delete";
+          document_snapshot: Json;
+          status: "pending" | "processing" | "completed" | "failed";
+          attempts: number;
+          last_error: string | null;
+          next_attempt_at: string;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          document_id: string;
+          document_version: number;
+          intent: "upsert" | "delete";
+          document_snapshot: Json;
+          status?: "pending" | "processing" | "completed" | "failed";
+          attempts?: number;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          completed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          status?: "pending" | "processing" | "completed" | "failed";
+          attempts?: number;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          completed_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      cms_import_operations: {
+        Row: {
+          operation_id: string;
+          payload_hash: string;
+          actor_user_id: string | null;
+          status: "running" | "completed";
+          total_count: number;
+          result: Json | null;
+          created_at: string;
+          completed_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          operation_id: string;
+          payload_hash: string;
+          actor_user_id?: string | null;
+          status?: "running" | "completed";
+          total_count: number;
+          result?: Json | null;
+          created_at?: string;
+          completed_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          status?: "running" | "completed";
+          result?: Json | null;
+          completed_at?: string | null;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -3148,6 +3405,9 @@ export interface Database {
           status: string;
           source: string;
           note: string | null;
+          status_history: Json;
+          organizer_comments: Json;
+          converted_booking_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -3163,6 +3423,9 @@ export interface Database {
           status?: string;
           source?: string;
           note?: string | null;
+          status_history?: Json;
+          organizer_comments?: Json;
+          converted_booking_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -3178,6 +3441,9 @@ export interface Database {
           status?: string;
           source?: string;
           note?: string | null;
+          status_history?: Json;
+          organizer_comments?: Json;
+          converted_booking_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -3204,6 +3470,10 @@ export interface Database {
           source_event_id: string | null;
           requested_by: string | null;
           approved_by: string | null;
+          request_idempotency_key: string | null;
+          source_transaction_id: string | null;
+          claimed_by: string | null;
+          claimed_at: string | null;
           request_reason: string | null;
           admin_notes: string | null;
           metadata: Json;
@@ -3222,6 +3492,10 @@ export interface Database {
           source_event_id?: string | null;
           requested_by?: string | null;
           approved_by?: string | null;
+          request_idempotency_key?: string | null;
+          source_transaction_id?: string | null;
+          claimed_by?: string | null;
+          claimed_at?: string | null;
           request_reason?: string | null;
           admin_notes?: string | null;
           metadata?: Json;
@@ -3240,6 +3514,10 @@ export interface Database {
           source_event_id?: string | null;
           requested_by?: string | null;
           approved_by?: string | null;
+          request_idempotency_key?: string | null;
+          source_transaction_id?: string | null;
+          claimed_by?: string | null;
+          claimed_at?: string | null;
           request_reason?: string | null;
           admin_notes?: string | null;
           metadata?: Json;
@@ -3262,6 +3540,12 @@ export interface Database {
           admin_notes: string | null;
           exported_at: string | null;
           export_file_hash: string | null;
+          created_by: string | null;
+          approved_at: string | null;
+          exported_by: string | null;
+          completed_by: string | null;
+          cancelled_by: string | null;
+          cancelled_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -3278,6 +3562,12 @@ export interface Database {
           admin_notes?: string | null;
           exported_at?: string | null;
           export_file_hash?: string | null;
+          created_by?: string | null;
+          approved_at?: string | null;
+          exported_by?: string | null;
+          completed_by?: string | null;
+          cancelled_by?: string | null;
+          cancelled_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -3294,6 +3584,264 @@ export interface Database {
           admin_notes?: string | null;
           exported_at?: string | null;
           export_file_hash?: string | null;
+          created_by?: string | null;
+          approved_at?: string | null;
+          exported_by?: string | null;
+          completed_by?: string | null;
+          cancelled_by?: string | null;
+          cancelled_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      commercial_adapters: {
+        Row: {
+          id: string;
+          adapter_type: string;
+          code: string;
+          label: string;
+          description: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          adapter_type: string;
+          code: string;
+          label: string;
+          description?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          adapter_type?: string;
+          code?: string;
+          label?: string;
+          description?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      commercial_entitlement_definitions: {
+        Row: {
+          key: string;
+          label: string;
+          description: string | null;
+          value_type: string;
+          adapter_id: string | null;
+          is_active: boolean;
+          default_enabled: boolean;
+          default_limit: number | null;
+          hard_limit: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          label: string;
+          description?: string | null;
+          value_type?: string;
+          adapter_id?: string | null;
+          is_active?: boolean;
+          default_enabled?: boolean;
+          default_limit?: number | null;
+          hard_limit?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          key?: string;
+          label?: string;
+          description?: string | null;
+          value_type?: string;
+          adapter_id?: string | null;
+          is_active?: boolean;
+          default_enabled?: boolean;
+          default_limit?: number | null;
+          hard_limit?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      commercial_plans: {
+        Row: {
+          id: string;
+          code: string;
+          version: number;
+          name: string;
+          description: string | null;
+          status: string;
+          is_default: boolean;
+          price_minor: number | null;
+          currency: string;
+          billing_period: string;
+          row_version: number;
+          activated_at: string | null;
+          activated_by: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          version: number;
+          name: string;
+          description?: string | null;
+          status?: string;
+          is_default?: boolean;
+          price_minor?: number | null;
+          currency?: string;
+          billing_period?: string;
+          row_version?: number;
+          activated_at?: string | null;
+          activated_by?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          version?: number;
+          name?: string;
+          description?: string | null;
+          status?: string;
+          is_default?: boolean;
+          price_minor?: number | null;
+          currency?: string;
+          billing_period?: string;
+          row_version?: number;
+          activated_at?: string | null;
+          activated_by?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      commercial_plan_entitlements: {
+        Row: {
+          plan_id: string;
+          entitlement_key: string;
+          enabled: boolean;
+          limit_value: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          plan_id: string;
+          entitlement_key: string;
+          enabled?: boolean;
+          limit_value?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          plan_id?: string;
+          entitlement_key?: string;
+          enabled?: boolean;
+          limit_value?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      organizer_commercial_subscriptions: {
+        Row: {
+          id: string;
+          organizer_user_id: string;
+          plan_id: string;
+          status: string;
+          starts_at: string;
+          ends_at: string | null;
+          row_version: number;
+          assigned_by: string | null;
+          cancelled_by: string | null;
+          cancelled_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organizer_user_id: string;
+          plan_id: string;
+          status?: string;
+          starts_at?: string;
+          ends_at?: string | null;
+          row_version?: number;
+          assigned_by?: string | null;
+          cancelled_by?: string | null;
+          cancelled_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organizer_user_id?: string;
+          plan_id?: string;
+          status?: string;
+          starts_at?: string;
+          ends_at?: string | null;
+          row_version?: number;
+          assigned_by?: string | null;
+          cancelled_by?: string | null;
+          cancelled_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      organizer_entitlement_overrides: {
+        Row: {
+          id: string;
+          organizer_user_id: string;
+          entitlement_key: string;
+          enabled: boolean | null;
+          limit_value: number | null;
+          reason: string;
+          starts_at: string;
+          ends_at: string | null;
+          row_version: number;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organizer_user_id: string;
+          entitlement_key: string;
+          enabled?: boolean | null;
+          limit_value?: number | null;
+          reason: string;
+          starts_at?: string;
+          ends_at?: string | null;
+          row_version?: number;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organizer_user_id?: string;
+          entitlement_key?: string;
+          enabled?: boolean | null;
+          limit_value?: number | null;
+          reason?: string;
+          starts_at?: string;
+          ends_at?: string | null;
+          row_version?: number;
+          updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -3467,6 +4015,100 @@ export interface Database {
         };
         Relationships: [];
       };
+      seo_provider_connections: {
+        Row: {
+          id: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label: string | null;
+          vault_secret_id: string;
+          status: "configured" | "verified" | "error";
+          last_verified_at: string | null;
+          last_synced_at: string | null;
+          last_error_code: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label?: string | null;
+          vault_secret_id: string;
+          status?: "configured" | "verified" | "error";
+          last_verified_at?: string | null;
+          last_synced_at?: string | null;
+          last_error_code?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_provider_connections"]["Insert"]>;
+        Relationships: [];
+      };
+      seo_search_performance_daily: {
+        Row: {
+          id: number;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          metric_date: string;
+          query: string;
+          page: string;
+          country: string;
+          device: string;
+          clicks: number;
+          impressions: number;
+          ctr: number;
+          position: number;
+          fetched_at: string;
+        };
+        Insert: {
+          id?: number;
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          metric_date: string;
+          query?: string;
+          page?: string;
+          country?: string;
+          device?: string;
+          clicks?: number;
+          impressions?: number;
+          ctr?: number;
+          position?: number;
+          fetched_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_search_performance_daily"]["Insert"]>;
+        Relationships: [];
+      };
+      seo_search_sync_runs: {
+        Row: {
+          id: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          status: "running" | "succeeded" | "failed";
+          started_at: string;
+          finished_at: string | null;
+          rows_received: number;
+          rows_written: number;
+          error_code: string | null;
+          triggered_by: "admin" | "cron";
+        };
+        Insert: {
+          id?: string;
+          provider: "google_search_console" | "yandex_webmaster";
+          status: "running" | "succeeded" | "failed";
+          started_at?: string;
+          finished_at?: string | null;
+          rows_received?: number;
+          rows_written?: number;
+          error_code?: string | null;
+          triggered_by?: "admin" | "cron";
+        };
+        Update: Partial<Database["public"]["Tables"]["seo_search_sync_runs"]["Insert"]>;
+        Relationships: [];
+      };
       search_documents: {
         Row: {
           id: string;
@@ -3506,6 +4148,190 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      admin_analytics_funnel_counts: {
+        Args: { p_since?: string | null };
+        Returns: {
+          tour_views: number;
+          booking_started: number;
+          confirmed: number;
+          paid: number;
+          review: number;
+        }[];
+      };
+      admin_analytics_booking_cohorts: {
+        Args: { p_since?: string | null };
+        Returns: { month_key: string; bookings: number }[];
+      };
+      seo_upsert_provider_connection: {
+        Args: {
+          p_provider: "google_search_console" | "yandex_webmaster";
+          p_property_url: string;
+          p_secret: string;
+          p_credential_label: string;
+          p_actor_user_id: string | null;
+        };
+        Returns: Json;
+      };
+      seo_delete_provider_connection: {
+        Args: {
+          p_provider: "google_search_console" | "yandex_webmaster";
+          p_actor_user_id: string | null;
+        };
+        Returns: boolean;
+      };
+      seo_get_provider_secret: {
+        Args: { p_provider: "google_search_console" | "yandex_webmaster" };
+        Returns: {
+          provider: "google_search_console" | "yandex_webmaster";
+          property_url: string;
+          credential_label: string | null;
+          secret_value: string;
+        }[];
+      };
+      seo_search_performance_summary: {
+        Args: { p_days?: number };
+        Returns: Json;
+      };
+      cms_create_document_atomic: {
+        Args: {
+          p_document_id: string;
+          p_doc_type: string;
+          p_slug: string;
+          p_locale: string;
+          p_title: string;
+          p_body: Json;
+          p_seo: Json;
+          p_status: string;
+          p_actor_id: string | null;
+          p_allow_publish?: boolean;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      cms_mutate_document_atomic: {
+        Args: {
+          p_document_id: string;
+          p_expected_version: number;
+          p_actor_id: string | null;
+          p_operation: string;
+          p_allow_publish?: boolean;
+          p_title?: string | null;
+          p_body?: Json | null;
+          p_seo?: Json | null;
+          p_target_status?: string | null;
+          p_scheduled_publish_at?: string | null;
+          p_restore_revision_id?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      cms_publish_due_scheduled_atomic: {
+        Args: { p_limit?: number };
+        Returns: Json;
+      };
+      cms_import_documents_atomic: {
+        Args: {
+          p_operation_id: string;
+          p_payload_hash: string;
+          p_items: Json;
+          p_actor_id: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_update_site_settings_atomic: {
+        Args: {
+          p_updates: Json;
+          p_actor_user_id: string | null;
+          p_actor_kind: string;
+          p_ip_address: string | null;
+          p_confirmed_risks?: string[];
+        };
+        Returns: Json;
+      };
+      admin_assign_staff_atomic: {
+        Args: {
+          p_actor_user_id: string;
+          p_target_user_id: string;
+          p_preset: string;
+          p_capabilities?: string[];
+          p_notes?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_update_staff_atomic: {
+        Args: {
+          p_actor_user_id: string;
+          p_target_user_id: string;
+          p_expected_version: number;
+          p_preset: string;
+          p_capabilities: string[];
+          p_is_active: boolean;
+          p_notes: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_remove_staff_atomic: {
+        Args: {
+          p_actor_user_id: string;
+          p_target_user_id: string;
+          p_expected_version: number;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      attach_guest_bookings_to_current_user: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      admin_decide_organizer_application: {
+        Args: {
+          p_application_id: string;
+          p_actor_user_id: string;
+          p_decision: "approve" | "reject";
+          p_review_note?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: {
+          application_id: string;
+          applicant_user_id: string;
+          decision_status: "approved" | "rejected";
+          decided_at: string;
+          changed: boolean;
+        }[];
+      };
+      admin_resolve_blog_comment_report: {
+        Args: {
+          p_queue_id: string;
+          p_report_id: string;
+          p_actor_id: string;
+          p_action: "hide_comment" | "restore_comment" | "dismiss_report";
+          p_expected_queue_status: string;
+          p_expected_report_status: string;
+          p_expected_comment_status: string;
+          p_note?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_resolve_moderation_item_atomic: {
+        Args: {
+          p_queue_id: string;
+          p_action: "approve" | "reject";
+          p_actor_user_id: string;
+          p_expected_queue_version: number;
+          p_expected_queue_status: string;
+          p_expected_entity_version: number;
+          p_expected_entity_status: string;
+          p_expected_related_version?: number | null;
+          p_expected_related_status?: string | null;
+          p_note?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
       cancel_booking_with_reservation_release: {
         Args: {
           p_booking_id: string;
@@ -3514,6 +4340,29 @@ export interface Database {
           p_updated_at: string;
         };
         Returns: Json;
+      };
+      admin_transition_booking_atomic: {
+        Args: {
+          p_booking_id: string;
+          p_expected_version: number;
+          p_actor_user_id: string;
+          p_next_status: string;
+          p_note?: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["bookings"]["Row"];
+      };
+      admin_transition_shop_order_atomic: {
+        Args: {
+          p_order_id: string;
+          p_expected_version: number;
+          p_actor_user_id: string;
+          p_next_status: string;
+          p_delivery_url: string | null;
+          p_notes: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["shop_orders"]["Row"];
       };
       create_booking_with_reservation: {
         Args: {
@@ -3534,6 +4383,201 @@ export interface Database {
           status: "accepted" | "rejected" | "invalid";
           attempts: number;
         }[];
+      };
+      prepare_refund_request_atomic: {
+        Args: {
+          p_booking_id: string;
+          p_source_transaction_id: string;
+          p_amount: number;
+          p_currency: string;
+          p_provider: string;
+          p_requested_by: string;
+          p_request_reason: string | null;
+          p_request_idempotency_key: string;
+          p_metadata?: Json;
+        };
+        Returns: Database["public"]["Tables"]["payment_transactions"]["Row"];
+      };
+      claim_refund_for_execution: {
+        Args: {
+          p_refund_id: string;
+          p_actor_user_id: string;
+          p_admin_notes?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["payment_transactions"]["Row"];
+      };
+      finalize_refund_attempt: {
+        Args: {
+          p_refund_id: string;
+          p_status: string;
+          p_external_id: string | null;
+          p_metadata: Json;
+          p_booking_fully_refunded?: boolean;
+        };
+        Returns: Database["public"]["Tables"]["payment_transactions"]["Row"];
+      };
+      reject_refund_request_atomic: {
+        Args: {
+          p_refund_id: string;
+          p_actor_user_id: string;
+          p_admin_notes?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["payment_transactions"]["Row"];
+      };
+      create_payout_batch_atomic: {
+        Args: {
+          p_organizer_user_id: string;
+          p_currency: string;
+          p_period: string | null;
+          p_admin_notes: string | null;
+          p_actor_user_id: string;
+        };
+        Returns: Json;
+      };
+      approve_payout_batch_atomic: {
+        Args: {
+          p_payout_id: string;
+          p_actor_user_id: string;
+          p_admin_notes?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["payout_records"]["Row"];
+      };
+      mark_payout_exported_atomic: {
+        Args: {
+          p_payout_id: string;
+          p_actor_user_id: string;
+          p_export_file_hash: string;
+        };
+        Returns: Database["public"]["Tables"]["payout_records"]["Row"];
+      };
+      complete_payout_batch_atomic: {
+        Args: {
+          p_payout_id: string;
+          p_actor_user_id: string;
+          p_admin_notes?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["payout_records"]["Row"];
+      };
+      cancel_payout_batch_atomic: {
+        Args: {
+          p_payout_id: string;
+          p_actor_user_id: string;
+          p_admin_notes?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["payout_records"]["Row"];
+      };
+      commercial_create_plan_version: {
+        Args: {
+          p_code: string;
+          p_name: string;
+          p_description: string | null;
+          p_price_minor: number | null;
+          p_currency: string;
+          p_billing_period: string;
+          p_clone_from_plan_id: string | null;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["commercial_plans"]["Row"];
+      };
+      commercial_update_draft_plan: {
+        Args: {
+          p_plan_id: string;
+          p_expected_version: number;
+          p_name: string;
+          p_description: string | null;
+          p_price_minor: number | null;
+          p_currency: string;
+          p_billing_period: string;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["commercial_plans"]["Row"];
+      };
+      commercial_set_plan_entitlement: {
+        Args: {
+          p_plan_id: string;
+          p_expected_version: number;
+          p_entitlement_key: string;
+          p_enabled: boolean;
+          p_limit_value: number | null;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["commercial_plans"]["Row"];
+      };
+      commercial_activate_plan: {
+        Args: {
+          p_plan_id: string;
+          p_expected_version: number;
+          p_make_default: boolean;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["commercial_plans"]["Row"];
+      };
+      commercial_retire_plan: {
+        Args: {
+          p_plan_id: string;
+          p_expected_version: number;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["commercial_plans"]["Row"];
+      };
+      commercial_assign_organizer_plan: {
+        Args: {
+          p_organizer_user_id: string;
+          p_plan_id: string;
+          p_expected_subscription_version: number;
+          p_starts_at: string | null;
+          p_ends_at: string | null;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["organizer_commercial_subscriptions"]["Row"];
+      };
+      commercial_upsert_organizer_override: {
+        Args: {
+          p_organizer_user_id: string;
+          p_entitlement_key: string;
+          p_enabled: boolean | null;
+          p_limit_value: number | null;
+          p_reason: string;
+          p_ends_at: string | null;
+          p_expected_version: number;
+          p_actor_user_id: string;
+        };
+        Returns: Database["public"]["Tables"]["organizer_entitlement_overrides"]["Row"];
+      };
+      commercial_delete_organizer_override: {
+        Args: {
+          p_override_id: string;
+          p_expected_version: number;
+          p_actor_user_id: string;
+        };
+        Returns: string;
+      };
+      organizer_mutate_tour_atomic: {
+        Args: {
+          p_tour_id: string;
+          p_actor_user_id: string;
+          p_expected_version: number;
+          p_operation: "save" | "submit" | "archive";
+          p_market_code: string;
+          p_product_type: "tour" | "excursion";
+          p_slug: string;
+          p_title: string;
+          p_listing: Json;
+          p_payload: Json;
+          p_editor_draft: Json;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
+      admin_unpublish_tour_atomic: {
+        Args: {
+          p_tour_id: string;
+          p_expected_version: number;
+          p_actor_user_id: string;
+          p_action: "unpublish" | "archive";
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
       };
       is_admin_with: {
         Args: { required_capability: string };

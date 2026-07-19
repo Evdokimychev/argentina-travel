@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
-import type { ShopProduct } from "@/data/shop-products";
+import type { ShopProduct } from "@/types/shop-product";
 import type { ShopOrder } from "@/types/shop-order";
 import type { SessionUser } from "@/types/user";
 import {
@@ -162,7 +162,7 @@ export function buildShopOrderFromProduct(input: {
     productId: input.product.id,
     productSlug: input.product.slug,
     productTitle: input.product.title,
-    priceUsd: input.product.price,
+    priceUsd: input.product.priceMinor / 100,
     currency: input.product.currency,
     status: "pending",
     paymentStatus: "pending",
@@ -171,7 +171,73 @@ export function buildShopOrderFromProduct(input: {
     customerPhone: input.customerPhone.trim(),
     deliveryUrl: null,
     notes: input.notes?.trim() || null,
+    operationVersion: 1,
     createdAt: now,
     updatedAt: now,
   };
+}
+
+export async function transitionAdminShopOrderAtomic(
+  supabase: DbClient,
+  input: {
+    orderId: string;
+    expectedVersion: number;
+    actorUserId: string;
+    nextStatus: ShopOrder["status"];
+    deliveryUrl: string | null;
+    notes: string | null;
+    ipAddress?: string | null;
+  }
+): Promise<{ order: ShopOrder } | { error: string; status: number }> {
+  const { data, error } = await supabase.rpc("admin_transition_shop_order_atomic", {
+    p_order_id: input.orderId,
+    p_expected_version: input.expectedVersion,
+    p_actor_user_id: input.actorUserId,
+    p_next_status: input.nextStatus,
+    p_delivery_url: input.deliveryUrl?.trim() || null,
+    p_notes: input.notes?.trim() || null,
+    p_ip_address: input.ipAddress ?? null,
+  });
+
+  if (error) {
+    if (error.code === "40001" || error.message.includes("SHOP_ORDER_CONFLICT")) {
+      return {
+        error: "Заказ уже изменился в другом окне. Обновите список и повторите действие.",
+        status: 409,
+      };
+    }
+    if (error.code === "P0002" || error.message.includes("SHOP_ORDER_NOT_FOUND")) {
+      return { error: "Заказ не найден.", status: 404 };
+    }
+    if (error.message.includes("SHOP_ORDER_PAYMENT_NOT_VERIFIED")) {
+      return {
+        error: "Оплата ещё не подтверждена платёжной системой. Вручную отметить её полученной нельзя.",
+        status: 409,
+      };
+    }
+    if (error.message.includes("SHOP_ORDER_REFUND_REQUIRED")) {
+      return {
+        error: "Сначала оформите возврат в финансовом разделе, затем отмените заказ.",
+        status: 409,
+      };
+    }
+    if (error.code === "23514" || error.message.includes("SHOP_ORDER_INVALID_TRANSITION")) {
+      return {
+        error: "Такой переход сейчас недоступен. Обновите заказ и выберите предложенное действие.",
+        status: 409,
+      };
+    }
+    if (error.code === "22023") {
+      return { error: "Проверьте статус, ссылку доставки и заметку.", status: 400 };
+    }
+    if (error.code === "42501") {
+      return { error: "Недостаточно прав для изменения заказа.", status: 403 };
+    }
+    return { error: "Не удалось сохранить заказ. Попробуйте ещё раз.", status: 500 };
+  }
+
+  if (!data) {
+    return { error: "База данных не подтвердила изменение заказа.", status: 500 };
+  }
+  return { order: rowToShopOrder(data) };
 }

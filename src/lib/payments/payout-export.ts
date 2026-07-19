@@ -5,6 +5,7 @@ import type { Database } from "@/types/database";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import type { PayoutRecordRow } from "@/types/payment-platform";
 import { listCommissionSnapshotsForOrganizer } from "@/lib/payments/commission-server";
+import { aggregateOrganizerBalancesByCurrency } from "@/lib/payments/ledger-aggregation";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -63,6 +64,9 @@ export async function buildPayoutBatchCsv(
     .order("created_at", { ascending: true });
 
   const rows = (snapshots ?? []) as SnapshotExportRow[];
+  if (rows.some((row) => row.currency !== payout.currency)) {
+    throw new Error("Пакет выплаты содержит начисления в другой валюте");
+  }
   const bookingRefs = rows.map((r) => r.booking_id).join("; ");
 
   const lines: string[] = [];
@@ -161,14 +165,18 @@ export async function buildOrganizerStatementCsv(
     limit: 500,
   });
 
-  let grossTotal = 0;
-  let commissionTotal = 0;
-  let netTotal = 0;
-
-  for (const snap of snapshots) {
-    grossTotal += snap.grossAmount;
-    commissionTotal += snap.commissionAmount;
-    netTotal += snap.organizerNetAmount;
+  const summary = aggregateOrganizerBalancesByCurrency({
+    snapshots: snapshots.map((snap) => ({
+      grossAmount: snap.grossAmount,
+      commissionAmount: snap.commissionAmount,
+      organizerNetAmount: snap.organizerNetAmount,
+      currency: snap.currency,
+      payoutRecordId: snap.payoutRecordId,
+    })),
+    payouts,
+  });
+  if (summary.issues.length > 0) {
+    throw new Error("В финансовой выписке найдены некорректные денежные записи");
   }
 
   const lines: string[] = [];
@@ -188,27 +196,29 @@ export async function buildOrganizerStatementCsv(
       new Date().toISOString(),
     ].join(",")
   );
-  lines.push(
-    [
-      csvEscape("summary"),
-      csvEscape("gross_total"),
-      csvEscape(Math.round(grossTotal * 100) / 100),
-    ].join(",")
-  );
-  lines.push(
-    [
-      csvEscape("summary"),
-      csvEscape("commission_total"),
-      csvEscape(Math.round(commissionTotal * 100) / 100),
-    ].join(",")
-  );
-  lines.push(
-    [
-      csvEscape("summary"),
-      csvEscape("net_total"),
-      csvEscape(Math.round(netTotal * 100) / 100),
-    ].join(",")
-  );
+  for (const bucket of summary.byCurrency) {
+    lines.push(
+      [
+        csvEscape("summary"),
+        csvEscape(`gross_total_${bucket.currency}`),
+        csvEscape(bucket.grossTotal),
+      ].join(",")
+    );
+    lines.push(
+      [
+        csvEscape("summary"),
+        csvEscape(`commission_total_${bucket.currency}`),
+        csvEscape(bucket.commissionTotal),
+      ].join(",")
+    );
+    lines.push(
+      [
+        csvEscape("summary"),
+        csvEscape(`net_total_${bucket.currency}`),
+        csvEscape(bucket.earnedNet),
+      ].join(",")
+    );
+  }
   lines.push(
     [
       csvEscape("summary"),

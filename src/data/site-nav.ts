@@ -216,7 +216,7 @@ const KNOWLEDGE_BASE_ENTRY_LINKS: SiteNavLink[] = [
   {
     id: "kb-hub-relocant",
     label: "Гид релоканта",
-    href: "/baza-znaniy/gid-relokanta",
+    href: "/baza-znaniy/razdel/pereezd",
     description: "Путь переезда: 6 этапов",
   },
   {

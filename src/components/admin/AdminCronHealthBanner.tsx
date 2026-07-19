@@ -7,7 +7,7 @@ type CronHealthResponse = {
   ok: boolean;
   status: "ok" | "degraded";
   generatedAt: string;
-  source: "file" | "memory" | "none";
+  source: "database" | "file" | "memory" | "none";
   dataAvailable: boolean;
   durable: boolean;
   failingRoutes: string[];
@@ -79,8 +79,8 @@ export default function AdminCronHealthBanner() {
           {typeof data.outbox.dead === "number" ? ` · dead ${data.outbox.dead}` : ""}
         </p>
       ) : null}
-      <Link href="/admin/system/settings" className="mt-2 inline-block text-xs font-medium text-amber-900 underline">
-        Открыть раздел эксплуатации
+      <Link href="/admin/operations/communications-commerce" className="mt-2 inline-block text-xs font-medium text-amber-900 underline">
+        Открыть очередь писем и состояние задач
       </Link>
     </section>
   );

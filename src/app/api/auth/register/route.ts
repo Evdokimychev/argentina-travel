@@ -21,8 +21,8 @@ async function postRegister(request: Request) {
       password?: string;
     };
 
-    const role = body.role ?? "tourist";
-    if (role === "admin") {
+    const requestedRole = body.role ?? "tourist";
+    if (requestedRole === "admin") {
       return NextResponse.json(
         { error: "Роль администратора назначается вручную", code: "FORBIDDEN" },
         { status: 403 }
@@ -30,13 +30,16 @@ async function postRegister(request: Request) {
     }
 
     const result = await registerSupabaseUser({
-      role,
+      role: "tourist",
       firstName: body.firstName ?? "",
       lastName: body.lastName ?? "",
       phone: body.phone ?? "",
       email: normalizeAuthEmail(body.email ?? ""),
       password: body.password,
-      emailRedirectTo: authRedirectUrl("/auth/confirm?next=/profile", request.url),
+      emailRedirectTo: authRedirectUrl(
+        requestedRole === "organizer" ? "/auth/confirm?next=/join" : "/auth/confirm?next=/profile",
+        request.url,
+      ),
     });
 
     if (!result.ok) {
@@ -58,6 +61,7 @@ async function postRegister(request: Request) {
       ok: true,
       userId: result.userId,
       confirmationRequired: result.confirmationRequired,
+      organizerApplicationRequired: requestedRole === "organizer",
     });
   } catch {
     return NextResponse.json(

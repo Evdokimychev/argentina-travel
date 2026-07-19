@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import AudioGuidesCatalogView from "@/components/audio-guides/AudioGuidesCatalogView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 
 const PAGE_TITLE = "Аудиогиды по Аргентине";
 const PAGE_DESCRIPTION =
@@ -18,7 +19,7 @@ export default function AudioGuidesPage() {
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/audio-guides" />
       <Suspense fallback={null}>
-        <AudioGuidesCatalogView />
+        <AudioGuidesCatalogView heroImage={getServicePageHeroImage("audio-guides")} />
       </Suspense>
     </>
   );

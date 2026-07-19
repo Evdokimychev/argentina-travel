@@ -9,6 +9,7 @@ import type {
 } from "@/lib/travelpayouts/types";
 
 const LINKS_API_URL = "https://api.travelpayouts.com/links/v1/create";
+const DEFAULT_LINKS_API_TIMEOUT_MS = 10_000;
 
 export class TravelpayoutsError extends Error {
   readonly status: number;
@@ -29,9 +30,51 @@ function mapLinkResult(item: NonNullable<TravelpayoutsCreateLinksResponse["resul
   };
 }
 
+function isHttpUrl(value: string | null | undefined): value is string {
+  if (!value?.trim()) return false;
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function validateLinksResponse(
+  body: TravelpayoutsCreateLinksResponse | null,
+  expected: { count: number; marker: number; trs: number }
+): NonNullable<TravelpayoutsCreateLinksResponse["result"]>["links"] {
+  if (!body || body.code !== "success" || body.status !== 200 || !body.result) {
+    throw new TravelpayoutsError("Travelpayouts API returned an invalid success payload", 502);
+  }
+
+  if (body.result.marker !== expected.marker || body.result.trs !== expected.trs) {
+    throw new TravelpayoutsError("Travelpayouts API returned mismatched attribution identifiers", 502);
+  }
+
+  const results = body.result.links;
+  if (!Array.isArray(results) || results.length !== expected.count) {
+    throw new TravelpayoutsError("Travelpayouts API returned a mismatched links payload", 502);
+  }
+
+  const failedIndex = results.findIndex(
+    (item) => item.code !== "success" || (!isHttpUrl(item.partner_url) && !isHttpUrl(item.url))
+  );
+  if (failedIndex >= 0) {
+    const failed = results[failedIndex];
+    const detail = failed?.message?.trim() || failed?.code?.trim() || "invalid link";
+    throw new TravelpayoutsError(
+      `Travelpayouts link ${failedIndex + 1} failed: ${detail}`,
+      502
+    );
+  }
+
+  return results;
+}
+
 export async function createTravelpayoutsPartnerLinks(
   links: TravelpayoutsLinkInput[],
-  options?: { shorten?: boolean }
+  options?: { shorten?: boolean; timeoutMs?: number }
 ): Promise<TravelpayoutsLinkResult[]> {
   if (!links.length) return [];
 
@@ -46,15 +89,38 @@ export async function createTravelpayoutsPartnerLinks(
     })),
   };
 
-  const response = await fetch(LINKS_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Access-Token": config.apiKey,
-    },
-    body: JSON.stringify(payload),
-    cache: "no-store",
-  });
+  const timeoutMs =
+    Number.isFinite(options?.timeoutMs) && Number(options?.timeoutMs) > 0
+      ? Number(options?.timeoutMs)
+      : DEFAULT_LINKS_API_TIMEOUT_MS;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetch(LINKS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Access-Token": config.apiKey,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new TravelpayoutsError("Travelpayouts API request timed out", 504);
+    }
+    throw new TravelpayoutsError(
+      error instanceof Error
+        ? `Travelpayouts API request failed: ${error.message}`
+        : "Travelpayouts API request failed",
+      502
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
 
   const body = (await response.json().catch(() => null)) as TravelpayoutsCreateLinksResponse | null;
 
@@ -65,11 +131,11 @@ export async function createTravelpayoutsPartnerLinks(
     throw new TravelpayoutsError(message, response.status);
   }
 
-  if (!body?.result?.links?.length) {
-    throw new TravelpayoutsError("Travelpayouts API returned an empty links payload");
-  }
-
-  return body.result.links.map(mapLinkResult);
+  return validateLinksResponse(body, {
+    count: links.length,
+    marker: config.marker,
+    trs: config.trs,
+  }).map(mapLinkResult);
 }
 
 export async function createTravelpayoutsPartnerLink(

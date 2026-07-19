@@ -3,101 +3,122 @@ id: pokupka-avtomobilya
 type: transport
 title: "Покупка автомобиля в Аргентине"
 title_es: "Comprar un auto"
-aliases: ["купить машину Аргентина", "покупка автомобиля", "transferencia", "cédula verde", "VTV", "patente", "informe de dominio", "содержание авто"]
-summary: "Как иностранцу купить и оформить автомобиль в Аргентине: проверка истории (informe de dominio), техосмотр VTV, переход права через форму 08 в Registro del Automotor, документы (título, cédula verde), налоги и расходы на содержание (patente, страховка, топливо, парковки), надёжные марки."
+aliases: ["купить машину Аргентина", "покупка автомобиля", "transferencia", "форма 08", "informe de dominio"]
+summary: "Как проверить юридическое состояние автомобиля и оформить переход права через DNRPA; отдельные требования для иностранца без residencia."
 status: published
 site_ready: true
-site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
+site_sections: [zhizn-v-strane, puteshestviya-po-argentine, dokumenty-i-legalizatsiya]
 applies_to: relocant
-tags: [авто, покупка, документы, транспорт, содержание]
+tags: [авто, покупка, документы, транспорт]
+related: [arenda-avto-i-vozhdenie, voditelskie-prava, dni-cuil, dokumenty-dlya-poezdki-na-avto, shtrafy-i-scoring]
 warnings:
-  - "Перед покупкой б/у авто закажите informe de dominio (справку из реестра): она показывает долги, штрафы, аресты и залоги. Без проверки рискуете купить машину с обременениями."
-  - "Право собственности переходит через оформление transferencia в Registro de la Propiedad del Automotor (форма 08 с заверенными подписями) — устная договорённость и передача ключей права не дают."
-  - "Для регистрации авто нужен местный налоговый номер (CUIT/CDI) и DNI; чисто турист оформить машину на себя обычно не может."
+  - "Перед передачей денег закажите свежий informe de dominio: он показывает зарегистрированные залоги, аресты, розыск и ограничения по данным реестра."
+  - "Передача ключей и подписанный частный договор не заменяют transferencia de dominio в Registro Seccional."
 recommendations:
-  - "Проверьте действующий техосмотр VTV: первый — при достижении 4 лет или ~64 000 км, дальше периодически (чаще с возрастом машины)."
-  - "Для надёжности и запчастей берите массовые марки местной сборки: Volkswagen, Toyota (Hilux), Ford, Renault, Fiat, Chevrolet, Peugeot."
-  - "Заложите в бюджет содержание: страховка (обязательна), patente (ежегодный налог), топливо (относительно недорогое), VTV, парковка/гараж в городе."
-last_verified: "2026-07-04"
-confidence: medium
+  - "Сверьте VIN, номера двигателя и шасси с документами и уточните, нужна ли для конкретного автомобиля verificación física."
+  - "Иностранец без residencia может участвовать в переоформлении с паспортом, но покупателю также нужен CUIL, CUIT или CDI."
+  - "Стоимость оформления рассчитывайте только через действующий калькулятор DNRPA на дату сделки."
+last_verified: "2026-07-17"
+confidence: high
 seo_slug: "pokupka-avtomobilya-v-argentine"
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "Gobierno CABA — trámites de compra/transferencia de vehículo (DNRPA)"
-    url: "https://buenosaires.gob.ar/tramites/verificacion-tecnica-vehicular-obligatoria"
+  - id: dnrpa-transfer-vehicle-title
+    title: "DNRPA — transferencia de dominio автомобиля"
+    url: "https://www.argentina.gob.ar/servicio/hacer-la-transferencia-de-dominio-de-un-auto-moto-o-maquinaria"
     lang: es
     type: official
-    note: "transferencia, форма 08, VTV, cédula verde, требования регистра"
-  - title: "OpenCars — Transferencia de autos en Argentina (guía)"
-    url: "https://www.opencars.com.ar/blog/%F0%9F%93%84-transferencia-de-autos-en-argentina-guia-paso-a-paso-para-compradores-y-vendedores/"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Официальные участники, документы, форма 08 и порядок перехода права."
+  - id: dnrpa-domain-report
+    title: "DNRPA — informe de dominio автомобиля"
+    url: "https://www.argentina.gob.ar/servicio/solicitar-un-informe-de-dominio-del-automotor"
     lang: es
-    type: aggregator
-    note: "пошаговый процесс покупки б/у авто, документы, расходы"
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Содержание официального отчёта о юридическом состоянии автомобиля."
+  - id: dnrpa-services-portal
+    title: "DNRPA — портал реестра автомобилей"
+    url: "https://www.argentina.gob.ar/propiedadautomotor"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Официальные онлайн-сервисы, калькулятор расходов и поиск Registro Seccional."
+claims:
+  - id: domain-report-shows-registered-legal-status
+    text: "Informe de dominio показывает зарегистрированные сведения о месте учёта, залоге, розыске, аресте, ограничениях владельца и характеристиках автомобиля."
+    sensitive: true
+    source_ids: [dnrpa-domain-report]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: transfer-requires-form-eight
+    text: "Переход права при купле-продаже оформляется через transferencia de dominio с обязательной формой 08 и участием сторон либо их представителей."
+    sensitive: true
+    source_ids: [dnrpa-transfer-vehicle-title]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: nonresident-foreigner-can-use-passport
+    text: "Иностранец без residencia может подтвердить личность паспортом; покупателю также требуется CUIL, CUIT или CDI."
+    sensitive: true
+    source_ids: [dnrpa-transfer-vehicle-title]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: signed-form-eight-starts-transfer-deadline
+    text: "После подписания формы 08 официальный сервис устанавливает срок для завершения регистрации перехода права; затягивать процедуру нельзя."
+    sensitive: true
+    source_ids: [dnrpa-transfer-vehicle-title]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
-## Описание
+## До задатка
 
-Автомобиль в Аргентине оправдан для загородной жизни и роуд-трипов (в мегаполисах он скорее обуза). Купить машину иностранцу можно, но оформление отличается от привычного: ключевые этапы — проверка истории авто, техосмотр VTV и официальная передача права (transferencia) в автомобильном реестре. Про аренду и вождение — отдельно в [[arenda-avto-i-vozhdenie|Аренда авто и вождение в Аргентине]].
+Запросите номерной знак и закажите `informe de dominio` через DNRPA. Он показывает юридическое состояние автомобиля по данным реестра: место регистрации, залог, розыск, арест, ограничения владельца и идентификационные сведения.
 
-## Где искать и как проверить
+Отчёт о домене не заменяет техническую диагностику. Отдельно проверьте состояние кузова, двигателя, систем безопасности, действующую RTO/VTV и историю обслуживания. Сверьте номера двигателя и шасси с документами.
 
-- **Где:** площадки объявлений (MercadoLibre, Kavak и др.), автосалоны (concesionarios), частные продавцы.
-- **Проверка истории — обязательна:** закажите **informe de dominio** в Registro de la Propiedad del Automotor (DNRPA). Он показывает долги, штрафы, аресты (embargos) и залоги. Отдельно проверьте отсутствие неоплаченных patente и штрафов.
-- **VTV** (техосмотр): убедитесь, что действующий; он подтверждает исправность и нужен для эксплуатации и продажи.
+## Документы покупателя
 
-## Документы и переход права
+Официальная процедура различает статус иностранца:
 
-Для **transferencia** (переоформления) нужны:
+- без residencia личность можно подтвердить паспортом;
+- при постоянной residencia используется DNI;
+- покупателю в любом случае нужен CUIL, CUIT или CDI в допустимой форме.
 
-- **DNI** покупателя и продавца (иностранцу — с местным налоговым номером CUIT/CDI).
-- **Título** (титул авто) и **cédula verde** (документ на право управления/circulación).
-- **Форма 08** (formulario 08), подписанная обеими сторонами с **заверенными подписями**.
-- **Верификация** (verificación policial) автомобиля.
+Старый совет о том, что турист в принципе не может оформить автомобиль, неверен. На практике до сделки нужно получить подходящий налоговый или идентификационный номер и подтвердить требования выбранного Registro Seccional.
 
-После оформления в реестре покупатель получает **cédula verde** и **título** на своё имя. Часть сборов недавно отменили (выдача cédula/título/номеров и заверение до двух подписей теперь бесплатны); остаётся сбор DNRPA (около 1% для местных авто, 2% для импортных) и гербовый сбор (sellos), различающийся по провинциям.
+## Как переходит право
 
-## Документы для езды
+Transferencia de dominio оформляется в автомобильном реестре. Форма 08 обязательна; её можно предварительно заполнить онлайн. Подписи сторон удостоверяются допустимым способом, а окончательный комплект подаётся в Registro Seccional.
 
-- **Cédula verde** — основной документ владельца/водителя.
-- **Cédula azul** — для тех, кто ездит на чужой машине с разрешения владельца.
-- **VTV** — действующий техосмотр; **seguro** — обязательная страховка.
+Для некоторых автомобилей и ситуаций требуется физическая проверка идентификационных номеров. Официальный сервис перечисляет случаи, когда она обязательна. Не путайте эту проверку с техническим осмотром RTO/VTV.
 
-## Содержание автомобиля
+После подписания формы 08 не откладывайте регистрацию: официальный срок и последствия просрочки указаны в действующей инструкции DNRPA.
 
-- **Страховка (seguro)** — обязательна; тариф зависит от машины и покрытия.
-- **Patente** — ежегодный автомобильный налог (зависит от стоимости и провинции).
-- **Топливо** — относительно недорогое; есть и заправка газом (GNC) как экономия.
-- **VTV** — периодический платный техосмотр.
-- **Парковка/гараж** в крупных городах — заметная статья; на улице в центре сложно.
+## Деньги и безопасность сделки
 
-## Надёжность и марки
+Не используйте фиксированные проценты и суммы из старых статей. Сборы зависят от автомобиля, юрисдикции и состава процедуры. Рассчитайте их в официальном калькуляторе DNRPA перед сделкой.
 
-Для доступности запчастей и сервиса берите массовые марки местной сборки: **Volkswagen, Toyota (популярна Hilux), Ford, Renault, Fiat, Chevrolet, Peugeot**. Импортные премиум-модели дороже в обслуживании.
+Передавайте деньги способом, который оставляет подтверждение. В расписке или договоре укажите автомобиль, стороны, сумму, дату и условия передачи. Если в отчёте есть залог, арест, запрет или несоответствие идентификаторов, остановите сделку и получите профессиональную правовую помощь.
 
-## Факты
+## После регистрации
 
-- Перед покупкой б/у обязателен informe de dominio (долги, аресты, залоги).
-- Переход права — через форму 08 с заверенными подписями в Registro del Automotor.
-- Владельцу выдают cédula verde и título; для управления нужны VTV и страховка.
-- Сбор DNRPA ~1% (местные) / 2% (импорт) + гербовый сбор по провинции.
-- Содержание: страховка, patente, топливо/GNC, VTV, парковка.
-
-## Рекомендации
-
-См. `recommendations` в метаданных.
-
-## Предупреждения
-
-См. `warnings` в метаданных — проверка истории, официальная transferencia, налоговый номер.
-
-## Связанные объекты
-
-- [[arenda-avto-i-vozhdenie|Аренда авто и вождение в Аргентине]] — аренда и вождение (МВУ, ПДД, дороги).
-- [[voditelskie-prava|Вождение и водительские права в Аргентине: туристу и релоканту]] — права и их обмен для резидентов.
-- [[dni-cuil|DNI и CUIL/CUIT в Аргентине: пошагово для иностранца]] — DNI и налоговый номер для регистрации авто.
-- [[bezopasnost-argentina|Безопасность в Аргентине: реальные риски]] — риски при сделках (в т.ч. с авто).
-- [[stoimost-zhizni-ba|Сколько стоит жизнь в Буэнос-Айресе]] — расходы на содержание в общем бюджете.
+Получите подтверждение завершённой transferencia и проверьте цифровые документы. До выезда оформите действующую страховку и убедитесь, что для автомобиля выполнены требования RTO/VTV и к номерным знакам.
 
 ## Источники
 
-- [Gobierno CABA — VTV и трансфер авто (DNRPA)](https://buenosaires.gob.ar/tramites/verificacion-tecnica-vehicular-obligatoria) — процесс, документы.
-- [OpenCars — transferencia пошагово](https://www.opencars.com.ar/blog/%F0%9F%93%84-transferencia-de-autos-en-argentina-guia-paso-a-paso-para-compradores-y-vendedores/) — покупка б/у, расходы.
+- [DNRPA — transferencia de dominio](https://www.argentina.gob.ar/servicio/hacer-la-transferencia-de-dominio-de-un-auto-moto-o-maquinaria)
+- [DNRPA — informe de dominio](https://www.argentina.gob.ar/servicio/solicitar-un-informe-de-dominio-del-automotor)
+- [DNRPA — официальный портал](https://www.argentina.gob.ar/propiedadautomotor)

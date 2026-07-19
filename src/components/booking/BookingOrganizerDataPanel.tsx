@@ -27,6 +27,8 @@ import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import BookingOrganizerInvoicesSection from "@/components/booking/BookingOrganizerInvoicesSection";
 import BookingOrganizerEditModal from "@/components/booking/BookingOrganizerEditModal";
 import { shouldShowBookingInvoices } from "@/lib/booking-payment";
+import { getOrganizerBookingEditAvailability } from "@/lib/booking-organizer-edit-access";
+import { isRemoteBookingsMode } from "@/lib/bookings-api";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
@@ -57,6 +59,7 @@ export default function BookingOrganizerDataPanel({
   const travelersComplete = hasCompleteBookingTravelers(booking);
   const travelersPending = needsBookingTravelersForm(booking);
   const isDraft = currentStatus === "new" || currentStatus === "pending";
+  const editAvailability = getOrganizerBookingEditAvailability(isRemoteBookingsMode());
 
   useEffect(() => {
     if (booking.travelersFormToken) {
@@ -102,14 +105,16 @@ export default function BookingOrganizerDataPanel({
           </h3>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setEditOpen(true)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
-            aria-label="Редактировать параметры бронирования"
-          >
-            <PencilLine className="h-4 w-4" />
-          </button>
+          {editAvailability.canEdit ? (
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+              aria-label="Редактировать параметры бронирования"
+            >
+              <PencilLine className="h-4 w-4" />
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={() => setCollapsed((open) => !open)}
@@ -141,6 +146,12 @@ export default function BookingOrganizerDataPanel({
               {badge.label}
             </span>
           </div>
+
+          {editAvailability.notice ? (
+            <p className="rounded-2xl bg-sky/5 px-4 py-3 text-sm leading-relaxed text-slate ring-1 ring-sky/10">
+              {editAvailability.notice}
+            </p>
+          ) : null}
 
           <div className="rounded-2xl bg-gray-50 px-4 py-3 ring-1 ring-gray-100">
             <DataBlockRow label="Заказчик">
@@ -254,11 +265,13 @@ export default function BookingOrganizerDataPanel({
         </div>
       ) : null}
 
-      <BookingOrganizerEditModal
-        booking={booking}
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-      />
+      {editAvailability.canEdit ? (
+        <BookingOrganizerEditModal
+          booking={booking}
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+        />
+      ) : null}
     </article>
   );
 }

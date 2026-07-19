@@ -20,6 +20,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -55,7 +56,7 @@ export async function POST(request: Request, context: RouteContext) {
 
   const body = (await request.json().catch(() => null)) as BookBody | null;
   if (!body) {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_INVALID_REQUEST"), { status: 400 });
   }
 
   const protection = await verifyGuestFormProtection({
@@ -67,24 +68,24 @@ export async function POST(request: Request, context: RouteContext) {
   if (!protection.ok) {
     if (protection.kind === "configuration") {
       return NextResponse.json(
-        { error: "Booking form protection is not configured." },
+        publicBookingError("BOOKING_VERIFICATION_UNAVAILABLE"),
         { status: 503 },
       );
     }
     return NextResponse.json(
-      { error: "Booking form verification failed." },
+      publicBookingError("BOOKING_VERIFICATION_FAILED"),
       { status: 400 },
     );
   }
 
   if (!(await fetchSiteNavigation()).showExcursions) {
-    return NextResponse.json({ error: "Excursions are temporarily unavailable." }, { status: 404 });
+    return NextResponse.json(publicBookingError("BOOKING_SECTION_UNAVAILABLE"), { status: 404 });
   }
 
   const { slug } = await context.params;
   const excursion = await fetchExcursionDetailServer(slug);
   if (!excursion) {
-    return NextResponse.json({ error: "Excursion not found." }, { status: 404 });
+    return NextResponse.json(publicBookingError("BOOKING_PRODUCT_NOT_FOUND"), { status: 404 });
   }
 
   const date = body.date?.trim();
@@ -96,49 +97,52 @@ export async function POST(request: Request, context: RouteContext) {
   const messageToGuide = body.messageToGuide?.trim();
 
   if (!date || !time || personsCount < 1) {
-    return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_REQUIRED_FIELDS"), { status: 400 });
   }
 
   const hasContactInput = Boolean(name || email || phone);
 
   if (excursion.partner === "platform") {
     return NextResponse.json(
-      { error: "Для собственной экскурсии используйте оформление заявки на сайте." },
+      publicBookingError("BOOKING_USE_SITE_CHECKOUT"),
       { status: 409 }
     );
   }
 
   const parsed = parseExcursionSlug(slug);
-  const affiliateFallback = (provider: "sputnik8" | "tripster", reason: string) =>
-    NextResponse.json({
-      ok: false,
-      mode: "affiliate_fallback",
-      fallbackUrl: `/api/affiliate/go/${slug}`,
-      fallbackReason: reason,
-      error: `${provider === "sputnik8" ? "Sputnik8" : "Tripster"} booking continues on the partner site.`,
-    });
+  const affiliateFallback = (reason: string, status = 200) =>
+    NextResponse.json(
+      {
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl: `/api/affiliate/go/${slug}`,
+        fallbackReason: reason,
+        ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+      },
+      { status },
+    );
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {
     // Sputnik8 is affiliate-only in the product contract. The API route must
     // never turn crafted contact payloads into real partner orders.
-    return affiliateFallback("sputnik8", "affiliate_only");
+    return affiliateFallback("affiliate_only");
   }
 
   // UI hiding is not a security boundary. Keep the server-side feature guard
   // authoritative so direct requests cannot create real External Orders while
   // partner contact collection is disabled.
   if (!ENABLE_PARTNER_CONTACT_FORM || !hasContactInput) {
-    return affiliateFallback("tripster", "contact_on_partner_site");
+    return affiliateFallback("contact_on_partner_site");
   }
 
   if (!isTripsterConfigured() || !isSupabaseConfigured()) {
-    return affiliateFallback("tripster", "api_not_configured");
+    return affiliateFallback("api_not_configured");
   }
 
   const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
   if (!isValidBookingOperationKey(idempotencyKey)) {
     return NextResponse.json(
-      { error: "Для безопасного бронирования повторите отправку формы." },
+      publicBookingError("BOOKING_REQUEST_KEY_INVALID"),
       { status: 400 },
     );
   }
@@ -171,18 +175,18 @@ export async function POST(request: Request, context: RouteContext) {
   }
   if (claim.state === "conflict") {
     return NextResponse.json(
-      { error: "Ключ бронирования уже использован для другой заявки." },
+      publicBookingError("BOOKING_REQUEST_CONFLICT"),
       { status: 409 },
     );
   }
   if (claim.state === "in_progress") {
     return NextResponse.json(
-      { error: "Заявка уже отправляется. Подождите результат." },
+      publicBookingError("BOOKING_REQUEST_IN_PROGRESS"),
       { status: 409, headers: { "Retry-After": "5" } },
     );
   }
   if (claim.state === "unavailable") {
-    return affiliateFallback("tripster", "idempotency_unavailable");
+    return affiliateFallback("idempotency_unavailable");
   }
 
   async function respond(payload: Record<string, unknown>, statusCode = 200) {
@@ -248,25 +252,27 @@ export async function POST(request: Request, context: RouteContext) {
   } catch (error) {
     if (error instanceof TripsterBookingError) {
       if (error.status === 403 || error.status === 401) {
-        return respond({
-          ok: false,
-          mode: "affiliate_fallback",
-          fallbackUrl: `/api/affiliate/go/${slug}`,
-          fallbackReason: "external_orders_unauthorized",
-          error: "External booking API unavailable. Redirecting to partner site.",
-        });
+        return respond(
+          {
+            ok: false,
+            mode: "affiliate_fallback",
+            fallbackUrl: `/api/affiliate/go/${slug}`,
+            fallbackReason: "external_orders_unauthorized",
+            ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+          },
+          error.status,
+        );
       }
 
       return respond(
         {
           ok: false,
-          error: "Booking failed.",
-          details: error.details,
+          ...publicBookingError("BOOKING_PARTNER_REJECTED"),
         },
         error.status >= 400 && error.status < 600 ? error.status : 400,
       );
     }
 
-    return respond({ error: "Booking failed." }, 502);
+    return respond(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), 502);
   }
 }

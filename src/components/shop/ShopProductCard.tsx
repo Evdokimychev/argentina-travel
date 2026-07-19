@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FileText, MessageCircle, ShoppingBag } from "lucide-react";
-import type { ShopProduct } from "@/data/shop-products";
+import { formatShopMoney, type ShopProduct } from "@/types/shop-product";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
 import type { SiteCommerceGlobal } from "@/types/site-globals";
@@ -28,7 +28,7 @@ export default function ShopProductCard({
         <Link href={`/shop/${product.slug}`} className="relative aspect-[4/3] overflow-hidden">
           <Image
             src={product.image}
-            alt={product.title}
+            alt={product.imageAlt}
             fill
             className="object-cover transition-transform duration-300 hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 33vw"
@@ -51,8 +51,7 @@ export default function ShopProductCard({
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
             {settings.showProductPrice ? (
               <span className="font-heading text-xl font-bold text-charcoal">
-                ${product.price}{" "}
-                <span className="text-sm font-normal text-slate">{product.currency}</span>
+                {formatShopMoney(product.priceMinor, product.currency)}
               </span>
             ) : <span />}
             <div className="flex flex-wrap items-center justify-end gap-2">

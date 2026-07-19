@@ -47,7 +47,7 @@ export default function GuestCounter({
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
           aria-label="Уменьшить количество туристов"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-charcoal transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-charcoal transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Minus className="h-4 w-4" />
         </button>
@@ -59,7 +59,7 @@ export default function GuestCounter({
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
           aria-label="Увеличить количество туристов"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus className="h-4 w-4" />
         </button>

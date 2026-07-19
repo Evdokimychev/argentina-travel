@@ -117,11 +117,12 @@ export function ExcursionBookingProvider({
       try {
         const response = await fetch(`/api/excursions/${excursion.slug}/schedule`);
         const data = (await response.json()) as {
-          error?: string;
           dates?: ExcursionScheduleDate[];
           maxPersons?: number;
         };
-        if (!response.ok) throw new Error(data.error ?? "Schedule unavailable");
+        if (!response.ok) {
+          throw new Error("Не удалось загрузить доступные даты. Попробуйте немного позже.");
+        }
         if (cancelled) return;
 
         setScheduleDates(data.dates ?? []);
@@ -130,7 +131,11 @@ export function ExcursionBookingProvider({
         setSelectedTime("");
       } catch (error) {
         if (!cancelled) {
-          setScheduleError(error instanceof Error ? error.message : "Schedule unavailable");
+          setScheduleError(
+            error instanceof Error
+              ? error.message
+              : "Не удалось загрузить доступные даты. Попробуйте немного позже.",
+          );
         }
       } finally {
         if (!cancelled) setScheduleLoading(false);

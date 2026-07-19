@@ -1,0 +1,714 @@
+[
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/bitrix/cache/css/s1/youtravel/page_a298f8ba5307d15c7d512061a542c786/page_a298f8ba5307d15c7d512061a542c786_v1.css?178420617740483"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/bitrix/cache/css/s1/youtravel/template_16f1c4a14796970f667df97ac82b6798/template_16f1c4a14796970f667df97ac82b6798_v1.css?1784206177256656"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://formscdn.dashamail.com/dm-0.2.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://web.webformscr.com/apps/fc3/build/form-animations.css?1783510807986"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://web.webformscr.com/apps/fc3/build/form-defaults.css?1783510807986"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/css/chunk-vendors.1f68ba2f.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/css/chunk-common.83764386.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/css/header.e43e95bb.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/css/auth.59e2a771.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/css/how-it-works.678699eb.css"
+  },
+  {
+    "type": "script",
+    "url": "https://mc.yandex.ru/metrika/tag_phono.js"
+  },
+  {
+    "type": "script",
+    "url": "https://connect.facebook.net/signals/config/645665257610651?v=2.9.357&r=stable&domain=youtravel.me&hme=1179b74563cacb97c6ebae600e40937237ab12824fb84996eee07eca65cabbd4&ex_m=107%2C208%2C158%2C22%2C73%2C74%2C149%2C69%2C68%2C11%2C167%2C93%2C16%2C141%2C130%2C39%2C76%2C81%2C137%2C163%2C169%2C26%2C27%2C28%2C30%2C48%2C150%2C78%2C115%2C18%2C20%2C44%2C40%2C42%2C41%2C86%2C95%2C99%2C113%2C148%2C151%2C46%2C114%2C24%2C21%2C122%2C70%2C36%2C153%2C152%2C154%2C145%2C143%2C25%2C35%2C59%2C112%2C165%2C71%2C17%2C156%2C117%2C84%2C67%2C19%2C88%2C89%2C119%2C87%2C139%2C138%2C142%2C164%2C34%2C49%2C116%2C47%2C8%2C4%2C5%2C7%2C6%2C3%2C94%2C104%2C170%2C175%2C222%2C75%2C235%2C234%2C233%2C23%2C33%2C55%2C106%2C61%2C10%2C64%2C100%2C101%2C102%2C108%2C133%2C31%2C29%2C135%2C136%2C132%2C131%2C159%2C77%2C162%2C160%2C161%2C50%2C60%2C126%2C15%2C166%2C45%2C280%2C281%2C279%2C294%2C310%2C215%2C204%2C62%2C205%2C203%2C313%2C304%2C52%2C216%2C110%2C134%2C83%2C124%2C54%2C123%2C129%2C128%2C58%2C65%2C63%2C155%2C79%2C80%2C118%2C37%2C32%2C53%2C56%2C103%2C168%2C1%2C127%2C14%2C125%2C12%2C2%2C57%2C96%2C66%2C121%2C92%2C91%2C171%2C172%2C97%2C98%2C9%2C105%2C51%2C146%2C90%2C82%2C72%2C120%2C109%2C43%2C147%2C0%2C85%2C140%2C144%2C157%2C38%2C111%2C13%2C173"
+  },
+  {
+    "type": "script",
+    "url": "https://connect.facebook.net/ru_RU/bundle/sdk.js/"
+  },
+  {
+    "type": "script",
+    "url": "https://top-fwz1.mail.ru/js/code.js"
+  },
+  {
+    "type": "script",
+    "url": "https://www.googletagmanager.com/gtag/js?id=G-WV5KSVEY68&cx=c&gtm=4e67g0h2"
+  },
+  {
+    "type": "script",
+    "url": "https://connect.facebook.net/en_US/fbevents.js"
+  },
+  {
+    "type": "script",
+    "url": "https://bitrix.info/ba.js"
+  },
+  {
+    "type": "script",
+    "url": "https://cdn.retailrocket.ru/content/javascript/tracking.js"
+  },
+  {
+    "type": "script",
+    "url": "https://mc.yandex.ru/metrika/tag.js"
+  },
+  {
+    "type": "script",
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-TVS6LRQ"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/src/vendor/sentry/8.55.0/bundle.tracing.replay.min.js"
+  },
+  {
+    "type": "script",
+    "url": "https://web-static.mindbox.ru/js/byendpoint/youtravel.website.js?_=5947958"
+  },
+  {
+    "type": "script",
+    "url": "https://cdn.sendpulse.com/js/push/9ceb2f87b3f8cd1fb4ebdfaf8b2dc1cb_1.js"
+  },
+  {
+    "type": "script",
+    "url": "https://st.hybrid.ai/txsp.js"
+  },
+  {
+    "type": "script",
+    "url": "https://dss.hybrid.ai/Pixel/GetSubstitute?pid=688ca69a810d983ca4be41ee&url=https%3A%2F%2Fyoutravel.me%2Fblog%2F&rf="
+  },
+  {
+    "type": "script",
+    "url": "https://dss.hybrid.ai/Pixel/TrackTp?pid=688ca69a810d983ca4be41ee&url=https%3A%2F%2Fyoutravel.me%2Fblog%2F&rf=&foadh=&gapl=&cs=&pcs=&vcs="
+  },
+  {
+    "type": "script",
+    "url": "https://emd.hybrid.ai/plgt.js?exl=&foadh=&gapl=&cs=&pcs=&vcs="
+  },
+  {
+    "type": "script",
+    "url": "https://web.webformscr.com/apps/fc3/build/default-handler.js"
+  },
+  {
+    "type": "script",
+    "url": "https://web.webformscr.com/apps/fc3/build/spsbuster-libs.js"
+  },
+  {
+    "type": "script",
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.3.6/mobile-detect.min.js"
+  },
+  {
+    "type": "script",
+    "url": "https://unpkg.com/centrifuge@5.0.1/dist/centrifuge.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/main/core/core.min.js?1767675515219752"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/pull/protobuf/protobuf.min.js?176767551676433"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/pull/protobuf/model.min.js?176767551614190"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/main/core/core_promise.min.js?17676755152490"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/rest/client/rest.client.min.js?17676755169240"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/pull/client/pull.client.min.js?176767551648309"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/currency/currency-core/dist/currency-core.bundle.min.js?17676755143755"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/js/currency/core_currency.min.js?1767675514833"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/jslang/jslang.js?lang=ru"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/cache/js/s1/youtravel/template_a8b7b090bbfd4c7fc430b5856c7af971/template_a8b7b090bbfd4c7fc430b5856c7af971_v1.js?1784205774403808"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/bitrix/cache/js/s1/youtravel/page_b5ef5101736fb1fa3ff88250136ebd73/page_b5ef5101736fb1fa3ff88250136ebd73_v1.js?178420617781843"
+  },
+  {
+    "type": "script",
+    "url": "https://api.flocktory.com/v2/loader.js?site_id=4118"
+  },
+  {
+    "type": "script",
+    "url": "https://261520.selcdn.ru/subscribe/popup/generator.js"
+  },
+  {
+    "type": "script",
+    "url": "https://static-login.sendpulse.com/apps/fc3/build/loader.js"
+  },
+  {
+    "type": "script",
+    "url": "https://web.webformscr.com/apps/fc3/build/default-handler.js?1642506959927"
+  },
+  {
+    "type": "script",
+    "url": "https://api.mindbox.ru/scripts/v1/tracker.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/chunk-vendors.8dc3899d.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/index.d8726e63.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/chunk-common.7c945e1c.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/header.a6c081ea.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/auth.42040130.js"
+  },
+  {
+    "type": "script",
+    "url": "https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v5.0&appId=1899920300282530&autoLogAppEvents=1"
+  },
+  {
+    "type": "script",
+    "url": "https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"
+  },
+  {
+    "type": "script",
+    "url": "https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js"
+  },
+  {
+    "type": "script",
+    "url": "https://youtravel.me/local/templates/youtravel/vue-app/dist/js/how-it-works.501e4d09.js"
+  },
+  {
+    "type": "script",
+    "url": "https://web.webformscr.com/apps/fc3/build/loader.js"
+  },
+  {
+    "type": "script",
+    "url": "https://web.webformscr.com/apps/fc3/build/default-handler.js?1607940994942"
+  },
+  {
+    "type": "script",
+    "url": "https://cdn.targetads.io/websdk/v2/index.js"
+  },
+  {
+    "type": "script",
+    "url": "https://privacy-cs.mail.ru/static/sync-loader.js"
+  },
+  {
+    "type": "script",
+    "url": "https://top-fwz1.mail.ru/js/dyn-goal-config.js?ids=3759998"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/static/vendor/fontawesome/webfonts/fa-regular-400.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/static/vendor/fontawesome/webfonts/fa-solid-900.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/montserrat-v18-latin_cyrillic/montserrat-v18-latin_cyrillic-regular.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/montserrat-v18-latin_cyrillic/montserrat-v18-latin_cyrillic-italic.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/montserrat-v18-latin_cyrillic/montserrat-v18-latin_cyrillic-500.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/montserrat-v18-latin_cyrillic/montserrat-v18-latin_cyrillic-600.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/montserrat-v18-latin_cyrillic/montserrat-v18-latin_cyrillic-700.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/roboto-v27-latin_cyrillic/roboto-v27-latin_cyrillic-regular.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/fonts/roboto-v27-latin_cyrillic/roboto-v27-latin_cyrillic-500.woff2"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/6be/6be65a3177422c58f34a811da9787001/e150d8cf9b30e630dd575a5c45f6775d.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/5dd/5dd674e9360013e40800b1fd404fc147/448cc9144f4355f6e2242f23e5a4529c.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/7ef/7efb0ceb26e597c501fe9e0d86636980/4e159bd7e3255abaee7c813d71c09240.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/1b9/1b9e64e72b424ba1d29dd244ef1b1785/934dd21aaa4c4e6ac446778460dad475.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/9f1/9f17479f403d8030e522b2abf66e0070/10d7a35e49cd8dfe265fe1c4c46f2ecf.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/49a/49a7b5a762458994b6166f03483e13d5/dc44dbe2f0a013ad439def88d42c5afe.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/a04/a04f67a272159c27e1d037d1fca29226.png"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/561/56164ce621256ebd39aa7ff9a0af4e0d/6ef9f64119b098f7f23bb22502154443.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/8e2/8e2e378aa5fa0748de47a3e9e43db57a/aa9e873f299d244ae05e36d546bd5bb4.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/5d1/5d13cd54402589ea0f2cb967cb379898/90aea210736d382b0a38f6b7e27bfd58.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/ea5/ea5de720223045a88e7fae45dddd6bca/a5b31d5e80191a8976240e1906f60746.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/0da/0da1d08c8d853c5f698c209e68d8334c/fcf3f6fe3267a0bd26007067900fd224.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/7a1/7a15b21a4a0360abeaab1533ba3a3eb1/2e8ff1c2f17e84c78686b2a91be8eec9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/4f8/4f8fcf9badbc3c8f3b90576a58b25256/cb4751cd9d8a7814a1cf66ff527e060d.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/ea7/ea7f03c461c4c5dc18dbfc60e8ecffca/fed061fb652b26d889e854289b870e57.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/829/hedrgqf5dprn1qx2pl0kfz9o0kre30fa.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/20e/tscetjamq91ujvbreoc1p287ga3l8z2p.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/fdf/v6r599v5qzvcmpzooh6vczu2ufb460ww.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/1ab/d43rywiompr0ao2ujk9svp51slxgygtm.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/119/mypfgj3bm115jqd1f54exm1s3bs519i8.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/226/fyegpdx5rqn603u1g3015oyaw3ncouz3.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/5b4/gn03ine9hapkmqz7fvt6mfjq1ah9kdwr.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/1e7/x7mr4ug2l8t9v2et3da1ypfm3he5uqrw.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/238/r4awi8q8pf529lh33u2g9y1yozsplvhk.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/d38/zp4bkdwk3tl3stxode63oknibxbuasu8.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/5a0/4xa41wtwph3e4a9ncmnehkwga5gjogkb.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/3d0/3q068nh0tl744r8bxfyy6m985jhii6bj.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/d51/donrys5qqf75f2oozhvpyq9a8qjj2s23.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/2ec/9iiuv65bk3jbxkl1s0zmndf1xsae0em3.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/efc/z9h29du8j7l8lc9t0vprn3pn5p6sluyt.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/797/h0zvvbsjzqmzi7zagd7grtpuzmnm59dd.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/eb9/dtnvirchjjnmrt12v4a0h00ebzb2j78k.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/eab/tjoc1i5mw1axovk8excszi6qo17y0ozs.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/13f/30n0qrfnph0avodwa1wpmrxeour05bjt.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/524/obpe8qifak4boe4u3hbc13hdi7lrzeax.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/321/12x3s2j2en0tj7ticpv5tg0js8d1qsbr.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/9a3/jhwis49n6ffts0c4cb60ujog6bt8bgvy.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/da0/70bvhoeg09jyiq84bb2bopdxd9fh234w.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/cfd/16qdythzhcj31ukc8amrx2f290zhvf90.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/281/q2d00lnq5fcp0ma0zjrf3ullb454get1.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/085/sob0b25205r1kmo2ow4y7gwiob1xls4q.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e37/2p09p5ji2jlm1ks0l5hklt8fjbnfj7vj.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/2ec/y01a0h5ucerdt8818dpxj10eippp6vgw.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/10a/4yw3to5a73kbnkx4rq48b39yr6vzzfce.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/f23/4djd7rc80oxd8ak189amf62irk4i7rw2.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/14b/r95m6s5486hhxoqrkir5ufxods3hvlim.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/21c/0wvetu1oe6vz7dts7tnjfxwuyle2yfff.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e3c/6lrzv7za3wmkk50uf3t0xn41sggz2x1x.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/0d5/6me0ep3twzvmtjhkbuzvrnzhqa7345rd.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/7a0/bhpfbyzl6t7j15irsb3nneo3muuj5c2r.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/157/ibdlkmgibhgl9old5wiprv37n8m9y578.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/4ad/0ckox7artwwwwzh3zy7wc3uam34083ni.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/a8d/a8d240050bc9edd602d6ab6655a21735/0c391a414dd1567db3a4d45e9accf8f3.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/bd3/wjzm9mqgyw6s2cd0mo1c86a0a0lq3a6w.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/885/r1f9jgikhh3gd1eaaneo023s51jyy08h.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/337/m0ns0okysr8ao2zyfb82kzp18eliphby.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/17d/p4hx479bu31tmb6ie6u64cyfap2b6ek8.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/da5/xqcck1rf1lq48uxzygo0pvypfcjdy0gd.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/109/30q2xk6z9u7y8zioyo7m5ozc9epkta6u.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/c8c/giq64hv3r9270ofhxok1tz71lnc623sq.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e0b/mvlvsxmz5ghvwug39h7ldswvese25gsq.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/d79/llc5ml2hokpva48slqx9jfncgvp4ojl9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/88a/7jxwtirpvtyxn7iokrkb716x5u3bh0if.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/1af/v0x5p14kx05feigx9i0re9uaps38efc1.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/7dd/p3bc2qcrw26cybxc202rryeo76smmjb7.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/586/tqo1n9d5x1t4yegzb8j8rnch65y1xd61.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/087/ucdznme8c4hhjld540vwap16xgrjyolz.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/fcd/p0gpcs3bgo96twupuya1og4zt12vs117.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/a77/1uty24p5icgp2q8m2n1mk3ei0ykkwa6s.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/92c/xwbf14l4b8uoqzdow7aicjxecdcsdvuv.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/07c/db9c8zzgp4avujzlud1ngwjrypjxxjtb.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/3bb/hodc1v154gmpr89akw2a0fxapjy0j5lv.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e82/hh4fmrt2y8kjfc2rr0weisz09lsyofo7.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/bf6/41iisbigupwvz58xnopuyvk83cjakx7m.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/88d/v1fj8h3sw55n8s915dq5cjx4bhax3vdo.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/204/3ac70w8903y7y0swc7jv3gadm0beoszk.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/4fb/p5dv11n00nlxmr081zqcl4hg23c29tq2.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/169/q9iiq4zmdp2hv9zy3gyo9j9jn5c8n5h2.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/0b2/0b249fa206c0383a23b9d6e8a97ff91c.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e4c/vz5xy71xi9ya08ngy3phi224m3kpz83d.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/518/95s8ae6lkengi23u9wj5h2hiyidyw1na.png"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/a34/520f29qlgwwo2nqpb13y9xp1bjrv08fe.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/584/4728i195vnuxe1h7m0imfswziv8155x2.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/1f8/0k7mdxo2emj7ewxhsip78ygffx98ulx6.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/6d1/i9eyh5arbfd2ohd9hzxsuy0ob4ihd38f.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/5ee/f8q39gecea7cid3r2cyp6a3dvp7iwts9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/499/499946abc7f711468b7109af6d2923e8.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/bf6/bf630d6f25aaf33c3c89a0b6aeb3968c.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/0f6/0f6036b837779836593fbde8f5777efc.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/693/69310392eb9eef34830cce47cfeb5194.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/a4f/a4f2ee90bc1776f68731cdaa841e8a2a.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/f3a/f3a28110252e35dd20d7868e8cd8db0b.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/250/2501ccc7cbf14ed0f490c1a3b0cb9788.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/343/343af5aeaa4f7bcd6fbef4ce383b8441.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/eeb/eeb6e29d76b6e0c6a323908eb50800f3.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/d42/d42540578dc9c77a2c194dba8781c075.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/544/54491852fa8e2661648a88e1086475fa.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/e54/e54a913ffc262559e1b65ea98a001f7a.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/c5e/c5eb19bd1f682d4bdb4bd402fe33da15.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/3c7/3c7377a42758f9524d63a7c3de1b2cf9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/331/3318a0ec6dd2004da7c941c09138cb4a.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/705/7058c2acbeb65c41b5ff8b248ba953e4.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/a9d/yqa0edx01tyokkwixwv1o66w1dlgbu4v.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/72e/pn42pi4tcr5526kp2dc7b9apizm8akst.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-776%2Ch-480/upload/iblock/5e4/scm6yrywog1fj2ei2sqz65lkdc983eft.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/8c1/8c102ba40ae6f2040e32f3383e2f963b/c9ee0d59fb109c7487162b9763973ce9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/i/tours/point.png"
+  },
+  {
+    "type": "image",
+    "url": "https://login.sendpulse.com/files/emailservice/userfiles/8f7f26d4bfb1f32ba4066e531c81f0f07160626/Frame-5-_3_.jpg"
+  }
+]

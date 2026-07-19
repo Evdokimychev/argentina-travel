@@ -159,7 +159,7 @@ async function suggestOpenAiBlogLinks(input: {
         title: post.title,
         href: `/blog/${post.slug}`,
         score: 10,
-        reason: item.reason?.trim() || "Рекомендация ИИ",
+        reason: item.reason?.trim() || "Подходящая связь по смыслу",
         source: "ai",
       });
       if (suggestions.length >= limit) break;

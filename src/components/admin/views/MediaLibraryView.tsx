@@ -13,9 +13,7 @@ import { SafeImage } from "@/components/ui/safe-image";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { mediaUrl } from "@/lib/media-resolver";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
-import type { MediaAsset, MediaCategory, MediaSource } from "@/types/media-asset";
-
-const MANIFEST_PATH = "src/data/media-library/manifest.json";
+import type { MediaAsset, MediaAssetRole, MediaCategory, MediaSource } from "@/types/media-asset";
 
 type MediaResponse = {
   assets?: MediaAsset[];
@@ -45,11 +43,54 @@ function sourceLabel(source: MediaSource): string {
     wikimedia: "Wikimedia",
     wikipedia: "Wikipedia",
     openstreetmap: "OSM",
-    local: "Локально",
+    local: "На сайте",
     instagram: "Instagram",
     "argentina-travel": "Проект",
   };
   return labels[source] ?? source;
+}
+
+function roleLabel(role: MediaAssetRole): string {
+  const labels: Record<MediaAssetRole, string> = {
+    hero: "Главное изображение",
+    gallery: "Галерея",
+    section: "Раздел страницы",
+    content: "Внутри материала",
+    card: "Карточка",
+    background: "Фон",
+    logo: "Логотип",
+    thumbnail: "Миниатюра",
+  };
+  return labels[role];
+}
+
+function categoryLabel(category: string): string {
+  const labels: Record<string, string> = {
+    destination: "Направления",
+    destinations: "Направления",
+    city: "Города",
+    province: "Провинции",
+    "national-park": "Национальные парки",
+    attraction: "Достопримечательности",
+    glacier: "Ледники",
+    waterfall: "Водопады",
+    mountain: "Горы",
+    trekking: "Треккинг",
+    winery: "Винодельни",
+    wildlife: "Животный мир",
+    transport: "Транспорт",
+    immigration: "Переезд",
+    banking: "Банки",
+    "mobile-operators": "Мобильная связь",
+    accommodation: "Проживание",
+    "travel-guide": "Путеводитель",
+    itinerary: "Маршруты",
+    collection: "Подборки",
+    "blog-article": "Статьи блога",
+    family: "Семейные путешествия",
+    place: "Места",
+  };
+  return labels[category] ?? category;
 }
 
 export default function MediaLibraryView() {
@@ -121,7 +162,7 @@ export default function MediaLibraryView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Медиатека"
-          subtitle={`${stats.total} assets · авто-sync manifest после upload`}
+          subtitle={`${stats.total} изображений · новые загрузки добавляются автоматически`}
           actions={
             <div className="flex flex-wrap gap-2">
               <Button
@@ -131,7 +172,7 @@ export default function MediaLibraryView() {
                 onClick={() => void syncManifest()}
               >
                 <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${syncing ? "animate-spin" : ""}`} />
-                Sync manifest
+                Обновить список
                 {(data?.stats?.cmsPendingSync ?? 0) > 0
                   ? ` (${data?.stats?.cmsPendingSync})`
                   : ""}
@@ -161,11 +202,11 @@ export default function MediaLibraryView() {
             <p className="text-2xl font-bold text-charcoal">{stats.total}</p>
           </div>
           <div className={`${cabinetCardClass} p-4`}>
-            <p className="text-xs text-slate">CMS uploads</p>
+            <p className="text-xs text-slate">Загружено вручную</p>
             <p className="text-2xl font-bold text-charcoal">{stats.cmsUploads}</p>
           </div>
           <div className={`${cabinetCardClass} p-4`}>
-            <p className="text-xs text-slate">Stock</p>
+            <p className="text-xs text-slate">Из фотобанков</p>
             <p className="text-2xl font-bold text-charcoal">{stats.stock}</p>
           </div>
           <div className={`${cabinetCardClass} p-4`}>
@@ -175,7 +216,7 @@ export default function MediaLibraryView() {
             </p>
           </div>
           <div className={`${cabinetCardClass} col-span-2 p-4 xl:col-span-1`}>
-            <p className="text-xs text-slate">Pinned</p>
+            <p className="text-xs text-slate">Закреплено</p>
             <p className="text-2xl font-bold text-charcoal">{stats.pinned}</p>
           </div>
         </div>
@@ -185,7 +226,7 @@ export default function MediaLibraryView() {
             onUploaded={(info) => {
               if (info?.manifestSkipped) {
                 setUploadNotice(
-                  "Файл загружен. Manifest не обновлён на сервере — выполните npm run sync-cms-media-manifest локально или в CI."
+                  "Файл загружен и ожидает обновления медиатеки. Нажмите «Синхронизировать» в верхней части страницы."
                 );
               } else {
                 setUploadNotice(null);
@@ -202,7 +243,7 @@ export default function MediaLibraryView() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Поиск по id, alt, автору, pageId…"
+            placeholder="Поиск по названию, описанию, автору или странице…"
             className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
           />
           <NativeSelect
@@ -214,7 +255,7 @@ export default function MediaLibraryView() {
             <option value="unsplash">Unsplash</option>
             <option value="pexels">Pexels</option>
             <option value="wikimedia">Wikimedia</option>
-            <option value="local">Локально</option>
+            <option value="local">На сайте</option>
           </NativeSelect>
           <NativeSelect
             value={category}
@@ -224,16 +265,14 @@ export default function MediaLibraryView() {
             <option value="all">Все категории</option>
             {categories.map((c) => (
               <option key={c} value={c}>
-                {c}
+                {categoryLabel(c)}
               </option>
             ))}
           </NativeSelect>
         </div>
 
         <p className="mb-4 text-sm text-slate">
-          Manifest: <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">{MANIFEST_PATH}</code>
-          {" · "}
-          UI по паттерну <code className="rounded bg-gray-100 px-1">payload-media-gallery</code>
+          Все изображения сайта собраны здесь. Используйте поиск или фильтры, чтобы найти нужный файл.
         </p>
 
         {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
@@ -259,7 +298,7 @@ export default function MediaLibraryView() {
                 </div>
                 <div className="space-y-0.5 p-2">
                   <p className="truncate font-mono text-[10px] text-charcoal">{asset.id}</p>
-                  <p className="truncate text-xs text-slate">{asset.role}</p>
+                  <p className="truncate text-xs text-slate">{roleLabel(asset.role)}</p>
                 </div>
               </button>
             ))}
@@ -270,7 +309,7 @@ export default function MediaLibraryView() {
               <thead>
                 <tr className="border-b border-gray-100 bg-surface-muted/60">
                   <th className="px-3 py-3 font-medium text-charcoal">Превью</th>
-                  <th className="px-3 py-3 font-medium text-charcoal">ID / роль</th>
+                  <th className="px-3 py-3 font-medium text-charcoal">Файл / назначение</th>
                   <th className="px-3 py-3 font-medium text-charcoal">Источник</th>
                   <th className="px-3 py-3 font-medium text-charcoal">Страница</th>
                   <th className="px-3 py-3 font-medium text-charcoal">Путь</th>
@@ -295,9 +334,9 @@ export default function MediaLibraryView() {
                       <td className="px-3 py-2">
                         <p className="font-mono text-xs text-charcoal">{asset.id}</p>
                         <p className="text-xs text-slate">
-                          {asset.role}
+                          {roleLabel(asset.role)}
                           {asset.pinned ? (
-                            <Pin className="ml-1 inline h-3 w-3 text-amber-600" aria-label="pinned" />
+                            <Pin className="ml-1 inline h-3 w-3 text-amber-600" aria-label="Закреплено" />
                           ) : null}
                         </p>
                       </td>
@@ -338,13 +377,11 @@ export default function MediaLibraryView() {
         )}
 
         <p className="mt-6 text-xs text-slate">
-          Stock: <code className="rounded bg-gray-100 px-1">npm run fetch-stock-media</code>
-          {" · "}
-          Аудит: <code className="rounded bg-gray-100 px-1">npm run audit-images</code>
-          {" · "}
+          Для изменения изображений, привязанных к материалам, откройте{" "}
           <Link href="/admin/content/documents" className="text-sky hover:underline">
-            CMS документы
+            редактор материалов
           </Link>
+          .
         </p>
 
         {lightboxIndex !== null ? (

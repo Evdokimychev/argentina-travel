@@ -24,6 +24,10 @@ import {
 import type { DestinationPage } from "@/data/destination-pages";
 import { DESTINATION_REGION_GROUPS } from "@/data/destination-pages";
 import { destinationHref } from "@/lib/destinations";
+import {
+  formatDestinationTaxonomySummary,
+  resolveDestinationTaxonomy,
+} from "@/lib/destination-taxonomy";
 import { getPlaceCoverImage } from "@/lib/media-resolver";
 import { destinationHeroAlt } from "@/lib/media-alt-text";
 import { siteContainerClass } from "@/lib/site-container";
@@ -43,6 +47,7 @@ function DestinationCard({
   dest: DestinationPage;
   featured?: boolean;
 }) {
+  const taxonomy = resolveDestinationTaxonomy(dest);
   return (
     <OverlayCardLink
       href={destinationHref(dest.id)}
@@ -65,6 +70,7 @@ function DestinationCard({
         />
         <div className={overlayGradientClass} />
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+          <OverlayTopPill>{taxonomy.kindLabel}</OverlayTopPill>
           <OverlayTopPill>{dest.regionGroup}</OverlayTopPill>
           {featured ? (
             <span className="inline-flex items-center gap-1 rounded-pill bg-sky/90 px-2.5 py-1 text-[11px] font-medium text-white">
@@ -76,7 +82,7 @@ function DestinationCard({
         <div className={cn("absolute inset-x-0 bottom-0 p-4 text-white sm:p-5", featured && "sm:p-6")}>
           <p className="flex items-center gap-1 text-xs text-white/75">
             <MapPin className="h-3 w-3" aria-hidden />
-            {dest.region}
+            {taxonomy.administrativeArea}
           </p>
           <h2 className={cn("mt-1 font-heading font-bold", featured ? "text-2xl sm:text-3xl" : "text-lg")}>
             {dest.name}
@@ -130,6 +136,7 @@ export default function GeographyHubView({ destinations, places, collections = [
   const rest = destinations.filter((d) => d.id !== featured.id);
   const topPlaces = places.slice(0, 8);
   const placesTotal = places.length;
+  const destinationSummary = formatDestinationTaxonomySummary(destinations);
 
   const grouped = DESTINATION_REGION_GROUPS.map((group) => ({
     label: group,
@@ -139,9 +146,9 @@ export default function GeographyHubView({ destinations, places, collections = [
   return (
     <>
       <Hero
-        eyebrow="Регионы и места"
+        eyebrow="Направления и места"
         title="Куда поехать в Аргентине"
-        subtitle="Регионы — для планирования поездки: сезоны, логистика и туры. Места — справочник парков, городов и достопримечательностей с картой и подборками."
+        subtitle="Направления — города и макрорегионы для планирования поездки. Места — справочник парков, ледников и достопримечательностей с картой и подборками."
         image={getPlaceCoverImage("perito-moreno-glacier")}
         theme="glacier"
         compact
@@ -151,10 +158,10 @@ export default function GeographyHubView({ destinations, places, collections = [
         <div className="grid gap-5 sm:grid-cols-2">
           <ConceptCard
             icon={MapPin}
-            title="Регионы для поездки"
-            description="8 направлений с подробными гидами: как добраться, когда ехать, что посмотреть и какие туры уже есть в каталоге."
+            title="Направления для поездки"
+            description={`${destinationSummary} с подробными гидами: как добраться, когда ехать, что посмотреть и какие туры уже есть в каталоге.`}
             href="/destinations#regions"
-            cta="Смотреть регионы"
+            cta="Смотреть направления"
           />
           <ConceptCard
             icon={Mountain}
@@ -167,7 +174,7 @@ export default function GeographyHubView({ destinations, places, collections = [
 
         <dl className="mt-8 grid grid-cols-2 gap-4 rounded-card border border-border-subtle bg-surface-muted px-5 py-4 sm:grid-cols-4 sm:gap-6 sm:px-6">
           <div>
-            <dt className="text-xs text-slate">Регионов</dt>
+            <dt className="text-xs text-slate">Направлений</dt>
             <dd className="font-heading text-2xl font-bold text-charcoal">{destinations.length}</dd>
           </div>
           <div>
@@ -188,7 +195,7 @@ export default function GeographyHubView({ destinations, places, collections = [
       <section id="seasons" className={cn(siteContainerClass, "pb-12 sm:pb-16")}>
         <div className="mb-6 max-w-2xl">
           <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
-            Когда ехать в каждый регион
+            Когда ехать по направлениям
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-slate">
             Сводная таблица по месяцам: нажмите месяц — увидите лучшие направления, наведите на ячейку —
@@ -212,9 +219,9 @@ export default function GeographyHubView({ destinations, places, collections = [
       <section id="regions" className={cn(siteContainerClass, "pb-12 sm:pb-16")}>
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Регионы</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Направления</h2>
             <p className="mt-1 max-w-2xl text-sm text-slate">
-              Выберите направление — на странице региона найдёте практический гид и ссылки на связанные места.
+              В каталоге {destinationSummary}: тип и административная принадлежность указаны на каждой карточке.
             </p>
           </div>
         </div>

@@ -3,6 +3,7 @@ import type { TourListing } from "@/types";
 import type { Tour, TourStatus } from "@/types/tour";
 import type { TourContentAdminSummary, TourContentStatus } from "@/types/tour-content";
 import { tourToDetail, tourToListing } from "@/lib/tour-mapper";
+import { PRIMARY_PUBLIC_MARKET } from "@/lib/market-context";
 
 const CONTENT_STATUSES: TourContentStatus[] = ["draft", "published", "archived"];
 
@@ -81,6 +82,8 @@ export function rowToAdminSummary(row: TourRow): TourContentAdminSummary {
   const moderationStatus = (row.moderation_status ?? "none") as TourContentAdminSummary["moderationStatus"];
   return {
     id: row.id,
+    marketCode: row.market_code,
+    rowVersion: row.row_version,
     slug: row.slug,
     ownerUserId: row.owner_user_id,
     status: parseContentStatus(row.status),
@@ -106,6 +109,7 @@ export function tourToContentRow(
 
   return {
     id: tour.id,
+    market_code: PRIMARY_PUBLIC_MARKET.id,
     slug: tour.slug,
     owner_user_id: ownerUserId,
     status,
@@ -122,6 +126,7 @@ export function tourToContentRow(
     moderation_notes: null,
     moderated_by: null,
     moderated_at: null,
+    row_version: 1,
     created_at: tour.updatedAt ?? now,
     updated_at: tour.updatedAt ?? now,
   };

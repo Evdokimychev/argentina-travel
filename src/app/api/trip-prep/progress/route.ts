@@ -42,7 +42,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Бронирование не найдено" }, { status: 404 });
   }
 
-  if (!canAccessBooking(booking, sessionUser, sessionUser.email)) {
+  if (!canAccessBooking(booking, sessionUser)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

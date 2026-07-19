@@ -6,7 +6,10 @@ import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbCallout from "@/components/knowledge-base/KbCallout";
 import KbEditorialNotice from "@/components/knowledge-base/KbEditorialNotice";
 import KbFactPanel from "@/components/knowledge-base/KbFactPanel";
-import { KbMediaGallery } from "@/components/knowledge-base/KbMediaGallery";
+import KbProvenance, {
+  buildKbPublicProvenance,
+  isKbSensitiveEntryStrictlyVerified,
+} from "@/components/knowledge-base/KbProvenance";
 import KbRelated from "@/components/knowledge-base/KbRelated";
 import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import KbSources from "@/components/knowledge-base/KbSources";
@@ -34,8 +37,6 @@ import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
 import type { KbEntry } from "@/lib/knowledge-base/types";
 import { entryHref } from "@/lib/knowledge-base/urls";
-import { KB_ID_TO_PLACE } from "@/data/kb-place-id-map";
-import { getPlaceGalleryMedia } from "@/lib/media-resolver";
 import { capBuildStaticParams } from "@/lib/build-static-limits";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import ContentExcursionSection from "@/components/content/ContentExcursionSection";
@@ -77,21 +78,22 @@ const CONFIDENCE_STYLE: Record<string, string> = {
   low: "bg-surface-muted text-slate",
 };
 
-function resolveEntryMedia(entry: KbEntry): KbEntry["media"] {
-  const placeSlug = KB_ID_TO_PLACE[entry.id];
-  if (!placeSlug) return entry.media;
-
-  const localMedia = getPlaceGalleryMedia(placeSlug);
-  if (localMedia.length === 0) return entry.media;
-
-  const images = localMedia.map((image) => ({
-    url: image.src,
-    alt: image.alt,
-    author: image.author,
-    license: image.license,
-    source_page: image.sourceUrl,
-  }));
-  return { hero: images[0], gallery: images.slice(1) };
+function imageCredit(hero: NonNullable<KbEntry["media"]>["hero"]) {
+  if (!hero) return null;
+  const parts = [hero.author, hero.license].filter(Boolean);
+  if (parts.length === 0 && !hero.source_page) return null;
+  const label = parts.join(", ") || "Источник изображения";
+  if (!hero.source_page) return label;
+  return (
+    <a
+      href={hero.source_page}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="underline decoration-slate/30 underline-offset-2 hover:decoration-slate"
+    >
+      {label}
+    </a>
+  );
 }
 
 export default async function KnowledgeArticlePage({ params }: PageProps) {
@@ -104,7 +106,12 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
   const related = getRelated(entry, 6);
   const { prev, next } = getSectionNeighbours(entry);
   const section = getEntrySection(entry);
-  const media = resolveEntryMedia(entry);
+  const hero = entry.media?.hero;
+  const publicProvenance = buildKbPublicProvenance(entry);
+  const maySayVerified = isKbSensitiveEntryStrictlyVerified(entry);
+  const editorialNoticeEntry = maySayVerified
+    ? entry
+    : { ...entry, last_verified: null };
   const contentExcursions = await fetchContentExcursionsServer();
   const excursionMatches = resolveExcursionsForKnowledgeEntry(entry, contentExcursions);
 
@@ -119,15 +126,6 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
       <ContentArticleJsonLd data={buildKbEntryArticleJsonLd(entry)} />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <KbBreadcrumbs items={getBreadcrumbs(entry)} />
-
-        <details className="mt-5 rounded-panel border border-border-subtle bg-surface-elevated p-4 shadow-card lg:hidden">
-          <summary className="cursor-pointer select-none text-sm font-semibold text-foreground marker:text-sky-ink">
-            Разделы базы знаний
-          </summary>
-          <div className="mt-4 border-t border-border-subtle pt-4">
-            <KbSideNav sectionId={section?.id} currentEntryId={entry.id} />
-          </div>
-        </details>
 
         <div className="mt-5 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[15rem_minmax(0,1fr)_14rem]">
           {/* Постоянная навигация базы знаний */}
@@ -146,11 +144,15 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               {entry.confidence && (
                 <span
                   className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-medium ${
-                    CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
+                    entry.confidence === "high" && !maySayVerified
+                      ? CONFIDENCE_STYLE.medium
+                      : CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
                   }`}
                 >
                   {entry.confidence === "high"
-                    ? "Проверено"
+                    ? maySayVerified
+                      ? "Проверено"
+                      : "Проверьте актуальность"
                     : entry.confidence === "medium"
                       ? "Проверяйте актуальность"
                       : "Ориентировочно"}
@@ -158,7 +160,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               )}
               {entry.last_verified && (
                 <span className="text-2xs text-slate">
-                  Обновлено: {entry.last_verified}
+                  Материал обновлён: {entry.last_verified}
                 </span>
               )}
               {entry.status === "stub" && (
@@ -177,9 +179,24 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               </p>
             )}
 
-            <KbEditorialNotice entry={entry} />
+            <KbEditorialNotice entry={editorialNoticeEntry} />
 
-            {media ? <KbMediaGallery media={media} title={entry.title} /> : null}
+            {hero && (
+              <figure className="mt-6">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hero.url}
+                  alt={hero.alt ?? entry.title}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full rounded-panel bg-surface-muted object-cover"
+                />
+                {imageCredit(hero) && (
+                  <figcaption className="mt-1.5 text-xs leading-relaxed text-slate">
+                    Фото: {imageCredit(hero)}
+                  </figcaption>
+                )}
+              </figure>
+            )}
 
             <KbFactPanel entry={entry} />
 
@@ -194,9 +211,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
             <KbCallout variant="recommendation" items={entry.recommendations} />
 
             <div className="mt-4 text-base">
-              {renderMarkdown(entry.body, { validIds })}
+              {renderMarkdown(entry.body, { validIds, provenance: publicProvenance })}
             </div>
 
+            <KbProvenance data={publicProvenance} />
             <KbSources sources={entry.sources} />
 
             {excursionMatches.length > 0 ? (

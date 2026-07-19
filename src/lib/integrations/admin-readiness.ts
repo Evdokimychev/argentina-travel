@@ -1,5 +1,6 @@
 export type IntegrationReadinessStatus =
   | "ready"
+  | "configured"
   | "partial"
   | "missing"
   | "built_in"
@@ -20,6 +21,8 @@ export type IntegrationReadinessItem = {
   /** Safe variable names only. Values and secrets are never returned to the browser. */
   missingVariables?: string[];
   href?: string;
+  verification?: "verified" | "not_run" | "unknown";
+  checkedAt?: string;
 };
 
 function hasEnv(name: string): boolean {
@@ -28,7 +31,7 @@ function hasEnv(name: string): boolean {
 
 function requiredStatus(required: string[]): Pick<IntegrationReadinessItem, "status" | "missingVariables"> {
   const missingVariables = required.filter((name) => !hasEnv(name));
-  if (missingVariables.length === 0) return { status: "ready" };
+  if (missingVariables.length === 0) return { status: "configured" };
   if (missingVariables.length < required.length) return { status: "partial", missingVariables };
   return { status: "missing", missingVariables };
 }
@@ -37,7 +40,12 @@ function item(
   base: Omit<IntegrationReadinessItem, "status" | "missingVariables">,
   required: string[],
 ): IntegrationReadinessItem {
-  return { ...base, ...requiredStatus(required) };
+  const readiness = requiredStatus(required);
+  return {
+    ...base,
+    ...readiness,
+    verification: readiness.status === "configured" ? "not_run" : "unknown",
+  };
 }
 
 export function getIntegrationReadiness(): IntegrationReadinessItem[] {
@@ -118,13 +126,14 @@ export function getIntegrationReadiness(): IntegrationReadinessItem[] {
       id: "youtravel",
       label: "YouTravel",
       group: "marketplace",
-      status: youTravelAuthReady ? (hasEnv("YOUTRAVEL_WEBHOOK_SECRET") ? "ready" : "partial") : "missing",
+      status: youTravelAuthReady ? (hasEnv("YOUTRAVEL_WEBHOOK_SECRET") ? "configured" : "partial") : "missing",
       summary: "Партнёрские туры, заявки и синхронизация статусов бронирований.",
       missingVariables: [
         ...(youTravelAuthReady ? [] : ["YOUTRAVEL_API_KEY или YOUTRAVEL_API_EMAIL + YOUTRAVEL_API_PASSWORD"]),
         ...(hasEnv("YOUTRAVEL_WEBHOOK_SECRET") ? [] : ["YOUTRAVEL_WEBHOOK_SECRET"]),
       ],
       href: "/admin/marketplace/tours",
+      verification: youTravelAuthReady && hasEnv("YOUTRAVEL_WEBHOOK_SECRET") ? "not_run" : "unknown",
     },
     item(
       {
@@ -157,9 +166,9 @@ export function getIntegrationReadiness(): IntegrationReadinessItem[] {
     item(
       {
         id: "openai",
-        label: "AI-функции",
+        label: "Редакционные помощники",
         group: "marketing",
-        summary: "Подбор туров и редакционные помощники. Ключ хранится только на сервере.",
+        summary: "Дополнительные подсказки для подбора туров и подготовки материалов.",
       },
       ["OPENAI_API_KEY"],
     ),
@@ -168,6 +177,7 @@ export function getIntegrationReadiness(): IntegrationReadinessItem[] {
       label: "Базовая защита форм",
       group: "marketing",
       status: "built_in",
+      verification: "verified",
       summary: "Ограничение частоты запросов уже действует для контактов, подписки и заявок организаторов.",
     },
     item(

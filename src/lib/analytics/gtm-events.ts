@@ -186,7 +186,8 @@ export function trackTourView(input: {
   priceUsd?: number;
   organizerId?: string;
 }): void {
-  trackGtmEvent(GTM_EVENTS.tourView, {
+  if (!hasAnalyticsConsent()) return;
+  const payload = createAnalyticsEventPayload({
     product_type: "tour",
     product_id: input.slug,
     item_id: input.slug,
@@ -196,6 +197,25 @@ export function trackTourView(input: {
     currency: "USD",
     organizer_id: input.organizerId,
   });
+  pushDataLayer({ ...payload, event: GTM_EVENTS.tourView });
+  if (typeof fetch !== "function") return;
+  void fetch("/api/analytics/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+    body: JSON.stringify({
+      eventType: "tour_view",
+      eventId: payload.event_id,
+      sessionId: payload.session_id,
+      tourSlug: input.slug,
+      tourId: input.slug,
+      metadata: {
+        product_type: "tour",
+        source: "tour_detail",
+        event_version: payload.event_version,
+      },
+    }),
+  }).catch(() => undefined);
 }
 
 export function trackExcursionView(input: {

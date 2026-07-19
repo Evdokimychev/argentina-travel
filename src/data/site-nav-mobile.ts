@@ -12,7 +12,6 @@ import {
   Sparkles,
   Wrench,
 } from "lucide-react";
-import { SITE_NAV_MOBILE_SECTIONS } from "@/data/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
 /** Visual groups for the mobile drawer — every mobile section appears exactly once. */
@@ -70,7 +69,7 @@ export function getSiteNavSectionIcon(sectionId: string): LucideIcon {
 }
 
 export function buildMobileNavGroups(
-  sections: SiteNavSection[] = SITE_NAV_MOBILE_SECTIONS,
+  sections: SiteNavSection[],
 ): Array<
   SiteNavMobileGroup & { sections: SiteNavSection[] }
 > {
@@ -85,9 +84,9 @@ export function buildMobileNavGroups(
 }
 
 /** Guard: all non-home sections must appear in a mobile group. */
-export function assertMobileNavCoverage(): void {
+export function assertMobileNavCoverage(sections: SiteNavSection[]): void {
   const grouped = new Set(SITE_NAV_MOBILE_GROUPS.flatMap((group) => group.sectionIds));
-  for (const section of SITE_NAV_MOBILE_SECTIONS) {
+  for (const section of sections) {
     if (!grouped.has(section.id)) {
       throw new Error(`Mobile nav group missing section: ${section.id}`);
     }

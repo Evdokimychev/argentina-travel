@@ -4,6 +4,8 @@ export type OrganizerNavId =
   | "dashboard"
   | "analytics"
   | "tours"
+  | "apartments"
+  | "mobility"
   | "articles"
   | "bookings"
   | "groupTrips"
@@ -22,6 +24,8 @@ export const ORGANIZER_NAV_ITEMS: OrganizerNavItem[] = [
   { id: "dashboard", label: "Обзор", href: "/organizer" },
   { id: "analytics", label: "Аналитика", href: "/organizer/analytics" },
   { id: "tours", label: "Туры и экскурсии", href: "/organizer/tours" },
+  { id: "apartments", label: "Апартаменты", href: "/organizer/apartments" },
+  { id: "mobility", label: "Авто и трансферы", href: "/organizer/mobility" },
   { id: "articles", label: "Мои статьи", href: "/organizer/articles" },
   { id: "bookings", label: "Заявки", href: "/organizer/bookings" },
   { id: "groupTrips", label: "Наборы группы", href: "/organizer/group-trips" },

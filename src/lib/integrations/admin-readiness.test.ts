@@ -9,7 +9,7 @@ describe("getIntegrationReadiness", () => {
     vi.stubEnv("STRIPE_WEBHOOK_SECRET", "whsec_do_not_expose");
 
     const readiness = getIntegrationReadiness();
-    expect(readiness.find((entry) => entry.id === "stripe")?.status).toBe("ready");
+    expect(readiness.find((entry) => entry.id === "stripe")?.status).toBe("configured");
     expect(JSON.stringify(readiness)).not.toContain("sk_do_not_expose");
     expect(JSON.stringify(readiness)).not.toContain("whsec_do_not_expose");
   });
@@ -36,10 +36,10 @@ describe("getIntegrationReadiness", () => {
     expect(readiness.find((entry) => entry.id === "captcha")?.status).toBe("missing");
   });
 
-  it("reports Turnstile ready only when both public and secret keys exist", () => {
+  it("reports Turnstile as configured but unverified when both keys exist", () => {
     vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "public-key");
     vi.stubEnv("TURNSTILE_SECRET_KEY", "secret-key");
 
-    expect(getIntegrationReadiness().find((entry) => entry.id === "captcha")?.status).toBe("ready");
+    expect(getIntegrationReadiness().find((entry) => entry.id === "captcha")?.status).toBe("configured");
   });
 });

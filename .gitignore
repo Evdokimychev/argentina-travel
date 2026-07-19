@@ -11,10 +11,14 @@
 # testing
 /coverage
 /test-results/
+/playwright-report/
 
 # next.js
 /.next/
 /.next-production/
+/.next-debug/
+/.next-editorial/
+/.next-kb-audit/
 /out/
 
 # production
@@ -23,6 +27,7 @@
 # misc
 .DS_Store
 .cache/
+__pycache__/
 *.pem
 
 # debug
@@ -37,6 +42,7 @@ yarn-error.log*
 
 # ops artifacts (backups local only; audit log may be committed from CI)
 /var/backups/
+/var/restore-rehearsal/
 /var/ops/backup-last.json
 /var/ops/cron-last.json
 /var/ops/old-database-url.txt
@@ -53,6 +59,3 @@ next-env.d.ts
 
 # Supabase CLI local metadata (never commit project links or branch state)
 /supabase/.temp/
-
-# Local third-party UX research artifacts (HTML, screenshots, DOM snapshots)
-/research/third-party/

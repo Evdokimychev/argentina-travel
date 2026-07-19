@@ -93,11 +93,13 @@ function TopicTeaserList({
 }
 
 type ImmigrationHubViewProps = {
+  /** Resolved on the server so the client graph never imports the full media manifest. */
+  heroImage: string;
   /** Server-rendered flight teaser — must not be imported from this client module. */
   flightHint?: ReactNode;
 };
 
-export default function ImmigrationHubView({ flightHint }: ImmigrationHubViewProps) {
+export default function ImmigrationHubView({ heroImage, flightHint }: ImmigrationHubViewProps) {
   const { t } = useLocaleCurrency();
   const hub = IMMIGRATION_HUB;
   const path = "/immigration";
@@ -112,7 +114,7 @@ export default function ImmigrationHubView({ flightHint }: ImmigrationHubViewPro
       <HubHero
         title={heroTitle}
         subtitle={heroSubtitle}
-        image={hub.heroImage}
+        image={heroImage}
         eyebrow={{ label: t("immigration.hub.hero.eyebrow") }}
         ctas={hub.heroCtas}
       />

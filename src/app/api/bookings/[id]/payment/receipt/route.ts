@@ -29,7 +29,7 @@ export async function GET(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    if (!canAccessBooking(booking, sessionUser, sessionUser.email)) {
+    if (!canAccessBooking(booking, sessionUser)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

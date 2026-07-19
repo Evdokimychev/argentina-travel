@@ -6,12 +6,45 @@ import { NORTHWEST_EDITORIAL } from "./northwest";
 import { PATAGONIA_EDITORIAL } from "./patagonia";
 import type { EditorialOverride } from "./types";
 
+function quarantineLegacyOverrides(
+  overrides: Record<string, EditorialOverride>,
+  publicationBlockReason: string,
+): Record<string, EditorialOverride> {
+  return Object.fromEntries(
+    Object.entries(overrides).map(([slug, override]) => [
+      slug,
+      override.publicationReady === true
+        ? override
+        : {
+            ...override,
+            publicationReady: false,
+            publicationBlockReason: override.publicationBlockReason ?? publicationBlockReason,
+          },
+    ]),
+  );
+}
+
 export const EDITORIAL_OVERRIDES: Record<string, EditorialOverride> = {
-  ...PATAGONIA_EDITORIAL,
-  ...MONEY_EDITORIAL,
-  ...BUENOS_AIRES_EDITORIAL,
-  ...IGUAZU_EDITORIAL,
-  ...NORTHWEST_EDITORIAL,
+  ...quarantineLegacyOverrides(
+    PATAGONIA_EDITORIAL,
+    "Legacy override contains unverified dynamic price, schedule, seasonality, safety, or pseudo-source claims.",
+  ),
+  ...quarantineLegacyOverrides(
+    MONEY_EDITORIAL,
+    "Financial override contains unverified dynamic rates or prices and unsafe exchange or payment guidance.",
+  ),
+  ...quarantineLegacyOverrides(
+    BUENOS_AIRES_EDITORIAL,
+    "Legacy override contains unverified dynamic price, schedule, seasonality, or safety claims.",
+  ),
+  ...quarantineLegacyOverrides(
+    IGUAZU_EDITORIAL,
+    "Legacy override contains unverified admission, schedule, seasonality, or safety claims.",
+  ),
+  ...quarantineLegacyOverrides(
+    NORTHWEST_EDITORIAL,
+    "Legacy override contains unverified road, schedule, seasonality, or safety claims.",
+  ),
 };
 
 export function getEditorialOverride(slug: string): EditorialOverride | undefined {

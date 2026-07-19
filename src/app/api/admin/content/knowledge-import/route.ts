@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
+import { clientIpFromRequest } from "@/lib/admin/audit";
+import { cmsMutationHttpStatus, importCmsDocumentsAtomic, listCmsDocuments } from "@/lib/cms/content-server";
 import { parseKnowledgePackage } from "@/lib/cms/knowledge-import";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAllEntries } from "@/lib/knowledge-base/content";
@@ -11,7 +11,12 @@ type RequestBody = {
   action?: "preview" | "import" | "import_static";
   package?: unknown;
   selectedIds?: string[];
+  operationId?: string;
 };
+
+function validOperationId(value: unknown): value is string {
+  return typeof value === "string" && /^[a-zA-Z0-9][a-zA-Z0-9:_-]{15,199}$/.test(value);
+}
 
 function staticPreviewItem(entry: KbEntry, existingIds: Set<string>) {
   const cmsId = `knowledge:${entry.id}:ru`;
@@ -62,6 +67,9 @@ export async function POST(request: Request) {
   }
 
   if (requestBody.action === "import_static") {
+    if (!validOperationId(requestBody.operationId)) {
+      return NextResponse.json({ error: "Повторите импорт: не удалось создать идентификатор операции" }, { status: 400 });
+    }
     const selectedIds = new Set(
       Array.isArray(requestBody.selectedIds)
         ? requestBody.selectedIds.filter((id): id is string => typeof id === "string").slice(0, 100)
@@ -72,26 +80,16 @@ export async function POST(request: Request) {
     }
 
     const supabase = createSupabaseAdminClient();
-    const existing = await listCmsDocuments(supabase, { docType: "knowledge" });
-    const existingIds = new Set(existing.map((document) => document.id));
-    const created: Array<{ id: string; title: string }> = [];
-    const skipped: Array<{ id: string; reason: string }> = [];
-
-    for (const entry of getAllEntries()) {
-      if (!selectedIds.has(entry.id)) continue;
-      const cmsId = `knowledge:${entry.id}:ru`;
-      if (existingIds.has(cmsId)) {
-        skipped.push({ id: entry.id, reason: "already_imported" });
-        continue;
-      }
-
-      const result = await createCmsDocument(supabase, {
-        docType: "knowledge",
+    const items = getAllEntries()
+      .filter((entry) => selectedIds.has(entry.id))
+      .map((entry) => ({
+        sourceId: entry.id,
+        docType: "knowledge" as const,
         slug: entry.id,
         locale: "ru",
         title: entry.title,
         body: {
-          kind: "blog",
+          kind: "blog" as const,
           excerpt: entry.summary,
           content: entry.body,
           sections: [{ title: "Основной текст", body: entry.body }],
@@ -118,30 +116,22 @@ export async function POST(request: Request) {
           description: entry.summary,
           noIndex: true,
         },
-        status: "draft",
-        actorId: auth.actorId,
-      });
-      if ("error" in result) {
-        skipped.push({ id: entry.id, reason: result.error });
-        continue;
-      }
-      existingIds.add(result.document.id);
-      created.push({ id: result.document.id, title: result.document.title });
-    }
-
-    await writeAdminAuditLog({
-      actorUserId: auth.actorId,
-      action: "cms.knowledge_import_static",
-      entityType: "content_document",
-      payload: { selected: selectedIds.size, created: created.length, skipped: skipped.length },
+      }));
+    const result = await importCmsDocumentsAtomic(supabase, {
+      operationId: requestBody.operationId,
+      items,
+      actorId: auth.actorId,
       ipAddress: clientIpFromRequest(request),
     });
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error, code: result.code }, { status: cmsMutationHttpStatus(result.code) });
+    }
 
     return NextResponse.json({
-      ok: skipped.length === 0,
-      created,
-      skipped,
-      message: `Создано черновиков: ${created.length}`,
+      ...result,
+      message: result.replayed
+        ? `Повторный запрос подтверждён: черновиков ${result.created.length}`
+        : `Создано черновиков: ${result.created.length}`,
     });
   }
 
@@ -194,56 +184,36 @@ export async function POST(request: Request) {
   if (selectedIds.size === 0) {
     return NextResponse.json({ error: "Не выбраны материалы для импорта" }, { status: 400 });
   }
+  if (!validOperationId(requestBody.operationId)) {
+    return NextResponse.json({ error: "Повторите импорт: не удалось создать идентификатор операции" }, { status: 400 });
+  }
 
-  const created: Array<{ id: string; title: string }> = [];
-  const skipped: Array<{ id: string; reason: string }> = [];
-  for (const candidate of parsed.value.candidates) {
-    if (!selectedIds.has(candidate.id)) continue;
-
-    const cmsId = `knowledge:${candidate.slug}:${candidate.locale}`;
-    if (existingIds.has(cmsId)) {
-      skipped.push({ id: candidate.id, reason: "already_imported" });
-      continue;
-    }
-
-    const result = await createCmsDocument(supabase, {
-      docType: "knowledge",
+  const items = parsed.value.candidates
+    .filter((candidate) => selectedIds.has(candidate.id))
+    .map((candidate) => ({
+      sourceId: candidate.id,
+      docType: "knowledge" as const,
       slug: candidate.slug,
       locale: candidate.locale,
       title: candidate.title,
       body: candidate.body,
       seo: candidate.seo,
-      status: "draft",
-      actorId: auth.actorId,
-    });
-    if ("error" in result) {
-      skipped.push({ id: candidate.id, reason: result.error });
-      continue;
-    }
-
-    existingIds.add(result.document.id);
-    created.push({ id: result.document.id, title: result.document.title });
-  }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.knowledge_import",
-    entityType: "content_document",
-    payload: {
-      exportId: parsed.value.exportId,
-      selected: selectedIds.size,
-      created: created.length,
-      skipped: skipped.length,
-      validationErrors: parsed.errors.length,
-    },
+    }));
+  const result = await importCmsDocumentsAtomic(supabase, {
+    operationId: requestBody.operationId,
+    items,
+    actorId: auth.actorId,
     ipAddress: clientIpFromRequest(request),
   });
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error, code: result.code }, { status: cmsMutationHttpStatus(result.code) });
+  }
 
   return NextResponse.json({
-    ok: skipped.length === 0,
-    created,
-    skipped,
+    ...result,
     validationErrors: parsed.errors,
-    message: `Создано черновиков: ${created.length}`,
+    message: result.replayed
+      ? `Повторный запрос подтверждён: черновиков ${result.created.length}`
+      : `Создано черновиков: ${result.created.length}`,
   });
 }

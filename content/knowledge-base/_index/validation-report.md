@@ -1,22 +1,25 @@
 # Отчёт валидации базы знаний
 
-Сгенерировано: 2026-07-15 19:16
+Сгенерировано: 2026-07-17 00:00
 
 Всего валидных записей: **689**
 Проблемных файлов: **0**
 Дублей id: **0**
 Форвард-ссылок / потенциальных опечаток в related: **0**
 Битых [[вики-ссылок]] в телах: **0**
-Осиротевших записей (0 входящих ссылок): **145**
+Осиротевших записей (0 входящих ссылок): **161**
 Записей `site_ready: true` без hero-фото: **20**
 Коротких опубликованных записей (<120 слов): **134**
 Гео-заголовков без русской адаптации: **202**
 Шаблонных импортных текстов INPROTUR: **0**
-Чувствительных опубликованных материалов: **119**
+Чувствительных опубликованных материалов: **115**
 Чувствительных материалов без источников: **27**
+Чувствительных кандидатов публичного gate: **63**
+Кандидатов, готовых по строгой claim-level проверке: **63/63**
+Строгий сигнал редакционной готовности: **PASS**
 Материалов с наступившей плановой перепроверкой: **0**
 Материалов с низкой уверенностью: **3**
-Материалов, требующих редакционного внимания: **30**
+Материалов, требующих редакционного внимания: **47**
 
 ## По типам
 
@@ -30,9 +33,16 @@
 - `route`: 7
 - `transport`: 11
 
+## Claim-level происхождение фактов
+
+Генератор работает в режиме `strict` и завершится ошибкой при редакционном долге.
+
+- Нарушений нет.
+
 ## Осиротевшие записи (никто не ссылается — стоит добавить входящую ссылку)
 
 - `centros-de-esqui-en-neuquen` (attraction, dostoprimechatelnosti/centros-de-esqui-en-neuquen.md)
+- `chto-takoe-dni-i-cuil` (faq, faq/chto-takoe-dni-i-cuil.md)
 - `circuito-de-cervecerias-en-rosario` (attraction, dostoprimechatelnosti/circuito-de-cervecerias-en-rosario.md)
 - `circuito-gastronomico-en-el-rio-parana` (attraction, dostoprimechatelnosti/circuito-gastronomico-en-el-rio-parana.md)
 - `corredor-del-viento` (attraction, dostoprimechatelnosti/corredor-del-viento.md)
@@ -41,6 +51,7 @@
 - `deportes-extremos-en-paso-de-la-patria` (attraction, dostoprimechatelnosti/deportes-extremos-en-paso-de-la-patria.md)
 - `dinosaurios-de-la-patagonia` (attraction, dostoprimechatelnosti/dinosaurios-de-la-patagonia.md)
 - `dinosaurios-en-neuquen` (attraction, dostoprimechatelnosti/dinosaurios-en-neuquen.md)
+- `dni-cuil-cuit-putanitsa` (author_tip, lichnyy-opyt/dni-cuil-cuit-putanitsa.md)
 - `empedrado-y-el-carrizal` (attraction, dostoprimechatelnosti/empedrado-y-el-carrizal.md)
 - `epuyen` (attraction, dostoprimechatelnosti/epuyen.md)
 - `esquina` (attraction, dostoprimechatelnosti/esquina.md)
@@ -60,6 +71,7 @@
 - `gastronomia-en-santa-fe` (attraction, dostoprimechatelnosti/gastronomia-en-santa-fe.md)
 - `general-acha` (attraction, dostoprimechatelnosti/general-acha.md)
 - `golf-en-mendoza` (attraction, dostoprimechatelnosti/golf-en-mendoza.md)
+- `govoryat-li-v-argentine-po-anglijski` (faq, faq/govoryat-li-v-argentine-po-anglijski.md)
 - `herradura` (attraction, dostoprimechatelnosti/herradura.md)
 - `intendente-alvear` (attraction, dostoprimechatelnosti/intendente-alvear.md)
 - `isla-del-cerrito` (attraction, dostoprimechatelnosti/isla-del-cerrito.md)
@@ -71,7 +83,11 @@
 - `juan-jose-castelli` (attraction, dostoprimechatelnosti/juan-jose-castelli.md)
 - `jujuy-en-bicicleta` (attraction, dostoprimechatelnosti/jujuy-en-bicicleta.md)
 - `junin-de-los-andes` (attraction, dostoprimechatelnosti/junin-de-los-andes.md)
+- `kak-perevezti-kota-ili-sobaku` (faq, faq/kak-perevezti-kota-ili-sobaku.md)
+- `kakie-rajony-ba-izbegat` (faq, faq/kakie-rajony-ba-izbegat.md)
+- `kakoj-dohod-nuzhen-dlya-rantye` (faq, faq/kakoj-dohod-nuzhen-dlya-rantye.md)
 - `kayak-en-el-parana` (attraction, dostoprimechatelnosti/kayak-en-el-parana.md)
+- `kogda-uchebnyj-god-v-argentine` (faq, faq/kogda-uchebnyj-god-v-argentine.md)
 - `legado-jesuita-en-cordoba` (attraction, dostoprimechatelnosti/legado-jesuita-en-cordoba.md)
 - `maimara` (attraction, dostoprimechatelnosti/maimara.md)
 - `malargue` (attraction, dostoprimechatelnosti/malargue.md)
@@ -82,12 +98,16 @@
 - `montanismo-en-jujuy` (attraction, dostoprimechatelnosti/montanismo-en-jujuy.md)
 - `monte-olivia-y-glaciar-de-agostini` (attraction, dostoprimechatelnosti/monte-olivia-y-glaciar-de-agostini.md)
 - `mountain-bike-en-piedra-del-aguila` (attraction, dostoprimechatelnosti/mountain-bike-en-piedra-del-aguila.md)
+- `mozhno-li-rabotat-na-mestnuyu-kompaniyu` (faq, faq/mozhno-li-rabotat-na-mestnuyu-kompaniyu.md)
+- `mozhno-li-uchitsya-v-universitete-besplatno` (faq, faq/mozhno-li-uchitsya-v-universitete-besplatno.md)
 - `museo-de-arqueologia-de-alta-montana` (attraction, dostoprimechatelnosti/museo-de-arqueologia-de-alta-montana.md)
 - `museos-de-salta` (attraction, dostoprimechatelnosti/museos-de-salta.md)
 - `navegacion-en-tierra-del-fuego` (attraction, dostoprimechatelnosti/navegacion-en-tierra-del-fuego.md)
 - `navegacion-entre-glaciares` (attraction, dostoprimechatelnosti/navegacion-entre-glaciares.md)
 - `nevado-de-chani` (attraction, dostoprimechatelnosti/nevado-de-chani.md)
 - `nueva-cordoba` (attraction, dostoprimechatelnosti/nueva-cordoba.md)
+- `nuzhen-li-4x4-ruta-40` (faq, faq/nuzhen-li-4x4-ruta-40.md)
+- `nuzhna-li-viza-cifrovomu-kochevniku` (faq, faq/nuzhna-li-viza-cifrovomu-kochevniku.md)
 - `obera` (attraction, dostoprimechatelnosti/obera.md)
 - `parapente-en-cerro-san-javier` (attraction, dostoprimechatelnosti/parapente-en-cerro-san-javier.md)
 - `parque-general-san-martin` (attraction, dostoprimechatelnosti/parque-general-san-martin.md)
@@ -126,6 +146,7 @@
 - `rafting-en-el-rio-manso` (attraction, dostoprimechatelnosti/rafting-en-el-rio-manso.md)
 - `red-de-refugios-de-montana` (attraction, dostoprimechatelnosti/red-de-refugios-de-montana.md)
 - `ria-de-bahia-blanca` (attraction, dostoprimechatelnosti/ria-de-bahia-blanca.md)
+- `rody-v-argentine` (faq, faq/rody-v-argentine.md)
 - `roque-saenz-pena` (attraction, dostoprimechatelnosti/roque-saenz-pena.md)
 - `ruta-40-en-santa-cruz` (attraction, dostoprimechatelnosti/ruta-40-en-santa-cruz.md)
 - `ruta-azul` (attraction, dostoprimechatelnosti/ruta-azul.md)
@@ -147,6 +168,8 @@
 - `seclantas` (attraction, dostoprimechatelnosti/seclantas.md)
 - `senderismo-con-llamas-en-jujuy` (attraction, dostoprimechatelnosti/senderismo-con-llamas-en-jujuy.md)
 - `senderos-periurbanos-de-esquel` (attraction, dostoprimechatelnosti/senderos-periurbanos-de-esquel.md)
+- `skolko-letet-iz-rossii` (faq, faq/skolko-letet-iz-rossii.md)
+- `skolko-stoit-oformit-vnzh` (faq, faq/skolko-stoit-oformit-vnzh.md)
 - `tafi-viejo` (attraction, dostoprimechatelnosti/tafi-viejo.md)
 - `tastil-y-santa-rosa-de-tastil` (attraction, dostoprimechatelnosti/tastil-y-santa-rosa-de-tastil.md)
 - `temporada-de-orcas-en-peninsula-valdes` (attraction, dostoprimechatelnosti/temporada-de-orcas-en-peninsula-valdes.md)
@@ -175,6 +198,8 @@
 - `vinos-de-san-juan` (attraction, dostoprimechatelnosti/vinos-de-san-juan.md)
 - `vinos-de-tolombon` (attraction, dostoprimechatelnosti/vinos-de-tolombon.md)
 - `vinos-del-valle-patagonico` (attraction, dostoprimechatelnosti/vinos-del-valle-patagonico.md)
+- `viza-cifrovogo-kochevnika-chto-daet` (faq, faq/viza-cifrovogo-kochevnika-chto-daet.md)
+- `viza-kochevnika-ne-vnzh` (author_tip, lichnyy-opyt/viza-kochevnika-ne-vnzh.md)
 - `yapeyu` (attraction, dostoprimechatelnosti/yapeyu.md)
 - `yungas-tucumanas` (attraction, dostoprimechatelnosti/yungas-tucumanas.md)
 
@@ -401,6 +426,6 @@
 
 ## Редакционный контроль: низкая уверенность
 
-- `argentina-vs-drugie-strany` (guide, pereezd/argentina-vs-drugie-strany.md) — Аргентина или другая страна: честное сравнение для переезда
 - `dostupnaya-sreda-i-invalidnost` (guide, puteshestvie/dostupnaya-sreda-i-invalidnost.md) — Доступная среда: путешествие и жизнь с инвалидностью в Аргентине
-- `voinskij-uchet-i-voennyj-bilet` (guide, pereezd/voinskij-uchet-i-voennyj-bilet.md) — Воинский учёт и военный билет при переезде в Аргентину
+- `falshivye-policejskie-i-obmenniki` (author_tip, lichnyy-opyt/falshivye-policejskie-i-obmenniki.md) — Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться
+- `voinskij-uchet-i-voennyj-bilet` (guide, pereezd/voinskij-uchet-i-voennyj-bilet.md) — Воинский учёт и переезд в Аргентину

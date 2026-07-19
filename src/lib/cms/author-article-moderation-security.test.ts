@@ -10,17 +10,20 @@ describe("author article moderation security", () => {
       path.join(root, "src/app/api/organizer/articles/[id]/submit/route.ts"),
       "utf8",
     );
-    const moderationServer = fs.readFileSync(
-      path.join(root, "src/lib/admin/moderation-server.ts"),
+    const moderationMigration = fs.readFileSync(
+      path.join(
+        root,
+        "supabase/migrations/20260717050000_general_moderation_atomic_workflow.sql",
+      ),
       "utf8",
     );
 
     expect(submitRoute).toContain("submittedRevisionId: submittedRevision.id");
-    expect(moderationServer).toContain('metadataString(item.metadata, "submittedRevisionId")');
-    expect(moderationServer).toContain("getCmsRevisionById");
-    expect(moderationServer).toContain("title: revision.title");
-    expect(moderationServer.indexOf("updateCmsDocument")).toBeLessThan(
-      moderationServer.indexOf('status: resolvedStatus'),
+    expect(moderationMigration).toContain("queue_hint.metadata->>'submittedRevisionId'");
+    expect(moderationMigration).toContain("and document_id = document_row.id for update");
+    expect(moderationMigration).toContain("p_operation => case when p_action = 'approve' then 'restore_publish'");
+    expect(moderationMigration.indexOf("public.cms_mutate_document_atomic")).toBeLessThan(
+      moderationMigration.indexOf("update public.moderation_queue", moderationMigration.indexOf("public.cms_mutate_document_atomic")),
     );
   });
 

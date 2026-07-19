@@ -20,6 +20,14 @@ import {
 import { resolveOrganizerExperienceStat } from "@/lib/organizer-experience";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
 import { formatTours } from "@/lib/pluralize";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
+
+export {
+  buildOrganizerCatalogHref,
+  buildOrganizerPublicHref,
+  getOrganizerSlug,
+  resolveListingOwnerUserId,
+} from "@/lib/organizer-public-routing";
 
 export interface PublicOrganizerProfile {
   slug: string;
@@ -74,27 +82,11 @@ export function getPlatformStatsFromMarketplace(tours: TourListing[]): PlatformS
   return catalogStatsToPlatformStats(computeCatalogStats(tours));
 }
 
-export function getOrganizerSlug(ownerUserId: string): string {
-  return ownerUserId;
-}
-
-export function buildOrganizerPublicHref(slug: string): string {
-  return `/organizers/${encodeURIComponent(slug)}`;
-}
-
-export function buildOrganizerCatalogHref(slug: string): string {
-  return `/tours?${new URLSearchParams({ organizer: slug }).toString()}`;
-}
-
 export function resolveTourOwnerUserId(tour: Pick<Tour, "organizerTourId">): string {
   if (tour.organizerTourId) {
     return getOrganizerTourOwnerId(tour.organizerTourId) ?? DEFAULT_ORGANIZER_OWNER_ID;
   }
   return DEFAULT_ORGANIZER_OWNER_ID;
-}
-
-export function resolveListingOwnerUserId(listing: Pick<TourListing, "organizerOwnerId">): string {
-  return listing.organizerOwnerId ?? DEFAULT_ORGANIZER_OWNER_ID;
 }
 
 export function isKnownOrganizerSlug(slug: string): boolean {

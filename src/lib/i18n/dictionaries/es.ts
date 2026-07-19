@@ -73,7 +73,7 @@ export const esDictionary: Record<DictionaryKey, string> = {
   "locale.language": "Idioma",
   "locale.currency": "Moneda",
   "locale.search": "Buscar",
-  "locale.languageHint": "Elige el idioma de la interfaz. Pronto habrá más traducciones.",
-  "locale.currencyHint": "Los precios se convierten con tasas de prueba.",
+  "locale.languageHint": "Elige el idioma de la interfaz.",
+  "locale.currencyHint": "La conversión es orientativa; el precio final se muestra al reservar.",
   "locale.title": "Idioma y moneda",
 };

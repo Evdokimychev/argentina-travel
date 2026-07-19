@@ -40,12 +40,12 @@
 ### Фаза A — Подготовка (до cutover)
 
 - [ ] Все PR влиты в `main`, CI зелёный (`tsc`, lint, `rls-audit`)
-- [ ] На staging применены все миграции: `DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
+- [ ] На staging применены все миграции: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`; повторный запуск показывает `pending=0`
 - [ ] `npm run production-readiness` на staging (с `DEPLOY_ENV=staging`) — без `fail`
 - [ ] `npm run rls-audit` — `var/ops/rls-audit-last.json` с `ok: true`
 - [ ] `npm run backup:schema` на **production** (если уже есть данные) или на staging перед финальной репетицией
 - [ ] Резервная копия вне репозитория (S3, локальный архив)
-- [ ] Платёжные ключи production проверены в dashboard Mercado Pago / Stripe (webhook URLs)
+- [ ] Платёжный sandbox проверен; для первого российского запуска приоритетен тестовый терминал Т‑Банка, production credentials ещё не используются
 - [ ] `CRON_SECRET`, `RESEND_API_KEY`, партнёрские API — production-значения в Vercel **Production** environment
 
 ### Фаза B — Репетиция на staging
@@ -63,6 +63,8 @@
 2. **Миграции production:**
    ```bash
    # Локально с production DATABASE_URL (Session pooler при IPv6)
+   MIGRATION_TARGET_ENVIRONMENT=production \
+   MIGRATION_PRODUCTION_CONFIRMATION=BACKUP_RESTORE_AND_STAGING_ACCEPTANCE_PASSED \
    DATABASE_URL="<production-pooler-url>" npm run supabase:migrate
    ```
 3. **Переменные Vercel Production** — сверить с матрицей выше; `DEPLOY_ENV=production`.
@@ -102,7 +104,7 @@ ls supabase/migrations/*.sql | sort
 | Commissions & analytics | `20250624000000` | commissions, events |
 | Realtime & API | `20250625000000+` | messaging v2, api_keys, assistant |
 
-**Важно:** `npm run supabase:migrate` выполняет **все** SQL-файлы подряд. На уже заполненной production БД используйте только **новые** миграции (через SQL Editor или доработайте runner под идемпотентность). Перед первым production cutover БД обычно пустая — полный прогон безопасен.
+**Важно:** runner ведёт checksum-журнал и не выполняет уже применённые файлы. Существующая БД без канонического журнала блокируется до SQL; не создавайте baseline вслепую. Для текущей production сначала обязательны backup, restore rehearsal и подписанная сверка фактической схемы.
 
 При использовании Supabase CLI:
 

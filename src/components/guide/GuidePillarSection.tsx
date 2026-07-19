@@ -3,6 +3,8 @@ import {
   Info,
   Lightbulb,
 } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
 import HubSection from "@/components/guide/hub/HubSection";
 import { cn } from "@/lib/cn";
@@ -36,6 +38,72 @@ const INFO_BOX_STYLES: Record<
   },
 };
 
+const INTERNAL_PATH_RE =
+  /(\/guide\/[a-z0-9-]+(?:#[a-z0-9-]+)?|\/tours|\/contacts|\/immigration(?:\/[a-z0-9-]+)*(?:#[a-z0-9-]+)?)/gi;
+const GUIDE_PATH_LABELS: Record<string, string> = {
+  "/guide/bezopasnost": "раздел о безопасности",
+  "/guide/ekonomika-i-dengi": "раздел о деньгах",
+  "/guide/gde-zhit": "раздел о жилье",
+  "/guide/kak-dobratsya": "раздел о дороге и въезде",
+  "/guide/pogoda-i-sezonnost": "раздел о погоде и сезонах",
+  "/guide/svyaz": "раздел о связи",
+  "/guide/transport": "раздел о транспорте",
+  "/guide/yazyk": "раздел о языке",
+  "/tours": "каталог туров",
+  "/contacts": "страница контактов",
+};
+
+export function renderGuideText(value: string): ReactNode[] {
+  const normalizedValue = value
+    .replace(/forecast yesterday, today and tomorrow/gi, "прогноз на сегодня и ближайшие дни")
+    .replace(/\bBuenos Aires\b/g, "Буэнос-Айрес")
+    .replace(/\bPatagonia\b/g, "Патагония")
+    .replace(/Iguazú/g, "Игуасу")
+    .replace(/\bMendoza\b/g, "Мендоса")
+    .replace(/\bSalta\b/g, "Сальта")
+    .replace(/\bBA\b/g, "Буэнос-Айрес")
+    .replace(/\boffline maps?\b/gi, "офлайн-карты")
+    .replace(/\bpower bank\b/gi, "внешний аккумулятор")
+    .replace(/\bremote work\b/gi, "удалённая работа")
+    .replace(/\bmobile data\b/gi, "мобильный интернет")
+    .replace(/\bdata\b/gi, "интернет")
+    .replace(/\bupload\b/gi, "отдача")
+    .replace(/\bcoworking\b/gi, "коворкинг")
+    .replace(/\bguesthouse\b/gi, "гостевой дом")
+    .replace(/\bhostel\b/gi, "хостел")
+    .replace(/\bdorm\b/gi, "общая комната")
+    .replace(/\bprivate room\b/gi, "отдельная комната")
+    .replace(/\bhotspot\b/gi, "режим модема")
+    .replace(/\bwindproof shell\b/gi, "ветрозащитная куртка")
+    .replace(/\bbase layer\b/gi, "термобельё")
+    .replace(/\bfleece\b/gi, "флисовая кофта")
+    .replace(/\bbreathable layers\b/gi, "дышащие слои одежды")
+    .replace(/\bshoulder\b/gi, "межсезонье")
+    .replace(/\bpremium\b/gi, "премиум")
+    .replace(/\bkiosco\b/gi, "киоск")
+    .replace(/\bprepago\b/gi, "предоплатный тариф");
+
+  return normalizedValue.split(INTERNAL_PATH_RE).filter(Boolean).map((part, index) => {
+    if (!part.startsWith("/")) return part;
+    const normalized = part.toLowerCase();
+    const href = normalized === "/immigration" ? "/contacts" : part;
+    const basePath = normalized.split("#")[0];
+    const label =
+      normalized === "/immigration"
+        ? "консультация по вопросам переезда"
+        : GUIDE_PATH_LABELS[basePath] ?? "подробный материал";
+    return (
+      <Link
+        key={`${part}-${index}`}
+        href={href}
+        className="text-sky-ink underline decoration-sky/35 underline-offset-2 hover:decoration-sky-ink"
+      >
+        {label}
+      </Link>
+    );
+  });
+}
+
 function InfoBox({ box }: { box: GuidePillarInfoBox }) {
   const style = INFO_BOX_STYLES[box.variant];
   const Icon = style.icon;
@@ -52,7 +120,9 @@ function InfoBox({ box }: { box: GuidePillarInfoBox }) {
         <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", style.iconClass)} aria-hidden />
         <div>
           <p className="font-heading text-sm font-bold text-charcoal">{box.title}</p>
-          <p className="mt-1.5 text-sm leading-relaxed text-slate">{box.body}</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-slate">
+            {renderGuideText(box.body)}
+          </p>
         </div>
       </div>
     </aside>
@@ -71,7 +141,9 @@ function PillarTableMobileCards({ headers, rows }: { headers: string[]; rows: st
             {headers.map((header, cellIndex) => (
               <div key={`${rowIndex}-${header}`}>
                 <dt className="text-xs font-medium uppercase tracking-wide text-slate">{header}</dt>
-                <dd className="mt-1 text-sm leading-relaxed text-charcoal">{row[cellIndex]}</dd>
+                <dd className="mt-1 text-sm leading-relaxed text-charcoal">
+                  {renderGuideText(row[cellIndex] ?? "")}
+                </dd>
               </div>
             ))}
           </dl>
@@ -105,7 +177,7 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
             <tr key={rowIndex} className="border-b border-gray-50 last:border-0">
               {row.map((cell, cellIndex) => (
                 <td key={cellIndex} className="px-4 py-3 text-slate">
-                  {cell}
+                  {renderGuideText(cell)}
                 </td>
               ))}
             </tr>
@@ -127,11 +199,17 @@ export default function GuidePillarSectionBlock({
   initialTours,
 }: GuidePillarSectionProps) {
   return (
-    <HubSection id={section.id} title={section.title} subtitle={section.content}>
+    <HubSection
+      id={section.id}
+      title={section.title}
+      subtitle={section.content ? renderGuideText(section.content) : undefined}
+    >
       {section.subsections?.map((sub) => (
         <div key={sub.title} className="mt-6 first:mt-0">
           <h3 className="font-heading text-lg font-bold text-charcoal">{sub.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-slate">{sub.body}</p>
+          <p className="mt-2 text-sm leading-relaxed text-slate">
+            {renderGuideText(sub.body)}
+          </p>
         </div>
       ))}
       {section.table ? (

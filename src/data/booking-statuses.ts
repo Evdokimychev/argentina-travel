@@ -15,6 +15,25 @@ export const BOOKING_STATUSES_FUTURE: Array<"waiting_payment" | "paid"> = [
   "paid",
 ];
 
+export const BOOKING_STATUSES_ADMIN: BookingStatus[] = [
+  ...BOOKING_STATUSES_ACTIVE,
+  ...BOOKING_STATUSES_FUTURE,
+];
+
+export function getAdminBookingStatusTransitions(
+  status: BookingStatus,
+  paymentStatus?: string | null
+): BookingStatus[] {
+  if (status === "new") return ["pending", "confirmed", "cancelled"];
+  if (status === "pending") return ["confirmed", "cancelled"];
+  if (status === "confirmed") return ["waiting_payment", "completed", "cancelled"];
+  if (status === "waiting_payment") {
+    return paymentStatus === "paid" ? ["completed", "cancelled"] : ["cancelled"];
+  }
+  if (status === "paid") return ["completed", "cancelled"];
+  return [];
+}
+
 export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   new: "Новая заявка",
   pending: "В обработке",

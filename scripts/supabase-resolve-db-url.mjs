@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import { isLocalDatabaseUrl } from "./lib/migration-journal.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -56,16 +57,10 @@ function parseDirectUrl(connectionString) {
   };
 }
 
-function buildPoolerUrl({ projectRef, password, database }, region, port) {
-  const user = `postgres.${projectRef}`;
-  const host = `aws-0-${region}.pooler.supabase.com`;
-  return `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}`;
-}
-
 async function tryConnect(connectionString, timeoutMs = 8000) {
   const client = new pg.Client({
     connectionString,
-    ssl: { rejectUnauthorized: false },
+    ssl: isLocalDatabaseUrl(connectionString) ? false : { rejectUnauthorized: false },
     connectionTimeoutMillis: timeoutMs,
   });
   try {
@@ -126,7 +121,6 @@ async function main() {
     console.log("DATABASE_URL: direct connection ok");
   } else {
     console.log("DATABASE_URL: use pooler fallback");
-    console.log(resolved);
   }
 }
 

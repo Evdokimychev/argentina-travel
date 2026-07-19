@@ -7,7 +7,16 @@ const REVIEW_PHOTO_PUBLIC_PREFIX = /\/storage\/v1\/object\/public\/tourist-revie
 export function getMediaCdnOrigin(): string | null {
   const raw = process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim();
   if (!raw) return null;
-  return raw.replace(/\/+$/, "");
+
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return url.toString().replace(/\/+$/, "");
+  } catch {
+    // A placeholder or incomplete hostname must never be prefixed to public
+    // media paths. Falling back to the bundled copy keeps the page usable.
+    return null;
+  }
 }
 
 export function isExternalMediaCdnEnabled(): boolean {

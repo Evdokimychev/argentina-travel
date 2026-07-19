@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { BookingPaymentStatus } from "@/types/booking-params";
@@ -101,9 +102,15 @@ function normalizeOccurredAt(raw: string | undefined): string {
 }
 
 function verifySignature(signatureHeader: string | null | undefined, secret: string | null | undefined): boolean {
-  if (!secret?.trim()) return true;
-  if (!signatureHeader?.trim()) return false;
-  return signatureHeader.trim() === secret.trim();
+  const expected = secret?.trim();
+  const provided = signatureHeader?.trim();
+  if (!expected || !provided) return false;
+  const expectedBuffer = Buffer.from(expected, "utf8");
+  const providedBuffer = Buffer.from(provided, "utf8");
+  return (
+    expectedBuffer.length === providedBuffer.length &&
+    timingSafeEqual(expectedBuffer, providedBuffer)
+  );
 }
 
 type SafePaymentSummary = {

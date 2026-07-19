@@ -2,6 +2,8 @@ import BlogIndexView from "@/components/blog/BlogIndexView";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import type { BlogHeroVariant } from "@/lib/blog-hero-variant";
 import type { BlogPost } from "@/types";
+import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
+import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
 
 type BlogIndexWithToursProps = {
   posts: BlogPost[];
@@ -18,13 +20,13 @@ export default async function BlogIndexWithTours({
   initialTag = null,
   initialCategory = null,
 }: BlogIndexWithToursProps) {
-  const initialTours = await fetchMarketplaceTours();
+  const tours = await fetchMarketplaceTours();
 
   return (
     <BlogIndexView
-      posts={posts}
-      initialTours={initialTours}
-      initialPersonalizedPosts={initialPersonalizedPosts}
+      posts={toBlogIndexCatalog(posts)}
+      featuredTours={pickBlogIndexFeaturedTours(tours, 4)}
+      initialPersonalizedSlugs={initialPersonalizedPosts.map((post) => post.slug)}
       heroVariant={heroVariant}
       initialTag={initialTag}
       initialCategory={initialCategory}

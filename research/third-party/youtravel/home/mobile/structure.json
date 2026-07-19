@@ -1,0 +1,3159 @@
+{
+  "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+  "url": "https://youtravel.me/",
+  "lang": "ru",
+  "documentSize": {
+    "width": 407,
+    "height": 7440
+  },
+  "landmarks": [
+    {
+      "tag": "header",
+      "text": "Подберите мне тур Как это работает Путешествия Все По типам Горящие туры Туры выходного дня Однодневные туры Отзывы путешественников Журнал о путешествиях Подарочный сертификат Компаниям Индивидуальные туры Корпоративные туры Турагентствам ",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 64
+      }
+    },
+    {
+      "tag": "nav",
+      "text": "Подберите мне тур Как это работает Путешествия Все По типам Горящие туры Туры выходного дня Однодневные туры Отзывы путешественников Журнал о путешествиях Подарочный сертификат Компаниям Индивидуальные туры Корпоративные туры Турагентствам ",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 64
+      }
+    },
+    {
+      "tag": "main",
+      "text": "Главная Безопасная оплата Бронируйте туры через нашу надежную платежную систему Продуманная спонтанность Маршруты могут адаптироваться под пожелания группы Проверенные тревел-эксперты В нашей базе 4 000 гидов, которые прошли тщательный отбо",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 600,
+        "width": 390,
+        "height": 4777.125
+      }
+    },
+    {
+      "tag": "main",
+      "text": "Безопасная оплата Бронируйте туры через нашу надежную платежную систему Продуманная спонтанность Маршруты могут адаптироваться под пожелания группы Проверенные тревел-эксперты В нашей базе 4 000 гидов, которые прошли тщательный отбор Гарант",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 600,
+        "width": 390,
+        "height": 4777.125
+      }
+    },
+    {
+      "tag": "footer",
+      "text": "YouTravel.me — это маркетплейс авторских туров от тревел-экспертов и частных независимых гидов. Авторские туры — это спонтанные и яркие возможности, предлагающие взять максимум от каждой точки маршрута. Мы за непринужденный подход к группов",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 5377.125,
+        "width": 390,
+        "height": 1789.1875
+      }
+    }
+  ],
+  "headings": [
+    {
+      "tag": "h1",
+      "text": "Авторские туры — новый формат насыщенных путешествий",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 12,
+        "y": 127.5,
+        "width": 366,
+        "height": 90
+      }
+    },
+    {
+      "tag": "h1",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 600,
+        "width": 390,
+        "height": 0
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Места для вдохновения",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 704,
+        "width": 360,
+        "height": 44
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Новый способ путешествовать",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 2733.125,
+        "width": 360,
+        "height": 44
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Как тут все устроено",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 3105.125,
+        "width": 360,
+        "height": 44
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Персональные рекомендации",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Туры специально для тебя",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Мир большой, сделайте первый шаг к его покорению",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 3810.125,
+        "width": 360,
+        "height": 68
+      }
+    },
+    {
+      "tag": "h2",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 4763.125,
+        "width": 360,
+        "height": 24
+      }
+    },
+    {
+      "tag": "h3",
+      "text": "Архипелаг Шпицберген: как туда попасть простому путешественнику",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 33,
+        "y": 4998.125,
+        "width": 284,
+        "height": 70
+      }
+    },
+    {
+      "tag": "h3",
+      "text": "Новая Зеландия: что посмотреть и чем заняться на краю света",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 369,
+        "y": 4998.125,
+        "width": 284,
+        "height": 50
+      }
+    },
+    {
+      "tag": "h3",
+      "text": "Достопримечательности Рязани: где искать грибы с глазами и есенинские пейзажи",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 705,
+        "y": 4998.125,
+        "width": 284,
+        "height": 70
+      }
+    },
+    {
+      "tag": "h3",
+      "text": "Кровь дракона и песчаные дюны: что посмотреть на Сокотре",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1041,
+        "y": 4998.125,
+        "width": 284,
+        "height": 70
+      }
+    }
+  ],
+  "buttons": [
+    {
+      "tag": "div",
+      "text": "",
+      "role": "button",
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Искать поблизости",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "button",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Найти",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 12,
+        "y": 386.5,
+        "width": 366,
+        "height": 56
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Ок",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "button",
+      "text": "Я понял",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    }
+  ],
+  "links": [
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 65,
+        "y": 14,
+        "width": 94,
+        "height": 36
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Все",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "По типам",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Горящие туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/goryashchie-tury",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры выходного дня",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/weekend",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Однодневные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/days-1",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отзывы путешественников",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/reviews/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подарочный сертификат",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/gift/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Индивидуальные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/lp/grouptours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Корпоративные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/corporatetours/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Турагентствам",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/partners-b2b/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Корпоративные промокоды",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://en.youtravel.me/promo",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подарочные сертификаты для компаний",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/corpsert/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Партнерская программа",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/partner",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Для рекламных интеграций",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/promo",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Узнать больше",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://en.youtravel.me/travelexpert",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Зарегистироваться",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/lk/?register=yes",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "О нас",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/about/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Поддержка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/support/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Тревел-экспертам",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://en.youtravel.me/travelexpert",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Вход",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/lk/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 108,
+        "width": 250,
+        "height": 45
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Регистрация",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/lk/?register=yes&backurl=%2F",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 153,
+        "width": 250,
+        "height": 45
+      }
+    },
+    {
+      "tag": "a",
+      "text": "+7 (495) 120-41-60",
+      "role": null,
+      "ariaLabel": null,
+      "href": "tel:+74951204160",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 650,
+        "width": 250,
+        "height": 85
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Скачайте приложение:",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://apps.apple.com/ru/app/youtravel-me/id1538329605",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 762,
+        "width": 295,
+        "height": 42
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Смотреть все туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 12,
+        "y": 454.5,
+        "width": 134.390625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Туры месяца",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/tours-month",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 748,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Майские праздники",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/%D0%BC%D0%B0%D0%B9%D1%81%D0%BA%D0%B8%D0%B5_%D0%BF%D1%80%D0%B0%D0%B7%D0%B4%D0%BD%D0%B8%D0%BA%D0%B8",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 910.09375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Окунуться в таинственную культуру Востока",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/okunutsya_v_yarkie_kraski_i_ritm_otkrytoy_azii",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1072.1875,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отправиться на охоту за северным сиянием",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/otpravitsya_na_ohotu_za_severnym_siyaniyem",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1234.28125,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Прикоснуться к великой природе Алтая",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/prikosnutsya_k_chistoy_i_velikoy_prirode_altaya",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1396.375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Вырваться из города на выходные",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/weekend",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1558.46875,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Познакомиться с гостеприимством Кавказа",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/poznakomitsya_s_gostepriimstvom_kavkaza",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1720.5625,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Ощутить силу вулканов России",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/vulkani",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 1882.65625,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Посмотреть на китов",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/tury-k-kitam",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 2044.75,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Погрузиться в мир дикой природы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/pogruzitsya_v_mir_dikoy_prirody",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 2206.84375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Исследовать морские глубины и отдохнуть на пляже",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/kogda_otdykh_bez_morya_ne_otdykh",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 2368.9375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Сделать фото уникальных мест",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/specials/sdelat_fotografii_samykh_redkikh_mest",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 2531.03125,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подарочный сертификат Более 3500 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/gift/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 10,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Авторский 5877 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 175,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Йога и ретриты 254 тура",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B9%D0%BE%D0%B3%D0%B0_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 340,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Горнолыжный 60 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B3%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 505,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Тур в горы 2440 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%82%D1%83%D1%80_%D0%B2_%D0%B3%D0%BE%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 670,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Рыбалка 176 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%80%D1%8B%D0%B1%D0%B0%D0%BB%D0%BA%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 835,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Фитнес тур 120 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%84%D0%B8%D1%82%D0%BD%D0%B5%D1%81_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1000,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Семейный 2027 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%81%D0%B5%D0%BC%D0%B5%D0%B9%D0%BD%D1%8B%D0%B9_%D1%82%D1%83%D1%80",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1165,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Экскурсионный 5879 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%8D%D0%BA%D1%81%D0%BA%D1%83%D1%80%D1%81%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1330,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Гастрономический 1237 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B3%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%BD%D0%BE%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1495,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Поход 1396 туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1660,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "ПОСМОТРЕТЬ ВСЕ",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1825,
+        "y": 2777.125,
+        "width": 145,
+        "height": 162
+      }
+    },
+    {
+      "tag": "a",
+      "text": "logos/google Created with Sketch. Rating 4.7 168 reviews",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://www.google.com/search?newwindow=1&safe=active&sxsrf=ALiCzsY-cwSQ6tdpjTLs9n_3uRqzMkJwtQ:1652343710515&q=You+Travel.me&si=AC1wQDAjJ8oRvNXHnN4UeD0TNg1RI9jH_YrDo7Xn4YuANY1GXGcZGcV63-yKjwCYrtMGXzxqfc0vaS1uEG848yR_jg8u1Unf1i7NQbZFPanqzuJYuz5JsvEac24riMciPINU0p5dkun_7RmLFjGtpoZSQCPSeF7m4vPuHh_KXRg1BmFK6-l2N-OBRCKloY6b7gktYd4lwGY3UCyv7So_oIVJwySWXbJ3jg%3D%3D&sa=X&ved=2ahUKEwj-0qX_w9n3AhWHuYsKHTL-BEEQ6RN6BAg1EAE&cshid=1652343857031169&biw=1536&bih=746&dpr=1.25#lrd=0x46b54b59c4c7cb35:0x191b7bee006a88de,1",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 2999.125,
+        "width": 200.640625,
+        "height": 56
+      }
+    },
+    {
+      "tag": "a",
+      "text": ".st0{fill:#FC3F1D;} Rating 5 345 reviews",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://yandex.ru/maps/org/youtravel_me/51654836007/reviews/?ll=37.574387%2C55.739528&z=11.26",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 219.640625,
+        "y": 2999.125,
+        "width": 187.109375,
+        "height": 56
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Азия",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D0%B0%D0%B7%D0%B8%D1%8F",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Африка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D0%B0%D1%84%D1%80%D0%B8%D0%BA%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 195,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Северная Америка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D1%81%D0%B5%D0%B2%D0%B5%D1%80%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 375,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Южная Америка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D1%8E%D0%B6%D0%BD%D0%B0%D1%8F_%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 555,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Австралия и Океания",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D0%B0%D0%B2%D1%81%D1%82%D1%80%D0%B0%D0%BB%D0%B8%D1%8F_%D0%B8_%D0%BE%D0%BA%D0%B5%D0%B0%D0%BD%D0%B8%D1%8F",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 735,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Ближний Восток",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D0%B1%D0%BB%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9_%D0%B2%D0%BE%D1%81%D1%82%D0%BE%D0%BA",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 915,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Европа",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/continent/%D0%B5%D0%B2%D1%80%D0%BE%D0%BF%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1095,
+        "y": 3878.125,
+        "width": 150,
+        "height": 225
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 4763.125,
+        "width": 260.5625,
+        "height": 24
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Архипелаг Шпицберген: как туда попасть простому путешественнику 16 июл 2026 Читать 9 мин. Читать статью",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/strany/shpitsbergen",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 15,
+        "y": 4817.125,
+        "width": 320,
+        "height": 326
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Новая Зеландия: что посмотреть и чем заняться на краю света 15 июл 2026 Читать 12 мин. Читать статью",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/strany/novaya-zelandiya-gde-nakhoditsya-chto-posmotret-i-chem-zanyatsya-na-krayu-sveta",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 351,
+        "y": 4817.125,
+        "width": 320,
+        "height": 326
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Достопримечательности Рязани: где искать грибы с глазами и есенинские пейзажи 14 июл 2026 Читать 9 мин. Читать статью",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/russia-tours/dostoprimechatelnosti-ryazani",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 687,
+        "y": 4817.125,
+        "width": 320,
+        "height": 326
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Кровь дракона и песчаные дюны: что посмотреть на Сокотре 13 июл 2026 Читать 9 мин. Читать статью",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/strany/ostrov-sokotra",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 1023,
+        "y": 4817.125,
+        "width": 320,
+        "height": 326
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://rb.ru/news/youtravelme-new-round/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 48,
+        "y": 5259.125,
+        "width": 83.890625,
+        "height": 22
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://incrussia.ru/concoct/pandemic-tourism/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 147.890625,
+        "y": 5251.125,
+        "width": 86,
+        "height": 38
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://pro.rbc.ru/news/60a67ae59a794731f96d3669",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 249.890625,
+        "y": 5259.125,
+        "width": 50.078125,
+        "height": 22
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://lenta.ru/news/2021/07/09/alternativa/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 48,
+        "y": 5308.125,
+        "width": 86,
+        "height": 38
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://secretmag.ru/selfie/ogranicheniya-v-golove-kak-zapustit-startap-dlya-puteshestvennikov.htm",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 150,
+        "y": 5305.125,
+        "width": 86,
+        "height": 44
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://vc.ru/services/289203-rossiyskiy-servis-bronirovaniya-avtorskih-turov-youtravel-me-privlek-1-mln",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 252,
+        "y": 5316.125,
+        "width": 59.140625,
+        "height": 22
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Как забронировать тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/how-it-works/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5582.125,
+        "width": 171.828125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Подход сообщества YouTravel.me",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/about/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5614.125,
+        "width": 245.46875,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Журнал о путешествиях",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/blog/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5646.125,
+        "width": 179.015625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Преимущества авторских туров",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/support/authors-tour",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5678.125,
+        "width": 237.765625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Отзывы путешественников",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/reviews/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5710.125,
+        "width": 202.53125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "FAQ",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/support/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5742.125,
+        "width": 30.3125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Связаться с нами",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/contact/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5774.125,
+        "width": 128.421875,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Организуйте авторский тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://en.youtravel.me/travelexpert",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5806.125,
+        "width": 206.34375,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Корпоративные туры",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/corporatetours/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5838.125,
+        "width": 158.875,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Работа у нас",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://ytme.atlassian.net/wiki/spaces/TM/overview",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5870.125,
+        "width": 92.453125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://vk.com/youtravelme",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 5966.125,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://www.instagram.com/youtravel.me/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 63.78125,
+        "y": 5966.125,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://www.facebook.com/youtravel.me/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 97.5625,
+        "y": 5966.125,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "tag": "a",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": "https://max.ru/u/f9LHodD0cOJ4aevIndK50x_2fp_6iR186aEVONgyJytZ4Bkj79bZuUqJFBc",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 131.34375,
+        "y": 5966.125,
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Публичная оферта",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help/public-offer/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6027.125,
+        "width": 139.46875,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Политика конфиденциальности",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help/privacy/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6027.125,
+        "width": 223.390625,
+        "height": 36
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Рекомендательные технологии",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help/recommendation-technologies/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6045.125,
+        "width": 319.28125,
+        "height": 36
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Реквизиты и информация",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/help/requisites/",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 127.125,
+        "y": 6063.125,
+        "width": 194.453125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Авторский",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6175.125,
+        "width": 80.203125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Йога и ретриты",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B9%D0%BE%D0%B3%D0%B0_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6207.125,
+        "width": 115.390625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Горнолыжный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B3%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6239.125,
+        "width": 105.78125,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Тур в горы",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%82%D1%83%D1%80_%D0%B2_%D0%B3%D0%BE%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6271.125,
+        "width": 78.15625,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Рыбалка",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%80%D1%8B%D0%B1%D0%B0%D0%BB%D0%BA%D0%B0",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 30,
+        "y": 6303.125,
+        "width": 63.9375,
+        "height": 18
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Фитнес тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%84%D0%B8%D1%82%D0%BD%D0%B5%D1%81_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Семейный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%81%D0%B5%D0%BC%D0%B5%D0%B9%D0%BD%D1%8B%D0%B9_%D1%82%D1%83%D1%80",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Экскурсионный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%8D%D0%BA%D1%81%D0%BA%D1%83%D1%80%D1%81%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Гастрономический",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B3%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%BD%D0%BE%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Поход",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Автотур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/roadtrip",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Арт тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B0%D1%80%D1%82_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Блог-тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/blog_tour",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Велотур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B2%D0%B5%D0%BB%D0%BE%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Винный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B2%D0%B8%D0%BD%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Водный тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B2%D0%BE%D0%B4%D0%BD%D1%8B%D0%B9_%D1%82%D1%83%D1%80",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Восхождение",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B2%D0%BE%D1%81%D1%85%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Дайвинг",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/diving-tours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Девичник",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B4%D0%B5%D0%B2%D0%B8%D1%87%D0%BD%D0%B8%D0%BA%D0%B8",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Квест тур",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BA%D0%B2%D0%B5%D1%81%D1%82_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Конный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/konnyi",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Лыжный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/skiing-tours",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Мама и малыш",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BC%D0%B0%D0%BC%D0%B0_%D0%B8_%D0%BC%D0%B0%D0%BB%D1%8B%D1%88",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Мото",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BC%D0%BE%D1%82%D0%BE_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "На внедорожниках",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B4%D0%B6%D0%B8%D0%BF_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "На море",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BD%D0%B0_%D0%BC%D0%BE%D1%80%D0%B5",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "На Снегоходах",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/snowmobile",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Образовательный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Обучающий",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%BE%D0%B1%D1%83%D1%87%D0%B0%D1%8E%D1%89%D0%B8%D0%B5_%D1%82%D1%83%D1%80%D1%8B",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Самостоятельный",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/%D0%B1%D0%B5%D0%B7_%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D1%8B_%D0%B8_%D1%81%D0%BE%D0%BF%D1%80%D0%BE%D0%B2%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "a",
+      "text": "Сафари",
+      "role": null,
+      "ariaLabel": null,
+      "href": "/tours/type/safari",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    }
+  ],
+  "forms": [
+    {
+      "tag": "form",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    }
+  ],
+  "controls": [
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "text",
+      "name": "",
+      "placeholder": "",
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 13,
+        "y": 263.5,
+        "width": 0,
+        "height": 20
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": null,
+      "name": null,
+      "placeholder": "Куда вы хотите?",
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "text",
+      "name": "date",
+      "placeholder": "Месяц или даты",
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 13,
+        "y": 309.5,
+        "width": 364,
+        "height": 58
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "hidden",
+      "name": "sessid",
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "email",
+      "name": "email",
+      "placeholder": "Укажите адрес электронной почты",
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "hidden",
+      "name": "lang",
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "email",
+      "name": "merge_",
+      "placeholder": "Введите Email",
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 7320.3125,
+        "width": 390,
+        "height": 35
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "checkbox",
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": false,
+      "box": {
+        "x": 0,
+        "y": 7370.8125,
+        "width": 13,
+        "height": 13
+      }
+    },
+    {
+      "tag": "input",
+      "text": "",
+      "role": null,
+      "ariaLabel": null,
+      "href": null,
+      "type": "submit",
+      "name": null,
+      "placeholder": null,
+      "checked": false,
+      "disabled": true,
+      "box": {
+        "x": 0,
+        "y": 7419.3125,
+        "width": 94.703125,
+        "height": 20
+      }
+    }
+  ],
+  "dialogs": [],
+  "accordions": [],
+  "images": [
+    {
+      "src": "https://cf.youtravel.me/tr:w-800%2Ch-800/upload/iblock/bb9/bb9094d1081c9cd49a095cfc0766b3a6.jpg",
+      "alt": "",
+      "width": 390,
+      "height": 390,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 600
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-800%2Ch-300/upload/iblock/e5d/gfw1w84415cx0zosnuompis0j4ia5qxy.png",
+      "alt": "Туры месяца",
+      "width": 390,
+      "height": 146,
+      "box": {
+        "x": 0,
+        "y": 748,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-800%2Ch-300/upload/iblock/09c/09cd01443ef4b021b0585b592007596e.jpeg",
+      "alt": "Майские праздники",
+      "width": 365,
+      "height": 146,
+      "box": {
+        "x": 0,
+        "y": 910.09375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/ac2/boyicoxzisvj3dhveghq7l1qv3pjspxj.jpg",
+      "alt": "Окунуться в таинственную культуру Востока",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 1072.1875,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/36b/xw1o21xlitggt2shrnwb79ypit5hzoy5.jpg",
+      "alt": "Отправиться на охоту за северным сиянием",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 1234.28125,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-800%2Ch-300/upload/iblock/c74/c7403006de5beced008ea2acf8bc8049.jpg",
+      "alt": "Прикоснуться к великой природе Алтая",
+      "width": 390,
+      "height": 146,
+      "box": {
+        "x": 0,
+        "y": 1396.375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/ee2/80qknxpy041ngcl719pyegxmqy4d647x.jpg",
+      "alt": "Вырваться из города на выходные",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 1558.46875,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "",
+      "alt": "Познакомиться с гостеприимством Кавказа",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 1720.5625,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/006/00674c8622625984798ce3d9f60e33af.jpg",
+      "alt": "Ощутить силу вулканов России",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 1882.65625,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/5bf/dlqbo2fdfgzd81wm0jpm73h26dzllt7j.jpg",
+      "alt": "Посмотреть на китов",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 2044.75,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/c8c/qbv31uw92i830cwfaxuiwn1wrhzwlt5k.jpg",
+      "alt": "Погрузиться в мир дикой природы",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 2206.84375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "https://cf.youtravel.me/tr:w-350%2Ch-200/upload/iblock/ec2/ec2f106ad749e2ee27cd9cec8eb4e94e.jpg",
+      "alt": "Исследовать морские глубины и отдохнуть на пляже",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 2368.9375,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "",
+      "alt": "Сделать фото уникальных мест",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 0,
+        "y": 2531.03125,
+        "width": 390,
+        "height": 152.09375
+      }
+    },
+    {
+      "src": "",
+      "alt": "Подарочный сертификат",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 10,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Авторский",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 175,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Йога и ретриты",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 340,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Горнолыжный",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 505,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Тур в горы",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 670,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Рыбалка",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 835,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Фитнес тур",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1000,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Семейный",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1165,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Экскурсионный",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1330,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Гастрономический",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1495,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "Поход",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1660,
+        "y": 2777.125,
+        "width": 145,
+        "height": 92
+      }
+    },
+    {
+      "src": "",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 15,
+        "y": 4817.125,
+        "width": 320,
+        "height": 166
+      }
+    },
+    {
+      "src": "",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 351,
+        "y": 4817.125,
+        "width": 320,
+        "height": 166
+      }
+    },
+    {
+      "src": "",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 687,
+        "y": 4817.125,
+        "width": 320,
+        "height": 166
+      }
+    },
+    {
+      "src": "",
+      "alt": "",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 1023,
+        "y": 4817.125,
+        "width": 320,
+        "height": 166
+      }
+    },
+    {
+      "src": "",
+      "alt": "Rusbase",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 48,
+        "y": 5259.125,
+        "width": 83.890625,
+        "height": 22
+      }
+    },
+    {
+      "src": "",
+      "alt": "IncRussia",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 147.890625,
+        "y": 5251.125,
+        "width": 86,
+        "height": 30
+      }
+    },
+    {
+      "src": "",
+      "alt": "РБК",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 249.890625,
+        "y": 5259.125,
+        "width": 50.078125,
+        "height": 22
+      }
+    },
+    {
+      "src": "",
+      "alt": "ЛентаРу",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 48,
+        "y": 5308.125,
+        "width": 86,
+        "height": 30
+      }
+    },
+    {
+      "src": "",
+      "alt": "Секрет Фирмы",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 150,
+        "y": 5305.125,
+        "width": 86,
+        "height": 30
+      }
+    },
+    {
+      "src": "",
+      "alt": "VC.ru",
+      "width": 0,
+      "height": 0,
+      "box": {
+        "x": 252,
+        "y": 5316.125,
+        "width": 59.140625,
+        "height": 22
+      }
+    },
+    {
+      "src": "https://youtravel.me/local/templates/youtravel/assets/i/tours/point.png",
+      "alt": "Point",
+      "width": 36,
+      "height": 40,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://youtravel.me/local/templates/youtravel/assets/i/tours/point.png",
+      "alt": "Point",
+      "width": 36,
+      "height": 40,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://youtravel.me/local/templates/youtravel/assets/i/tours/point.png",
+      "alt": "Point",
+      "width": 36,
+      "height": 40,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "src": "https://youtravel.me/local/templates/youtravel/assets/i/tours/point.png",
+      "alt": "Point",
+      "width": 36,
+      "height": 40,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    }
+  ],
+  "cards": []
+}

@@ -1,22 +1,44 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
+import { escapeCsvCell } from "@/lib/admin/csv";
+import {
+  AdminExportTooLargeError,
+  collectAdminExportRows,
+} from "@/lib/admin/export-pagination";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { fetchAllBookingsAdmin } from "@/lib/admin/bookings-server";
 import { fetchAttributionByBookingIds } from "@/lib/attribution/attribution-server";
-
-function csvEscape(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
-}
+import { rowToBooking, type BookingRow } from "@/lib/bookings-db-mapper";
+import { normalizeBooking } from "@/lib/bookings-store";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "operations.bookings");
   if (!auth.ok) return auth.response;
 
   const supabase = createSupabaseAdminClient();
-  const bookings = await fetchAllBookingsAdmin(supabase);
+  let bookingRows: BookingRow[];
+  try {
+    bookingRows = await collectAdminExportRows(async (from, to) => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .range(from, to);
+      if (error) throw error;
+      return (data ?? []) as BookingRow[];
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof AdminExportTooLargeError
+            ? "Выгрузка слишком большая для одного файла. Сузьте период или обратитесь к владельцу сайта."
+            : "Не удалось подготовить выгрузку бронирований. Попробуйте ещё раз.",
+      },
+      { status: error instanceof AdminExportTooLargeError ? 413 : 503 },
+    );
+  }
+  const bookings = bookingRows.map((row) => normalizeBooking(rowToBooking(row)));
   const attributionMap = await fetchAttributionByBookingIds(
     supabase,
     bookings.map((b) => b.id)
@@ -31,20 +53,20 @@ export async function GET(request: Request) {
     const attribution = attributionMap.get(row.id) ?? row.attribution;
     lines.push(
       [
-        csvEscape(row.id),
-        csvEscape(row.tourTitle),
-        csvEscape(row.tourSlug),
-        csvEscape(row.status),
-        csvEscape(row.contactName),
-        csvEscape(row.contactEmail),
-        csvEscape(row.contactPhone),
+        escapeCsvCell(row.id),
+        escapeCsvCell(row.tourTitle),
+        escapeCsvCell(row.tourSlug),
+        escapeCsvCell(row.status),
+        escapeCsvCell(row.contactName),
+        escapeCsvCell(row.contactEmail),
+        escapeCsvCell(row.contactPhone),
         String(row.guests),
         String(row.totalPriceUsd),
-        csvEscape(attribution?.utmSource ?? ""),
-        csvEscape(attribution?.utmMedium ?? ""),
-        csvEscape(attribution?.utmCampaign ?? ""),
-        csvEscape(attribution?.referrer ?? ""),
-        csvEscape(attribution?.landingPath ?? ""),
+        escapeCsvCell(attribution?.utmSource ?? ""),
+        escapeCsvCell(attribution?.utmMedium ?? ""),
+        escapeCsvCell(attribution?.utmCampaign ?? ""),
+        escapeCsvCell(attribution?.referrer ?? ""),
+        escapeCsvCell(attribution?.landingPath ?? ""),
         row.createdAt,
       ].join(",")
     );
@@ -54,6 +76,8 @@ export async function GET(request: Request) {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": 'attachment; filename="bookings-export.csv"',
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

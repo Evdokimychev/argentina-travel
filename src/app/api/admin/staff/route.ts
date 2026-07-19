@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import {
   assertStaffTargetMutationAllowed,
@@ -19,22 +19,25 @@ export async function GET(request: Request) {
   const [staffRes, presetsRes] = await Promise.all([
     supabase
       .from("admin_staff")
-      .select("user_id, preset, capabilities, is_active, notes, created_at, updated_at")
+      .select("user_id, preset, capabilities, is_active, notes, row_version, created_at, updated_at")
       .order("created_at", { ascending: false }),
     supabase.from("admin_role_presets").select("id, label, description, capabilities"),
   ]);
 
-  if (staffRes.error) {
-    return NextResponse.json({ error: staffRes.error.message }, { status: 500 });
+  if (staffRes.error || presetsRes.error) {
+    return NextResponse.json({ error: "Не удалось загрузить список команды" }, { status: 503 });
   }
 
   const userIds = (staffRes.data ?? []).map((row) => row.user_id);
   let profiles: Array<{ id: string; email: string | null; first_name: string; last_name: string }> = [];
   if (userIds.length) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("id, email, first_name, last_name")
       .in("id", userIds);
+    if (error) {
+      return NextResponse.json({ error: "Не удалось загрузить данные участников команды" }, { status: 503 });
+    }
     profiles = data ?? [];
   }
   const profileById = new Map(profiles.map((p) => [p.id, p]));
@@ -53,6 +56,7 @@ export async function GET(request: Request) {
         capabilities: row.capabilities,
         isActive: row.is_active,
         notes: row.notes,
+        rowVersion: row.row_version,
         createdAt: row.created_at,
         updatedAt: row.updated_at,
       };
@@ -72,7 +76,10 @@ export async function POST(request: Request) {
   const access = await authorizeStaffManagementRequest(request);
   if (!access.ok) return access.response;
 
-  const body = (await request.json()) as PostBody;
+  const body = (await request.json().catch(() => null)) as PostBody | null;
+  if (!body) {
+    return NextResponse.json({ error: "Проверьте данные формы" }, { status: 400 });
+  }
   const { auth, supabase } = access;
 
   if (body.userId !== undefined && typeof body.userId !== "string") {
@@ -84,14 +91,20 @@ export async function POST(request: Request) {
   if (body.notes !== undefined && typeof body.notes !== "string") {
     return NextResponse.json({ error: "notes должен быть строкой" }, { status: 400 });
   }
+  if (typeof body.notes === "string" && body.notes.trim().length > 5000) {
+    return NextResponse.json({ error: "Заметка не должна превышать 5000 символов" }, { status: 400 });
+  }
 
   let userId = body.userId?.trim();
   if (!userId && body.email?.trim()) {
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("id")
       .ilike("email", body.email.trim())
       .maybeSingle();
+    if (profileError) {
+      return NextResponse.json({ error: "Не удалось найти пользователя" }, { status: 503 });
+    }
     userId = profile?.id;
   }
 
@@ -102,7 +115,14 @@ export async function POST(request: Request) {
   const existingStaff = await fetchStaffSecurityRecord(supabase, userId);
   const targetGuard = assertStaffTargetMutationAllowed({
     actorId: auth.actorId,
-    target: existingStaff ?? { userId, preset: null, capabilities: [], isActive: false },
+    target: existingStaff ?? {
+      userId,
+      preset: null,
+      capabilities: [],
+      isActive: false,
+      notes: null,
+      rowVersion: 1,
+    },
   });
   if (!targetGuard.ok) {
     return NextResponse.json(
@@ -138,55 +158,26 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("roles")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (!profile) {
-    return NextResponse.json({ error: "Пользователь не найден" }, { status: 404 });
-  }
-
-  const roles = profile.roles ?? [];
-  const { error } = await supabase.from("admin_staff").insert({
-    user_id: userId,
-    preset: assignment.preset,
-    capabilities: assignment.capabilities,
-    is_active: true,
-    notes: body.notes?.trim() || null,
-    invited_by: auth.actorId,
+  const { error } = await supabase.rpc("admin_assign_staff_atomic", {
+    p_actor_user_id: auth.actorId,
+    p_target_user_id: userId,
+    p_preset: assignment.preset,
+    p_capabilities: assignment.capabilities,
+    p_notes: body.notes?.trim() || null,
+    p_ip_address: clientIpFromRequest(request),
   });
-
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  if (!roles.includes("admin")) {
-    const { error: profileUpdateError } = await supabase
-      .from("profiles")
-      .update({ roles: [...roles, "admin"], active_role: "admin" })
-      .eq("id", userId);
-
-    if (profileUpdateError) {
-      // Fail closed: a half-created staff row must not survive a profile update
-      // failure and block a safe retry. Access still requires both records.
-      await supabase.from("admin_staff").delete().eq("user_id", userId);
-      return NextResponse.json(
-        { error: "Не удалось подтвердить роль администратора" },
-        { status: 500 },
-      );
+    if (error.message.includes("USER_NOT_FOUND")) {
+      return NextResponse.json({ error: "Пользователь не найден" }, { status: 404 });
     }
+    if (error.message.includes("STAFF_ALREADY_ASSIGNED")) {
+      return NextResponse.json({ error: "Пользователь уже входит в команду" }, { status: 409 });
+    }
+    return NextResponse.json(
+      { error: "Не удалось назначить доступ. Состав команды не изменён." },
+      { status: 409 },
+    );
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "staff.assign",
-    entityType: "admin_staff",
-    entityId: userId,
-    payload: { preset: assignment.preset, capabilities: assignment.capabilities },
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ ok: true });
 }

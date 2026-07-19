@@ -5,6 +5,7 @@ export function getGitSha(): string | null {
   const sha =
     process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ||
+    process.env.NEXT_PUBLIC_RELEASE_GIT_SHA?.trim() ||
     process.env.GIT_SHA?.trim();
   return sha || null;
 }

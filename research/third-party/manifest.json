@@ -1,0 +1,30 @@
+{
+  "viewports": [
+    { "id": "desktop-wide", "width": 1440, "height": 1100 },
+    { "id": "desktop", "width": 1280, "height": 900 },
+    { "id": "tablet", "width": 768, "height": 1024 },
+    { "id": "mobile", "width": 390, "height": 844, "mobile": true },
+    { "id": "small-mobile", "width": 360, "height": 800, "mobile": true }
+  ],
+  "pages": [
+    { "id": "home", "site": "youtravel", "type": "home", "url": "https://youtravel.me/" },
+    { "id": "tours", "site": "youtravel", "type": "catalog", "url": "https://youtravel.me/tours/" },
+    { "id": "argentina", "site": "youtravel", "type": "country-catalog", "url": "https://youtravel.me/tours/country/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%B0" },
+    { "id": "last-minute", "site": "youtravel", "type": "special-catalog", "url": "https://youtravel.me/tours/specials/goryashchie-tury" },
+    { "id": "one-day", "site": "youtravel", "type": "duration-catalog", "url": "https://youtravel.me/tours/days-1" },
+    { "id": "patagonia-tour", "site": "youtravel", "type": "tour-detail", "url": "https://youtravel.me/tours/52537/%D0%BC%D0%BD%D0%BE%D0%B3%D0%BE_%D1%82%D1%80%D0%B5%D0%BA%D0%BA%D0%B8%D0%BD%D0%B3%D0%B0_%D0%B2_%D0%BF%D0%B0%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%D0%B8%D0%B8_%D0%BA%D1%80%D1%83%D0%B8%D0%B7%D1%8B_%D0%BD%D0%B0_%D0%BA%D0%BE%D1%80%D0%B0%D0%B1%D0%BB%D1%8F%D1%85_%D1%83%D1%88%D1%83%D0%B0%D0%B9%D1%8F_%D0%B8_%D0%B8%D0%B3%D1%83%D0%B0%D1%81%D1%83" },
+    { "id": "expert-nikolay", "site": "youtravel", "type": "organizer", "url": "https://youtravel.me/expert/105276/%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9" },
+    { "id": "reviews", "site": "youtravel", "type": "reviews", "url": "https://youtravel.me/reviews/" },
+    { "id": "blog", "site": "youtravel", "type": "journal", "url": "https://youtravel.me/blog/" },
+    { "id": "buenos-aires-article", "site": "youtravel", "type": "article", "url": "https://youtravel.me/blog/planiruem-puteshestvie/dostoprimechatelnosti-buehnos-ajresa" },
+    { "id": "argentina-places-article", "site": "youtravel", "type": "article", "url": "https://youtravel.me/blog/strany/6-best-places-to-visit-in-argentina" },
+    { "id": "iguazu-article", "site": "youtravel", "type": "article", "url": "https://youtravel.me/blog/strany/vodopady-iguasu" },
+    { "id": "home", "site": "klubgidov", "type": "home", "url": "https://klubgidov.ru/" },
+    { "id": "tours", "site": "klubgidov", "type": "catalog", "url": "https://klubgidov.ru/tours" },
+    { "id": "argentina", "site": "klubgidov", "type": "country-catalog", "url": "https://klubgidov.ru/argentina" },
+    { "id": "patagonia-tour", "site": "klubgidov", "type": "tour-detail", "url": "https://klubgidov.ru/argentina/odisseya-po-patagonii-s-pereletami-386784" },
+    { "id": "providers", "site": "klubgidov", "type": "organizer-catalog", "url": "https://klubgidov.ru/tour-providers" },
+    { "id": "provider-2458", "site": "klubgidov", "type": "organizer", "url": "https://klubgidov.ru/tour-provider/2458" },
+    { "id": "journal", "site": "klubgidov", "type": "journal", "url": "https://klubgidov.ru/journal" }
+  ]
+}

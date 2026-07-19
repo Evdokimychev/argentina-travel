@@ -1,7 +1,6 @@
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { GUIDE_TOPICS } from "@/data/guide-topics";
-import { blogPosts } from "@/data/blog";
-import { buildPublishedBlogSlugSet } from "@/lib/blog-slug-resolve";
+import { SITE_NAV_RECENT_BLOG_LINKS } from "@/data/site-nav-blog-links";
 import { getSafeBlogDestinationTerms } from "@/lib/blog-destination-terms";
 
 export type BlogInternalLinkRule = {
@@ -26,10 +25,10 @@ const VISA_TERMS = [
 ] as const;
 
 function blogSlugRules(): BlogInternalLinkRule[] {
-  const slugs = buildPublishedBlogSlugSet(blogPosts.map((p) => p.slug));
+  const publishedHrefs = new Set(SITE_NAV_RECENT_BLOG_LINKS.map((link) => link.href));
   const rules: BlogInternalLinkRule[] = [];
 
-  if (slugs.has("argentina-tourist-visa-2026")) {
+  if (publishedHrefs.has("/blog/argentina-tourist-visa-2026")) {
     rules.push({
       id: "visa-entry",
       terms: VISA_TERMS,
@@ -37,8 +36,7 @@ function blogSlugRules(): BlogInternalLinkRule[] {
       minLength: 4,
     });
   }
-
-  if (slugs.has("itinerary-чек-лист")) {
+  if (publishedHrefs.has("/blog/itinerary-чек-лист")) {
     rules.push({
       id: "checklist",
       terms: ["чек-лист", "чеклист", "контрольный список"],
@@ -46,7 +44,6 @@ function blogSlugRules(): BlogInternalLinkRule[] {
       minLength: 5,
     });
   }
-
   return rules;
 }
 
@@ -88,14 +85,13 @@ function escapeRegExp(value: string): string {
 function buildTermPattern(term: string): RegExp {
   const escaped = escapeRegExp(term);
   // Русские склонения: корень + до 3 букв окончания
-  if (/^[а-яё]+$/iu.test(term) && term.length >= 5) {
+  if (/[\u0400-\u04FF]/u.test(term) && term.length >= 5) {
     const stem = escapeRegExp(term.slice(0, term.length - 1));
     return new RegExp(`(?<![\\w/])(${stem}[а-яё]{0,3})(?![\\w])`, "iu");
   }
   return new RegExp(`(?<![\\w/])(${escaped})(?![\\w])`, "iu");
 }
 
-/** Разбивает текст на сегменты с одной автоссылкой (первое совпадение). */
 function linkifyBlogTextInternal(
   text: string,
   rules: BlogInternalLinkRule[],

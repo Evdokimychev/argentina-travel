@@ -20,6 +20,7 @@ import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 import { resolveTourCoverImage } from "@/lib/tour-metadata";
 import { getTourPrivateAccessFromCookies } from "@/lib/tour-private-access";
+import { buildTourSeoDescription, buildTourSeoTitle } from "@/lib/tour-seo";
 
 export const dynamic = "force-dynamic";
 
@@ -56,13 +57,15 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   const pageUrl = absoluteUrl(`/tours/${slug}`);
   const coverImage = resolveTourCoverImage(tour);
   const imageUrl = coverImage ? resolvePublicUrl(coverImage) : undefined;
+  const seoTitle = buildTourSeoTitle(tour);
+  const seoDescription = buildTourSeoDescription(tour);
   return {
-    title: `${tour.title} — тур по Аргентине`,
-    description: tour.shortDescription,
+    title: seoTitle,
+    description: seoDescription,
     robots: tour.isPrivate ? { index: false, follow: false } : undefined,
     openGraph: {
       title: tour.title,
-      description: tour.shortDescription,
+      description: seoDescription,
       url: pageUrl,
       images: imageUrl ? [{ url: imageUrl }] : undefined,
       type: "website",
@@ -71,7 +74,7 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
       ? {
           card: "summary_large_image",
           title: tour.title,
-          description: tour.shortDescription,
+          description: seoDescription,
           images: [imageUrl],
         }
       : undefined,

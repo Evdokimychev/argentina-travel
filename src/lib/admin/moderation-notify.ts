@@ -44,6 +44,16 @@ export async function notifyModerationOutcome(input: {
         .join("\n"),
       layoutOptions,
     ),
+    managed: {
+      eventKey: "moderation.outcome",
+      locale: "ru",
+      variables: {
+        entity_type: input.entityType,
+        entity_title: input.entityTitle,
+        decision: input.action === "approve" ? "Одобрено" : "Отклонено",
+        moderator_note: input.note?.trim() || "Комментарий не добавлен",
+      },
+    },
   });
 }
 
@@ -81,8 +91,8 @@ export async function notifyOrganizerApplicationReview(input: {
       }
     : { previewText: subject };
 
-  await sendOperationalEmail({
-    category: "organizer",
+  const common = {
+    category: "organizer" as const,
     recipientEmails: [input.applicantEmail],
     subject,
     html: renderEmailLayout(contentHtml, layoutOptions),
@@ -97,5 +107,30 @@ export async function notifyOrganizerApplicationReview(input: {
         : `Здравствуйте, ${input.applicantName}!\nК сожалению, заявку пока нельзя одобрить.${input.note ? ` Причина: ${input.note}` : ""}`,
       layoutOptions,
     ),
+  };
+  if (input.action === "approve") {
+    await sendOperationalEmail({
+      ...common,
+      managed: {
+        eventKey: "organizer.application_approved",
+        locale: "ru",
+        variables: {
+          applicant_name: input.applicantName,
+          organizer_url: organizerCabinetUrl,
+        },
+      },
+    });
+    return;
+  }
+  await sendOperationalEmail({
+    ...common,
+    managed: {
+      eventKey: "organizer.application_rejected",
+      locale: "ru",
+      variables: {
+        applicant_name: input.applicantName,
+        review_note: input.note?.trim() || "Дополните сведения в заявке и свяжитесь с поддержкой.",
+      },
+    },
   });
 }

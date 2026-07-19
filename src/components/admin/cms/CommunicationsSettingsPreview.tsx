@@ -41,6 +41,7 @@ const STATE_META: Record<PreviewState, { className: string; icon: typeof CheckCi
 
 const READINESS_LABELS: Record<IntegrationReadinessStatus, string> = {
   ready: "Подключено",
+  configured: "Настроено, не проверено",
   partial: "Настроено частично",
   missing: "Не настроено",
   built_in: "Работает",

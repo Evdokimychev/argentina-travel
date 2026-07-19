@@ -5,6 +5,7 @@
  * Validates supabase/migrations/*.sql:
  * - every public table enables RLS
  * - non–service-role tables have at least one policy
+ * - the migration set declares the explicit service-role Data API grant
  *
  * Writes var/ops/rls-audit-last.json for admin UI.
  *
@@ -23,9 +24,13 @@ const root = path.resolve(__dirname, "..");
 const opsDir = path.join(root, "var/ops");
 const auditFile = path.join(opsDir, "rls-audit-last.json");
 
-const TABLE_RE = /create\s+table\s+if\s+not\s+exists\s+public\.([a-z0-9_]+)/gi;
+const TABLE_RE = /create\s+table\s+(?:if\s+not\s+exists\s+)?public\.([a-z0-9_]+)/gi;
 const RLS_RE = /alter\s+table\s+public\.([a-z0-9_]+)\s+enable\s+row\s+level\s+security/gi;
 const POLICY_RE = /create\s+policy\s+(?:"[^"]+"|[a-z0-9_]+)\s+on\s+public\.([a-z0-9_]+)/gi;
+const SERVICE_ROLE_DATA_API_GRANT_RE =
+  /grant\s+select\s*,\s*insert\s*,\s*update\s*,\s*delete\s+on\s+all\s+tables\s+in\s+schema\s+public\s+to\s+service_role\s*;/i;
+const CLIENT_DEFAULT_REVOKE_RE =
+  /revoke\s+all\s+privileges\s+on\s+all\s+tables\s+in\s+schema\s+public\s+from\s+anon\s*,\s*authenticated\s*;/i;
 
 function loadEnvLocal() {
   for (const file of [".env.local", ".env"]) {
@@ -87,6 +92,22 @@ function runStaticRlsAudit() {
         message: `Таблица public.${table} без политик RLS (критично для публичных таблиц)`,
       });
     }
+  }
+
+  if (!SERVICE_ROLE_DATA_API_GRANT_RE.test(sql)) {
+    criticalIssues.push({
+      table: "*",
+      kind: "missing_service_role_grants",
+      message: "Миграции не фиксируют явный Data API grant для service_role",
+    });
+  }
+
+  if (!CLIENT_DEFAULT_REVOKE_RE.test(sql)) {
+    criticalIssues.push({
+      table: "*",
+      kind: "missing_client_default_revoke",
+      message: "Миграции не сбрасывают неявные grants старых Supabase-проектов",
+    });
   }
 
   return { tables, criticalIssues, ok: criticalIssues.length === 0, source: "static" };

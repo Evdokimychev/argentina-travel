@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
@@ -8,8 +9,15 @@ import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
-import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 import { GalleryMosaicDesktop } from "@/components/shared/GalleryMosaicDesktop";
+
+const DetailGalleryLightbox = dynamic(
+  () =>
+    import("@/components/shared/DetailGalleryLightbox").then(
+      (module) => module.DetailGalleryLightbox,
+    ),
+  { ssr: false },
+);
 
 interface TourDetailGalleryProps {
   images: string[];
@@ -157,60 +165,6 @@ function GalleryCarousel({
   );
 }
 
-function GalleryThumbnailStrip({
-  images,
-  title,
-  activeIndex,
-  onSelect,
-  className,
-}: {
-  images: string[];
-  title: string;
-  activeIndex: number;
-  onSelect: (index: number) => void;
-  className?: string;
-}) {
-  if (images.length <= 1) return null;
-
-  return (
-    <div
-      className={cn(
-        "mt-2 flex gap-2 overflow-x-auto pb-1 scrollbar-hide",
-        className,
-      )}
-      role="tablist"
-      aria-label="Миниатюры галереи"
-    >
-      {images.slice(0, 12).map((src, index) => (
-        <button
-          key={`${src}-thumb-${index}`}
-          type="button"
-          role="tab"
-          aria-selected={index === activeIndex}
-          aria-label={`Фото ${index + 1} из ${images.length}`}
-          onClick={() => onSelect(index)}
-          className={cn(
-            "relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100 ring-1 ring-gray-100 transition-shadow",
-            index === activeIndex && "ring-2 ring-sky shadow-sm"
-          )}
-        >
-          <SafeImage
-            src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
-            alt={index === 0 ? title : `${title} — ${index + 1}`}
-            fill
-            placeholderVariant="tour"
-            partnerImageWidth={320}
-            partnerImageQuality={72}
-            className="object-cover"
-            sizes="96px"
-            loading="lazy"
-          />
-        </button>
-      ))}
-    </div>
-  );
-}
-
 export default function TourDetailGallery({
   images,
   title,
@@ -223,13 +177,6 @@ export default function TourDetailGallery({
   const mobileGalleryImages = galleryImages.slice(0, 12);
   const mobileActiveIndex = Math.min(activeIndex, Math.max(0, mobileGalleryImages.length - 1));
   const mosaicSeed = layoutSeed ?? title;
-
-  const scrollCarouselToIndex = useCallback((index: number) => {
-    setActiveIndex(index);
-    const el = carouselScrollRef.current;
-    if (!el || el.clientWidth === 0) return;
-    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
-  }, []);
 
   if (!galleryImages.length) {
     return (
@@ -262,14 +209,6 @@ export default function TourDetailGallery({
           priorityFirst
         />
       </div>
-
-      <GalleryThumbnailStrip
-        images={mobileGalleryImages}
-        title={title}
-        activeIndex={mobileActiveIndex}
-        onSelect={scrollCarouselToIndex}
-        className="md:hidden"
-      />
 
       <GalleryMosaicDesktop
         images={galleryImages}

@@ -27,6 +27,12 @@ function rateLimitedResponse(retryAfter: number) {
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const ipLimit = await checkRateLimit(`auth:password-reset:ip:${ip}`, 5, 10 * 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitedResponse(ipLimit.retryAfterSec);
+  }
+
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json(
       {
@@ -37,12 +43,6 @@ export async function POST(request: Request) {
       },
       { status: 503 }
     );
-  }
-
-  const ip = getClientIp(request);
-  const ipLimit = await checkRateLimit(`auth:password-reset:ip:${ip}`, 5, 10 * 60_000);
-  if (!ipLimit.ok) {
-    return rateLimitedResponse(ipLimit.retryAfterSec);
   }
 
   try {

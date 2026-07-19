@@ -14,14 +14,18 @@ import { AdminTableState } from "@/components/admin/AdminTableState";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
-import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
+import {
+  BOOKING_STATUSES_ADMIN,
+  BOOKING_STATUS_LABELS,
+  getAdminBookingStatusTransitions,
+} from "@/data/booking-statuses";
 import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
 import { CabinetTableWrap } from "@/components/ui/table";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
 import { normalizeBookingPaymentStatus } from "@/lib/booking-params";
-import type { Booking, BookingStatusActive } from "@/types/tourist";
+import type { Booking, BookingStatus } from "@/types/tourist";
 import type { BookingPaymentStatus } from "@/types/booking-params";
 
 type BookingsResponse = {
@@ -29,7 +33,7 @@ type BookingsResponse = {
   stats?: AdminBookingsStats;
 };
 
-type StatusFilter = "all" | BookingStatusActive;
+type StatusFilter = "all" | BookingStatus;
 
 export default function BookingsView() {
   const searchParams = useSearchParams();
@@ -39,7 +43,7 @@ export default function BookingsView() {
       ? "/api/admin/bookings"
       : `/api/admin/bookings?status=${statusFilter}`;
   const { data, loading, error, refresh } = useAdminApi<BookingsResponse>(url);
-  const bookings = data?.bookings ?? [];
+  const bookings = useMemo(() => data?.bookings ?? [], [data?.bookings]);
   const stats = data?.stats;
   const [search, setSearch] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -67,13 +71,24 @@ export default function BookingsView() {
     if (res.ok && json.booking) setDetail(json.booking);
   }
 
-  async function updateStatus(bookingId: string, status: BookingStatusActive) {
-    setUpdatingId(bookingId);
+  async function updateStatus(booking: AdminBookingSummary, status: BookingStatus) {
+    if (status === booking.status) return;
+    const paymentWarning =
+      status === "cancelled" && (booking.paymentStatus === "paid" || booking.status === "paid")
+        ? "\n\nОплата останется отмеченной как полученная. Возврат оформляется отдельно в разделе финансов."
+        : "";
+    const reservationMessage =
+      status === "cancelled" ? " Места в заезде будут освобождены автоматически." : "";
+    if (!window.confirm(
+      `Изменить статус «${BOOKING_STATUS_LABELS[booking.status]}» на «${BOOKING_STATUS_LABELS[status]}»?${reservationMessage}${paymentWarning}`
+    )) return;
+
+    setUpdatingId(booking.id);
     try {
-      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
+      const res = await fetch(`/api/admin/bookings/${booking.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, expectedVersion: booking.operationVersion }),
       });
       if (!res.ok) {
         const json = (await res.json()) as { error?: string };
@@ -123,7 +138,7 @@ export default function BookingsView() {
             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-charcoal">
               Всего: {stats.total}
             </span>
-            {BOOKING_STATUSES_ACTIVE.map((status) =>
+            {BOOKING_STATUSES_ADMIN.map((status) =>
               stats.byStatus[status] ? (
                 <span
                   key={status}
@@ -150,7 +165,7 @@ export default function BookingsView() {
               className="sm:w-48"
             >
               <option value="all">Все статусы</option>
-              {BOOKING_STATUSES_ACTIVE.map((status) => (
+              {BOOKING_STATUSES_ADMIN.map((status) => (
                 <option key={status} value={status}>
                   {BOOKING_STATUS_LABELS[status]}
                 </option>
@@ -220,20 +235,34 @@ export default function BookingsView() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-col gap-2">
-                          <NativeSelect
-                            value={booking.status}
-                            disabled={updatingId === booking.id}
-                            onChange={(e) =>
-                              void updateStatus(booking.id, e.target.value as BookingStatusActive)
-                            }
-                            className="min-w-[140px] text-xs"
-                          >
-                            {BOOKING_STATUSES_ACTIVE.map((status) => (
-                              <option key={status} value={status}>
-                                {BOOKING_STATUS_LABELS[status]}
+                          {getAdminBookingStatusTransitions(
+                            booking.status,
+                            booking.paymentStatus
+                          ).length ? (
+                            <NativeSelect
+                              value={booking.status}
+                              disabled={updatingId === booking.id}
+                              onChange={(e) =>
+                                void updateStatus(booking, e.target.value as BookingStatus)
+                              }
+                              className="min-w-[160px] text-xs"
+                              aria-label={`Изменить статус заявки ${booking.id}`}
+                            >
+                              <option value={booking.status}>
+                                {BOOKING_STATUS_LABELS[booking.status]}
                               </option>
-                            ))}
-                          </NativeSelect>
+                              {getAdminBookingStatusTransitions(
+                                booking.status,
+                                booking.paymentStatus
+                              ).map((status) => (
+                                <option key={status} value={status}>
+                                  → {BOOKING_STATUS_LABELS[status]}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          ) : (
+                            <span className="text-xs text-slate">Финальный статус</span>
+                          )}
                           <Button size="sm" variant="ghost" onClick={() => void openDetail(booking.id)}>
                             Подробнее
                           </Button>
@@ -262,7 +291,7 @@ export default function BookingsView() {
               </div>
               <div>
                 <dt className="text-xs text-slate">Статус</dt>
-                <dd>{BOOKING_STATUS_LABELS[detail.status as BookingStatusActive] ?? detail.status}</dd>
+                <dd>{BOOKING_STATUS_LABELS[detail.status] ?? detail.status}</dd>
               </div>
               <div>
                 <dt className="text-xs text-slate">Турист</dt>
@@ -327,8 +356,8 @@ export default function BookingsView() {
                   {detail.statusHistory.map((entry) => (
                     <li key={entry.id}>
                       {formatAdminWhen(entry.changedAt)} —{" "}
-                      {entry.from ? BOOKING_STATUS_LABELS[entry.from as BookingStatusActive] ?? entry.from : "—"}{" "}
-                      → {BOOKING_STATUS_LABELS[entry.to as BookingStatusActive] ?? entry.to}
+                      {entry.from ? BOOKING_STATUS_LABELS[entry.from] ?? entry.from : "—"}{" "}
+                      → {BOOKING_STATUS_LABELS[entry.to] ?? entry.to}
                       {entry.note ? ` (${entry.note})` : ""}
                     </li>
                   ))}

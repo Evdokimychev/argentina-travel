@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getShopProductBySlug } from "@/data/shop-products";
+import { fetchPublishedShopProductBySlug } from "@/lib/shop-products-server";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import { notifyShopOrderCreated } from "@/lib/shop-order-notify";
 import {
@@ -18,6 +18,10 @@ import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import type { ShopOrder } from "@/types/shop-order";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+
+async function getShopProductBySlug(slug: string) {
+  return fetchPublishedShopProductBySlug(slug);
+}
 
 function isSameShopOrderRequest(existing: ShopOrder, requested: ShopOrder): boolean {
   return (
@@ -75,7 +79,7 @@ async function postShopOrder(request: Request) {
       return NextResponse.json({ error: "Укажите товар, имя и email" }, { status: 400 });
     }
 
-    const product = getShopProductBySlug(productSlug);
+    const product = await getShopProductBySlug(productSlug);
     if (!product) {
       return NextResponse.json({ error: "Товар не найден" }, { status: 404 });
     }
@@ -133,9 +137,9 @@ async function postShopOrder(request: Request) {
     void notifyShopOrderCreated(result.order);
 
     return NextResponse.json({ order: result.order });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
+      { error: "Не удалось оформить заказ. Попробуйте ещё раз." },
       { status: 500 }
     );
   }
@@ -183,9 +187,9 @@ export async function GET() {
         b.createdAt.localeCompare(a.createdAt)
       ),
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
+      { error: "Не удалось загрузить заказы. Попробуйте ещё раз." },
       { status: 500 }
     );
   }

@@ -13,13 +13,20 @@ export default function KbSources({ sources }: { sources?: KbSource[] }) {
           const label = source.title ?? source.url ?? "Источник";
           const external = source.url && /^https?:\/\//.test(source.url);
           return (
-            <li key={idx} className="leading-relaxed">
+            <li
+              key={`${source.url ?? source.title ?? "source"}-${idx}`}
+              id={`kb-source-${idx + 1}`}
+              className="scroll-mt-24 leading-relaxed"
+            >
+              <span className="mr-1.5 text-xs font-semibold text-slate" aria-hidden="true">
+                {idx + 1}.
+              </span>
               {external ? (
                 <a
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sky-ink underline decoration-sky/40 underline-offset-2 hover:decoration-sky-ink"
+                  className="inline-flex min-h-8 items-center text-sky-ink underline decoration-sky/40 underline-offset-2 hover:decoration-sky-ink focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky"
                 >
                   {label}
                 </a>

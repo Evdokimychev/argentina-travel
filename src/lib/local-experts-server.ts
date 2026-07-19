@@ -5,6 +5,7 @@ import {
   getExpertSeedBySlug,
 } from "@/data/local-experts-seed";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { isProductionRuntime } from "@/lib/runtime-mode";
 import type {
   ExpertCatalogFilters,
   ExpertCategory,
@@ -16,6 +17,10 @@ import type {
 type DbClient = SupabaseClient<Database>;
 
 type ExpertRow = Database["public"]["Tables"]["local_experts"]["Row"];
+
+function productionSafeSeedExperts(filters?: ExpertCatalogFilters): LocalExpertView[] {
+  return isProductionRuntime() ? [] : filterSeedExperts(LOCAL_EXPERTS_SEED, filters);
+}
 
 function rowToView(row: ExpertRow): LocalExpertView {
   return {
@@ -99,7 +104,7 @@ export async function fetchPublishedExperts(
   filters?: ExpertCatalogFilters
 ): Promise<LocalExpertView[]> {
   if (!supabase || !isSupabaseAuthEnabled()) {
-    return filterSeedExperts(LOCAL_EXPERTS_SEED, filters);
+    return productionSafeSeedExperts(filters);
   }
 
   let query = supabase
@@ -122,7 +127,7 @@ export async function fetchPublishedExperts(
 
   const { data, error } = await query;
   if (error || !data?.length) {
-    return filterSeedExperts(LOCAL_EXPERTS_SEED, filters);
+    return productionSafeSeedExperts(filters);
   }
 
   let experts = data.map(rowToView);
@@ -141,7 +146,7 @@ export async function fetchExpertBySlug(
   if (!normalized) return null;
 
   if (!supabase || !isSupabaseAuthEnabled()) {
-    return getExpertSeedBySlug(normalized);
+    return isProductionRuntime() ? null : getExpertSeedBySlug(normalized);
   }
 
   const { data, error } = await supabase
@@ -152,7 +157,7 @@ export async function fetchExpertBySlug(
     .maybeSingle();
 
   if (error || !data) {
-    return getExpertSeedBySlug(normalized);
+    return isProductionRuntime() ? null : getExpertSeedBySlug(normalized);
   }
 
   return rowToView(data);

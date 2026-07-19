@@ -1,0 +1,590 @@
+- banner:
+  - button "toggle menu"
+  - link "На главную":
+    - /url: /
+    - img "Logo"
+  - img
+  - text: Куда поедем?
+  - textbox "Куда поедем?"
+  - img
+  - text: Когда?
+  - textbox "Когда?"
+  - button "Найти туры"
+  - link "Избранное":
+    - /url: /favorites
+    - img
+    - text: Избранное
+  - button "Войти"
+- complementary:
+  - link "На главную":
+    - /url: /
+    - img "Logo"
+  - link "home page icon Туры":
+    - /url: /tours
+    - img "home page icon"
+    - text: Туры
+  - link "home page icon Избранное":
+    - /url: /favorites
+    - img "home page icon"
+    - text: Избранное
+  - link "home page icon Направления":
+    - /url: /destinations
+    - img "home page icon"
+    - text: Направления
+  - link "home page icon Виды отдыха":
+    - /url: /collections
+    - img "home page icon"
+    - text: Виды отдыха
+  - paragraph: Войдите, чтобы использовать все возможности Клуба Гидов
+  - button "Войти"
+  - text: Контакты
+  - link "vk":
+    - /url: https://vk.com/klubgidov?roistat_visit=53422413
+    - img
+  - link "telegram":
+    - /url: https://t.me/klubgidov?roistat_visit=53422413
+    - img
+  - button "Заказать звонок"
+  - text: По будням с 08:00 до 20:00 По выходным с 08:00 до 19:00 О Клубе Гидов
+  - link "О нас":
+    - /url: /about
+  - link "Подарочные сертификаты":
+    - /url: /podarochnye-sertifikaty
+  - link "Журнал о путешествиях":
+    - /url: /journal
+  - link "Достопримечательности мира":
+    - /url: /dostoprimechatelnosti
+  - link "Частые вопросы":
+    - /url: /help-center/about
+  - link "Поддержка и контакты":
+    - /url: /contacts
+  - text: Авторам путешествий
+  - paragraph: Организуйте собственный тур вместе с Клубом Гидов
+  - link "Стать автором":
+    - /url: /join
+  - img
+  - text: RUB (₽)
+  - img
+  - list:
+    - listitem:
+      - link "Оферта":
+        - /url: /agreement
+    - listitem:
+      - link "Политика конфиденциальности":
+        - /url: /privacy
+  - img "visa"
+  - img "mastercard"
+  - img "maestro"
+  - img "unionpay"
+  - img "mir"
+  - text: © 2026 ООО «ВАУТРИП»
+- navigation "Breadcrumb":
+  - list:
+    - listitem:
+      - link "Главная":
+        - /url: /
+    - listitem: "Найти гида: организаторы авторских туров"
+- heading "Организаторы туров Клуба Гидов" [level=1]
+- paragraph: Хотите найти гида для необычного путешествия? В Клубе Гидов организаторы туров предлагают маршруты по всему миру. Их специализация — запоминающиеся поездки, чтобы увидеть красивейшие уголки планеты и погрузиться в культуру разных народов. Путешествие с Клубом Гидов — это не просто путь из точки А в точку Б, а настоящее приключение и новые друзья!
+- text: Хотите присоединиться к нам?
+- paragraph: Мы всегда рады новым участникам нашего Клуба. Присоединитесь и начните проводить свои туры вместе с Клубом Гидов.
+- link "Стать автором":
+  - /url: /join
+- link "Анна Г.-photo Анна Г. 4.9 925 отзывов 130 туров":
+  - /url: /tour-provider/2458
+  - img "Анна Г.-photo"
+  - text: Анна Г.
+  - img
+  - strong: "4.9"
+  - text: 925 отзывов 130 туров
+- link "Светлана Г.-photo Светлана Г. 5.0 486 отзывов 62 тура":
+  - /url: /tour-provider/2316
+  - img "Светлана Г.-photo"
+  - text: Светлана Г.
+  - img
+  - strong: "5.0"
+  - text: 486 отзывов 62 тура
+- link "Виталий Т.-photo Виталий Т. 4.9 925 отзывов 54 тура":
+  - /url: /tour-provider/1411
+  - img "Виталий Т.-photo"
+  - text: Виталий Т.
+  - img
+  - strong: "4.9"
+  - text: 925 отзывов 54 тура
+- link "Татьяна Ш.-photo Татьяна Ш. 4.9 687 отзывов 53 тура":
+  - /url: /tour-provider/1740
+  - img "Татьяна Ш.-photo"
+  - text: Татьяна Ш.
+  - img
+  - strong: "4.9"
+  - text: 687 отзывов 53 тура
+- link "Олег Л.-photo Олег Л. 4.8 32 отзыва 50 туров":
+  - /url: /tour-provider/3376
+  - img "Олег Л.-photo"
+  - text: Олег Л.
+  - img
+  - strong: "4.8"
+  - text: 32 отзыва 50 туров
+- link "Наира Т.-photo Наира Т. 5.0 38 отзывов 44 тура":
+  - /url: /tour-provider/3203
+  - img "Наира Т.-photo"
+  - text: Наира Т.
+  - img
+  - strong: "5.0"
+  - text: 38 отзывов 44 тура
+- link "Людмила Т.-photo Людмила Т. 4.8 10 отзывов 39 туров":
+  - /url: /tour-provider/2810
+  - img "Людмила Т.-photo"
+  - text: Людмила Т.
+  - img
+  - strong: "4.8"
+  - text: 10 отзывов 39 туров
+- link "Умар А.-photo Умар А. 4.9 537 отзывов 37 туров":
+  - /url: /tour-provider/1464
+  - img "Умар А.-photo"
+  - text: Умар А.
+  - img
+  - strong: "4.9"
+  - text: 537 отзывов 37 туров
+- link "Александр К.-photo Александр К. 5.0 7 отзывов 31 тур":
+  - /url: /tour-provider/1874
+  - img "Александр К.-photo"
+  - text: Александр К.
+  - img
+  - strong: "5.0"
+  - text: 7 отзывов 31 тур
+- link "Данил К.-photo Данил К. 4.9 773 отзыва 21 тур":
+  - /url: /tour-provider/1515
+  - img "Данил К.-photo"
+  - text: Данил К.
+  - img
+  - strong: "4.9"
+  - text: 773 отзыва 21 тур
+- link "Ольга О.-photo Ольга О. 5.0 12 отзывов 21 тур":
+  - /url: /tour-provider/4548
+  - img "Ольга О.-photo"
+  - text: Ольга О.
+  - img
+  - strong: "5.0"
+  - text: 12 отзывов 21 тур
+- link "Андрей Р.-photo Андрей Р. 5.0 368 отзывов 20 туров":
+  - /url: /tour-provider/1524
+  - img "Андрей Р.-photo"
+  - text: Андрей Р.
+  - img
+  - strong: "5.0"
+  - text: 368 отзывов 20 туров
+- link "Марина Т.-photo Марина Т. 5.0 166 отзывов 20 туров":
+  - /url: /tour-provider/1559
+  - img "Марина Т.-photo"
+  - text: Марина Т.
+  - img
+  - strong: "5.0"
+  - text: 166 отзывов 20 туров
+- link "Михаил Б.-photo Михаил Б. 4.9 452 отзыва 20 туров":
+  - /url: /tour-provider/2846
+  - img "Михаил Б.-photo"
+  - text: Михаил Б.
+  - img
+  - strong: "4.9"
+  - text: 452 отзыва 20 туров
+- link "Дмитрий Р.-photo Дмитрий Р. 5.0 19 отзывов 20 туров":
+  - /url: /tour-provider/4502
+  - img "Дмитрий Р.-photo"
+  - text: Дмитрий Р.
+  - img
+  - strong: "5.0"
+  - text: 19 отзывов 20 туров
+- link "Курбан А.-photo Курбан А. 5.0 1710 отзывов 19 туров":
+  - /url: /tour-provider/2578
+  - img "Курбан А.-photo"
+  - text: Курбан А.
+  - img
+  - strong: "5.0"
+  - text: 1710 отзывов 19 туров
+- link "Дмитрий К.-photo Дмитрий К. 5.0 22 отзыва 18 туров":
+  - /url: /tour-provider/2806
+  - img "Дмитрий К.-photo"
+  - text: Дмитрий К.
+  - img
+  - strong: "5.0"
+  - text: 22 отзыва 18 туров
+- link "Виктор М.-photo Виктор М. 4.9 1199 отзывов 17 туров":
+  - /url: /tour-provider/1467
+  - img "Виктор М.-photo"
+  - text: Виктор М.
+  - img
+  - strong: "4.9"
+  - text: 1199 отзывов 17 туров
+- link "Наталия М.-photo Наталия М. 5.0 3 отзыва 17 туров":
+  - /url: /tour-provider/4252
+  - img "Наталия М.-photo"
+  - text: Наталия М.
+  - img
+  - strong: "5.0"
+  - text: 3 отзыва 17 туров
+- link "Анар Р.-photo Анар Р. 5.0 28 отзывов 17 туров":
+  - /url: /tour-provider/4762
+  - img "Анар Р.-photo"
+  - text: Анар Р.
+  - img
+  - strong: "5.0"
+  - text: 28 отзывов 17 туров
+- button "Загрузить еще"
+- button "Previous page":
+  - img
+- link "1":
+  - /url: /tour-providers?page=1
+- link "2":
+  - /url: /tour-providers?page=2
+- link "3":
+  - /url: /tour-providers?page=3
+- link "4":
+  - /url: /tour-providers?page=4
+- link "5":
+  - /url: /tour-providers?page=5
+- link "6":
+  - /url: /tour-providers?page=6
+- link "7":
+  - /url: /tour-providers?page=7
+- button "Next page":
+  - img
+- text: 1–20 из 943
+- contentinfo:
+  - link "На главную":
+    - /url: /
+    - img "Logo"
+  - text: Маркетплейс авторских туров от независимых гидов Авторам путешествий Организуйте собственный тур вместе с Клубом Гидов
+  - link "Стать автором":
+    - /url: /join
+    - text: Стать автором
+    - img
+  - list:
+    - listitem: Туры напрямую от авторов Бронируй без наценок и посредников
+    - listitem:
+      - text: Проверенные авторы Все авторы подтверждают свою личность
+      - button "info":
+        - img
+    - listitem:
+      - text: Безопасная оплата Оплата через безопасную сделку от
+      - img "tinkoff"
+    - listitem: Реальные отзывы После каждого путешествия мы собираем отзыв туриста
+  - text: Клуб Гидов
+  - list:
+    - listitem:
+      - link "Туры":
+        - /url: /tours
+    - listitem:
+      - link "Виды отдыха":
+        - /url: /collections
+    - listitem:
+      - link "Организаторы туров":
+        - /url: /tour-providers
+    - listitem:
+      - link "Отзывы о путешествиях":
+        - /url: /reviews
+    - listitem:
+      - link "Частые вопросы":
+        - /url: /help-center/about
+    - listitem:
+      - link "Мы в СМИ":
+        - /url: /press
+    - listitem:
+      - link "О нас":
+        - /url: /about
+    - listitem:
+      - link "Подарочные сертификаты":
+        - /url: /podarochnye-sertifikaty
+    - listitem:
+      - link "Журнал о путешествиях":
+        - /url: /journal
+    - listitem:
+      - link "Достопримечательности мира":
+        - /url: /dostoprimechatelnosti
+    - listitem:
+      - link "Поддержка и контакты":
+        - /url: /contacts
+  - text: Давайте дружить
+  - link "vk":
+    - /url: https://vk.com/klubgidov?roistat_visit=53422413
+    - img
+  - link "telegram":
+    - /url: https://t.me/klubgidov?roistat_visit=53422413
+    - img
+  - link "4.8 Рейтинг организации в Google":
+    - /url: https://maps.app.goo.gl/DG7ruZoeJB8dYN157?roistat_visit=53422413
+    - text: "4.8"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в Google
+  - link "4.6 Рейтинг организации в Яндекс":
+    - /url: https://yandex.ru/maps/-/CPAlV60C?roistat_visit=53422413
+    - text: "4.6"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в Яндекс
+  - link "4.8 Рейтинг организации в 2ГИС":
+    - /url: https://go.2gis.com/7F7O4?roistat_visit=53422413
+    - text: "4.8"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в 2ГИС
+  - link "4.5 Рейтинг организации в ВКонтакте":
+    - /url: https://vk.com/reviews-197000825?roistat_visit=53422413
+    - text: "4.5"
+    - img
+    - img
+    - img
+    - img
+    - img
+    - text: Рейтинг организации в ВКонтакте
+  - text: Позвонить нам
+  - button "Заказать звонок"
+  - text: По будням с 08:00 до 20:00 По выходным с 08:00 до 19:00 © 2026 ООО «ВАУТРИП»
+  - link "Оферта":
+    - /url: /agreement
+  - link "Политика конфиденциальности":
+    - /url: /privacy
+  - text: Полное или частичное копирование изображений и текстов возможно только с указанием активной ссылки на сайт
+  - link "klubgidov.ru":
+    - /url: /
+  - img "visa"
+  - img "mastercard"
+  - img "maestro"
+  - img "unionpay"
+  - img "mir"
+  - text: Туры по континентам
+  - list:
+    - listitem:
+      - link "Европа":
+        - /url: /evropa
+    - listitem:
+      - link "Азия":
+        - /url: /aziya
+    - listitem:
+      - link "Африка":
+        - /url: /afrika
+    - listitem:
+      - link "Северная Америка":
+        - /url: /severnaya-amerika
+    - listitem:
+      - link "Австралия и Океания":
+        - /url: /avstraliya-i-okeaniya
+    - listitem:
+      - link "Центральная Америка":
+        - /url: /centralnaya-amerika
+    - listitem:
+      - link "Южная Америка":
+        - /url: /yuzhnaya-amerika
+  - text: Туры по странам
+  - link "Абхазия":
+    - /url: /abhaziya
+  - link "Австралия":
+    - /url: /avstraliya
+  - link "Австрия":
+    - /url: /avstriya
+  - link "Азербайджан":
+    - /url: /azerbaijan
+  - link "Алжир":
+    - /url: /alzhir
+  - link "Аргентина":
+    - /url: /argentina
+  - link "Армения":
+    - /url: /armenia
+  - link "Багамы":
+    - /url: /bagamy
+  - link "Беларусь":
+    - /url: /belarus
+  - link "Бельгия":
+    - /url: /belgiya
+  - link "Боливия":
+    - /url: /boliviya
+  - link "Босния и Герцеговина":
+    - /url: /bosniya-i-gercegovina
+  - link "Ботсвана":
+    - /url: /botswana
+  - link "Бразилия":
+    - /url: /braziliya
+  - link "Бруней":
+    - /url: /brunej
+  - link "Бутан":
+    - /url: /butan
+  - link "Великобритания":
+    - /url: /velikobritaniya
+  - link "Венгрия":
+    - /url: /vengriya
+  - link "Вьетнам":
+    - /url: /vetnam
+  - link "Гватемала":
+    - /url: /gvatemala
+  - link "Германия":
+    - /url: /germaniya
+  - link "Гондурас":
+    - /url: /gonduras
+  - link "Греция":
+    - /url: /greece
+  - link "Грузия":
+    - /url: /gruziya
+  - link "Египет":
+    - /url: /egipet
+  - link "Замбия":
+    - /url: /zambiya
+  - link "Зимбабве":
+    - /url: /zimbabwe
+  - link "Индия":
+    - /url: /india
+  - link "Индонезия":
+    - /url: /indoneziya
+  - link "Иордания":
+    - /url: /iordaniya
+  - link "Исландия":
+    - /url: /islandiya
+  - link "Испания":
+    - /url: /ispaniya
+  - link "Италия":
+    - /url: /italiya
+  - link "Йемен":
+    - /url: /yemen
+  - link "Казахстан":
+    - /url: /kazakhstan
+  - link "Камбоджа":
+    - /url: /kambodzha
+  - link "Канада":
+    - /url: /kanada
+  - link "Кения":
+    - /url: /kenia
+  - link "Кипр":
+    - /url: /kipr
+  - link "Киргизия":
+    - /url: /kirgiziya
+  - link "Китай":
+    - /url: /kitaj
+  - link "Колумбия":
+    - /url: /kolumbiya
+  - link "Коста-Рика":
+    - /url: /kosta-rika
+  - link "Лаос":
+    - /url: /laos
+  - link "Лихтенштейн":
+    - /url: /lihtenshtejn
+  - link "Маврикий":
+    - /url: /mauritius
+  - link "Мадагаскар":
+    - /url: /madagaskar
+  - link "Макао":
+    - /url: /makao
+  - link "Малайзия":
+    - /url: /malajziya
+  - link "Мальдивы":
+    - /url: /maldives
+  - link "Марокко":
+    - /url: /marokko
+  - link "Мартиника":
+    - /url: /martinika
+  - link "Мексика":
+    - /url: /meksika
+  - link "Монако":
+    - /url: /monako
+  - link "Монголия":
+    - /url: /mongoliya
+  - link "Мьянма":
+    - /url: /myanma
+  - link "Намибия":
+    - /url: /namibia
+  - link "Непал":
+    - /url: /nepal
+  - link "Новая Зеландия":
+    - /url: /novaya-zelandiya
+  - link "Норвегия":
+    - /url: /norvegiya
+  - link "ОАЭ":
+    - /url: /oae
+  - link "Оман":
+    - /url: /oman
+  - link "Пакистан":
+    - /url: /pakistan
+  - link "Палау":
+    - /url: /palau
+  - link "Парагвай":
+    - /url: /paragvaj
+  - link "Перу":
+    - /url: /peru
+  - link "Португалия":
+    - /url: /portugaliya
+  - link "Россия":
+    - /url: /rossiya
+  - link "Сальвадор":
+    - /url: /salvador
+  - link "Сейшельские Острова":
+    - /url: /sejshelskie-ostrova
+  - link "Сент-Винсент и Гренадины":
+    - /url: /sent-vinsent-i-grenadiny
+  - link "Сент-Люсия":
+    - /url: /sent-lyusiya
+  - link "Сербия":
+    - /url: /serbia
+  - link "Сингапур":
+    - /url: /singapur
+  - link "Словения":
+    - /url: /sloveniya
+  - link "США":
+    - /url: /ssha
+  - link "Таджикистан":
+    - /url: /tadzhikistan
+  - link "Таиланд":
+    - /url: /thailand
+  - link "Танзания":
+    - /url: /tanzania
+  - link "Туркменистан":
+    - /url: /turkmenistan
+  - link "Турция":
+    - /url: /turciya
+  - link "Узбекистан":
+    - /url: /uzbekistan
+  - link "Фарерские острова":
+    - /url: /farerskie-ostrova
+  - link "Фиджи":
+    - /url: /fidzhi
+  - link "Филиппины":
+    - /url: /filippiny
+  - link "Франция":
+    - /url: /franciya
+  - link "Хорватия":
+    - /url: /horvatiya
+  - link "Черногория":
+    - /url: /montenegro
+  - link "Чили":
+    - /url: /chili
+  - link "Швейцария":
+    - /url: /shvejcariya
+  - link "Шри-Ланка":
+    - /url: /srilanka
+  - link "Эквадор":
+    - /url: /ehkvador
+  - link "Эфиопия":
+    - /url: /ethiopia
+  - link "ЮАР":
+    - /url: /yuar
+  - link "Южная Корея":
+    - /url: /yuzhnaya-koreya
+  - link "Южная Осетия":
+    - /url: /yuzhnaya-osetiya
+  - link "Япония":
+    - /url: /yaponiya
+  - button "Посмотреть все страны"
+- button
+- text: Используя данный сайт, вы даете согласие на использование
+- link "файлов куки (cookie)":
+  - /url: /privacy
+- button "ОК"
+- button "Служба поддержки":
+  - img

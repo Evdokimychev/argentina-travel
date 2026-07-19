@@ -20,10 +20,11 @@ import WaitlistStatusBadge from "@/components/waitlist/WaitlistStatusBadge";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerWaitlistForCabinet } from "@/lib/organizer-waitlist";
+import { apiFetchOrganizerWaitlist } from "@/lib/waitlist-api";
+import { isRemoteBookingsMode } from "@/lib/bookings-api";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { WAITLIST_UPDATED_EVENT, type WaitlistEntry, type WaitlistStatus } from "@/types/waitlist";
 import { WAITLIST_STATUS_LABELS } from "@/data/waitlist-statuses";
-import { cn } from "@/lib/cn";
 import { cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 
 type WaitlistFilter = "all" | WaitlistStatus;
@@ -38,17 +39,33 @@ export default function OrganizerWaitlistView() {
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<WaitlistFilter>(initialStatus);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     if (!user) return;
 
-    function refresh() {
+    async function refresh() {
+      if (isRemoteBookingsMode()) {
+        setLoading(true);
+        setLoadError("");
+        try {
+          setEntries(await apiFetchOrganizerWaitlist());
+        } catch (error) {
+          setEntries([]);
+          setLoadError(error instanceof Error ? error.message : "Не удалось загрузить лист ожидания");
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
       setEntries(getOrganizerWaitlistForCabinet(user!.id));
     }
 
-    refresh();
-    window.addEventListener(WAITLIST_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, refresh);
+    void refresh();
+    const onUpdated = () => void refresh();
+    window.addEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
   }, [user]);
 
   const filtered = useMemo(() => {
@@ -95,7 +112,15 @@ export default function OrganizerWaitlistView() {
           </NativeSelect>
         </div>
 
-        {filtered.length > 0 ? (
+        {loading ? (
+          <p className="py-8 text-center text-sm text-slate" role="status">
+            Загружаем заявки…
+          </p>
+        ) : loadError ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+            {loadError}
+          </div>
+        ) : filtered.length > 0 ? (
           <div className={cabinetTableWrapClass}>
             <Table className="min-w-[820px] text-left">
               <TableHeader className={cabinetTableHeaderClass}>

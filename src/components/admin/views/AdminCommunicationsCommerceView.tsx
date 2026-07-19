@@ -23,6 +23,10 @@ const statusMeta: Record<ReadinessStatus, { label: string; className: string }> 
     label: "Готово",
     className: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   },
+  configured: {
+    label: "Настроено, не проверено",
+    className: "bg-amber-50 text-amber-800 ring-amber-200",
+  },
   partial: {
     label: "Нужна настройка",
     className: "bg-amber-50 text-amber-800 ring-amber-200",
@@ -173,6 +177,7 @@ export function AdminCommunicationsCommerceView({
 
               <div className="mt-5 divide-y divide-slate-200 rounded-2xl border border-slate-200">
                 {[
+                  ["Очередь писем", "Ошибки, повторные попытки и восстановление", "/admin/operations/email"],
                   ["Платежи", "Состояния операций и возвратов", "/admin/operations/payments"],
                   ["Сверка", "Расхождения и ручная проверка", "/admin/operations/reconciliation"],
                   ["Бронирования", "Заявки туристов и статусы", "/admin/operations/bookings"],

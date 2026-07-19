@@ -30,8 +30,8 @@ import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
-import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
-import { filterPublicPaths, isTravelModulePathEnabled } from "@/lib/public-module-visibility";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
+import { filterPublicPaths } from "@/lib/public-module-visibility";
 import { KB_SECTIONS } from "@/lib/knowledge-base/content";
 import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
@@ -41,6 +41,26 @@ import {
   findRuUrlDecision,
 } from "@/lib/seo/publication-registry";
 import type { BlogPost } from "@/types";
+
+/**
+ * Conservative compatibility guard for public paths whose stable,
+ * self-canonical response cannot be guaranteed for every sitemap request.
+ */
+export function isIndexableInternalPath(href: string): boolean {
+  if (!href.startsWith("/") || href.startsWith("//")) return false;
+  if (href.includes("?") || href.includes("#") || href.includes("\\")) return false;
+  if (href.startsWith("/organizer") || href.startsWith("/profile")) return false;
+  if (href === "/booking/find") return false;
+  if (href.startsWith("/booking/pay") || href.startsWith("/booking/travelers")) return false;
+  if (href === "/baza-znaniy/poisk") return false;
+
+  // Partner city availability changes independently from our publication
+  // catalog. City hubs stay discoverable through /excursions without being
+  // asserted as permanently indexable here.
+  if (href.startsWith("/excursions/city/")) return false;
+
+  return findRuUrlDecision(href) === null;
+}
 
 function uniquePaths(paths: string[]): string[] {
   return [...new Set(paths)];
@@ -70,13 +90,18 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   }
 }
 
+export const STABLE_TOUR_LANDING_PATHS = ["/tours/region/patagonia"] as const;
+
 export async function collectTourSitemapPaths(): Promise<string[]> {
   try {
     const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
     const slugs = await fetchCutoverPublishedTourSlugs();
-    return uniquePaths(slugs.map((slug) => `/tours/${slug}`));
+    return uniquePaths([...STABLE_TOUR_LANDING_PATHS, ...slugs.map((slug) => `/tours/${slug}`)]);
   } catch {
-    return marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+    return uniquePaths([
+      ...STABLE_TOUR_LANDING_PATHS,
+      ...marketplaceTours.map((tour) => `/tours/${tour.slug}`),
+    ]);
   }
 }
 
@@ -138,6 +163,17 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
   return uniquePaths(paths);
 }
 
+export async function collectApartmentSitemapPaths(): Promise<string[]> {
+  try {
+    const { listPublishedApartments } = await import("@/lib/apartments/apartment-repository-server");
+    const { PRIMARY_PUBLIC_MARKET } = await import("@/lib/market-context");
+    const apartments = await listPublishedApartments(PRIMARY_PUBLIC_MARKET.id);
+    return ["/apartments", ...apartments.map((item) => `/apartments/${item.slug}`)];
+  } catch {
+    return [];
+  }
+}
+
 export async function collectPlacesSitemapPaths(): Promise<string[]> {
   const paths = ["/places", "/collections", "/itineraries"];
 
@@ -183,12 +219,12 @@ export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
 export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
-    .filter((path) => filterRuSitemapPaths([path]).length > 0);
+    .filter(isIndexableInternalPath);
 
   const footerPaths = [
     ...SITE_FOOTER_NAV.map((link) => link.href),
     ...SITE_FOOTER_CONTACTS.map((link) => link.href),
-  ].filter((path) => filterRuSitemapPaths([path]).length > 0);
+  ].filter(isIndexableInternalPath);
 
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
@@ -197,6 +233,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     tourPaths,
     excursionPaths,
     placesPaths,
+    apartmentPaths,
     guideSlugs,
     destinationSlugs,
     legalSlugs,
@@ -205,6 +242,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     collectTourSitemapPaths(),
     collectExcursionSitemapPaths(),
     collectPlacesSitemapPaths(),
+    collectApartmentSitemapPaths(),
     listPublishedGuideSlugs(),
     listPublishedDestinationSlugs(),
     listPublishedLegalSlugs(),
@@ -235,6 +273,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...tourPaths,
     ...excursionPaths,
     ...placesPaths,
+    ...apartmentPaths,
     ...blogPaths,
     ...immigrationPaths,
     ...guidePaths,
@@ -245,7 +284,24 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
-  ]);
+  ]).filter(isIndexableInternalPath);
+}
+
+/**
+ * Final public-availability gate shared with middleware. Keeping it after all
+ * collectors prevents a disabled, 404 or noindex route from being reintroduced
+ * by navigation, footer or a future catalog source.
+ */
+export function filterSitemapPathsByPublicSettings(
+  paths: string[],
+  navigation: Parameters<typeof filterPublicPaths>[1],
+  modules: NonNullable<Parameters<typeof filterPublicPaths>[2]>,
+): string[] {
+  return filterPublicPaths(
+    filterRuSitemapPaths(paths).filter(isIndexableInternalPath),
+    navigation,
+    modules,
+  );
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
@@ -259,17 +315,13 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const [navigation, modules] = await Promise.all([
-    fetchSiteNavigation(),
-    fetchSiteModules(),
-  ]);
-  const visiblePaths = filterPublicPaths(
+  const controlPlane = await fetchSiteControlPlaneEdge();
+  const visiblePaths = filterSitemapPathsByPublicSettings(
     await collectSitemapPaths({ blogCatalog }),
-    navigation,
+    controlPlane.navigation,
+    controlPlane.modules,
   );
-  const paths = expandI18nSitemapPaths(
-    visiblePaths.filter((path) => isTravelModulePathEnabled(path, modules)),
-  );
+  const paths = expandI18nSitemapPaths(visiblePaths);
 
   return paths.map((path) => {
     const lastModified =

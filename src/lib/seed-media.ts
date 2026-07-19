@@ -1,7 +1,6 @@
 import { getPlaceCoverImage, getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
 
-/** Checkout / transfer vehicle thumbnails — local service card art. */
-export const TRANSFER_VEHICLE_PLACEHOLDER = "/media/services/cards/transfers.jpg";
+export { TRANSFER_VEHICLE_PLACEHOLDER } from "@/lib/media/media-placeholders";
 
 export function tourCover(slug: string): string {
   return getTourCoverImage(slug);

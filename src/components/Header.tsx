@@ -12,10 +12,6 @@ import DesktopSiteNav from "@/components/navigation/DesktopSiteNav";
 import { SiteNavFullScreenOverlay } from "@/components/navigation/SiteNavDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import {
-  SITE_NAV_SECTIONS,
-  SITE_NAV_UTILITY_LINKS,
-} from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { useSiteHeaderAutoHide } from "@/hooks/useSiteHeaderAutoHide";
 import { useSiteHeaderOverlayLocked } from "@/hooks/useSiteHeaderOverlayLock";
@@ -38,6 +34,7 @@ import type {
   SiteMarketingGlobal,
   SiteModulesGlobal,
 } from "@/types/site-globals";
+import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 import { filterPublicLinks, filterSiteNavSections } from "@/lib/public-module-visibility";
 
 const CircleButton = forwardRef<
@@ -93,12 +90,16 @@ export default function Header({
   branding,
   marketing,
   modules,
+  sections,
+  baseUtilityLinks,
 }: {
   navigation?: SiteNavigationGlobal;
   design?: SiteDesignGlobal;
   branding?: SiteBrandingGlobalResolved;
   marketing?: SiteMarketingGlobal;
   modules?: SiteModulesGlobal;
+  sections: SiteNavSection[];
+  baseUtilityLinks: SiteNavLink[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -143,17 +144,17 @@ export default function Header({
   }, []);
 
   const utilityLinks = useMemo(() => {
-    if (!navigation) return SITE_NAV_UTILITY_LINKS;
+    if (!navigation) return baseUtilityLinks;
     return filterPublicLinks([
-      { ...SITE_NAV_UTILITY_LINKS[0], label: navigation.utilityToursLabel, labelKey: undefined, href: navigation.utilityToursUrl },
-      { ...SITE_NAV_UTILITY_LINKS[1], label: navigation.utilityOrganizerLabel, labelKey: undefined, href: navigation.utilityOrganizerUrl },
-      { ...SITE_NAV_UTILITY_LINKS[2], label: navigation.utilityContactLabel, labelKey: undefined, href: navigation.utilityContactUrl },
+      { ...baseUtilityLinks[0], label: navigation.utilityToursLabel, labelKey: undefined, href: navigation.utilityToursUrl },
+      { ...baseUtilityLinks[1], label: navigation.utilityOrganizerLabel, labelKey: undefined, href: navigation.utilityOrganizerUrl },
+      { ...baseUtilityLinks[2], label: navigation.utilityContactLabel, labelKey: undefined, href: navigation.utilityContactUrl },
     ], navigation, modules);
-  }, [modules, navigation]);
+  }, [baseUtilityLinks, modules, navigation]);
   const utilityCtaLink = utilityLinks.at(-1);
   const navSections = useMemo(
-    () => navigation ? filterSiteNavSections(SITE_NAV_SECTIONS, navigation, modules) : SITE_NAV_SECTIONS,
-    [modules, navigation],
+    () => navigation ? filterSiteNavSections(sections, navigation, modules) : sections,
+    [modules, navigation, sections],
   );
   const mobileNavSections = useMemo(
     () => navSections.filter((section) => section.id !== "home"),

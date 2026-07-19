@@ -15,9 +15,21 @@ import {
 } from "@/types/organizer-analytics";
 
 type OrganizerAnalyticsApiResponse = {
-  report?: OrganizerAnalyticsServerReport;
+  report?: Pick<OrganizerAnalyticsServerReport, "period" | "generatedAt" | "summary">;
+  advanced?: Pick<OrganizerAnalyticsServerReport, "funnel" | "topTours"> | null;
+  commercial?: {
+    plan: { code: string; version: number; name: string } | null;
+    canUseAdvancedAnalytics: boolean;
+    canExportCsv: boolean;
+  };
   error?: string;
 };
+
+type BasicAnalyticsReport = NonNullable<OrganizerAnalyticsApiResponse["report"]>;
+type AdvancedAnalyticsReport = NonNullable<OrganizerAnalyticsApiResponse["advanced"]>;
+type CommercialAnalyticsAccess = NonNullable<
+  OrganizerAnalyticsApiResponse["commercial"]
+>;
 
 function KpiCard({
   label,
@@ -48,7 +60,9 @@ export default function OrganizerAnalyticsRemoteView() {
   const [loading, setLoading] = useState(true);
   const [csvLoading, setCsvLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [report, setReport] = useState<OrganizerAnalyticsServerReport | null>(null);
+  const [report, setReport] = useState<BasicAnalyticsReport | null>(null);
+  const [advanced, setAdvanced] = useState<AdvancedAnalyticsReport | null>(null);
+  const [commercial, setCommercial] = useState<CommercialAnalyticsAccess | null>(null);
 
   const loadAnalytics = useCallback(async () => {
     setLoading(true);
@@ -61,6 +75,8 @@ export default function OrganizerAnalyticsRemoteView() {
         return;
       }
       setReport(json.report ?? null);
+      setAdvanced(json.advanced ?? null);
+      setCommercial(json.commercial ?? null);
     } catch {
       setError("Не удалось загрузить аналитику");
     } finally {
@@ -114,9 +130,14 @@ export default function OrganizerAnalyticsRemoteView() {
               Показатели бизнеса
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-              Серверная сводка по выручке, воронке и лучшим турам на основе бронирований и
-              платежей в Supabase.
+              Сводка по бронированиям и выручке. Расширенная воронка и экспорт
+              зависят от выбранного тарифа.
             </p>
+            {commercial?.plan ? (
+              <p className="mt-3 inline-flex rounded-full border border-sky/20 bg-white px-3 py-1 text-xs font-medium text-charcoal">
+                Тариф: {commercial.plan.name} · версия {commercial.plan.version}
+              </p>
+            ) : null}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2">
@@ -148,7 +169,12 @@ export default function OrganizerAnalyticsRemoteView() {
               variant="secondary"
               size="sm"
               onClick={() => void downloadCsv()}
-              disabled={csvLoading || loading}
+              disabled={csvLoading || loading || !commercial?.canExportCsv}
+              title={
+                commercial?.canExportCsv
+                  ? "Скачать отчёт"
+                  : "Экспорт CSV не входит в текущий тариф"
+              }
             >
               <Download className="mr-1.5 h-4 w-4" aria-hidden />
               Скачать CSV
@@ -189,43 +215,62 @@ export default function OrganizerAnalyticsRemoteView() {
               <KpiCard
                 label="Клиенты"
                 value={report.summary.uniqueCustomers}
-                hint="Уникальные email"
+                hint="Уникальные клиенты за выбранный период"
               />
             </div>
           </section>
 
-          <section className={cabinetPanelClass}>
-            <h2 className="font-heading text-lg font-bold text-charcoal">Воронка конверсии</h2>
-            <p className="mt-1 text-sm text-slate">
-              Просмотры туров, старты бронирования, подтверждения и оплаты.
-            </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <KpiCard label="Просмотры" value={report.funnel.tourViews} />
-              <KpiCard
-                label="Старт бронирования"
-                value={report.funnel.bookingStarts}
-                hint={`Конверсия: ${formatPct(report.funnel.viewToStartPct)}`}
-              />
-              <KpiCard
-                label="Подтверждение"
-                value={report.funnel.confirmedBookings}
-                hint={`Конверсия: ${formatPct(report.funnel.startToConfirmedPct)}`}
-              />
-              <KpiCard
-                label="Оплата"
-                value={report.funnel.paidBookings}
-                hint={`Конверсия: ${formatPct(report.funnel.confirmedToPaidPct)}`}
-              />
-            </div>
-          </section>
+          {advanced ? (
+            <section className={cabinetPanelClass}>
+              <h2 className="font-heading text-lg font-bold text-charcoal">
+                Воронка конверсии
+              </h2>
+              <p className="mt-1 text-sm text-slate">
+                Просмотры туров, старты бронирования, подтверждения и оплаты.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <KpiCard label="Просмотры" value={advanced.funnel.tourViews} />
+                <KpiCard
+                  label="Старт бронирования"
+                  value={advanced.funnel.bookingStarts}
+                  hint={`Конверсия: ${formatPct(advanced.funnel.viewToStartPct)}`}
+                />
+                <KpiCard
+                  label="Подтверждение"
+                  value={advanced.funnel.confirmedBookings}
+                  hint={`Конверсия: ${formatPct(advanced.funnel.startToConfirmedPct)}`}
+                />
+                <KpiCard
+                  label="Оплата"
+                  value={advanced.funnel.paidBookings}
+                  hint={`Конверсия: ${formatPct(advanced.funnel.confirmedToPaidPct)}`}
+                />
+              </div>
+            </section>
+          ) : (
+            <section className={cabinetPanelClass}>
+              <h2 className="font-heading text-lg font-bold text-charcoal">
+                Расширенная аналитика
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
+                Воронка конверсии, рейтинг туров и выгрузка CSV доступны в старших
+                тарифах. Базовые показатели выше продолжают работать.
+              </p>
+            </section>
+          )}
 
-          <section className={cabinetPanelClass}>
-            <h2 className="font-heading text-lg font-bold text-charcoal">Топ туров</h2>
-            <p className="mt-1 text-sm text-slate">Сортировка по выручке за выбранный период.</p>
-            {report.topTours.length === 0 ? (
-              <p className="mt-4 text-sm text-slate">Пока нет данных по турам за этот период.</p>
-            ) : (
-              <div className="mt-4 overflow-x-auto rounded-2xl border border-gray-200">
+          {advanced ? (
+            <section className={cabinetPanelClass}>
+              <h2 className="font-heading text-lg font-bold text-charcoal">Топ туров</h2>
+              <p className="mt-1 text-sm text-slate">
+                Сортировка по выручке за выбранный период.
+              </p>
+              {advanced.topTours.length === 0 ? (
+                <p className="mt-4 text-sm text-slate">
+                  Пока нет данных по турам за этот период.
+                </p>
+              ) : (
+                <div className="mt-4 overflow-x-auto rounded-2xl border border-gray-200">
                 <table className="min-w-[760px] w-full text-left text-sm">
                   <thead className="bg-surface-muted/60 text-slate">
                     <tr>
@@ -238,7 +283,7 @@ export default function OrganizerAnalyticsRemoteView() {
                     </tr>
                   </thead>
                   <tbody>
-                    {report.topTours.map((tour) => (
+                    {advanced.topTours.map((tour) => (
                       <tr key={tour.tourSlug} className="border-t border-gray-100">
                         <td className="px-4 py-3">
                           <Link
@@ -261,9 +306,10 @@ export default function OrganizerAnalyticsRemoteView() {
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
-          </section>
+                </div>
+              )}
+            </section>
+          ) : null}
         </>
       ) : null}
     </div>

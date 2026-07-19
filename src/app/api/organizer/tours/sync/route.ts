@@ -6,7 +6,7 @@ import { userHasAccountRole } from "@/types/user";
 
 export async function POST() {
   if (!isSupabaseToursEnabled()) {
-    return NextResponse.json({ error: "Tours sync unavailable" }, { status: 503 });
+    return NextResponse.json({ error: "Синхронизация предложений недоступна" }, { status: 503 });
   }
 
   try {
@@ -14,16 +14,16 @@ export async function POST() {
     const sessionUser = await loadSessionUserFromSupabase(supabase);
 
     if (!sessionUser || !userHasAccountRole(sessionUser, "organizer")) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
     }
 
     return NextResponse.json(
       { error: "Используйте редактор предложения для сохранения черновика" },
       { status: 410 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
+      { error: "Не удалось проверить синхронизацию. Повторите попытку позже." },
       { status: 500 }
     );
   }

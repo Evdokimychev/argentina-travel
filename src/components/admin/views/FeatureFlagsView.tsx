@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,10 @@ import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { Json } from "@/types/database";
+import {
+  jsonDraftsEqual,
+  mergeServerDraftsPreservingDirty,
+} from "@/lib/admin/draft-preservation";
 
 type FeatureFlagItem = {
   key: string;
@@ -51,6 +55,14 @@ function stringifyMetadata(metadata: Json): string {
   } catch {
     return "{}";
   }
+}
+
+function featureFlagToDraft(item: FeatureFlagItem): FeatureFlagDraft {
+  return {
+    enabled: item.enabled,
+    rolloutPercent: String(item.rolloutPercent ?? 0),
+    metadataText: stringifyMetadata(item.metadata),
+  };
 }
 
 function validateKey(input: string): string | undefined {
@@ -107,6 +119,11 @@ function parseMetadata(input: string): ValidationResult<Json> {
 export default function FeatureFlagsView() {
   const { data, loading, error, refresh } = useAdminApi<FeatureFlagsResponse>("/api/admin/feature-flags");
   const [drafts, setDrafts] = useState<Record<string, FeatureFlagDraft>>({});
+  const [baselines, setBaselines] = useState<Record<string, FeatureFlagDraft>>({});
+  const draftsRef = useRef(drafts);
+  const baselinesRef = useRef(baselines);
+  draftsRef.current = drafts;
+  baselinesRef.current = baselines;
   const [newKey, setNewKey] = useState("");
   const [newEnabled, setNewEnabled] = useState(false);
   const [newRolloutPercent, setNewRolloutPercent] = useState("0");
@@ -125,15 +142,19 @@ export default function FeatureFlagsView() {
   const newMetadata = parseMetadata(newMetadataText);
 
   useEffect(() => {
-    const nextDrafts: Record<string, FeatureFlagDraft> = {};
+    const serverDrafts: Record<string, FeatureFlagDraft> = {};
     for (const item of items) {
-      nextDrafts[item.key] = {
-        enabled: item.enabled,
-        rolloutPercent: String(item.rolloutPercent ?? 0),
-        metadataText: stringifyMetadata(item.metadata),
-      };
+      serverDrafts[item.key] = featureFlagToDraft(item);
     }
-    setDrafts(nextDrafts);
+    const merged = mergeServerDraftsPreservingDirty(
+      draftsRef.current,
+      baselinesRef.current,
+      serverDrafts,
+    );
+    draftsRef.current = merged.drafts;
+    baselinesRef.current = merged.baselines;
+    setDrafts(merged.drafts);
+    setBaselines(merged.baselines);
   }, [items]);
 
   function updateDraft(key: string, patch: Partial<FeatureFlagDraft>) {
@@ -219,6 +240,9 @@ export default function FeatureFlagsView() {
       if (!response.ok) {
         throw new Error(payload.error ?? "Не удалось сохранить флаг");
       }
+      const nextBaselines = { ...baselinesRef.current, [key]: draft };
+      baselinesRef.current = nextBaselines;
+      setBaselines(nextBaselines);
       await refresh();
       setFeedback({
         variant: "success",
@@ -394,10 +418,16 @@ export default function FeatureFlagsView() {
                 const rollout = parseRollout(draft.rolloutPercent);
                 const metadata = parseMetadata(draft.metadataText);
                 const hasValidationError = Boolean(rollout.error || metadata.error);
+                const isDirty = !jsonDraftsEqual(draft, baselines[item.key] ?? draft);
                 return (
                   <li key={item.key} className="rounded-xl border border-gray-100 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-mono text-sm font-semibold text-charcoal">{item.key}</p>
+                      <div>
+                        <p className="font-mono text-sm font-semibold text-charcoal">{item.key}</p>
+                        <p className={`mt-1 text-xs ${isDirty ? "text-amber-700" : "text-slate"}`}>
+                          {isDirty ? "Есть несохранённые изменения" : "Сохранено"}
+                        </p>
+                      </div>
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
@@ -405,7 +435,7 @@ export default function FeatureFlagsView() {
                           onClick={() => void saveFlag(item.key)}
                           loading={savingKey === item.key}
                           loadingLabel="Сохраняем…"
-                          disabled={hasValidationError || deletingKey === item.key}
+                          disabled={!isDirty || hasValidationError || deletingKey === item.key}
                         >
                           Сохранить
                         </Button>

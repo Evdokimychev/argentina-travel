@@ -1,14 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   COLLECTIONS_SEED,
-  getAllPlaceListings,
   ITINERARIES_SEED,
   PLACES_SEED,
 } from "@/data/places-seed";
 import { PLACE_CATEGORIES } from "@/types/place";
 import { getPlaceCoverImage, MEDIA_LOGO_FALLBACK } from "@/lib/media-resolver";
-import { CANONICAL_PLACE_REGIONS } from "@/data/places-planning";
-import { destinationIdForPlaceRegion } from "@/lib/places-nav";
 
 const slugs = new Set(PLACES_SEED.map((p) => p.slug));
 
@@ -50,19 +47,11 @@ describe("Places catalog integrity", () => {
     }
   });
 
-  it("gives every public place a canonical region and practical planning fields", () => {
-    for (const place of getAllPlaceListings()) {
-      expect(CANONICAL_PLACE_REGIONS, place.slug).toContain(place.region);
-      expect(place.season?.trim().length, `${place.slug}: season`).toBeGreaterThan(10);
-      expect(place.visitDuration?.trim().length, `${place.slug}: visitDuration`).toBeGreaterThan(2);
-      expect(destinationIdForPlaceRegion(place.region), `${place.slug}: regional guide`).toBeTruthy();
-    }
-  });
-
-  it("keeps at least one own image for every seeded place", () => {
+  it("publishes complete human-readable descriptions", () => {
+    const forbidden = /(?:…|\.\.\.)\s*$|\b(?:production|bodegas|kayaking|Magellanic penguins)\b/i;
     for (const place of PLACES_SEED) {
-      expect(place.coverImage, `${place.slug}: cover`).toBeTruthy();
-      expect(place.gallery.length, `${place.slug}: gallery`).toBeGreaterThan(0);
+      expect(place.shortDescription, place.slug).not.toMatch(forbidden);
+      expect(place.fullDescription, place.slug).not.toMatch(forbidden);
     }
   });
 

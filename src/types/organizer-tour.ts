@@ -29,6 +29,10 @@ export interface OrganizerTourListing {
   id: string;
   /** Owner organizer account id. */
   ownerUserId?: string;
+  /** Stable commercial market capability code (for example, ar). */
+  marketId?: string;
+  /** Optimistic concurrency version returned by the canonical server store. */
+  rowVersion?: number;
   /** Internal slug; defaults to catalogSlug for new tours. */
   slug: string;
   /** Public catalog slug used in /tours/[slug]. Falls back to slug when omitted. */

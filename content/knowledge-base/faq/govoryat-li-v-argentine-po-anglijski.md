@@ -2,30 +2,62 @@
 id: govoryat-li-v-argentine-po-anglijski
 type: faq
 question: "Говорят ли в Аргентине по-английски?"
-short_answer: "Ограниченно. В туристических зонах, отелях, у молодёжи в Буэнос-Айресе английский встречается, но в целом страна испаноязычная, и вне туризма на английском объясниться сложно. Базовый испанский и переводчик в телефоне сильно выручают."
+short_answer: "Основной язык — испанский. В отдельных туристических сервисах могут помочь на английском, но рассчитывать на это в повседневных ситуациях не стоит; базовый испанский и офлайн-переводчик заметно упрощают поездку."
 topic: kultura
 status: published
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [язык, культура, туризм, практика]
 related: [ispanskij-dlya-puteshestvennika, poleznye-prilozheniya, zhizn-bez-ispanskogo]
-last_verified: "2026-07-04"
+last_verified: "2026-07-17"
 confidence: high
+site_ready: true
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "Гайд по испанскому для путешественника — эта же база знаний"
-    url: "../kultura/ispanskij-dlya-puteshestvennika.md"
-    lang: ru
-    type: aggregator
-    note: "полезные фразы и особенности аргентинского испанского"
+  - id: argentina-official-language
+    title: "Argentina.gob.ar — язык Аргентины"
+    url: "https://www.argentina.gob.ar/node/208638"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает, что официальным языком страны является испанский."
+  - id: buenos-aires-porteno-language
+    title: "Buenos Aires Ciudad — porteños и местная речь"
+    url: "https://turismo.buenosaires.gob.ar/en/article/buenos-aires-its-people"
+    lang: en
+    type: official
+    authority: primary
+    checked_at: "2026-07-17"
+    url_status: verified
+    note: "Подтверждает особенности porteño: voseo и характерное произношение ll/y."
+claims:
+  - id: argentina-official-language-spanish
+    text: "Официальный язык Аргентины — испанский."
+    sensitive: true
+    source_ids: [argentina-official-language]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: porteno-voseo-and-pronunciation
+    text: "Речь porteño использует voseo и характерное произношение ll/y."
+    sensitive: true
+    source_ids: [buenos-aires-porteno-language]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
 ## Ответ
 
-Аргентина — **испаноязычная страна**, и рассчитывать на повсеместный английский не стоит. В **туристической среде** (отели, турагентства, гиды популярных направлений, часть ресторанов Палермо, молодёжь и айтишники в Буэнос-Айресе) на английском объяснятся, но стоит чуть отойти от туристических троп — в кафе, магазинах, на транспорте, в госучреждениях и в глубинке — и общение идёт только на испанском.
+Официальный язык Аргентины — испанский. Если обслуживание на английском для вас важно, подтвердите его у конкретного отеля, экскурсии или другого сервиса до бронирования. Для транспорта, магазинов, медучреждений и государственных служб заранее подготовьте испанские фразы или переводчик.
 
-Важная особенность: местный испанский — **риоплатский** (порой с непривычным произношением ll/y как «ш/ж» и обращением vos вместо tú), но базовые фразы понимают везде. Даже несколько вежливых слов (hola, gracias, por favor, la cuenta) заметно улучшают отношение.
+В Буэнос-Айресе распространена речь porteño с обращением vos и характерным произношением ll/y. Эти особенности не мешают пользоваться нейтральными базовыми фразами.
 
-Практично: выучите базовый минимум (см. [[ispanskij-dlya-puteshestvennika|Аргентинский испанский для путешественника]]) и держите под рукой переводчик в телефоне (Google Translate с офлайн-словарём испанского) — этого достаточно для комфортной поездки. Для переезда и жизни знание испанского из «желательного» становится необходимым.
+Практично: выучите базовый минимум (см. [[ispanskij-dlya-puteshestvennika|Аргентинский испанский для путешественника]]), скачайте испанский язык в переводчике для работы без сети и заранее сохраните адреса и медицинские данные. Для длительной жизни испанский нужен для самостоятельного решения бытовых и административных вопросов.
 
 ## Источники
 
-- Гайд `ispanskij-dlya-puteshestvennika` этой базы — фразы и особенности местного испанского.
+- [Argentina.gob.ar — язык Аргентины](https://www.argentina.gob.ar/node/208638)
+- [Buenos Aires Ciudad — porteños и местная речь](https://turismo.buenosaires.gob.ar/en/article/buenos-aires-its-people)

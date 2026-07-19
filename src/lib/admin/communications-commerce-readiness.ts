@@ -1,4 +1,4 @@
-export type ReadinessStatus = "ready" | "partial" | "not_configured";
+export type ReadinessStatus = "ready" | "configured" | "partial" | "not_configured";
 
 export type ReadinessCheck = {
   key: string;
@@ -33,7 +33,7 @@ function isExplicitlyDisabled(value: string | undefined): boolean {
 function getStatus(checks: ReadinessCheck[]): ReadinessStatus {
   const readyCount = checks.filter((check) => check.ready).length;
 
-  if (readyCount === checks.length) return "ready";
+  if (readyCount === checks.length) return "configured";
   if (readyCount > 0) return "partial";
   return "not_configured";
 }

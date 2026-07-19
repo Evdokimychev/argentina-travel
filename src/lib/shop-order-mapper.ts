@@ -41,6 +41,7 @@ export function rowToShopOrder(row: ShopOrderRow): ShopOrder {
     customerPhone: row.customer_phone,
     deliveryUrl: row.delivery_url,
     notes: row.notes,
+    operationVersion: row.operation_version,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -72,6 +73,7 @@ export function shopOrderToRow(
     customer_phone: order.customerPhone,
     delivery_url: order.deliveryUrl,
     notes: order.notes,
+    operation_version: order.operationVersion,
     created_at: order.createdAt,
     updated_at: order.updatedAt,
   };

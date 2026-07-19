@@ -15,8 +15,12 @@ export type FeatureFlagSnapshot = {
 };
 
 const CACHE_TTL_MS = 30_000;
+const FAILURE_BACKOFF_MS = 3_000;
+const QUERY_TIMEOUT_MS = 1_000;
 
 const flagCache = new Map<string, { at: number; row: FeatureFlagRow | null }>();
+const flagInFlight = new Map<string, Promise<FeatureFlagRow | null>>();
+const flagRetryAfter = new Map<string, number>();
 
 function normalizeRolloutPercent(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -38,19 +42,38 @@ async function loadFlagRow(flagKey: string): Promise<FeatureFlagRow | null> {
   if (cached && now - cached.at < CACHE_TTL_MS) {
     return cached.row;
   }
+  if (now < (flagRetryAfter.get(flagKey) ?? 0)) return null;
 
-  try {
-    const supabase = createSupabaseAdminClient();
-    const { data } = await supabase
-      .from("feature_flags")
-      .select("key, enabled, rollout_percent, metadata")
-      .eq("key", flagKey)
-      .maybeSingle();
-    flagCache.set(flagKey, { at: now, row: data ?? null });
-    return data ?? null;
-  } catch {
-    return null;
-  }
+  const existingRequest = flagInFlight.get(flagKey);
+  if (existingRequest) return existingRequest;
+
+  const request = (async (): Promise<FeatureFlagRow | null> => {
+    try {
+      const supabase = createSupabaseAdminClient();
+      const { data, error } = await supabase
+        .from("feature_flags")
+        .select("key, enabled, rollout_percent, metadata")
+        .eq("key", flagKey)
+        .abortSignal(AbortSignal.timeout(QUERY_TIMEOUT_MS))
+        .retry(false)
+        .maybeSingle();
+      if (error) throw error;
+
+      const row = data ?? null;
+      flagCache.set(flagKey, { at: Date.now(), row });
+      flagRetryAfter.delete(flagKey);
+      return row;
+    } catch {
+      flagRetryAfter.set(flagKey, Date.now() + FAILURE_BACKOFF_MS);
+      return null;
+    }
+  })();
+
+  flagInFlight.set(flagKey, request);
+  void request.finally(() => {
+    if (flagInFlight.get(flagKey) === request) flagInFlight.delete(flagKey);
+  });
+  return request;
 }
 
 export async function getFeatureFlagSnapshot(flagKey: string): Promise<FeatureFlagSnapshot | null> {
@@ -89,7 +112,12 @@ export async function getFlag(flagKey: string, userId?: string | null): Promise<
 export function invalidateFeatureFlagsCache(flagKey?: string): void {
   if (!flagKey) {
     flagCache.clear();
+    flagInFlight.clear();
+    flagRetryAfter.clear();
     return;
   }
-  flagCache.delete(flagKey.trim());
+  const normalizedKey = flagKey.trim();
+  flagCache.delete(normalizedKey);
+  flagInFlight.delete(normalizedKey);
+  flagRetryAfter.delete(normalizedKey);
 }

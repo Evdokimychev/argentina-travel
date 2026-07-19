@@ -30,7 +30,7 @@ export default function DesktopSiteNav({
     showNavIndex,
     navCompact,
     registerItemRef,
-  } = useSiteNavLayout(navRef);
+  } = useSiteNavLayout(navRef, sections);
 
   const allowedIds = new Set(sections.map((section) => section.id));
   const visiblePrimarySections = primarySections.filter((section) => allowedIds.has(section.id));
@@ -75,6 +75,7 @@ export default function DesktopSiteNav({
         <div ref={registerItemRef("overflow")} className="shrink-0">
           <NavOverflowMegaMenuTrigger
             sections={visibleOverflowSections}
+            allSections={sections}
             active={overflowNavActive}
             t={t}
             open={openMegaMenuId === "more"}

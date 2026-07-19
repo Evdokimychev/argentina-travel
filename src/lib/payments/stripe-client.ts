@@ -1,7 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { fetchLiveExchangeRates, resolveRateFromUsd } from "@/lib/exchange-rates";
+import { fetchLiveExchangeRates, requireLiveRateFromUsd } from "@/lib/exchange-rates";
 import {
-  convertUsdToDisplayCurrency,
   resolveChargeCurrency,
   type CheckoutCurrencyCode,
 } from "@/lib/payments/checkout-currency";
@@ -272,10 +271,11 @@ export async function createCheckoutSession(
   const displayCurrency: CheckoutCurrencyCode = booking.metadata?.checkoutCurrency ?? "USD";
   const chargeCurrency = resolveChargeCurrency("stripe", displayCurrency);
   const ratesPayload = await fetchLiveExchangeRates();
+  const chargeRate = requireLiveRateFromUsd(ratesPayload, chargeCurrency);
   const chargeAmount =
     chargeCurrency === "USD"
       ? amountUsd
-      : convertUsdToDisplayCurrency(amountUsd, chargeCurrency, ratesPayload.rates);
+      : amountUsd * chargeRate;
   const safeAmount = Number(chargeAmount.toFixed(2));
   if (!(safeAmount > 0)) {
     throw new Error("Booking amount must be greater than zero to create Stripe checkout session.");
@@ -307,7 +307,7 @@ export async function createCheckoutSession(
   appendFormField(
     params,
     "metadata[rateFromUsd]",
-    String(resolveRateFromUsd(chargeCurrency, ratesPayload.rates))
+    String(chargeRate)
   );
   appendFormField(params, "payment_intent_data[metadata][bookingId]", booking.id);
   appendFormField(params, "payment_intent_data[metadata][paymentLinkToken]", link?.token ?? "");
@@ -316,7 +316,7 @@ export async function createCheckoutSession(
   appendFormField(
     params,
     "payment_intent_data[metadata][rateFromUsd]",
-    String(resolveRateFromUsd(chargeCurrency, ratesPayload.rates)),
+    String(chargeRate),
   );
   appendFormField(params, "line_items[0][quantity]", 1);
   appendFormField(params, "line_items[0][price_data][currency]", stripeCurrency);
@@ -487,6 +487,7 @@ export async function createStripeRefund(input: {
   chargeId?: string;
   amount?: number;
   reason?: "requested_by_customer" | "duplicate" | "fraudulent";
+  idempotencyKey: string;
 }): Promise<StripeRefundDetails> {
   const secretKey = input.secretKey.trim();
   if (!secretKey) throw new Error("Stripe secret key is missing.");
@@ -496,6 +497,8 @@ export async function createStripeRefund(input: {
   if (!paymentIntentId && !chargeId) {
     throw new Error("Missing Stripe charge or payment intent id.");
   }
+  const idempotencyKey = input.idempotencyKey.trim();
+  if (!idempotencyKey) throw new Error("Stripe refund idempotency key is missing.");
 
   const params = new URLSearchParams();
   if (paymentIntentId) appendFormField(params, "payment_intent", paymentIntentId);
@@ -509,7 +512,7 @@ export async function createStripeRefund(input: {
   const { controller, timeout } = createTimeoutController();
   const response = await fetch(`${STRIPE_API_BASE}/refunds`, {
     method: "POST",
-    headers: buildAuthHeaders(secretKey, `refund-${paymentIntentId ?? chargeId}-${Date.now()}`),
+    headers: buildAuthHeaders(secretKey, idempotencyKey),
     body: params.toString(),
     signal: controller.signal,
     cache: "no-store",

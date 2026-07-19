@@ -363,11 +363,12 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         label: "Апартаменты",
         type: "select",
         options: [
+          { label: "Собственный каталог — запрос подтверждения", value: "native_request" },
           { label: "Подбор по заявке", value: "request" },
           { label: "Готовим собственный каталог", value: "preparing_native" },
           { label: "Отключено", value: "disabled" },
         ],
-        hint: "Сейчас безопасный рабочий сценарий — заявка менеджеру. Собственный каталог потребует отдельной модели объектов, доступности и бронирований.",
+        hint: "Собственный каталог принимает запрос и честно ожидает подтверждения владельца. Мгновенная оплата не включается.",
       },
       {
         name: "carRentalMode",

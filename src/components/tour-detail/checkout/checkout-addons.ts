@@ -1,4 +1,4 @@
-import { TRANSFER_VEHICLE_PLACEHOLDER } from "@/lib/seed-media";
+import { TRANSFER_VEHICLE_PLACEHOLDER } from "@/lib/media/media-placeholders";
 
 export interface TransferVehicleOption {
   id: string;

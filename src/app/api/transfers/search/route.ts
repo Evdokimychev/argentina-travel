@@ -5,6 +5,8 @@ import { searchTransfers } from "@/lib/intui/search";
 import { isTravelpayoutsConfigured } from "@/lib/travelpayouts";
 import type { TransferLocation } from "@/lib/intui/types";
 import type { CurrencyCode, LocaleCode } from "@/types/locale";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
+import { publicApiError } from "@/lib/public-api/safe-error";
 
 const LOCALES = new Set<LocaleCode>(["ru", "en", "es", "pt"]);
 const CURRENCIES = new Set<CurrencyCode>([
@@ -64,6 +66,9 @@ function resolveLocation(input: {
 }
 
 export async function GET(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("transfers", "public_read");
+  if (moduleBlocked) return moduleBlocked;
+
   const { searchParams } = new URL(request.url);
   const localeParam = searchParams.get("locale")?.trim() ?? "ru";
   const locale = LOCALES.has(localeParam as LocaleCode) ? (localeParam as LocaleCode) : "ru";
@@ -94,7 +99,7 @@ export async function GET(request: Request) {
   const time = searchParams.get("time")?.trim() || "12:00";
 
   if (!origin || !destination || !date) {
-    return NextResponse.json({ error: "Invalid search parameters" }, { status: 400 });
+    return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
   }
 
   const hasOriginEndpoint =
@@ -104,7 +109,7 @@ export async function GET(request: Request) {
     (destination.lat != null && destination.lng != null);
 
   if (!hasOriginEndpoint || !hasDestinationEndpoint) {
-    return NextResponse.json({ error: "Origin and destination must be set" }, { status: 400 });
+    return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
   }
 
   const searchInput = {
@@ -128,6 +133,13 @@ export async function GET(request: Request) {
     } catch {
       /* affiliate fallback is optional */
     }
+  }
+
+  if (result.error) {
+    return NextResponse.json({
+      ...result,
+      ...publicApiError("PARTNER_DATA_UNAVAILABLE"),
+    });
   }
 
   return NextResponse.json(result);

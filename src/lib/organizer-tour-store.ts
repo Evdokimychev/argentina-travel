@@ -92,6 +92,7 @@ import {
 import type { SessionUser } from "@/types/user";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 import { ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE } from "@/data/tour-photos-defaults";
+import { PRIMARY_PUBLIC_MARKET } from "@/lib/market-context";
 
 const DRAFTS_KEY = "argentina-travel-organizer-tour-drafts";
 const LISTINGS_KEY = "argentina-travel-organizer-tour-listings";
@@ -138,8 +139,7 @@ function fireOrganizerDraftSync(draft: OrganizerTourDraft): void {
       patchOrganizerTourDraftRemote({
         tourId: draft.id,
         draft,
-        expectedUpdatedAt: null,
-        force: true,
+        expectedUpdatedAt: draft.updatedAt ?? null,
       })
     )
     .catch(() => undefined);
@@ -881,6 +881,7 @@ export function createOrganizerTour(
   const listing: OrganizerTourListing = {
     id,
     ownerUserId: actor!.id,
+    marketId: PRIMARY_PUBLIC_MARKET.id,
     slug,
     catalogSlug: slug,
     title: type === "excursion" ? "Новая экскурсия" : "Новый тур",

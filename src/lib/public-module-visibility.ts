@@ -56,6 +56,7 @@ export function isTravelModulePathEnabled(
   pathname: string,
   modules: SiteModulesGlobal,
 ): boolean {
+  if (matchesPrefix(pathname, "/apartments")) return modules.apartmentsMode === "native_request";
   if (matchesPrefix(pathname, "/car-rental")) return modules.carRentalMode !== "disabled";
   if (matchesPrefix(pathname, "/transfers")) return modules.transfersMode !== "disabled";
   return true;

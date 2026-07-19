@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "reportType": "commercial-funnel-readiness",
+  "generatedAt": "2026-07-17T04:37:44.829Z",
+  "evidenceScope": "candidate",
+  "candidateTree": "dc10266ca8d074b22a120ece2241ffeded4a147e",
+  "evidenceRunId": "5e36887f-b35d-4288-b01d-e95288b38892",
+  "evidenceStartedAt": "2026-07-17T04:37:40.711Z",
+  "evidenceGeneratedAt": "2026-07-17T04:37:44.829Z",
+  "evidenceEnvironment": "local-contract",
+  "evidenceBaseUrl": null,
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "evidenceLevel": "local-contract",
+  "environment": "local-contract",
+  "status": "passed",
+  "live": false,
+  "sandbox": false,
+  "external": false,
+  "events": false,
+  "dashboard": false,
+  "conversionProof": false,
+  "leadCapture": false,
+  "deduplication": false,
+  "revenueAttribution": false,
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3
+  },
+  "localContracts": {
+    "eventTaxonomy": true,
+    "consentAwareProductEvents": true,
+    "attributionContracts": true,
+    "leadCaptureAdapter": true,
+    "newsletterDeduplication": true
+  },
+  "checks": [
+    {
+      "id": "event-taxonomy",
+      "label": "Consent-aware commercial event contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1471,
+      "command": "npx --no-install vitest run src/lib/analytics/gtm-events.test.ts src/lib/analytics/product-events.test.ts",
+      "sources": [
+        "src/lib/analytics/gtm-events.test.ts",
+        "src/lib/analytics/product-events.test.ts"
+      ]
+    },
+    {
+      "id": "attribution-contracts",
+      "label": "First-touch and affiliate attribution contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1073,
+      "command": "npx --no-install vitest run src/lib/attribution/first-touch.test.ts src/lib/attribution/affiliate-click-server.test.ts src/app/api/travelpayouts/links/route.test.ts",
+      "sources": [
+        "src/lib/attribution/first-touch.test.ts",
+        "src/lib/attribution/affiliate-click-server.test.ts",
+        "src/app/api/travelpayouts/links/route.test.ts"
+      ]
+    },
+    {
+      "id": "lead-contracts",
+      "label": "Lead capture, validation and deduplication contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1185,
+      "command": "npx --no-install vitest run src/lib/lead-capture.test.ts src/lib/lead-capture-validation.test.ts src/app/api/lead-capture-routes.test.ts src/lib/admin/lead-crm.test.ts",
+      "sources": [
+        "src/lib/lead-capture.test.ts",
+        "src/lib/lead-capture-validation.test.ts",
+        "src/app/api/lead-capture-routes.test.ts",
+        "src/lib/admin/lead-crm.test.ts"
+      ]
+    }
+  ],
+  "limitations": [
+    "No deployed analytics container or dashboard was inspected.",
+    "No real lead delivery or commercial conversion was performed.",
+    "No partner dashboard or revenue attribution was verified."
+  ]
+}

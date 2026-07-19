@@ -15,7 +15,7 @@ export type ShopOrder = {
   productSlug: string;
   productTitle: string;
   priceUsd: number;
-  currency: "USD";
+  currency: string;
   status: ShopOrderStatus;
   paymentStatus: ShopOrderPaymentStatus;
   customerName: string;
@@ -23,6 +23,7 @@ export type ShopOrder = {
   customerPhone: string;
   deliveryUrl: string | null;
   notes: string | null;
+  operationVersion: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -40,3 +41,19 @@ export const SHOP_ORDER_PAYMENT_STATUS_LABELS: Record<ShopOrderPaymentStatus, st
   paid: "Оплачен",
   refunded: "Возврат",
 };
+
+export function getAdminShopOrderTransitions(order: Pick<ShopOrder, "status" | "paymentStatus">): ShopOrderStatus[] {
+  if (order.status === "pending") {
+    if (order.paymentStatus === "paid") return ["awaiting_payment"];
+    if (order.paymentStatus === "refunded") return ["cancelled"];
+    return ["awaiting_payment", "cancelled"];
+  }
+  if (order.status === "awaiting_payment") {
+    return order.paymentStatus === "paid" ? ["paid"] : ["cancelled"];
+  }
+  if (order.status === "paid") {
+    return order.paymentStatus === "refunded" ? ["cancelled"] : ["delivered"];
+  }
+  if (order.status === "delivered" && order.paymentStatus === "refunded") return ["cancelled"];
+  return [];
+}

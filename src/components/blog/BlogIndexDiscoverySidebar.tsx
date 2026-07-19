@@ -18,7 +18,7 @@ type BlogIndexDiscoverySidebarProps = {
   onCategorySelect: (category: string) => void;
   startHerePosts: BlogPost[];
   catalog: BlogPost[];
-  initialPersonalizedPosts: BlogPost[];
+  initialPersonalizedSlugs: string[];
   freshPosts: BlogPost[];
   className?: string;
 };
@@ -29,7 +29,7 @@ export default function BlogIndexDiscoverySidebar({
   onCategorySelect,
   startHerePosts,
   catalog,
-  initialPersonalizedPosts,
+  initialPersonalizedSlugs,
   freshPosts,
   className,
 }: BlogIndexDiscoverySidebarProps) {
@@ -81,7 +81,7 @@ export default function BlogIndexDiscoverySidebar({
 
       <BlogPersonalizedPosts
         catalog={catalog}
-        initialPosts={initialPersonalizedPosts}
+        initialSlugs={initialPersonalizedSlugs}
         variant="compact"
       />
 
@@ -115,13 +115,13 @@ export function BlogStartHereStrip({ posts, className }: BlogStartHereStripProps
 
 type BlogIndexSecondaryDiscoveryProps = {
   catalog: BlogPost[];
-  initialTours: TourListing[];
+  featuredTours: TourListing[];
   className?: string;
 };
 
 export function BlogIndexSecondaryDiscovery({
   catalog,
-  initialTours,
+  featuredTours,
   className,
 }: BlogIndexSecondaryDiscoveryProps) {
   return (
@@ -129,7 +129,7 @@ export function BlogIndexSecondaryDiscovery({
       <BlogTrendingDestinations />
       <BlogPopularRoutes />
       <BlogEditorialHubs posts={catalog} />
-      <BlogRecommendedTours initialTours={initialTours} />
+      <BlogRecommendedTours featuredTours={featuredTours} />
     </div>
   );
 }

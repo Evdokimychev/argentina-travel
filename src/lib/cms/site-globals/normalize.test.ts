@@ -246,7 +246,7 @@ describe("normalizeSiteModules", () => {
   it("accepts supported modes and visibility switches", () => {
     expect(
       normalizeSiteModules({
-        apartmentsMode: "preparing_native",
+        apartmentsMode: "native_request",
         carRentalMode: "preparing_hybrid",
         transfersMode: "request",
         hotelsMode: "disabled",
@@ -255,7 +255,7 @@ describe("normalizeSiteModules", () => {
         showTransfersInServices: true,
       }),
     ).toEqual({
-      apartmentsMode: "preparing_native",
+      apartmentsMode: "native_request",
       carRentalMode: "preparing_hybrid",
       transfersMode: "request",
       hotelsMode: "disabled",

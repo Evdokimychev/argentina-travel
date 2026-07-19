@@ -39,6 +39,7 @@ function cms(updatedAt: string): CmsDocument {
     scheduledPublishAt: null,
     createdBy: null,
     updatedBy: null,
+    rowVersion: 1,
     createdAt: updatedAt,
     updatedAt,
   };

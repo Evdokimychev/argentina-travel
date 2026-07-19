@@ -35,6 +35,7 @@ import {
   resolveExcursionBookingPreviewPrice,
 } from "@/lib/excursion-price-display";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import { resolvePublicBookingErrorMessage } from "@/lib/partner-booking/public-errors";
 import type { AuthUser } from "@/types/auth";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 import {
@@ -322,9 +323,16 @@ export default function ExcursionBookingContactSection() {
             company,
           }),
         });
-        const data = (await response.json()) as { booking?: { id: string }; error?: string };
+        const data = (await response.json().catch(() => ({}))) as {
+          booking?: { id: string };
+          code?: string;
+        };
         if (!response.ok || !data.booking) {
-          throw new Error(data.error || t("excursions.booking.failed"));
+          throw new Error(
+            data.code
+              ? resolvePublicBookingErrorMessage(data.code)
+              : t("excursions.booking.failed"),
+          );
         }
 
         bookingOperationKeyRef.current = null;
@@ -373,15 +381,14 @@ export default function ExcursionBookingContactSection() {
         }),
       });
 
-      const data = (await response.json()) as {
+      const data = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         mode?: string;
         orderId?: number;
         orderUrl?: string;
         fallbackUrl?: string;
         fallbackReason?: string;
-        error?: string;
-        details?: Record<string, string[] | { non_field_errors?: string[] }>;
+        code?: string;
       };
 
       if (response.ok && (data.ok || data.mode === "affiliate_fallback")) {
@@ -389,6 +396,7 @@ export default function ExcursionBookingContactSection() {
       }
 
       if (data.mode === "affiliate_fallback") {
+        bookingOperationKeyRef.current = null;
         completePartnerBookingTransition(
           resolveTripsterBookingRedirectFromApi({
             response: data,
@@ -401,13 +409,11 @@ export default function ExcursionBookingContactSection() {
       }
 
       if (!response.ok || !data.ok) {
-        const details = data.details;
-        const firstFieldError =
-          details &&
-          Object.values(details)
-            .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
-            .find(Boolean);
-        throw new Error(firstFieldError || data.error || t("excursions.booking.failed"));
+        throw new Error(
+          data.code
+            ? resolvePublicBookingErrorMessage(data.code)
+            : t("excursions.booking.failed"),
+        );
       }
 
       setSubmitted(true);

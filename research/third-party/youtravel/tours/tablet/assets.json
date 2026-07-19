@@ -1,0 +1,234 @@
+[
+  {
+    "type": "script",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/entry.BVgiXN89.js"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProText-Regular.DU-zUmSc.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProText-Semibold.DwISntCQ.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProText-Bold.C7PXtlzJ.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProDisplay-Regular.M7edu-1M.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProDisplay-Bold.YXKDzhow.woff2"
+  },
+  {
+    "type": "font",
+    "url": "https://static.youtravel.me/public-front/2026-07-16-44837/_nuxt/SFProDisplay-Semibold.qhwqXlkj.woff2"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-1256%2Ch-350/upload/iblock/21a/6ig7m7j8pyuk2rfpfmj264r55uarhy86.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://youtravel.me/local/templates/youtravel/assets/i/tours/what_is_exclusive_tours/camel.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/9fb/9fbdb9edc318f1d71602183011dd6c3f/6490a3c4346c531fb912edb4436be78b.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/c55/c55f885a4c5c4ce7e46c759ec1daff60/c56143fbda825b43e27fd234c1b1551d.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/d25/d257d80ca65778b6ff1bcd8f713425be/9600c95e8742bfe860439e9bbb3fd2d2.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/f64/f644733c3eca055ff5ad1bdedeb452dd/25cfb4221a88e5ebfd14e5e3a3af5736.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/b89/b8989adfbead200d0455f24459a54a0d/0639adf9d68c8fbf0aa310f8876fdc89.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/d22/d221f5da198046e3d0c7b244f8acacdf/7b374b811e2f06532668bd41bcecdd1f.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/ba0/ba035ef73b64fee5fc5b0ca978ca4a01/458f9c81b53186802e24c7a424c2cf77.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/3d4/3d440704eabe2630106a3f802754cbd8/817c5d25e15471af6b42e86dc42d08c3.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/cb7/cb7e761349c9e3281777fd3f50561cee/dad0674ce067bfafc23555b22cd02d1e.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/chat/24c/prqgv9d09lxfi0js4xgz6kbd8cj0c76l.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/de3/dvfcuvkrd2cz9sur1wahtsskiw3bbldb.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/tours/23607/media/482/48251d31f292a23197529527b1445c01.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/177/17747193e7ba3f7aff59f4cfce11de94/690f300b91b3d2efe39bcc85e73a38cf.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2025/11/27/69dfbbb6bd0276b750b38b29de2c4e6298ec6ae5.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/699/scutnxeucax53hz84r00o432g42pn1vi.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/tours/25392/media/3d9/nya1yhlz0sjaaz4i9ims65vaf9mvmt6q.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/351/n4i58h1w6jfcudjhn52hl3po03775zhc.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2025/12/17/4023f6b1f26c2d4a27a04f38cb027f317b6eb12d.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/7b3/9gnizvjfmlm9csjmy9c9vzimhnwrg7mq.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2025/12/18/a2dfb9a1a97689366dcaab907c1cf22bddcae1d8.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/3d9/3d93b12102ec1c35978942731b0f63ce/25761a02e14a7b7f30dc2014f4836d2d.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/07/11/cdeb45ed64c0ab1415784f79ce971632c9d03df5.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/e54/ilmj8gdfw5f5mgvv0262apmj1r3btsku.JPEG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/06/09/f2fa9b037fe1ad9630c495ba134e93d8052a8e5d.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/370/l9yzek3vqb5mdnvc0am43vr1pewvjj4a.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2025/07/31/4186090d6413de82cfe14a50b14c87bddf09ab06.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/7a1/kufjqausrhjk00c3dos9v5j69kwsm3k7.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/05/14/315c87ab348d774bc53b8a3c6d34c80661da88d7.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/951/vi6gk4jx11oqnxh7f9obtq4zbcs22aji.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/04/06/786f0aa932257843d55ac21841c84b43ad342eba.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/7db/16cywqau4nrwtvo63gn6xiukyfw7de6e.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/tours/29454/media/25b/2u5zfgh73x8qvwd10xdmg0a8q630kwpb.png"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/8c7/2wkjsc1elbi9bthbwl72nedcq1y2tknh.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/tours/40066/media/833/a2gzr71zw90t4z89skyl6t4c723pyqk3.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/d6c/a0e5frsy44dar2vzyyl3b1bhbcawnvdx.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/06/28/ca28f65561039e056c913d74130a0d21e2018ee9.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/9be/tigv9cxi7vwhptzarybb6s2yi8fcx608.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/upload/chat/80d/cevsigtlh0dn4zwcanwbxetxvp481fcx.PNG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/792/7928a06751b00b71f7bbe574e33b4168/ab8003cf9d5452a773c4eb0983aa0cdd.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/03/25/66550c3e648fd6431e72603cf3413812d1f0e29b.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/048/04827ecc6e731f027112bb1946409f7e.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/01/28/c739896ffe60727348567c8c86f991c16e1936a2.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/640/f5hewzzuhc7q9hw6jeae5oysijq9vcxu.JPG"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2025/07/08/c47be1020c3a2f6a5d4d9cc5884aecca041b49b5.webp"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/07/15/c810d4e5f29b7a4e3f7c8b04bdcc76299bb16174.png"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/5b7/8mrkn2073xctob48ygnyaskn1vhc4esk.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-276%2Ch-258/public/images/tour/media/2026/07/07/e453ce2c3b53e4e4d505d17d1dc46540a3a1f89a.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/tr:w-64%2Ch-64/upload/main/ad8/ad8e6f23bf0b5d58cf5fb0f5ad54aad5/f1f60f8c7564712b0aceb3d3495ca932.jpg"
+  },
+  {
+    "type": "image",
+    "url": "https://cf.youtravel.me/upload/iblock/056/056e862e3395865658cdaa9126eba090/3bdf30851791130e99c6e2988148a059.jpg"
+  }
+]

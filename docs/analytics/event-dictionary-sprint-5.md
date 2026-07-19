@@ -52,9 +52,11 @@
 - Яндекс.Метрика отправляет первый hit один раз и затем один hit на изменившийся SPA URL; защита — `__goArgentinaYmFirstHitSent` и сравнение предыдущего URL.
 - GTM Preview/GA4 DebugView должны показать один `page_view` на загрузку и один на SPA-переход. Это ручное доказательство, пока контейнер не предоставлен.
 
-## Extension contract Sprint 6/7
+## Operations contract Sprint 6/7
 
-Следующие события согласованы со следующими потоками разработки, но ещё не добавлены в runtime enum и не считаются реализованными:
+Следующие события добавлены в строгий server-side словарь `operational-event-contract.ts`.
+Неизвестные поля отбрасываются, обязательные поля и enum проверяются, а событие с контактными
+данными отклоняется целиком. Для этих событий writer не сохраняет `user_id` и `session_id`.
 
 | Event | Поля без PII |
 |---|---|
@@ -66,15 +68,15 @@
 
 При интеграции Sprint 6/7 slug передаётся как единый `product_id`; `operation_id` — технический idempotency/operation ID, не booking contact и не partner URL.
 
-## Незакрытый security blocker
+## Граница доверия KPI
 
-Production `analytics_events` нельзя считать доверенным KPI-источником: текущие RLS migrations разрешают прямой INSERT ролям `anon` и `authenticated`, включая произвольные `metadata` и `session_id`. Серверный writer теперь валидирует плоский PII-free envelope, но Data API обходит его.
+Миграция `20260717047000_analytics_readiness_truth.sql` закрепляет provenance событий:
 
-После нормализации migration history отдельная rehearsed migration должна:
+1. прямой `INSERT` для `anon` и `authenticated` отозван;
+2. server writer записывает `ingestion_source=controlled_server` только после проверки контракта;
+3. прежняя история остаётся `legacy_unverified` и не участвует в KPI;
+4. admin funnel получает точный snapshot через закрытый RPC;
+5. оплаты считаются как уникальные booking ID по завершённым `charge` в ledger, отзывы — только `published`.
 
-1. удалить policy `analytics_events_anon_insert`;
-2. отозвать `INSERT` у `anon` и `authenticated`;
-3. выдать запись только `service_role`;
-4. направить браузерные события в ограниченный server ingestion с allowlist, rate limit и schema validation.
-
-До этого `trustedForKpi=false` зафиксирован в `src/lib/analytics/ingestion-security.ts`.
+При отсутствии миграции или ошибке RPC UI получает типизированное значение
+`{ value: null, status: unavailable, source }`; сбой никогда не отображается как доверенный ноль.

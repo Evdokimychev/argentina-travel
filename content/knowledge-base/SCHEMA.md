@@ -1,6 +1,12 @@
 # Схема данных базы знаний
 
-Версия: 2.0 · Дата: 2026-07-01 · Статус: действующая
+Версия: 3.0 · Дата: 2026-07-17 · Статус: действующая, совместимая с v2.0
+
+**Изменение v3.0:** для чувствительных фактов введён проверяемый реестр
+`claims → source_ids`, явная первичность источника, дата проверки, ответственный
+редактор и состояние URL. Переход версионирован и начинается с диагностического
+режима, поэтому исторический корпус не получает ложную отметку «проверено» и не
+исчезает с сайта до поэтапной редакционной миграции.
 
 **Стратегическое решение v2.0 (Иван, 2026-07-01):** база — **ультимативный первоисточник** всего контента сайта (блог, гид по иммиграции, места), а не тонкий слой фактов над лонгридами. Что это меняет:
 
@@ -61,6 +67,8 @@
 | `seo_slug` | string | нет | Если у лонгрида уже есть свой SEO-slug, отличный от `id`. |
 | `site_id_map` | string | нет | Если сущность уже существует в коде сайта (`src/data/places-enrichment.ts`, `places-seed.ts`) под другим id — указываем его здесь для будущей синхронизации без переименования (например `id: iguasu`, `site_id_map: iguazu-falls`). |
 | `sources` | `Source[]` | да (если `confidence != low`) | См. ниже. |
+| `claims` | `Claim[]` | обязательно для строгой публикации чувствительных материалов | Проверяемые утверждения и точные связи с `sources[].id`. |
+| `provenance` | `ProvenanceConfig` | обязательно для строгой публикации чувствительных материалов | Версия схемы, режим включения и срок актуальности проверки. |
 
 ### §2а. Блок `media` (добавлен в v2.0)
 
@@ -103,7 +111,20 @@ media:
   "missing_sources": false,
   "source_count": 2,
   "word_count": 420,
-  "needs_attention": false
+  "needs_attention": false,
+  "provenance": {
+    "schema_version": 1,
+    "declared": true,
+    "mode": "strict",
+    "strict_ready": true,
+    "issue_count": 0,
+    "issue_codes": [],
+    "source_count": 2,
+    "identified_source_count": 2,
+    "claim_count": 3,
+    "sensitive_claim_count": 3,
+    "stale_after_days": 45
+  }
 }
 ```
 
@@ -112,12 +133,95 @@ media:
 ### Объект `Source`
 ```yaml
 sources:
-  - title: "Администрация нацпарков Аргентины (APN)"
+  - id: apn-los-glaciares
+    title: "Администрация нацпарков Аргентины (APN)"
     url: "https://www.argentina.gob.ar/parquesnacionales/..."
     lang: es          # ru | es | en
-    type: official     # official | ru_blog | ru_media | telegram | forum | en_source | es_source | aggregator
+    type: official    # official | ru_blog | ru_media | telegram | forum | en_source | es_source | aggregator
+    authority: primary # primary | secondary | community
+    url_status: verified # verified | redirected | unreachable | unchecked
+    checked_at: "2026-07-17"
+    expires_at: "2026-12-31" # необязательно; для временных правил, тарифов и расписаний
     note: "тарифы и часы работы"
 ```
+
+`id` стабилен внутри записи и пишется в kebab-case. `authority: primary` означает
+первоисточник полномочий или данных: государственный орган, официальный реестр,
+оператор услуги либо владелец объекта. `type: official` само по себе не заменяет
+`authority`: источник может быть официальным обзором, но не первичным документом.
+
+`url_status` и `checked_at` — результат внешней проверки редактором, а не догадка
+генератора. Сборщик проверяет формат и свежесть этих полей, но не делает сетевой
+запрос и не заявляет, что ссылка работала, если человек или отдельная проверка URL
+этого не подтвердили. При смене адреса сначала обновляется URL и повторяется
+проверка; `redirected`, `unreachable` и `unchecked` не проходят строгий режим.
+
+### §2в. Claim-level provenance v1
+
+Новая модель связывает каждое существенное чувствительное утверждение с конкретным
+источником. Она не разрешает автоматически приписать источники старым статьям.
+
+```yaml
+provenance:
+  schema_version: 1
+  mode: diagnostic       # diagnostic во время миграции; strict после полной проверки статьи
+  stale_after_days: 45
+
+sources:
+  - id: dnm-residencias
+    title: "Dirección Nacional de Migraciones — residencias"
+    url: "https://www.argentina.gob.ar/interior/migraciones/radicaciones"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+
+claims:
+  - id: residencia-tramite-dnm
+    text: "Заявление на резиденцию рассматривает DNM."
+    sensitive: true
+    source_ids: [dnm-residencias]
+    verified_at: "2026-07-17"
+    reviewer:
+      id: role-editorial-owner
+      role: editor
+```
+
+| Поле | Правило |
+|---|---|
+| `provenance.schema_version` | Сейчас только `1`. Неизвестная версия не проходит строгую проверку. |
+| `provenance.mode` | `diagnostic` сохраняет совместимость; `strict` включает fail-closed фильтр для этой статьи. |
+| `stale_after_days` | Положительное целое. Для чувствительных тем по умолчанию 45 дней. |
+| `claims[].id` | Уникальный kebab-case id утверждения внутри статьи. |
+| `claims[].text` | Краткая формулировка проверенного факта; не обязательно дословная цитата. |
+| `claims[].source_ids` | Непустой список существующих `sources[].id`; битая ссылка — ошибка. |
+| `claims[].verified_at` | Дата фактической проверки утверждения. Для чувствительного факта обязательна и не должна быть устаревшей. |
+| `claims[].reviewer` | Непустой внутренний id проверяющего или объект `{ id, role }`. Нельзя выдумывать проверяющего. |
+| `claims[].sensitive` | Явный флаг. Если он пропущен в чувствительной статье, утверждение считается чувствительным. |
+
+Для чувствительного утверждения строгий режим требует одновременно: хотя бы один
+связанный `primary`-источник, свежую `verified_at`, реального `reviewer`, здоровый и
+недавно проверенный URL источника. Просроченный `expires_at`, устаревшая проверка,
+битый `source_id` или отсутствие реестра утверждений дают `strict_ready: false`.
+
+Переход выполняется безопасно:
+
+1. Старые статьи без `provenance` автоматически получают вычисляемый режим
+   `diagnostic` и остаются в текущей публичной выдаче.
+2. `python3 _index/build_manifest.py --diagnostic` пересобирает индексы и показывает
+   долг без изменения публичности.
+3. Статья переводится в `mode: strict` только после ручной связи всех существенных
+   чувствительных фактов с источниками. Неполная strict-статья снимается с выдачи.
+4. `python3 _index/build_manifest.py --strict-provenance` — отдельный релизный сигнал:
+   команда завершается ошибкой, пока хотя бы один чувствительный кандидат
+   публичного gate не готов по новой модели. Намеренно изолированные материалы
+   (`site_ready: false`, статья без источников или короткая редакционная заготовка)
+   остаются в диагностике, но не делают релизный критерий недостижимым.
+
+`manifest.json` и `content.json` содержат корневой `editorial_readiness`, а каждая
+запись — `editorial.provenance`. Полные `claims` и расширенные `sources` присутствуют
+в `content.json`; внутренние диагностические фразы не попадают в публичный индекс.
 
 ---
 

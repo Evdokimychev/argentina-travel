@@ -164,7 +164,7 @@ export default function MapObjectCard({
               <dd className="mt-0.5 font-semibold text-foreground">{object.airportDetails.domesticRoutes || "Нет данных"}</dd>
             </div>
             <div>
-              <dt className="text-muted">Проверено</dt>
+              <dt className="text-muted">Дата актуальности</dt>
               <dd className="mt-0.5 font-semibold text-foreground">
                 {object.sourceVerifiedAt ? new Date(`${object.sourceVerifiedAt}T12:00:00Z`).toLocaleDateString("ru-RU") : "Не указано"}
               </dd>
@@ -176,7 +176,7 @@ export default function MapObjectCard({
           <div className="mt-3 rounded-card bg-sky/5 p-2.5">
             <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-sky-ink">
               <Plane className="h-3.5 w-3.5" aria-hidden />
-              Прямые рейсы · {object.flightDestinations.length}
+              Возможные направления · {object.flightDestinations.length}
             </p>
             <div className="mt-1.5 flex max-h-28 flex-wrap gap-1.5 overflow-y-auto">
               {object.flightDestinations.map((dest) => (

@@ -7,7 +7,8 @@ title_es: "Mitos sobre Argentina"
 aliases: ["мифы об Аргентине", "заблуждения", "правда об Аргентине", "Аргентина стереотипы", "развенчание мифов"]
 summary: "Аргентина обросла устойчивыми мифами: тут всегда тепло, жизнь почти даром, танго на каждом углу, вегетарианцу нечего есть, повсюду опасно, а испанский такой же, как в Испании. Разбираем популярные заблуждения и заменяем их тем, как есть на самом деле."
 status: published
-site_ready: true
+site_ready: false
+publication_block_reason: "Broad financial, safety, climate and immigration comparisons require claim-level primary-source review before publication."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [мифы, стереотипы, культура, что удивляет]
@@ -19,7 +20,7 @@ last_verified: "2026-07-04"
 confidence: high
 seo_slug: "mify-ob-argentine"
 sources:
-  - title: "Записи этой базы знаний по климату, деньгам, безопасности и культуре"
+  - title: "Связанные материалы по климату, деньгам, безопасности и культуре"
     url: "../regiony/patagonia.md"
     lang: ru
     type: aggregator
@@ -71,10 +72,6 @@ sources:
 - Страна одна из безопаснейших в регионе; риск — кражи, не насилие.
 - Испанский — риоплатский, с vos и своим произношением.
 
-## Рекомендации
-
-См. `recommendations` в метаданных.
-
 ## Связанные объекты
 
 - [[interesnye-fakty|Что удивляет в Аргентине: интересные факты]] — что удивляет в Аргентине по-настоящему.
@@ -84,4 +81,4 @@ sources:
 
 ## Источники
 
-- Профильные записи базы по климату, деньгам, безопасности, языку и культуре — каждый миф разобран со ссылкой.
+- [[klimat-po-regionam|Климат по регионам]], [[inflyatsiya-i-ekonomika|экономика и инфляция]], [[bezopasnost-argentina|безопасность]], [[ispanskij-dlya-puteshestvennika|аргентинский испанский]] и [[mentalitet-i-etiket|культура и менталитет]] — материалы для проверки отдельных тем без обобщающих стереотипов.

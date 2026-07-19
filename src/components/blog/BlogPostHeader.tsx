@@ -2,7 +2,7 @@ import { Clock, UserRound } from "lucide-react";
 import BlogPostBreadcrumbs from "@/components/blog/BlogPostBreadcrumbs";
 import BlogPostHeroImage from "@/components/blog/BlogPostHeroImage";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
-import { formatDate, formatBlogUpdatedLabel } from "@/data/blog";
+import { formatBlogDate, formatBlogUpdatedLabel } from "@/lib/blog-utils";
 import { cn } from "@/lib/cn";
 import { resolveBlogEditorialTheme } from "@/lib/editorial-theme";
 import { siteContainerClass } from "@/lib/site-container";
@@ -69,7 +69,7 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
                 {post.author}
               </span>
               <span aria-hidden>·</span>
-              <span>{formatDate(post.date)}</span>
+              <span>{formatBlogDate(post.date)}</span>
               <span aria-hidden>·</span>
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-4 w-4" aria-hidden />

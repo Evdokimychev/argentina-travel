@@ -14,6 +14,8 @@ const owner: StaffSecurityRecord = {
   preset: "super_admin",
   capabilities: ["*"],
   isActive: true,
+  notes: null,
+  rowVersion: 1,
 };
 
 describe("admin staff management security", () => {
@@ -47,7 +49,7 @@ describe("admin staff management security", () => {
     ).toBe(false);
   });
 
-  it("keeps mutations behind the owner guard and audits removal", () => {
+  it("keeps mutations behind the owner guard and atomic audited RPCs", () => {
     const collectionRoute = fs.readFileSync(
       path.join(process.cwd(), "src/app/api/admin/staff/route.ts"),
       "utf8",
@@ -55,11 +57,8 @@ describe("admin staff management security", () => {
     expect(collectionRoute).toContain('authorizeAdminRequest(request, "users.manage")');
     expect(collectionRoute).toContain("authorizeStaffManagementRequest");
     expect(collectionRoute).toContain("assertStaffTargetMutationAllowed");
-    const staffInsert = collectionRoute.indexOf('.from("admin_staff").insert');
-    const profileRoleUpdate = collectionRoute.indexOf('.from("profiles")\n      .update');
-    expect(staffInsert).toBeGreaterThan(-1);
-    expect(profileRoleUpdate).toBeGreaterThan(staffInsert);
-    expect(collectionRoute).toContain('.from("admin_staff").delete().eq("user_id", userId)');
+    expect(collectionRoute).toContain('.rpc("admin_assign_staff_atomic"');
+    expect(collectionRoute).not.toContain('.from("admin_staff").insert');
 
     const itemRoute = fs.readFileSync(
       path.join(process.cwd(), "src/app/api/admin/staff/[userId]/route.ts"),
@@ -67,7 +66,20 @@ describe("admin staff management security", () => {
     );
     expect(itemRoute).toContain("authorizeStaffManagementRequest");
     expect(itemRoute).toContain("assertStaffTargetMutationAllowed");
-    expect(itemRoute).toContain('action: "staff.remove"');
+    expect(itemRoute).toContain('.rpc("admin_update_staff_atomic"');
+    expect(itemRoute).toContain('.rpc("admin_remove_staff_atomic"');
+    expect(itemRoute).not.toContain('.from("admin_staff").delete');
+
+    const migration = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "supabase/migrations/20260717042000_admin_staff_atomic_controls.sql",
+      ),
+      "utf8",
+    );
+    expect(migration).toContain("insert into public.admin_audit_log");
+    expect(migration).toContain("grant execute on function public.admin_assign_staff_atomic");
+    expect(migration).toContain("to service_role");
 
     const guard = fs.readFileSync(
       path.join(process.cwd(), "src/lib/admin/staff-management.ts"),

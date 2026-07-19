@@ -2,36 +2,64 @@
 id: mozhno-li-rabotat-na-mestnuyu-kompaniyu
 type: faq
 question: "Можно ли иностранцу устроиться на работу в аргентинскую компанию?"
-short_answer: "Легально — да, но по трудовому договору вас может нанять только работодатель, зарегистрированный в реестре RENURE, и не каждая компания готова этим заниматься ради одного иностранца. Поэтому большинство релокантов сначала получают резиденцию по другому основанию, а работу ищут уже с документами на руках."
+short_answer: "Да, если миграционный статус разрешает работу. Если трудовой договор служит основанием для новой временной резиденции, нужны предварительный договор и работодатель, зарегистрированный в налоговой службе и RENURE. Для человека с уже действующим правом на работу применяется обычное оформление найма."
 topic: rabota
 status: published
+site_ready: true
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [работа, визы, релокация]
 related: [rabochaya-viza, vnzh-argentina, rabota-i-poisk-raboty]
-last_verified: "2026-07-01"
-confidence: medium
+last_verified: "2026-07-17"
+confidence: high
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-  - title: "DNM — Obtener una residencia temporaria como trabajador migrante"
+  - id: migraciones-worker-residence
+    title: "Migraciones — временная резиденция trabajador migrante"
     url: "https://www.argentina.gob.ar/servicio/obtener-una-residencia-temporaria-como-trabajador-migrante"
     lang: es
     type: official
-    note: "требования к рабочей резиденции: пре-контракт, регистрация работодателя в RENURE"
-  - title: "Afon.site — FAQ «Работа»"
-    url: "https://afon.site/rabota"
-    lang: ru
-    type: ru_blog
-    note: "живая практика: наём иностранцев тяжёл сам по себе, востребованные ниши, своё дело через monotributo после прекарии и CUIT; сверено с актуальными требованиями DNM на 2026 год"
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-17"
+    note: "Официальные требования к резиденции на основании найма."
+  - id: argentina-dnu-366-2025-work-status
+    title: "Decreto DNU 366/2025 — право иностранца на работу"
+    url: "https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-17"
+    note: "Запрещает оплачиваемую работу при нерегулярном статусе или без соответствующего разрешения."
+claims:
+  - id: work-requires-authorized-status
+    text: "Иностранец не может работать по найму или самостоятельно при нерегулярном статусе либо без миграционного разрешения на работу."
+    sensitive: true
+    source_ids: [argentina-dnu-366-2025-work-status]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: worker-residence-employer-requirements
+    text: "Для резиденции trabajador migrante нужны предварительный трудовой договор, налоговая регистрация работодателя и его регистрация в RENURE."
+    sensitive: true
+    source_ids: [migraciones-worker-residence]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
 ## Ответ
 
-Формально путь есть: аргентинский работодатель заключает с вами пре-контракт, и вы подаёте на рабочую резиденцию (trabajador migrante). Но ключевое условие — компания должна быть заранее зарегистрирована в **RENURE**, государственном реестре работодателей, имеющих право нанимать иностранцев. Регистрация — отдельная процедура, и мало кто из небольших компаний готов проходить её ради одного кандидата.
+Иностранец может работать в аргентинской компании, если его действующий миграционный статус разрешает оплачиваемую работу. Туристический или нерегулярный статус сам по себе такого права не даёт.
 
-Отсюда известный замкнутый круг: работодатели предпочитают людей с готовыми DNI и CUIL, а получить эти документы проще всего... через работодателя. Добавьте перегретый в пользу работника трудовой кодекс (из-за него аргентинские компании в принципе нанимают неохотно) и необходимость испанского почти во всех сферах, кроме части IT, — и станет ясно, почему наём «с улицы» из-за границы случается редко.
+Если именно будущий трудовой договор используется как основание для временной резиденции trabajador migrante, Migraciones требует предварительный договор с условиями работы, налоговую регистрацию работодателя и его регистрацию в **RENURE**, а также остальные документы заявителя.
 
-Рабочие обходные пути: устроиться в крупную или IT-аутсорсинговую компанию, которая уже состоит в RENURE и нанимала иностранцев; либо — самый частый сценарий — сначала оформить резиденцию по другому основанию (рантье, учёба, цифровой кочевник), а работу искать уже изнутри страны с легальным статусом. Третий вариант — своё дело: после получения прекарии и CUIT можно зарегистрировать monotributo (аналог ИП) и работать на себя.
+Не переносите требование RENURE на любую ситуацию найма: оно относится к оформлению этой миграционной категории. Если право на работу уже следует из действующей резиденции или прекарии, работодатель проверяет документы и оформляет трудовые отношения по применимому порядку. До начала работы подтвердите статус в Migraciones и оформление у работодателя.
 
 ## Источники
 
-- [DNM — рабочая резиденция trabajador migrante](https://www.argentina.gob.ar/servicio/obtener-una-residencia-temporaria-como-trabajador-migrante) — RENURE, пре-контракт, es.
-- [Afon.site — Работа](https://afon.site/rabota) — практика найма и monotributo; сверено с 2026, ru.
+- [Migraciones — резиденция trabajador migrante](https://www.argentina.gob.ar/servicio/obtener-una-residencia-temporaria-como-trabajador-migrante).
+- [Decreto DNU 366/2025 — требования к праву на работу](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).

@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T11:59:07.853Z",
+  "scope": "public-guide-copy",
+  "status": "passed",
+  "summary": {
+    "total": 29,
+    "passed": 29,
+    "failed": 0
+  },
+  "entries": [
+    {
+      "id": "guide-hub",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:kak-dobratsya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:gde-zhit",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:transport",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:turistskie-regiony",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:dostoprimechatelnosti",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:pogoda-i-sezonnost",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:yazyk",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:kultura",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:istoriya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:kukhnya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:svyaz",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:ekonomika-i-dengi",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:shopping",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "pillar:bezopasnost",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:kak-dobratsya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:gde-zhit",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:transport",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:turistskie-regiony",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:dostoprimechatelnosti",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:pogoda-i-sezonnost",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:yazyk",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:kultura",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:istoriya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:kukhnya",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:svyaz",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:ekonomika-i-dengi",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:shopping",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "id": "practical:bezopasnost",
+      "status": "passed",
+      "issues": []
+    }
+  ]
+}

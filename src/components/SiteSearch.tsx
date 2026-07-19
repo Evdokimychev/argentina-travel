@@ -41,7 +41,7 @@ import {
   SEARCH_TYPE_LABELS,
   type SearchIndexItem,
   type SearchResultType,
-} from "@/lib/site-search-index";
+} from "@/lib/site-search-schema";
 import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
@@ -160,7 +160,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
   return order.filter((type) => groups.has(type)).map((type) => groups.get(type)!);
 }
 
-export default function SiteSearch() {
+export default function SiteSearch({ initialOpen = false }: { initialOpen?: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -174,6 +174,10 @@ export default function SiteSearch() {
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const abortRef = useRef<AbortController | null>(null);
   const lastTrackedSubmitRef = useRef<string>("");
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T17:55:59.202Z",
+  "generatedAt": "2026-07-17T11:59:32.030Z",
   "policy": "No source deletion; quarantine is reversible",
   "actions": [
     {
@@ -182,6 +182,16 @@
       ]
     },
     {
+      "id": "banki-i-perevody",
+      "sourcePath": "content/knowledge-base/dengi/banki-i-perevody.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready",
+        "mixed_script_word"
+      ]
+    },
+    {
       "id": "barreal",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/barreal.md",
       "action": "quarantine_and_review",
@@ -276,6 +286,15 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "byudzhet-poezdki",
+      "sourcePath": "content/knowledge-base/dengi/byudzhet-poezdki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -618,6 +637,33 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "chto-delat-krome-dostoprimechatelnostej",
+      "sourcePath": "content/knowledge-base/faq/chto-delat-krome-dostoprimechatelnostej.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "chto-est-vegetariancu",
+      "sourcePath": "content/knowledge-base/faq/chto-est-vegetariancu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "chto-stoit-deneg-prioritety",
+      "sourcePath": "content/knowledge-base/puteshestvie/chto-stoit-deneg-prioritety.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -1249,6 +1295,15 @@
       ]
     },
     {
+      "id": "falshivye-policejskie-i-obmenniki",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/falshivye-policejskie-i-obmenniki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "federacion",
       "sourcePath": "content/knowledge-base/goroda/federacion.md",
       "action": "quarantine_and_review",
@@ -1326,15 +1381,6 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
-      ]
-    },
-    {
-      "id": "futbol-kak-popast-bez-skama",
-      "sourcePath": "content/knowledge-base/lichnyy-opyt/futbol-kak-popast-bez-skama.md",
-      "action": "quarantine_and_review",
-      "reversible": true,
-      "issues": [
-        "mixed_script_word"
       ]
     },
     {
@@ -1528,6 +1574,15 @@
       "reversible": true,
       "issues": [
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "grazhdanstvo",
+      "sourcePath": "content/knowledge-base/pereezd/grazhdanstvo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -1747,6 +1802,15 @@
       ]
     },
     {
+      "id": "kakoj-mesyats-kuda-ehat",
+      "sourcePath": "content/knowledge-base/faq/kakoj-mesyats-kuda-ehat.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "kakoj-otrub-steika-zakazat",
       "sourcePath": "content/knowledge-base/faq/kakoj-otrub-steika-zakazat.md",
       "action": "quarantine_and_review",
@@ -1781,6 +1845,15 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "kovorkingi-i-rabota-nomada",
+      "sourcePath": "content/knowledge-base/svyaz/kovorkingi-i-rabota-nomada.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2027,6 +2100,15 @@
       ]
     },
     {
+      "id": "medicina-i-strahovka",
+      "sourcePath": "content/knowledge-base/medicina/medicina-i-strahovka.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "mendoza-best-of-wine-tourism",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/mendoza-best-of-wine-tourism.md",
       "action": "quarantine_and_review",
@@ -2052,6 +2134,15 @@
       "reversible": true,
       "issues": [
         "missing_hero"
+      ]
+    },
+    {
+      "id": "mify-ob-argentine",
+      "sourcePath": "content/knowledge-base/kultura/mify-ob-argentine.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2124,12 +2215,30 @@
       ]
     },
     {
+      "id": "mozhno-li-delat-vizaran",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-delat-vizaran.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "thin_content"
+      ]
+    },
+    {
       "id": "mozhno-li-otkryt-schet-nerezidentu",
       "sourcePath": "content/knowledge-base/faq/mozhno-li-otkryt-schet-nerezidentu.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "thin_content"
+      ]
+    },
+    {
+      "id": "mozhno-li-uchitsya-v-universitete-besplatno",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-uchitsya-v-universitete-besplatno.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
         "thin_content"
       ]
     },
@@ -2334,6 +2443,15 @@
       ]
     },
     {
+      "id": "otkrytie-biznesa",
+      "sourcePath": "content/knowledge-base/dengi/otkrytie-biznesa.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "parapente-en-cerro-san-javier",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/parapente-en-cerro-san-javier.md",
       "action": "quarantine_and_review",
@@ -2520,6 +2638,15 @@
       ]
     },
     {
+      "id": "parque-nacional-tierra-del-fuego",
+      "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-tierra-del-fuego.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "parque-natural-valle-fertil",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/parque-natural-valle-fertil.md",
       "action": "quarantine_and_review",
@@ -2637,6 +2764,15 @@
       ]
     },
     {
+      "id": "pereezd-s-minimalnym-byudzhetom",
+      "sourcePath": "content/knowledge-base/pereezd/pereezd-s-minimalnym-byudzhetom.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "pesca-con-devolucion-en-entre-rios",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/pesca-con-devolucion-en-entre-rios.md",
       "action": "quarantine_and_review",
@@ -2745,6 +2881,15 @@
       ]
     },
     {
+      "id": "pokupka-nedvizhimosti",
+      "sourcePath": "content/knowledge-base/zhile/pokupka-nedvizhimosti.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "posadas",
       "sourcePath": "content/knowledge-base/goroda/posadas.md",
       "action": "quarantine_and_review",
@@ -2752,6 +2897,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "provoz-lekarstv",
+      "sourcePath": "content/knowledge-base/medicina/provoz-lekarstv.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -2889,6 +3043,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "rabota-i-poisk-raboty",
+      "sourcePath": "content/knowledge-base/pereezd/rabota-i-poisk-raboty.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -3151,6 +3314,15 @@
       ]
     },
     {
+      "id": "rody-i-beremennost",
+      "sourcePath": "content/knowledge-base/medicina/rody-i-beremennost.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "roque-saenz-pena",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/roque-saenz-pena.md",
       "action": "quarantine_and_review",
@@ -3158,6 +3330,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "rossiya-vs-argentina",
+      "sourcePath": "content/knowledge-base/kultura/rossiya-vs-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -3514,6 +3695,15 @@
       ]
     },
     {
+      "id": "sistema-zdravoohraneniya",
+      "sourcePath": "content/knowledge-base/medicina/sistema-zdravoohraneniya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "skam-s-falshivoj-policiej",
       "sourcePath": "content/knowledge-base/faq/skam-s-falshivoj-policiej.md",
       "action": "quarantine_and_review",
@@ -3578,6 +3768,51 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source"
+      ]
+    },
+    {
+      "id": "status-expediente-migraciones",
+      "sourcePath": "content/knowledge-base/pereezd/status-expediente-migraciones.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-ba",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-ba.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-semya-i-para",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-semya-i-para.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "stoit-li-ehat-v-argentinu",
+      "sourcePath": "content/knowledge-base/puteshestvie/stoit-li-ehat-v-argentinu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "studencheskaya-zhizn",
+      "sourcePath": "content/knowledge-base/pereezd/studencheskaya-zhizn.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -3892,6 +4127,15 @@
       ]
     },
     {
+      "id": "udalyonnaya-rabota-i-oplata",
+      "sourcePath": "content/knowledge-base/dengi/udalyonnaya-rabota-i-oplata.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "ushuaia-la-ciudad-y-el-tren",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ushuaia-la-ciudad-y-el-tren.md",
       "action": "quarantine_and_review",
@@ -4187,6 +4431,24 @@
       ]
     },
     {
+      "id": "vnzh-argentina",
+      "sourcePath": "content/knowledge-base/pereezd/vnzh-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "voinskij-uchet-i-voennyj-bilet",
+      "sourcePath": "content/knowledge-base/pereezd/voinskij-uchet-i-voennyj-bilet.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
+      ]
+    },
+    {
       "id": "volcan-lanin",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/volcan-lanin.md",
       "action": "quarantine_and_review",
@@ -4203,6 +4465,15 @@
       "issues": [
         "not_publication_ready",
         "thin_content"
+      ]
+    },
+    {
+      "id": "vysokogorye-na-avto",
+      "sourcePath": "content/knowledge-base/transport/vysokogorye-na-avto.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     },
     {
@@ -4226,12 +4497,21 @@
       ]
     },
     {
-      "id": "zhizn-bez-ispanskogo",
-      "sourcePath": "content/knowledge-base/kultura/zhizn-bez-ispanskogo.md",
+      "id": "zashchita-nakoplenij-ot-inflyacii",
+      "sourcePath": "content/knowledge-base/dengi/zashchita-nakoplenij-ot-inflyacii.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "mixed_script_word"
+        "not_publication_ready"
+      ]
+    },
+    {
+      "id": "zhizn-na-pensii",
+      "sourcePath": "content/knowledge-base/pereezd/zhizn-na-pensii.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "not_publication_ready"
       ]
     }
   ]

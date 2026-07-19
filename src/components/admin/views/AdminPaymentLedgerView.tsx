@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { useAdminLayoutPrefs } from "@/context/AdminLayoutPrefsContext";
+import { useAdminContext } from "@/context/AdminContext";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import { cn } from "@/lib/cn";
 import {
@@ -49,12 +50,6 @@ type TransactionDetailResponse = {
 type CreateRefundResponse = {
   error?: string;
   transaction?: PaymentTransactionRow;
-  providerAttempt?: {
-    executed?: boolean;
-    skippedReason?: string | null;
-    code?: string;
-    error?: string;
-  };
 };
 
 const TYPE_FILTER_LABELS: Record<PaymentTransactionType | "all", string> = {
@@ -89,6 +84,9 @@ function formatAdminDateTime(value: string | null | undefined): string {
 
 export function AdminPaymentLedgerPanel() {
   const { tableClass, thClass, tdClass } = useAdminLayoutPrefs();
+  const { hasCapability } = useAdminContext();
+  const canPrepareRefund = hasCapability("finance.refunds.prepare");
+  const canApproveRefund = hasCapability("finance.refunds.approve");
   const [period, setPeriod] = useState<AdminPaymentPeriodFilter>("30d");
   const [type, setType] = useState<PaymentTransactionType | "all">("all");
   const [status, setStatus] = useState<PaymentTransactionStatus | "all">("all");
@@ -143,6 +141,9 @@ export function AdminPaymentLedgerPanel() {
 
   const handleRefundAction = useCallback(
     async (transactionId: string, action: "approve" | "reject") => {
+      if (!window.confirm(action === "approve"
+        ? "Одобрить возврат? После этого система передаст операцию платёжному провайдеру."
+        : "Отклонить запрос на возврат? Решение будет записано в финансовый журнал.")) return;
       setActionError(null);
       setActionLoadingId(transactionId);
       try {
@@ -172,6 +173,7 @@ export function AdminPaymentLedgerPanel() {
 
   const handleCreateRefund = useCallback(
     async (row: PaymentTransactionRow) => {
+      if (!window.confirm("Создать запрос на возврат? Деньги пока не отправятся: запрос должен одобрить другой финансовый сотрудник.")) return;
       setCreateRefundError(null);
       setCreateRefundMessage(null);
       setCreateRefundLoading(true);
@@ -183,6 +185,8 @@ export function AdminPaymentLedgerPanel() {
             bookingId: row.bookingId,
             amountUsd: row.amount,
             reason: `Возврат по операции ${row.id}`,
+            operationId: crypto.randomUUID(),
+            sourceTransactionId: row.id,
           }),
         });
         const payload = (await response.json().catch(() => ({}))) as CreateRefundResponse;
@@ -191,15 +195,9 @@ export function AdminPaymentLedgerPanel() {
           return;
         }
 
-        if (payload.providerAttempt?.executed) {
-          setCreateRefundMessage("Возврат отправлен провайдеру");
-        } else if (payload.providerAttempt?.skippedReason) {
-          setCreateRefundMessage("Запрос создан и ожидает ручной обработки");
-        } else if (payload.providerAttempt?.error) {
-          setCreateRefundMessage("Запрос создан, но провайдер вернул ошибку");
-        } else {
-          setCreateRefundMessage("Запрос на возврат создан");
-        }
+        setCreateRefundMessage(
+          "Возврат подготовлен и ожидает подтверждения другого финансового сотрудника"
+        );
 
         await refresh();
         setSelectedId(payload.transaction.id);
@@ -231,7 +229,7 @@ export function AdminPaymentLedgerPanel() {
         >
           Заявка
         </Link>
-        {row.type === "refund" && row.status === "pending" ? (
+        {canApproveRefund && row.type === "refund" && row.status === "pending" ? (
           <>
             <button
               type="button"
@@ -558,12 +556,12 @@ export function AdminPaymentLedgerPanel() {
                 </p>
               ) : null}
 
-              {selected.type === "charge" && selected.status === "completed" ? (
+              {canPrepareRefund && selected.type === "charge" && selected.status === "completed" ? (
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                   <p className="text-sm font-medium text-charcoal">Возврат по операции списания</p>
                   <p className="mt-1 text-xs text-slate">
-                    Создаётся запрос на полный возврат с последующей попыткой отправки в платёжную
-                    систему.
+                    Запрос резервирует сумму. Отправить возврат провайдеру сможет только другой
+                    финансовый сотрудник после проверки.
                   </p>
                   {createRefundError ? (
                     <p className="mt-2 text-sm text-red-600">{createRefundError}</p>
@@ -582,7 +580,7 @@ export function AdminPaymentLedgerPanel() {
                 </div>
               ) : null}
 
-              {selected.type === "refund" && selected.status === "pending" ? (
+              {canApproveRefund && selected.type === "refund" && selected.status === "pending" ? (
                 <div className="flex flex-wrap gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
                   <button
                     type="button"

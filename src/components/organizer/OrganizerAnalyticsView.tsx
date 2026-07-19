@@ -552,9 +552,9 @@ function OrganizerAnalyticsLocalView() {
 
       {shouldSeedDemoData() ? (
         <section className="rounded-2xl border border-dashed border-gray-300 bg-gray-50/80 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate">Демо тарифов</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-slate">Предпросмотр тарифов</p>
           <p className="mt-1 text-sm text-slate">
-            Переключите тариф, чтобы проверить базовую и расширенную аналитику до подключения биллинга.
+            Переключите пример тарифа, чтобы сравнить базовую и расширенную аналитику.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {(Object.keys(ORGANIZER_PLANS) as OrganizerPlanTier[]).map((tier) => (

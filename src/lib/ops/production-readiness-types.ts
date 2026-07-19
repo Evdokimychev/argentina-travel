@@ -18,6 +18,7 @@ export type ProductionReadinessScriptReport = {
 
 export type ProductionReadinessSnapshot = {
   ok: boolean;
+  state: "blocked" | "needs_verification" | "local_passed" | "ready_to_publish";
   ranAt: string;
   source: "inline" | "script" | "merged";
   environment: {

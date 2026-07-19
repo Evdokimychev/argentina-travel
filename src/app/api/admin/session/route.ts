@@ -7,19 +7,28 @@ import type { AdminSessionPayload } from "@/types/admin";
 
 export async function GET() {
   if (!isSupabaseConfigured()) {
-    return NextResponse.json({ error: "Supabase is not configured." }, { status: 503 });
+    return NextResponse.json(
+      { error: "Вход в панель временно недоступен. Обратитесь к владельцу сайта." },
+      { status: 503, headers: { "Cache-Control": "private, no-store" } },
+    );
   }
 
   const supabase = await createSupabaseServerClient();
   const sessionUser = await loadSessionUserFromSupabase(supabase);
 
   if (!sessionUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Войдите в аккаунт администратора." },
+      { status: 401, headers: { "Cache-Control": "private, no-store" } },
+    );
   }
 
   const staff = await resolveAdminCapabilitiesWithClient(supabase, sessionUser);
   if (!staff) {
-    return NextResponse.json({ error: "Нет доступа", code: "FORBIDDEN" }, { status: 403 });
+    return NextResponse.json(
+      { error: "У этого аккаунта нет доступа к панели.", code: "FORBIDDEN" },
+      { status: 403, headers: { "Cache-Control": "private, no-store" } },
+    );
   }
 
   const payload: AdminSessionPayload = {
@@ -29,5 +38,5 @@ export async function GET() {
     via: "session",
   };
 
-  return NextResponse.json(payload);
+  return NextResponse.json(payload, { headers: { "Cache-Control": "private, no-store" } });
 }

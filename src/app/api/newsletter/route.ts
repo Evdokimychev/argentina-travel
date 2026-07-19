@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { LeadCaptureError, submitNewsletter } from "@/lib/lead-capture";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteForms } from "@/lib/site-settings-server";
+import {
+  LeadCaptureValidationError,
+  NEWSLETTER_REQUEST_MAX_BYTES,
+  normalizeNewsletterSubmission,
+  readLimitedJson,
+} from "@/lib/lead-capture-validation";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
 export async function POST(request: Request) {
@@ -20,30 +26,29 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as {
-      email?: string;
-      source?: string;
-      locale?: string | null;
-      captchaToken?: string | null;
-      honeypot?: string | null;
-    };
-
+    const rawBody = await readLimitedJson(request, NEWSLETTER_REQUEST_MAX_BYTES);
+    const rawFields =
+      rawBody && typeof rawBody === "object" && !Array.isArray(rawBody)
+        ? (rawBody as Record<string, unknown>)
+        : {};
     const protection = await verifyGuestFormProtection({
       request,
       formId: "newsletter",
-      captchaToken: body.captchaToken,
-      honeypot: body.honeypot,
+      captchaToken:
+        typeof rawFields.captchaToken === "string" ? rawFields.captchaToken : null,
+      honeypot: typeof rawFields.honeypot === "string" ? rawFields.honeypot : null,
     });
     if (!protection.ok) {
       if (protection.kind === "configuration") {
-        return NextResponse.json({ error: "Защита подписки временно недоступна." }, { status: 503 });
+        return NextResponse.json(
+          { error: "Защита подписки временно недоступна." },
+          { status: 503 },
+        );
       }
       return NextResponse.json({ ok: true });
     }
 
-    if (!body.email?.trim()) {
-      return NextResponse.json({ error: "Укажите email." }, { status: 400 });
-    }
+    const body = normalizeNewsletterSubmission(rawBody);
 
     await submitNewsletter({
       email: body.email,
@@ -53,10 +58,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
+    if (error instanceof LeadCaptureValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     if (error instanceof LeadCaptureError) {
       const status =
         error.code === "validation" ? 400 : error.code === "not_configured" ? 503 : 500;
-      return NextResponse.json({ error: error.message }, { status });
+      const message =
+        error.code === "database"
+          ? "Не удалось оформить подписку. Попробуйте позже."
+          : error.message;
+      return NextResponse.json({ error: message }, { status });
     }
 
     return NextResponse.json({ error: "Не удалось оформить подписку. Попробуйте позже." }, { status: 500 });

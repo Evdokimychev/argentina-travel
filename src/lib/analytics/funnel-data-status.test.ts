@@ -5,7 +5,7 @@ describe("admin funnel data quality", () => {
   it("fails closed instead of presenting estimates or untrusted events as conversion", () => {
     expect(
       resolveAnalyticsFunnelTrust({
-        hasObservedTourViews: true,
+        metricsAvailable: true,
         ingestionTrusted: false,
       }),
     ).toMatchObject({
@@ -15,14 +15,14 @@ describe("admin funnel data quality", () => {
 
     expect(
       resolveAnalyticsFunnelTrust({
-        hasObservedTourViews: false,
+        metricsAvailable: false,
         ingestionTrusted: true,
       }),
     ).toMatchObject({ dataStatus: "unavailable", trustedForKpi: false });
 
     expect(
       resolveAnalyticsFunnelTrust({
-        hasObservedTourViews: true,
+        metricsAvailable: true,
         ingestionTrusted: true,
       }),
     ).toEqual({ dataStatus: "trusted", trustedForKpi: true, reason: null });

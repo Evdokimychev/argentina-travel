@@ -11,7 +11,6 @@ interface ExternalBookingButtonProps {
   link: TourCustomBookingLinkPublic;
   label?: string;
   className?: string;
-  showIcon?: boolean;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
 
@@ -20,7 +19,6 @@ export default function ExternalBookingButton({
   link,
   label,
   className,
-  showIcon = true,
   onClick,
 }: ExternalBookingButtonProps) {
   return (
@@ -32,7 +30,7 @@ export default function ExternalBookingButton({
       className={cn(buttonVariants({ variant: "default" }), "w-full gap-2", className)}
     >
       {label ?? link.label}
-      {showIcon ? <ExternalLink className="h-4 w-4" aria-hidden /> : null}
+      <ExternalLink className="h-4 w-4" aria-hidden />
     </a>
   );
 }

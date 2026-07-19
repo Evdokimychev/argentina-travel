@@ -6,6 +6,7 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { userHasAccountRole } from "@/types/user";
 import { patchOrganizerGroupTripListing } from "@/lib/group-trips-server";
 import type { OrganizerGroupTripPatchAction } from "@/types/group-trips";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -29,6 +30,10 @@ export async function PATCH(request: Request, context: RouteContext) {
     const body = (await request.json()) as PatchBody;
     if (body.action !== "confirm" && body.action !== "cancel") {
       return NextResponse.json({ error: "Укажите action: confirm или cancel" }, { status: 400 });
+    }
+    if (body.action === "confirm") {
+      const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+      if (moduleBlocked) return moduleBlocked;
     }
 
     const admin = createSupabaseAdminClient();

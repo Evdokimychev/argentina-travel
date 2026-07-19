@@ -20,14 +20,13 @@ import {
   resolveAiraloHelpCenterUrl,
 } from "@/lib/airalo/locale-url";
 import type { EsimOfferFilters } from "@/lib/airalo/offer-meta";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { EsimCatalogSummary, EsimOffer } from "@/lib/airalo/types";
 
 type EsimSortOption = "price_asc" | "price_desc" | "data_desc" | "validity_desc" | "price_per_day";
 
-export default function EsimCatalogView() {
+export default function EsimCatalogView({ heroImage }: { heroImage: string }) {
   const searchParams = useSearchParams();
   const { t, locale } = useLocaleCurrency();
   const [countryId, setCountryId] = useState(DEFAULT_ESIM_COUNTRY_ID);
@@ -148,7 +147,7 @@ export default function EsimCatalogView() {
         title={t("esim.title")}
         subtitle={t("esim.subtitle")}
         description={t("esim.intro")}
-        image={getServicePageHeroImage("esim")}
+        image={heroImage}
         compact
       />
 

@@ -158,6 +158,8 @@ export type CmsDocument = {
   scheduledPublishAt: string | null;
   createdBy: string | null;
   updatedBy: string | null;
+  /** Optimistic concurrency token supplied back with every write. */
+  rowVersion: number;
   createdAt: string;
   updatedAt: string;
 };

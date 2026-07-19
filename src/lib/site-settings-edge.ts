@@ -1,72 +1,174 @@
 import {
+  DEFAULT_SITE_FEATURES,
+  DEFAULT_SITE_MODULES,
+  DEFAULT_SITE_NAVIGATION,
   normalizeSiteFeatures,
-  normalizeSiteNavigation,
   normalizeSiteModules,
+  normalizeSiteNavigation,
 } from "@/lib/cms/site-globals/normalize";
-import type { SiteFeaturesGlobal, SiteModulesGlobal, SiteNavigationGlobal } from "@/types/site-globals";
+import type {
+  SiteFeaturesGlobal,
+  SiteModulesGlobal,
+  SiteNavigationGlobal,
+} from "@/types/site-globals";
 
 const CACHE_TTL_MS = 60_000;
-let cached: { value: SiteFeaturesGlobal; at: number } | null = null;
-let navigationCached: { value: SiteNavigationGlobal; at: number } | null = null;
-let modulesCached: { value: SiteModulesGlobal; at: number } | null = null;
+const FAILURE_BACKOFF_MS = 3_000;
+const QUERY_TIMEOUT_MS = 1_000;
 
-async function fetchEdgeSetting(key: string): Promise<unknown> {
+type ControlPlaneValues = {
+  features: SiteFeaturesGlobal;
+  navigation: SiteNavigationGlobal;
+  modules: SiteModulesGlobal;
+};
+
+export type SiteControlPlaneEdgeSnapshot = ControlPlaneValues &
+  (
+    | {
+        ok: true;
+        source: "fresh" | "last_known_good";
+        revision: number;
+      }
+    | {
+        ok: false;
+        source: "safe_fallback";
+        revision: null;
+      }
+  );
+
+type DurableSnapshot = ControlPlaneValues & {
+  revision: number;
+  fetchedAt: number;
+};
+
+let cached: DurableSnapshot | null = null;
+let inFlight: Promise<SiteControlPlaneEdgeSnapshot> | null = null;
+let retryAfter = 0;
+
+const SAFE_FALLBACK: SiteControlPlaneEdgeSnapshot = {
+  ok: false,
+  source: "safe_fallback",
+  revision: null,
+  features: {
+    ...DEFAULT_SITE_FEATURES,
+    maintenanceMode: false,
+    allowOrganizerSignup: false,
+  },
+  // Keep the established read-only site available during a cold settings
+  // outage. New transactional modules remain disabled below, and every public
+  // write independently requires an `ok: true` control-plane snapshot.
+  navigation: { ...DEFAULT_SITE_NAVIGATION },
+  modules: {
+    ...DEFAULT_SITE_MODULES,
+    apartmentsMode: "disabled",
+    carRentalMode: "disabled",
+    transfersMode: "disabled",
+    hotelsMode: "disabled",
+    showApartmentsInServices: false,
+    showCarRentalInServices: false,
+    showTransfersInServices: false,
+  },
+};
+
+function lastKnownGood(): SiteControlPlaneEdgeSnapshot {
+  if (!cached) return SAFE_FALLBACK;
+  return {
+    ok: true,
+    source: "last_known_good",
+    revision: cached.revision,
+    features: cached.features,
+    navigation: cached.navigation,
+    modules: cached.modules,
+  };
+}
+
+async function fetchDurableControlPlane(): Promise<DurableSnapshot> {
   const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const token =
-    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
-  if (!baseUrl || !token) return undefined;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!baseUrl || !anonKey) throw new Error("Public control plane is not configured");
 
-  const url = new URL("/rest/v1/site_settings", baseUrl);
-  url.searchParams.set("select", "value");
-  url.searchParams.set("key", `eq.${key}`);
+  const url = new URL("/rest/v1/site_settings_control_plane", baseUrl);
+  url.searchParams.set("select", "revision,features,navigation,modules");
+  url.searchParams.set("singleton", "eq.true");
   url.searchParams.set("limit", "1");
   const response = await fetch(url, {
-    headers: { apikey: token, Authorization: `Bearer ${token}` },
+    headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
     cache: "no-store",
+    signal: AbortSignal.timeout(QUERY_TIMEOUT_MS),
   });
-  if (!response.ok) return undefined;
-  const rows = (await response.json()) as Array<{ value?: unknown }>;
-  return rows[0]?.value;
+  if (!response.ok) throw new Error(`Control plane lookup failed: ${response.status}`);
+
+  const rows = (await response.json()) as Array<{
+    revision?: unknown;
+    features?: unknown;
+    navigation?: unknown;
+    modules?: unknown;
+  }>;
+  const row = rows[0];
+  if (!row || typeof row.revision !== "number" || !Number.isSafeInteger(row.revision)) {
+    throw new Error("Control plane snapshot is missing");
+  }
+
+  return {
+    revision: row.revision,
+    features: normalizeSiteFeatures(row.features),
+    navigation: normalizeSiteNavigation(row.navigation),
+    modules: normalizeSiteModules(row.modules),
+    fetchedAt: Date.now(),
+  };
 }
 
-/** Edge-safe maintenance settings read used by middleware. */
+/**
+ * One Edge-safe read for all public switches. The database row is a durable,
+ * non-secret snapshot. A warm isolate keeps the last successful value without
+ * an expiry during an outage; a cold isolate uses the conservative fallback.
+ */
+export async function fetchSiteControlPlaneEdge(): Promise<SiteControlPlaneEdgeSnapshot> {
+  const now = Date.now();
+  if (cached && now - cached.fetchedAt < CACHE_TTL_MS) {
+    return {
+      ok: true,
+      source: "fresh",
+      revision: cached.revision,
+      features: cached.features,
+      navigation: cached.navigation,
+      modules: cached.modules,
+    };
+  }
+  if (now < retryAfter) return lastKnownGood();
+  if (inFlight) return inFlight;
+
+  inFlight = (async () => {
+    try {
+      cached = await fetchDurableControlPlane();
+      retryAfter = 0;
+      return {
+        ok: true as const,
+        source: "fresh" as const,
+        revision: cached.revision,
+        features: cached.features,
+        navigation: cached.navigation,
+        modules: cached.modules,
+      };
+    } catch {
+      retryAfter = Date.now() + FAILURE_BACKOFF_MS;
+      return lastKnownGood();
+    } finally {
+      inFlight = null;
+    }
+  })();
+
+  return inFlight;
+}
+
 export async function fetchSiteFeaturesEdge(): Promise<SiteFeaturesGlobal> {
-  if (cached && Date.now() - cached.at < CACHE_TTL_MS) return cached.value;
-
-  try {
-    const value = normalizeSiteFeatures(await fetchEdgeSetting("site.features"));
-    cached = { value, at: Date.now() };
-    return value;
-  } catch {
-    return normalizeSiteFeatures(undefined);
-  }
+  return (await fetchSiteControlPlaneEdge()).features;
 }
 
-/** Edge-safe public module visibility read used by middleware. */
 export async function fetchSiteNavigationEdge(): Promise<SiteNavigationGlobal> {
-  if (navigationCached && Date.now() - navigationCached.at < CACHE_TTL_MS) {
-    return navigationCached.value;
-  }
-
-  try {
-    const value = normalizeSiteNavigation(await fetchEdgeSetting("site.navigation"));
-    navigationCached = { value, at: Date.now() };
-    return value;
-  } catch {
-    return normalizeSiteNavigation(undefined);
-  }
+  return (await fetchSiteControlPlaneEdge()).navigation;
 }
 
 export async function fetchSiteModulesEdge(): Promise<SiteModulesGlobal> {
-  if (modulesCached && Date.now() - modulesCached.at < CACHE_TTL_MS) {
-    return modulesCached.value;
-  }
-  try {
-    const value = normalizeSiteModules(await fetchEdgeSetting("site.modules"));
-    modulesCached = { value, at: Date.now() };
-    return value;
-  } catch {
-    return normalizeSiteModules(undefined);
-  }
+  return (await fetchSiteControlPlaneEdge()).modules;
 }

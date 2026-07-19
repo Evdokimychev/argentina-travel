@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-15 19:16",
+  "generated_at": "2026-07-17 00:00",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -1302,7 +1302,7 @@
           "id": "istoriya-argentiny",
           "type": "guide",
           "subtype": "culture",
-          "title": "Краткая история Аргентины для путешественника"
+          "title": "История Аргентины: три опорные темы для путешественника"
         },
         {
           "id": "istoriya-zheleznyh-dorog",
@@ -1368,7 +1368,7 @@
           "id": "kak-dobratsya-iz-rossii",
           "type": "transport",
           "subtype": null,
-          "title": "Как добраться из России и СНГ в Аргентину"
+          "title": "Как добраться из России и стран СНГ в Аргентину"
         },
         {
           "id": "kak-kupit-aviabilety-deshevle",
@@ -1392,7 +1392,7 @@
           "id": "kak-poluchit-prava-v-argentine",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля"
         },
         {
           "id": "kakie-privivki-nuzhny-dlya-argentiny",
@@ -1452,7 +1452,7 @@
           "id": "kemping-i-palatki",
           "type": "guide",
           "subtype": "accommodation",
-          "title": "Кемпинг и палатки в Аргентине"
+          "title": "Кемпинг в национальных парках Аргентины"
         },
         {
           "id": "kladbische-recoleta",
@@ -1716,7 +1716,7 @@
           "id": "medicina-i-strahovka",
           "type": "guide",
           "subtype": "health",
-          "title": "Медицина и страховка в Аргентине"
+          "title": "Медицина и медицинская страховка в Аргентине"
         },
         {
           "id": "mendoza",
@@ -1812,7 +1812,7 @@
           "id": "mozhno-li-ezdit-po-inostrannym-pravam",
           "type": "faq",
           "subtype": null,
-          "title": "Можно ли ездить в Аргентине по иностранным (российским) правам?"
+          "title": "Можно ли ездить в Аргентине по иностранным правам?"
         },
         {
           "id": "mozhno-li-pit-vodu-iz-krana",
@@ -2376,7 +2376,7 @@
           "id": "podgotovka-k-poezdke",
           "type": "guide",
           "subtype": "planning",
-          "title": "Подготовка к поездке в Аргентину: чек-лист"
+          "title": "Подготовка к поездке в Аргентину: проверенный чек-лист"
         },
         {
           "id": "poezda",
@@ -2394,7 +2394,7 @@
           "id": "pokupki-i-tax-free",
           "type": "guide",
           "subtype": "shopping",
-          "title": "Покупки и tax free в Аргентине"
+          "title": "Tax free в Аргентине: как оформить возврат"
         },
         {
           "id": "poleznye-prilozheniya",
@@ -2430,7 +2430,7 @@
           "id": "provoz-lekarstv",
           "type": "guide",
           "subtype": "health",
-          "title": "Провоз лекарств через границу Аргентины"
+          "title": "Ввоз лекарств в Аргентину для личного использования"
         },
         {
           "id": "pueblos-de-la-provincia-de-buenos-aires",
@@ -2976,7 +2976,7 @@
           "id": "shtrafy-i-scoring",
           "type": "guide",
           "subtype": "transport",
-          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
+          "title": "Штрафы, баллы и проверка нарушений за рулём в Аргентине"
         },
         {
           "id": "sierra-de-la-ventana",
@@ -3509,8 +3509,8 @@
         {
           "id": "viza-i-granica-dlya-rossiyan",
           "type": "guide",
-          "subtype": "planning",
-          "title": "Виза и граница для россиян: пустят ли и что спрашивают"
+          "subtype": "immigration",
+          "title": "Въезд в Аргентину для граждан России"
         },
         {
           "id": "viza-rf-v-argentinu",
@@ -3535,12 +3535,6 @@
           "type": "faq",
           "subtype": null,
           "title": "Во сколько в Аргентине обедают и ужинают?"
-        },
-        {
-          "id": "voditelskie-prava",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
         },
         {
           "id": "volcan-lanin",
@@ -3576,7 +3570,7 @@
           "id": "zemletryaseniya-i-vulkany",
           "type": "guide",
           "subtype": "safety",
-          "title": "Землетрясения, вулканы и природные стихии Аргентины"
+          "title": "Землетрясения, вулканы и природные риски Аргентины"
         },
         {
           "id": "zhile-dlya-turistov",
@@ -6095,7 +6089,7 @@
           "id": "stoimost-zhizni-ba",
           "type": "guide",
           "subtype": "finance",
-          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+          "title": "Как рассчитать стоимость жизни в Буэнос-Айресе"
         },
         {
           "id": "susques",
@@ -6604,7 +6598,7 @@
           "id": "futbol-kak-popast-bez-skama",
           "type": "author_tip",
           "subtype": "lifehack",
-          "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это меняет весь план"
+          "title": "Как купить билет на футбол в Аргентине без риска"
         },
         {
           "id": "ibera-rassvet-i-tihie-portaly",
@@ -6669,8 +6663,8 @@
         {
           "id": "motochorros-telefon-na-ulitse",
           "type": "author_tip",
-          "subtype": "mistake",
-          "title": "Телефон в руке у края тротуара — самая частая ошибка туриста в Буэнос-Айресе"
+          "subtype": "observation",
+          "title": "Как снизить риск кражи телефона и вещей в Буэнос-Айресе"
         },
         {
           "id": "nablyudenie-pro-dengi-i-banki",
@@ -6736,7 +6730,7 @@
           "id": "viza-kochevnika-ne-vnzh",
           "type": "author_tip",
           "subtype": "mistake",
-          "title": "Виза цифрового кочевника — не первый шаг к переезду навсегда, хотя так часто думают"
+          "title": "Статус цифрового кочевника — не автоматический путь к ВНЖ"
         }
       ]
     },
@@ -6765,7 +6759,7 @@
           "id": "banki-i-perevody",
           "type": "guide",
           "subtype": "finance",
-          "title": "Как завести и перевести деньги в Аргентину"
+          "title": "Перевод денег в Аргентину: безопасная проверка каналов"
         },
         {
           "id": "besplatna-li-medicina-dlya-turista",
@@ -6796,12 +6790,6 @@
           "type": "guide",
           "subtype": "daily_life",
           "title": "Быт в Аргентине: квартиры, отопление, коммуналка"
-        },
-        {
-          "id": "certificado-de-domicilio",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
         },
         {
           "id": "chto-delat-krome-dostoprimechatelnostej",
@@ -6867,7 +6855,7 @@
           "id": "futbol-kak-popast-bez-skama",
           "type": "author_tip",
           "subtype": "lifehack",
-          "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это меняет весь план"
+          "title": "Как купить билет на футбол в Аргентине без риска"
         },
         {
           "id": "gde-luchshiy-karnaval-v-argentine",
@@ -6902,8 +6890,8 @@
         {
           "id": "gosudarstvennye-prilozheniya",
           "type": "guide",
-          "subtype": "digital",
-          "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA"
+          "subtype": "communication",
+          "title": "Mi Argentina: государственные цифровые документы"
         },
         {
           "id": "govoryat-li-v-argentine-po-anglijski",
@@ -6915,7 +6903,7 @@
           "id": "inflyatsiya-i-ekonomika",
           "type": "guide",
           "subtype": "finance",
-          "title": "Инфляция и экономика Аргентины простыми словами"
+          "title": "Инфляция в Аргентине: как читать цены и статистику"
         },
         {
           "id": "interesnye-fakty",
@@ -6933,7 +6921,7 @@
           "id": "istoriya-argentiny",
           "type": "guide",
           "subtype": "culture",
-          "title": "Краткая история Аргентины для путешественника"
+          "title": "История Аргентины: три опорные темы для путешественника"
         },
         {
           "id": "istoriya-zheleznyh-dorog",
@@ -6969,7 +6957,7 @@
           "id": "kovorkingi-i-rabota-nomada",
           "type": "guide",
           "subtype": "communication",
-          "title": "Коворкинги и удалённая работа в Аргентине"
+          "title": "Коворкинги и удалённая работа: безопасная проверка условий"
         },
         {
           "id": "kuhnya",
@@ -6999,13 +6987,13 @@
           "id": "medicina-i-strahovka",
           "type": "guide",
           "subtype": "health",
-          "title": "Медицина и страховка в Аргентине"
+          "title": "Медицина и медицинская страховка в Аргентине"
         },
         {
           "id": "mentalitet-i-etiket",
           "type": "guide",
           "subtype": "culture",
-          "title": "Менталитет и этикет аргентинцев: как здесь принято"
+          "title": "Повседневный этикет в Аргентине: приветствия, vos, мате и асадо"
         },
         {
           "id": "mezhgorodnie-avtobusy",
@@ -7022,8 +7010,8 @@
         {
           "id": "motochorros-telefon-na-ulitse",
           "type": "author_tip",
-          "subtype": "mistake",
-          "title": "Телефон в руке у края тротуара — самая частая ошибка туриста в Буэнос-Айресе"
+          "subtype": "observation",
+          "title": "Как снизить риск кражи телефона и вещей в Буэнос-Айресе"
         },
         {
           "id": "mozhno-li-pit-vodu-iz-krana",
@@ -7062,16 +7050,10 @@
           "title": "Нужно ли оставлять чаевые в Аргентине и сколько?"
         },
         {
-          "id": "otkrytie-biznesa",
-          "type": "guide",
-          "subtype": "finance",
-          "title": "Открытие бизнеса и самозанятость в Аргентине"
-        },
-        {
           "id": "pervyj-mesyac-plan",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Первый месяц в Аргентине по дням: пошаговый план"
+          "title": "Первый месяц в Аргентине: практический план"
         },
         {
           "id": "pochemu-net-pryamyh-reisov",
@@ -7083,7 +7065,7 @@
           "id": "podgotovka-k-poezdke",
           "type": "guide",
           "subtype": "planning",
-          "title": "Подготовка к поездке в Аргентину: чек-лист"
+          "title": "Подготовка к поездке в Аргентину: проверенный чек-лист"
         },
         {
           "id": "poezda",
@@ -7107,7 +7089,7 @@
           "id": "pokupki-i-tax-free",
           "type": "guide",
           "subtype": "shopping",
-          "title": "Покупки и tax free в Аргентине"
+          "title": "Tax free в Аргентине: как оформить возврат"
         },
         {
           "id": "poleznye-prilozheniya",
@@ -7137,7 +7119,7 @@
           "id": "provoz-lekarstv",
           "type": "guide",
           "subtype": "health",
-          "title": "Провоз лекарств через границу Аргентины"
+          "title": "Ввоз лекарств в Аргентину для личного использования"
         },
         {
           "id": "razvlecheniya-i-nochnaya-zhizn",
@@ -7155,31 +7137,37 @@
           "id": "rody-i-beremennost",
           "type": "guide",
           "subtype": "health",
-          "title": "Роды и беременность в Аргентине: полное руководство"
+          "title": "Беременность и роды в Аргентине: медицина и документы"
         },
         {
           "id": "rossiya-vs-argentina",
           "type": "guide",
           "subtype": "culture",
-          "title": "Россия и Аргентина: чем жизнь здесь отличается"
+          "title": "Россия и Аргентина: как сравнить жизнь без стереотипов"
         },
         {
           "id": "sdacha-nedvizhimosti-v-arendu",
           "type": "guide",
           "subtype": "finance",
-          "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги"
+          "title": "Сдача недвижимости в аренду: регистрация и документы"
+        },
+        {
+          "id": "shkola-dlya-detey",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как устроить ребёнка в школу в Аргентине"
         },
         {
           "id": "shtrafy-i-scoring",
           "type": "guide",
           "subtype": "transport",
-          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
+          "title": "Штрафы, баллы и проверка нарушений за рулём в Аргентине"
         },
         {
           "id": "sistema-zdravoohraneniya",
           "type": "guide",
           "subtype": "health",
-          "title": "Система здравоохранения Аргентины"
+          "title": "Система здравоохранения Аргентины: público, obra social и prepaga"
         },
         {
           "id": "skam-s-falshivoj-policiej",
@@ -7203,31 +7191,31 @@
           "id": "soobshestvo-i-adaptaciya",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Где найти своих и как пережить адаптацию в Аргентине"
+          "title": "Где найти своих и как устроить адаптацию в Аргентине"
         },
         {
           "id": "stoimost-zhizni-ba",
           "type": "guide",
           "subtype": "finance",
-          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+          "title": "Как рассчитать стоимость жизни в Буэнос-Айресе"
         },
         {
           "id": "stoimost-zhizni-semya-i-para",
           "type": "guide",
           "subtype": "finance",
-          "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни"
+          "title": "Стоимость жизни для пары и семьи: как собрать свой сценарий"
         },
         {
           "id": "stoit-li-pereezzhat",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Стоит ли переезжать в Аргентину: плюсы, минусы и кому подходит"
+          "title": "Стоит ли переезжать в Аргентину: рамка честного решения"
         },
         {
           "id": "studencheskaya-zhizn",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Учёба и студенческий быт в Аргентине: поступление, язык, жильё"
+          "title": "Учёба и студенческая жизнь в Аргентине"
         },
         {
           "id": "tango",
@@ -7257,13 +7245,13 @@
           "id": "zashchita-nakoplenij-ot-inflyacii",
           "type": "guide",
           "subtype": "finance",
-          "title": "Как защитить накопления от инфляции в Аргентине"
+          "title": "Как оценивать способы защиты накоплений от инфляции в Аргентине"
         },
         {
           "id": "zemletryaseniya-i-vulkany",
           "type": "guide",
           "subtype": "safety",
-          "title": "Землетрясения, вулканы и природные стихии Аргентины"
+          "title": "Землетрясения, вулканы и природные риски Аргентины"
         },
         {
           "id": "zhile-dlya-turistov",
@@ -7275,19 +7263,19 @@
           "id": "zhile-i-arenda",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Жильё и аренда в Аргентине"
+          "title": "Как безопасно арендовать жильё в Аргентине"
         },
         {
           "id": "zhizn-bez-ispanskogo",
           "type": "guide",
           "subtype": "culture",
-          "title": "Жизнь без испанского: как справляться в Аргентине первое время"
+          "title": "Жизнь без испанского: как устроить первые недели в Аргентине"
         },
         {
           "id": "zhizn-na-pensii",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Жизнь на пенсии в Аргентине: переезд для пенсионера"
+          "title": "Жизнь на пенсии в Аргентине: что учесть до переезда"
         }
       ]
     },
@@ -7310,13 +7298,13 @@
           "id": "banki-i-perevody",
           "type": "guide",
           "subtype": "finance",
-          "title": "Как завести и перевести деньги в Аргентину"
+          "title": "Перевод денег в Аргентину: безопасная проверка каналов"
         },
         {
           "id": "bankovskij-schet",
           "type": "guide",
           "subtype": "finance",
-          "title": "Банковский счёт и финансы релоканта в Аргентине"
+          "title": "Банковский счёт для мигранта в Аргентине"
         },
         {
           "id": "byudzhet-poezdki",
@@ -7346,7 +7334,7 @@
           "id": "inflyatsiya-i-ekonomika",
           "type": "guide",
           "subtype": "finance",
-          "title": "Инфляция и экономика Аргентины простыми словами"
+          "title": "Инфляция в Аргентине: как читать цены и статистику"
         },
         {
           "id": "kak-menyat-valyutu",
@@ -7376,19 +7364,19 @@
           "id": "nalogi-i-monotributo",
           "type": "guide",
           "subtype": "finance",
-          "title": "Налоги и монотрибуто в Аргентине для релоканта"
+          "title": "Монотрибуто в Аргентине: категории и безопасная проверка"
         },
         {
           "id": "otkrytie-biznesa",
           "type": "guide",
           "subtype": "finance",
-          "title": "Открытие бизнеса и самозанятость в Аргентине"
+          "title": "Открытие бизнеса в Аргентине: выбор формы и проверка требований"
         },
         {
           "id": "pereezd-s-minimalnym-byudzhetom",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Переезд в Аргентину с минимальным бюджетом ($6-8 тысяч)"
+          "title": "Переезд в Аргентину с ограниченным бюджетом: как посчитать запас"
         },
         {
           "id": "pokupka-nedvizhimosti",
@@ -7400,19 +7388,13 @@
           "id": "rabota-i-poisk-raboty",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
-        },
-        {
-          "id": "raskhozhdeniya-dni-cuit-cuil",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
+          "title": "Работа в Аргентине: статус, CUIL и поиск вакансий"
         },
         {
           "id": "sdacha-nedvizhimosti-v-arendu",
           "type": "guide",
           "subtype": "finance",
-          "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги"
+          "title": "Сдача недвижимости в аренду: регистрация и документы"
         },
         {
           "id": "skolko-deneg-brat-na-poezdku",
@@ -7436,13 +7418,13 @@
           "id": "stoimost-zhizni-ba",
           "type": "guide",
           "subtype": "finance",
-          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+          "title": "Как рассчитать стоимость жизни в Буэнос-Айресе"
         },
         {
           "id": "stoimost-zhizni-semya-i-para",
           "type": "guide",
           "subtype": "finance",
-          "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни"
+          "title": "Стоимость жизни для пары и семьи: как собрать свой сценарий"
         },
         {
           "id": "stoit-li-ehat-v-argentinu",
@@ -7454,13 +7436,264 @@
           "id": "udalyonnaya-rabota-i-oplata",
           "type": "guide",
           "subtype": "finance",
-          "title": "Удалёнка в Аргентине: как получать оплату и не терять на курсе"
+          "title": "Удалённая работа в Аргентине: оплата, документы и законный маршрут денег"
         },
         {
           "id": "zashchita-nakoplenij-ot-inflyacii",
           "type": "guide",
           "subtype": "finance",
-          "title": "Как защитить накопления от инфляции в Аргентине"
+          "title": "Как оценивать способы защиты накоплений от инфляции в Аргентине"
+        }
+      ]
+    },
+    "dokumenty-i-legalizatsiya": {
+      "title": "Документы и легализация",
+      "entries": [
+        {
+          "id": "apostil-i-perevod-dokumentov",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Апостиль и перевод документов для Аргентины"
+        },
+        {
+          "id": "certificado-de-domicilio",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как подтвердить адрес в Аргентине"
+        },
+        {
+          "id": "certificado-de-legalidad-prav",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Certificado de legalidad водительских прав: что это и зачем"
+        },
+        {
+          "id": "chek-list-pereezda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Чек-лист переезда в Аргентину: по этапам"
+        },
+        {
+          "id": "chto-takoe-dni-i-cuil",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
+        },
+        {
+          "id": "chto-takoe-prekariya",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?"
+        },
+        {
+          "id": "dni-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "DNI, CUIL и CUIT: что нужно иностранцу"
+        },
+        {
+          "id": "dni-cuil-cuit-putanitsa",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "CUIL, CUIT, CDI, AFIP/ARCA — путаница в названиях, которая стоит реального времени"
+        },
+        {
+          "id": "dokumenty-dlya-poezdki-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
+        },
+        {
+          "id": "gid-po-dokumentam",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Документы для въезда и переезда в Аргентину"
+        },
+        {
+          "id": "grazhdanstvo",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Гражданство Аргентины: где проверять действующую процедуру"
+        },
+        {
+          "id": "kak-perevezti-kota-ili-sobaku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как перевезти кота или собаку в Аргентину?"
+        },
+        {
+          "id": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "type": "faq",
+          "subtype": null,
+          "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
+        },
+        {
+          "id": "kak-poluchit-prava-v-argentine",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля"
+        },
+        {
+          "id": "kakie-dokumenty-vezti-s-soboj",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие документы везти с собой при переезде в Аргентину?"
+        },
+        {
+          "id": "kakoj-dohod-nuzhen-dlya-rantye",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
+        },
+        {
+          "id": "mozhno-li-delat-vizaran",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли жить в Аргентине на визаранах, как в Азии?"
+        },
+        {
+          "id": "mozhno-li-ezdit-po-inostrannym-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли ездить в Аргентине по иностранным правам?"
+        },
+        {
+          "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли иностранцу устроиться на работу в аргентинскую компанию?"
+        },
+        {
+          "id": "mozhno-li-vodit-po-rossijskim-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли водить машину в Аргентине по российским правам?"
+        },
+        {
+          "id": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужно ли отказываться от российского гражданства при получении аргентинского?"
+        },
+        {
+          "id": "perevoz-veshchey-i-pitomtsev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Переезд с вещами и домашними животными"
+        },
+        {
+          "id": "plan-podgotovki-6-mesyacev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Подготовка к переезду в Аргентину за 6 месяцев"
+        },
+        {
+          "id": "pokupka-avtomobilya",
+          "type": "transport",
+          "subtype": null,
+          "title": "Покупка автомобиля в Аргентине"
+        },
+        {
+          "id": "priznanie-diploma",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как признать иностранный диплом в Аргентине"
+        },
+        {
+          "id": "rabochaya-viza",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция по работе в Аргентине"
+        },
+        {
+          "id": "raskhozhdeniya-dni-cuit-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Расхождения в DNI, CUIL и CUIT: куда обращаться"
+        },
+        {
+          "id": "rody-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт рождение ребёнка в Аргентине?"
+        },
+        {
+          "id": "shtrafy-i-scoring",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Штрафы, баллы и проверка нарушений за рулём в Аргентине"
+        },
+        {
+          "id": "skolko-stoit-oformit-vnzh",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+        },
+        {
+          "id": "status-expediente-migraciones",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как проверить статус дела в Migraciones"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Статус цифрового кочевника в Аргентине"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika-chto-daet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
+        },
+        {
+          "id": "viza-kochevnika-ne-vnzh",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Статус цифрового кочевника — не автоматический путь к ВНЖ"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
+        },
+        {
+          "id": "vnzh-argentina",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция в Аргентине: как выбрать основание"
+        },
+        {
+          "id": "vnzh-po-uchebe",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Временная резиденция по учёбе"
+        },
+        {
+          "id": "vnzh-rantye",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Временная резиденция rentista"
+        },
+        {
+          "id": "voditelskie-prava",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Иностранные водительские права и аргентинская лицензия"
+        },
+        {
+          "id": "voinskij-uchet-i-voennyj-bilet",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Воинский учёт и переезд в Аргентину"
+        },
+        {
+          "id": "vossoedinenie-semi",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Временная резиденция по семейному основанию"
         }
       ]
     },
@@ -7471,7 +7704,7 @@
           "id": "apostil-i-perevod-dokumentov",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Апостиль и присяжный перевод документов для Аргентины"
+          "title": "Апостиль и перевод документов для Аргентины"
         },
         {
           "id": "argentina-vs-drugie-strany",
@@ -7483,7 +7716,7 @@
           "id": "bankovskij-schet",
           "type": "guide",
           "subtype": "finance",
-          "title": "Банковский счёт и финансы релоканта в Аргентине"
+          "title": "Банковский счёт для мигранта в Аргентине"
         },
         {
           "id": "byt-i-zhilyo",
@@ -7495,7 +7728,7 @@
           "id": "certificado-de-domicilio",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
+          "title": "Как подтвердить адрес в Аргентине"
         },
         {
           "id": "certificado-de-legalidad-prav",
@@ -7531,7 +7764,7 @@
           "id": "dni-cuil",
           "type": "guide",
           "subtype": "immigration",
-          "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца"
+          "title": "DNI, CUIL и CUIT: что нужно иностранцу"
         },
         {
           "id": "gid-po-dokumentam",
@@ -7546,16 +7779,22 @@
           "title": "Переезд в Аргентину: пошаговый путеводитель"
         },
         {
+          "id": "gosudarstvennye-prilozheniya",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "Mi Argentina: государственные цифровые документы"
+        },
+        {
           "id": "grazhdanstvo",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Гражданство Аргентины: натурализация и правила 2026"
+          "title": "Гражданство Аргентины: где проверять действующую процедуру"
         },
         {
           "id": "kak-dobratsya-iz-rossii",
           "type": "transport",
           "subtype": null,
-          "title": "Как добраться из России и СНГ в Аргентину"
+          "title": "Как добраться из России и стран СНГ в Аргентину"
         },
         {
           "id": "kak-perevezti-kota-ili-sobaku",
@@ -7579,7 +7818,7 @@
           "id": "kak-poluchit-prava-v-argentine",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля"
         },
         {
           "id": "kak-snyat-kvartiru-bez-garanta",
@@ -7609,19 +7848,19 @@
           "id": "kovorkingi-i-rabota-nomada",
           "type": "guide",
           "subtype": "communication",
-          "title": "Коворкинги и удалённая работа в Аргентине"
+          "title": "Коворкинги и удалённая работа: безопасная проверка условий"
         },
         {
           "id": "medicina-i-strahovka",
           "type": "guide",
           "subtype": "health",
-          "title": "Медицина и страховка в Аргентине"
+          "title": "Медицина и медицинская страховка в Аргентине"
         },
         {
           "id": "mentalitet-i-etiket",
           "type": "guide",
           "subtype": "culture",
-          "title": "Менталитет и этикет аргентинцев: как здесь принято"
+          "title": "Повседневный этикет в Аргентине: приветствия, vos, мате и асадо"
         },
         {
           "id": "mozhno-li-delat-vizaran",
@@ -7657,7 +7896,7 @@
           "id": "nalogi-i-monotributo",
           "type": "guide",
           "subtype": "finance",
-          "title": "Налоги и монотрибуто в Аргентине для релоканта"
+          "title": "Монотрибуто в Аргентине: категории и безопасная проверка"
         },
         {
           "id": "nuzhna-li-strahovka-dlya-vezda",
@@ -7678,52 +7917,64 @@
           "title": "Нужно ли отказываться от российского гражданства при получении аргентинского?"
         },
         {
+          "id": "otkrytie-biznesa",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Открытие бизнеса в Аргентине: выбор формы и проверка требований"
+        },
+        {
           "id": "pereezd-s-minimalnym-byudzhetom",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Переезд в Аргентину с минимальным бюджетом ($6-8 тысяч)"
+          "title": "Переезд в Аргентину с ограниченным бюджетом: как посчитать запас"
         },
         {
           "id": "perevoz-veshchey-i-pitomtsev",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Перевоз личных вещей и домашних животных при переезде в Аргентину"
+          "title": "Переезд с вещами и домашними животными"
         },
         {
           "id": "pervyj-mesyac-plan",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Первый месяц в Аргентине по дням: пошаговый план"
+          "title": "Первый месяц в Аргентине: практический план"
         },
         {
           "id": "plan-podgotovki-6-mesyacev",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн"
+          "title": "Подготовка к переезду в Аргентину за 6 месяцев"
         },
         {
           "id": "priznanie-diploma",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Признание иностранного диплома в Аргентине (гомологация)"
+          "title": "Как признать иностранный диплом в Аргентине"
         },
         {
           "id": "rabochaya-viza",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Рабочая резиденция в Аргентине: наём местным работодателем"
+          "title": "Резиденция по работе в Аргентине"
         },
         {
           "id": "rabota-i-poisk-raboty",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
+          "title": "Работа в Аргентине: статус, CUIL и поиск вакансий"
         },
         {
           "id": "raskhozhdeniya-dni-cuit-cuil",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
+          "title": "Расхождения в DNI, CUIL и CUIT: куда обращаться"
+        },
+        {
+          "id": "rody-i-beremennost",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Беременность и роды в Аргентине: медицина и документы"
         },
         {
           "id": "rody-v-argentine",
@@ -7735,19 +7986,19 @@
           "id": "rossiya-vs-argentina",
           "type": "guide",
           "subtype": "culture",
-          "title": "Россия и Аргентина: чем жизнь здесь отличается"
+          "title": "Россия и Аргентина: как сравнить жизнь без стереотипов"
         },
         {
           "id": "shkola-dlya-detey",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Школа для детей в Аргентине: система образования для семей релокантов"
+          "title": "Как устроить ребёнка в школу в Аргентине"
         },
         {
           "id": "sistema-zdravoohraneniya",
           "type": "guide",
           "subtype": "health",
-          "title": "Система здравоохранения Аргентины"
+          "title": "Система здравоохранения Аргентины: público, obra social и prepaga"
         },
         {
           "id": "skolko-letet-iz-rossii",
@@ -7771,318 +8022,37 @@
           "id": "soobshestvo-i-adaptaciya",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Где найти своих и как пережить адаптацию в Аргентине"
+          "title": "Где найти своих и как устроить адаптацию в Аргентине"
         },
         {
           "id": "status-expediente-migraciones",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Как узнать статус дела (expediente) в Migraciones"
+          "title": "Как проверить статус дела в Migraciones"
         },
         {
           "id": "stoit-li-pereezzhat",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Стоит ли переезжать в Аргентину: плюсы, минусы и кому подходит"
+          "title": "Стоит ли переезжать в Аргентину: рамка честного решения"
         },
         {
           "id": "studencheskaya-zhizn",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Учёба и студенческий быт в Аргентине: поступление, язык, жильё"
+          "title": "Учёба и студенческая жизнь в Аргентине"
         },
         {
           "id": "udalyonnaya-rabota-i-oplata",
           "type": "guide",
           "subtype": "finance",
-          "title": "Удалёнка в Аргентине: как получать оплату и не терять на курсе"
+          "title": "Удалённая работа в Аргентине: оплата, документы и законный маршрут денег"
         },
         {
           "id": "viza-cifrovogo-kochevnika",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Виза цифрового кочевника Аргентины"
-        },
-        {
-          "id": "viza-cifrovogo-kochevnika-chto-daet",
-          "type": "faq",
-          "subtype": null,
-          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
-        },
-        {
-          "id": "viza-rf-v-argentinu",
-          "type": "faq",
-          "subtype": null,
-          "title": "Нужна ли виза в Аргентину гражданам России?"
-        },
-        {
-          "id": "vnzh-argentina",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "ВНЖ Аргентины: все легальные пути резиденции"
-        },
-        {
-          "id": "vnzh-po-uchebe",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "ВНЖ Аргентины по учёбе (студенческая резиденция)"
-        },
-        {
-          "id": "vnzh-rantye",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд"
-        },
-        {
-          "id": "voditelskie-prava",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
-        },
-        {
-          "id": "voinskij-uchet-i-voennyj-bilet",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Воинский учёт и военный билет при переезде в Аргентину"
-        },
-        {
-          "id": "vossoedinenie-semi",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители"
-        },
-        {
-          "id": "zhile-i-arenda",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Жильё и аренда в Аргентине"
-        },
-        {
-          "id": "zhizn-bez-ispanskogo",
-          "type": "guide",
-          "subtype": "culture",
-          "title": "Жизнь без испанского: как справляться в Аргентине первое время"
-        },
-        {
-          "id": "zhizn-na-pensii",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Жизнь на пенсии в Аргентине: переезд для пенсионера"
-        }
-      ]
-    },
-    "dokumenty-i-legalizatsiya": {
-      "title": "Документы и легализация",
-      "entries": [
-        {
-          "id": "apostil-i-perevod-dokumentov",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Апостиль и присяжный перевод документов для Аргентины"
-        },
-        {
-          "id": "certificado-de-domicilio",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
-        },
-        {
-          "id": "certificado-de-legalidad-prav",
-          "type": "guide",
-          "subtype": "transport",
-          "title": "Certificado de legalidad водительских прав: что это и зачем"
-        },
-        {
-          "id": "chek-list-pereezda",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Чек-лист переезда в Аргентину: по этапам"
-        },
-        {
-          "id": "chto-takoe-dni-i-cuil",
-          "type": "faq",
-          "subtype": null,
-          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
-        },
-        {
-          "id": "chto-takoe-prekariya",
-          "type": "faq",
-          "subtype": null,
-          "title": "Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?"
-        },
-        {
-          "id": "dni-cuil",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца"
-        },
-        {
-          "id": "dni-cuil-cuit-putanitsa",
-          "type": "author_tip",
-          "subtype": "mistake",
-          "title": "CUIL, CUIT, CDI, AFIP/ARCA — путаница в названиях, которая стоит реального времени"
-        },
-        {
-          "id": "dokumenty-dlya-poezdki-na-avto",
-          "type": "guide",
-          "subtype": "transport",
-          "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
-        },
-        {
-          "id": "gid-po-dokumentam",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Документы для въезда и переезда в Аргентину"
-        },
-        {
-          "id": "gosudarstvennye-prilozheniya",
-          "type": "guide",
-          "subtype": "digital",
-          "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA"
-        },
-        {
-          "id": "grazhdanstvo",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Гражданство Аргентины: натурализация и правила 2026"
-        },
-        {
-          "id": "kak-perevezti-kota-ili-sobaku",
-          "type": "faq",
-          "subtype": null,
-          "title": "Как перевезти кота или собаку в Аргентину?"
-        },
-        {
-          "id": "kak-poluchit-grazhdanstvo-za-2-goda",
-          "type": "faq",
-          "subtype": null,
-          "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
-        },
-        {
-          "id": "kak-poluchit-prava-v-argentine",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
-        },
-        {
-          "id": "kakie-dokumenty-vezti-s-soboj",
-          "type": "faq",
-          "subtype": null,
-          "title": "Какие документы везти с собой при переезде в Аргентину?"
-        },
-        {
-          "id": "kakoj-dohod-nuzhen-dlya-rantye",
-          "type": "faq",
-          "subtype": null,
-          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
-        },
-        {
-          "id": "mozhno-li-delat-vizaran",
-          "type": "faq",
-          "subtype": null,
-          "title": "Можно ли жить в Аргентине на визаранах, как в Азии?"
-        },
-        {
-          "id": "mozhno-li-ezdit-po-inostrannym-pravam",
-          "type": "faq",
-          "subtype": null,
-          "title": "Можно ли ездить в Аргентине по иностранным (российским) правам?"
-        },
-        {
-          "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
-          "type": "faq",
-          "subtype": null,
-          "title": "Можно ли иностранцу устроиться на работу в аргентинскую компанию?"
-        },
-        {
-          "id": "mozhno-li-vodit-po-rossijskim-pravam",
-          "type": "faq",
-          "subtype": null,
-          "title": "Можно ли водить машину в Аргентине по российским правам?"
-        },
-        {
-          "id": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
-          "type": "faq",
-          "subtype": null,
-          "title": "Нужно ли отказываться от российского гражданства при получении аргентинского?"
-        },
-        {
-          "id": "perevoz-veshchey-i-pitomtsev",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Перевоз личных вещей и домашних животных при переезде в Аргентину"
-        },
-        {
-          "id": "plan-podgotovki-6-mesyacev",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн"
-        },
-        {
-          "id": "posle-dtp",
-          "type": "guide",
-          "subtype": "transport",
-          "title": "Что делать после ДТП в Аргентине"
-        },
-        {
-          "id": "priznanie-diploma",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Признание иностранного диплома в Аргентине (гомологация)"
-        },
-        {
-          "id": "rabochaya-viza",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Рабочая резиденция в Аргентине: наём местным работодателем"
-        },
-        {
-          "id": "raskhozhdeniya-dni-cuit-cuil",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
-        },
-        {
-          "id": "rody-i-beremennost",
-          "type": "guide",
-          "subtype": "health",
-          "title": "Роды и беременность в Аргентине: полное руководство"
-        },
-        {
-          "id": "rody-v-argentine",
-          "type": "faq",
-          "subtype": null,
-          "title": "Что даёт рождение ребёнка в Аргентине?"
-        },
-        {
-          "id": "shkola-dlya-detey",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Школа для детей в Аргентине: система образования для семей релокантов"
-        },
-        {
-          "id": "shtrafy-i-scoring",
-          "type": "guide",
-          "subtype": "transport",
-          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
-        },
-        {
-          "id": "skolko-stoit-oformit-vnzh",
-          "type": "faq",
-          "subtype": null,
-          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
-        },
-        {
-          "id": "status-expediente-migraciones",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Как узнать статус дела (expediente) в Migraciones"
-        },
-        {
-          "id": "viza-cifrovogo-kochevnika",
-          "type": "guide",
-          "subtype": "immigration",
-          "title": "Виза цифрового кочевника Аргентины"
+          "title": "Статус цифрового кочевника в Аргентине"
         },
         {
           "id": "viza-cifrovogo-kochevnika-chto-daet",
@@ -8093,14 +8063,8 @@
         {
           "id": "viza-i-granica-dlya-rossiyan",
           "type": "guide",
-          "subtype": "planning",
-          "title": "Виза и граница для россиян: пустят ли и что спрашивают"
-        },
-        {
-          "id": "viza-kochevnika-ne-vnzh",
-          "type": "author_tip",
-          "subtype": "mistake",
-          "title": "Виза цифрового кочевника — не первый шаг к переезду навсегда, хотя так часто думают"
+          "subtype": "immigration",
+          "title": "Въезд в Аргентину для граждан России"
         },
         {
           "id": "viza-rf-v-argentinu",
@@ -8112,37 +8076,55 @@
           "id": "vnzh-argentina",
           "type": "guide",
           "subtype": "immigration",
-          "title": "ВНЖ Аргентины: все легальные пути резиденции"
+          "title": "Резиденция в Аргентине: как выбрать основание"
         },
         {
           "id": "vnzh-po-uchebe",
           "type": "guide",
           "subtype": "immigration",
-          "title": "ВНЖ Аргентины по учёбе (студенческая резиденция)"
+          "title": "Временная резиденция по учёбе"
         },
         {
           "id": "vnzh-rantye",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд"
+          "title": "Временная резиденция rentista"
         },
         {
           "id": "voditelskie-prava",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
+          "title": "Иностранные водительские права и аргентинская лицензия"
         },
         {
           "id": "voinskij-uchet-i-voennyj-bilet",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Воинский учёт и военный билет при переезде в Аргентину"
+          "title": "Воинский учёт и переезд в Аргентину"
         },
         {
           "id": "vossoedinenie-semi",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители"
+          "title": "Временная резиденция по семейному основанию"
+        },
+        {
+          "id": "zhile-i-arenda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как безопасно арендовать жильё в Аргентине"
+        },
+        {
+          "id": "zhizn-bez-ispanskogo",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Жизнь без испанского: как устроить первые недели в Аргентине"
+        },
+        {
+          "id": "zhizn-na-pensii",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Жизнь на пенсии в Аргентине: что учесть до переезда"
         }
       ]
     }

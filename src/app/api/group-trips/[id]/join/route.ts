@@ -3,10 +3,14 @@ import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { joinGroupTripListing } from "@/lib/group-trips-server";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(_request: Request, context: RouteContext) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ error: "Набор группы недоступен" }, { status: 503 });
   }

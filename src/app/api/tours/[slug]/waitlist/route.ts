@@ -6,6 +6,7 @@ import { fetchTourAvailabilityBySlug } from "@/lib/tour-availability-server";
 import { checkRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
 import { hashRateLimitIdentifier } from "@/lib/rate-limit-identifier";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -33,6 +34,9 @@ function normalizeGuests(value: number | undefined): number {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ error: "Лист ожидания недоступен" }, { status: 503 });
   }
@@ -73,7 +77,8 @@ export async function POST(request: Request, context: RouteContext) {
       data: { user: authUser },
     } = await supabase.auth.getUser();
 
-    const availability = await fetchTourAvailabilityBySlug(createSupabaseAdminClient(), slug);
+    const admin = createSupabaseAdminClient();
+    const availability = await fetchTourAvailabilityBySlug(admin, slug);
     if (!availability) {
       return NextResponse.json({ error: "Тур не найден" }, { status: 404 });
     }
@@ -113,7 +118,7 @@ export async function POST(request: Request, context: RouteContext) {
       }
     }
 
-    let duplicateQuery = supabase
+    let duplicateQuery = admin
       .from("tour_waitlist_entries")
       .select("id")
       .eq("tour_id", availability.tourId)
@@ -139,7 +144,7 @@ export async function POST(request: Request, context: RouteContext) {
       );
     }
 
-    const { data: inserted, error: insertError } = await supabase
+    const { data: inserted, error: insertError } = await admin
       .from("tour_waitlist_entries")
       .insert({
         tour_id: availability.tourId,

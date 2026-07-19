@@ -38,9 +38,10 @@ import { getCatalogSlug } from "@/lib/tour-slug";
 import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
 import {
-  siteStickyBelowHeaderInset075Class,
-  siteStickyBelowHeaderInsetClass,
-} from "@/lib/site-container";
+  cabinetWorkspaceStickyMaxHeightClass,
+  cabinetWorkspaceStickyTopClass,
+  cabinetWorkspaceStickyTopInsetClass,
+} from "@/lib/cabinet-ui";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourTravelRisksBlock from "@/components/organizer/TourTravelRisksBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
@@ -426,14 +427,14 @@ function DraftSyncConflictDialog({
   localUpdatedAt,
   serverUpdatedAt,
   onOpenChange,
-  onForceSync,
+  onReplaceServer,
   onUseServer,
 }: {
   open: boolean;
   localUpdatedAt: string | null;
   serverUpdatedAt: string | null;
   onOpenChange: (open: boolean) => void;
-  onForceSync: () => void;
+  onReplaceServer: () => void;
   onUseServer: () => void;
 }) {
   const localLabel = formatEditorDateTime(localUpdatedAt) ?? "неизвестно";
@@ -462,7 +463,7 @@ function DraftSyncConflictDialog({
           <Button type="button" variant="outline" onClick={onUseServer}>
             Открыть версию с сервера
           </Button>
-          <Button type="button" onClick={onForceSync}>
+          <Button type="button" onClick={onReplaceServer}>
             Перезаписать сервер
           </Button>
         </DialogFooter>
@@ -611,7 +612,13 @@ function TourEditorSidebar({
         : "Черновик";
 
   return (
-    <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
+    <aside
+      className={cn(
+        "hidden xl:sticky xl:block xl:h-fit xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto",
+        cabinetWorkspaceStickyTopInsetClass,
+        cabinetWorkspaceStickyMaxHeightClass,
+      )}
+    >
       <div className="space-y-4">
         <TourProfileProgress draft={draft} compact />
 
@@ -842,10 +849,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   );
 
   const syncDraftToRemote = useCallback(
-    async (
-      nextDraft: OrganizerTourDraft,
-      options?: { force?: boolean }
-    ): Promise<"synced" | "queued" | "conflict" | "skipped"> => {
+    async (nextDraft: OrganizerTourDraft): Promise<"synced" | "queued" | "conflict" | "skipped"> => {
       if (!canSyncDraftToRemote(nextDraft)) {
         setSyncStatus("saved");
         return "skipped";
@@ -871,13 +875,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           tourId: nextDraft.id,
           draft: nextDraft,
           expectedUpdatedAt,
-          force: options?.force ?? false,
         });
         clearOrganizerTourDraftSync(nextDraft.id);
         serverUpdatedAtRef.current = response.updatedAt ?? nextDraft.updatedAt ?? null;
         const syncedDraft: OrganizerTourDraft = {
           ...nextDraft,
           updatedAt: response.updatedAt ?? nextDraft.updatedAt,
+          rowVersion: response.rowVersion ?? nextDraft.rowVersion,
           moderationStatus: response.moderationStatus ?? nextDraft.moderationStatus,
           moderationNotes: response.moderationNotes ?? null,
         };
@@ -1115,7 +1119,6 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   async function persistDraft(options?: {
     forcePublished?: boolean;
     draftOverride?: OrganizerTourDraft;
-    forceRemoteSync?: boolean;
   }) {
     const draftToPersist = options?.draftOverride ?? draft;
     if (!draftToPersist) return false;
@@ -1141,9 +1144,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     lastPersistedDraftRef.current = result.draft;
     dirtyRef.current = false;
     setDirty(false);
-    const remoteStatus = await syncDraftToRemote(result.draft, {
-      force: options?.forceRemoteSync,
-    });
+    const remoteStatus = await syncDraftToRemote(result.draft);
     if (remoteStatus === "conflict") {
       return false;
     }
@@ -1219,15 +1220,21 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     await persistDraft({ forcePublished: true, draftOverride: nextDraft });
   }
 
-  async function handleForceSyncAfterConflict() {
+  async function handleReplaceServerAfterConflict() {
     if (!lastPersistedDraftRef.current) {
       setConflictDialogOpen(false);
       return;
     }
 
-    const result = await syncDraftToRemote(lastPersistedDraftRef.current, {
-      force: true,
-    });
+    try {
+      const latest = await fetchOrganizerTourDraftSnapshot(lastPersistedDraftRef.current.id);
+      serverUpdatedAtRef.current = latest.updatedAt;
+      conflictServerDraftRef.current = latest.draft;
+    } catch {
+      setError("Не удалось проверить актуальную версию. Повторите попытку позже.");
+      return;
+    }
+    const result = await syncDraftToRemote(lastPersistedDraftRef.current);
     if (result !== "conflict") {
       setConflictDialogOpen(false);
       if (hasQueuedOrganizerTourDraftSync(lastPersistedDraftRef.current.id)) {
@@ -1392,7 +1399,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         aria-label={draft.type === "excursion" ? "Разделы редактора экскурсии" : "Разделы редактора тура"}
         className={cn(
           "sticky z-30 w-full transition-[max-width] duration-300 ease-out",
-          siteStickyBelowHeaderInset075Class,
+          cabinetWorkspaceStickyTopClass,
           navStuck && "xl:max-w-[calc(100%-19rem)]"
         )}
       >
@@ -2197,8 +2204,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
         <aside
           className={cn(
-            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] 2xl:self-start 2xl:overflow-y-auto",
-            siteStickyBelowHeaderInsetClass
+            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:self-start 2xl:overflow-y-auto",
+            cabinetWorkspaceStickyTopInsetClass,
+            cabinetWorkspaceStickyMaxHeightClass,
           )}
         >
           <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />
@@ -2242,7 +2250,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         localUpdatedAt={conflictLocalUpdatedAt}
         serverUpdatedAt={conflictServerUpdatedAt}
         onOpenChange={setConflictDialogOpen}
-        onForceSync={handleForceSyncAfterConflict}
+        onReplaceServer={handleReplaceServerAfterConflict}
         onUseServer={handleUseServerDraft}
       />
 

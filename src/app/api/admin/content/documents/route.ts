@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import {
+  cmsMutationHttpStatus,
   createCmsDocument,
   getCmsDocumentById,
   listCmsDocuments,
@@ -10,7 +11,7 @@ import { groupCmsDocuments } from "@/lib/cms/cms-locale";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import { getBlogPostBySlug } from "@/data/blog";
-import { getGuideCmsSourcePage } from "@/lib/cms/guide-topic-source";
+import { getContentPage } from "@/lib/content-pages";
 import { getDestinationBySlug } from "@/lib/destinations";
 import { fetchPlaceBySlugServer } from "@/lib/places-repository";
 import {
@@ -100,7 +101,7 @@ export async function POST(request: Request) {
   }
 
   if (body.importFromSource && docType === "guide") {
-    const source = getGuideCmsSourcePage(slug);
+    const source = getContentPage("guide", slug);
     if (!source) {
       return NextResponse.json({ error: "Исходная страница путеводителя не найдена" }, { status: 404 });
     }
@@ -138,20 +139,15 @@ export async function POST(request: Request) {
     title,
     body: cmsBody,
     actorId: auth.actorId,
+    ipAddress: clientIpFromRequest(request),
   });
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json(
+      { error: result.error, code: result.code },
+      { status: cmsMutationHttpStatus(result.code) },
+    );
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "cms.document.create",
-    entityType: "content_document",
-    entityId: result.document.id,
-    payload: { docType, slug },
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ document: result.document }, { status: 201 });
 }

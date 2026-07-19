@@ -31,7 +31,7 @@ export default async function DestinationsPage() {
   const jsonLd = buildDestinationsCatalogJsonLd(destinations, locale);
   const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
     { labelKey: "nav.home", path: "/", fallback: "Главная" },
-    { labelKey: "nav.geography", path: "/destinations", fallback: "Регионы и места" },
+    { labelKey: "nav.destinations", path: "/destinations", fallback: "Направления" },
   ]);
 
   return (

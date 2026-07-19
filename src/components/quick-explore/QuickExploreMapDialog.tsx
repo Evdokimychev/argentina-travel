@@ -76,13 +76,17 @@ function filterSpots(spots: QuickExploreSpot[], query: string): QuickExploreSpot
   );
 }
 
-export default function QuickExploreMapDialog() {
+export default function QuickExploreMapDialog({ initialOpen = false }: { initialOpen?: boolean }) {
   const { payload, loading, error, refresh } = useQuickExplore();
   const [open, setOpen] = useState(false);
   const [provinceIso, setProvinceIso] = useState<string | null>(null);
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onOpenRequest() {

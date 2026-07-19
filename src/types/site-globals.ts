@@ -210,7 +210,7 @@ export type SiteMarketingGlobal = {
   announcementOnMobile: boolean;
 };
 
-export type ApartmentsModuleMode = "disabled" | "request" | "preparing_native";
+export type ApartmentsModuleMode = "disabled" | "request" | "preparing_native" | "native_request";
 export type CarRentalModuleMode = "disabled" | "partner" | "preparing_hybrid";
 export type TransfersModuleMode = "disabled" | "request" | "partner" | "preparing_hybrid";
 export type HotelsModuleMode = "disabled" | "planned";

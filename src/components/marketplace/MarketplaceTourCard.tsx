@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Flame, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
@@ -22,14 +23,13 @@ import {
 } from "@/components/content/ContentCard";
 import { formatTourLocationCompactPlain } from "@/lib/geo";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
-import { buildOrganizerPublicHref } from "@/lib/organizer-public";
+import { buildOrganizerPublicHref } from "@/lib/organizer-public-routing";
 import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
 import { plainTextFromRichContent } from "@/lib/rich-text";
-import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
 import { formatTourGroupSizeLabel } from "@/lib/tour-group-size-display";
 import { formatYouTravelListedPrice } from "@/lib/youtravel/offers-mapper";
@@ -39,6 +39,8 @@ import {
 } from "./TourListingCatalogBadges";
 import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
 import { resolveTourOfferCapabilities } from "@/lib/product-capabilities";
+
+const TourDepartureDatesModal = dynamic(() => import("./TourDepartureDatesModal"));
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -136,6 +138,8 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
                 fill
                 placeholderVariant="avatar"
                 placeholderCompact
+                partnerImageWidth={160}
+                partnerImageQuality={60}
                 className="object-cover"
                 sizes="28px"
               />
@@ -267,7 +271,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
         ariaLabel={`Открыть тур: ${tour.title}`}
       />
 
-      {schedule?.type === "dates" && schedule.moreDates > 0 ? (
+      {datesModalOpen && schedule?.type === "dates" && schedule.moreDates > 0 ? (
         <TourDepartureDatesModal
           tour={tour}
           open={datesModalOpen}

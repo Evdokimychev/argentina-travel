@@ -3,7 +3,7 @@ import { contentPageListItem, getPagesBySection } from "@/lib/content-pages";
 export { IMMIGRATION_HUB } from "@/data/immigration-hub-content";
 
 export const IMMIGRATION_HUB_INTRO =
-  "Справочные материалы о въезде в Аргентину, документах и видах на жительство. Перед поездкой или подачей на ВНЖ сверяйтесь с официальными источниками Migraciones и консульством.";
+  "Справочные материалы о въезде, residencia и гражданстве. Правила сверены 17.07.2026; перед поездкой или подачей снова откройте официальную процедуру DNM и требования консульства.";
 
 export const IMMIGRATION_HUB_ARTICLES = getPagesBySection("immigration").map(contentPageListItem);
 

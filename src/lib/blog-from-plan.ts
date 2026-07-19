@@ -1,5 +1,6 @@
 import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { getEditorialOverride } from "@/data/blog-editorial";
+import { isEditorialOverridePublicationReady } from "@/data/blog-editorial/types";
 import { estimateReadMinutesFromSections, sectionsToContent as editorialSectionsToContent } from "@/data/blog-editorial/helpers";
 import {
   buildArticleSections,
@@ -156,9 +157,10 @@ function buildTags(item: BlogContentPlanItem, topic: string): string[] {
 
 function staggerDate(index: number): string {
   const start = new Date("2025-06-01T12:00:00Z");
+  const editorialCutover = new Date("2026-07-17T12:00:00Z");
   const d = new Date(start);
   d.setUTCDate(d.getUTCDate() + index * 4);
-  return d.toISOString().slice(0, 10);
+  return new Date(Math.min(d.getTime(), editorialCutover.getTime())).toISOString().slice(0, 10);
 }
 
 function estimateReadMinutes(content: string): number {
@@ -200,7 +202,7 @@ export function generateBlogPostFromPlan(
         override.relatedResources,
       ),
       editorialReviewed: true,
-      noIndex: false,
+      noIndex: !isEditorialOverridePublicationReady(override),
       dateModified: override.dateModified ?? "2026-06-21",
       tourEmbeds: getBlogTourEmbeds(item.slug),
     };

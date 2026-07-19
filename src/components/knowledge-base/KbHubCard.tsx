@@ -5,11 +5,11 @@ import type { KbEntry } from "@/lib/knowledge-base/types";
 
 const HUB_ICONS: Record<string, string> = {
   "gid-puteshestvennika": "🧭",
-  "gid-relokanta": "🧳",
-  "gid-po-dengam": "💵",
-  "gid-po-dokumentam": "📄",
+  "chek-list-pereezda": "🧳",
+  "byudzhet-poezdki": "💵",
+  "kakie-dokumenty-vezti-s-soboj": "📄",
   "gid-po-zhilyu": "🏘️",
-  "gid-po-medicine": "🏥",
+  "medicina-i-strahovka": "🏥",
   "gid-po-transportu": "🚌",
   "gid-po-kulture": "🎭",
 };

@@ -55,8 +55,8 @@
 ## Особые проверки Supabase
 
 1. До production выполнить `npm run backup:schema` и отдельный backup данных средствами Supabase; schema backup из проекта не содержит пользовательские данные.
-2. На staging применить ровно набор миграций релизного SHA командой `DATABASE_URL=<staging> npm run supabase:migrate`.
-3. Учесть, что текущий runner читает и выполняет **все** `supabase/migrations/*.sql` по имени и не ведёт собственную таблицу применений. Все файлы должны быть повторно исполнимы либо запуск должен быть заменён контролируемым применением только проверенного delta.
+2. На staging применить ровно набор миграций релизного SHA командой `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=<staging> npm run supabase:migrate`.
+3. Подтвердить журнал и checksum: первый clean replay применяет 95 файлов, повторный даёт `pending=0`; unjournaled существующая схема и изменённый ранее SQL должны завершаться блокировкой.
 4. После миграции повторить `supabase:verify`, `rls-audit`, auth/RBAC negative tests и сверить `/api/health.migrationVersion` с последним ожидаемым ID.
 
 ## Протокол результата

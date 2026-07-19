@@ -1,4 +1,7 @@
-import { sendOperationalEmail } from "@/lib/notifications/email-delivery";
+import {
+  sendOperationalEmail,
+  type OperationalEmailResult,
+} from "@/lib/notifications/email-delivery";
 import {
   renderEmailLayout,
   stripHtml,
@@ -9,11 +12,11 @@ import {
 export async function notifyLeadCaptured(input: {
   subject: string;
   html: string;
-}): Promise<void> {
+}): Promise<OperationalEmailResult> {
   const subject = input.subject.replace(/[\r\n]+/g, " ").trim().slice(0, 300);
-  if (!subject) return;
+  if (!subject) return { status: "skipped" };
 
-  await sendOperationalEmail({
+  return sendOperationalEmail({
     includeAdminCopy: true,
     subject,
     html: renderEmailLayout(input.html, { previewText: subject }),

@@ -13,6 +13,8 @@ export type StaffSecurityRecord = {
   preset: AdminPresetId | null;
   capabilities: AdminCapability[];
   isActive: boolean;
+  notes: string | null;
+  rowVersion: number;
 };
 
 const CAPABILITY_ALLOWLIST = new Set<string>(ADMIN_CAPABILITIES);
@@ -53,7 +55,9 @@ export function isConfirmedActiveOwner(record: StaffSecurityRecord | null): bool
   );
 }
 
-export function hasConsistentOwnerGrant(record: StaffSecurityRecord): boolean {
+export function hasConsistentOwnerGrant(
+  record: Pick<StaffSecurityRecord, "preset" | "capabilities">,
+): boolean {
   const hasOwnerPreset = record.preset === "super_admin";
   const hasExplicitWildcard = record.capabilities.includes("*");
   return hasOwnerPreset === hasExplicitWildcard;
@@ -93,7 +97,7 @@ export async function fetchStaffSecurityRecord(
 ): Promise<StaffSecurityRecord | null> {
   const { data, error } = await supabase
     .from("admin_staff")
-    .select("user_id, preset, capabilities, is_active")
+    .select("user_id, preset, capabilities, is_active, notes, row_version")
     .eq("user_id", userId)
     .maybeSingle();
 
@@ -103,6 +107,8 @@ export async function fetchStaffSecurityRecord(
     preset: (data.preset as AdminPresetId | null) ?? null,
     capabilities: (data.capabilities ?? []) as AdminCapability[],
     isActive: data.is_active,
+    notes: data.notes,
+    rowVersion: data.row_version,
   };
 }
 

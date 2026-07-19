@@ -265,7 +265,7 @@ export const KUHNYA_PILLAR: GuidePillarContent = {
   blogLinks: [
     { title: "Гастрономия и asado", href: "/guide/gastronomiya-i-asado", description: "Отрубы и этикет" },
     { title: "Путеводитель по аргентинскому стейку", href: "/blog/argentinian-steak-guide", description: "Parrilla и chimichurri" },
-    { title: "Кухня Буэнос-Айреса", href: "/baza-znaniy/gastronomia-portena", description: "Кафе, рынки и гастрономические районы" },
+    { title: "Асадо и культура паррильи", href: "/baza-znaniy/asado", description: "Отрубы, гриль и застольный этикет" },
   ],
   partnerServices: [
     { softIntro: "Хотите понять кухню через людей и места?", title: "Гастрономические экскурсии", description: "Рынки, районные заведения и блюда с культурным контекстом.", href: "/tours?query=гастрономический", ctaLabel: "Смотреть экскурсии" },

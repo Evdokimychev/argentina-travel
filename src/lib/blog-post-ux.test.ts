@@ -420,6 +420,13 @@ describe("blog Phase 4", () => {
     expect(profiles.some((p) => p.slug === "redaktsiya" && p.postCount === 2)).toBe(true);
   });
 
+  it("keeps the editorial profile available when the CMS catalog is empty", () => {
+    const profiles = buildBlogAuthorProfiles([]);
+    expect(profiles).toEqual([
+      expect.objectContaining({ slug: "redaktsiya", postCount: 0 }),
+    ]);
+  });
+
   it("plans rich inline related indices", () => {
     expect(planInlineRelatedRichSectionIndices(7)).toEqual([2, 5]);
   });

@@ -25,7 +25,8 @@ device_class, locale, error_category
 consent_state, ingestion_source, data_status
 ```
 
-`analytics_events` остаётся `data_status=untrusted_direct_insert` до закрытия RLS blocker. Существующую estimate подстановку tour views из bookings/inquiries не использовать в Sprint 5 KPI.
+Admin funnel использует только события с `ingestion_source=controlled_server`. Исторические строки
+`legacy_unverified` не участвуют в KPI; подстановка просмотров из заявок или обращений запрещена.
 
 ## Локальная проверка перед внешней настройкой
 
@@ -67,9 +68,9 @@ npx vitest run src/lib/analytics src/lib/cookie-consent.test.ts
 2. Отправить production sitemap в GSC/Bing и сохранить статус/дату/owner.
 3. Не считать наличие env или meta доказательством успешной внешней верификации.
 
-## Analytics ingestion remediation
+## Analytics ingestion boundary
 
-Migration сейчас не создаётся: migration timestamps/history нормализуются другим потоком. После снятия блокировки единственный владелец migration выполняет staging rehearsal следующего изменения:
+Миграция `20260717047000_analytics_readiness_truth.sql` закрепляет границу:
 
 ```sql
 drop policy if exists analytics_events_anon_insert on public.analytics_events;
@@ -77,11 +78,14 @@ revoke insert on table public.analytics_events from anon, authenticated;
 grant insert, select on table public.analytics_events to service_role;
 ```
 
-Затем browser ingestion переводится на server endpoint с allowlist event names, scalar schema, PII sanitizer, durable rate limit и idempotency/deduplication по `event_id`. Production применять только после staging negative test прямого Data API INSERT.
+Browser ingestion проходит через server endpoint с allowlist, scalar schema, PII sanitizer,
+rate limit и дедупликацией по `event_id`. Пять operations-событий проверяются отдельным строгим
+словарём без identity/contact полей. Production применять только после staging negative test
+прямого Data API INSERT и проверки, что старые строки остаются `legacy_unverified`.
 
 ## Exit evidence
 
 - Автоматически: denied-by-default, revoke stops app events, PII sanitizer, единый envelope, booking outcome normalization, no custom `page_view` contract.
 - Требует staging: end-to-end native/partner/fallback/error evidence.
 - Требует владельца внешних систем: GTM publish, GA4 DebugView, Tag Assistant, GSC/Bing/Ahrefs verification.
-- Требует разблокированной migration history: server-only `analytics_events` ingestion.
+- Требует staging: применение migration и negative test прямого Data API INSERT.

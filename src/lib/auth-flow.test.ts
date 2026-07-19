@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   isValidAuthEmail,
+  cleanAuthEntryUrl,
   mapAuthClientError,
   normalizeAuthEmail,
   parseRetryAfterSeconds,
@@ -18,7 +19,15 @@ describe("auth flow helpers", () => {
   it("allows only internal auth destinations", () => {
     expect(resolveSafeAuthNext("https://evil.example", "email")).toBe("/");
     expect(resolveSafeAuthNext("/profile", "email")).toBe("/profile");
+    expect(resolveSafeAuthNext("/join", "signup")).toBe("/join");
     expect(resolveSafeAuthNext("/profile", "recovery")).toBe("/account/update-password");
+  });
+
+  it("cleans auth entry parameters without discarding unrelated query state", () => {
+    expect(cleanAuthEntryUrl("auth=sign-in&role=organizer&step=forgot-password&next=%2Fprofile"))
+      .toBe("/");
+    expect(cleanAuthEntryUrl("utm_source=header&auth=sign-in&error=expired"))
+      .toBe("/?utm_source=header");
   });
 
   it("parses rate limits and maps auth errors", () => {

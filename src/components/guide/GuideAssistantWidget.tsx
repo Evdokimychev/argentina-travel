@@ -99,7 +99,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
         {!isUser && message.sources ? <SourceLinks sources={message.sources} /> : null}
         {!isUser && message.mode === "search_fallback" ? (
           <p className="mt-2 text-xs text-muted">
-            Ответ составлен по результатам поиска по сайту.
+            Подобрано по материалам сайта.
           </p>
         ) : null}
       </div>

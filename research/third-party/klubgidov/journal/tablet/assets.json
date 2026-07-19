@@ -1,0 +1,250 @@
+[
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/entry.DlykQFvf.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/CookieAlertSheet.VSkclCKq.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/useSuccessRequestModal.CbYafLhC.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/useRequestCallModal.CV0eWx69.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SearchToursCount.D1Wja7Ve.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SearchFiltersDropdown.DNlMY-aj.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SearchDropdownFooter.D4WFReBV.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/PhoneContacts.HIy8J-8f.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SocialButton.CiZ2qb0p.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SocialsButtons.UwzxBJzA.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SupportSchedule.wpfJca4b.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/TourSelectionModeSheet.D6Ns4Png.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/WebCallModal.CqfC6qlr.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/BlogRootPage.FUDDDjrt.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/ArticleSidebarSocials.C5rW7dOL.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/BlogArticleCard.CtPqw-n3.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/BlogLikeButton.BAPUBL60.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/BlogCategoriesCard.DjuKTI-L.css"
+  },
+  {
+    "type": "stylesheet",
+    "url": "https://static.klubgidov.ru/_nuxt/SearchDropdownFiltersList.DoYJ82DX.css"
+  },
+  {
+    "type": "script",
+    "url": "https://cllctr.roistat.com/stream/view/-/Y291bnRlcl9pZD0xZGRiZjI2NGQyNDc0NzRiYzE2NWI3YmE0NGNkOWE3OCZwYWdlPWh0dHBzJTNBJTJGJTJGa2x1YmdpZG92LnJ1JTJGam91cm5hbCZjb29raWU9cm9pc3RhdF92aXNpdCUzRDUzNDIyNDQ0JTNCJTIwcm9pc3RhdF9maXJzdF92aXNpdCUzRDUzNDIyNDQ0JTNCJTIwcm9pc3RhdF92aXNpdF9jb29raWVfZXhwaXJlJTNEMTIwOTYwMCUzQiUyMHJvaXN0YXRfaXNfbmVlZF9saXN0ZW5fcmVxdWVzdHMlM0QwJTNCJTIwcm9pc3RhdF9pc19zYXZlX2RhdGFfaW5fY29va2llJTNEMSUzQiUyMHJvaXN0YXRfY2FsbF90cmFja2luZyUzRDAlM0IlMjByb2lzdGF0X2Nvb2tpZXNfdG9fcmVzYXZlJTNEcm9pc3RhdF9hYiUyNTJDcm9pc3RhdF9hYl9zdWJtaXQlMjUyQ3JvaXN0YXRfdmlzaXQlMjUyQ3JvaXN0YXRfY2FsbF90cmFja2luZyUzQiUyMGkxOG5fcmVkaXJlY3RlZCUzRHJ1JTNCJTIwZmF2b3JpdGVfdG91cnMlM0QlMjU1QiUyNTVEJmhvc3Q9a2x1YmdpZG92LnJ1JnZpc2l0X2lkPTUzNDIyNDQ0JnBob25lPQ==?counter_id=1ddbf264d247474bc165b7ba44cd9a78"
+  },
+  {
+    "type": "script",
+    "url": "https://mc.yandex.ru/metrika/tag.js"
+  },
+  {
+    "type": "script",
+    "url": "https://cllctr.roistat.com/counter.js"
+  },
+  {
+    "type": "script",
+    "url": "https://cloud.roistat.com/api/site/1.0/1ddbf264d247474bc165b7ba44cd9a78/addVisit?v=428&marker=&visit=53422444&first_visit=53422444&guid=&phone_prefix=&phone_prefix_bind=&phone_scripts_bind=&referrer=&page=https%3A%2F%2Fklubgidov.ru%2Fjournal&ab=&ab_variants=&hash=OS%60%40c%40ECIG%13ZI%19xBNl%13%18KrdZNn%1A%1BgP%7BSg%40%7B%1AdnYMIG%13ZI%19xBNl%13GKr%60PNl%13%18KrdZNn%1A%1BgP%7BSg%40%7B%1AdnYMIG%13ZI%19xBNl%13%18KrdZNl%13%40H%18%13XK%7D%7CLprB%5DKr%60Fz~oSgnA%18gnk%1Dcb%60%5CKrd%1AsrxLKrdLHG%7CFpl%13YKrd%1Ap%7D%1FLIG%7CRN%7D%7CPNbg%13gnYMIG%13ZI%19xBNl%13ZI%1B%13PsrpFr%18xBNmlLK%7D%1FLs%18%13%5CK%18FFz~oCL%7B%17%17&screenWidth=768&screenHeight=1024&screenPixelDepth=24&screenColorDepth=24&deviceMemory=16&hardwareConcurrency=10&language=ru-RU&platform=MacIntel&osVersion=27.0.0"
+  },
+  {
+    "type": "script",
+    "url": "https://cloud.roistat.com/api/site/1.0/1ddbf264d247474bc165b7ba44cd9a78/init?referrer=https%3A%2F%2Fklubgidov.ru%2Fjournal"
+  },
+  {
+    "type": "script",
+    "url": "https://static.klubgidov.ru/_nuxt/BtRLm4MP.js"
+  },
+  {
+    "type": "script",
+    "url": "https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=onloadSmartcaptcha"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/guidesclub.Yg_1Bd49.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/864x540/GC_7b94c9eb1f8563e91fe2d741f7dab73c1ca062723806d7f2ba87285b241db30a.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_1f2da01052250c3839c2d16be5cf0da8b3700212e7343963cb4ae2b0aa1e08ae.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_28f1e2eb1d945f7e4e0df66c658186b9b45ee22719e78e43ddf180075e9828a6.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_849738905a95e54986e88668f79143547cd03a4e54f10052bb7cdf2e2e31cc30.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_5a8ca0eff23cfe0b2013b91c54b808dcfb157b869918ac58772a54587fc4882d.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_3a7e0548393bafb94c2ce41c319c358ae86e57ca2b2f5c0f03a98b8710627e2b.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_0acf75b360ee3db25388d7cbf4d45a29975037c10b6e21e3aaa1c9be97c06568.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_422cd100394a5b89cc5cac90fcbd2ee7109e45bbe9c5eb2b3d3a22ae2eae30d3.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_f393f2b240e0383f60d0748d5716eb8343adc4c7f9a15b6ced23d4dd562b079d.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_c6e300fb749b76bd6fbc9b9da69c8fbe5acb09504ffaf9af267381b97e3eb26b.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_3b2a3821b4a165f78349d4d64b18622dd7aef23dfcdccab26bfee8aca2a67df4.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_fae7f3f45c7ca4cdf71ef944e08093a0094b25e6a8dee4e1f7bd8b87d9d5d54f.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_146e5f3aae3f8af975f48de3ff504f25da51bec38a12faa6fad217646dcfcb46.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_56f8a5e6c6d7bae3736468652398160ccd927fe00823fc93c8103f6ae2a9a236.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_ddf0721de084cb08ff10a3b9c06ed205417f94af7cdea45b92455b1aae86577a.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_eb00a1c599aa36ac2c58fee528a83d8fe0aa5bbd210653db976d56d5aed9318e.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_3ff2a0546d7a8ad71b089046ae97bb973e5a90932557394b3acce09c8a4e7d63.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_d6d2935884bf85273fdfd0f12323453fca43762904d427e03a94b9e5b5439b85.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_fbf4da84e8dc8756384eaf76a7f4b9e24dee835b08c4a85ecccd82705fa56f52.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://imcdn.klubgidov.ru/427x236/GC_5a08d7ee591644251a69b71ff7d0bf344bda09c1dcec7793e5c9f32c67d31f11.jpeg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/rocket.Bdc5YIuG.png"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/check.AlEww-ZN.png"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/shield.DqeKlLn9.png"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/tinkoff.WhCtsTJ2.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/star.BaxtuoiE.png"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/google.D79yt0W1.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/yandex.BJmavNob.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/2gis.CfEMP1ck.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/vk.BUR_Cl3X.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/visa.BrwAcX4f.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/mastercard.ZXPiqdkd.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/maestro.DMxPqv73.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/unionpay.DqjuNaa2.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/_nuxt/mir.kw-CeSS0.svg"
+  },
+  {
+    "type": "image",
+    "url": "https://static.klubgidov.ru/support-image.jpg"
+  }
+]

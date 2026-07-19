@@ -7,8 +7,6 @@ import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry"
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { ensureAvailabilitySlotForBooking } from "@/lib/tour-availability-server";
-import type { Booking } from "@/types/tourist";
-import { normalizeBooking } from "@/lib/bookings-store";
 import {
   BookingCommandError,
   buildCanonicalBooking,
@@ -149,30 +147,12 @@ export async function GET() {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    const { fetchUserBookings } = await import("@/lib/bookings-server");
+    const { attachGuestBookingsToCurrentUser, fetchUserBookings } = await import("@/lib/bookings-server");
+    await attachGuestBookingsToCurrentUser(supabase);
     const byUserId = await fetchUserBookings(supabase, authUser.id);
 
-    const { data: emailRows } = await supabase
-      .from("bookings")
-      .select("*")
-      .is("user_id", null)
-      .ilike("contact_email", sessionUser.email.trim().toLowerCase())
-      .order("created_at", { ascending: false });
-
-    const { rowsToBookings } = await import("@/lib/bookings-db-mapper");
-    const byEmail = emailRows?.length
-      ? rowsToBookings(emailRows).map((b) => normalizeBooking(b))
-      : [];
-
-    const merged = new Map<string, Booking>();
-    for (const booking of [...byUserId, ...byEmail]) {
-      merged.set(booking.id, booking);
-    }
-
     return NextResponse.json({
-      bookings: Array.from(merged.values()).sort((a, b) =>
-        b.createdAt.localeCompare(a.createdAt)
-      ),
+      bookings: byUserId,
     });
   } catch (error) {
     return NextResponse.json(

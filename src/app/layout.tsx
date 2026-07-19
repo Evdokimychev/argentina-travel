@@ -12,6 +12,7 @@ import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
 import { resolveSiteVerificationMeta } from "@/lib/analytics/site-verification-meta";
 import {
   fetchSiteBranding,
+  fetchSiteContact,
   fetchSiteDesign,
   fetchSiteNavigation,
   fetchSiteMarketing,
@@ -20,6 +21,7 @@ import {
   fetchSitePublicMeta,
 } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
+import { SITE_NAV_SECTIONS, SITE_NAV_UTILITY_LINKS } from "@/data/site-nav";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -115,16 +117,27 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [siteFooter, siteNavigation, siteDesign, siteBranding, siteMarketing, siteForms, siteModules] = await Promise.all([
+  const [
+    siteFooter,
+    siteNavigation,
+    siteDesign,
+    siteBranding,
+    siteContact,
+    siteMarketing,
+    siteForms,
+    siteModules,
+    i18nLocale,
+  ] = await Promise.all([
     loadSiteFooterInfo(),
     fetchSiteNavigation(),
     fetchSiteDesign(),
     fetchSiteBranding(),
+    fetchSiteContact(),
     fetchSiteMarketing(),
     fetchSiteForms(),
     fetchSiteModules(),
+    getServerI18nLocale(),
   ]);
-  const i18nLocale = await getServerI18nLocale();
   const locale = localeCodeFromI18n(i18nLocale);
 
   return (
@@ -152,7 +165,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <ThemeScript />
-        <SiteJsonLd />
+        <SiteJsonLd branding={siteBranding} contact={siteContact} />
         <Providers
           locale={locale}
           siteDesign={siteDesign}
@@ -167,6 +180,8 @@ export default async function RootLayout({
             siteMarketing={siteMarketing}
             siteForms={siteForms}
             siteModules={siteModules}
+            siteNavSections={SITE_NAV_SECTIONS}
+            siteNavUtilityLinks={SITE_NAV_UTILITY_LINKS}
           >
             {children}
           </SiteChrome>

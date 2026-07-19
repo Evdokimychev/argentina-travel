@@ -297,7 +297,7 @@ export default function ExcursionsCatalog({
                 secondaryAction={
                   excursions.length > 0
                     ? { label: t("excursions.allCities"), href: "/excursions" }
-                    : undefined
+                    : { label: t("nav.tours"), href: "/tours" }
                 }
                 suggestions={excursions.length > 0 ? emptySuggestions : undefined}
               />

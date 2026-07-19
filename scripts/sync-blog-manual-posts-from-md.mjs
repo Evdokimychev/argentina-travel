@@ -11,13 +11,12 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const DOCS = path.join(ROOT, "docs", "articles");
 const OUT = path.join(ROOT, "src/data/blog-manual-from-md");
 
-/** @type {Array<{ md: string; category: string; replacesSlug?: string; featured?: boolean; dateModified?: string }>} */
+/** @type {Array<{ md: string; category: string; replacesSlug?: string; featured?: boolean; dateModified?: string; readTimeMinutes?: number }>} */
 const MANUAL_ARTICLES = [
   {
     md: "Маршрут-по-Аргентине-2-недели.md",
     category: "Маршруты",
     featured: true,
-    dateModified: "2026-07-17",
   },
   {
     md: "Маршруты-10-дней-и-3-недели.md",
@@ -38,14 +37,20 @@ const MANUAL_ARTICLES = [
   {
     md: "Деньги-Бюджет-поездки-по-Аргентине.md",
     category: "Путеводитель",
+    dateModified: "2026-07-17",
+    readTimeMinutes: 6,
   },
   {
     md: "Деньги-Стоимость-жизни-Буэнос-Айрес.md",
     category: "Путеводитель",
+    dateModified: "2026-07-17",
+    readTimeMinutes: 6,
   },
   {
     md: "Деньги-как-менять-валюту-Аргентина.md",
     category: "Путеводитель",
+    dateModified: "2026-07-17",
+    readTimeMinutes: 5,
   },
   {
     md: "Города-Буэнос-Айрес-районы.md",
@@ -69,6 +74,8 @@ const MANUAL_ARTICLES = [
   {
     md: "Переезд-DNI-и-CUIL-пошагово.md",
     category: "Иммиграция",
+    dateModified: "2026-07-17",
+    readTimeMinutes: 6,
   },
   {
     md: "Переезд-Гражданство-Аргентины.md",
@@ -77,6 +84,8 @@ const MANUAL_ARTICLES = [
   {
     md: "Переезд-Банковский-счёт-и-финансы.md",
     category: "Иммиграция",
+    dateModified: "2026-07-17",
+    readTimeMinutes: 6,
   },
 ];
 
@@ -191,7 +200,7 @@ function generatePost(config) {
   const parsed = parseManualMd(content);
   const seo = parseSeoMeta(content);
   const relatedResources = parseRelatedResources(content);
-  const readTimeMinutes = estimateReadMinutes(parsed.sections);
+  const readTimeMinutes = config.readTimeMinutes ?? estimateReadMinutes(parsed.sections);
 
   if (!seo.slug) {
     throw new Error(`Missing URL Slug in ${config.md}`);
@@ -242,7 +251,7 @@ ${sectionsTs}
   author: "",
   authorBio: "",
   date: "2026-06-21",
-  dateModified: "${escapeTs(config.dateModified ?? "2026-06-21")}",
+  dateModified: "${config.dateModified ?? "2026-06-21"}",
   image: "",
   category: "${escapeTs(config.category)}",
   readTimeMinutes: ${readTimeMinutes},

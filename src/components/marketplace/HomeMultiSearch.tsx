@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { Suspense, use, useState } from "react";
 import type { TourListing } from "@/types";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { cn } from "@/lib/cn";
 import SearchBlock from "./SearchBlock";
-import HomeFlightSearchBlock from "./HomeFlightSearchBlock";
-import HomeExcursionSearchBlock from "./HomeExcursionSearchBlock";
-import HomeFlightPopularRoutes from "./HomeFlightPopularRoutes";
 import type { ExcursionCity } from "@/types/excursion";
+
+function SearchPanelSkeleton() {
+  return (
+    <div
+      className="h-20 w-full animate-pulse rounded-2xl bg-surface-muted motion-reduce:animate-none"
+      role="status"
+      aria-label="Загружаем форму поиска"
+    />
+  );
+}
+
+// Tours are the default tab and stay in the initial bundle. Alternative search
+// engines are downloaded only after the visitor asks for them.
+const HomeFlightSearchBlock = dynamic(() => import("./HomeFlightSearchBlock"), {
+  loading: SearchPanelSkeleton,
+});
+const HomeExcursionSearchBlock = dynamic(() => import("./HomeExcursionSearchBlock"), {
+  loading: SearchPanelSkeleton,
+});
+const HomeFlightPopularRoutes = dynamic(() => import("./HomeFlightPopularRoutes"), {
+  loading: () => null,
+});
 
 export type HomeSearchTab = "flights" | "tours" | "excursions";
 
 type HomeMultiSearchProps = {
   tours: TourListing[];
-  excursionCities: ExcursionCity[];
+  excursionCities: Promise<ExcursionCity[]>;
   query: string;
   dateFrom: Date | null;
   dateTo: Date | null;
@@ -28,6 +48,14 @@ type HomeMultiSearchProps = {
 };
 
 const TAB_ORDER: HomeSearchTab[] = ["tours", "excursions", "flights"];
+
+function HomeExcursionSearchData({
+  cities,
+}: {
+  cities: Promise<ExcursionCity[]>;
+}) {
+  return <HomeExcursionSearchBlock cities={use(cities)} />;
+}
 
 export default function HomeMultiSearch({
   tours,
@@ -137,7 +165,9 @@ export default function HomeMultiSearch({
         ) : null}
 
         {activeTab === "excursions" ? (
-          <HomeExcursionSearchBlock cities={excursionCities} />
+          <Suspense fallback={<SearchPanelSkeleton />}>
+            <HomeExcursionSearchData cities={excursionCities} />
+          </Suspense>
         ) : null}
       </div>
 

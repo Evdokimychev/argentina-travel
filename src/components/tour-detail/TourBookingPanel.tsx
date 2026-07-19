@@ -26,6 +26,7 @@ import BookingWaitlistPrompt from "./BookingWaitlistPrompt";
 import ExternalBookingButton from "./ExternalBookingButton";
 import PartnerTourPrepaymentNotice from "./PartnerTourPrepaymentNotice";
 import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
+import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -141,6 +142,9 @@ export default function TourBookingPanel({
           guests,
           selectedDateId
         );
+
+  const externalHint =
+    externalBookingLink?.hint?.trim() || DEFAULT_CUSTOM_BOOKING_HINT;
 
   const primaryLabel = usesExternalBooking
     ? offerCapabilities.primaryActionLabel
@@ -347,11 +351,12 @@ export default function TourBookingPanel({
             </div>
           ) : usesExternalBooking && externalBookingHref && externalBookingLink ? (
             <>
+              <p className="mt-4 text-xs leading-relaxed text-slate">{externalHint}</p>
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
                 label={offerCapabilities.primaryActionLabel}
-                className="mt-5"
+                className="mt-3"
                 onClick={handleExternalBookingClick}
               />
               {isYouTravel ? <PartnerTourPrepaymentNotice tour={tour} className="mt-4" /> : null}

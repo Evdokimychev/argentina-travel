@@ -6,6 +6,8 @@ import {
 import SocialFeedBlock from "@/components/social-feed/SocialFeedBlock";
 import type { SocialFeedLayout } from "@/lib/social-feed/types";
 
+const PUBLIC_SOCIAL_FEED_WAIT_MS = 2_500;
+
 export type SocialFeedProps = {
   /** Ключ размещения: home, about, destination:ba, place:bariloche, kb:slug */
   placement?: string;
@@ -21,8 +23,7 @@ export type SocialFeedProps = {
   className?: string;
 };
 
-/** Серверная секция социальной ленты. */
-export default async function SocialFeed({
+async function loadSocialFeedBlock({
   placement,
   sources,
   title,
@@ -61,3 +62,26 @@ export default async function SocialFeed({
     />
   );
 }
+
+async function SocialFeedContent(props: SocialFeedProps) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), PUBLIC_SOCIAL_FEED_WAIT_MS);
+  });
+
+  try {
+    return await Promise.race([loadSocialFeedBlock(props), deadline]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+/** Социальная лента не удерживает основной публичный контент при сбое источника. */
+export default function SocialFeed(props: SocialFeedProps) {
+  return (
+    <Suspense fallback={null}>
+      <SocialFeedContent {...props} />
+    </Suspense>
+  );
+}
+import { Suspense } from "react";

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import EsimCatalogView from "@/components/esim/EsimCatalogView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 
 const PAGE_TITLE = "eSIM для поездки в Аргентину";
 const PAGE_DESCRIPTION =
@@ -18,7 +19,7 @@ export default function EsimPage() {
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/esim" />
       <Suspense fallback={null}>
-        <EsimCatalogView />
+        <EsimCatalogView heroImage={getServicePageHeroImage("esim")} />
       </Suspense>
     </>
   );

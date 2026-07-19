@@ -42,7 +42,7 @@ export default async function GuidePage() {
   return (
     <>
       <BreadcrumbListJsonLd items={breadcrumbItems} />
-      <GuideHubView />
+      <GuideHubView heroImage={getServicePageHeroImage("guide-hub")} />
     </>
   );
 }

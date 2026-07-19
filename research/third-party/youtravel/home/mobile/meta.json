@@ -1,0 +1,17 @@
+{
+  "sourceUrl": "https://youtravel.me/",
+  "finalUrl": "https://youtravel.me/",
+  "title": "Бронируйте уникальные путешествия по всему миру · YouTravel.Me",
+  "researchedAt": "2026-07-18T15:18:53.608Z",
+  "httpStatus": 200,
+  "viewport": {
+    "id": "mobile",
+    "width": 390,
+    "height": 844,
+    "mobile": true
+  },
+  "pageType": "home",
+  "interactiveStates": [
+    "default"
+  ]
+}

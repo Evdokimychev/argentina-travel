@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/table";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import FormattedPrice from "@/components/FormattedPrice";
 import { EmptyState } from "@/components/ui/empty-state";
 import { NativeSelect } from "@/components/ui/native-select";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { cabinetHeroClass } from "@/lib/cabinet-ui";
+import { formatLedgerAmount } from "@/lib/payments/format-money";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import type { OrganizerFinanceSummary, BookingCommissionSnapshotRow } from "@/types/platform-commission";
@@ -116,7 +116,7 @@ export default function OrganizerFinanceView() {
         <EmptyState
           icon={Wallet}
           title="Финансовая сводка недоступна"
-          description="Подключите Supabase для отображения начислений и выплат по реальным платежам."
+          description="Учёт начислений и выплат пока не подключён для этого кабинета. Обратитесь к администратору сайта."
         />
       ) : (
         <>
@@ -162,37 +162,45 @@ export default function OrganizerFinanceView() {
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           {summary ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card variant="cabinet" className="p-5">
-                <p className="text-sm text-slate">Заработано (нетто)</p>
-                <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                  <FormattedPrice priceUsd={summary.earnedNet} />
+            <div className="space-y-3">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {summary.byCurrency.map((bucket) => (
+                  <Card key={bucket.currency} variant="cabinet" className="p-5">
+                    <p className="font-heading text-lg font-bold text-charcoal">{bucket.currency}</p>
+                    <dl className="mt-3 space-y-2 text-sm text-slate">
+                      <div className="flex justify-between gap-3">
+                        <dt>Брутто</dt>
+                        <dd>{formatLedgerAmount(bucket.grossTotal, bucket.currency)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Заработано</dt>
+                        <dd>{formatLedgerAmount(bucket.earnedNet, bucket.currency)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Комиссия</dt>
+                        <dd>{formatLedgerAmount(bucket.commissionTotal, bucket.currency)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Ожидает</dt>
+                        <dd>{formatLedgerAmount(bucket.pendingPayout, bucket.currency)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-3">
+                        <dt>Выплачено</dt>
+                        <dd>{formatLedgerAmount(bucket.paidOut, bucket.currency)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-3 border-t border-gray-100 pt-2 font-semibold text-charcoal">
+                        <dt>Доступно</dt>
+                        <dd>{formatLedgerAmount(bucket.availableBalance, bucket.currency)}</dd>
+                      </div>
+                    </dl>
+                  </Card>
+                ))}
+              </div>
+              {summary.invalidRecordCount > 0 ? (
+                <p className="text-sm text-error">
+                  Не включено некорректных финансовых записей: {summary.invalidRecordCount}.
                 </p>
-                <p className="mt-1 text-xs text-slate">
-                  Брутто: <FormattedPrice priceUsd={summary.grossTotal} />
-                </p>
-              </Card>
-              <Card variant="cabinet" className="p-5">
-                <p className="text-sm text-slate">Комиссия платформы</p>
-                <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                  <FormattedPrice priceUsd={summary.commissionTotal} />
-                </p>
-              </Card>
-              <Card variant="cabinet" className="p-5">
-                <p className="text-sm text-slate">Ожидает выплаты</p>
-                <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                  <FormattedPrice priceUsd={summary.pendingPayout} />
-                </p>
-              </Card>
-              <Card variant="cabinet" className="p-5">
-                <p className="text-sm text-slate">Доступно для выплаты</p>
-                <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                  <FormattedPrice priceUsd={summary.availableBalance} />
-                </p>
-                <p className="mt-1 text-xs text-slate">
-                  Выплачено: <FormattedPrice priceUsd={summary.paidOut} />
-                </p>
-              </Card>
+              ) : null}
             </div>
           ) : loading ? (
             <p className="text-sm text-slate">Загрузка…</p>
@@ -219,7 +227,7 @@ export default function OrganizerFinanceView() {
                           {PAYOUT_RECORD_STATUS_LABELS[row.status]}
                         </TableCell>
                         <TableCell className="text-right text-sm font-medium">
-                          <FormattedPrice priceUsd={row.amount} />
+                          {formatLedgerAmount(row.amount, row.currency)}
                         </TableCell>
                         <TableCell className="text-sm text-slate">
                           {formatBookingCreatedAt(row.createdAt)}
@@ -266,16 +274,16 @@ export default function OrganizerFinanceView() {
                           ) : null}
                         </TableCell>
                         <TableCell className="text-right text-sm">
-                          <FormattedPrice priceUsd={row.grossAmount} />
+                          {formatLedgerAmount(row.grossAmount, row.currency)}
                         </TableCell>
                         <TableCell className="text-right text-sm text-slate">
-                          <FormattedPrice priceUsd={row.commissionAmount} />
+                          {formatLedgerAmount(row.commissionAmount, row.currency)}
                           {row.commissionPercent != null ? (
                             <span className="text-xs"> ({row.commissionPercent}%)</span>
                           ) : null}
                         </TableCell>
                         <TableCell className="text-right text-sm font-medium">
-                          <FormattedPrice priceUsd={row.organizerNetAmount} />
+                          {formatLedgerAmount(row.organizerNetAmount, row.currency)}
                         </TableCell>
                         <TableCell className="text-sm text-slate">
                           {formatBookingCreatedAt(row.createdAt)}

@@ -1,0 +1,8 @@
+"fact_id","subject","implementation","source","owner","publication_rule","status","evidence"
+"exchange-rates","валютные курсы","ArgentinaExchangeRates","live source with component fallback","Finance editor","review source/date in UI","production_integration_review_required","current source tree"
+"weather","погода","ArgentinaWeatherPanel","live API/cache","Destination editor","verify location, units and stale state","production_integration_review_required","current source tree"
+"tour-availability","доступность и цены туров","tour repositories","CMS/partner data","Marketplace editor","verify supplier and timestamp before action","production_integration_review_required","current source tree"
+"excursion-price","цена экскурсии","Tripster quote/listing","partner API","Marketplace editor","show original currency and exact/fallback state","production_integration_review_required","current source tree"
+"flight-price","цены авиабилетов","Travelpayouts/flight API","partner API","Integration owner","do not present teaser as guaranteed fare","production_integration_review_required","current source tree"
+"esim-price","цены eSIM","Airalo catalog","partner feed","Integration owner","verify feed freshness and currency","production_integration_review_required","current source tree"
+"knowledge-review-date","дата актуальности базы","content index editorial metadata","generated from last_verified","Content editor","block sensitive item when source missing","implemented","current source tree"

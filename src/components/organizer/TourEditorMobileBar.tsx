@@ -30,6 +30,7 @@ export default function TourEditorMobileBar({
     <nav
       aria-label="Панели редактора тура"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.06)] backdrop-blur-md xl:hidden"
+      data-mobile-action-slot="organizer-editor"
     >
       <div className="mx-auto flex max-w-lg">
         {PANELS.map((panel) => {

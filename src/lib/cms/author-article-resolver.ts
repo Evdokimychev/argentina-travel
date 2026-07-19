@@ -19,25 +19,28 @@ export async function resolveAuthorArticle(
   locale = "ru"
 ): Promise<BlogPost | undefined> {
   const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "author_article", slug, {
+  const translationStatusPromise = supabase
+    ? fetchCmsTranslationStatusForSlug(supabase, "author_article", slug, {
         ruFallbackComplete: false,
       })
-    : buildDefaultTranslationStatus(false);
+    : Promise.resolve(buildDefaultTranslationStatus(false));
 
   let resolvedSeo: CmsDocument["seo"] | undefined;
-  const resolved = await resolveWithPublishedCmsOverride<BlogPost>({
-    docType: "author_article",
-    slug,
-    locale,
-    fallback: null,
-    merge: (doc) => authorArticleFromCms(doc) ?? null,
-    supabase,
-    isUsable: isCmsDocumentComplete,
-    onResolvedDocument: (doc) => {
-      resolvedSeo = doc.seo;
-    },
-  });
+  const [translationStatus, resolved] = await Promise.all([
+    translationStatusPromise,
+    resolveWithPublishedCmsOverride<BlogPost>({
+      docType: "author_article",
+      slug,
+      locale,
+      fallback: null,
+      merge: (doc) => authorArticleFromCms(doc) ?? null,
+      supabase,
+      isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
+    }),
+  ]);
 
   if (!resolved) return undefined;
   return attachCmsResolverMetadata(

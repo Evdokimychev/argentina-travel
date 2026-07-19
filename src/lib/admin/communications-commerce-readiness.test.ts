@@ -29,7 +29,7 @@ describe("getCommunicationsCommerceReadiness", () => {
       PAYMENT_SANDBOX_MODE: "true",
     });
 
-    expect(result.providers.every((provider) => provider.status === "ready")).toBe(true);
+    expect(result.providers.every((provider) => provider.status === "configured")).toBe(true);
     expect(result.paymentSandboxMode).toBe(true);
 
     const serialized = JSON.stringify(result);

@@ -18,7 +18,7 @@ import {
 } from "@/lib/tour-price-bounds";
 import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
-import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import { matchesCatalogCountryScope } from "@/lib/catalog-country-relevance";
 import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
 

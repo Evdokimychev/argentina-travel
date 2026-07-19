@@ -96,6 +96,8 @@ export default function RouteMap({
   useEffect(() => {
     if (!containerRef.current || points.length === 0) return;
 
+    const markers = markersRef.current;
+
     if (mapRef.current) {
       try {
         mapRef.current.remove();
@@ -173,7 +175,7 @@ export default function RouteMap({
 
     return () => {
       map.off("zoomend", requestLayoutRefresh);
-      markersRef.current.clear();
+      markers.clear();
       try {
         if (mapRef.current) {
           mapRef.current.remove();

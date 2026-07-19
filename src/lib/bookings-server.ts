@@ -8,7 +8,6 @@ import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
 import { bookingToRow, rowToBooking, rowsToBookings } from "@/lib/bookings-db-mapper";
 import { normalizeBooking } from "@/lib/bookings-store";
-import { bookingMatchesContactEmail, isGuestUserId } from "@/lib/guest-booking";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
 import { canManageBooking, canCancelOwnBooking } from "@/lib/permissions";
@@ -91,6 +90,7 @@ export function organizerCanAccessBooking(
   organizerUserId: string,
   tourSlugs: string[] = getOrganizerCatalogSlugs(organizerUserId)
 ): boolean {
+  if (booking.organizerUserId === organizerUserId) return true;
   if (booking.organizerTourId) {
     const tourOwnerUserId = getOrganizerTourOwnerId(booking.organizerTourId);
     if (tourOwnerUserId === organizerUserId) return true;
@@ -101,25 +101,13 @@ export function organizerCanAccessBooking(
 export function canAccessBooking(
   booking: Booking,
   actor: SessionUser | null,
-  profileEmail?: string | null
 ): boolean {
   if (!actor) return false;
 
   if (booking.userId === actor.id) return true;
 
-  const email = profileEmail ?? actor.email;
-  if (email && bookingMatchesContactEmail(booking, email)) return true;
-
-  // Generic booking endpoints are for the booking owner and the owning organizer.
-  // Staff access must go through /api/admin/* where admin_staff capabilities are enforced.
   if (userHasAccountRole(actor, "organizer")) {
-    if (organizerCanAccessBooking(booking, actor.id)) {
-      return true;
-    }
-    const tourOwnerUserId = booking.organizerTourId
-      ? getOrganizerTourOwnerId(booking.organizerTourId)
-      : undefined;
-    return canManageBooking(actor, { tourOwnerUserId, bookingUserId: booking.userId });
+    return organizerCanAccessBooking(booking, actor.id);
   }
 
   return false;
@@ -186,6 +174,9 @@ export async function insertCanonicalBookingAtomically(
   const created = result.created === true;
 
   if (created) {
+    if (input.booking.attribution && hasAttributionData(input.booking.attribution)) {
+      await insertBookingAttribution(supabase, stored.id, input.booking.attribution);
+    }
     void import("@/lib/partner-webhooks").then(({ dispatchPartnerBookingWebhookEvent }) =>
       dispatchPartnerBookingWebhookEvent({
         organizerId: input.organizerUserId,
@@ -271,39 +262,10 @@ export async function cancelBookingAndReleaseReservation(
   };
 }
 
-export async function attachGuestBookingsByEmail(
-  supabase: DbClient,
-  userId: string,
-  email: string
-): Promise<number> {
-  if (isGuestUserId(userId)) return 0;
-
-  const normalizedEmail = email.trim().toLowerCase();
-  if (!normalizedEmail) return 0;
-
-  const { data, error } = await supabase
-    .from("bookings")
-    .select("*")
-    .is("user_id", null)
-    .ilike("contact_email", normalizedEmail);
-
-  if (error || !data?.length) return 0;
-
-  let attached = 0;
-  for (const row of data) {
-    const { error: updateError } = await supabase
-      .from("bookings")
-      .update({
-        user_id: userId,
-        guest_user_id: null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", row.id);
-
-    if (!updateError) attached += 1;
-  }
-
-  return attached;
+export async function attachGuestBookingsToCurrentUser(supabase: DbClient): Promise<number> {
+  const { data, error } = await supabase.rpc("attach_guest_bookings_to_current_user");
+  if (error) throw new Error(error.message);
+  return Number(data ?? 0);
 }
 
 export function assertBookingMutationAllowed(
@@ -315,8 +277,7 @@ export function assertBookingMutationAllowed(
 
   if (action === "cancel") {
     if (
-      !canCancelOwnBooking(actor, booking.userId) &&
-      !(actor.email && bookingMatchesContactEmail(booking, actor.email))
+      !canCancelOwnBooking(actor, booking.userId)
     ) {
       return { error: "Нет доступа" };
     }

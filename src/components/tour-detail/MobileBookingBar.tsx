@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { TourDetail } from "@/types";
 import { formatDateRange } from "@/lib/utils";
 import { formatTourists } from "@/lib/pluralize";
-import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
@@ -18,12 +17,12 @@ import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
 import ExternalBookingButton from "./ExternalBookingButton";
-import PartnerTourListedPrice from "./PartnerTourListedPrice";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
+import { formatPartnerBookingAmount } from "@/lib/tripster/partner-tour-price";
 
 function formatMobileDateSummary(
   dates: TourDetail["dates"],
@@ -67,7 +66,6 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     externalBookingLink,
     externalBookingHref,
     partnerBookingPrice,
-    partnerPriceLoading,
     scheduleDates,
     partnerPreviewOpen,
     openPartnerBookingPreview,
@@ -105,7 +103,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     return () => window.clearTimeout(timer);
   }, [partnerEditRequest]);
 
-  const availableDates = isPartnerTour ? scheduleDates : tour.dates;
+  const availableDates = scheduleDates;
   const selectedDate = availableDates.find((d) => d.id === selectedDateId);
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
   const guestHint =
@@ -194,7 +192,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   }
 
   const primaryLabel = usesExternalBooking
-    ? "Забронировать"
+    ? offerCapabilities.primaryActionLabel
     : offerCapabilities.bookingMode === "disabled"
       ? offerCapabilities.primaryActionLabel
       : canJoinWaitlist && bookingValidationError
@@ -207,11 +205,18 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     priceFromPrefix: tour.priceFromPrefix,
   });
   const displayPriceUsd = priceOnRequest ? tour.priceUsd : totalPriceUsd;
+  const compactPartnerPrice = partnerBookingPrice
+    ? partnerBookingPrice.displayFallback ??
+      formatPartnerBookingAmount(
+        partnerBookingPrice.totalValue,
+        partnerBookingPrice.currency
+      )
+    : null;
 
   return (
     <div className={tourDetailMobileBarClass}>
       {expanded ? (
-        <div className="border-b border-gray-100 py-3">
+        <div id="mobile-booking-controls" className="border-b border-gray-100 py-3">
           <div className={cn(siteContainerClass, "space-y-3")}>
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm font-medium text-charcoal">Дата и туристы</p>
@@ -225,7 +230,11 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               </button>
             </div>
             <div id="mobile-bar-booking-date">
-              <BookingDateSelector tour={tour} idPrefix="mobile-bar" />
+              <BookingDateSelector
+                tour={tour}
+                idPrefix="mobile-bar"
+                showDepartureCalendar={false}
+              />
             </div>
             <div id="mobile-bar-booking-guests">
               <GuestCounter
@@ -250,8 +259,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
         </div>
       ) : null}
 
-      <div className="py-2.5">
-        <div className={cn(siteContainerClass, "flex flex-col gap-1.5")}>
+      <div className="py-2">
+        <div className={cn(siteContainerClass, "space-y-2")}>
           {error ? (
             <InlineFeedback
               variant="error"
@@ -261,53 +270,52 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             />
           ) : null}
 
-          {!expanded ? (
+          <div className="flex min-h-12 items-center gap-2">
+            <div className="min-w-0 flex-1">
+              {compactPartnerPrice ? (
+                <p className="truncate text-base font-semibold text-charcoal">
+                  {compactPartnerPrice}
+                </p>
+              ) : priceOnRequest ? (
+                <TourPublicPriceDisplay
+                  priceUsd={tour.priceUsd}
+                  originalPriceUsd={tour.originalPriceUsd}
+                  priceOnRequest
+                  priceFromPrefix={tour.priceFromPrefix}
+                  size="sm"
+                  showFrom={false}
+                />
+              ) : (
+                <p className="truncate text-base font-semibold text-charcoal">
+                  {showFromPrefix ? <span className="font-normal text-slate">от </span> : null}
+                  <FormattedPrice priceUsd={displayPriceUsd} className="tabular-nums" />
+                </p>
+              )}
+              <p className="mt-0.5 truncate text-[11px] leading-tight text-slate">
+                {dateSummary} · {formatTourists(guests)}
+              </p>
+            </div>
+
             <button
               type="button"
-              onClick={() => setExpanded(true)}
-              className="flex min-h-9 w-full items-center justify-between gap-3 rounded-lg px-1 text-left text-xs text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
+              onClick={() => setExpanded((current) => !current)}
+              aria-expanded={expanded}
+              aria-controls="mobile-booking-controls"
+              aria-label={expanded ? "Свернуть выбор даты и туристов" : "Изменить дату и туристов"}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-slate transition-colors hover:border-sky/30 hover:text-charcoal"
             >
-              <span className="min-w-0 truncate">
-                <span className="font-medium text-charcoal">{dateSummary}</span>
-                <span> · {formatTourists(guests)}</span>
-              </span>
-              <ChevronUp className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              {expanded ? (
+                <ChevronDown className="h-4 w-4" aria-hidden />
+              ) : (
+                <ChevronUp className="h-4 w-4" aria-hidden />
+              )}
             </button>
-          ) : null}
-
-          <div className="flex items-center justify-between gap-3">
-            {partnerBookingPrice ? (
-              <div className="min-w-0 shrink">
-                <PartnerTourBookingPriceSummary
-                  price={partnerBookingPrice}
-                  loading={partnerPriceLoading}
-                  size="sm"
-                />
-              </div>
-            ) : isPartnerTour && tour.partnerPriceDisplay ? (
-              <PartnerTourListedPrice tour={tour} showFrom size="sm" className="min-w-0 shrink" />
-            ) : priceOnRequest ? (
-              <TourPublicPriceDisplay
-                priceUsd={tour.priceUsd}
-                originalPriceUsd={tour.originalPriceUsd}
-                priceOnRequest
-                priceFromPrefix={tour.priceFromPrefix}
-                size="sm"
-                showFrom={false}
-              />
-            ) : (
-              <p className="min-w-0 truncate text-base font-semibold text-charcoal">
-                {showFromPrefix ? <span className="font-normal text-slate">от </span> : null}
-                <FormattedPrice priceUsd={displayPriceUsd} className="tabular-nums" />
-              </p>
-            )}
             {usesExternalBooking && externalBookingHref && externalBookingLink ? (
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
-                label={primaryLabel}
-                showIcon={false}
-                className="min-h-11 max-w-[13rem] flex-1 rounded-xl px-5 py-3 text-sm font-semibold"
+                label={offerCapabilities.primaryActionLabel}
+                className="min-h-12 min-w-0 flex-[1.15] rounded-xl px-2 py-2 text-xs font-semibold leading-tight sm:text-sm"
                 onClick={handleExternalBookingClick}
               />
             ) : (
@@ -316,7 +324,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                 onClick={handlePrimaryAction}
                 disabled={offerCapabilities.bookingMode === "disabled"}
                 className={cn(
-                  "min-h-11 flex-1 rounded-xl bg-sky-ink py-3 text-center text-sm font-semibold text-white hover:bg-sky-ink/90",
+                  "min-h-12 min-w-0 flex-[1.15] rounded-xl bg-sky-ink px-2 py-2 text-center text-xs font-semibold leading-tight text-white hover:bg-sky-ink/90 sm:text-sm",
                   offerCapabilities.bookingMode === "disabled" &&
                     "cursor-not-allowed bg-gray-300 text-slate hover:bg-gray-300",
                 )}

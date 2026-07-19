@@ -1,29 +1,19 @@
 import { getShopProductImage } from "@/lib/media-resolver";
+import { getShopProductAlt } from "@/lib/media-resolver";
+import type { ShopProduct } from "@/types/shop-product";
 
-export type ShopProduct = {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  price: number;
-  currency: "USD";
-  deliveryType: "digital";
-  image: string;
-  format: string;
-  /** Supabase Storage path for future signed PDF delivery */
-  storagePath?: string;
-};
+export type { ShopProduct } from "@/types/shop-product";
 
-const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
+const SHOP_PRODUCTS_RAW: Array<
+  Pick<ShopProduct, "id" | "slug" | "title" | "description" | "format" | "priceMinor">
+> = [
   {
     id: "shop-patagonia-guide",
     slug: "patagonia-pdf-guide",
     title: "PDF-путеводитель: Патагония",
     description:
       "Маршруты, сезоны, снаряжение для треккинга и практические советы по Эль-Калафате, Чалтен и Ушуайе.",
-    price: 19,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 1900,
     format: "PDF, 48 страниц",
   },
   {
@@ -32,9 +22,7 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
     title: "Гид по Буэнос-Айресу",
     description:
       "Районы, milonga для начинающих, asado и безопасные маршруты на 3–5 дней в столице.",
-    price: 15,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 1500,
     format: "PDF, 36 страниц",
   },
   {
@@ -43,9 +31,7 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
     title: "Список документов для въезда",
     description:
       "Список документов, сроки, ссылки на Migraciones и типичные ошибки перед поездкой в Аргентину.",
-    price: 9,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 900,
     format: "PDF, 12 страниц",
   },
   {
@@ -54,9 +40,7 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
     title: "Винный гид Мендосы",
     description:
       "Bodegas, регионы Uco Valley и Luján de Cuyo, дегустации и логистика винных туров.",
-    price: 14,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 1400,
     format: "PDF, 32 страниц",
   },
   {
@@ -65,9 +49,7 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
     title: "Северо-запад: Сальта и Кафаяте",
     description:
       "Каньоны, солончаки, высоты и автомаршруты по провинции Сальта и Жужуй.",
-    price: 16,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 1600,
     format: "PDF, 40 страниц",
   },
   {
@@ -76,9 +58,7 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
     title: "Список для семейной поездки",
     description:
       "Документы детей, медицина, страховка, развлечения и подбор туров для семей с детьми.",
-    price: 7,
-    currency: "USD",
-    deliveryType: "digital",
+    priceMinor: 700,
     format: "PDF, 10 страниц",
   },
 ];
@@ -86,6 +66,21 @@ const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
 export const SHOP_PRODUCTS: ShopProduct[] = SHOP_PRODUCTS_RAW.map((product) => ({
   ...product,
   image: getShopProductImage(product.id),
+  imageAlt: getShopProductAlt(product.id),
+  images: [{ url: getShopProductImage(product.id), alt: getShopProductAlt(product.id) }],
+  categoryId: null,
+  categoryName: "Цифровые гиды",
+  currency: "USD",
+  deliveryType: "digital",
+  availability: "unlimited",
+  stockQuantity: null,
+  status: "published",
+  seoTitle: product.title,
+  seoDescription: product.description,
+  version: 1,
+  publishedAt: null,
+  archivedAt: null,
+  updatedAt: "",
 }));
 
 export function getShopProductBySlug(slug: string): ShopProduct | undefined {

@@ -1,5 +1,7 @@
 import {
   escapeHtml,
+  formatRecipientName,
+  formatRuDate,
   renderBookingReminder24hEmail,
   renderTripPrepReminderEmail,
   renderBookingConfirmedEmail,
@@ -18,6 +20,13 @@ import {
   type DigestEventItem,
   type EmailTemplateResult,
 } from "@/lib/notifications/email-templates";
+import { formatBookingDisplayNumber } from "@/lib/booking-display";
+import { resolveManagedEmailTemplate } from "@/lib/notifications/email-template-resolver-server";
+import type {
+  EmailTemplateEventKey,
+  EmailTemplateVariables,
+} from "@/lib/notifications/email-template-contract";
+import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import {
   isEmailNotificationEnabled,
   isPersistableUserId,
@@ -29,6 +38,7 @@ import {
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { absoluteUrl } from "@/lib/site-url";
 import type { NotificationCategory } from "@/types/notifications-hub";
+import type { BookingStatus } from "@/types/tourist";
 import { fetchSiteEmail } from "@/lib/site-settings-server";
 
 type ReviewModerationAction = "approve" | "reject";
@@ -52,6 +62,13 @@ type TransactionalSendContext = {
   category: NotificationCategory;
 };
 
+type ManagedEmailRequest<K extends EmailTemplateEventKey> = {
+  eventKey: K;
+  locale: string;
+  variables: EmailTemplateVariables<K>;
+  unsubscribeUrl?: string | null;
+};
+
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const EMAIL_MAX_ATTEMPTS = 5;
 
@@ -65,6 +82,13 @@ type EmailOutboxRow = {
   headers: Record<string, string> | null;
   attempts: number;
 };
+
+export type OperationalEmailResult =
+  | { status: "accepted"; providerMessageId?: string }
+  | { status: "failed"; providerStatus?: number }
+  | { status: "skipped" };
+
+type EmailDeliveryResult = Exclude<OperationalEmailResult, { status: "skipped" }>;
 
 function resolveEmailConfig(): EmailConfig | null {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -111,7 +135,7 @@ function nextEmailAttemptAt(attempts: number): string {
 async function deliverEmailOutboxRow(
   config: EmailConfig,
   row: EmailOutboxRow,
-): Promise<boolean> {
+): Promise<EmailDeliveryResult> {
   const supabase = createSupabaseAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const table = (supabase as any).from("email_delivery_outbox");
@@ -121,7 +145,7 @@ async function deliverEmailOutboxRow(
     .in("status", ["pending", "failed"])
     .select("id")
     .maybeSingle();
-  if (claimError || !claimed) return false;
+  if (claimError || !claimed) return { status: "failed" };
 
   try {
     const response = await fetch(RESEND_ENDPOINT, {
@@ -153,7 +177,10 @@ async function deliverEmailOutboxRow(
           next_attempt_at: null,
         })
         .eq("id", row.id);
-      return true;
+      return {
+        status: "accepted",
+        ...(responseBody?.id ? { providerMessageId: responseBody.id } : {}),
+      };
     }
 
     const attempts = row.attempts + 1;
@@ -164,7 +191,7 @@ async function deliverEmailOutboxRow(
         next_attempt_at: attempts >= EMAIL_MAX_ATTEMPTS ? null : nextEmailAttemptAt(attempts),
       })
       .eq("id", row.id);
-    return false;
+    return { status: "failed", providerStatus: response.status };
   } catch (error) {
     const attempts = row.attempts + 1;
     await table
@@ -174,12 +201,15 @@ async function deliverEmailOutboxRow(
         next_attempt_at: attempts >= EMAIL_MAX_ATTEMPTS ? null : nextEmailAttemptAt(attempts),
       })
       .eq("id", row.id);
-    return false;
+    return { status: "failed" };
   }
 }
 
-async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<boolean> {
-  if (!input.to.length) return false;
+async function enqueueAndDeliverEmail(
+  config: EmailConfig,
+  input: SendEmailInput,
+): Promise<EmailDeliveryResult> {
+  if (!input.to.length) return { status: "failed" };
 
   try {
     const settings = await fetchSiteEmail();
@@ -216,45 +246,73 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<bo
       .select("id, from_email, recipients, subject, html_body, text_body, headers, attempts")
       .single();
 
-    if (error || !data) return false;
+    if (error || !data) return { status: "failed" };
     return deliverEmailOutboxRow(config, data as EmailOutboxRow);
   } catch {
-    return false;
+    return { status: "failed" };
   }
+}
+
+async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<boolean> {
+  return (await enqueueAndDeliverEmail(config, input)).status === "accepted";
 }
 
 /**
  * Queues non-preference operational mail through the same durable outbox as
  * transactional messages. Callers must pass already escaped HTML fragments.
  */
-export async function sendOperationalEmail(input: {
+export async function sendOperationalEmail<
+  K extends EmailTemplateEventKey = "operations.alert",
+>(input: {
   recipientEmails?: Array<string | null | undefined>;
   includeAdminCopy?: boolean;
   subject: string;
   html: string;
   text: string;
   category?: "lead" | "organizer" | "required";
-}): Promise<boolean> {
+  managed?: ManagedEmailRequest<K>;
+}): Promise<OperationalEmailResult> {
   const config = resolveEmailConfig();
-  if (!config) return false;
+  if (!config) return { status: "skipped" };
   const settings = await fetchSiteEmail();
-  if (input.category === "lead" && !settings.leadAlertsEnabled) return false;
-  if (input.category === "organizer" && !settings.organizerAlertsEnabled) return false;
+  if (input.category === "lead" && !settings.leadAlertsEnabled) return { status: "skipped" };
+  if (input.category === "organizer" && !settings.organizerAlertsEnabled) return { status: "skipped" };
 
   const subject = input.subject.replace(/[\r\n]+/g, " ").trim().slice(0, 300);
-  if (!subject) return false;
+  if (!subject) return { status: "skipped" };
 
   const recipients = normalizeRecipients([
     ...(input.recipientEmails ?? []),
     input.includeAdminCopy ? config.adminEmail : null,
   ]);
-  if (!recipients.length) return false;
+  if (!recipients.length) return { status: "skipped" };
 
-  return sendEmail(config, {
-    to: recipients,
+  const fallback: EmailTemplateResult = {
     subject,
     html: input.html,
     text: input.text,
+  };
+  const managed = input.managed ?? {
+    eventKey: "operations.alert",
+    locale: "ru",
+    variables: {
+      alert_title: subject,
+      alert_details: input.text.trim() || "Проверьте новое событие в панели управления.",
+    },
+  } as ManagedEmailRequest<K>;
+  const resolved = await resolveManagedEmailTemplate({
+    eventKey: managed.eventKey,
+    locale: managed.locale,
+    variables: managed.variables,
+    fallback,
+    layoutOptions: { unsubscribeUrl: managed.unsubscribeUrl },
+  });
+
+  return enqueueAndDeliverEmail(config, {
+    to: recipients,
+    subject: resolved.subject,
+    html: resolved.html,
+    text: resolved.text,
   });
 }
 
@@ -294,15 +352,49 @@ export async function processEmailOutboxRetries(limit = 50): Promise<{
 
   let delivered = 0;
   for (const row of data as EmailOutboxRow[]) {
-    if (await deliverEmailOutboxRow(config, row)) delivered += 1;
+    if ((await deliverEmailOutboxRow(config, row)).status === "accepted") delivered += 1;
   }
   return { queued: data.length, delivered, failed: data.length - delivered };
 }
 
-async function sendTemplateEmail(
+export async function processEmailOutboxIds(ids: string[]): Promise<{
+  queued: number;
+  delivered: number;
+  failed: number;
+}> {
+  const uniqueIds = [...new Set(ids)].slice(0, 50);
+  if (!uniqueIds.length) return { queued: 0, delivered: 0, failed: 0 };
+  const config = resolveEmailConfig();
+  if (!config) throw new Error("Email provider is not configured");
+
+  const supabase = createSupabaseAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("email_delivery_outbox")
+    .select("id, from_email, recipients, subject, html_body, text_body, headers, attempts")
+    .in("id", uniqueIds)
+    .in("status", ["pending", "failed"])
+    .lt("attempts", EMAIL_MAX_ATTEMPTS)
+    .limit(50);
+  if (error || !Array.isArray(data)) throw new Error(error?.message ?? "Не удалось прочитать письма");
+
+  let delivered = 0;
+  for (const row of data as EmailOutboxRow[]) {
+    if ((await deliverEmailOutboxRow(config, row)).status === "accepted") delivered += 1;
+  }
+  return { queued: data.length, delivered, failed: data.length - delivered };
+}
+
+async function sendTemplateEmail<K extends EmailTemplateEventKey>(
   template: EmailTemplateResult,
   recipients: string[],
-  context: TransactionalSendContext
+  context: TransactionalSendContext,
+  managed?: {
+    eventKey: K;
+    locale: string;
+    variables: EmailTemplateVariables<K>;
+    unsubscribeUrl?: string | null;
+  },
 ): Promise<boolean> {
   const config = resolveEmailConfig();
   if (!config || !recipients.length) return false;
@@ -311,15 +403,46 @@ async function sendTemplateEmail(
   if (!allowed) return false;
 
   const unsubscribeUrl = resolveUnsubscribeUrl(context);
+  const resolvedTemplate = managed
+    ? await resolveManagedEmailTemplate({
+        eventKey: managed.eventKey,
+        locale: managed.locale,
+        variables: managed.variables,
+        fallback: template,
+        layoutOptions: { unsubscribeUrl: managed.unsubscribeUrl },
+      })
+    : template;
 
   return sendEmail(config, {
     to: recipients,
-    subject: template.subject,
-    html: template.html,
-    text: template.text,
+    subject: resolvedTemplate.subject,
+    html: resolvedTemplate.html,
+    text: resolvedTemplate.text,
     headers: buildListUnsubscribeHeader(unsubscribeUrl),
   });
 
+}
+
+function bookingStatusLabel(status: string | null): string {
+  if (!status) return "—";
+  return BOOKING_STATUS_LABELS[status as BookingStatus] ?? status;
+}
+
+const PAYMENT_STATUS_LABELS: Record<"paid" | "partial" | "refunded", string> = {
+  paid: "Оплата получена",
+  partial: "Зафиксирована частичная оплата",
+  refunded: "Оформлен возврат",
+};
+
+function daysUntilTripLabel(daysBefore: 7 | 3 | 1): string {
+  if (daysBefore === 1) return "завтра";
+  if (daysBefore === 3) return "через 3 дня";
+  return "через неделю";
+}
+
+function listSummary(lines: string[], fallback: string): string {
+  const summary = lines.map((line) => shortText(line, 240)).filter(Boolean).slice(0, 20).join("\n");
+  return summary || fallback;
 }
 
 export async function sendBookingLookupCodeEmail(input: {
@@ -350,6 +473,8 @@ export async function sendBookingConfirmedEmail(input: {
   const recipients = normalizeRecipients([input.recipientEmail]);
   if (!recipients.length) return false;
 
+  const unsubscribeUrl = resolveUnsubscribeUrl({ userId: input.userId, category: "booking" });
+
   const template = renderBookingConfirmedEmail({
     recipientName: input.recipientName,
     bookingId: input.bookingId,
@@ -357,12 +482,25 @@ export async function sendBookingConfirmedEmail(input: {
     guests: input.guests,
     startDate: input.startDate,
     endDate: input.endDate,
-    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+    unsubscribeUrl,
   });
 
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "booking",
+  }, {
+    eventKey: "booking.confirmed",
+    locale: "ru",
+    unsubscribeUrl,
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      booking_number: formatBookingDisplayNumber(input.bookingId),
+      tour_title: input.tourTitle,
+      start_date: input.startDate?.trim() || "уточняются",
+      end_date: input.endDate?.trim() || "уточняются",
+      guests: typeof input.guests === "number" && input.guests > 0 ? String(input.guests) : "уточняется",
+      booking_url: absoluteUrl(`/profile/bookings/${encodeURIComponent(input.bookingId)}`),
+    },
   });
 }
 
@@ -396,9 +534,35 @@ export async function sendBookingStatusChangedEmail(input: {
       : resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
   });
 
+  const unsubscribeUrl = input.adminCopy
+    ? null
+    : resolveUnsubscribeUrl({ userId: input.userId, category: "booking" });
+
   return sendTemplateEmail(template, primaryRecipients, {
     userId: input.adminCopy ? null : input.userId,
     category: "booking",
+  }, input.adminCopy ? {
+    eventKey: "booking.status_changed_admin",
+    locale: "ru",
+    variables: {
+      booking_number: formatBookingDisplayNumber(input.bookingId),
+      tour_title: input.tourTitle,
+      previous_status: bookingStatusLabel(input.fromStatus),
+      status: bookingStatusLabel(input.toStatus),
+      admin_url: absoluteUrl("/admin/bookings"),
+    },
+  } : {
+    eventKey: "booking.status_changed",
+    locale: "ru",
+    unsubscribeUrl,
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      booking_number: formatBookingDisplayNumber(input.bookingId),
+      tour_title: input.tourTitle,
+      previous_status: bookingStatusLabel(input.fromStatus),
+      status: bookingStatusLabel(input.toStatus),
+      booking_url: absoluteUrl(`/profile/bookings/${encodeURIComponent(input.bookingId)}`),
+    },
   });
 }
 
@@ -428,9 +592,26 @@ export async function sendPaymentReceivedEmail(input: {
     unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "payment" }),
   });
 
+  const unsubscribeUrl = resolveUnsubscribeUrl({ userId: input.userId, category: "payment" });
+
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "payment",
+  }, {
+    eventKey: "payment.received",
+    locale: "ru",
+    unsubscribeUrl,
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      booking_number: formatBookingDisplayNumber(input.bookingId),
+      tour_title: input.tourTitle,
+      payment_status: PAYMENT_STATUS_LABELS[input.paymentStatus],
+      amount: typeof input.amountUsd === "number" && input.amountUsd > 0
+        ? `${input.amountUsd.toLocaleString("ru-RU")} USD`
+        : "уточняется",
+      payment_method: input.providerLabel?.trim() || "не указан",
+      booking_url: absoluteUrl(`/profile/bookings/${encodeURIComponent(input.bookingId)}`),
+    },
   });
 }
 
@@ -460,6 +641,20 @@ export async function sendConversationNewMessageEmail(input: {
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "booking",
+  }, {
+    eventKey: "messaging.new_message",
+    locale: "ru",
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      sender_name: input.senderName.trim() || "Собеседник",
+      tour_title: input.tourTitle,
+      booking_number: input.bookingId
+        ? formatBookingDisplayNumber(input.bookingId)
+        : "без номера заявки",
+      message_preview: shortText(input.messageBody, 220),
+      message_url: absoluteUrl(input.messageHref),
+    },
   });
 }
 
@@ -487,6 +682,17 @@ export async function sendBookingReminder24hEmail(input: {
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "booking",
+  }, {
+    eventKey: "booking.reminder_24h",
+    locale: "ru",
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      booking_number: formatBookingDisplayNumber(input.bookingId),
+      tour_title: input.tourTitle,
+      start_date: formatRuDate(input.startDate),
+      details_url: absoluteUrl(input.detailsHref),
+    },
   });
 }
 
@@ -516,6 +722,17 @@ export async function sendTripPrepReminderEmail(input: {
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "booking",
+  }, {
+    eventKey: "trip_prep.reminder",
+    locale: "ru",
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      tour_title: input.tourTitle,
+      start_date: formatRuDate(input.startDate),
+      time_until_start: daysUntilTripLabel(input.daysBefore),
+      prep_url: absoluteUrl(input.prepHref),
+    },
   });
 }
 
@@ -546,6 +763,17 @@ export async function sendReviewModerationEmail(input: {
   await sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "reviews",
+  }, {
+    eventKey: "review.moderated",
+    locale: "ru",
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "reviews" }),
+    variables: {
+      recipient_name: formatRecipientName(input.touristName),
+      tour_title: input.tourTitle,
+      moderation_result: input.action === "approve" ? "Отзыв опубликован" : "Отзыв не опубликован",
+      moderator_note: input.note?.trim() || "Комментарий не добавлен",
+      tour_url: absoluteUrl(`/tours/${encodeURIComponent(input.tourSlug ?? "")}`),
+    },
   });
 }
 
@@ -568,11 +796,18 @@ export async function sendPrivacyDeleteCompletedEmail(input: {
     supportEmail: config.adminEmail,
   });
 
-  return sendEmail(config, {
-    to: recipients,
-    subject: template.subject,
-    html: template.html,
-    text: template.text,
+  return sendTemplateEmail(template, recipients, {
+    category: "system",
+  }, {
+    eventKey: "privacy.delete_completed",
+    locale: "ru",
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      request_number: input.requestId,
+      completed_date: formatRuDate(input.completedAt),
+      support_contact: config.adminEmail || "форма обратной связи на сайте",
+      settings_url: absoluteUrl("/profile/settings"),
+    },
   });
 
 }
@@ -613,8 +848,7 @@ export async function sendOrganizerNewReviewEmail(input: {
     cta: { label: "Открыть отзывы", href: organizerReviewsUrl },
   };
 
-  await sendEmail(config, {
-    to: recipients,
+  const template: EmailTemplateResult = {
     subject: `Новый опубликованный отзыв: ${input.tourTitle}`,
     html: renderEmailLayout(contentHtml, layoutOptions),
     text: renderPlainEmail(
@@ -629,6 +863,22 @@ export async function sendOrganizerNewReviewEmail(input: {
         .join("\n"),
       layoutOptions
     ),
+  };
+
+  await sendTemplateEmail(template, recipients, {
+    category: "reviews",
+  }, {
+    eventKey: "review.organizer_published",
+    locale: "ru",
+    variables: {
+      organizer_name: input.organizerName?.trim() || "организатор",
+      tour_title: input.tourTitle,
+      author_name: input.touristName?.trim() || "путешественник",
+      rating: `${input.rating} из 5`,
+      review_preview: shortText(input.reviewText),
+      trip_date: input.tripDate?.trim() || "не указана",
+      reviews_url: organizerReviewsUrl,
+    },
   });
 }
 
@@ -653,6 +903,21 @@ export async function sendContentFreshnessReportEmail(input: {
 
   return sendTemplateEmail(template, recipients, {
     category: "system",
+  }, {
+    eventKey: "content.freshness_report",
+    locale: "ru",
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName ?? "редакция"),
+      report_date: formatRuDate(input.generatedAt ?? new Date()),
+      total_count: String(input.items.length),
+      critical_count: String(input.items.filter((item) => item.status === "critical").length),
+      stale_count: String(input.items.filter((item) => item.status === "stale").length),
+      items_summary: listSummary(
+        input.items.map((item) => `${item.title} — ${item.ageDays} дн. без проверки`),
+        "Материалов для проверки нет",
+      ),
+      dashboard_url: absoluteUrl(input.dashboardUrl ?? "/admin/content/freshness"),
+    },
   });
 }
 
@@ -685,5 +950,19 @@ export async function sendDailyDigestEmail(input: {
   return sendTemplateEmail(template, recipients, {
     userId: input.userId,
     category: "system",
+  }, {
+    eventKey: "notifications.daily_digest",
+    locale: "ru",
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "system" }),
+    variables: {
+      recipient_name: formatRecipientName(input.recipientName),
+      scope_label: input.scopeLabel,
+      date: formatRuDate(),
+      event_count: String(input.events.length),
+      events_summary: listSummary(
+        input.events.map((event) => `${event.title} — ${event.body}`),
+        "За последние сутки новых событий не было",
+      ),
+    },
   });
 }

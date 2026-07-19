@@ -4,6 +4,7 @@ import ToursCatalog from "@/components/marketplace/ToursCatalog";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import CatalogItemListJsonLd from "@/components/seo/CatalogItemListJsonLd";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
+import CommercialSeoSection from "@/components/seo/CommercialSeoSection";
 import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { buildToursCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
@@ -11,6 +12,7 @@ import { buildCatalogMetadata, getServerCatalogView, hasActiveCatalogFilters } f
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
+import { TOURS_CATALOG_SEO } from "@/lib/commercial-catalog-seo";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +52,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог туров…" />}>
         <ToursCatalog tours={tours} platformStats={platformStats} />
       </Suspense>
+      <CommercialSeoSection copy={TOURS_CATALOG_SEO} />
     </>
   );
 }

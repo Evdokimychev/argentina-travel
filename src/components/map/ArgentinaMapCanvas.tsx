@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import L from "leaflet";
 import type { GeoJSON as GeoJsonType } from "geojson";
 import {
@@ -181,7 +181,7 @@ export default function ArgentinaMapCanvas({
     };
   }, []);
 
-  const renderToursLayer = (map: L.Map) => {
+  const renderToursLayer = useCallback((map: L.Map) => {
     toursLayerRef.current?.remove();
     if (!dataRef.current.layers.includes("tours")) {
       toursLayerRef.current = null;
@@ -218,9 +218,9 @@ export default function ArgentinaMapCanvas({
 
     group.addTo(map);
     toursLayerRef.current = group;
-  };
+  }, [selectedTourId]);
 
-  const renderPlacesLayer = (map: L.Map) => {
+  const renderPlacesLayer = useCallback((map: L.Map) => {
     placesLayerRef.current?.remove();
     if (!dataRef.current.layers.includes("places")) {
       placesLayerRef.current = null;
@@ -258,9 +258,9 @@ export default function ArgentinaMapCanvas({
 
     group.addTo(map);
     placesLayerRef.current = group;
-  };
+  }, [selectedPlaceSlug]);
 
-  const renderRoutesLayer = (map: L.Map) => {
+  const renderRoutesLayer = useCallback((map: L.Map) => {
     routesLayerRef.current?.remove();
     if (!dataRef.current.layers.includes("routes")) {
       routesLayerRef.current = null;
@@ -296,9 +296,9 @@ export default function ArgentinaMapCanvas({
 
     group.addTo(map);
     routesLayerRef.current = group;
-  };
+  }, [selectedRouteSlug]);
 
-  const renderRegionsLayer = (map: L.Map) => {
+  const renderRegionsLayer = useCallback((map: L.Map) => {
     regionsLayerRef.current?.remove();
     if (!dataRef.current.layers.includes("regions")) {
       regionsLayerRef.current = null;
@@ -328,9 +328,9 @@ export default function ArgentinaMapCanvas({
 
     layer.addTo(map);
     regionsLayerRef.current = layer;
-  };
+  }, []);
 
-  const renderAllLayers = (map: L.Map, fit = false) => {
+  const renderAllLayers = useCallback((map: L.Map, fit = false) => {
     renderRegionsLayer(map);
     renderRoutesLayer(map);
     renderToursLayer(map);
@@ -350,7 +350,7 @@ export default function ArgentinaMapCanvas({
     } else {
       map.setView(ARGENTINA_MAP_CENTER, ARGENTINA_DEFAULT_ZOOM);
     }
-  };
+  }, [renderPlacesLayer, renderRegionsLayer, renderRoutesLayer, renderToursLayer]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -363,7 +363,17 @@ export default function ArgentinaMapCanvas({
     return () => {
       map.off("zoomend", onZoomEnd);
     };
-  }, [tours, places, routes, layers, highlightRegion, selectedTourId, selectedPlaceSlug, selectedRouteSlug]);
+  }, [
+    tours,
+    places,
+    routes,
+    layers,
+    highlightRegion,
+    selectedTourId,
+    selectedPlaceSlug,
+    selectedRouteSlug,
+    renderAllLayers,
+  ]);
 
   useEffect(() => {
     const map = mapRef.current;

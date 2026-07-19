@@ -1,94 +1,129 @@
 ---
 id: parque-nacional-rio-pilcomayo
 type: national_park
-title: Национальный парк Рио-Пилькомайо
-title_es: Parque Nacional Río Pilcomayo
-aliases:
-- Рио-Пилькомайо
-- Río Pilcomayo
-summary: Официальный нацпарк APN на востоке провинции Формоса, вдоль реки Пилькомайо
-  у границы с Парагваем — пальмовые саванны, водно-болотные угодья Рамсар, кайманы
-  и капибары, менее известный аналог Ибера.
+title: "Национальный парк Рио-Пилькомайо"
+title_es: "Parque Nacional Río Pilcomayo"
+summary: "Водно-болотный национальный парк в Формосе площадью 51 889 га: Sitio Ramsar, Laguna Blanca, два портала и грунтовые подъезды, состояние которых нужно проверять после дождей."
 status: published
 site_ready: true
-site_sections:
-- puteshestviya-po-argentine
-- goroda-i-regiony
+site_sections: [goroda-i-regiony, puteshestviya-po-argentine]
 region_id: litoral
-province: Формоса
-coordinates:
-  lat: -25.0667
-  lng: -58.1167
-area_ha: '51889'
-founded_year: '1951'
-unesco_status: Не объект ЮНЕСКО; водно-болотное угодье международного значения по
-  Рамсарской конвенции и признанная орнитологическая территория (AICA)
-nearest_city: Клоринда (~60 км до сектора Лагуна-Бланка)
-tags:
-- водно-болотные угодья
-- дикая природа
-- птицы
-- сафари
-best_time:
-- март-май
-- сентябрь-ноябрь (более комфортная температура; летом
-- декабрь-февраль
-- изнуряющая жара и высокая влажность
-- к тому же именно летом чаще проходят сильные ливни)
-duration: 1 день (можно совместить с дорогой из Формосы)
-how_to_get_there: 'На машине: из города Формоса по RN 11 до Клоринды (~120 км), далее
-  по RN 86 около 50-60 км до посёлка Лагуна-Найнек или Лагуна-Бланка, откуда несколько
-  км грунтовой дороги хорошего качества до входа. Общественным транспортом: рейсовые
-  автобусы (в т.ч. компания Godoy) из Формосы или Клоринды до Лагуна-Бланка, далее
-  такси/частный извоз (remís) до парка.'
-related:
-- formosa
-- banado-la-estrella
-- ibera
-- litoral
+province: Formosa
+coordinates: { lat: -25.0833, lng: -58.1333 }
+tags: [национальный парк, водно-болотные угодья, птицы, Формоса, природа]
+related: [litoral]
 media:
   hero:
     url: /media/argentina-travel/parque-nacional-rio-pilcomayo/1625153864676-panoramica_parque_nacional_pilcomayo.jpg
-    alt: Национальный парк Рио-Пилькомайо
-    author: INPROTUR / Visit Argentina
+    alt: "Водно-болотный ландшафт национального парка Рио-Пилькомайо"
+    author: "INPROTUR / Visit Argentina"
     license: argentina.travel
-    source_page: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-  gallery:
-  - url: /media/argentina-travel/parque-nacional-rio-pilcomayo/1625153873984-parque_pilcomayo.jpg
-    alt: Parque Nacional Río Pilcomayo
-    author: INPROTUR / Visit Argentina
-    license: argentina.travel
-    source_page: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-  - url: /media/argentina-travel/parque-nacional-rio-pilcomayo/1625153881192-parque_nacional_pilcomayo_9.jpg
-    alt: Parque Nacional Río Pilcomayo
-    author: INPROTUR / Visit Argentina
-    license: argentina.travel
-    source_page: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-  - url: /media/argentina-travel/parque-nacional-rio-pilcomayo/1625153885940-panoramica_mirador_parque_nacional_pilcomayo.jpg
-    alt: Parque Nacional Río Pilcomayo
-    author: INPROTUR / Visit Argentina
-    license: argentina.travel
-    source_page: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-last_verified: '2026-07-07'
+    source_page: "https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo"
+warnings:
+  - "После сильных дождей грунтовые подъезды могут стать непроезжими; проверяйте состояние дорог перед выездом."
+  - "Вода в зоне кемпинга обозначена APN как обработанная, но не питьевая."
+recommendations:
+  - "Уточните часы по сезону и состояние порталов Estero Poí и Laguna Blanca на официальной странице APN."
+  - "Возьмите питьевую воду, защиту от солнца и насекомых и не сходите с разрешённых маршрутов."
+last_verified: "2026-07-17"
 confidence: high
+seo_slug: "parque-nacional-rio-pilcomayo"
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 45
 sources:
-- title: Visit Argentina — Parque Nacional Río Pilcomayo
-  url: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-  lang: es
-  type: official
-  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
-title_en: Río Pilcomayo National Park
+  - id: apn-rio-pilcomayo-overview
+    title: "APN — Parque Nacional Río Pilcomayo"
+    url: "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-rio-pilcomayo"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-10-31"
+    note: "Официальное описание парка, экорегиона, Ramsar/AICA и контактов."
+  - id: apn-rio-pilcomayo-factsheet
+    title: "APN — ficha Parque Nacional Río Pilcomayo"
+    url: "https://www.argentina.gob.ar/sites/default/files/ficha_-_pn_rio_pilcomayo.pdf"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2027-01-17"
+    note: "Подтверждает площадь 51 889 га, создание в 1951 году, Laguna Blanca, фауну и более 320 видов птиц."
+  - id: apn-rio-pilcomayo-access
+    title: "APN — horarios y cómo llegar"
+    url: "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-rio-pilcomayo/horarios-como-llegar"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2026-09-30"
+    note: "Текущие часы, два портала, маршруты и предупреждение о состоянии дорог после дождей."
+  - id: argentina-ramsar-rio-pilcomayo
+    title: "Argentina.gob.ar — Sitio Ramsar Río Pilcomayo"
+    url: "https://www.argentina.gob.ar/ambiente/agua/humedales/sitiosramsar/pilcomayo"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-17"
+    expires_at: "2027-07-17"
+    note: "Подтверждает площадь и статус Ramsar с 4 мая 1992 года."
+claims:
+  - id: rio-pilcomayo-area-and-creation
+    text: "Парк создан в 1951 году и занимает 51 889 гектаров в провинции Формоса."
+    sensitive: true
+    source_ids: [apn-rio-pilcomayo-factsheet]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: rio-pilcomayo-ramsar-status
+    text: "Parque Nacional Río Pilcomayo является водно-болотным угодьем Ramsar с 4 мая 1992 года."
+    sensitive: true
+    source_ids: [argentina-ramsar-rio-pilcomayo]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: rio-pilcomayo-biodiversity
+    text: "Официальная ficha указывает Laguna Blanca, два вида yacaré и более 320 зарегистрированных видов птиц."
+    sensitive: true
+    source_ids: [apn-rio-pilcomayo-factsheet]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: rio-pilcomayo-access-varies-after-rain
+    text: "APN рекомендует проверять состояние подъездов: после сильных дождей Estero Poí может стать непроезжим, а дорога к Laguna Blanca — ухудшиться."
+    sensitive: true
+    source_ids: [apn-rio-pilcomayo-access]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: rio-pilcomayo-two-portals
+    text: "Посетительские зоны Estero Poí и Laguna Blanca имеют разные подъезды, а часы доступа меняются по сезону."
+    sensitive: true
+    source_ids: [apn-rio-pilcomayo-access]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
+  - id: rio-pilcomayo-treated-water-not-potable
+    text: "Официальная информация парка обозначает обработанную воду в кемпинге как непригодную для питья."
+    sensitive: true
+    source_ids: [apn-rio-pilcomayo-access]
+    verified_at: "2026-07-17"
+    reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
-## Описание Национальный парк Рио-Пилькомайо — официально признанный APN (Администрацией национальных парков Аргентины) резерват на востоке провинции Формоса, вдоль одноимённой реки, образующей естественную границу с Парагваем. Он был создан законом №14073 в 1951 году и изначально охватывал огромную территорию в 285 000 га, но в 1968 году по просьбе легислатуры Формосы был сокращён до нынешних 51 889 га — освободившаяся земля перешла в собственность провинции. В отличие от соседнего провинциального резервата Баньядо-ла-Эстрелья на западе той же провинции (см. отдельную запись — это два разных объекта Формосы, не путайте их), Рио-Пилькомайо имеет полный статус национального парка с соответствующей охраной и признан водно-болотным угодьем международного значения по Рамсарской конвенции, а также ключевой орнитологической территорией (AICA); статуса объекта ЮНЕСКО у парка нет. Ландшафт представляет собой смесь пальмовых саванн (с характерной пальмой карандай), галерейных лесных «островков» и обширных болот и лагун, крупнейшая из которых — Лагуна-Бланка. Именно здесь у воды почти гарантированно можно увидеть капибар и два вида кайманов (жёлтого и чёрного якаре), а также муравьедов, тапиров и обезьян-ревунов в лесных массивах; в парке зарегистрировано около 300 видов птиц. По типу природы и набору фауны парк напоминает знаменитое Ибера в Корриентесе, но остаётся значительно менее известным и туристически развитым — тихая, аутентичная альтернатива для тех, кто готов отклониться от привычных маршрутов Литораля. ## Факты - Создан законом №14073 в 1951 году; нынешние границы и площадь установлены законом №17915 в 1968 году.
-- Площадь — 51 889 га (изначально было 285 000 га до сокращения территории в 1968 году).
-- Статус: официальный национальный парк системы APN; водно-болотное угодье Рамсарской конвенции и признанная орнитологическая территория (AICA); не объект ЮНЕСКО.
-- Крупнейший водоём парка — Лагуна-Бланка (около 700 га), где обитают два вида кайманов (якаре-оверо и якаре-негро), оба под угрозой исчезновения.
-- Зарегистрировано порядка 300+ видов птиц, около 85 видов млекопитающих (включая муравьедов, тапиров, обезьян-ревунов, изредка — ягуара) и десятки видов рептилий.
-- Экспедиция полковника Луиса Фонтаны 1884 года, картографировавшая реку Пилькомайо для разграничения с Парагваем, проходила именно по этой территории. ## Рекомендации См. `recommendations` в метаданных — однодневная вылазка из Формосы/Клоринды, тропа к Лагуна-Бланка, репеллент обязателен, не совмещать в один день с Баньядо-ла-Эстрелья. ## Предупреждения См. `warnings` в метаданных — не путать с Баньядо-ла-Эстрелья, летняя жара и грозы, сезонное подтопление троп, скромная инфраструктура по сравнению с флагманскими нацпарками. ## Связанные объекты - [[formosa|Формоса]] — столица провинции, ближайший крупный город и логичная база для поездки в парк.
-- [[banado-la-estrella|Баньядо-ла-Эстрелья]] — другой, отдельный резерват той же провинции Формоса, дальше на западе — провинциальный, а не национальный статус.
-- [[ibera|Национальный парк Ибера]] — более крупное и туристически развитое водно-болотное угодье Корриентеса со схожим типом природы, удобно для сравнения при выборе маршрута.
-- [[litoral|Литораль (Северо-Восток / Месопотамия)]] — регион Северо-Восток / Месопотамия, в который входит провинция Формоса. ## Источники - [APN — Parque Nacional Río Pilcomayo](https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-rio-pilcomayo) — официальное описание, статус Рамсар/AICA.
-- [Wikipedia (ES) — Parque nacional Río Pilcomayo](https://es.wikipedia.org/wiki/Parque_nacional_R%C3%ADo_Pilcomayo) — год основания, история изменения площади, фауна и флора.
-- [La Ruta Natural — Parque Nacional Río Pilcomayo: cómo llegar](https://larutanatural.gob.ar/es/imperdible/134/parque-nacional-rio-pilcomayo) — логистика доступа.
-- [Votpusk.ru — Национальный парк Рио-Пилкомайо](https://www.votpusk.ru/article/attractions/argentina/formosa/nacionalnyi_park_rio_pilkomaio-a) — русскоязычное описание фауны.
+## Зачем ехать
+
+Парк сохраняет водно-болотные ландшафты Chaco Húmedo: лагуны, эстеры, пальмовые саванны и островки леса. Laguna Blanca известна наблюдением за птицами и двумя видами yacaré. Территория имеет статус Ramsar и AICA.
+
+## Планирование визита
+
+У парка два портала — Estero Poí и Laguna Blanca. Они находятся на разных подъездах, поэтому маршрут выбирайте заранее. Часы меняются по сезону, а состояние грунтовых дорог зависит от дождей.
+
+Зоны кемпинга и услуги проверяйте непосредственно перед поездкой. Официальная памятка указывает, что обработанная вода на территории не является питьевой: запас нужно привезти с собой.
+
+## Источники
+
+- [APN — парк](https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-rio-pilcomayo).
+- [APN — доступ и часы](https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-rio-pilcomayo/horarios-como-llegar).
+- [Ramsar](https://www.argentina.gob.ar/ambiente/agua/humedales/sitiosramsar/pilcomayo).

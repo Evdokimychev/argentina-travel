@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import AdminTrendChart from "@/components/admin/AdminTrendChart";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
@@ -17,7 +18,8 @@ import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
 
 type AnalyticsResponse = { analytics?: AdminAnalyticsV2Payload };
 
-function formatUsd(value: number): string {
+function formatUsd(value: number | null): string {
+  if (value === null) return "Данные недоступны";
   return new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: "USD",
@@ -54,6 +56,13 @@ export default function AnalyticsView() {
         />
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {analytics?.dataQuality.status === "partial" ? (
+          <InlineFeedback
+            variant="info"
+            title="Часть метрик временно недоступна"
+            description={`Не подменяем ошибку нулём. Недоступно показателей: ${analytics.dataQuality.unavailableMetrics.length}. Обновите страницу позже или откройте центр операций.`}
+          />
+        ) : null}
 
         <section className="space-y-8">
           <div>
@@ -68,7 +77,7 @@ export default function AnalyticsView() {
                 <div key={item.label} className={cabinetStatCardClass}>
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
                   <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                    {loading ? "…" : (item.value ?? 0)}
+                    {loading ? "…" : item.value === null || item.value === undefined ? "Нет данных" : item.value}
                   </p>
                 </div>
               ))}
@@ -151,10 +160,10 @@ export default function AnalyticsView() {
             <div>
               <h2 className="font-heading text-lg font-bold text-charcoal">Динамика</h2>
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <AdminTrendChart title="Бронирования" points={analytics.trends.bookingsByDay} />
-                <AdminTrendChart title="Заявки с сайта" points={analytics.trends.contactsByDay} />
-                <AdminTrendChart title="Заказы магазина" points={analytics.trends.shopOrdersByDay} />
-                <AdminTrendChart title="Подписки" points={analytics.trends.newsletterByDay} />
+                {analytics.trends.bookingsByDay ? <AdminTrendChart title="Бронирования" points={analytics.trends.bookingsByDay} /> : null}
+                {analytics.trends.contactsByDay ? <AdminTrendChart title="Заявки с сайта" points={analytics.trends.contactsByDay} /> : null}
+                {analytics.trends.shopOrdersByDay ? <AdminTrendChart title="Заказы магазина" points={analytics.trends.shopOrdersByDay} /> : null}
+                {analytics.trends.newsletterByDay ? <AdminTrendChart title="Подписки" points={analytics.trends.newsletterByDay} /> : null}
               </div>
             </div>
           ) : null}
@@ -182,7 +191,7 @@ export default function AnalyticsView() {
                 <div key={item.label} className={cabinetStatCardClass}>
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
                   <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                    {loading ? "…" : (item.value ?? 0)}
+                    {loading ? "…" : item.value === null || item.value === undefined ? "Нет данных" : item.value}
                   </p>
                   {item.href ? (
                     <Link href={item.href} className="mt-3 inline-block text-sm text-sky hover:underline">

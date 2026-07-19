@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import SiteGlobalForm from "@/components/admin/site-globals/SiteGlobalForm";
@@ -30,6 +32,11 @@ import type { ProductionReadinessSnapshot } from "@/lib/ops/production-readiness
 import type { IntegrationReadinessItem } from "@/lib/integrations/admin-readiness";
 import { SITE_GLOBAL_KEYS, type SiteGlobalKey } from "@/types/site-globals";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import {
+  jsonDraftsEqual,
+  mergeServerDraftsPreservingDirty,
+} from "@/lib/admin/draft-preservation";
+import { useUnsavedChangesGuard } from "@/hooks/useUnsavedChangesGuard";
 
 type CronRunEntry = {
   ranAt: string;
@@ -40,6 +47,7 @@ type CronRunEntry = {
 type SettingsResponse = {
   settings?: Partial<Record<SiteGlobalKey, Record<string, unknown>>>;
   updatedAt?: Partial<Record<SiteGlobalKey, string>>;
+  rowVersions?: Partial<Record<SiteGlobalKey, number>>;
   ops?: {
     rlsAudit: {
       ok: boolean;
@@ -51,6 +59,9 @@ type SettingsResponse = {
       lastBackupAt: string | null;
       lastBackupFile: string | null;
       hint: string;
+      productionReady: boolean;
+      mode: "managed" | "offsite" | "unverified";
+      restoreVerifiedAt: string | null;
     };
     cron?: {
       digest: CronRunEntry | null;
@@ -86,6 +97,82 @@ type SettingsResponse = {
   searchOps?: SearchOpsSnapshot;
   integrations?: IntegrationReadinessItem[];
 };
+
+type SettingsPatchPayload =
+  | {
+      key: SiteGlobalKey;
+      value: Record<string, unknown>;
+      expectedVersion: number;
+    }
+  | {
+      batch: Array<{
+        key: SiteGlobalKey;
+        value: Record<string, unknown>;
+        expectedVersion: number;
+      }>;
+    };
+
+type SettingsPatchErrorPayload = {
+  error?: string;
+  code?: string;
+  requiresConfirmation?: boolean;
+  confirmationToken?: string;
+  risks?: Array<{ id: string; label: string }>;
+  currentVersions?: Partial<Record<SiteGlobalKey, number>>;
+};
+
+class SettingsPatchError extends Error {
+  constructor(
+    message: string,
+    readonly code?: string,
+    readonly currentVersions?: Partial<Record<SiteGlobalKey, number>>,
+  ) {
+    super(message);
+  }
+}
+
+async function submitSettingsPatch(payload: SettingsPatchPayload): Promise<void> {
+  const send = async (confirmationToken?: string) => {
+    const response = await fetch("/api/admin/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, confirmationToken }),
+    });
+    let result: SettingsPatchErrorPayload = {};
+    try {
+      result = (await response.json()) as SettingsPatchErrorPayload;
+    } catch {
+      // The owner-facing fallback below deliberately hides transport details.
+    }
+    return { response, result };
+  };
+
+  let attempt = await send();
+  if (
+    attempt.response.status === 428 &&
+    attempt.result.requiresConfirmation &&
+    attempt.result.confirmationToken
+  ) {
+    const riskList = (attempt.result.risks ?? [])
+      .map((risk) => `• ${risk.label}`)
+      .join("\n");
+    const confirmed = window.confirm(
+      `Проверьте важные последствия:\n\n${riskList}\n\nПрименить эти изменения?`,
+    );
+    if (!confirmed) {
+      throw new SettingsPatchError("Сохранение отменено. Настройки не изменены.");
+    }
+    attempt = await send(attempt.result.confirmationToken);
+  }
+
+  if (!attempt.response.ok) {
+    throw new SettingsPatchError(
+      attempt.result.error ?? "Не удалось сохранить настройки",
+      attempt.result.code,
+      attempt.result.currentVersions,
+    );
+  }
+}
 
 type SettingsTab =
   | "appearance"
@@ -135,6 +222,7 @@ const MODULE_LINKS: Partial<Record<SettingsTab, ModuleLink[]>> = {
     { href: "/admin/operations/payments", label: "Платежи", description: "Состояния оплат и сверка операций." },
   ],
   marketing: [
+    { href: "/admin/marketing/search-visibility", label: "Поиск и SEO", description: "Запросы из Google и Яндекса, позиции и точки роста." },
     { href: "/admin/analytics", label: "Аналитика", description: "Ключевые показатели и качество данных." },
     { href: "/admin/analytics/funnels", label: "Воронки", description: "Путь от просмотра до заявки или перехода партнёру." },
     { href: "/admin/content/social-feed", label: "Социальные медиа", description: "Публичная лента и источники материалов." },
@@ -222,6 +310,12 @@ export default function SettingsView() {
   const { data, loading, error, refresh } = useAdminApi<SettingsResponse>("/api/admin/settings");
   const [tab, setTab] = useState<SettingsTab>("appearance");
   const [globals, setGlobals] = useState(emptyGlobalsState);
+  const [baselines, setBaselines] = useState(emptyGlobalsState);
+  const globalsRef = useRef(globals);
+  const baselinesRef = useRef(baselines);
+  const rowVersionsRef = useRef<Partial<Record<SiteGlobalKey, number>>>({});
+  globalsRef.current = globals;
+  baselinesRef.current = baselines;
   const [savingKey, setSavingKey] = useState<SiteGlobalKey | null>(null);
   const [savingAll, setSavingAll] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -232,34 +326,56 @@ export default function SettingsView() {
 
   useEffect(() => {
     if (!data?.settings) return;
-    setGlobals((prev) => {
-      const next = { ...prev };
-      for (const key of Object.keys(data.settings!) as SiteGlobalKey[]) {
-        if (data.settings![key]) {
-          next[key] = { ...data.settings![key] };
-        }
+    const nextVersions = { ...rowVersionsRef.current };
+    const serverValues: Record<string, Record<string, unknown>> = {};
+    for (const key of Object.keys(data.settings) as SiteGlobalKey[]) {
+      if (data.settings[key]) {
+        serverValues[key] = { ...data.settings[key] };
+        const hasLocalDraft = !jsonDraftsEqual(
+          globalsRef.current[key],
+          baselinesRef.current[key],
+        );
+        if (!hasLocalDraft) nextVersions[key] = data.rowVersions?.[key] ?? 0;
       }
-      return next;
-    });
-  }, [data?.settings]);
+    }
+    const merged = mergeServerDraftsPreservingDirty(
+      globalsRef.current,
+      baselinesRef.current,
+      serverValues,
+    );
+    const nextGlobals = merged.drafts as Record<SiteGlobalKey, Record<string, unknown>>;
+    const nextBaselines = merged.baselines as Record<SiteGlobalKey, Record<string, unknown>>;
+    globalsRef.current = nextGlobals;
+    baselinesRef.current = nextBaselines;
+    rowVersionsRef.current = nextVersions;
+    setGlobals(nextGlobals);
+    setBaselines(nextBaselines);
+  }, [data?.rowVersions, data?.settings]);
 
   const saveGlobal = useCallback(
     async (key: SiteGlobalKey) => {
+      const submitted = globals[key];
       setSavingKey(key);
       setSaveFeedback(null);
       try {
-        const res = await fetch("/api/admin/settings", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ key, value: globals[key] }),
+        await submitSettingsPatch({
+          key,
+          value: submitted,
+          expectedVersion: rowVersionsRef.current[key] ?? 0,
         });
-        if (!res.ok) {
-          const json = (await res.json()) as { error?: string };
-          throw new Error(json.error ?? "Ошибка сохранения");
-        }
+        const nextBaselines = { ...baselinesRef.current, [key]: submitted };
+        baselinesRef.current = nextBaselines;
+        setBaselines(nextBaselines);
         await refresh();
         setSaveFeedback({ variant: "success", message: "Настройки сохранены и применятся на публичном сайте." });
       } catch (saveError) {
+        if (saveError instanceof SettingsPatchError && saveError.code === "SETTINGS_CONFLICT") {
+          rowVersionsRef.current = {
+            ...rowVersionsRef.current,
+            ...saveError.currentVersions,
+          };
+          await refresh();
+        }
         setSaveFeedback({
           variant: "error",
           message: saveError instanceof Error ? saveError.message : "Не удалось сохранить настройки",
@@ -279,33 +395,47 @@ export default function SettingsView() {
   const changedKeys = useMemo(
     () =>
       SITE_GLOBAL_KEYS.filter(
-        (key) => JSON.stringify(globals[key]) !== JSON.stringify(data?.settings?.[key] ?? {}),
+        (key) => !jsonDraftsEqual(globals[key], baselines[key]),
       ),
-    [data?.settings, globals],
+    [baselines, globals],
   );
+
+  useUnsavedChangesGuard(changedKeys.length > 0);
 
   const saveAll = useCallback(async () => {
     if (changedKeys.length === 0) return;
+    const submitted = Object.fromEntries(changedKeys.map((key) => [key, globals[key]])) as Partial<
+      Record<SiteGlobalKey, Record<string, unknown>>
+    >;
     setSavingAll(true);
     setSaveFeedback(null);
     try {
-      const res = await fetch("/api/admin/settings", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          batch: changedKeys.map((key) => ({ key, value: globals[key] })),
-        }),
+      await submitSettingsPatch({
+        batch: changedKeys.map((key) => ({
+          key,
+          value: submitted[key] ?? {},
+          expectedVersion: rowVersionsRef.current[key] ?? 0,
+        })),
       });
-      if (!res.ok) {
-        const json = (await res.json()) as { error?: string };
-        throw new Error(json.error ?? "Ошибка сохранения");
-      }
+      const nextBaselines = { ...baselinesRef.current, ...submitted } as Record<
+        SiteGlobalKey,
+        Record<string, unknown>
+      >;
+      baselinesRef.current = nextBaselines;
+      setBaselines(nextBaselines);
       await refresh();
       setSaveFeedback({
         variant: "success",
         message: "Все изменения сохранены. Публичные страницы используют обновлённые настройки.",
       });
     } catch (saveError) {
+      if (saveError instanceof SettingsPatchError && saveError.code === "SETTINGS_CONFLICT") {
+        rowVersionsRef.current = {
+          ...rowVersionsRef.current,
+          ...saveError.currentVersions,
+        };
+        await refresh();
+      }
       setSaveFeedback({
         variant: "error",
         message: saveError instanceof Error ? saveError.message : "Не удалось сохранить настройки",
@@ -366,21 +496,21 @@ export default function SettingsView() {
 
   const resetGlobal = useCallback(
     (key: SiteGlobalKey) => {
-      const saved = data?.settings?.[key] ?? {};
+      const saved = baselines[key] ?? {};
       setGlobals((prev) => ({ ...prev, [key]: { ...saved } }));
       setSaveFeedback(null);
     },
-    [data?.settings],
+    [baselines],
   );
 
   const resetAll = useCallback(() => {
     const saved = emptyGlobalsState();
     for (const key of SITE_GLOBAL_KEYS) {
-      saved[key] = { ...(data?.settings?.[key] ?? {}) };
+      saved[key] = { ...(baselines[key] ?? {}) };
     }
     setGlobals(saved);
     setSaveFeedback(null);
-  }, [data?.settings]);
+  }, [baselines]);
 
   return (
     <CapabilityGate capability="system.settings">
@@ -400,7 +530,7 @@ export default function SettingsView() {
           />
         ) : null}
 
-        <section className={`${cabinetCardClass} flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between`}>
+        <section className={`${cabinetCardClass} flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between`}>
           <div>
             <p className="text-sm font-semibold text-foreground">
               {changedKeys.length
@@ -412,7 +542,7 @@ export default function SettingsView() {
               сохранения; каждое действие записывается в журнал администратора.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="hidden flex-wrap gap-2 sm:flex">
             <button
               type="button"
               onClick={exportSettings}
@@ -427,17 +557,6 @@ export default function SettingsView() {
             >
               Загрузить копию
             </button>
-            <input
-              ref={importInputRef}
-              type="file"
-              accept="application/json,.json"
-              className="sr-only"
-              onChange={(event) => {
-                const file = event.currentTarget.files?.[0];
-                if (file) void importSettings(file);
-                event.currentTarget.value = "";
-              }}
-            />
             <button
               type="button"
               onClick={resetAll}
@@ -455,9 +574,68 @@ export default function SettingsView() {
               {savingAll ? "Сохраняем…" : changedKeys.length ? "Сохранить всё" : "Всё сохранено"}
             </button>
           </div>
+
+          <details className="rounded-xl border border-border-subtle bg-surface-muted/40 sm:hidden">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-4 text-sm font-semibold text-foreground marker:hidden">
+              Ещё действия
+              <span aria-hidden>＋</span>
+            </summary>
+            <div className="grid gap-2 border-t border-border-subtle p-3">
+              <button
+                type="button"
+                onClick={exportSettings}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground"
+              >
+                Скачать копию
+              </button>
+              <button
+                type="button"
+                onClick={() => importInputRef.current?.click()}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground"
+              >
+                Загрузить копию
+              </button>
+              <button
+                type="button"
+                onClick={resetAll}
+                disabled={changedKeys.length === 0 || savingAll}
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border-subtle bg-surface-elevated px-4 text-sm font-semibold text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Отменить изменения
+              </button>
+            </div>
+          </details>
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0];
+              if (file) void importSettings(file);
+              event.currentTarget.value = "";
+            }}
+          />
         </section>
 
-        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="rounded-2xl border border-border-subtle bg-surface-elevated p-3 shadow-sm sm:hidden">
+          <label htmlFor="mobile-settings-section" className="text-xs font-semibold text-slate">
+            Раздел настроек
+          </label>
+          <NativeSelect
+            id="mobile-settings-section"
+            value={tab}
+            onChange={(event) => setTab(event.target.value as SettingsTab)}
+            className="mt-1"
+          >
+            {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
+              <option key={tabKey} value={tabKey}>{TAB_LABELS[tabKey]}</option>
+            ))}
+          </NativeSelect>
+          <p className="mt-2 text-xs leading-5 text-slate">{TAB_DESCRIPTIONS[tab]}</p>
+        </div>
+
+        <div className="hidden gap-2 sm:grid sm:grid-cols-2 xl:grid-cols-3">
           {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
             <button
               key={tabKey}
@@ -488,7 +666,7 @@ export default function SettingsView() {
               }
               onSave={() => void saveGlobal(definition.key)}
               onReset={() => resetGlobal(definition.key)}
-              savedValues={data?.settings?.[definition.key] ?? {}}
+              savedValues={baselines[definition.key] ?? {}}
               saving={savingKey === definition.key}
               updatedAt={data?.updatedAt?.[definition.key] ?? null}
             />
@@ -548,6 +726,26 @@ export default function SettingsView() {
                 contact={globals["site.contact"]}
               />
               <IntegrationReadinessPanel items={data?.integrations} />
+
+              <section className={`${cabinetCardClass} space-y-3 p-5`}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h2 className="font-heading text-lg font-bold text-foreground">Защита данных</h2>
+                    <p className="mt-1 text-sm text-slate">Копия базы и регулярная проверка восстановления.</p>
+                  </div>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${data?.ops?.backup.productionReady ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
+                    {data?.ops?.backup.productionReady ? "Подтверждено" : "Не подтверждено"}
+                  </span>
+                </div>
+                <p className="text-sm leading-6 text-slate">
+                  {data?.ops?.backup.productionReady
+                    ? `Резервирование работает; восстановление проверено ${data.ops.backup.restoreVerifiedAt}.`
+                    : "JSON настроек и локальный снимок схемы не защищают бронирования, пользователей и платежи. До настройки ежедневной копии данных и пробного восстановления запуск считается ограниченным."}
+                </p>
+                <Link href="/admin/operations" className="inline-flex text-sm font-semibold text-sky-ink hover:underline">
+                  Открыть состояние защиты данных →
+                </Link>
+              </section>
 
             <section className={`${cabinetCardClass} space-y-4 p-5`}>
               <h2 className="font-heading text-lg font-bold text-foreground">
@@ -650,6 +848,31 @@ export default function SettingsView() {
             </>
           ) : null}
         </div>
+
+        {changedKeys.length > 0 ? (
+          <>
+            <div className="h-20 sm:hidden" aria-hidden />
+            <div
+              className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] z-40 flex items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-surface-elevated/95 p-3 shadow-elevated backdrop-blur-md sm:hidden"
+              data-mobile-settings-save-bar
+            >
+              <p className="min-w-0 text-xs font-semibold text-foreground" aria-live="polite">
+                Изменений: {changedKeys.length}
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => void saveAll()}
+                disabled={savingAll || loading}
+                loading={savingAll}
+                loadingLabel="Сохраняем…"
+                className="shrink-0"
+              >
+                Сохранить всё
+              </Button>
+            </div>
+          </>
+        ) : null}
       </AdminPageShell>
     </CapabilityGate>
   );

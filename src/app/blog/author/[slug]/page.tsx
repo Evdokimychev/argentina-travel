@@ -10,8 +10,8 @@ import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
-import { fetchContentExcursionsServer } from "@/lib/content-excursions-server";
-import { resolveExcursionsForBlogPost } from "@/lib/content-excursion-match";
+
+export const dynamic = "force-dynamic";
 
 interface AuthorArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -53,13 +53,11 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
   }
 
   const cmsMetadata = getCmsResolverMetadata(post);
-  const [initialTours, blogSettings, forms, contentExcursions] = await Promise.all([
+  const [initialTours, blogSettings, forms] = await Promise.all([
     fetchMarketplaceTours(),
     fetchSiteBlog(),
     fetchSiteForms(),
-    fetchContentExcursionsServer(),
   ]);
-  const excursionMatches = resolveExcursionsForBlogPost(post, contentExcursions);
   return (
     <>
       {cmsMetadata?.showTranslationBanner ? (
@@ -70,7 +68,6 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
       <BlogPostView
         post={post}
         initialTours={initialTours}
-        excursionMatches={excursionMatches}
         settings={blogSettings}
         newsletterEnabled={forms.newsletterEnabled}
       />

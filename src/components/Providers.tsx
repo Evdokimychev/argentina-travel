@@ -18,10 +18,9 @@ import FirstTouchAttributionCapture from "@/components/attribution/FirstTouchAtt
 import InteractionTrackingProvider from "@/components/personalization/InteractionTrackingProvider";
 import { isWorkspacePath } from "@/lib/internal-route-access";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import OnDemandPublicDialogs from "@/components/OnDemandPublicDialogs";
-import type { SiteDesignGlobal } from "@/types/site-globals";
-import type { SiteFormsGlobal } from "@/types/site-globals";
+import type { SiteDesignGlobal, SiteFormsGlobal } from "@/types/site-globals";
 import { SiteFormsProvider } from "@/context/SiteFormsContext";
+import OnDemandPublicDialogs from "@/components/OnDemandPublicDialogs";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
 const ScrollNavigationRail = dynamic(() => import("@/components/ScrollNavigationRail"), {
@@ -50,42 +49,44 @@ export default function Providers({
 
   return (
     <TooltipProvider delayDuration={450} skipDelayDuration={250}>
-      <ThemeProvider>
-        <LocaleCurrencyProvider initialLocale={locale}>
-          <SiteFormsProvider settings={siteForms} captchaSiteKey={captchaSiteKey}>
-            <SiteFeedbackProvider>
-              <AuthProvider>
-                <UserExperienceProvider>
-                  <InteractionTrackingProvider>
-                    {siteDesign?.showRouteProgress !== false ? <RouteProgressBar /> : null}
-                    <SiteHashScroll />
-                    {children}
-                    {!isWorkspace && siteDesign?.showCustomCursor !== false ? <CustomCursor /> : null}
-                    {!isWorkspace && siteDesign?.showScrollToTop !== false ? (
-                      <ScrollNavigationRail
-                        showOnMobile={siteDesign?.showScrollToTopMobile === true}
-                      />
-                    ) : null}
-                    {!isWorkspace ? (
-                      <OnDemandPublicDialogs searchEnabled={siteDesign?.showSiteSearch !== false} />
-                    ) : null}
-                    <CookieConsentBanner />
-                    {!isWorkspace ? <PwaShell /> : null}
-                    {!isWorkspace ? (
-                      <Suspense fallback={null}>
-                        <FirstTouchAttributionCapture />
-                      </Suspense>
-                    ) : null}
-                    {!isWorkspace ? <GuideAssistantWidget /> : null}
-                    <SiteAnalytics />
-                    <SiteToastHost />
-                  </InteractionTrackingProvider>
-                </UserExperienceProvider>
-              </AuthProvider>
-            </SiteFeedbackProvider>
-          </SiteFormsProvider>
-        </LocaleCurrencyProvider>
-      </ThemeProvider>
+    <ThemeProvider>
+      <LocaleCurrencyProvider initialLocale={locale}>
+        <SiteFormsProvider settings={siteForms} captchaSiteKey={captchaSiteKey}>
+          <SiteFeedbackProvider>
+            <AuthProvider>
+              <UserExperienceProvider>
+                <InteractionTrackingProvider>
+                  {siteDesign?.showRouteProgress !== false ? <RouteProgressBar /> : null}
+                  <SiteHashScroll />
+                  {children}
+                  {!isWorkspace && siteDesign?.showCustomCursor !== false ? <CustomCursor /> : null}
+                  {!isWorkspace && siteDesign?.showScrollToTop !== false ? (
+                    <ScrollNavigationRail
+                      showOnMobile={siteDesign?.showScrollToTopMobile === true}
+                    />
+                  ) : null}
+                  {!isWorkspace ? (
+                    <OnDemandPublicDialogs
+                      searchEnabled={siteDesign?.showSiteSearch !== false}
+                    />
+                  ) : null}
+                  <CookieConsentBanner />
+                  {!isWorkspace ? <PwaShell /> : null}
+                  {!isWorkspace ? (
+                    <Suspense fallback={null}>
+                      <FirstTouchAttributionCapture />
+                    </Suspense>
+                  ) : null}
+                  {!isWorkspace ? <GuideAssistantWidget /> : null}
+                  <SiteAnalytics />
+                  <SiteToastHost />
+                </InteractionTrackingProvider>
+              </UserExperienceProvider>
+            </AuthProvider>
+          </SiteFeedbackProvider>
+        </SiteFormsProvider>
+      </LocaleCurrencyProvider>
+    </ThemeProvider>
     </TooltipProvider>
   );
 }

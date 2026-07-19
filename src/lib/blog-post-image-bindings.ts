@@ -82,7 +82,6 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
     "/media/blog/patagonia-whale-watching/hero.jpg",
     "/media/blog/patagonia-penguins/hero.jpg",
     "/media/places/el-chalten/gallery-1.jpg",
-    "/media/places/el-chalten/gallery-2.jpg",
     "/media/places/el-calafate/gallery-1.jpg",
     "/media/places/bariloche/hero.jpg",
     "/media/places/bariloche/gallery-1.jpg",
@@ -91,7 +90,7 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
     "/media/blog/patagonia-avtobusy/hero.jpg",
     "/media/blog/patagonia-oteli/hero.jpg",
     "/media/blog/patagonia-aviabilety/hero.jpg",
-    "/media/blog/wildlife-s-gidom/hero.jpg",
+    "/media/places/valdes-peninsula/hero.jpg",
   ],
   "buenos-aires": [
     "/media/blog/buenos-aires-rajony/hero.jpg",
@@ -128,7 +127,6 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
     "/media/places/fitz-roy/hero.jpg",
     "/media/places/el-chalten/hero.jpg",
     "/media/blog/patagonia-mini-trekking/hero.jpg",
-    "/media/places/el-chalten/gallery-2.jpg",
   ],
   wine: [
     "/media/blog/mendoza-vinnyj-gid/hero.jpg",
@@ -139,9 +137,9 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
   wildlife: [
     "/media/blog/patagonia-whale-watching/hero.jpg",
     "/media/blog/patagonia-penguins/hero.jpg",
-    "/media/blog/wildlife-s-gidom/hero.jpg",
     "/media/places/valdes-peninsula/hero.jpg",
-    "/media/blog/natsionalnyy-park-poluostrov-valdes/hero.jpg",
+    "/media/places/valdes-peninsula/hero.jpg",
+    "/media/blog/rich/valdes-peninsula-national-park/gallery-2.jpg",
   ],
   food: [
     "/media/blog/argentinian-steak-guide/hero.jpg",

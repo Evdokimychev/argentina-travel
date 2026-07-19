@@ -2,13 +2,6 @@
 > next lint
 
 
-./src/app/api/admin/cms/cutover-enable/route.ts
-6:3  Warning: 'fetchCmsCutoverReadiness' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/app/api/admin/excursions/route.ts
-3:10  Warning: 'clientIpFromRequest' is defined but never used.  @typescript-eslint/no-unused-vars
-3:31  Warning: 'writeAdminAuditLog' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/app/api/conversations/by-booking/[bookingId]/route.ts
 4:3  Warning: 'fetchConversationMessages' is defined but never used.  @typescript-eslint/no-unused-vars
 
@@ -21,15 +14,6 @@
 ./src/components/admin/CmsLocaleTabs.tsx
 17:3  Warning: 'docType' is defined but never used.  @typescript-eslint/no-unused-vars
 18:3  Warning: 'slug' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/admin/views/BookingsView.tsx
-42:9  Warning: The 'bookings' logical expression could make the dependencies of useMemo Hook (at line 60) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'bookings' in its own useMemo() Hook.  react-hooks/exhaustive-deps
-
-./src/components/admin/views/ContentDocumentEditorView.tsx
-320:6  Warning: React Hook useMemo has missing dependencies: 'buildBody' and 'buildSeo'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-
-./src/components/admin/views/ShopOrdersView.tsx
-31:10  Warning: 'paymentStatusLabel' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/analytics/YandexMetrikaHeadScripts.tsx
 25:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
@@ -61,9 +45,6 @@
 ./src/components/guide/GuideWidgetSlot.tsx
 4:3  Warning: 'ArgentinaSeasonMatrixSkeleton' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/guide/hub/DomesticRoutesMap.tsx
-91:17  Warning: The ref value 'layersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'layersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
-
 ./src/components/guide/hub/HubDataTable.tsx
 39:32  Warning: '_isFirst' is defined but never used.  @typescript-eslint/no-unused-vars
 
@@ -71,21 +52,8 @@
 5:3  Warning: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
 6:3  Warning: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/immigration/ImmigrationNextTopic.tsx
-6:10  Warning: 'getImmigrationHubHeroImage' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/map/ArgentinaMapCanvas.tsx
-366:6  Warning: React Hook useEffect has a missing dependency: 'renderAllLayers'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-
-./src/components/map/ArgentinaMapLibreCanvasInner.tsx
-666:25  Warning: The ref value 'loadedThematicRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadedThematicRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
-676:6  Warning: React Hook useEffect has a missing dependency: 'syncActiveThematicLayers'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-
 ./src/components/marketplace/CatalogDepartureCalendarModal.tsx
 18:33  Warning: 'DialogDescription' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/marketplace/ToursCatalogMap.tsx
-88:18  Warning: The ref value 'markersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'markersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
 
 ./src/components/messages/MessagesInboxView.tsx
 287:6  Warning: React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
@@ -97,7 +65,7 @@
 35:24  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/navigation/NavOverflowMegaMenuTrigger.tsx
-161:3  Warning: 'compact' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+163:3  Warning: 'compact' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/navigation/PlacesMegaMenuPanel.tsx
 42:20  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -108,9 +76,6 @@
 ./src/components/organizer/OrganizerBookingDetailView.tsx
 47:8  Warning: 'FormattedPrice' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/organizer/OrganizerBookingsView.tsx
-31:8  Warning: 'FormattedPrice' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/components/organizer/OrganizerCancellationTab.tsx
 24:8  Warning: 'OrganizerCancellationPolicyType' is defined but never used.  @typescript-eslint/no-unused-vars
 
@@ -120,19 +85,8 @@
 ./src/components/organizer/OrganizerTripOperationsPanel.tsx
 35:10  Warning: 'BOOKINGS_UPDATED_EVENT' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/organizer/OrganizerWaitlistDetailView.tsx
-30:10  Warning: 'cabinetCardClass' is defined but never used.  @typescript-eslint/no-unused-vars
-30:28  Warning: 'cabinetTableHeaderClass' is defined but never used.  @typescript-eslint/no-unused-vars
-30:53  Warning: 'cabinetTableWrapClass' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/organizer/OrganizerWaitlistView.tsx
-26:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/components/organizer/TourArrivalDepartureBlock.tsx
 6:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/organizer/TourGroupDatesBlock.tsx
-135:6  Warning: React Hook useEffect has a missing dependency: 'refreshInventory'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
 
 ./src/components/organizer/TourIndividualBlock.tsx
 7:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -150,18 +104,8 @@
 ./src/components/tour-detail/PartnerTourAccommodationSection.tsx
 15:10  Warning: 'tourDetailCardBorderClass' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/components/tour-detail/PartnerTourBookingContactSection.tsx
-135:6  Warning: React Hook useMemo has a missing dependency: 'isYouTravel'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-223:6  Warning: React Hook useEffect has a missing dependency: 'user'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-
 ./src/components/tour-detail/PartnerTourImportantSection.tsx
 26:9  Warning: The 'items' logical expression could make the dependencies of useMemo Hook (at line 30) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'items' in its own useMemo() Hook.  react-hooks/exhaustive-deps
-
-./src/components/tour-detail/RouteMap.tsx
-176:18  Warning: The ref value 'markersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'markersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
-
-./src/components/tour-detail/RouteMapSection.tsx
-153:6  Warning: React Hook useEffect has a missing dependency: 'progress'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
 
 ./src/components/tour-detail/TourFlightBriefingPanel.tsx
 5:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -179,9 +123,6 @@
 ./src/data/blog.ts
 2:30  Warning: 'filterIndexableBlogPosts' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/data/places-seed.ts
-10:7  Warning: 'MEDIA_FALLBACK' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-
 ./src/data/tour-guides-defaults.ts
 89:25  Warning: '_ignored' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 
@@ -191,19 +132,15 @@
 ./src/hooks/usePartnerTourSchedule.ts
 77:6  Warning: React Hook useEffect has a missing dependency: 'tour'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
 
-./src/hooks/useRepositoryTourListings.ts
-8:3  Warning: 'getMarketplaceListings' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/lib/attribution/first-touch.ts
-22:10  Warning: 'normalizeReferrer' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/lib/blog-post-ux.test.ts
 17:31  Warning: 'sortBlogPostsByUpdated' is defined but never used.  @typescript-eslint/no-unused-vars
 19:3  Warning: 'getBlogPostFooterLinks' is defined but never used.  @typescript-eslint/no-unused-vars
 
+./src/lib/bookings-demo-seeds-active.ts
+4:37  Warning: '_now' is defined but never used.  @typescript-eslint/no-unused-vars
+
 ./src/lib/bookings-store.ts
-4:10  Warning: 'SITE_SUPPORT_EMAIL' is defined but never used.  @typescript-eslint/no-unused-vars
-85:3  Warning: 'appendTripClientUpdates' is defined but never used.  @typescript-eslint/no-unused-vars
+83:3  Warning: 'appendTripClientUpdates' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/flights/destination-airports.ts
 58:53  Warning: 'hub' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -223,13 +160,7 @@
 10:3  Warning: 'OrganizerInboxItemType' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/payments/commission-server.ts
-237:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-
-./src/lib/payments/mercadopago-client.ts
-184:9  Warning: 'returnUrl' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-
-./src/lib/payments/transaction-server.ts
-337:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+273:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/permissions.ts
 11:10  Warning: 'hasAnyRole' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -244,8 +175,8 @@
 ./src/lib/quick-explore/build-payload.ts
 5:26  Warning: 'PLACE_TO_KB_ID' is defined but never used.  @typescript-eslint/no-unused-vars
 
-./src/lib/site-search-client.ts
-8:10  Warning: 'buildExcursionSearchItems' is defined but never used.  @typescript-eslint/no-unused-vars
+./src/lib/reviews-demo-seeds-active.ts
+4:36  Warning: '_now' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/social-feed/manifest.ts
 42:40  Warning: '_id' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -261,21 +192,6 @@
 
 ./src/lib/tour-accommodation-public.ts
 7:15  Warning: 'AccommodationType' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/lib/tour-content-server.ts
-12:3  Warning: 'rowToTour' is defined but never used.  @typescript-eslint/no-unused-vars
-13:3  Warning: 'rowToTourDetail' is defined but never used.  @typescript-eslint/no-unused-vars
-14:3  Warning: 'rowToTourListing' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/lib/tour-itinerary-pdf/TourItineraryPdfDocument.tsx
-109:22  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
-178:23  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
-
-./src/lib/tour-mapper.ts
-6:3  Warning: 'normalizeItineraryOrganizerComment' is defined but never used.  @typescript-eslint/no-unused-vars
-7:3  Warning: 'normalizeAccommodationOrganizerComment' is defined but never used.  @typescript-eslint/no-unused-vars
-20:3  Warning: 'TourDate' is defined but never used.  @typescript-eslint/no-unused-vars
-60:32  Warning: 'canViewTourDetail' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/lib/tour-nav-icons.ts
 10:3  Warning: 'MessageSquare' is defined but never used.  @typescript-eslint/no-unused-vars
@@ -314,3 +230,4 @@ info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/d
 For new projects, use create-next-app to choose your preferred linter.
 For existing projects, migrate to the ESLint CLI:
 npx @next/codemod@canary next-lint-to-eslint-cli .
+

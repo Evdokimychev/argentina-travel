@@ -1,0 +1,16 @@
+{
+  "sourceUrl": "https://klubgidov.ru/tour-providers",
+  "finalUrl": "https://klubgidov.ru/tour-providers",
+  "title": "Найти гида: организаторы авторских туров | Клуб Гидов",
+  "researchedAt": "2026-07-18T15:17:21.068Z",
+  "httpStatus": 200,
+  "viewport": {
+    "id": "tablet",
+    "width": 768,
+    "height": 1024
+  },
+  "pageType": "organizer-catalog",
+  "interactiveStates": [
+    "default"
+  ]
+}

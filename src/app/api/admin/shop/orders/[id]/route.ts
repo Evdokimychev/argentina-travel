@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { fetchShopOrderById } from "@/lib/shop-order-server";
-import type { Database } from "@/types/database";
-import type { ShopOrderPaymentStatus, ShopOrderStatus } from "@/types/shop-order";
+import { fetchShopOrderById, transitionAdminShopOrderAtomic } from "@/lib/shop-order-server";
+import type { ShopOrderStatus } from "@/types/shop-order";
 
 type PatchBody = {
   status?: ShopOrderStatus;
-  paymentStatus?: ShopOrderPaymentStatus;
+  paymentStatus?: unknown;
   deliveryUrl?: string | null;
   notes?: string | null;
+  expectedVersion?: number;
 };
 
 const ORDER_STATUSES: ShopOrderStatus[] = [
@@ -20,8 +20,6 @@ const ORDER_STATUSES: ShopOrderStatus[] = [
   "delivered",
   "cancelled",
 ];
-
-const PAYMENT_STATUSES: ShopOrderPaymentStatus[] = ["pending", "paid", "refunded"];
 
 export async function GET(
   _request: Request,
@@ -47,9 +45,33 @@ export async function PATCH(
 ) {
   const auth = await authorizeAdminRequest(request, "operations.shop");
   if (!auth.ok) return auth.response;
+  if (auth.via !== "session") {
+    return NextResponse.json(
+      { error: "Изменение заказа доступно только авторизованному сотруднику." },
+      { status: 403 },
+    );
+  }
 
   const { id } = await context.params;
-  const body = (await request.json()) as PatchBody;
+  const body = (await request.json().catch(() => null)) as PatchBody | null;
+  if (!body) {
+    return NextResponse.json({ error: "Проверьте данные заказа." }, { status: 400 });
+  }
+  if (body.paymentStatus !== undefined) {
+    return NextResponse.json(
+      { error: "Статус оплаты подтверждает платёжная система; вручную менять его нельзя." },
+      { status: 409 },
+    );
+  }
+  if (!Number.isSafeInteger(body.expectedVersion) || (body.expectedVersion ?? 0) < 1) {
+    return NextResponse.json(
+      { error: "Обновите список заказов и повторите действие." },
+      { status: 409 },
+    );
+  }
+  if ((body.notes?.length ?? 0) > 2000 || (body.deliveryUrl?.length ?? 0) > 2048) {
+    return NextResponse.json({ error: "Ссылка или заметка слишком длинные." }, { status: 400 });
+  }
   const supabase = createSupabaseAdminClient();
   const current = await fetchShopOrderById(supabase, id);
 
@@ -57,51 +79,23 @@ export async function PATCH(
     return NextResponse.json({ error: "Заказ не найден" }, { status: 404 });
   }
 
-  const update: Database["public"]["Tables"]["shop_orders"]["Update"] = {
-    updated_at: new Date().toISOString(),
-  };
-
-  if (body.status !== undefined) {
-    if (!ORDER_STATUSES.includes(body.status)) {
-      return NextResponse.json({ error: "Недопустимый статус заказа" }, { status: 400 });
-    }
-    update.status = body.status;
+  const nextStatus = body.status ?? current.status;
+  if (!ORDER_STATUSES.includes(nextStatus)) {
+    return NextResponse.json({ error: "Выберите допустимый статус заказа." }, { status: 400 });
   }
 
-  if (body.paymentStatus !== undefined) {
-    if (!PAYMENT_STATUSES.includes(body.paymentStatus)) {
-      return NextResponse.json({ error: "Недопустимый статус оплаты" }, { status: 400 });
-    }
-    update.payment_status = body.paymentStatus;
-  }
-
-  if (body.deliveryUrl !== undefined) {
-    update.delivery_url = body.deliveryUrl?.trim() || null;
-  }
-
-  if (body.notes !== undefined) {
-    update.notes = body.notes?.trim() || null;
-  }
-
-  if (Object.keys(update).length <= 1) {
-    return NextResponse.json({ error: "Нет полей для обновления" }, { status: 400 });
-  }
-
-  const { error } = await supabase.from("shop_orders").update(update).eq("id", id);
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  const order = await fetchShopOrderById(supabase, id);
-
-  await writeAdminAuditLog({
+  const result = await transitionAdminShopOrderAtomic(supabase, {
+    orderId: id,
+    expectedVersion: body.expectedVersion!,
     actorUserId: auth.actorId,
-    action: "shop_order.update",
-    entityType: "shop_order",
-    entityId: id,
-    payload: update,
+    nextStatus,
+    deliveryUrl: body.deliveryUrl === undefined ? current.deliveryUrl : body.deliveryUrl,
+    notes: body.notes === undefined ? current.notes : body.notes,
     ipAddress: clientIpFromRequest(request),
   });
+  if ("error" in result) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
+  }
 
-  return NextResponse.json({ order });
+  return NextResponse.json({ order: result.order });
 }

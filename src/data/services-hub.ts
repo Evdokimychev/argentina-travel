@@ -197,6 +197,19 @@ export const OPTIONAL_SERVICE_CATEGORIES: ServiceCategory[] = [
   },
 ];
 
+const NATIVE_APARTMENTS_CATEGORY: ServiceCategory = {
+  id: "apartments",
+  title: "Апартаменты",
+  description: "Проверенные объекты платформы и организаторов с запросом подтверждения дат.",
+  items: [{
+    id: "apartments-native",
+    slug: "apartments",
+    title: "Выбрать апартаменты",
+    description: "Сравните условия и отправьте запрос владельцу — доступность подтверждается до бронирования.",
+    href: "/apartments",
+  }],
+};
+
 const TRANSFER_REQUEST_SERVICE: ServiceItem = {
   id: "transfers-request",
   slug: "transfer-request",
@@ -241,14 +254,14 @@ export function getServiceCategoriesForModules(
   }
 
   if (modules.apartmentsMode !== "disabled" && modules.showApartmentsInServices) {
-    categories.push(...OPTIONAL_SERVICE_CATEGORIES);
+    categories.push(modules.apartmentsMode === "native_request" ? NATIVE_APARTMENTS_CATEGORY : OPTIONAL_SERVICE_CATEGORIES[0]);
   }
 
   return categories;
 }
 
 export function getServiceBySlug(slug: string): ServiceItem | undefined {
-  for (const category of [...SERVICE_CATEGORIES, ...OPTIONAL_SERVICE_CATEGORIES]) {
+  for (const category of [...SERVICE_CATEGORIES, ...OPTIONAL_SERVICE_CATEGORIES, NATIVE_APARTMENTS_CATEGORY]) {
     const item = category.items.find((entry) => entry.slug === slug);
     if (item) return item;
   }

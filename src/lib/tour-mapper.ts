@@ -3,8 +3,6 @@ import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOpti
 import {
   normalizeParticipantRecommendations,
   normalizeRouteFeaturesText,
-  normalizeItineraryOrganizerComment,
-  normalizeAccommodationOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
 import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
@@ -17,7 +15,7 @@ import type {
   GroupSizeBucket,
   TourAccommodation,
   TourArrivalInfo,
-  TourDate,
+  TourDatePrice,
   TourDescriptionExtra,
   TourDetail,
   TourItineraryDay,
@@ -57,9 +55,14 @@ import {
 } from "@/lib/tour-custom-booking-link";
 import type { TourCustomBookingLink } from "@/types/tour-custom-booking-link";
 import { resolveTourCatalogPriceUsd } from "@/lib/tour-date-pricing";
-import { isTourCatalogVisible, canViewTourDetail } from "@/lib/tour-private-access";
+import { isTourCatalogVisible } from "@/lib/tour-private-access";
 import { normalizeGroupDiscountSettings, getBestGroupDiscountHint } from "@/lib/group-discount";
 import { getLegacyTourDetail } from "@/lib/tours-legacy";
+import { isProductionRuntime } from "@/lib/runtime-mode";
+
+function demoTourSeedsEnabled(): boolean {
+  return !isProductionRuntime();
+}
 
 function buildOrganizerCommentFromDraft(
   draft: OrganizerTourDraft,
@@ -121,7 +124,7 @@ function resolveTourAccommodationPlaces(
   slug: string,
   places: Tour["accommodation"]["places"]
 ): Tour["accommodation"]["places"] {
-  return mergeAccommodationSeedPlaces(slug, places);
+  return demoTourSeedsEnabled() ? mergeAccommodationSeedPlaces(slug, places) : places;
 }
 
 function resolveTourAccommodationUpgradesEnabled(
@@ -131,7 +134,7 @@ function resolveTourAccommodationUpgradesEnabled(
 ): boolean {
   if (typeof draftEnabled === "boolean") return draftEnabled;
   if (typeof canonicalEnabled === "boolean") return canonicalEnabled;
-  return getAccommodationSeedForSlug(slug)?.upgradesEnabled ?? true;
+  return demoTourSeedsEnabled() ? getAccommodationSeedForSlug(slug)?.upgradesEnabled ?? true : true;
 }
 
 function resolveTourAccommodationDescription(
@@ -139,7 +142,7 @@ function resolveTourAccommodationDescription(
   description?: string
 ): string | undefined {
   if (description?.trim()) return description.trim();
-  return getAccommodationSeedForSlug(slug)?.description;
+  return demoTourSeedsEnabled() ? getAccommodationSeedForSlug(slug)?.description : undefined;
 }
 
 function buildPublicAccommodations(tour: Tour, legacy?: TourDetail | null): TourAccommodation[] {
@@ -260,6 +263,9 @@ function dayMonthToIso(dayMonth: string, year = new Date().getFullYear()): strin
 
 /** Build canonical Tour from marketplace listing + legacy detail page data. */
 function resolveSeedPrivateFields(slug: string) {
+  if (!demoTourSeedsEnabled()) {
+    return { isPrivate: false, privateAccessToken: undefined as string | undefined };
+  }
   const seed = getPrivateTourSeedForSlug(slug);
   if (!seed) {
     return { isPrivate: false, privateAccessToken: undefined as string | undefined };
@@ -268,6 +274,7 @@ function resolveSeedPrivateFields(slug: string) {
 }
 
 function resolveSeedWaitlistFields(slug: string) {
+  if (!demoTourSeedsEnabled()) return { waitlistEnabled: false };
   const seed = getWaitlistSeedForSlug(slug);
   return { waitlistEnabled: seed?.waitlistEnabled ?? false };
 }
@@ -276,6 +283,7 @@ function applyWaitlistDateOverrides<T extends { id: string; spotsLeft: number }>
   slug: string,
   dates: T[]
 ): T[] {
+  if (!demoTourSeedsEnabled()) return dates;
   const seed = getWaitlistSeedForSlug(slug);
   if (!seed?.dateSpotsOverrides) return dates;
   return dates.map((date) => ({
@@ -289,14 +297,17 @@ function resolveCustomBookingLinkForSlug(
   draftLink?: TourCustomBookingLink | null,
   fallbackLink?: TourCustomBookingLink | null
 ): TourCustomBookingLink {
-  const seed = getCustomBookingSeedForSlug(slug);
   if (draftLink?.enabled) return normalizeCustomBookingLink(draftLink);
   if (fallbackLink?.enabled) return normalizeCustomBookingLink(fallbackLink);
+  const seed = demoTourSeedsEnabled() ? getCustomBookingSeedForSlug(slug) : undefined;
   if (seed?.customBookingLink) return normalizeCustomBookingLink(seed.customBookingLink);
   return normalizeCustomBookingLink(draftLink ?? fallbackLink);
 }
 
 function resolveSeedPriceOnRequest(slug: string, basePriceUsd: number) {
+  if (!demoTourSeedsEnabled()) {
+    return { priceOnRequest: false, priceFromPrefix: false, basePriceUsd };
+  }
   const seed = getPriceOnRequestSeedForSlug(slug);
   if (!seed) {
     return { priceOnRequest: false, priceFromPrefix: false, basePriceUsd };
@@ -309,6 +320,18 @@ function resolveSeedPriceOnRequest(slug: string, basePriceUsd: number) {
   };
 }
 
+function resolveTourDates(
+  slug: string,
+  dates: TourDatePrice[],
+  basePriceUsd: number,
+): TourDatePrice[] {
+  if (demoTourSeedsEnabled()) return resolveDemoTourDates(slug, dates, basePriceUsd);
+  return dates.map((date) => ({
+    ...date,
+    priceUsd: date.priceUsd > 0 ? date.priceUsd : basePriceUsd,
+  }));
+}
+
 export function listingAndDetailToTour(listing: TourListing, detail: TourDetail): Tour {
   const primaryComfort = listing.comfortLevel;
   const priceOnRequestFields = resolveSeedPriceOnRequest(listing.slug, listing.priceUsd);
@@ -316,7 +339,7 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
   const waitlistFields = resolveSeedWaitlistFields(listing.slug);
   const detailDates = applyWaitlistDateOverrides(
     listing.slug,
-    resolveDemoTourDates(
+    resolveTourDates(
       listing.slug,
       detail.dates,
       listing.priceUsd
@@ -372,7 +395,9 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       priceFromPrefix: priceOnRequestFields.priceFromPrefix ?? false,
       priceOnRequest: priceOnRequestFields.priceOnRequest ?? false,
       enabledDiscounts: [],
-      groupDiscount: normalizeGroupDiscountSettings(getGroupDiscountSeedForSlug(listing.slug)),
+      groupDiscount: normalizeGroupDiscountSettings(
+        demoTourSeedsEnabled() ? getGroupDiscountSeedForSlug(listing.slug) : undefined,
+      ),
     },
     isPrivate: privateFields.isPrivate,
     privateAccessToken: privateFields.privateAccessToken,
@@ -453,10 +478,13 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       faq: detail.faq,
     },
     logistics: (() => {
-      const merged = mergeLogisticsSeed(listing.slug, {
+      const fallbackLogistics = {
         arrivalDepartureEnabled: false,
         arrivalDepartureCities: [],
-      });
+      };
+      const merged = demoTourSeedsEnabled()
+        ? mergeLogisticsSeed(listing.slug, fallbackLogistics)
+        : fallbackLogistics;
 
       return {
         ticketRecommendationsEnabled: detail.arrival.flights.length > 0,
@@ -681,7 +709,7 @@ export function tourToListing(tour: Tour): TourListing {
 
   const datesWithPrices = applyWaitlistDateOverrides(
     tour.slug,
-    resolveDemoTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
+    resolveTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
   );
 
   const listingDates = datesWithPrices.map((date) => ({
@@ -774,7 +802,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
 
   const dates = applyWaitlistDateOverrides(
     tour.slug,
-    resolveDemoTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
+    resolveTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
   );
 
   const catalogPrice = resolveTourCatalogPriceUsd(dates, tour.pricing.basePriceUsd);

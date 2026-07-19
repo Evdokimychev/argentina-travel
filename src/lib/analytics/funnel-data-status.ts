@@ -6,7 +6,7 @@ export type AnalyticsFunnelDataStatus =
   | "unavailable";
 
 export function resolveAnalyticsFunnelTrust(input: {
-  hasObservedTourViews: boolean;
+  metricsAvailable: boolean;
   ingestionTrusted?: boolean;
 }): {
   dataStatus: AnalyticsFunnelDataStatus;
@@ -20,14 +20,14 @@ export function resolveAnalyticsFunnelTrust(input: {
     return {
       dataStatus: "untrusted_direct_insert",
       trustedForKpi: false,
-      reason: "Прямой Data API INSERT в analytics_events ещё не закрыт.",
+      reason: "Контролируемый источник событий для этого релиза не подтверждён.",
     };
   }
-  if (!input.hasObservedTourViews) {
+  if (!input.metricsAvailable) {
     return {
       dataStatus: "unavailable",
       trustedForKpi: false,
-      reason: "Достоверные события просмотра тура за период не накоплены.",
+      reason: "Часть показателей сейчас недоступна. Значения не заменены нулями.",
     };
   }
   return { dataStatus: "trusted", trustedForKpi: true, reason: null };

@@ -10,6 +10,8 @@ const TURNSTILE_CALLSITES = [
   "src/components/contacts/ContactsPageClient.tsx",
   "src/components/FooterNewsletter.tsx",
   "src/components/blog/BlogNewsletterBlock.tsx",
+  "src/components/apartments/ApartmentInquiryForm.tsx",
+  "src/components/mobility/MobilityCatalogClient.tsx",
   "src/components/tour-detail/TourWaitlistModal.tsx",
   "src/components/shop/ShopCheckoutModal.tsx",
   "src/components/tour-detail/checkout/TourCheckoutModal.tsx",

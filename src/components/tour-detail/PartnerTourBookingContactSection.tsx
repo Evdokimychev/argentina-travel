@@ -16,6 +16,7 @@ import { ENABLE_PARTNER_CONTACT_FORM } from "@/lib/booking/partner-contact-form-
 import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import { resolvePublicBookingErrorMessage } from "@/lib/partner-booking/public-errors";
 import { formatDateRange } from "@/lib/utils";
 import { formatTourists } from "@/lib/pluralize";
 import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
@@ -450,15 +451,14 @@ export default function PartnerTourBookingContactSection({
         body: JSON.stringify(bookingBody),
       });
 
-      const data = (await response.json()) as {
+      const data = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         mode?: string;
         orderId?: number | string;
         orderUrl?: string;
         fallbackUrl?: string;
         fallbackReason?: string;
-        error?: string;
-        details?: Record<string, string[] | { non_field_errors?: string[] }>;
+        code?: string;
       };
 
       if (response.ok && (data.ok || data.mode === "affiliate_fallback")) {
@@ -466,6 +466,7 @@ export default function PartnerTourBookingContactSection({
       }
 
       if (data.mode === "affiliate_fallback") {
+        bookingOperationKeyRef.current = null;
         completePartnerBookingTransition(
           isYouTravel
             ? (data.fallbackUrl ?? clientFallbackUrl)
@@ -476,24 +477,16 @@ export default function PartnerTourBookingContactSection({
       }
 
       if (!response.ok || !data.ok) {
-        const details = data.details;
-        const firstFieldError =
-          details &&
-          Object.values(details)
-            .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
-            .find(Boolean);
-
-        if (firstFieldError) {
-          throw new Error(firstFieldError);
+        if (data.fallbackUrl) {
+          completePartnerBookingTransition(
+            isYouTravel
+              ? data.fallbackUrl
+              : resolveTripsterRedirectUrl(data, contact, date, time),
+            data.fallbackReason ?? "partner_site_fallback"
+          );
+          return;
         }
-
-        completePartnerBookingTransition(
-          isYouTravel
-            ? (data.fallbackUrl ?? clientFallbackUrl)
-            : resolveTripsterRedirectUrl(data, contact, date, time),
-          data.fallbackReason ?? "partner_site_fallback"
-        );
-        return;
+        throw new Error(resolvePublicBookingErrorMessage(data.code));
       }
 
       setSubmitted(true);

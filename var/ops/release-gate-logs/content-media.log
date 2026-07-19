@@ -2,7 +2,7 @@
 > argentina-travel@0.1.0 media:integrity
 > node scripts/media-manifest-integrity.mjs
 
-Manifest assets with localPath: 2208
+Manifest assets with localPath: 2212
 Missing on disk: 0
 ✓ All manifest files present under public/
 ✓ runtime fallback /media/placeholders/tour-card.jpg

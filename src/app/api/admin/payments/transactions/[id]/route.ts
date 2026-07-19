@@ -21,7 +21,7 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.view");
   if (!auth.ok) return auth.response;
 
   const { id } = await context.params;

@@ -43,8 +43,12 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   if (password.length < 8) {
     return validationError("Пароль должен содержать не менее 8 символов");
   }
-  if (input.role === "admin") {
-    return validationError("Роль администратора назначается вручную");
+  if (input.role !== "tourist") {
+    // Public registration never grants elevated roles. Organizer access is
+    // assigned only after the separate, moderated application flow.
+    return validationError(
+      "Публичная регистрация создаёт аккаунт туриста. Роль организатора назначается после проверки заявки.",
+    );
   }
 
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
@@ -76,8 +80,6 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
     return { ok: false, error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" };
   }
 
-  // Registration creates only the safe base role. Organizer access is granted
-  // after an organizer_applications review by a capable staff member.
   const roles: AccountRole[] = ["tourist"];
 
   const signupClient = await createSupabaseServerClient();

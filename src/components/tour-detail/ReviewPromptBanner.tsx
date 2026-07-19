@@ -7,6 +7,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
+import { useAuth } from "@/context/AuthContext";
+import { getUserBookings } from "@/lib/bookings-store";
+import { getUserReviews } from "@/lib/reviews-store";
+import { resolveReviewEligibility } from "@/lib/review-eligibility";
 
 type ReviewPromptBannerProps = {
   tourSlug: string;
@@ -16,45 +20,53 @@ type ReviewPromptBannerProps = {
 function ReviewPromptBannerInner({ tourSlug, isPartnerTour }: ReviewPromptBannerProps) {
   const searchParams = useSearchParams();
   const wantsReview = searchParams.get("review") === "1";
+  const { user } = useAuth();
   const [dismissed, setDismissed] = useState(false);
+  const [eligibleForReview, setEligibleForReview] = useState(false);
 
   useEffect(() => {
-    if (!wantsReview) return;
-    scrollToSiteAnchor("leave-review");
-  }, [wantsReview]);
+    if (!wantsReview || !user || isPartnerTour) {
+      setEligibleForReview(false);
+      return;
+    }
+    const eligibility = resolveReviewEligibility({
+      tourSlug,
+      bookings: getUserBookings(user.id),
+      reviews: getUserReviews(user.id),
+    });
+    setEligibleForReview(eligibility.eligible);
+  }, [isPartnerTour, tourSlug, user, wantsReview]);
 
-  if (isPartnerTour || dismissed) return null;
+  useEffect(() => {
+    if (!eligibleForReview) return;
+    scrollToSiteAnchor("leave-review");
+  }, [eligibleForReview]);
+
+  if (!eligibleForReview || dismissed) return null;
 
   return (
     <div className={cn(siteContainerClass, "pt-4")}>
-      <div className="flex flex-col gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="flex items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-3 sm:px-5">
         <div>
-          <p className="font-medium text-charcoal">
-            {wantsReview ? "Поделитесь впечатлениями о поездке" : "Были на этом туре?"}
+          <p className="text-sm font-medium text-charcoal sm:text-base">
+            Поделитесь впечатлениями о поездке
           </p>
-          <p className="mt-1 text-sm text-slate">
-            {wantsReview
-              ? "Заполните форму ниже — отзыв появится на странице после модерации."
-              : "После завершённой поездки можно оставить отзыв — он появится на странице после модерации."}
+          <p className="mt-1 hidden text-sm text-slate sm:block">
+            Форма отзыва открыта ниже; публикация появится после модерации.
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2">
-          {!wantsReview ? (
-            <Link
-              href={`/tours/${tourSlug}?review=1#leave-review`}
-              className={cn(buttonVariants({ size: "sm" }))}
-            >
-              Оставить отзыв
-            </Link>
-          ) : (
-            <Link href="/profile/reviews" className={cn(buttonVariants({ size: "sm", variant: "outline" }))}>
-              Мои отзывы
-            </Link>
-          )}
+        <div className="flex shrink-0 gap-2">
+          <Link
+            href="/profile/reviews"
+            className={cn(buttonVariants({ size: "sm", variant: "outline" }), "hidden sm:inline-flex")}
+          >
+            Мои отзывы
+          </Link>
           <button
             type="button"
+            aria-label="Закрыть приглашение оставить отзыв"
             onClick={() => setDismissed(true)}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-slate hover:bg-gray-50"
+            className="min-h-11 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-slate hover:bg-gray-50"
           >
             Закрыть
           </button>

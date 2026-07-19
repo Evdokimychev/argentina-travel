@@ -10,7 +10,7 @@ export function Badge({
   const variants = {
     default: "bg-gray-100 text-charcoal",
     hot: "bg-brand text-white",
-    new: "bg-sky text-white",
+    new: "bg-sky-ink text-white",
     hit: "bg-wine text-white",
     family: "bg-success-muted text-success",
     expedition: "bg-charcoal text-white",

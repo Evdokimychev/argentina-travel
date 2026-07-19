@@ -8,7 +8,7 @@ import { buildTourContactHref } from "@/lib/tour-contact";
 import {
   buildOrganizerCatalogHref,
   buildOrganizerPublicHref,
-} from "@/lib/organizer-public";
+} from "@/lib/organizer-public-routing";
 import { resolveOrganizerExperienceStat } from "@/lib/organizer-experience";
 import {
   resolveOrganizerRatingDisplay,

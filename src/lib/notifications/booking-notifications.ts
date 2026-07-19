@@ -30,7 +30,7 @@ export function notifyPaymentReminder(booking: Booking, paymentLinkToken?: strin
     category: "payment",
     bookingId: booking.id,
     title: "Ожидается оплата",
-    body: `По заявке №${bookingDisplayNumber(booking)} доступна ссылка на оплату. Онлайн-оплата через платформу скоро — пока свяжитесь с организатором при необходимости.`,
+    body: `По заявке №${bookingDisplayNumber(booking)} доступна ссылка на оплату. Откройте её и следуйте инструкциям; если оплата не открывается, свяжитесь с организатором.`,
     href,
   });
 }

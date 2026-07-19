@@ -21,13 +21,13 @@ const STATUS_CLASS: Record<AnalyticsReadinessCheckItem["status"], string> = {
 };
 
 const GTM_PUBLISH_CHECKLIST = [
-  "NEXT_PUBLIC_GTM_ID в Vercel Production → Redeploy",
-  "GA4 Configuration + универсальный GA4 Event (regex из docs/analytics-gtm-setup.md)",
-  "Consent Mode (analytics_storage) на всех тегах аналитики",
+  "Подключить рабочий контейнер аналитики к опубликованному сайту",
+  "Добавить универсальную передачу событий в GA4",
+  "Включить режим согласия для всех тегов аналитики",
   "GA4 Conversions: booking_submit, contact_form_submit, newsletter_subscribe",
   "Яндекс.Метрика: цели по событиям dataLayer",
-  "Submit + Publish контейнера в tagmanager.google.com",
-  "Tag Assistant + GA4 DebugView после согласия на cookie",
+  "Опубликовать изменения контейнера",
+  "Проверить события после согласия посетителя на cookie",
 ] as const;
 
 type AnalyticsReadinessPanelProps = {
@@ -45,14 +45,7 @@ export default function AnalyticsReadinessPanel({ snapshot }: AnalyticsReadiness
         <div>
           <h2 className="font-heading text-lg font-bold text-foreground">Аналитика и GTM</h2>
           <p className="mt-1 text-sm text-slate">
-            Только чтение. Полный прогон:{" "}
-            <code className="text-xs">npm run analytics:go-live</code> или{" "}
-            <code className="text-xs">
-              ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
-            </code>
-            . См.{" "}
-            <code className="text-xs">docs/analytics-gtm-setup.md</code>,{" "}
-            <code className="text-xs">docs/i2-analytics-gsc-runbook.md</code>.
+            Здесь видно, какие метрики уже подтверждены и что ещё нужно проверить перед публикацией.
           </p>
         </div>
         <span
@@ -60,7 +53,7 @@ export default function AnalyticsReadinessPanel({ snapshot }: AnalyticsReadiness
             snapshot.ok ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"
           }`}
         >
-          {snapshot.ok ? "Готово" : "Есть блокеры"}
+          {snapshot.ok ? "Проверки пройдены" : "Требует внимания"}
         </span>
       </div>
 
@@ -74,7 +67,7 @@ export default function AnalyticsReadinessPanel({ snapshot }: AnalyticsReadiness
           <dd className="mt-1 font-medium text-charcoal">{snapshot.ranAt}</dd>
         </div>
         <div>
-          <dt className="text-slate">События dataLayer в коде</dt>
+          <dt className="text-slate">Подключённые события</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {gtmEventsCount != null ? `${gtmEventsCount} событий` : "—"}
           </dd>
@@ -125,8 +118,8 @@ export default function AnalyticsReadinessPanel({ snapshot }: AnalyticsReadiness
           ))}
         </ol>
         <p className="mt-3 text-xs text-slate">
-          Настройка env в Vercel, публикация контейнера и конверсии в GA4/Метрике выполняются вне
-          админки.
+          Подключение внешних кабинетов выполняется владельцем аккаунтов. После этого состояние
+          автоматически появится в админке.
         </p>
       </details>
     </section>

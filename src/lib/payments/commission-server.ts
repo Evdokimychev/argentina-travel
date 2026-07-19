@@ -7,12 +7,10 @@ import type {
 } from "@/types/platform-commission";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { periodStartIso } from "@/lib/admin/analytics-period";
+import { aggregateCommissionByCurrency } from "@/lib/payments/ledger-aggregation";
+import { moneyFromMajorUnits, moneyToMajorUnits, parseMoneyCurrency } from "@/lib/payments/money";
 
 type DbClient = SupabaseClient<Database>;
-
-function roundMoney(value: number): number {
-  return Math.round(value * 100) / 100;
-}
 
 function mapRuleRow(
   row: Database["public"]["Tables"]["platform_commission_rules"]["Row"]
@@ -104,31 +102,68 @@ export async function getCommissionRuleForBooking(
 
 export function calculateCommissionSplit(
   grossAmount: number,
+  currencyValue: string,
   rule: PlatformCommissionRuleRow
-): {
-  commissionAmount: number;
-  organizerNetAmount: number;
-  commissionPercent: number | null;
-  commissionFixed: number | null;
-} {
-  const gross = Math.max(0, grossAmount);
+):
+  | {
+      ok: true;
+      commissionAmount: number;
+      organizerNetAmount: number;
+      commissionPercent: number | null;
+      commissionFixed: number | null;
+    }
+  | { ok: false; error: "UNSUPPORTED_CURRENCY" | "INVALID_AMOUNT" | "FIXED_CURRENCY_MISMATCH" } {
+  const currency = parseMoneyCurrency(currencyValue);
+  if (!currency) return { ok: false, error: "UNSUPPORTED_CURRENCY" };
+
+  let grossMoney;
+  try {
+    grossMoney = moneyFromMajorUnits(currency, grossAmount);
+  } catch {
+    return { ok: false, error: "INVALID_AMOUNT" };
+  }
 
   if (rule.ruleType === "fixed" && rule.fixedAmount != null) {
-    const fixed = Math.min(gross, Math.max(0, rule.fixedAmount));
-    const commissionAmount = roundMoney(fixed);
+    const fixedCurrency = parseMoneyCurrency(rule.fixedCurrency);
+    if (!fixedCurrency || fixedCurrency !== currency) {
+      return { ok: false, error: "FIXED_CURRENCY_MISMATCH" };
+    }
+    let fixedMoney;
+    try {
+      fixedMoney = moneyFromMajorUnits(currency, rule.fixedAmount);
+    } catch {
+      return { ok: false, error: "INVALID_AMOUNT" };
+    }
+    const commissionMinorUnits = Math.min(grossMoney.minorUnits, fixedMoney.minorUnits);
+    const commissionAmount = moneyToMajorUnits({ currency, minorUnits: commissionMinorUnits });
     return {
+      ok: true,
       commissionAmount,
-      organizerNetAmount: roundMoney(Math.max(0, gross - commissionAmount)),
+      organizerNetAmount: moneyToMajorUnits({
+        currency,
+        minorUnits: grossMoney.minorUnits - commissionMinorUnits,
+      }),
       commissionPercent: null,
       commissionFixed: commissionAmount,
     };
   }
 
   const percent = rule.percentValue ?? 0;
-  const commissionAmount = roundMoney(gross * (percent / 100));
+  if (!Number.isFinite(percent) || percent < 0) {
+    return { ok: false, error: "INVALID_AMOUNT" };
+  }
+  const commissionMinorUnits = Math.min(
+    grossMoney.minorUnits,
+    Math.round(grossMoney.minorUnits * (percent / 100)),
+  );
+  const commissionAmount = moneyToMajorUnits({ currency, minorUnits: commissionMinorUnits });
   return {
+    ok: true,
     commissionAmount,
-    organizerNetAmount: roundMoney(Math.max(0, gross - commissionAmount)),
+    organizerNetAmount: moneyToMajorUnits({
+      currency,
+      minorUnits: grossMoney.minorUnits - commissionMinorUnits,
+    }),
     commissionPercent: percent,
     commissionFixed: null,
   };
@@ -139,7 +174,7 @@ export type CreateCommissionSnapshotInput = {
   paymentTransactionId: string;
   organizerUserId: string;
   grossAmount: number;
-  currency?: string;
+  currency: string;
 };
 
 /** Idempotent snapshot on payment_transaction_id — called after completed charge. */
@@ -168,8 +203,9 @@ export async function createCommissionSnapshotForCharge(
   const rule = await getCommissionRuleForBooking(supabase, input.bookingId);
   if (!rule) return null;
 
-  const split = calculateCommissionSplit(input.grossAmount, rule);
-  const currency = input.currency ?? "USD";
+  const currency = input.currency;
+  const split = calculateCommissionSplit(input.grossAmount, currency, rule);
+  if (!split.ok) return null;
 
   const { data, error } = await supabase
     .from("booking_commission_snapshots")
@@ -250,7 +286,7 @@ export async function buildCommissionReport(
 
   let query = supabase
     .from("booking_commission_snapshots")
-    .select("gross_amount, commission_amount, organizer_net_amount, organizer_user_id");
+    .select("gross_amount, commission_amount, organizer_net_amount, organizer_user_id, currency");
 
   if (since) {
     query = query.gte("created_at", since);
@@ -259,31 +295,28 @@ export async function buildCommissionReport(
   const { data, error } = await query;
   if (error || !data) {
     return {
-      grossTotal: 0,
-      commissionTotal: 0,
-      organizerNetTotal: 0,
+      byCurrency: [],
       snapshotCount: 0,
       organizerCount: 0,
+      invalidRecordCount: 0,
     };
   }
 
-  const organizers = new Set<string>();
-  let grossTotal = 0;
-  let commissionTotal = 0;
-  let organizerNetTotal = 0;
-
-  for (const row of data) {
-    grossTotal += Number(row.gross_amount);
-    commissionTotal += Number(row.commission_amount);
-    organizerNetTotal += Number(row.organizer_net_amount);
-    organizers.add(row.organizer_user_id);
-  }
+  const result = aggregateCommissionByCurrency(
+    data.map((row) => ({
+      grossAmount: Number(row.gross_amount),
+      commissionAmount: Number(row.commission_amount),
+      organizerNetAmount: Number(row.organizer_net_amount),
+      organizerId: row.organizer_user_id,
+      currency: row.currency,
+    })),
+  );
+  const organizers = new Set(data.map((row) => row.organizer_user_id));
 
   return {
-    grossTotal: roundMoney(grossTotal),
-    commissionTotal: roundMoney(commissionTotal),
-    organizerNetTotal: roundMoney(organizerNetTotal),
+    byCurrency: [...result.byCurrency],
     snapshotCount: data.length,
     organizerCount: organizers.size,
+    invalidRecordCount: result.issues.length,
   };
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import L from "leaflet";
 import Link from "next/link";
 import type { ArticleMapPoint } from "@/lib/article-map-points";
 import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
@@ -15,60 +14,57 @@ type Props = {
   embedded?: boolean;
 };
 
-function markerIcon(active = false) {
-  return L.divIcon(
-    createMapPinDivIcon({
-      tone: active ? "brand" : "muted",
-      active,
-      size: active ? "lg" : "sm",
-    }),
-  );
-}
-
 export default function ArticlePlacesMiniMap({ points, className, embedded = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<import("leaflet").Map | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current || points.length === 0) return;
 
-    const map = L.map(containerRef.current, { scrollWheelZoom: false, zoomControl: true });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-      maxZoom: 18,
-    }).addTo(map);
+    let cancelled = false;
 
-    mapRef.current = map;
+    void import("leaflet").then((leafletModule) => {
+      if (cancelled || !containerRef.current || mapRef.current) return;
+
+      const L = leafletModule.default;
+      const map = L.map(containerRef.current, { scrollWheelZoom: false, zoomControl: true });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+        maxZoom: 18,
+      }).addTo(map);
+
+      const bounds: import("leaflet").LatLngExpression[] = [];
+      points.forEach((point, index) => {
+        bounds.push([point.lat, point.lng]);
+        const marker = L.marker([point.lat, point.lng], {
+          icon: L.divIcon(
+            createMapPinDivIcon({
+              tone: index === 0 ? "brand" : "muted",
+              active: index === 0,
+              size: index === 0 ? "lg" : "sm",
+            }),
+          ),
+        });
+        marker.bindPopup(point.label);
+        marker.addTo(map);
+      });
+
+      if (bounds.length > 1) {
+        map.fitBounds(bounds as import("leaflet").LatLngBoundsExpression, {
+          padding: [24, 24],
+          maxZoom: 10,
+        });
+      } else {
+        map.setView([points[0].lat, points[0].lng], 10);
+      }
+      mapRef.current = map;
+    });
 
     return () => {
-      map.remove();
+      cancelled = true;
+      mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [points.length]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || points.length === 0) return;
-
-    map.eachLayer((layer) => {
-      if (layer instanceof L.Marker) map.removeLayer(layer);
-    });
-
-    const bounds: L.LatLngExpression[] = [];
-    points.forEach((point, index) => {
-      bounds.push([point.lat, point.lng]);
-      const marker = L.marker([point.lat, point.lng], {
-        icon: markerIcon(index === 0),
-      });
-      marker.bindPopup(point.label);
-      marker.addTo(map);
-    });
-
-    if (bounds.length > 1) {
-      map.fitBounds(bounds as L.LatLngBoundsExpression, { padding: [24, 24], maxZoom: 10 });
-    } else {
-      map.setView([points[0].lat, points[0].lng], 10);
-    }
   }, [points]);
 
   if (points.length === 0) return null;

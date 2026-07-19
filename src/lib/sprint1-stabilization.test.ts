@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { blogPosts } from "@/data/blog";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
-import { buildStaticSearchIndex } from "@/lib/site-search-index";
+import { buildStaticSearchIndex, SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
 
 describe("Sprint 1 stabilization", () => {
   it("blog nav lists only recent indexable posts (max 12)", () => {
@@ -28,6 +28,21 @@ describe("Sprint 1 stabilization", () => {
     for (const item of blogItems) {
       const slug = item.href.replace("/blog/", "");
       expect(noIndexSlugs.has(slug)).toBe(false);
+    }
+  });
+
+  it("describes the destination catalog without calling cities regions", () => {
+    const items = buildStaticSearchIndex();
+    const destinationIndexes = items.filter(
+      (item) => item.id === "page-destinations" || item.id === "destinations-index",
+    );
+
+    expect(SEARCH_TYPE_LABELS.destination).toBe("Направления");
+    expect(destinationIndexes).toHaveLength(1);
+    for (const item of destinationIndexes) {
+      expect(item.title).toBe("Направления и места");
+      expect(item.description).toContain("7 городов и 1 макрорегион");
+      expect(item.description).not.toContain("8 регионов");
     }
   });
 });

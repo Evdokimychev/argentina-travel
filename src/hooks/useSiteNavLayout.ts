@@ -9,18 +9,19 @@ import {
   useState,
   type RefObject,
 } from "react";
-import {
-  getSiteNavBarSectionsByCount,
-  getSiteNavSection,
-  SITE_NAV_DESKTOP_PRIORITY_IDS,
-} from "@/data/site-nav";
+import { SITE_NAV_DESKTOP_PRIORITY_IDS } from "@/data/site-nav-client-static";
+import type { SiteNavSection } from "@/types/site-nav";
 
 const MIN_PRIMARY_COUNT = 2;
 const NAV_ITEM_GAP_PX = 4;
 const OVERFLOW_TRIGGER_WIDTH_PX = 52;
 
-function estimateNavItemWidth(sectionId: string, showIndex: boolean): number {
-  const section = getSiteNavSection(sectionId);
+function estimateNavItemWidth(
+  sectionId: string,
+  showIndex: boolean,
+  sections: SiteNavSection[],
+): number {
+  const section = sections.find((item) => item.id === sectionId);
   const label = section?.label ?? sectionId;
   const textWidth = label.length * 7.1;
   const padding = 10;
@@ -33,6 +34,7 @@ function computeVisiblePrimaryCount(
   availableWidth: number,
   itemWidths: Map<string, number>,
   showIndex: boolean,
+  sections: SiteNavSection[],
 ): number {
   const ids = [...SITE_NAV_DESKTOP_PRIORITY_IDS];
   const overflowWidth = itemWidths.get("overflow") ?? OVERFLOW_TRIGGER_WIDTH_PX;
@@ -43,7 +45,7 @@ function computeVisiblePrimaryCount(
     for (let index = 0; index < count; index += 1) {
       const id = ids[index];
       total +=
-        (itemWidths.get(id) ?? estimateNavItemWidth(id, showIndex)) + NAV_ITEM_GAP_PX;
+        (itemWidths.get(id) ?? estimateNavItemWidth(id, showIndex, sections)) + NAV_ITEM_GAP_PX;
     }
 
     if (total <= availableWidth) {
@@ -54,7 +56,10 @@ function computeVisiblePrimaryCount(
   return MIN_PRIMARY_COUNT;
 }
 
-export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
+export function useSiteNavLayout(
+  navRef: RefObject<HTMLElement | null>,
+  sections: SiteNavSection[],
+) {
   const itemWidthsRef = useRef<Map<string, number>>(new Map());
   const lastMeasuredWidthRef = useRef(-1);
   const [visiblePrimaryCount, setVisiblePrimaryCount] = useState(5);
@@ -86,10 +91,11 @@ export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
       width,
       itemWidthsRef.current,
       showIndex,
+      sections,
     );
 
     setVisiblePrimaryCount((current) => (current === nextCount ? current : nextCount));
-  }, [navRef]);
+  }, [navRef, sections]);
 
   useLayoutEffect(() => {
     remeasure(true);
@@ -105,8 +111,22 @@ export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
   }, [navRef, remeasure]);
 
   const { primarySections, overflowSections } = useMemo(
-    () => getSiteNavBarSectionsByCount(visiblePrimaryCount),
-    [visiblePrimaryCount],
+    () => {
+      const clamped = Math.max(
+        MIN_PRIMARY_COUNT,
+        Math.min(visiblePrimaryCount, SITE_NAV_DESKTOP_PRIORITY_IDS.length),
+      );
+      const primaryIds = SITE_NAV_DESKTOP_PRIORITY_IDS.slice(0, clamped);
+      const primaryIdSet = new Set<string>(primaryIds);
+      const primarySections = primaryIds
+        .map((id) => sections.find((section) => section.id === id))
+        .filter((section): section is SiteNavSection => Boolean(section));
+      const overflowSections = sections.filter(
+        (section) => section.id !== "home" && !primaryIdSet.has(section.id),
+      );
+      return { primarySections, overflowSections };
+    },
+    [sections, visiblePrimaryCount],
   );
 
   const showNavIndex = navWidth >= 1080 && visiblePrimaryCount >= 5;

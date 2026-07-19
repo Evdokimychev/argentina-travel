@@ -12,12 +12,13 @@ const MODE_LABELS = {
   request: "Заявка менеджеру",
   partner: "Партнёрский сервис",
   preparing_native: "Готовим свой каталог",
+  native_request: "Свой каталог — запрос подтверждения",
   preparing_hybrid: "Партнёр + готовим свой каталог",
   planned: "В планах",
 } as const;
 
 function statusClass(mode: string): string {
-  if (mode === "partner" || mode === "request") return "bg-emerald-50 text-emerald-700";
+  if (mode === "partner" || mode === "request" || mode === "native_request") return "bg-emerald-50 text-emerald-700";
   if (mode.startsWith("preparing") || mode === "planned") return "bg-amber-50 text-amber-800";
   return "bg-surface-muted text-slate";
 }
@@ -49,8 +50,8 @@ export default function TravelModulesPreview({ values }: { values: Record<string
       mode: MODE_LABELS[modules.apartmentsMode],
       rawMode: modules.apartmentsMode,
       icon: House,
-      tourist: "Сейчас — понятная заявка на подбор без выдуманной доступности и оплаты.",
-      organizer: "Следующий этап: объект, календарь, тарифы, правила, проверка и публикация.",
+      tourist: modules.apartmentsMode === "native_request" ? "Каталог, карточка и запрос дат с явным ожиданием подтверждения." : "Понятная заявка на подбор без выдуманной доступности и оплаты.",
+      organizer: modules.apartmentsMode === "native_request" ? "Объект, права на фото, календарь, тариф, модерация и публикация работают." : "Собственный инвентарь не публикуется в этом режиме.",
       publicVisible: modules.showApartmentsInServices && modules.apartmentsMode !== "disabled",
     },
     {

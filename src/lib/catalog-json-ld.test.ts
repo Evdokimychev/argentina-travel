@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_CATALOG_ITEM_LIST,
   buildDestinationsCatalogItemListJsonLd,
+  buildExcursionsCatalogItemListJsonLd,
   buildPlacesCatalogItemListJsonLd,
   buildToursCatalogItemListJsonLd,
 } from "@/lib/catalog-json-ld";
 import type { TourListing } from "@/types";
 import type { PlaceListing } from "@/types/place";
 import type { DestinationPage } from "@/data/destination-pages";
+import type { ExcursionListing } from "@/types/excursion";
 
 function sampleTour(partial: Partial<TourListing> = {}): TourListing {
   return {
@@ -80,6 +82,21 @@ function sampleDestination(partial: Partial<DestinationPage> = {}): DestinationP
   };
 }
 
+function sampleExcursion(partial: Partial<ExcursionListing> = {}): ExcursionListing {
+  return {
+    partner: partial.partner ?? "tripster",
+    id: partial.id ?? 10,
+    slug: partial.slug ?? "buenos-aires-center",
+    title: partial.title ?? "Знакомство с Буэнос-Айресом",
+    tagline: partial.tagline ?? "Прогулка по главным районам города",
+    cityId: partial.cityId ?? 1,
+    citySlug: partial.citySlug ?? "Buenos_Aires",
+    cityName: partial.cityName ?? "Буэнос-Айрес",
+    coverImage: partial.coverImage ?? "/media/home/showcase-ba.jpg",
+    reviewCount: partial.reviewCount ?? 12,
+  };
+}
+
 describe("buildToursCatalogItemListJsonLd", () => {
   it("builds Product items with locale-aware list name", () => {
     const jsonLd = buildToursCatalogItemListJsonLd([sampleTour()], "en");
@@ -112,11 +129,27 @@ describe("buildPlacesCatalogItemListJsonLd", () => {
   });
 });
 
+describe("buildExcursionsCatalogItemListJsonLd", () => {
+  it("builds a canonical ItemList without inventing price or availability", () => {
+    const jsonLd = buildExcursionsCatalogItemListJsonLd([sampleExcursion()], {
+      name: "Экскурсии в Буэнос-Айресе",
+      path: "/excursions/city/Buenos_Aires",
+    });
+
+    expect(jsonLd.name).toBe("Экскурсии в Буэнос-Айресе");
+    expect(jsonLd.url).toContain("/excursions/city/Buenos_Aires");
+    expect(jsonLd.itemListElement[0]?.item.url).toContain(
+      "/excursions/buenos-aires-center",
+    );
+    expect(jsonLd.itemListElement[0]?.item).not.toHaveProperty("offers");
+  });
+});
+
 describe("buildDestinationsCatalogItemListJsonLd", () => {
   it("builds TouristDestination items", () => {
     const jsonLd = buildDestinationsCatalogItemListJsonLd([sampleDestination()], "en");
 
-    expect(jsonLd.name).toBe("Regions & places");
+    expect(jsonLd.name).toBe("Destinations & places");
     expect(jsonLd.itemListElement[0]?.item["@type"]).toBe("TouristDestination");
     expect(jsonLd.itemListElement[0]?.item.url).toContain("/destinations/patagonia");
   });

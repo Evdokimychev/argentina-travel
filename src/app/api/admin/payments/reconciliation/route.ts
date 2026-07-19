@@ -11,7 +11,7 @@ import { listPayoutRecords, summarizePayoutRecords } from "@/lib/payments/payout
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function GET(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.view");
   if (!auth.ok) return auth.response;
 
   const url = new URL(request.url);
@@ -42,7 +42,7 @@ type PostBody = {
 };
 
 export async function POST(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.reconciliation");
   if (!auth.ok) return auth.response;
 
   const body = (await request.json().catch(() => ({}))) as PostBody;

@@ -10,6 +10,15 @@ export const ADMIN_CAPABILITIES = [
   "operations.leads",
   "operations.bookings",
   "operations.shop",
+  "operations.email",
+  "finance.view",
+  "finance.refunds.prepare",
+  "finance.refunds.approve",
+  "finance.payouts.create",
+  "finance.payouts.approve",
+  "finance.payouts.export",
+  "finance.payouts.complete",
+  "finance.reconciliation",
   "marketplace.tours",
   "marketplace.excursions",
   "marketplace.moderation",
@@ -30,6 +39,8 @@ export const ADMIN_PRESET_IDS = [
   "marketplace_manager",
   "content_editor",
   "support_agent",
+  "finance_operator",
+  "finance_approver",
 ] as const;
 
 export type AdminPresetId = (typeof ADMIN_PRESET_IDS)[number];
@@ -39,6 +50,7 @@ export type AdminNavSectionId =
   | "operations"
   | "marketplace"
   | "content"
+  | "marketing"
   | "users"
   | "analytics"
   | "system";
@@ -48,17 +60,24 @@ export type AdminNavItemId =
   | "operations-hub"
   | "operations-leads"
   | "operations-bookings"
+  | "operations-waitlist"
+  | "operations-email"
+  | "operations-communications-commerce"
   | "operations-privacy"
   | "operations-payments"
   | "operations-reconciliation"
   | "operations-shop"
   | "marketplace-tours"
+  | "marketplace-apartments"
+  | "marketplace-mobility"
   | "marketplace-excursions"
   | "marketplace-organizers"
   | "marketplace-experts"
   | "marketplace-moderation"
   | "content-documents"
   | "content-knowledge"
+  | "content-forum"
+  | "content-shop"
   | "content-map"
   | "content-media"
   | "content-social-feed"
@@ -67,8 +86,11 @@ export type AdminNavItemId =
   | "users-list"
   | "analytics-overview"
   | "analytics-funnels"
+  | "marketing-search-visibility"
+  | "marketing-email-templates"
   | "system-redirects"
   | "system-settings"
+  | "system-commercial-plans"
   | "system-feature-flags"
   | "system-api-keys"
   | "system-staff"

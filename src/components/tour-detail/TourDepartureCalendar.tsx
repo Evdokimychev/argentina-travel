@@ -19,7 +19,10 @@ import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
 import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatForTourists, formatNights, formatSpots } from "@/lib/pluralize";
-import { dateFitsGuestCount } from "@/lib/tour-booking-spots";
+import {
+  dateFitsGuestCount,
+  isTourDateCurrentOrFuture,
+} from "@/lib/tour-booking-spots";
 import {
   buildDepartureCalendarMap,
   countTourDepartureDays,
@@ -94,7 +97,9 @@ export default function TourDepartureCalendar({
   className,
 }: TourDepartureCalendarProps) {
   const departureMap = useMemo(() => buildDepartureCalendarMap(dates), [dates]);
-  const selectedDate = dates.find((item) => item.id === selectedDateId);
+  const selectedDate = dates.find(
+    (item) => item.id === selectedDateId && isTourDateCurrentOrFuture(item)
+  );
 
   const selectedRange = useMemo(() => {
     if (!selectedDate?.startDate) return null;
@@ -153,7 +158,7 @@ export default function TourDepartureCalendar({
             <button
               type="button"
               onClick={() => setViewMonth((current) => subMonths(current, 1))}
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 text-slate transition-colors hover:border-sky/30 hover:text-charcoal"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-gray-200 text-slate transition-colors hover:border-sky/30 hover:text-charcoal"
               aria-label="Предыдущий месяц"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -164,7 +169,7 @@ export default function TourDepartureCalendar({
             <button
               type="button"
               onClick={() => setViewMonth((current) => addMonths(current, 1))}
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 text-slate transition-colors hover:border-sky/30 hover:text-charcoal"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-gray-200 text-slate transition-colors hover:border-sky/30 hover:text-charcoal"
               aria-label="Следующий месяц"
             >
               <ChevronRight className="h-3.5 w-3.5" />
@@ -181,13 +186,16 @@ export default function TourDepartureCalendar({
 
           <div className="mt-0.5 grid grid-cols-7">
             {Array.from({ length: startPad }).map((_, index) => (
-              <div key={`pad-${index}`} className="h-9" />
+              <div key={`pad-${index}`} className="h-11" />
             ))}
             {monthDays.map((day, dayIndex) => {
               const key = format(day, "yyyy-MM-dd");
               const columnIndex = (startPad + dayIndex) % 7;
               const entry = departureMap.get(key);
-              const selected = entry?.date.id === selectedDateId;
+              const currentOrFuture = entry
+                ? isTourDateCurrentOrFuture(entry.date)
+                : false;
+              const selected = currentOrFuture && entry?.date.id === selectedDateId;
               const bookable = entry ? dateFitsGuestCount(entry.date, guests, groupMin) : false;
               const inSelectedRange = selectedRange?.keys.has(key) ?? false;
               const isRangeStart = selectedRange?.startKey === key;
@@ -202,7 +210,7 @@ export default function TourDepartureCalendar({
               );
 
               return (
-                <div key={key} className="relative h-9 w-full px-px">
+                <div key={key} className="relative h-11 w-full px-px">
                   {barCaps ? (
                     <div
                       className={cn(
@@ -219,10 +227,11 @@ export default function TourDepartureCalendar({
                     <button
                       type="button"
                       onClick={() => onSelect(entry.date)}
+                      disabled={!currentOrFuture}
                       aria-label={`Заезд ${format(day, "d MMMM", { locale: ru })}`}
                       aria-pressed={selected}
                       className={cn(
-                        "relative z-10 flex h-9 w-full flex-col items-center justify-center px-0.5 py-0.5 text-center transition-colors",
+                        "relative z-10 flex h-11 w-full flex-col items-center justify-center px-0.5 py-0.5 text-center transition-colors disabled:cursor-not-allowed disabled:opacity-45",
                         selected
                           ? isSingleDay
                             ? "rounded-full bg-sky text-white shadow-sm"
@@ -255,7 +264,7 @@ export default function TourDepartureCalendar({
                   ) : inSelectedRange ? (
                     <span
                       className={cn(
-                        "relative z-10 flex h-9 w-full items-center justify-center text-[11px] font-semibold text-sky-dark",
+                        "relative z-10 flex h-11 w-full items-center justify-center text-[11px] font-semibold text-sky-dark",
                         isRangeEnd && !isSingleDay && "text-sky"
                       )}
                       aria-hidden
@@ -264,7 +273,7 @@ export default function TourDepartureCalendar({
                     </span>
                   ) : (
                     <span
-                      className="relative z-10 flex h-9 w-full items-center justify-center text-[11px] text-gray-300"
+                      className="relative z-10 flex h-11 w-full items-center justify-center text-[11px] text-gray-300"
                       aria-hidden
                     >
                       {format(day, "d")}

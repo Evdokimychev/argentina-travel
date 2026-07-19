@@ -1,6 +1,4 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { syncPendingToursToQueue } from "@/lib/admin/moderation-server";
-import { syncPendingReviewsToQueue } from "@/lib/reviews-server";
 import type { Database, Json } from "@/types/database";
 import type { AdminNotificationItem, AdminNotificationType } from "@/types/admin-notifications";
 
@@ -168,9 +166,6 @@ export async function markAllRead(supabase: DbClient): Promise<number> {
 }
 
 async function syncModerationNotifications(supabase: DbClient): Promise<void> {
-  await syncPendingToursToQueue(supabase);
-  await syncPendingReviewsToQueue(supabase);
-
   const { data: rows, error } = await supabase
     .from("moderation_queue")
     .select("id, entity_type, entity_id, reason, metadata")
@@ -181,8 +176,15 @@ async function syncModerationNotifications(supabase: DbClient): Promise<void> {
   if (error || !rows?.length) return;
 
   for (const row of rows) {
-    const title =
-      row.entity_type === "review" ? "Отзыв ожидает модерации" : "Тур ожидает модерации";
+    const title = row.entity_type === "review"
+      ? "Отзыв ожидает модерации"
+      : row.entity_type === "review_report"
+        ? "Жалоба на отзыв ожидает решения"
+        : row.entity_type === "forum_post"
+          ? "Жалоба на сообщение форума"
+          : row.entity_type === "blog_comment_report"
+            ? "Жалоба на комментарий блога"
+            : "Тур ожидает модерации";
     const entityTitle =
       metadataString(row.metadata, "title") ??
       metadataString(row.metadata, "tourTitle") ??

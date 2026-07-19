@@ -5,6 +5,8 @@ question: "У меня отпуск в конкретном месяце — к�
 short_answer: "Смотрите не «когда лучше вообще», а «что открыто в ваш месяц»: в аргентинское лето (дек-фев) — Патагония, в зиму (июн-авг) — север и киты; Игуасу и Буэнос-Айрес хороши почти круглый год."
 topic: klimat
 status: published
+site_ready: false
+publication_block_reason: "Сезонные рекомендации требуют сверки с SMN, национальными парками и официальными туристическими службами регионов."
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [климат, сезонность, планирование, по месяцам]
 related: [kogda-luchshe-ehat-v-argentinu, klimat-po-regionam, chto-stoit-deneg-prioritety, stoit-li-ehat-v-argentinu]

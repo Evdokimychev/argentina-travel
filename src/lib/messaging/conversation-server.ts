@@ -174,7 +174,7 @@ export async function getOrCreateConversationThreadForBooking(
     return { error: "Заявка не найдена" };
   }
 
-  if (!canAccessBooking(booking, actor, profileEmail)) {
+  if (!canAccessBooking(booking, actor)) {
     return { error: "Нет доступа к переписке" };
   }
 
