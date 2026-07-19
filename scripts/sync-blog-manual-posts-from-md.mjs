@@ -17,6 +17,7 @@ const MANUAL_ARTICLES = [
     md: "Маршрут-по-Аргентине-2-недели.md",
     category: "Маршруты",
     featured: true,
+    dateModified: "2026-07-17",
   },
   {
     md: "Маршруты-10-дней-и-3-недели.md",
