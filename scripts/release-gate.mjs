@@ -104,7 +104,9 @@ if (requestedGroup && !groups[requestedGroup]) {
 }
 
 fs.mkdirSync(logsDir, { recursive: true });
-const groupNames = requestedGroup ? [requestedGroup] : Object.keys(groups);
+const groupNames = requestedGroup
+  ? [requestedGroup]
+  : ["static", "contracts", "content", "security", "commerce", "production", "journeys"];
 const checks = [];
 let blocked = false;
 
@@ -134,6 +136,9 @@ for (const group of groupNames) {
         // explicitly by the caller.
         ...(process.env.PLAYWRIGHT_BASE_URL
           ? { PLAYWRIGHT_BASE_URL: process.env.PLAYWRIGHT_BASE_URL }
+          : {}),
+        ...(group === "journeys" && !requestedGroup
+          ? { PLAYWRIGHT_RELEASE_GATE: "true" }
           : {}),
       },
       encoding: "utf8",

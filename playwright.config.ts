@@ -6,6 +6,7 @@ const explicitBase =
 const baseURL = explicitBase || "http://127.0.0.1:3000";
 const useLocalWebServer =
   !explicitBase && /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(baseURL);
+const useReleaseBundle = process.env.PLAYWRIGHT_RELEASE_GATE === "true";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -31,7 +32,7 @@ export default defineConfig({
   ],
   webServer: useLocalWebServer
     ? {
-        command: "npm run dev",
+        command: useReleaseBundle ? "npm run start -- -p 3000" : "npm run dev",
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 180_000,
