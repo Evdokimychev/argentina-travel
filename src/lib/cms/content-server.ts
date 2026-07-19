@@ -64,7 +64,7 @@ export async function createCmsDocument(
     body: CmsDocumentBody;
     seo?: CmsDocumentSeo;
     status?: CmsDocumentStatus;
-    actorId: string;
+    actorId: string | null;
   }
 ): Promise<{ document: CmsDocument } | { error: string }> {
   const locale = input.locale ?? "ru";

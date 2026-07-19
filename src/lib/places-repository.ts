@@ -1,5 +1,10 @@
 import { getPlaceEnrichment } from "@/data/places-enrichment";
 import {
+  completePlacePlanningFaq,
+  getPlacePlanningHowToGetThere,
+  withPlacePlanningDefaults,
+} from "@/data/places-planning";
+import {
   COLLECTIONS_SEED,
   getAllPlaceListings,
   getPlaceBySlug,
@@ -83,6 +88,7 @@ function enrichPlaceDetail(seed: (typeof PLACES_SEED)[number]): PlaceDetail {
     coverImage: it.coverImage,
   }));
 
+  const editorialEnrichment = getPlaceEnrichment(seed.slug);
   return {
     ...listing,
     fullDescription: seed.fullDescription,
@@ -92,7 +98,9 @@ function enrichPlaceDetail(seed: (typeof PLACES_SEED)[number]): PlaceDetail {
     relatedPlaces,
     collections,
     itineraryReferences,
-    ...getPlaceEnrichment(seed.slug),
+    howToGetThere: getPlacePlanningHowToGetThere(listing),
+    ...editorialEnrichment,
+    faq: completePlacePlanningFaq(listing, editorialEnrichment?.faq),
   };
 }
 
@@ -101,7 +109,7 @@ export async function fetchPlacesServer(): Promise<PlaceListing[]> {
   if (isPlacesDbEnabled()) {
     try {
       const rows = await prisma.place.findMany({ orderBy: { popularity: "desc" } });
-      return rows.map(mapPrismaPlace);
+      return rows.map(mapPrismaPlace).map(withPlacePlanningDefaults);
     } catch {
       // fall through to seed
     }
@@ -115,13 +123,17 @@ export async function fetchPlaceBySlugServer(slug: string): Promise<PlaceDetail 
     try {
       const row = await prisma.place.findUnique({ where: { slug } });
       if (row) {
-        const mapped = mapPrismaPlace(row);
+        const mapped = withPlacePlanningDefaults(mapPrismaPlace(row));
         const all = await fetchPlacesServer();
+        const editorialEnrichment = getPlaceEnrichment(mapped.slug);
         return {
           ...mapped,
           relatedPlaces: buildPlaceRelations(mapped, all).map((r) => r.place),
           collections: [],
           itineraryReferences: [],
+          howToGetThere: getPlacePlanningHowToGetThere(mapped),
+          ...editorialEnrichment,
+          faq: completePlacePlanningFaq(mapped, editorialEnrichment?.faq),
         };
       }
     } catch {

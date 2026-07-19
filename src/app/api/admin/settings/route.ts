@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { sanitizeGlobalForSave } from "@/lib/cms/site-globals/normalize";
+import {
+  normalizeSiteGlobalByKey,
+  normalizeSiteFeatures,
+  normalizeSiteForms,
+  sanitizeGlobalForSave,
+} from "@/lib/cms/site-globals/normalize";
 import { SITE_GLOBAL_BY_KEY } from "@/lib/cms/site-globals/registry";
 import { fetchPublicHealthSnapshot } from "@/lib/monitoring/health-public";
 import { fetchAnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-server";
@@ -12,12 +17,10 @@ import {
   invalidateSiteGlobal,
 } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import {
-  fetchCmsCutoverReadiness,
-} from "@/lib/cms/cms-cutover";
+import { fetchCmsCutoverReadiness } from "@/lib/cms/cms-cutover";
 import { fetchCmsOpsSummary } from "@/lib/cms/cms-ops";
-import { normalizeSiteFeatures } from "@/lib/cms/site-globals/normalize";
 import { fetchSearchOpsSnapshot } from "@/lib/search/search-ops-server";
+import { getIntegrationReadiness } from "@/lib/integrations/admin-readiness";
 import type { Json } from "@/types/database";
 import type { SiteGlobalKey } from "@/types/site-globals";
 import { SITE_GLOBAL_KEYS } from "@/types/site-globals";
@@ -58,6 +61,12 @@ export async function GET(request: Request) {
       "site.contact": normalized["site.contact"],
       "site.navigation": normalized["site.navigation"],
       "site.design": normalized["site.design"],
+      "site.blog": normalized["site.blog"],
+      "site.commerce": normalized["site.commerce"],
+      "site.modules": normalized["site.modules"],
+      "site.forms": normalized["site.forms"],
+      "site.email": normalized["site.email"],
+      "site.marketing": normalized["site.marketing"],
       "site.maintenance": normalized["site.maintenance"],
     },
     updatedAt,
@@ -70,6 +79,7 @@ export async function GET(request: Request) {
     cmsOps,
     cronHealth: readCronHealthReport(12),
     searchOps: fetchSearchOpsSnapshot(),
+    integrations: getIntegrationReadiness(),
     productionReadiness: fetchProductionReadinessSnapshot(),
     analyticsReadiness: fetchAnalyticsReadinessSnapshot(),
     publicHealth: await fetchPublicHealthSnapshot({ includeSearchIndexCount: false }),
@@ -95,13 +105,17 @@ export async function PATCH(request: Request) {
       }
       updates.push({
         key: item.key,
-        value: sanitizeGlobalForSave((item.value ?? {}) as Record<string, unknown>) as Json,
+        value: sanitizeGlobalForSave(
+          normalizeSiteGlobalByKey(item.key, item.value ?? {}) as Record<string, unknown>,
+        ) as Json,
       });
     }
   } else if (body.key && isAllowedKey(body.key)) {
     updates.push({
       key: body.key,
-      value: sanitizeGlobalForSave((body.value ?? {}) as Record<string, unknown>) as Json,
+      value: sanitizeGlobalForSave(
+        normalizeSiteGlobalByKey(body.key, body.value ?? {}) as Record<string, unknown>,
+      ) as Json,
     });
   } else {
     return NextResponse.json({ error: "Недопустимый ключ настройки" }, { status: 400 });
@@ -109,7 +123,26 @@ export async function PATCH(request: Request) {
 
   const supabase = createSupabaseAdminClient();
 
+  // Validate the complete batch before the first database write so an invalid
+  // later entry cannot leave a partially published settings snapshot.
   for (const update of updates) {
+    if (update.key === "site.forms") {
+      const forms = normalizeSiteForms(update.value);
+      if (
+        forms.captchaMode !== "off" &&
+        (!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ||
+          !process.env.TURNSTILE_SECRET_KEY?.trim())
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              "Нельзя включить CAPTCHA: публичный и секретный ключи Turnstile ещё не настроены в защищённом окружении",
+          },
+          { status: 400 },
+        );
+      }
+    }
+
     if (update.key === "site.features") {
       const features = normalizeSiteFeatures(update.value);
       const readiness = await fetchCmsCutoverReadiness();
@@ -155,20 +188,22 @@ export async function PATCH(request: Request) {
         );
       }
     }
+  }
 
-    const { error } = await supabase.from("site_settings").upsert(
-      {
-        key: update.key,
-        value: update.value,
-        updated_by: auth.actorId,
-      },
-      { onConflict: "key" }
-    );
+  const { error } = await supabase.from("site_settings").upsert(
+    updates.map((update) => ({
+      key: update.key,
+      value: update.value,
+      updated_by: auth.actorId,
+    })),
+    { onConflict: "key" },
+  );
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
+  for (const update of updates) {
     invalidateSiteGlobal(update.key);
 
     await writeAdminAuditLog({

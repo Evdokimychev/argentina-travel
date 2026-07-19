@@ -17,7 +17,15 @@ export function getDefaultOgImageUrl(): string {
 export default async function SiteJsonLd() {
   const [branding, contact] = await Promise.all([fetchSiteBranding(), fetchSiteContact()]);
   const siteUrl = absoluteUrl("/");
-  const sameAs = [contact.telegramUrl, contact.instagramUrl, contact.whatsAppUrl]
+  const sameAs = [
+    contact.telegramUrl,
+    contact.instagramUrl,
+    contact.whatsAppUrl,
+    contact.youtubeUrl,
+    contact.tiktokUrl,
+    contact.facebookUrl,
+    contact.xUrl,
+  ]
     .map((url) => url?.trim())
     .filter((url): url is string => Boolean(url));
 

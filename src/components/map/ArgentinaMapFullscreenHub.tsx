@@ -400,7 +400,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         layerAvailability={layerAvailability}
         onToggleThematic={handleToggleThematic}
         onClearThematic={handleClearThematic}
-        className="absolute left-2.5 top-[248px] z-20 sm:left-[9px]"
+        className="absolute left-2.5 top-[300px] z-20 sm:left-[9px] sm:top-[248px]"
       />
 
       <MapStyleLayersControl
@@ -408,7 +408,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         onThemeChange={handleThemeChange}
         overlays={state.overlays}
         onToggleOverlay={handleToggleOverlay}
-        className="absolute right-2.5 top-[248px] z-20 sm:right-[9px]"
+        className="absolute right-2.5 top-[300px] z-20 sm:right-[9px] sm:top-[248px]"
       />
 
       <MapObjectPopup

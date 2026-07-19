@@ -15,6 +15,8 @@ import {
   parseCreateBookingCommand,
 } from "@/lib/booking-create-server";
 import { notifyBookingCreatedEmail } from "@/lib/bookings-notify";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
 
 async function postBooking(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
@@ -22,7 +24,29 @@ async function postBooking(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as { command?: unknown };
+    const body = (await request.json()) as {
+      command?: unknown;
+      captchaToken?: string;
+      company?: string;
+    };
+    const protection = await verifyGuestFormProtection({
+      request,
+      formId: "native_booking",
+      captchaToken: body.captchaToken,
+      honeypot: body.company,
+    });
+    if (!protection.ok) {
+      if (protection.kind === "configuration") {
+        return NextResponse.json(
+          { error: "Защита формы временно не настроена. Сообщите администратору." },
+          { status: 503 },
+        );
+      }
+      return NextResponse.json(
+        { error: "Не удалось подтвердить отправку формы." },
+        { status: 400 },
+      );
+    }
     const command = parseCreateBookingCommand(body.command);
 
     const supabase = await createSupabaseServerClient();
@@ -32,6 +56,14 @@ async function postBooking(request: Request) {
 
     const admin = createSupabaseAdminClient();
     const canonical = await buildCanonicalBooking(admin, command, authUser?.id);
+    const navigation = await fetchSiteNavigation();
+    const productEnabled =
+      canonical.productKind === "excursion"
+        ? navigation.showExcursions
+        : navigation.showTours;
+    if (!productEnabled) {
+      return NextResponse.json({ error: "Раздел временно недоступен." }, { status: 404 });
+    }
     const booking = canonical.booking;
 
     addBookingBreadcrumb("booking.create.requested", {

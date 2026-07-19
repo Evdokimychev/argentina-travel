@@ -1,10 +1,7 @@
 import {
   AlertTriangle,
-  Calculator,
   Info,
   Lightbulb,
-  Megaphone,
-  Sparkles,
 } from "lucide-react";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
 import HubSection from "@/components/guide/hub/HubSection";
@@ -120,25 +117,13 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
   );
 }
 
-function ImagePlaceholder() {
-  return null;
-}
-
-function MapPlaceholder() {
-  return null;
-}
-
 type GuidePillarSectionProps = {
   section: GuidePillarSection;
-  showMapPlaceholder?: boolean;
-  showImagePlaceholder?: boolean;
   initialTours?: import("@/types").TourListing[];
 };
 
 export default function GuidePillarSectionBlock({
   section,
-  showMapPlaceholder,
-  showImagePlaceholder,
   initialTours,
 }: GuidePillarSectionProps) {
   return (
@@ -152,8 +137,6 @@ export default function GuidePillarSectionBlock({
       {section.table ? (
         <PillarTable headers={section.table.headers} rows={section.table.rows} />
       ) : null}
-      {showImagePlaceholder ? <ImagePlaceholder /> : null}
-      {showMapPlaceholder ? <MapPlaceholder /> : null}
       {section.infoBoxes && section.infoBoxes.length > 0 ? (
         <div className="mt-5 space-y-4">
           {section.infoBoxes.map((box) => (
@@ -169,5 +152,3 @@ export default function GuidePillarSectionBlock({
     </HubSection>
   );
 }
-
-export { Calculator, Megaphone, Sparkles };

@@ -5,7 +5,6 @@ import {
   ArrowLeftRight,
   BookOpen,
   Building2,
-  Calculator,
   Car,
   ChevronLeft,
   ChevronRight,
@@ -22,7 +21,6 @@ import {
   ListOrdered,
   Map,
   MapPin,
-  Megaphone,
   MessageCircle,
   Plane,
   Route,
@@ -94,10 +92,7 @@ const TOC_ICONS: Record<string, LucideIcon> = {
   recommend: Sparkles,
   "read-more": BookOpen,
   "widget-exchange-rates": ArrowLeftRight,
-  "widget-calculator": Calculator,
-  "widget-map": Map,
   "widget-weather-panel": CloudSun,
-  "widget-promo": Megaphone,
 };
 
 function resolveTocIcon(id: string): LucideIcon {

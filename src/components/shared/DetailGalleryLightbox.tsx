@@ -29,6 +29,7 @@ export function DetailGalleryLightbox({
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const suppressBackdropClickRef = useRef(false);
   const hasMultiple = images.length > 1;
 
   useSiteHeaderOverlayLock(true);
@@ -42,8 +43,17 @@ export function DetailGalleryLightbox({
   }, [activeIndex, images.length, onActiveIndexChange]);
 
   useEffect(() => {
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     closeButtonRef.current?.focus();
 
+    return () => {
+      window.requestAnimationFrame(() => previousFocus?.focus());
+    };
+  }, []);
+
+  useEffect(() => {
     const dialog = dialogRef.current;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -98,9 +108,16 @@ export function DetailGalleryLightbox({
       touchStartXRef.current = null;
 
       if (delta > SWIPE_THRESHOLD_PX) {
+        suppressBackdropClickRef.current = true;
         goPrev();
       } else if (delta < -SWIPE_THRESHOLD_PX) {
+        suppressBackdropClickRef.current = true;
         goNext();
+      }
+      if (suppressBackdropClickRef.current) {
+        window.setTimeout(() => {
+          suppressBackdropClickRef.current = false;
+        }, 350);
       }
     },
     [goNext, goPrev, hasMultiple],
@@ -109,10 +126,49 @@ export function DetailGalleryLightbox({
   const activeSrc = images[activeIndex];
   if (!activeSrc) return null;
 
+  function handleStageClick(event: React.MouseEvent<HTMLDivElement>) {
+    event.stopPropagation();
+    if (suppressBackdropClickRef.current) {
+      suppressBackdropClickRef.current = false;
+      return;
+    }
+    if ((event.target as HTMLElement).closest("button")) return;
+
+    const image = event.currentTarget.querySelector("img");
+    if (!image || image.naturalWidth <= 0 || image.naturalHeight <= 0) {
+      onClose();
+      return;
+    }
+
+    const rect = image.getBoundingClientRect();
+    const style = window.getComputedStyle(image);
+    const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+    const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+    const paddingTop = Number.parseFloat(style.paddingTop) || 0;
+    const paddingBottom = Number.parseFloat(style.paddingBottom) || 0;
+    const availableWidth = Math.max(0, rect.width - paddingLeft - paddingRight);
+    const availableHeight = Math.max(0, rect.height - paddingTop - paddingBottom);
+    const scale = Math.min(
+      availableWidth / image.naturalWidth,
+      availableHeight / image.naturalHeight,
+    );
+    const renderedWidth = image.naturalWidth * scale;
+    const renderedHeight = image.naturalHeight * scale;
+    const renderedLeft = rect.left + paddingLeft + (availableWidth - renderedWidth) / 2;
+    const renderedTop = rect.top + paddingTop + (availableHeight - renderedHeight) / 2;
+    const insidePhoto =
+      event.clientX >= renderedLeft &&
+      event.clientX <= renderedLeft + renderedWidth &&
+      event.clientY >= renderedTop &&
+      event.clientY <= renderedTop + renderedHeight;
+
+    if (!insidePhoto) onClose();
+  }
+
   return (
     <div
       ref={dialogRef}
-      className="fixed inset-0 z-lightbox flex flex-col bg-charcoal/95 backdrop-blur-sm"
+      className="fixed inset-0 z-lightbox flex flex-col bg-black/90 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
@@ -137,8 +193,8 @@ export function DetailGalleryLightbox({
       </div>
 
       <div
-        className="relative min-h-0 flex-1 touch-pan-y"
-        onClick={(event) => event.stopPropagation()}
+        className="detail-gallery-lightbox-media relative min-h-0 flex-1 touch-pan-y"
+        onClick={handleStageClick}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -179,7 +235,7 @@ export function DetailGalleryLightbox({
 
       {hasMultiple ? (
         <div
-          className="shrink-0 px-4 pb-4 pt-2 sm:px-6"
+          className="hidden shrink-0 px-4 pb-4 pt-2 sm:block sm:px-6"
           onClick={(event) => event.stopPropagation()}
         >
           <div
@@ -196,7 +252,7 @@ export function DetailGalleryLightbox({
                 aria-label={`Фото ${index + 1} из ${images.length}`}
                 onClick={() => onActiveIndexChange(index)}
                 className={cn(
-                  "relative h-14 w-20 shrink-0 overflow-hidden rounded-xl bg-charcoal/40 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:h-16 sm:w-24",
+                  "relative h-14 w-20 shrink-0 overflow-hidden rounded-xl bg-black/40 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:h-16 sm:w-24",
                   index === activeIndex
                     ? "ring-2 ring-white shadow-sm"
                     : "opacity-70 ring-1 ring-white/20 hover:opacity-100",

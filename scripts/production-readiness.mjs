@@ -25,6 +25,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
+import { SERVICE_ROLE_ONLY_TABLES } from "./lib/rls-audit-config.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -60,25 +62,6 @@ const PAYMENT_PRODUCTION_ENV = [
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
 ];
-
-const SERVICE_ROLE_ONLY_TABLES = new Set([
-  "api_key_usage_log",
-  "affiliate_link_clicks",
-  "booking_commission_snapshots",
-  "payment_audit_log",
-  "payment_transactions",
-  "payout_records",
-  "platform_commission_rules",
-  "sputnik8_booking_requests",
-  "sputnik8_sync_runs",
-  "trip_prep_reminders_sent",
-  "tripster_booking_requests",
-  "tripster_sync_runs",
-  "url_redirects",
-  "youtravel_affise_snapshots",
-  "youtravel_booking_requests",
-  "youtravel_sync_runs",
-]);
 
 const TABLE_RE = /create\s+table\s+if\s+not\s+exists\s+public\.([a-z0-9_]+)/gi;
 const RLS_RE = /alter\s+table\s+public\.([a-z0-9_]+)\s+enable\s+row\s+level\s+security/gi;
@@ -342,6 +325,7 @@ function checkTsc() {
 
 async function main() {
   loadEnvLocal();
+  const release = buildReleaseFingerprint(root, process.env);
 
   const checks = [];
   const deployEnv = process.env.DEPLOY_ENV?.trim().toLowerCase();
@@ -536,7 +520,8 @@ async function main() {
   const payload = {
     ok: summary.fail === 0,
     ranAt: new Date().toISOString(),
-    gitSha: process.env.GIT_SHA?.trim() || null,
+    gitSha: release.commitSha,
+    gitShaSource: release.source,
     checks,
     summary,
   };

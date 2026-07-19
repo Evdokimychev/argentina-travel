@@ -31,7 +31,7 @@ export default function MapSearchPanel({
           onSubmit();
         }}
         className={cn(
-          "flex items-center gap-2 rounded-xl border border-gray-200/80 bg-white/95 shadow-sm backdrop-blur-sm",
+          "flex min-h-11 items-center gap-2 rounded-xl border border-gray-200/80 bg-white/95 shadow-sm backdrop-blur-sm",
           compact ? "px-2.5 py-1.5" : "rounded-2xl px-3 py-2"
         )}
       >
@@ -46,7 +46,7 @@ export default function MapSearchPanel({
         />
         <button
           type="submit"
-          className="rounded-lg bg-sky px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-sky-dark"
+          className="inline-flex min-h-9 items-center rounded-lg bg-sky px-3 py-1 text-[11px] font-semibold text-white hover:bg-sky-dark"
         >
           Найти
         </button>
@@ -57,7 +57,7 @@ export default function MapSearchPanel({
             <li key={item.id}>
               <button
                 type="button"
-                className="block w-full px-3 py-2 text-left hover:bg-gray-50"
+                className="block min-h-11 w-full px-3 py-2 text-left hover:bg-gray-50"
                 onClick={() => {
                   onChange(item.label);
                   if (onSelectSuggestion) {

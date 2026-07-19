@@ -12,7 +12,7 @@ function needsAttribution(hero: ReturnType<typeof getBlogPostHeroResolved>): boo
   const src = hero.attribution?.source;
   if (src === "unsplash" || src === "pexels" || src === "wikimedia") return true;
   const html = hero.attributionHtml ?? "";
-  return /Unsplash|Pexels|Wikimedia/.test(html);
+  return Boolean(html && html !== "© Пора в Аргентину");
 }
 
 export default function BlogPostHeroImage({ post, className }: BlogPostHeroImageProps) {

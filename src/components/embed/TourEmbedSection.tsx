@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { ArrowRight } from "lucide-react";
 import type { TourListing } from "@/types";
 import type { TourEmbedConfig } from "@/types/tour-embed";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
 import TourEmbedSectionHeader from "./TourEmbedSectionHeader";
 import TourEmbedWidget from "./TourEmbedWidget";
+import { resolveTourEmbedWidgetMatches } from "@/lib/tour-embed";
 
 interface TourEmbedSectionProps {
   config: TourEmbedConfig;
@@ -41,6 +43,12 @@ export default function TourEmbedSection({
   const tone = config.tone ?? "default";
   const toneStyle = TONE_STYLES[tone];
   const compact = tone === "inline";
+  const hasInitialMatches = useMemo(
+    () => resolveTourEmbedWidgetMatches(initialTours, config).length > 0,
+    [initialTours, config],
+  );
+
+  if (!hasInitialMatches) return null;
 
   return (
     <section

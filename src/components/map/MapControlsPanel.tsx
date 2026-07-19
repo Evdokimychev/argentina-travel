@@ -41,7 +41,6 @@ export default function MapControlsPanel({
   onResetKinds,
   loading = false,
 }: Props) {
-  const [panelOpen, setPanelOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const shareResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -83,7 +82,7 @@ export default function MapControlsPanel({
         <button
           type="button"
           onClick={handleShare}
-          className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate hover:bg-sky/5 hover:text-sky"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate hover:bg-sky/5 hover:text-sky sm:min-h-9"
           title="Скопировать ссылку на текущий вид карты"
         >
           {shareCopied ? (
@@ -99,57 +98,32 @@ export default function MapControlsPanel({
           )}
         </button>
 
-        <button
-          type="button"
-          onClick={() => setPanelOpen((open) => !open)}
-          className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-sky hover:bg-sky/5"
-          aria-expanded={panelOpen}
-        >
-          {panelOpen ? (
-            <>
-              Свернуть
-              <ChevronUp className="h-3.5 w-3.5" aria-hidden />
-            </>
-          ) : (
-            <>
-              Ещё
-              <ChevronDown className="h-3.5 w-3.5" aria-hidden />
-            </>
-          )}
-        </button>
       </div>
 
-      {panelOpen ? (
-        <div className="space-y-2 border-t border-gray-100/80 px-3 pb-3 pt-2 sm:px-3.5">
-          <MapSearchPanel
-            value={searchDraft}
-            onChange={onSearchChange}
-            onSubmit={onSearchSubmit}
-            suggestions={suggestions}
-            onSelectSuggestion={onSelectSuggestion}
-            compact
-          />
-          {activeQuery ? (
-            <div className="flex items-center gap-2 rounded-lg bg-sky/5 px-2.5 py-1.5 text-[11px] text-charcoal">
-              <Search className="h-3 w-3 shrink-0 text-sky" aria-hidden />
-              <span className="min-w-0 flex-1 truncate">Фильтр: «{activeQuery}»</span>
-              <button
-                type="button"
-                onClick={onSearchClear}
-                className="inline-flex items-center gap-0.5 font-semibold text-sky hover:underline"
-              >
-                <X className="h-3 w-3" aria-hidden />
-                Сбросить
-              </button>
-            </div>
-          ) : null}
-          <p className="text-[10px] leading-snug text-slate">
-            Стиль карты и слои (рельеф, 3D, спутник) — в кнопке
-            <span className="mx-1 inline-flex h-4 w-4 items-center justify-center rounded bg-sky/10 align-middle text-sky">▣</span>
-            у правого края карты.
-          </p>
-        </div>
-      ) : null}
+      <div className="space-y-2 border-t border-gray-100/80 px-3 py-2 sm:px-3.5">
+        <MapSearchPanel
+          value={searchDraft}
+          onChange={onSearchChange}
+          onSubmit={onSearchSubmit}
+          suggestions={suggestions}
+          onSelectSuggestion={onSelectSuggestion}
+          compact
+        />
+        {activeQuery ? (
+          <div className="flex items-center gap-2 rounded-lg bg-sky/5 px-2.5 py-1.5 text-[11px] text-charcoal">
+            <Search className="h-3 w-3 shrink-0 text-sky" aria-hidden />
+            <span className="min-w-0 flex-1 truncate">Фильтр: «{activeQuery}»</span>
+            <button
+              type="button"
+              onClick={onSearchClear}
+              className="inline-flex min-h-11 items-center gap-0.5 font-semibold text-sky hover:underline sm:min-h-9"
+            >
+              <X className="h-3 w-3" aria-hidden />
+              Сбросить
+            </button>
+          </div>
+        ) : null}
+      </div>
 
       <div className="border-t border-gray-100/80 px-3 py-2 sm:px-3.5">
         <MapCategoryFilters
@@ -166,7 +140,7 @@ export default function MapControlsPanel({
         <button
           type="button"
           onClick={() => setLegendOpen((open) => !open)}
-          className="flex w-full items-center justify-between py-1 text-[11px] font-semibold text-slate hover:text-charcoal"
+          className="flex min-h-11 w-full items-center justify-between py-1 text-[11px] font-semibold text-slate hover:text-charcoal sm:min-h-9"
           aria-expanded={legendOpen}
         >
           Обозначения

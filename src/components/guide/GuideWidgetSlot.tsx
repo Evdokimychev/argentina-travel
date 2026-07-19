@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
-import ArgentinaSeasonMatrix, {
-  ArgentinaSeasonMatrixSkeleton,
-} from "@/components/travel/ArgentinaSeasonMatrix";
+import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import ArgentinaWeatherPanel, {

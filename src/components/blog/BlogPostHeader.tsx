@@ -32,8 +32,8 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
 
         <div className="mt-5 grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_min(42%,460px)] lg:gap-10">
           <div className="min-w-0">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="min-w-0 flex-1">
+            <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+              <div className="min-w-0 flex-1 sm:min-w-[20rem]">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
                     {post.category}
@@ -60,7 +60,7 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
                   </p>
                 </div>
               </div>
-              <SharePageLinkButton title={post.title} className="shrink-0" />
+              <SharePageLinkButton title={post.title} className="shrink-0 self-end sm:self-auto" />
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate">

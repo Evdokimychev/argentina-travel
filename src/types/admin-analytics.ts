@@ -93,8 +93,11 @@ export type AdminAnalyticsFunnelsPayload = {
   funnel: AnalyticsFunnelStep[];
   cohorts: AnalyticsCohortMonth[];
   meta: {
-    tourViewsSource: "events" | "estimate";
+    tourViewsSource: "events" | "unavailable";
     hasTourViewData: boolean;
+    dataStatus: "trusted" | "untrusted_direct_insert" | "unavailable";
+    trustedForKpi: boolean;
+    reason: string | null;
   };
 };
 

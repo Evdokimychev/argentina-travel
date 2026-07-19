@@ -27,7 +27,7 @@ export default function BlogChecklist({ items, title, className }: BlogChecklist
           {title}
         </p>
       ) : null}
-      <ul className="space-y-2.5">
+      <ul className="m-0 list-none space-y-2.5 p-0">
         {items.map((item) => (
           <li key={item.text} className="flex items-start gap-3 text-sm leading-relaxed text-slate">
             <span

@@ -1,6 +1,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { notifyLeadCaptured } from "@/lib/leads-notify";
+import { escapeHtml } from "@/lib/notifications/email-templates";
 import type {
   ContactSubmissionInsert,
   ContactSubmissionKind,
@@ -63,8 +64,8 @@ export async function submitNewsletter(input: SubmitNewsletterInput): Promise<vo
   }
 
   void notifyLeadCaptured({
-    subject: `Новая подписка: ${email}`,
-    html: `<p>Email: <strong>${email}</strong></p><p>Источник: ${row.source ?? "footer"}</p>`,
+    subject: `Новая подписка: ${email.replace(/[\r\n]+/g, " ")}`,
+    html: `<p>Email: <strong>${escapeHtml(email)}</strong></p><p>Источник: ${escapeHtml(row.source ?? "footer")}</p>`,
   });
 }
 
@@ -104,10 +105,10 @@ export async function submitContact(input: SubmitContactInput): Promise<void> {
 
   void notifyLeadCaptured({
     subject: `Новая заявка: ${input.kind}`,
-    html: `<p><strong>${name}</strong></p>
-<p>Email: ${email ?? "—"}<br/>Телефон: ${phone ?? "—"}</p>
-<p>${row.message}</p>
-<pre>${JSON.stringify(row.context, null, 2)}</pre>`,
+    html: `<p><strong>${escapeHtml(name)}</strong></p>
+<p>Email: ${escapeHtml(email ?? "—")}<br/>Телефон: ${escapeHtml(phone ?? "—")}</p>
+<p>${escapeHtml(row.message ?? "")}</p>
+<pre>${escapeHtml(JSON.stringify(row.context, null, 2))}</pre>`,
   });
 }
 

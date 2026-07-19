@@ -24,7 +24,6 @@ import { buildPartnerTourAffiliateFallbackPath } from "@/lib/partner-tour/affili
 import {
   normalizePartnerBookingUrl,
   openPartnerBookingUrl,
-  PARTNER_TOUR_BOOKING_THANK_YOU,
   resolveTripsterFallbackDescription,
   resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
@@ -42,6 +41,11 @@ import {
 import { resolveYouTravelBookingRedirectFromApi } from "@/lib/youtravel/checkout-url";
 import type { TourDetail } from "@/types";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
+import {
+  partnerTransitionMessage,
+  type PartnerTransitionOutcome,
+} from "@/lib/booking/partner-handoff-copy";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 function RequiredMark() {
   return (
@@ -102,9 +106,13 @@ export default function PartnerTourBookingContactSection({
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [transitionOutcome, setTransitionOutcome] = useState<PartnerTransitionOutcome>("partner_handoff");
   const [partnerBookingUrl, setPartnerBookingUrl] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const [company, setCompany] = useState("");
   const [form, setForm] = useState(() => createPartnerContactForm(guests, user));
 
   const previewSummary = useMemo(() => {
@@ -136,6 +144,7 @@ export default function PartnerTourBookingContactSection({
     customDate,
     dateMode,
     guests,
+    isYouTravel,
     partnerBookingPrice,
     selectedDate,
     tour.partnerPriceDisplay,
@@ -220,11 +229,14 @@ export default function PartnerTourBookingContactSection({
       contactEmail: autofill.contactEmail || prev.contactEmail,
       contactPhone: autofill.contactPhone || prev.contactPhone,
     }));
-  }, [user?.id, user?.phone, user?.country, user?.email, user?.fullName]);
+  }, [user]);
 
   function handleClosePreview() {
     closePartnerBookingPreview();
+    setSubmitted(false);
     setError(null);
+    setCaptchaToken("");
+    setCompany("");
     setPartnerBookingUrl(null);
     setPopupBlocked(false);
   }
@@ -293,6 +305,7 @@ export default function PartnerTourBookingContactSection({
   function completePartnerBookingTransition(openUrl: string, reason?: string | null) {
     const normalized = normalizePartnerBookingUrl(openUrl);
     setSubmitted(true);
+    setTransitionOutcome("partner_handoff");
     setPartnerBookingUrl(normalized);
     setPopupBlocked(!openPartnerBookingUrl(normalized));
     trackBookingSubmit({
@@ -303,8 +316,8 @@ export default function PartnerTourBookingContactSection({
       guests,
       source: "partner_affiliate_fallback",
     });
-    feedback.success({
-      title: "Заявка принята",
+    feedback.info({
+      title: "Продолжите у партнёра",
       description: isYouTravel
         ? resolveYouTravelFallbackDescription(reason)
         : resolveTripsterFallbackDescription(reason),
@@ -408,6 +421,8 @@ export default function PartnerTourBookingContactSection({
             phone: contact.phone,
             message: contact.messageToGuide,
             userId: user?.id,
+            captchaToken,
+            company,
           }
         : {
             slug: tour.slug,
@@ -420,6 +435,8 @@ export default function PartnerTourBookingContactSection({
             messageToGuide: contact.messageToGuide,
             productType: "tour",
             userId: user?.id,
+            captchaToken,
+            company,
           };
 
       bookingOperationKeyRef.current ??= crypto.randomUUID();
@@ -480,6 +497,7 @@ export default function PartnerTourBookingContactSection({
       }
 
       setSubmitted(true);
+      setTransitionOutcome("order_created");
       trackBookingSubmit({
         productType: "tour",
         slug: tour.slug,
@@ -499,8 +517,12 @@ export default function PartnerTourBookingContactSection({
       setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
       setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
       feedback.success({
-        title: "Заявка принята",
-        description: PARTNER_TOUR_BOOKING_THANK_YOU,
+        title: "Заказ создан у партнёра",
+        description: partnerTransitionMessage({
+          outcome: "order_created",
+          productType: "tour",
+          partnerLabel,
+        }),
       });
     } catch (submitError) {
       const normalized = normalizeSiteError(submitError, {
@@ -510,18 +532,24 @@ export default function PartnerTourBookingContactSection({
       feedback.showError(normalized);
     } finally {
       setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
   if (submitted) {
     return (
       <PartnerBookingSuccessPanel
-        message={PARTNER_TOUR_BOOKING_THANK_YOU}
+        message={partnerTransitionMessage({
+          outcome: transitionOutcome,
+          productType: "tour",
+          partnerLabel,
+        })}
         partnerLabel={partnerLabel}
+        outcome={transitionOutcome}
         partnerBookingUrl={partnerBookingUrl}
         popupBlocked={popupBlocked}
         productType="tour"
-        onClose={closePartnerBookingPreview}
+        onClose={handleClosePreview}
       />
     );
   }
@@ -623,6 +651,22 @@ export default function PartnerTourBookingContactSection({
           </div>
         </>
       ) : null}
+
+      <input
+        type="text"
+        name="company"
+        value={company}
+        onChange={(event) => setCompany(event.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden="true"
+      />
+      <TurnstileField
+        formId="partner_booking"
+        onToken={setCaptchaToken}
+        resetSignal={captchaResetSignal}
+      />
 
       {error ? (
         <InlineFeedback variant="error" title="Проверьте форму" description={error} />

@@ -10,6 +10,7 @@ import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import { fetchPlacesServer, placeHref } from "@/lib/places-repository";
 import { MEDIA_LOGO_FALLBACK } from "@/lib/media-resolver";
+import { placeListingQualityScore } from "@/lib/places-readiness";
 import { findBestMapObjectMatch } from "@/lib/map-search";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -34,6 +35,9 @@ function mapEditorialFields(input: {
   source?: string;
   sourceUrl?: string;
   sourceVerifiedAt?: string;
+  qualityScore?: number;
+  tags?: string[];
+  status?: MapObject["status"];
 }): Required<Pick<MapObject, "importance" | "featured" | "editorialPriority" | "qualityScore" | "source" | "minZoom" | "maxZoom" | "tags" | "status">> & Pick<MapObject, "sourceUrl" | "sourceVerifiedAt"> {
   const baseImportance: Record<MapMarkerKind, number> = {
     city: 90,
@@ -60,14 +64,14 @@ function mapEditorialFields(input: {
     importance,
     featured: input.featured === true,
     editorialPriority: importance,
-    qualityScore: input.sourceVerifiedAt ? 90 : 72,
+    qualityScore: input.qualityScore ?? (input.sourceVerifiedAt ? 90 : 72),
     source: input.source ?? MAP_SOURCE,
     sourceUrl: input.sourceUrl,
     sourceVerifiedAt: input.sourceVerifiedAt,
     minZoom: minZoom[input.kind],
     maxZoom: 18,
-    tags: [input.kind],
-    status: "published",
+    tags: [...new Set([input.kind, ...(input.tags ?? [])])],
+    status: input.status ?? "published",
   };
 }
 
@@ -200,7 +204,12 @@ function placeToMapObject(place: PlaceListing, tours: TourListing[]): MapObject 
     meta: place.city ?? place.region,
     relatedTours: relatedToursForPlace(place.slug, tours),
     relatedArticles: [{ title: "Места на карте", href: `/places/${place.slug}` }],
-    ...mapEditorialFields({ kind }),
+    ...mapEditorialFields({
+      kind,
+      qualityScore: placeListingQualityScore(place),
+      tags: [...place.tags, place.province ?? "", place.city ?? ""].filter(Boolean),
+      status: placeListingQualityScore(place) >= 70 ? "published" : "needs_review",
+    }),
   };
 }
 

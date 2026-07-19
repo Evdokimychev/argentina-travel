@@ -13,6 +13,7 @@ import type {
   AnalyticsPeriod,
 } from "@/types/admin-analytics";
 import { ANALYTICS_FUNNEL_STEP_LABELS } from "@/types/admin-analytics";
+import { resolveAnalyticsFunnelTrust } from "@/lib/analytics/funnel-data-status";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -55,7 +56,7 @@ function buildFunnelSteps(counts: Record<AnalyticsFunnelStepId, number>): Analyt
 async function countTourViews(
   supabase: DbClient,
   since: string | null
-): Promise<{ count: number; source: "events" | "estimate"; hasData: boolean }> {
+): Promise<{ count: number; source: "events" | "unavailable"; hasData: boolean }> {
   let query = supabase
     .from("analytics_events")
     .select("id", { count: "exact", head: true })
@@ -63,30 +64,10 @@ async function countTourViews(
   query = applySince(query, since);
 
   const { count, error } = await query;
-  if (!error && (count ?? 0) > 0) {
-    return { count: count ?? 0, source: "events", hasData: true };
+  if (error || (count ?? 0) <= 0) {
+    return { count: 0, source: "unavailable", hasData: false };
   }
-
-  const [bookingsRes, inquiriesRes] = await Promise.all([
-    applySince(supabase.from("bookings").select("id", { count: "exact", head: true }), since),
-    applySince(
-      supabase
-        .from("contact_submissions")
-        .select("id", { count: "exact", head: true })
-        .eq("kind", "tour_inquiry"),
-      since
-    ),
-  ]);
-
-  const bookingCount = bookingsRes.count ?? 0;
-  const inquiryCount = inquiriesRes.count ?? 0;
-  const estimate = bookingCount + inquiryCount;
-
-  return {
-    count: estimate,
-    source: "estimate",
-    hasData: estimate > 0,
-  };
+  return { count: count ?? 0, source: "events", hasData: true };
 }
 
 async function countBookingsStarted(supabase: DbClient, since: string | null): Promise<number> {
@@ -161,7 +142,7 @@ export async function fetchAdminFunnels(
     ]);
 
   const funnelCounts: Record<AnalyticsFunnelStepId, number> = {
-    tour_view: Math.max(tourViews.count, bookingStarted),
+    tour_view: tourViews.count,
     booking_started: bookingStarted,
     confirmed,
     paid,
@@ -175,16 +156,20 @@ export async function fetchAdminFunnels(
     bookings: row.count,
     retentionStub: null,
   }));
+  const trust = resolveAnalyticsFunnelTrust({
+    hasObservedTourViews: tourViews.hasData,
+  });
 
   return {
     period,
     periodStart: since,
     generatedAt: new Date().toISOString(),
-    funnel: buildFunnelSteps(funnelCounts),
+    funnel: trust.trustedForKpi ? buildFunnelSteps(funnelCounts) : [],
     cohorts,
     meta: {
       tourViewsSource: tourViews.source,
       hasTourViewData: tourViews.hasData,
+      ...trust,
     },
   };
 }

@@ -49,6 +49,7 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   excursion: Landmark,
   place: Mountain,
   blog: BookOpen,
+  knowledge: BookOpen,
   faq: HelpCircle,
   page: Compass,
   legal: FileText,
@@ -63,6 +64,7 @@ const KIND_FILTERS: Array<{ kind: SearchResultType | "all"; label: string }> = [
   { kind: "excursion", label: SEARCH_TYPE_LABELS.excursion },
   { kind: "place", label: SEARCH_TYPE_LABELS.place },
   { kind: "blog", label: SEARCH_TYPE_LABELS.blog },
+  { kind: "knowledge", label: SEARCH_TYPE_LABELS.knowledge },
   { kind: "guide", label: SEARCH_TYPE_LABELS.guide },
   { kind: "destination", label: SEARCH_TYPE_LABELS.destination },
 ];
@@ -145,6 +147,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
     "tour",
     "excursion",
     "place",
+    "knowledge",
     "blog",
     "guide",
     "destination",
@@ -210,6 +213,7 @@ export default function SiteSearch() {
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>(() => getDefaultSearchIndex());
 
   useEffect(() => {
+    if (!open) return;
     let cancelled = false;
 
     void loadSearchIndex().then((index) => {
@@ -219,7 +223,7 @@ export default function SiteSearch() {
     return () => {
       cancelled = true;
     };
-  }, [indexVersion]);
+  }, [indexVersion, open]);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;

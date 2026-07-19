@@ -32,7 +32,6 @@ import TourWaitlistModal from "./TourWaitlistModal";
 import PartnerTourBookingModal from "./PartnerTourBookingModal";
 import TourSectionNav from "./TourSectionNav";
 import PrivateTourBanner from "./PrivateTourBanner";
-import PartnerTourBanner from "./PartnerTourBanner";
 import PartnerTourStatsSection from "./PartnerTourStatsSection";
 import PartnerTourDescriptionSection from "./PartnerTourDescriptionSection";
 import PartnerTourIncludedSection from "./PartnerTourIncludedSection";
@@ -220,12 +219,6 @@ export default function TourDetailView({
           <PrivateTourBanner />
         </div>
       ) : null}
-      {isPartnerTour ? (
-        <div className={cn(siteContainerClass, "mt-4")}>
-          <PartnerTourBanner partnerSource={tour.partnerSource ?? null} />
-        </div>
-      ) : null}
-
       <TourSectionNav items={sectionLinks} />
 
       <div className="bg-surface-muted pb-32 lg:pb-16">

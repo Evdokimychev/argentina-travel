@@ -171,7 +171,7 @@ export function SafeImage({
         onLoad={() => setLoaded(true)}
         onError={() => {
           const localFallback = localMediaFallback(resolvedSrc);
-          if (localFallback && retrySrc !== localFallback) {
+          if (localFallback && activeSrc !== localFallback) {
             setLoaded(false);
             setRetrySrc(localFallback);
             return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +13,16 @@ import {
 } from "@/components/ui/dialog";
 import FilterBar from "@/components/marketplace/FilterBar";
 import type { TourFilters, TourListing } from "@/types";
+import { filterTours } from "@/lib/filter-tours";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { formatTours } from "@/lib/pluralize";
 
 type CatalogFiltersSheetProps = {
   tours: TourListing[];
   filters: TourFilters;
   onChange: (filters: TourFilters) => void;
   activeFilterCount: number;
+  defaultFilters: TourFilters;
 };
 
 export default function CatalogFiltersSheet({
@@ -26,8 +30,25 @@ export default function CatalogFiltersSheet({
   filters,
   onChange,
   activeFilterCount,
+  defaultFilters,
 }: CatalogFiltersSheetProps) {
   const [open, setOpen] = useState(false);
+  const [draftFilters, setDraftFilters] = useState(filters);
+  const { currency } = useLocaleCurrency();
+  const draftResultCount = useMemo(
+    () => filterTours(tours, draftFilters, currency).length,
+    [tours, draftFilters, currency],
+  );
+
+  function openSheet() {
+    setDraftFilters(filters);
+    setOpen(true);
+  }
+
+  function applyFilters() {
+    onChange(draftFilters);
+    setOpen(false);
+  }
 
   return (
     <>
@@ -36,7 +57,7 @@ export default function CatalogFiltersSheet({
         variant="outline"
         size="sm"
         className="lg:hidden min-h-11"
-        onClick={() => setOpen(true)}
+        onClick={openSheet}
       >
         <SlidersHorizontal className="h-4 w-4" aria-hidden />
         Фильтры
@@ -56,11 +77,23 @@ export default function CatalogFiltersSheet({
             </DialogDescription>
           </DialogHeader>
           <div className="max-w-full overflow-x-hidden px-5 pb-2 sm:px-6">
-            <FilterBar tours={tours} filters={filters} onChange={onChange} inline />
+            <FilterBar
+              tours={tours}
+              filters={draftFilters}
+              onChange={setDraftFilters}
+              inline
+            />
           </div>
-          <DialogFooter>
-            <Button type="button" className="w-full sm:w-auto" onClick={() => setOpen(false)}>
-              Показать результаты
+          <DialogFooter className="grid grid-cols-[auto_minmax(0,1fr)] gap-2 sm:flex">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDraftFilters(defaultFilters)}
+            >
+              Сбросить
+            </Button>
+            <Button type="button" className="min-w-0 sm:w-auto" onClick={applyFilters}>
+              Показать {formatTours(draftResultCount)}
             </Button>
           </DialogFooter>
         </DialogContent>

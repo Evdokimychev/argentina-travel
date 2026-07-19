@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
-import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
+import {
+  assertStaffTargetMutationAllowed,
+  authorizeStaffManagementRequest,
+  fetchStaffSecurityRecord,
+  hasConsistentOwnerGrant,
+  isAdminPresetId,
+  parseAdminCapabilities,
+} from "@/lib/admin/staff-management";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { AdminPresetId } from "@/types/admin";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "users.manage");
   if (!auth.ok) return auth.response;
-
   const supabase = createSupabaseAdminClient();
 
   const [staffRes, presetsRes] = await Promise.all([
@@ -55,19 +61,29 @@ export async function GET(request: Request) {
 }
 
 type PostBody = {
-  userId?: string;
-  email?: string;
-  preset?: AdminPresetId | null;
-  capabilities?: string[];
-  notes?: string;
+  userId?: unknown;
+  email?: unknown;
+  preset?: unknown;
+  capabilities?: unknown;
+  notes?: unknown;
 };
 
 export async function POST(request: Request) {
-  const auth = await authorizeAdminRequest(request, "users.manage");
-  if (!auth.ok) return auth.response;
+  const access = await authorizeStaffManagementRequest(request);
+  if (!access.ok) return access.response;
 
   const body = (await request.json()) as PostBody;
-  const supabase = createSupabaseAdminClient();
+  const { auth, supabase } = access;
+
+  if (body.userId !== undefined && typeof body.userId !== "string") {
+    return NextResponse.json({ error: "userId должен быть строкой" }, { status: 400 });
+  }
+  if (body.email !== undefined && typeof body.email !== "string") {
+    return NextResponse.json({ error: "email должен быть строкой" }, { status: 400 });
+  }
+  if (body.notes !== undefined && typeof body.notes !== "string") {
+    return NextResponse.json({ error: "notes должен быть строкой" }, { status: 400 });
+  }
 
   let userId = body.userId?.trim();
   if (!userId && body.email?.trim()) {
@@ -83,6 +99,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Укажите userId или email" }, { status: 400 });
   }
 
+  const existingStaff = await fetchStaffSecurityRecord(supabase, userId);
+  const targetGuard = assertStaffTargetMutationAllowed({
+    actorId: auth.actorId,
+    target: existingStaff ?? { userId, preset: null, capabilities: [], isActive: false },
+  });
+  if (!targetGuard.ok) {
+    return NextResponse.json(
+      { error: targetGuard.error, code: targetGuard.code },
+      { status: targetGuard.status },
+    );
+  }
+  if (existingStaff) {
+    return NextResponse.json(
+      { error: "Сотрудник уже назначен. Используйте изменение записи." },
+      { status: 409 },
+    );
+  }
+
+  const preset = body.preset === undefined ? "support_agent" : body.preset;
+  if (!isAdminPresetId(preset)) {
+    return NextResponse.json({ error: "Неизвестный preset" }, { status: 400 });
+  }
+  const parsedCapabilities = parseAdminCapabilities(body.capabilities ?? []);
+  if (!parsedCapabilities.ok) {
+    return NextResponse.json({ error: parsedCapabilities.error }, { status: 400 });
+  }
+  const assignment = {
+    userId,
+    preset,
+    capabilities: parsedCapabilities.capabilities,
+    isActive: true,
+  };
+  if (!hasConsistentOwnerGrant(assignment)) {
+    return NextResponse.json(
+      { error: "super_admin требует явный wildcard; wildcard допустим только для super_admin" },
+      { status: 400 },
+    );
+  }
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("roles")
@@ -94,27 +149,34 @@ export async function POST(request: Request) {
   }
 
   const roles = profile.roles ?? [];
-  if (!roles.includes("admin")) {
-    await supabase
-      .from("profiles")
-      .update({ roles: [...roles, "admin"], active_role: "admin" })
-      .eq("id", userId);
-  }
-
-  const { error } = await supabase.from("admin_staff").upsert(
-    {
-      user_id: userId,
-      preset: body.preset ?? "support_agent",
-      capabilities: body.capabilities ?? [],
-      is_active: true,
-      notes: body.notes?.trim() || null,
-      invited_by: auth.actorId,
-    },
-    { onConflict: "user_id" }
-  );
+  const { error } = await supabase.from("admin_staff").insert({
+    user_id: userId,
+    preset: assignment.preset,
+    capabilities: assignment.capabilities,
+    is_active: true,
+    notes: body.notes?.trim() || null,
+    invited_by: auth.actorId,
+  });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (!roles.includes("admin")) {
+    const { error: profileUpdateError } = await supabase
+      .from("profiles")
+      .update({ roles: [...roles, "admin"], active_role: "admin" })
+      .eq("id", userId);
+
+    if (profileUpdateError) {
+      // Fail closed: a half-created staff row must not survive a profile update
+      // failure and block a safe retry. Access still requires both records.
+      await supabase.from("admin_staff").delete().eq("user_id", userId);
+      return NextResponse.json(
+        { error: "Не удалось подтвердить роль администратора" },
+        { status: 500 },
+      );
+    }
   }
 
   await writeAdminAuditLog({
@@ -122,7 +184,7 @@ export async function POST(request: Request) {
     action: "staff.assign",
     entityType: "admin_staff",
     entityId: userId,
-    payload: { preset: body.preset ?? null },
+    payload: { preset: assignment.preset, capabilities: assignment.capabilities },
     ipAddress: clientIpFromRequest(request),
   });
 

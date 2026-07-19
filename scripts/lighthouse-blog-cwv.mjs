@@ -45,14 +45,23 @@ const SAMPLE_PATHS = (process.env.LIGHTHOUSE_SAMPLE_PATHS?.split(",").map((p) =>
 const CATEGORIES = (
   process.env.LIGHTHOUSE_CATEGORIES?.split(",").map((c) => c.trim()).filter(Boolean) ?? ["performance"]
 );
+const requestedRuns = Number(process.env.LIGHTHOUSE_RUNS_PER_PATH ?? 1);
+const RUNS_PER_PATH = Number.isFinite(requestedRuns)
+  ? Math.max(1, Math.min(5, Math.floor(requestedRuns)))
+  : 1;
 
-/** Phase 6: local median ≥75, prod step ≥65; CLS ≤0.1; LCP ≤2500ms (soft fail). */
+/** Sprint 3: blocking public mobile budgets. Every cold run must pass. */
 const BUDGET = {
   performance: Number(process.env.LIGHTHOUSE_PERF_BUDGET ?? 90),
   accessibility: Number(process.env.LIGHTHOUSE_A11Y_BUDGET ?? 95),
-  lcpMs: 2500,
-  cls: 0.1,
+  seo: Number(process.env.LIGHTHOUSE_SEO_BUDGET ?? 95),
+  lcpMs: Number(process.env.LIGHTHOUSE_LCP_BUDGET_MS ?? 4000),
+  cls: Number(process.env.LIGHTHOUSE_CLS_BUDGET ?? 0.1),
+  tbtMs: Number(process.env.LIGHTHOUSE_TBT_BUDGET_MS ?? 300),
   inpMs: 200,
+  homeTransferBytes: Number(process.env.LIGHTHOUSE_HOME_TRANSFER_BUDGET_BYTES ?? 2_500_000),
+  contentTransferBytes: Number(process.env.LIGHTHOUSE_CONTENT_TRANSFER_BUDGET_BYTES ?? 1_500_000),
+  scriptTransferBytes: Number(process.env.LIGHTHOUSE_SCRIPT_TRANSFER_BUDGET_BYTES ?? 350_000),
 };
 
 if (process.env.SKIP_LIGHTHOUSE === "1") {
@@ -89,82 +98,110 @@ const results = [];
 let failed = false;
 
 for (const samplePath of SAMPLE_PATHS) {
-  const url = `${BASE_URL}${samplePath}`;
-  const outFile = path.join(reportDir, `lh-${samplePath.replace(/\//g, "_")}.json`);
+  for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
+    const url = `${BASE_URL}${samplePath}`;
+    const outFile = path.join(
+      reportDir,
+      `lh-${samplePath.replace(/\//g, "_")}-run-${run}.json`,
+    );
 
-  console.log(`\nLighthouse (mobile): ${url}`);
+    console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
 
-  const lh = spawnSync(
-    "npx",
-    [
-      "--yes",
-      "lighthouse",
-      url,
-      "--quiet",
-      "--chrome-flags=--headless --no-sandbox --disable-gpu",
-      "--only-categories=" + CATEGORIES.join(","),
-      "--form-factor=mobile",
-      "--screenEmulation.mobile=true",
-      "--throttling-method=simulate",
-      "--output=json",
-      `--output-path=${outFile}`,
-    ],
-    { stdio: "inherit", cwd: root, env: process.env },
-  );
+    const lh = spawnSync(
+      "npx",
+      [
+        "--yes",
+        "lighthouse",
+        url,
+        "--quiet",
+        "--chrome-flags=--headless --no-sandbox --disable-gpu",
+        "--only-categories=" + CATEGORIES.join(","),
+        "--form-factor=mobile",
+        "--screenEmulation.mobile=true",
+        "--throttling-method=simulate",
+        "--output=json",
+        `--output-path=${outFile}`,
+      ],
+      { stdio: "inherit", cwd: root, env: process.env },
+    );
 
-  if (lh.status !== 0 || !fs.existsSync(outFile)) {
-    failed = true;
-    results.push({ path: samplePath, url, error: "lighthouse failed" });
-    continue;
-  }
+    if (lh.status !== 0 || !fs.existsSync(outFile)) {
+      failed = true;
+      results.push({ path: samplePath, url, run, error: "lighthouse failed", pass: false });
+      continue;
+    }
 
-  const report = JSON.parse(fs.readFileSync(outFile, "utf8"));
-  const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
-  const a11yScore =
-    CATEGORIES.includes("accessibility")
+    const report = JSON.parse(fs.readFileSync(outFile, "utf8"));
+    const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
+    const a11yScore = CATEGORIES.includes("accessibility")
       ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
       : null;
-  const audits = report.audits ?? {};
+    const seoScore = CATEGORIES.includes("seo")
+      ? Math.round((report.categories?.seo?.score ?? 0) * 100)
+      : null;
+    const audits = report.audits ?? {};
 
-  const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? Infinity;
-  const cls = audits["cumulative-layout-shift"]?.numericValue ?? Infinity;
-  const inpMs =
-    audits["interaction-to-next-paint"]?.numericValue ??
-    audits["experimental-interaction-to-next-paint"]?.numericValue ??
-    null;
+    const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? Infinity;
+    const cls = audits["cumulative-layout-shift"]?.numericValue ?? Infinity;
+    const tbtMs = audits["total-blocking-time"]?.numericValue ?? Infinity;
+    const transferBytes = audits["total-byte-weight"]?.numericValue ?? Infinity;
+    const scriptTransferBytes = Array.isArray(audits["network-requests"]?.details?.items)
+      ? audits["network-requests"].details.items
+          .filter((item) => item.resourceType === "Script")
+          .reduce((sum, item) => sum + Number(item.transferSize ?? 0), 0)
+      : Infinity;
+    const transferBudget =
+      samplePath === "/" ? BUDGET.homeTransferBytes : BUDGET.contentTransferBytes;
+    const inpMs =
+      audits["interaction-to-next-paint"]?.numericValue ??
+      audits["experimental-interaction-to-next-paint"]?.numericValue ??
+      null;
 
-  const perfPass =
-    !CATEGORIES.includes("performance") ||
-    (perfScore >= BUDGET.performance &&
-      lcpMs <= BUDGET.lcpMs &&
-      cls <= BUDGET.cls &&
-      (inpMs == null || inpMs <= BUDGET.inpMs));
-  const a11yPass =
-    a11yScore == null || a11yScore >= BUDGET.accessibility;
+    const perfPass =
+      !CATEGORIES.includes("performance") ||
+      (perfScore >= BUDGET.performance &&
+        lcpMs <= BUDGET.lcpMs &&
+        cls <= BUDGET.cls &&
+        tbtMs <= BUDGET.tbtMs &&
+        transferBytes <= transferBudget &&
+        scriptTransferBytes <= BUDGET.scriptTransferBytes &&
+        (inpMs == null || inpMs <= BUDGET.inpMs));
+    const a11yPass = a11yScore == null || a11yScore >= BUDGET.accessibility;
+    const seoPass = seoScore == null || seoScore >= BUDGET.seo;
 
-  const row = {
-    path: samplePath,
-    url,
-    performance: CATEGORIES.includes("performance") ? perfScore : null,
-    accessibility: a11yScore,
-    lcpMs: Math.round(lcpMs),
-    cls: Number(cls.toFixed(3)),
-    inpMs: inpMs != null ? Math.round(inpMs) : null,
-    pass: perfPass && a11yPass,
-  };
+    const row = {
+      path: samplePath,
+      url,
+      run,
+      performance: CATEGORIES.includes("performance") ? perfScore : null,
+      accessibility: a11yScore,
+      seo: seoScore,
+      lcpMs: Math.round(lcpMs),
+      cls: Number(cls.toFixed(3)),
+      tbtMs: Math.round(tbtMs),
+      transferBytes: Math.round(transferBytes),
+      transferBudgetBytes: transferBudget,
+      scriptTransferBytes: Math.round(scriptTransferBytes),
+      inpMs: inpMs != null ? Math.round(inpMs) : null,
+      pass: perfPass && a11yPass && seoPass,
+    };
 
-  results.push(row);
+    results.push(row);
 
-  const status = row.pass ? "PASS" : "FAIL";
-  console.log(
-    `  ${status}` +
-      (row.performance != null ? ` perf=${row.performance}` : "") +
-      (row.accessibility != null ? ` a11y=${row.accessibility}` : "") +
-      ` LCP=${row.lcpMs}ms CLS=${row.cls}` +
-      (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
-  );
+    const status = row.pass ? "PASS" : "FAIL";
+    console.log(
+      `  ${status}` +
+        (row.performance != null ? ` perf=${row.performance}` : "") +
+        (row.accessibility != null ? ` a11y=${row.accessibility}` : "") +
+        (row.seo != null ? ` seo=${row.seo}` : "") +
+        ` LCP=${row.lcpMs}ms CLS=${row.cls} TBT=${row.tbtMs}ms` +
+        ` transfer=${Math.round(row.transferBytes / 1024)}KB` +
+        ` scripts=${Math.round(row.scriptTransferBytes / 1024)}KB` +
+        (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
+    );
 
-  if (!row.pass) failed = true;
+    if (!row.pass) failed = true;
+  }
 }
 
 const perfScores = results
@@ -173,6 +210,9 @@ const perfScores = results
 const a11yScores = results
   .filter((r) => typeof r.accessibility === "number")
   .map((r) => r.accessibility);
+const seoScores = results
+  .filter((r) => typeof r.seo === "number")
+  .map((r) => r.seo);
 
 function median(values) {
   if (values.length === 0) return 0;
@@ -182,19 +222,35 @@ function median(values) {
 
 const medianPerf = median(perfScores);
 const medianA11y = median(a11yScores);
+const medianSeo = median(seoScores);
+const gitSha =
+  process.env.GIT_SHA?.trim() ||
+  spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout?.trim() ||
+  null;
+const gitStatus = spawnSync("git", ["status", "--porcelain"], {
+  cwd: root,
+  encoding: "utf8",
+}).stdout?.trim();
+const dirty = Boolean(gitStatus);
 
 const summary = {
   at: new Date().toISOString(),
+  gitSha,
+  dirty,
   baseUrl: BASE_URL,
   categories: CATEGORIES,
+  runsPerPath: RUNS_PER_PATH,
+  device: "Lighthouse mobile / simulated throttling / cold Chrome process per run",
   budget: BUDGET,
   medianPerformance: medianPerf,
   medianAccessibility: medianA11y || null,
+  medianSeo: medianSeo || null,
   results,
   pass:
     !failed &&
     (perfScores.length === 0 || medianPerf >= BUDGET.performance) &&
-    (a11yScores.length === 0 || medianA11y >= BUDGET.accessibility),
+    (a11yScores.length === 0 || medianA11y >= BUDGET.accessibility) &&
+    (seoScores.length === 0 || medianSeo >= BUDGET.seo),
 };
 
 fs.mkdirSync(reportDir, { recursive: true });
@@ -205,6 +261,9 @@ if (perfScores.length) {
 }
 if (a11yScores.length) {
   console.log(`Median Accessibility: ${medianA11y} (budget ≥ ${BUDGET.accessibility})`);
+}
+if (seoScores.length) {
+  console.log(`Median SEO: ${medianSeo} (budget ≥ ${BUDGET.seo})`);
 }
 
 process.exit(failed ? 1 : 0);

@@ -4,6 +4,8 @@ import { cn } from "@/lib/cn";
 interface ArgentinaLogoProps {
   className?: string;
   size?: "sm" | "md";
+  src?: string;
+  alt?: string;
 }
 
 const sizeClass = {
@@ -12,11 +14,16 @@ const sizeClass = {
 } as const;
 
 /** Фирменный логотип «Пора в Аргентину» (светлая тема) */
-export default function ArgentinaLogo({ className, size = "md" }: ArgentinaLogoProps) {
+export default function ArgentinaLogo({
+  className,
+  size = "md",
+  src = "/logo-light.svg",
+  alt = "Пора в Аргентину",
+}: ArgentinaLogoProps) {
   return (
     <Image
-      src="/logo-light.svg"
-      alt="Пора в Аргентину"
+      src={src}
+      alt={alt}
       width={849}
       height={257}
       priority

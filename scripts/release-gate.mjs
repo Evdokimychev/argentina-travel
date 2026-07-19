@@ -3,6 +3,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import nextEnv from "@next/env";
+import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
 
 const root = process.cwd();
 nextEnv.loadEnvConfig(root, false);
@@ -11,6 +12,7 @@ const logsDir = path.join(root, "var/ops/release-gate-logs");
 const requestedGroup = process.argv.includes("--group")
   ? process.argv[process.argv.indexOf("--group") + 1]
   : null;
+const sourceFingerprint = buildReleaseFingerprint(root, process.env);
 
 const groups = {
   static: [
@@ -120,9 +122,10 @@ for (const group of groupNames) {
   if (blocked) break;
 }
 
-const shaResult = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" });
 const report = {
-  commitSha: process.env.GIT_SHA?.trim() || shaResult.stdout.trim() || null,
+  commitSha: sourceFingerprint.commitSha,
+  commitShaSource: sourceFingerprint.source,
+  sourceFingerprint,
   timestamp: new Date().toISOString(),
   environment: process.env.VERCEL_ENV ?? process.env.DEPLOY_ENV ?? "local-production",
   requestedGroup: requestedGroup ?? "all",

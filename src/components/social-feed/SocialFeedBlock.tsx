@@ -90,12 +90,11 @@ export default function SocialFeedBlock({
 
       {layout === "grid" ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {gridItems.map((item, index) => (
+          {gridItems.map((item) => (
             <SocialFeedTile
               key={item.id}
               item={item}
               source={sourcesById.get(item.sourceId)}
-              priority={index < 2}
             />
           ))}
         </div>

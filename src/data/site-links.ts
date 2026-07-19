@@ -17,6 +17,7 @@ export const SITE_FOOTER_NAV = [
   { href: "/shop", label: "Магазин", labelKey: "nav.shop" },
   { href: "/services", label: "Сервисы", labelKey: "nav.services" },
   { href: "/blog", label: "Блог", labelKey: "nav.blog" },
+  { href: "/forum", label: "Форум" },
   { href: "/about", label: "О проекте", labelKey: "nav.about" },
 ] as const;
 

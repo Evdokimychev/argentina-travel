@@ -76,8 +76,9 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
     return { ok: false, error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" };
   }
 
-  const roles: AccountRole[] =
-    input.role === "organizer" ? ["tourist", "organizer"] : [input.role];
+  // Registration creates only the safe base role. Organizer access is granted
+  // after an organizer_applications review by a capable staff member.
+  const roles: AccountRole[] = ["tourist"];
 
   const signupClient = await createSupabaseServerClient();
   const { data: created, error: createError } = await signupClient.auth.signUp({
@@ -89,7 +90,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
         first_name: firstName,
         last_name: lastName,
         phone: normalizedPhone,
-        role: input.role,
+        role: "tourist",
         country: "Россия",
       },
     },
@@ -119,7 +120,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
       last_name: lastName,
       phone: normalizedPhone,
       roles,
-      active_role: input.role,
+      active_role: "tourist",
       country: "Россия",
     });
 
@@ -138,7 +139,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
         last_name: lastName,
         phone: normalizedPhone,
         roles,
-        active_role: input.role,
+        active_role: "tourist",
       })
       .eq("id", userId);
 

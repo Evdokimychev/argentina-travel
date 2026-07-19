@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Download, Share, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
@@ -20,11 +21,18 @@ type BeforeInstallPromptEvent = Event & {
 const MIN_VISITS = 2;
 
 export default function InstallPrompt() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [iosHint, setIosHint] = useState(false);
   const deferredPromptRef = useRef<BeforeInstallPromptEvent | null>(null);
+  const suppressOnBookingSurface = /^\/(?:tours|excursions)(?:\/|$)/.test(pathname);
 
   useEffect(() => {
+    if (suppressOnBookingSurface) {
+      setVisible(false);
+      deferredPromptRef.current = null;
+      return;
+    }
     if (isStandalonePwa() || isPwaInstallDismissed() || !isMobileDevice()) return;
 
     const visits = incrementPwaVisitCount();
@@ -44,7 +52,7 @@ export default function InstallPrompt() {
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     return () => window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-  }, []);
+  }, [suppressOnBookingSurface]);
 
   useEffect(() => {
     if (!visible) {

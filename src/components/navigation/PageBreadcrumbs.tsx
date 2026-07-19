@@ -11,6 +11,8 @@ type PageBreadcrumbsProps = {
   className?: string;
   variant?: "default" | "on-dark";
   separator?: "slash" | "dash";
+  /** Keeps long detail-page trails to one compact, scrollable line on phones. */
+  compactOnMobile?: boolean;
 };
 
 export default function PageBreadcrumbs({
@@ -18,6 +20,7 @@ export default function PageBreadcrumbs({
   className,
   variant = "default",
   separator = "slash",
+  compactOnMobile = false,
 }: PageBreadcrumbsProps) {
   const onDark = variant === "on-dark";
   const linkClass = onDark ? "transition-colors hover:text-white" : "transition-colors hover:text-sky";
@@ -27,10 +30,23 @@ export default function PageBreadcrumbs({
   const sep = separator === "dash" ? "–" : "/";
 
   return (
-    <nav className={className} aria-label="Хлебные крошки">
-      <ol className={cn("flex flex-wrap items-center text-sm", trailClass)}>
+    <nav className={cn(compactOnMobile && "overflow-hidden", className)} aria-label="Хлебные крошки">
+      <ol
+        className={cn(
+          "flex flex-wrap items-center text-sm",
+          compactOnMobile &&
+            "scrollbar-hide flex-nowrap overflow-x-auto whitespace-nowrap pb-1 [mask-image:linear-gradient(to_right,#000_0,#000_calc(100%-1.25rem),transparent_100%)] sm:flex-wrap sm:overflow-visible sm:whitespace-normal sm:pb-0 sm:[mask-image:none]",
+          trailClass,
+        )}
+      >
         {items.map((item, index) => (
-          <li key={`${item.label}-${index}`} className="inline-flex items-center">
+          <li
+            key={`${item.label}-${index}`}
+            className={cn(
+              "inline-flex shrink-0 items-center",
+              compactOnMobile && index === items.length - 1 && "sr-only sm:not-sr-only sm:inline-flex",
+            )}
+          >
             {index > 0 ? (
               <span className={cn("mx-2", sepClass)} aria-hidden>
                 {sep}

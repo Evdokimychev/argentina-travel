@@ -17,7 +17,14 @@ import type { SiteFooterInfo } from "@/lib/site-footer-info";
 import { siteContainerClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
 import { COOKIE_CONSENT_OPEN_EVENT } from "@/lib/cookie-consent";
-import type { SiteDesignGlobal } from "@/types/site-globals";
+import { filterPublicLinks, isPublicLinkEnabled } from "@/lib/public-module-visibility";
+import type {
+  SiteBrandingGlobalResolved,
+  SiteDesignGlobal,
+  SiteNavigationGlobal,
+  SiteFormsGlobal,
+  SiteModulesGlobal,
+} from "@/types/site-globals";
 
 function FooterColumn({
   title,
@@ -85,18 +92,32 @@ export default function Footer({
   /** @deprecated Pass siteFooter instead */
   siteLegal,
   design,
+  branding,
+  navigation,
+  forms,
+  modules,
 }: {
   siteFooter?: SiteFooterInfo;
   siteLegal?: SiteFooterInfo;
   design?: SiteDesignGlobal;
+  branding?: SiteBrandingGlobalResolved;
+  navigation?: SiteNavigationGlobal;
+  forms?: SiteFormsGlobal;
+  modules?: SiteModulesGlobal;
 }) {
   const { t } = useLocaleCurrency();
   const footerInfo = siteFooter ?? siteLegal;
   const socialLinks =
     footerInfo?.socialLinks?.length ? footerInfo.socialLinks : [...SITE_SOCIAL_LINKS];
-  const navMid = Math.ceil(SITE_FOOTER_NAV.length / 2);
-  const navPrimary = SITE_FOOTER_NAV.slice(0, navMid);
-  const navSecondary = SITE_FOOTER_NAV.slice(navMid);
+  const footerNavigation = navigation
+    ? filterPublicLinks(SITE_FOOTER_NAV, navigation, modules)
+    : SITE_FOOTER_NAV;
+  const showRouteCta =
+    design?.showFooterRouteCta !== false &&
+    (!navigation || isPublicLinkEnabled("/podbor", navigation, modules));
+  const navMid = Math.ceil(footerNavigation.length / 2);
+  const navPrimary = footerNavigation.slice(0, navMid);
+  const navSecondary = footerNavigation.slice(navMid);
 
   return (
     <footer
@@ -107,12 +128,17 @@ export default function Footer({
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5 xl:col-span-4">
             <Link href="/" className="inline-flex rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40">
-              <ArgentinaLogo />
+              <ArgentinaLogo
+                src={branding?.footerLogoUrl || branding?.primaryLogoUrl}
+                alt={branding?.logoAlt}
+              />
             </Link>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-slate dark:text-muted">
               {t("footer.description")}
             </p>
-            {design?.showFooterNewsletter !== false ? <FooterNewsletter /> : null}
+            {design?.showFooterNewsletter !== false && forms?.newsletterEnabled !== false ? (
+              <FooterNewsletter />
+            ) : null}
           </div>
 
           <div className="space-y-1 lg:hidden">
@@ -202,7 +228,7 @@ export default function Footer({
           </div>
         </div>
 
-        {design?.showFooterRouteCta !== false ? (
+        {showRouteCta ? (
           <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/[0.06] via-surface-elevated to-surface-elevated p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 dark:from-sky/[0.08] dark:via-surface-elevated dark:to-surface-elevated">
             <div className="min-w-0">
               <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-sky-ink dark:text-sky">

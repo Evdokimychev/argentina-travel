@@ -43,4 +43,20 @@ describe("cmsDocumentToSearchIndexItem", () => {
   it("returns null for draft", () => {
     expect(cmsDocumentToSearchIndexItem({ ...baseDoc, status: "draft" })).toBeNull();
   });
+
+  it("keeps knowledge documents in the KB namespace", () => {
+    const item = cmsDocumentToSearchIndexItem({
+      ...baseDoc,
+      id: "knowledge:test-slug:ru",
+      docType: "knowledge",
+    });
+    expect(cmsDocumentSearchId({ docType: "knowledge", slug: "test-slug" })).toBe(
+      "knowledge-test-slug",
+    );
+    expect(item).toMatchObject({
+      id: "knowledge-test-slug",
+      type: "knowledge",
+      href: "/baza-znaniy/test-slug",
+    });
+  });
 });

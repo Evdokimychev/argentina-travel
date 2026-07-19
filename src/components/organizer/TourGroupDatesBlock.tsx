@@ -98,12 +98,9 @@ export default function TourGroupDatesBlock({
         .map((date) => {
           const normalizedCapacity = Math.max(0, date.totalSeats || date.spotsLeft || 0);
           const normalizedLeft = Math.max(0, date.spotsLeft || 0);
-          const bookedCount =
-            normalizedCapacity > 0 ? Math.max(normalizedCapacity - normalizedLeft, 0) : 0;
           return {
             date: date.startDate,
             capacity: normalizedCapacity,
-            bookedCount,
             status: normalizedLeft <= 0 ? "sold_out" : "open",
           };
         });

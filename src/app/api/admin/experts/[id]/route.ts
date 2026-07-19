@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchExpertByIdAdmin } from "@/lib/local-experts-server";
 import type { LocalExpertUpdate } from "@/types/database";
 import type { ExpertCategory } from "@/types/local-experts";
+import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 
 const VALID_CATEGORIES: ExpertCategory[] = [
   "guide",
@@ -83,6 +84,19 @@ export async function PATCH(
     if (error || !data) {
       return NextResponse.json({ error: error?.message ?? "Update failed" }, { status: 500 });
     }
+
+    await writeAdminAuditLog({
+      actorUserId: auth.actorId,
+      action: "expert.update",
+      entityType: "local_expert",
+      entityId: id,
+      payload: {
+        changedFields: Object.keys(patch).sort(),
+        previousStatus: existing.status,
+        nextStatus: data.status,
+      },
+      ipAddress: clientIpFromRequest(request),
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

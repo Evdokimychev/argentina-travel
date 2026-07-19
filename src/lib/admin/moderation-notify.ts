@@ -1,17 +1,11 @@
-/**
- * Optional email alerts for moderation outcomes (Resend).
- */
+/** Durable email alerts for moderation outcomes. */
 import { absoluteUrl } from "@/lib/site-url";
-
-function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  })[character] ?? character);
-}
+import { sendOperationalEmail } from "@/lib/notifications/email-delivery";
+import {
+  escapeHtml,
+  renderEmailLayout,
+  renderPlainEmail,
+} from "@/lib/notifications/email-templates";
 
 export async function notifyModerationOutcome(input: {
   entityType: string;
@@ -20,40 +14,37 @@ export async function notifyModerationOutcome(input: {
   action: "approve" | "reject";
   note?: string;
 }): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const adminTo = process.env.LEADS_NOTIFY_EMAIL?.trim();
-  const from = process.env.LEADS_NOTIFY_FROM?.trim() ?? "onboarding@resend.dev";
-
-  if (!apiKey) return;
-
   const actionLabel = input.action === "approve" ? "одобрено" : "отклонено";
-  const subject = `Модерация: ${input.entityTitle} — ${actionLabel}`;
+  const subject = `Модерация: ${input.entityTitle.replace(/[\r\n]+/g, " ")} — ${actionLabel}`;
   const safeEntityType = escapeHtml(input.entityType);
   const safeEntityTitle = escapeHtml(input.entityTitle);
   const safeNote = input.note ? escapeHtml(input.note) : null;
-  const html = `
+  const contentHtml = `
     <p>Тип: ${safeEntityType}</p>
     <p>Объект: <strong>${safeEntityTitle}</strong></p>
     <p>Решение: ${actionLabel}</p>
     ${safeNote ? `<p>Комментарий: ${safeNote}</p>` : ""}
   `;
+  const layoutOptions = { previewText: subject };
 
-  const recipients = [adminTo, input.ownerEmail].filter(Boolean) as string[];
-  if (!recipients.length) return;
-
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from, to: recipients, subject, html }),
-      signal: AbortSignal.timeout(10_000),
-    });
-  } catch {
-    // Non-blocking
-  }
+  await sendOperationalEmail({
+    category: "organizer",
+    recipientEmails: [input.ownerEmail],
+    includeAdminCopy: true,
+    subject,
+    html: renderEmailLayout(contentHtml, layoutOptions),
+    text: renderPlainEmail(
+      [
+        `Тип: ${input.entityType}`,
+        `Объект: ${input.entityTitle}`,
+        `Решение: ${actionLabel}`,
+        input.note ? `Комментарий: ${input.note}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      layoutOptions,
+    ),
+  });
 }
 
 export async function notifyOrganizerApplicationReview(input: {
@@ -62,10 +53,7 @@ export async function notifyOrganizerApplicationReview(input: {
   action: "approve" | "reject";
   note?: string;
 }): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const from = process.env.LEADS_NOTIFY_FROM?.trim() ?? "onboarding@resend.dev";
-
-  if (!apiKey || !input.applicantEmail) return;
+  if (!input.applicantEmail) return;
 
   const subject =
     input.action === "approve"
@@ -73,35 +61,41 @@ export async function notifyOrganizerApplicationReview(input: {
       : "Заявка организатора — требуются уточнения";
 
   const organizerCabinetUrl = absoluteUrl("/organizer/tours?welcome=1");
+  const safeApplicantName = escapeHtml(input.applicantName);
+  const safeNote = input.note ? escapeHtml(input.note) : null;
 
-  const html =
+  const contentHtml =
     input.action === "approve"
-      ? `<p>Здравствуйте, ${input.applicantName}!</p>
+      ? `<p>Здравствуйте, ${safeApplicantName}!</p>
 <p>Ваша заявка организатора одобрена.</p>
 <p>Вы уже можете зайти в кабинет и начать публикацию.</p>
 <p><strong>Чек-лист первого шага:</strong></p>
 <ul>
   <li>Создайте первый тур</li>
-</ul>
-<p><a href="${organizerCabinetUrl}">Открыть кабинет организатора</a></p>`
-      : `<p>Здравствуйте, ${input.applicantName}!</p><p>К сожалению, заявку пока нельзя одобрить.${input.note ? ` Причина: ${input.note}` : ""}</p>`;
+</ul>`
+      : `<p>Здравствуйте, ${safeApplicantName}!</p><p>К сожалению, заявку пока нельзя одобрить.${safeNote ? ` Причина: ${safeNote}` : ""}</p>`;
+  const layoutOptions = input.action === "approve"
+    ? {
+        previewText: subject,
+        cta: { label: "Открыть кабинет организатора", href: organizerCabinetUrl },
+      }
+    : { previewText: subject };
 
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [input.applicantEmail],
-        subject,
-        html,
-      }),
-      signal: AbortSignal.timeout(10_000),
-    });
-  } catch {
-    // Non-blocking
-  }
+  await sendOperationalEmail({
+    category: "organizer",
+    recipientEmails: [input.applicantEmail],
+    subject,
+    html: renderEmailLayout(contentHtml, layoutOptions),
+    text: renderPlainEmail(
+      input.action === "approve"
+        ? [
+            `Здравствуйте, ${input.applicantName}!`,
+            "Ваша заявка организатора одобрена.",
+            "Вы уже можете зайти в кабинет и начать публикацию.",
+            "Создайте первый тур.",
+          ].join("\n")
+        : `Здравствуйте, ${input.applicantName}!\nК сожалению, заявку пока нельзя одобрить.${input.note ? ` Причина: ${input.note}` : ""}`,
+      layoutOptions,
+    ),
+  });
 }

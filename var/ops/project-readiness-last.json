@@ -1,11 +1,11 @@
 {
-  "ranAt": "2026-07-16T03:00:56.164Z",
-  "overall": 7.6,
-  "grade": "B",
+  "ranAt": "2026-07-19T16:19:52.657Z",
+  "overall": 9.5,
+  "grade": "A",
   "dimensions": {
     "code": {
-      "score": 4.4,
-      "note": "OK 14, warn 1, fail 1"
+      "score": 9.9,
+      "note": "OK 15, warn 1, fail 0"
     },
     "cms": {
       "score": 10,
@@ -16,18 +16,16 @@
       "note": "https://www.goargentina.ru"
     },
     "analytics": {
-      "score": 10,
-      "manual": false,
-      "note": "OK 1, warn 0, fail 0"
+      "score": null,
+      "note": "нет analytics-readiness-last.json",
+      "manual": true
     },
     "performance": {
       "score": 5.9,
       "note": "median perf 49, a11y 97, worst CLS 0.668 (prod CDN)"
     }
   },
-  "blockers": [
-    "publish:verify has blocking failures"
-  ],
+  "blockers": [],
   "manualNext": [
     "Vercel: NEXT_PUBLIC_GTM_ID + verification tokens → redeploy",
     "GTM: опубликовать контейнер (GA4, Метрика, Clarity)",

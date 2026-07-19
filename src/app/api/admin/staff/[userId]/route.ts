@@ -1,33 +1,88 @@
 import { NextResponse } from "next/server";
-import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { AdminPresetId } from "@/types/admin";
+import {
+  assertStaffTargetMutationAllowed,
+  authorizeStaffManagementRequest,
+  fetchStaffSecurityRecord,
+  hasConsistentOwnerGrant,
+  isAdminPresetId,
+  parseAdminCapabilities,
+} from "@/lib/admin/staff-management";
 import type { Database } from "@/types/database";
 
 type PatchBody = {
-  preset?: AdminPresetId | null;
-  capabilities?: string[];
-  isActive?: boolean;
-  notes?: string;
+  preset?: unknown;
+  capabilities?: unknown;
+  isActive?: unknown;
+  notes?: unknown;
 };
 
 export async function PATCH(
   request: Request,
   context: { params: Promise<{ userId: string }> }
 ) {
-  const auth = await authorizeAdminRequest(request, "users.manage");
-  if (!auth.ok) return auth.response;
+  const access = await authorizeStaffManagementRequest(request);
+  if (!access.ok) return access.response;
 
   const { userId } = await context.params;
   const body = (await request.json()) as PatchBody;
-  const supabase = createSupabaseAdminClient();
+  const { auth, supabase } = access;
+  const current = await fetchStaffSecurityRecord(supabase, userId);
+  if (!current) {
+    return NextResponse.json({ error: "Сотрудник не найден" }, { status: 404 });
+  }
+  const targetGuard = assertStaffTargetMutationAllowed({ actorId: auth.actorId, target: current });
+  if (!targetGuard.ok) {
+    return NextResponse.json(
+      { error: targetGuard.error, code: targetGuard.code },
+      { status: targetGuard.status },
+    );
+  }
 
   const update: Database["public"]["Tables"]["admin_staff"]["Update"] = {};
-  if (body.preset !== undefined) update.preset = body.preset;
-  if (body.capabilities !== undefined) update.capabilities = body.capabilities;
-  if (body.isActive !== undefined) update.is_active = body.isActive;
-  if (body.notes !== undefined) update.notes = body.notes?.trim() || null;
+  if (body.preset !== undefined) {
+    if (!isAdminPresetId(body.preset)) {
+      return NextResponse.json({ error: "Неизвестный preset" }, { status: 400 });
+    }
+    update.preset = body.preset;
+  }
+  let nextCapabilities = current.capabilities;
+  if (body.capabilities !== undefined) {
+    const parsedCapabilities = parseAdminCapabilities(body.capabilities);
+    if (!parsedCapabilities.ok) {
+      return NextResponse.json({ error: parsedCapabilities.error }, { status: 400 });
+    }
+    nextCapabilities = parsedCapabilities.capabilities;
+    update.capabilities = nextCapabilities;
+  }
+  if (body.isActive !== undefined) {
+    if (typeof body.isActive !== "boolean") {
+      return NextResponse.json({ error: "isActive must be boolean" }, { status: 400 });
+    }
+    update.is_active = body.isActive;
+  }
+  if (body.notes !== undefined) {
+    if (typeof body.notes !== "string") {
+      return NextResponse.json({ error: "notes must be a string" }, { status: 400 });
+    }
+    update.notes = body.notes.trim() || null;
+  }
+
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json({ error: "Нет данных для обновления" }, { status: 400 });
+  }
+  const nextRecord = {
+    ...current,
+    preset: body.preset === undefined ? current.preset : body.preset,
+    capabilities: nextCapabilities,
+    isActive: typeof body.isActive === "boolean" ? body.isActive : current.isActive,
+  };
+  if (!hasConsistentOwnerGrant(nextRecord)) {
+    return NextResponse.json(
+      { error: "super_admin требует явный wildcard; wildcard допустим только для super_admin" },
+      { status: 400 },
+    );
+  }
 
   const { error } = await supabase.from("admin_staff").update(update).eq("user_id", userId);
 
@@ -51,11 +106,22 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ userId: string }> }
 ) {
-  const auth = await authorizeAdminRequest(request, "users.manage");
-  if (!auth.ok) return auth.response;
+  const access = await authorizeStaffManagementRequest(request);
+  if (!access.ok) return access.response;
 
   const { userId } = await context.params;
-  const supabase = createSupabaseAdminClient();
+  const { auth, supabase } = access;
+  const current = await fetchStaffSecurityRecord(supabase, userId);
+  if (!current) {
+    return NextResponse.json({ error: "Сотрудник не найден" }, { status: 404 });
+  }
+  const targetGuard = assertStaffTargetMutationAllowed({ actorId: auth.actorId, target: current });
+  if (!targetGuard.ok) {
+    return NextResponse.json(
+      { error: targetGuard.error, code: targetGuard.code },
+      { status: targetGuard.status },
+    );
+  }
 
   const { error } = await supabase.from("admin_staff").delete().eq("user_id", userId);
   if (error) {
@@ -78,6 +144,15 @@ export async function DELETE(
       })
       .eq("id", userId);
   }
+
+  await writeAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "staff.remove",
+    entityType: "admin_staff",
+    entityId: userId,
+    payload: { preset: current.preset, capabilities: current.capabilities },
+    ipAddress: clientIpFromRequest(request),
+  });
 
   return NextResponse.json({ ok: true });
 }

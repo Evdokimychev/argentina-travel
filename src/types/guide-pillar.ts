@@ -48,9 +48,6 @@ export type GuidePillarBlogLink = {
 
 export type GuidePillarWidgetSlotType =
   | "exchange-rates"
-  | "calculator"
-  | "map"
-  | "promo"
   | "weather-panel"
   | "season-matrix"
   | "tourism-infographic"

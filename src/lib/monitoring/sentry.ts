@@ -20,6 +20,25 @@ function getDsn(): string | undefined {
   return dsn || undefined;
 }
 
+export function getSentryRelease(): string | undefined {
+  const release =
+    process.env.NEXT_PUBLIC_SENTRY_RELEASE?.trim() ||
+    process.env.SENTRY_RELEASE?.trim() ||
+    process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
+    process.env.GIT_SHA?.trim();
+  return release || undefined;
+}
+
+export function getSentryEnvironment(): string {
+  return (
+    process.env.SENTRY_ENVIRONMENT?.trim() ||
+    process.env.VERCEL_ENV?.trim() ||
+    process.env.DEPLOY_ENV?.trim() ||
+    process.env.NODE_ENV ||
+    "development"
+  );
+}
+
 export function isSentryEnabled(): boolean {
   return Boolean(getDsn());
 }
@@ -52,11 +71,13 @@ export async function initSentry(): Promise<void> {
 
     const Sentry = await loadSentry();
     if (!Sentry) return;
+    const release = getSentryRelease();
 
     Sentry.init({
       dsn,
       enabled: true,
-      environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
+      environment: getSentryEnvironment(),
+      ...(release ? { release } : {}),
       tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
       sendDefaultPii: false,
     });
@@ -165,4 +186,31 @@ export async function captureRouterTransitionStart(
 
   const Sentry = await loadSentry();
   Sentry?.captureRouterTransitionStart(...args);
+}
+
+export async function captureOperationalTestException(): Promise<{
+  enabled: boolean;
+  eventId: string | null;
+  release: string | null;
+  environment: string;
+}> {
+  const release = getSentryRelease() ?? null;
+  const environment = getSentryEnvironment();
+  const Sentry = await loadSentry();
+  if (!Sentry) {
+    return { enabled: false, eventId: null, release, environment };
+  }
+
+  let eventId: string | null = null;
+  Sentry.withScope((scope) => {
+    scope.setTag("area", "ops");
+    scope.setTag("verification", "sentry_test_exception");
+    if (release) scope.setTag("release_sha", release);
+    eventId = Sentry.captureException(
+      new Error("Operational Sentry verification event (intentional)"),
+    );
+  });
+  await Sentry.flush(2_000);
+
+  return { enabled: true, eventId, release, environment };
 }

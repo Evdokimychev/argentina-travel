@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-07-15T20:04:42.351Z",
+  "ranAt": "2026-07-18T18:08:57.611Z",
   "baseUrl": "https://www.goargentina.ru",
   "checks": [
     {
@@ -119,7 +119,7 @@
       "id": "live:sitemap",
       "label": "sitemap.xml доступен",
       "status": "ok",
-      "message": "1172 URL",
+      "message": "558 URL",
       "category": "live"
     },
     {

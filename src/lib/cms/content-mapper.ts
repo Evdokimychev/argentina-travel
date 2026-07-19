@@ -19,6 +19,42 @@ function parseBody(value: Json): CmsDocumentBody {
   const record = value as Record<string, unknown>;
   const stringArray = (input: unknown): string[] | undefined =>
     Array.isArray(input) ? input.filter((item): item is string => typeof item === "string") : undefined;
+  const parseCollector = (input: unknown) => {
+    if (!input || typeof input !== "object" || Array.isArray(input)) return undefined;
+    const collector = input as Record<string, unknown>;
+    if (typeof collector.identity !== "string" || typeof collector.fingerprint !== "string") {
+      return undefined;
+    }
+    const scoreBreakdown =
+      collector.scoreBreakdown && typeof collector.scoreBreakdown === "object" && !Array.isArray(collector.scoreBreakdown)
+        ? Object.fromEntries(
+            Object.entries(collector.scoreBreakdown as Record<string, unknown>).filter(
+              (entry): entry is [string, number] => typeof entry[1] === "number"
+            )
+          )
+        : {};
+    return {
+      schemaVersion: typeof collector.schemaVersion === "number" ? collector.schemaVersion : 2,
+      identity: collector.identity,
+      source: typeof collector.source === "string" ? collector.source : "unknown",
+      sourceId: typeof collector.sourceId === "string" ? collector.sourceId : "unknown",
+      sourceItemId:
+        typeof collector.sourceItemId === "string" || typeof collector.sourceItemId === "number"
+          ? collector.sourceItemId
+          : null,
+      sourceUrl: typeof collector.sourceUrl === "string" ? collector.sourceUrl : undefined,
+      fingerprint: collector.fingerprint,
+      qualityScore: typeof collector.qualityScore === "number" ? collector.qualityScore : 0,
+      scoreBreakdown,
+      flags: stringArray(collector.flags) ?? [],
+      category: typeof collector.category === "string" ? collector.category : undefined,
+      province: typeof collector.province === "string" ? collector.province : undefined,
+      city: typeof collector.city === "string" ? collector.city : undefined,
+      tags: stringArray(collector.tags) ?? [],
+      media: stringArray(collector.media) ?? [],
+      collectedAt: typeof collector.collectedAt === "string" ? collector.collectedAt : undefined,
+    };
+  };
   if (record.kind === "blog") {
     return {
       kind: "blog",
@@ -28,6 +64,7 @@ function parseBody(value: Json): CmsDocumentBody {
       sections: Array.isArray(record.sections)
         ? record.sections.map((section) => parseCmsBlogSection(section))
         : undefined,
+      collector: parseCollector(record.collector),
     };
   }
   if (record.kind === "author_article") {

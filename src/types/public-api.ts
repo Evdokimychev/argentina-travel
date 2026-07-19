@@ -1,5 +1,10 @@
-/** Scopes for public API v1 keys. Wildcard grants all read scopes. */
-export type PublicApiScope = "tours:read" | "excursions:read" | "*";
+/** Scopes for public API v1 keys. Wildcard grants every scope. */
+export type PublicApiScope =
+  | "tours:read"
+  | "excursions:read"
+  | "content:write"
+  | "content:status"
+  | "*";
 
 export type PublicApiKeyUsageStats = {
   requestsLast7d: number;

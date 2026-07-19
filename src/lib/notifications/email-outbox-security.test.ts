@@ -29,6 +29,9 @@ describe("transactional email outbox", () => {
     );
     expect(retryRoute).toContain("authorizeCronRequest(request)");
     expect(retryRoute).toContain("processEmailOutboxRetries");
+    expect(retryRoute).toContain("fetchOutboxHealthSnapshot");
+    expect(retryRoute).toContain("logCronResult(CRON_ROUTE");
+    expect(retryRoute).toContain("durationMs: Date.now() - startedAt");
     expect(maintenance).toContain('/api/cron/notifications/email-retry');
   });
 });

@@ -18,7 +18,6 @@ import { getAuthProvider } from "@/lib/auth-provider";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { profileToSessionUser } from "@/lib/profile-mapper";
-import { attachGuestBookingsToUser } from "@/lib/bookings-store";
 import {
   flushFavoriteSyncQueue,
   syncFavoritesOnLogin,
@@ -244,6 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const afterAuthSuccess = useCallback(async (nextUser: SessionUser) => {
     setUser(nextUser);
     if (nextUser.email) {
+      const { attachGuestBookingsToUser } = await import("@/lib/bookings-store");
       attachGuestBookingsToUser(nextUser.id, nextUser.email);
     }
 

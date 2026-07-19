@@ -37,5 +37,19 @@ describe("auth role hardening", () => {
       "utf8",
     );
     expect(provider).not.toContain('update({ roles: nextRoles, active_role: "organizer" })');
+
+    const registration = fs.readFileSync(
+      path.join(root, "src/lib/auth-register-server.ts"),
+      "utf8",
+    );
+    expect(registration).toContain('const roles: AccountRole[] = ["tourist"]');
+    expect(registration).toContain('active_role: "tourist"');
+    expect(registration).not.toContain('["tourist", "organizer"]');
+
+    const authModal = fs.readFileSync(
+      path.join(root, "src/components/auth/AuthModal.tsx"),
+      "utf8",
+    );
+    expect(authModal).toContain('isOrganizerFlow ? "/join#join-application" : "/profile"');
   });
 });

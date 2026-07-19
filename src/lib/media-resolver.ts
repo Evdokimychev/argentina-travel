@@ -6,7 +6,6 @@ import {
   CLIMATE_REGION_MONTH_MAP,
   DESTINATION_PLACE_MAP,
   GUIDE_PAGE_PLACE_MAP,
-  GUIDE_TOPIC_PLACE_MAP,
   PLACE_COVER_FALLBACK_MAP,
   RICH_ARTICLE_PLACE_MAP,
   TOUR_PLACE_MAP,
@@ -24,7 +23,11 @@ import {
 import { resolveSlotAssetId } from "@/lib/image-provider/slot-ids";
 import type { ResolvedImage } from "@/lib/image-provider/types";
 import type { MediaAsset } from "@/types/media-asset";
-import { resolveBlogSemanticHeroImage } from "@/lib/blog-post-image-bindings";
+import {
+  getBlogTopicImagePool,
+  inferBlogImageTopic,
+  resolveBlogSemanticHeroImage,
+} from "@/lib/blog-post-image-bindings";
 import { blogMediaFolder } from "@/lib/blog-media-path";
 
 const manifest = manifestData as { version: number; assets: MediaAsset[] };
@@ -111,6 +114,25 @@ export function getPlaceGallery(slug: string): string[] {
 
 export function getPlaceGalleryAlts(slug: string): string[] {
   return assetsForPlace(slug).map((a) => a.alt);
+}
+
+export type PlaceGalleryMediaItem = {
+  src: string;
+  alt: string;
+  author?: string;
+  license?: string;
+  sourceUrl?: string;
+};
+
+/** Bundled place media with attribution, safe for content galleries without remote hotlinking. */
+export function getPlaceGalleryMedia(slug: string): PlaceGalleryMediaItem[] {
+  return assetsForPlace(slug).map((asset) => ({
+    src: manifestMediaUrl(asset.localPath),
+    alt: asset.alt,
+    author: asset.author,
+    license: asset.license,
+    sourceUrl: asset.sourceUrl,
+  }));
 }
 
 export function getDestinationImage(destinationId: string): string {
@@ -263,12 +285,6 @@ function stockHeroBy(field: keyof MediaAsset, value: string): MediaAsset | undef
   return manifest.assets.find((a) => a[field] === value && a.role === "hero");
 }
 
-function stockAssetsBy(field: keyof MediaAsset, value: string): MediaAsset[] {
-  return manifest.assets
-    .filter((a) => a[field] === value)
-    .sort((a, b) => a.id.localeCompare(b.id));
-}
-
 export function getImmigrationTopicHeroImage(topicSlug: string): string {
   return getHeroSrc(`immigration:${topicSlug}`);
 }
@@ -343,7 +359,7 @@ export function isMediaLogoFallback(src: string): boolean {
   return src === MEDIA_LOGO_FALLBACK;
 }
 
-/** Card/listing cover: semantic topic pool → rich → legacy fallbacks. */
+/** Card/listing cover: rich/explicit editorial media → semantic topic pool → fallbacks. */
 export function resolveBlogPostCardImage(post: {
   slug: string;
   image?: string;
@@ -356,15 +372,15 @@ export function resolveBlogPostCardImage(post: {
     if (!isMediaLogoFallback(rich)) return rich;
   }
 
+  const manifestHero = manifestBlogHero(post.slug);
+  if (manifestHero) return manifestMediaUrl(manifestHero.localPath);
+
   const semantic = resolveBlogSemanticHeroImage({
     slug: post.slug,
     category: post.category,
     tags: post.tags ?? [],
   });
   if (!isMediaLogoFallback(semantic)) return semantic;
-
-  const manifestHero = manifestBlogHero(post.slug);
-  if (manifestHero) return manifestMediaUrl(manifestHero.localPath);
 
   const cover = getHeroSrc(`blog:${post.slug}`);
   if (!isMediaLogoFallback(cover)) return cover;
@@ -417,21 +433,15 @@ export function getBlogPostHeroResolved(post: {
     if (!isMediaLogoFallback(richHero.src)) return richHero;
   }
 
+  const manifestHero = manifestBlogHero(post.slug);
+  if (manifestHero) return mediaAssetToResolved(manifestHero);
+
   const semanticSrc = resolveBlogSemanticHeroImage({
     slug: post.slug,
     category: post.category,
     tags: post.tags ?? [],
   });
   if (!isMediaLogoFallback(semanticSrc)) {
-    const manifestHero = manifestBlogHero(post.slug);
-    if (
-      manifestHero &&
-      (manifestMediaUrl(manifestHero.localPath) === semanticSrc ||
-        mediaUrl(manifestHero.localPath) === semanticSrc)
-    ) {
-      return mediaAssetToResolved(manifestHero);
-    }
-
     const alt = getBlogPostCoverAlt(post.slug) || post.title;
     const normalized = semanticSrc.replace(/^\//, "");
     const pathAsset = manifest.assets.find((asset) => {
@@ -457,9 +467,6 @@ export function getBlogPostHeroResolved(post: {
       attributionHtml: "© Пора в Аргентину",
     };
   }
-
-  const manifestHero = manifestBlogHero(post.slug);
-  if (manifestHero) return mediaAssetToResolved(manifestHero);
 
   const blogHero = getHeroImage(`blog:${post.slug}`);
   if (!isMediaLogoFallback(blogHero.src)) return blogHero;
@@ -565,6 +572,80 @@ export function getContentImage(pageId: string, slotId: string): ResolvedImage {
   const asset = getMediaAsset(assetId);
   if (asset) return mediaAssetToResolved(asset);
   return getProviderSectionImage(pageId, slotId);
+}
+
+const BLOG_SECTION_SLOT_IDS = ["section-1", "section-2", "section-3"] as const;
+
+function mediaAssetIdentity(asset: MediaAsset): string {
+  return asset.contentHash ? `hash:${asset.contentHash}` : `path:${asset.localPath}`;
+}
+
+function manifestAssetForImagePath(path: string): MediaAsset | undefined {
+  const pathname = path.startsWith("http") ? new URL(path).pathname : path;
+  return manifest.assets.find(
+    (asset) =>
+      manifestMediaUrl(asset.localPath) === pathname ||
+      manifestMediaUrl(asset.localPath) === path ||
+      mediaUrl(asset.localPath) === path,
+  );
+}
+
+function stableMediaIndex(value: string, size: number): number {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) | 0;
+  }
+  return size > 0 ? Math.abs(hash) % size : 0;
+}
+
+/**
+ * Resolves a blog section image without repeating the hero or an earlier slot.
+ * Legacy manifests often copied hero→section-2 and section-1→section-3.
+ */
+export function getDistinctBlogSectionImage(
+  post: Pick<import("@/types").BlogPost, "slug" | "category" | "tags">,
+  slotId: (typeof BLOG_SECTION_SLOT_IDS)[number],
+): ResolvedImage | undefined {
+  const targetIndex = BLOG_SECTION_SLOT_IDS.indexOf(slotId);
+  if (targetIndex === -1) return undefined;
+
+  const used = new Set<string>();
+  const hero = manifestBlogHero(post.slug) ??
+    manifestAssetForImagePath(resolveBlogSemanticHeroImage(post));
+  if (hero) used.add(mediaAssetIdentity(hero));
+
+  const topicPool = getBlogTopicImagePool(inferBlogImageTopic(post));
+  const poolAssets = topicPool.flatMap((path) => {
+    const asset = manifestAssetForImagePath(path);
+    return asset ? [asset] : [];
+  });
+
+  for (let index = 0; index <= targetIndex; index += 1) {
+    const currentSlot = BLOG_SECTION_SLOT_IDS[index];
+    const explicit = getMediaAsset(resolveSlotAssetId(`blog:${post.slug}`, currentSlot));
+    let selected = explicit && !used.has(mediaAssetIdentity(explicit)) ? explicit : undefined;
+
+    if (!selected && poolAssets.length > 0) {
+      const start = stableMediaIndex(`${post.slug}:${currentSlot}`, poolAssets.length);
+      for (let offset = 0; offset < poolAssets.length; offset += 1) {
+        const candidate = poolAssets[(start + offset) % poolAssets.length];
+        if (!used.has(mediaAssetIdentity(candidate))) {
+          selected = candidate;
+          break;
+        }
+      }
+    }
+
+    if (!selected) {
+      if (index === targetIndex) return undefined;
+      continue;
+    }
+
+    used.add(mediaAssetIdentity(selected));
+    if (index === targetIndex) return mediaAssetToResolved(selected);
+  }
+
+  return undefined;
 }
 
 /** True when manifest has a dedicated slot asset with a non-logo image src. */

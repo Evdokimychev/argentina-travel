@@ -37,9 +37,6 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
 
   widgetSlots: [
     { id: "widget-exchange-rates", label: "Курс доллара сегодня", type: "exchange-rates" },
-    { id: "widget-calculator", label: "Калькулятор обмена", type: "calculator" },
-    { id: "widget-map", label: "Карта обменников", type: "map" },
-    { id: "widget-promo", label: "Партнёрские предложения", type: "promo" },
   ],
 
   sections: [

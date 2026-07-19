@@ -27,7 +27,7 @@ function sampleRailTone(button: HTMLElement): BackgroundTone {
   return darkVotes >= 2 ? "dark" : "light";
 }
 
-export default function ScrollNavigationRail() {
+export default function ScrollNavigationRail({ showOnMobile = false }: { showOnMobile?: boolean }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -87,7 +87,8 @@ export default function ScrollNavigationRail() {
       data-no-custom-cursor
       data-floating-chrome="true"
       className={cn(
-        "group fixed top-1/2 z-[85] hidden -translate-y-1/2 sm:flex",
+        "group fixed top-1/2 z-[85] -translate-y-1/2",
+        showOnMobile ? "flex" : "hidden sm:flex",
         floatingChromeInsetClass,
         "flex-col items-center gap-2 transition-opacity duration-200",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"

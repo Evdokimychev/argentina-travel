@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { authorizeCronRequest } from "@/lib/cron/authorize-cron";
 import { readCronHealthReport } from "@/lib/ops/ops-status";
+import { fetchOutboxHealthSnapshot } from "@/lib/ops/outbox-health-server";
 
 export const dynamic = "force-dynamic";
 
@@ -14,5 +15,25 @@ export async function GET(request: Request) {
   }
 
   const report = readCronHealthReport();
-  return NextResponse.json(report);
+  try {
+    const outbox = await fetchOutboxHealthSnapshot();
+    const ok = report.ok && outbox.ok;
+    return NextResponse.json({
+      ...report,
+      ok,
+      status: ok ? "ok" : "degraded",
+      outbox,
+    });
+  } catch {
+    return NextResponse.json({
+      ...report,
+      ok: false,
+      status: "degraded",
+      outbox: {
+        ok: false,
+        status: "critical",
+        reasons: ["outbox_health_unavailable"],
+      },
+    });
+  }
 }

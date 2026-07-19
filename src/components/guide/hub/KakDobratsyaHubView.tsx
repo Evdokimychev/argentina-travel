@@ -2,8 +2,6 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
-  ExternalLink,
-  MapPin,
   Shield,
 } from "lucide-react";
 import GuideNextTopic from "@/components/guide/GuideNextTopic";

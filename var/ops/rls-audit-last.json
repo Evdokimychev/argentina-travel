@@ -1,8 +1,9 @@
 {
   "ok": true,
   "source": "static",
-  "ranAt": "2026-07-16T03:03:38.645Z",
-  "gitSha": null,
+  "ranAt": "2026-07-19T16:20:40.173Z",
+  "gitSha": "ec5d30e6f533dbd3b620f673541664acfef7526d",
+  "gitShaSource": "git-head",
   "tableCount": 86,
   "criticalIssueCount": 0,
   "criticalIssues": [],

@@ -23,7 +23,7 @@ export default function HubDataTable({ table }: HubDataTableProps) {
               {row.map((cell, cellIndex) => (
                 <td
                   key={cellIndex}
-                  className={cnCell(cellIndex, rowIndex === 0)}
+                  className={cnCell(cellIndex)}
                 >
                   {cell}
                 </td>
@@ -36,7 +36,7 @@ export default function HubDataTable({ table }: HubDataTableProps) {
   );
 }
 
-function cnCell(index: number, _isFirst: boolean) {
+function cnCell(index: number) {
   const base = "px-4 py-3 text-slate align-top";
   if (index === 0) return `${base} font-medium text-charcoal`;
   return base;

@@ -957,6 +957,8 @@ export async function createBookingFromCheckout(input: {
   attribution?: BookingAttribution;
   optionId?: string;
   idempotencyKey?: string;
+  captchaToken?: string;
+  honeypot?: string;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
@@ -1007,7 +1009,10 @@ export async function createBookingFromCheckout(input: {
   };
 
   try {
-    const saved = await apiCreateBooking(command);
+    const saved = await apiCreateBooking(command, {
+      captchaToken: input.captchaToken,
+      honeypot: input.honeypot,
+    });
     notifyUpdated();
     return saved;
   } catch (error) {

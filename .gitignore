@@ -50,3 +50,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+
+# Supabase CLI local metadata (never commit project links or branch state)
+/supabase/.temp/
+
+# Local third-party UX research artifacts (HTML, screenshots, DOM snapshots)
+/research/third-party/

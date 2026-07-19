@@ -32,6 +32,8 @@ import {
   fingerprintPartnerBookingRequest,
   isValidBookingOperationKey,
 } from "@/lib/partner-booking/idempotency";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
 
 type BookingRequestBody = {
   slug?: string;
@@ -44,6 +46,8 @@ type BookingRequestBody = {
   messageToGuide?: string;
   productType?: "excursion" | "tour";
   userId?: string;
+  captchaToken?: string;
+  company?: string;
 };
 
 function normalizeTimeForApi(time: string): string {
@@ -192,6 +196,32 @@ async function postTripsterBookingRequest(request: Request) {
   const body = (await request.json().catch(() => null)) as BookingRequestBody | null;
   if (!body) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const protection = await verifyGuestFormProtection({
+    request,
+    formId: "partner_booking",
+    captchaToken: body.captchaToken,
+    honeypot: body.company,
+  });
+  if (!protection.ok) {
+    if (protection.kind === "configuration") {
+      return NextResponse.json(
+        { error: "Booking form protection is not configured." },
+        { status: 503 },
+      );
+    }
+    return NextResponse.json(
+      { error: "Booking form verification failed." },
+      { status: 400 },
+    );
+  }
+
+  const navigation = await fetchSiteNavigation();
+  const productEnabled =
+    body.productType === "tour" ? navigation.showTours : navigation.showExcursions;
+  if (!productEnabled) {
+    return NextResponse.json({ error: "Booking section is temporarily unavailable." }, { status: 404 });
   }
 
   const slug = body.slug?.trim();

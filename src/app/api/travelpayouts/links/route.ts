@@ -4,13 +4,19 @@ import {
   isTravelpayoutsConfigured,
   TravelpayoutsError,
 } from "@/lib/travelpayouts";
+import { isAllowedTravelpayoutsTargetUrl } from "@/lib/travelpayouts/target-url";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 type CreateLinksBody = {
   links?: Array<{ url?: string; subId?: string }>;
   shorten?: boolean;
 };
 
-export async function POST(request: Request) {
+async function postPartnerLinks(request: Request) {
+  if (process.env.TRAVELPAYOUTS_LINKS_ROUTE_ENABLED !== "true") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   if (!isTravelpayoutsConfigured()) {
     return NextResponse.json(
       { error: "Travelpayouts is not configured on the server" },
@@ -39,6 +45,12 @@ export async function POST(request: Request) {
   if (links.length > 20) {
     return NextResponse.json({ error: "Maximum 20 links per request" }, { status: 400 });
   }
+  if (links.some((item) => !isAllowedTravelpayoutsTargetUrl(item.url))) {
+    return NextResponse.json(
+      { error: "Partner URL is not allowed" },
+      { status: 400 },
+    );
+  }
 
   try {
     const result = await createTravelpayoutsPartnerLinks(links, { shorten: body.shorten });
@@ -50,3 +62,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to create partner links" }, { status: 500 });
   }
 }
+
+export const POST = withRateLimit(postPartnerLinks, {
+  limit: 10,
+  window: 60_000,
+  keyPrefix: "travelpayouts:links",
+  key: (request) => `ip:${getClientIp(request)}`,
+});

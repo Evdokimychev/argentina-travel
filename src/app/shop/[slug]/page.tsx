@@ -3,6 +3,7 @@ import ShopProductDetailView from "@/components/shop/ShopProductDetailView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { getShopProductBySlug } from "@/data/shop-products";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { fetchSiteCommerce } from "@/lib/site-settings-server";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function ShopProductPage({ params }: PageProps) {
-  const { slug } = await params;
+  const [{ slug }, settings] = await Promise.all([params, fetchSiteCommerce()]);
   const product = getShopProductBySlug(slug);
   if (!product) notFound();
 
@@ -32,7 +33,7 @@ export default async function ShopProductPage({ params }: PageProps) {
         description={product.description}
         path={`/shop/${product.slug}`}
       />
-      <ShopProductDetailView product={product} />
+      <ShopProductDetailView product={product} settings={settings} />
     </>
   );
 }

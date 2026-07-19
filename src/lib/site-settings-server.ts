@@ -3,11 +3,17 @@ import { resolveSiteGlobalForLocale } from "@/lib/cms/site-globals/locale-resolv
 import {
   DEFAULT_SITE_BRANDING,
   normalizeSiteBranding,
+  normalizeSiteBlog,
+  normalizeSiteCommerce,
   normalizeSiteContact,
   normalizeSiteDesign,
   normalizeSiteFeatures,
   normalizeSiteLegal,
   normalizeSiteMaintenance,
+  normalizeSiteModules,
+  normalizeSiteForms,
+  normalizeSiteEmail,
+  normalizeSiteMarketing,
   normalizeSiteNavigation,
   normalizeSiteSeo,
 } from "@/lib/cms/site-globals/normalize";
@@ -18,6 +24,8 @@ import type {
   SiteBrandingGlobalResolved,
   SiteContactGlobal,
   SiteContactGlobalResolved,
+  SiteBlogGlobal,
+  SiteCommerceGlobal,
   SiteDesignGlobal,
   SiteFeaturesGlobal,
   SiteGlobalKey,
@@ -26,6 +34,10 @@ import type {
   SiteLegalGlobalResolved,
   SiteMaintenanceGlobal,
   SiteMaintenanceGlobalResolved,
+  SiteModulesGlobal,
+  SiteFormsGlobal,
+  SiteEmailGlobal,
+  SiteMarketingGlobal,
   SiteNavigationGlobal,
   SiteSeoGlobal,
   SiteSeoGlobalResolved,
@@ -142,6 +154,54 @@ export async function fetchSiteDesign(): Promise<SiteDesignGlobal> {
   return parsed;
 }
 
+export async function fetchSiteBlog(): Promise<SiteBlogGlobal> {
+  const cached = readCache<SiteBlogGlobal>("site.blog");
+  if (cached) return cached;
+  const parsed = normalizeSiteBlog(await loadSettingsKey("site.blog"));
+  writeCache("site.blog", parsed);
+  return parsed;
+}
+
+export async function fetchSiteCommerce(): Promise<SiteCommerceGlobal> {
+  const cached = readCache<SiteCommerceGlobal>("site.commerce");
+  if (cached) return cached;
+  const parsed = normalizeSiteCommerce(await loadSettingsKey("site.commerce"));
+  writeCache("site.commerce", parsed);
+  return parsed;
+}
+
+export async function fetchSiteModules(): Promise<SiteModulesGlobal> {
+  const cached = readCache<SiteModulesGlobal>("site.modules");
+  if (cached) return cached;
+  const parsed = normalizeSiteModules(await loadSettingsKey("site.modules"));
+  writeCache("site.modules", parsed);
+  return parsed;
+}
+
+export async function fetchSiteForms(): Promise<SiteFormsGlobal> {
+  const cached = readCache<SiteFormsGlobal>("site.forms");
+  if (cached) return cached;
+  const parsed = normalizeSiteForms(await loadSettingsKey("site.forms"));
+  writeCache("site.forms", parsed);
+  return parsed;
+}
+
+export async function fetchSiteEmail(): Promise<SiteEmailGlobal> {
+  const cached = readCache<SiteEmailGlobal>("site.email");
+  if (cached) return cached;
+  const parsed = normalizeSiteEmail(await loadSettingsKey("site.email"));
+  writeCache("site.email", parsed);
+  return parsed;
+}
+
+export async function fetchSiteMarketing(): Promise<SiteMarketingGlobal> {
+  const cached = readCache<SiteMarketingGlobal>("site.marketing");
+  if (cached) return cached;
+  const parsed = normalizeSiteMarketing(await loadSettingsKey("site.marketing"));
+  writeCache("site.marketing", parsed);
+  return parsed;
+}
+
 export async function fetchSiteMaintenance(locale?: I18nLocale): Promise<SiteMaintenanceGlobalResolved> {
   const cached = readCache<SiteMaintenanceGlobal>("site.maintenance");
   const stored = cached ?? normalizeSiteMaintenance(await loadSettingsKey("site.maintenance"));
@@ -183,6 +243,12 @@ export async function fetchAllSiteGlobalsForAdmin(): Promise<Record<SiteGlobalKe
     "site.contact": normalizeSiteContact(settings["site.contact"]) as unknown as Json,
     "site.navigation": normalizeSiteNavigation(settings["site.navigation"]) as unknown as Json,
     "site.design": normalizeSiteDesign(settings["site.design"]) as unknown as Json,
+    "site.blog": normalizeSiteBlog(settings["site.blog"]) as unknown as Json,
+    "site.commerce": normalizeSiteCommerce(settings["site.commerce"]) as unknown as Json,
+    "site.modules": normalizeSiteModules(settings["site.modules"]) as unknown as Json,
+    "site.forms": normalizeSiteForms(settings["site.forms"]) as unknown as Json,
+    "site.email": normalizeSiteEmail(settings["site.email"]) as unknown as Json,
+    "site.marketing": normalizeSiteMarketing(settings["site.marketing"]) as unknown as Json,
     "site.maintenance": normalizeSiteMaintenance(settings["site.maintenance"]) as unknown as Json,
   };
 }

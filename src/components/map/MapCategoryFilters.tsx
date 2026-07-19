@@ -36,12 +36,12 @@ export default function MapCategoryFilters({
 
   return (
     <div className={cn("space-y-2", className)}>
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className="scrollbar-hide flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-0.5 sm:flex-wrap sm:overflow-visible">
         <button
           type="button"
           onClick={onSelectAll}
           disabled={allActive}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40"
+          className="min-h-11 shrink-0 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40 sm:min-h-9"
         >
           Все метки
         </button>
@@ -49,20 +49,20 @@ export default function MapCategoryFilters({
           type="button"
           onClick={onClearAll}
           disabled={noneActive}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40"
+          className="min-h-11 shrink-0 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-[10px] font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky disabled:opacity-40 sm:min-h-9"
         >
           Скрыть все
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="rounded-full border border-gray-200/90 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-slate transition hover:border-sky/30 hover:text-sky"
+          className="min-h-11 shrink-0 rounded-full border border-gray-200/90 bg-white/90 px-3 py-1 text-[10px] font-semibold text-slate transition hover:border-sky/30 hover:text-sky sm:min-h-9"
         >
           По умолчанию
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="scrollbar-hide flex flex-nowrap gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
         {VISIBLE_KINDS.map((kind) => {
           const active = activeKinds.includes(kind);
           const color = MAP_KIND_COLORS[kind];
@@ -72,7 +72,7 @@ export default function MapCategoryFilters({
               type="button"
               onClick={() => onToggle(kind)}
               className={cn(
-                "inline-flex items-center gap-1 rounded-full border font-semibold transition",
+                "inline-flex min-h-11 shrink-0 items-center gap-1 rounded-full border font-semibold transition sm:min-h-9",
                 compact ? "px-2 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
                 active
                   ? "border-transparent text-white shadow-sm"
@@ -94,7 +94,7 @@ export default function MapCategoryFilters({
           type="button"
           onClick={() => onToggle("route")}
           className={cn(
-            "inline-flex items-center gap-1 rounded-full border font-semibold transition",
+            "inline-flex min-h-11 shrink-0 items-center gap-1 rounded-full border font-semibold transition sm:min-h-9",
             compact ? "px-2 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
             activeKinds.includes("route")
               ? "border-transparent text-white shadow-sm"

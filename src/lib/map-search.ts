@@ -19,6 +19,7 @@ function objectSearchHaystack(obj: MapObject): string {
     obj.region,
     obj.description ?? "",
     kindLabel,
+    ...(obj.tags ?? []),
   ]
     .join(" ")
     .toLowerCase();
@@ -33,6 +34,7 @@ function matchScore(obj: MapObject, needle: string): number {
   const meta = (obj.meta ?? "").toLowerCase();
   const region = obj.region.toLowerCase();
   const kind = (MAP_MARKER_KIND_LABELS[obj.kind] ?? obj.kind).toLowerCase();
+  const tags = (obj.tags ?? []).join(" ").toLowerCase();
 
   if (title === q || slug === q) return 100;
   if (title.startsWith(q)) return 90;
@@ -40,6 +42,7 @@ function matchScore(obj: MapObject, needle: string): number {
   if (meta.startsWith(q) || region.startsWith(q)) return 75;
   if (title.includes(q)) return 60;
   if (meta.includes(q) || region.includes(q) || kind.includes(q)) return 50;
+  if (tags.includes(q)) return 45;
   if (objectSearchHaystack(obj).includes(q)) return 30;
   return 0;
 }

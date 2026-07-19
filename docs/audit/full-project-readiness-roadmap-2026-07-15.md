@@ -636,6 +636,13 @@ EN/ES сейчас используют fallback-контент и правил�
 - Home transfer ≤2,5 МБ; контентная страница ≤1,5 МБ.
 - First Load JS ключевых публичных страниц ≤350 КБ.
 
+### Критерии выхода
+
+- Три холодных прогона каждого ключевого маршрута укладываются в бюджеты без ухудшения SEO и доступности.
+- Ни один LCP-ресурс не загружается одновременно из CDN и локального fallback.
+- CI блокирует превышение согласованных byte/LCP/CLS/TBT-бюджетов.
+- Before/after отчёт привязан к одному SHA, устройству, профилю сети и набору URL.
+
 ### Готовый промпт
 
 ```text
@@ -675,6 +682,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Metadata quality batches.
 - GSC/Bing submit после deploy.
 
+### Критерии выхода
+
+- Полный RU crawl имеет 0 critical: в sitemap нет 404, noindex и non-canonical URL.
+- Canonical, robots, hreflang, sitemap и redirects читают единый publication registry.
+- Все duplicate-кластеры имеют зафиксированное решение merge/redirect/canonical/different intent.
+- Production crawl после deploy подтверждает локальный результат; GSC/Bing checklist выполнен или имеет владельца и срок.
+
 ### Готовый промпт
 
 ```text
@@ -712,6 +726,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Dashboard acquisition → detail → booking → success/fallback.
 - Weekly KPI review.
 
+### Критерии выхода
+
+- До согласия не отправляются необязательные события/cookies; отзыв согласия прекращает сбор.
+- Один пользовательский шаг создаёт одно нормализованное событие без PII и двойного `page_view`.
+- Воронка различает native success, partner redirect, fallback и error с едиными product/session IDs.
+- Рабочая панель и еженедельный отчёт имеют определения, владельцев, цели и защитные метрики.
+
 ### Готовый промпт
 
 ```text
@@ -746,6 +767,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Tripster/YouTravel/Sputnik8 fallback и attribution.
 - Idempotency, retries, confirmation, support route.
 - Conversion/error instrumentation.
+
+### Критерии выхода
+
+- Listing, detail, CTA, checkout и кабинеты показывают один и тот же фактический capability для каждого предложения.
+- Native booking проходит staging UI → API → atomic DB → три кабинета → cancellation/release без дублей.
+- Partner paths не обещают внутренний заказ при 403/405 и сохраняют attribution до внешнего handoff.
+- Ошибки, повтор и поддержка проверены; реальные платные заказы не создавались.
 
 ### Готовый промпт
 
@@ -786,6 +814,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Booking inbox, messages, notifications, finance preview.
 - Admin SLA и audit trail.
 
+### Критерии выхода
+
+- Черновик проходит create/autosave/conflict/reload/media/readiness с owner и чужой-role negative checks.
+- Approve/reject/re-moderation сохраняют корректный approved snapshot и полный audit actor trail.
+- Capacity/waitlist/booking выдерживают конкурентный прогон без overbooking и cross-user утечки.
+- После cleanup нет orphan rows/storage objects; статусы совпадают у туриста, организатора и администратора.
+
 ### Готовый промпт
 
 ```text
@@ -825,6 +860,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Media completeness и freshness dates.
 - Автор, reviewer, status, verification due.
 
+### Критерии выхода
+
+- Выбранный тематический пакет имеет источник, автора, проверяющего, дату проверки и срок следующей проверки.
+- `content:lint`, ссылки, дубли, медиа, CMS readiness и SEO crawl пакета зелёные.
+- Чувствительные материалы без первичного источника и проверки остаются в карантине, а не публикуются.
+- Places cutover выполнен только для полного набора и имеет проверенный rollback.
+
 ### Готовый промпт
 
 ```text
@@ -860,6 +902,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Idempotency и immutable ledger.
 - Legal copy, receipts/taxes, organizer settlement.
 - Privacy export/delete, retention и incident response.
+
+### Критерии выхода
+
+- Для каждого provider есть отдельный GO/NO-GO; production enablement требует подтверждённого legal/ops owner.
+- Sandbox checkout, signed webhook, replay, failure, refund и reconciliation проходят без двойной транзакции.
+- Финансовый статус меняется только по подтверждённому provider response/webhook и сохраняет неизменяемый audit trail.
+- Runbooks dispute/outage/duplicate/key rotation и правила retention/privacy проверены на staging.
 
 ### Готовый промпт
 
@@ -899,6 +948,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Reduced motion, contrast, touch targets.
 - Устранение accessibility/hook warnings, которые влияют на поведение.
 
+### Критерии выхода
+
+- Критичные journeys зелёные в Chromium, Firefox и WebKit на 320/390/768/1440 и при zoom 200%.
+- axe не находит serious/critical нарушений; keyboard/focus/dialog/live-region сценарии воспроизводимы.
+- Stage 2 проходит 42/42, UX audit не содержит unexpected fail/skip и двойного подсчёта.
+- Visual baseline обновляется только через документированное осмысленное подтверждение.
+
 ### Готовый промпт
 
 ```text
@@ -935,6 +991,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Caching/rendering matrix.
 - ESLint CLI, Node 22 parity.
 - План Next.js 16, proxy migration и breaking changes отдельным PR.
+
+### Критерии выхода
+
+- ADR фиксирует источник истины, роль Prisma/Supabase и владельцев доменов.
+- Public/partner API registry покрывает method, auth, owner, validation, rate limit, idempotency и error contract.
+- Node 22 и ESLint CLI совпадают локально/CI; build, release gate и auth regressions зелёные.
+- Next.js upgrade изолирован от feature work и имеет совместимость, bundle/perf diff и rollback plan.
 
 ### Готовый промпт
 
@@ -978,6 +1041,13 @@ Baseline: home ~25 МБ, blog ~17,5 МБ; home perf 47/LCP 59,5s; First Load JS 
 - Search relevance/zero results.
 - Growth experiments с guardrails.
 - PWA/forum/AI features — только через evidence gate.
+
+### Критерии выхода
+
+- Решение о новой локали основано на данных; при недостатке данных зафиксирован HOLD без фиктивного rollout.
+- Каждая индексируемая локализованная страница переведена и проверена человеком, self-canonical и имеет reciprocal hreflang.
+- Поиск измеряет relevance/zero-results, а каждый эксперимент имеет hypothesis, primary metric, guardrail и stop rule.
+- RU-core performance, privacy, SEO и booking funnel не ухудшились.
 
 ### Готовый промпт
 

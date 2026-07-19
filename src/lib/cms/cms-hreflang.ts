@@ -8,6 +8,7 @@ import type { CmsDocType } from "@/types/cms-content";
 /** Public URL segment per CMS doc type (matches app router paths). */
 export const CMS_DOC_TYPE_PATH_SEGMENT: Record<CmsDocType, string> = {
   blog: "blog",
+  knowledge: "baza-znaniy",
   guide: "guide",
   destination: "destinations",
   place: "places",

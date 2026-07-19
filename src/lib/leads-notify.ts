@@ -1,34 +1,23 @@
-/**
- * Optional email alerts for new leads (Resend).
- * Set RESEND_API_KEY + LEADS_NOTIFY_EMAIL in env.
- */
+import { sendOperationalEmail } from "@/lib/notifications/email-delivery";
+import {
+  renderEmailLayout,
+  stripHtml,
+} from "@/lib/notifications/email-templates";
+
+/** Optional durable alerts for new leads and operational requests. */
 
 export async function notifyLeadCaptured(input: {
   subject: string;
   html: string;
 }): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const to = process.env.LEADS_NOTIFY_EMAIL?.trim();
-  const from = process.env.LEADS_NOTIFY_FROM?.trim() ?? "onboarding@resend.dev";
+  const subject = input.subject.replace(/[\r\n]+/g, " ").trim().slice(0, 300);
+  if (!subject) return;
 
-  if (!apiKey || !to) return;
-
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: input.subject,
-        html: input.html,
-      }),
-      signal: AbortSignal.timeout(10_000),
-    });
-  } catch {
-    // Non-blocking — lead is already persisted
-  }
+  await sendOperationalEmail({
+    includeAdminCopy: true,
+    subject,
+    html: renderEmailLayout(input.html, { previewText: subject }),
+    text: stripHtml(input.html),
+    category: "lead",
+  });
 }

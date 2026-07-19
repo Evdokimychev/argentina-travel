@@ -48,7 +48,7 @@ describe("Sprint 4 SEO and performance", () => {
 
   it("CI runs lighthouse without SKIP_LIGHTHOUSE", () => {
     const ci = readFileSync(resolve(process.cwd(), ".github/workflows/ci.yml"), "utf8");
-    expect(ci).toMatch(/lighthouse-ci\.mjs/);
+    expect(ci).toMatch(/lighthouse-phase2-ci\.mjs/);
     expect(ci).not.toMatch(/SKIP_LIGHTHOUSE/);
   });
 

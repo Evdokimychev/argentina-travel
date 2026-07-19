@@ -183,6 +183,30 @@ describe("parseBlogSectionBody — FAQ sections", () => {
     );
     expect(blocks[0].type).toBe("faq");
   });
+
+  it("removes unverifiable legacy source labels from rendered FAQ", () => {
+    const blocks = parseBlogSectionBody(
+      "Когда ехать? Весной. (Wikipedia) Где остановиться? В городе. (Laura the Explorer) Что проверить? Расписание. (https://example.com/guide)",
+      "FAQ",
+    );
+
+    expect(JSON.stringify(blocks)).not.toMatch(/Wikipedia|Laura the Explorer|example\.com/);
+  });
+
+  it("splits compact FAQ text into separate questions", () => {
+    const blocks = parseBlogSectionBody(
+      "Когда ехать? С октября по март. Где остановиться? В Пуэрто-Мадрине или Трелью.",
+      "FAQ",
+    );
+
+    expect(blocks[0]).toMatchObject({
+      type: "faq",
+      items: [
+        { question: "Когда ехать?", answer: "С октября по март." },
+        { question: "Где остановиться?", answer: "В Пуэрто-Мадрине или Трелью." },
+      ],
+    });
+  });
 });
 
 describe("parseBlogSectionBody — mistakes sections", () => {

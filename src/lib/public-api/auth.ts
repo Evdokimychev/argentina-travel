@@ -12,6 +12,7 @@ export type ResolvedPublicApiKey = {
   label: string;
   partnerName: string | null;
   organizerId: string | null;
+  createdBy: string | null;
   scopes: string[];
   rateLimitPerMinute: number;
 };
@@ -60,7 +61,7 @@ export async function resolvePublicApiKey(
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("api_keys")
-    .select("id, label, partner_name, organizer_id, scopes, rate_limit_per_minute, is_active, revoked_at, key_hash")
+    .select("id, label, partner_name, organizer_id, created_by, scopes, rate_limit_per_minute, is_active, revoked_at, key_hash")
     .eq("key_hash", keyHash)
     .maybeSingle();
 
@@ -114,6 +115,7 @@ export async function resolvePublicApiKey(
       label: data.label,
       partnerName: data.partner_name,
       organizerId: data.organizer_id,
+      createdBy: data.created_by,
       scopes: data.scopes ?? [],
       rateLimitPerMinute: data.rate_limit_per_minute,
     },

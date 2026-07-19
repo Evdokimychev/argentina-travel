@@ -2,6 +2,15 @@ import { PLACES_SEED } from "@/data/places-seed";
 import { placeHref } from "@/lib/places-urls";
 import type { SiteNavLink } from "@/types/site-nav";
 
+const REGION_DESTINATION_IDS: Record<string, string> = {
+  "Центр и Пампа": "ba",
+  Патагония: "patagonia",
+  "Северо-запад": "salta",
+  "Северо-восток": "iguazu",
+  Куйо: "mendoza",
+  "Огненная Земля": "ushuaia",
+};
+
 const POPULAR_PLACE_SLUGS = [
   "iguazu-falls",
   "perito-moreno-glacier",
@@ -20,4 +29,9 @@ export function buildPopularPlaceNavLinks(): SiteNavLink[] {
       description: place?.shortDescription,
     };
   });
+}
+
+/** Региональный гид для места, когда нет отдельной destination-страницы. */
+export function destinationIdForPlaceRegion(region: string): string | undefined {
+  return REGION_DESTINATION_IDS[region];
 }

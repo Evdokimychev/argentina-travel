@@ -1,3 +1,5 @@
+import { syncGtmConsent } from "@/lib/analytics/gtm-consent";
+
 export const COOKIE_CONSENT_STORAGE_KEY = "site-cookie-consent";
 export const COOKIE_CONSENT_COOKIE_NAME = "site-cookie-consent";
 export const COOKIE_CONSENT_MAX_AGE = 60 * 60 * 24 * 365;
@@ -111,9 +113,8 @@ function persistPreferences(preferences: CookieConsentPreferences): void {
   } catch {
     /* ignore */
   }
-  if (typeof window !== "undefined") {
-    import("@/lib/analytics/gtm-consent").then(({ syncGtmConsent }) => syncGtmConsent(preferences));
-  }
+  // Consent update must reach already-loaded tags before subscribers unmount them.
+  syncGtmConsent(preferences);
   window.dispatchEvent(new Event(COOKIE_CONSENT_CHANGED_EVENT));
 }
 

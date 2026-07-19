@@ -15,17 +15,23 @@ export type CreateShopOrderInput = {
   customerEmail: string;
   customerPhone?: string;
   notes?: string;
+  idempotencyKey?: string;
+  captchaToken?: string;
+  honeypot?: string;
 };
 
-export async function apiCreateShopOrder(input: CreateShopOrderInput): Promise<ShopOrder> {
-  const data = await parseJson<{ order: ShopOrder }>(
+export async function apiCreateShopOrder(input: CreateShopOrderInput): Promise<ShopOrder | null> {
+  const data = await parseJson<{ order?: ShopOrder; ok?: boolean }>(
     await fetch("/api/shop/orders", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Idempotency-Key": input.idempotencyKey ?? crypto.randomUUID(),
+      },
       body: JSON.stringify(input),
     })
   );
-  return data.order;
+  return data.order ?? null;
 }
 
 export async function apiFetchUserShopOrders(): Promise<ShopOrder[]> {

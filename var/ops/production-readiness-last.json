@@ -1,7 +1,8 @@
 {
-  "ok": false,
-  "ranAt": "2026-07-01T21:39:05.264Z",
-  "gitSha": null,
+  "ok": true,
+  "ranAt": "2026-07-16T20:07:24.944Z",
+  "gitSha": "ec5d30e6f533dbd3b620f673541664acfef7526d",
+  "gitShaSource": "git-head",
   "checks": [
     {
       "id": "env:NEXT_PUBLIC_SITE_URL",
@@ -76,8 +77,8 @@
     {
       "id": "env:recommended:RESEND_API_KEY",
       "label": "Рекомендуется: RESEND_API_KEY",
-      "status": "skip",
-      "message": "Не задана",
+      "status": "ok",
+      "message": "Задана",
       "category": "env"
     },
     {
@@ -104,8 +105,8 @@
     {
       "id": "env:forbidden:NEXT_PUBLIC_ENABLE_DEMO_SEED",
       "label": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false",
-      "status": "fail",
-      "message": "Демо-данные включены",
+      "status": "ok",
+      "message": "Отключено",
       "category": "security"
     },
     {
@@ -147,35 +148,35 @@
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "55 файлов, последняя: 20250630200000_youtravel_affise_snapshots",
+      "message": "69 файлов, последняя: 20260716195954_lock_shop_orders_to_idempotent_server_api",
       "category": "database"
     },
     {
       "id": "security:rls-audit",
       "label": "Статический RLS-аудит",
       "status": "ok",
-      "message": "81 таблиц, критичных проблем нет",
+      "message": "86 таблиц, критичных проблем нет",
       "category": "security"
     },
     {
       "id": "migrations:db-count",
       "label": "Миграции в БД",
       "status": "warn",
-      "message": "Таблиц public: 81. schema_migrations недоступна — сверьте вручную с 55 файлами (последняя: 20250630200000_youtravel_affise_snapshots)",
+      "message": "Таблиц public: 86. schema_migrations недоступна — сверьте вручную с 69 файлами (последняя: 20260716195954_lock_shop_orders_to_idempotent_server_api)",
       "category": "database"
     },
     {
       "id": "smoke:supabase-verify",
       "label": "Smoke /api/health",
-      "status": "fail",
-      "message": "БД: Service for this project is restricted due to the following violations: exceed_egress_quota. The project owner must upgrade their plan or remove spend caps to restore service.",
+      "status": "warn",
+      "message": "Сервер недоступен на http://127.0.0.1:3000. Запустите npm run dev или задайте SMOKE_BASE_URL",
       "category": "smoke"
     },
     {
       "id": "build:tsc",
       "label": "TypeScript (tsc --noEmit)",
-      "status": "ok",
-      "message": "Компиляция без ошибок",
+      "status": "skip",
+      "message": "SKIP_TSC=1",
       "category": "build"
     },
     {
@@ -193,6 +194,13 @@
       "category": "search"
     },
     {
+      "id": "search:readiness-report",
+      "label": "Search readiness (последний отчёт)",
+      "status": "ok",
+      "message": "ok=true — npm run search:readiness",
+      "category": "search"
+    },
+    {
       "id": "perf:lighthouse-phase2",
       "label": "Lighthouse phase2 (последний отчёт)",
       "status": "warn",
@@ -201,9 +209,9 @@
     }
   ],
   "summary": {
-    "ok": 9,
-    "warn": 5,
-    "fail": 2,
+    "ok": 11,
+    "warn": 6,
+    "fail": 0,
     "skip": 12
   }
 }

@@ -19,7 +19,8 @@ describe("Sprint 6 — premium homepage", () => {
 
   it("home hero collage uses mobile-safe object position", () => {
     const source = readFileSync(join(root, "components/marketplace/HomeHeroCollage.tsx"), "utf8");
-    expect(source).toContain("object-[center_35%]");
+    expect(source).toContain("object-[62%_center]");
+    expect(source).toContain("lg:object-center");
     expect(source).toContain("motion-reduce:transform-none");
   });
 

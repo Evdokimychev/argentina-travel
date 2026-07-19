@@ -5,6 +5,7 @@ import type {
   GuidePillarHeroCta,
   GuidePillarSection,
 } from "@/types/guide-pillar";
+import type { ContentPage } from "@/types/content-page";
 
 export type {
   GuidePartnerCard,
@@ -39,6 +40,8 @@ export type GuideTopicPage = {
   features?: { exchangeRates?: boolean };
   /** Full Ultimate Guide pillar layout — rendered by GuidePillarView when present. */
   pillarPage?: GuidePillarContent;
+  /** Published CMS editorial body for this core topic; pillar chrome stays intact. */
+  cmsPage?: ContentPage;
 };
 
 export type GuideTopicServiceCard = {

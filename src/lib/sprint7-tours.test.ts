@@ -53,9 +53,9 @@ describe("Sprint 7 — tours catalog & detail", () => {
     expect(domain).toBe("www.goargentina.ru");
   });
 
-  it("MarketplaceTourCard v2 has 4/3 aspect and partner badge", () => {
+  it("MarketplaceTourCard v2 has responsive media and partner badge", () => {
     const source = readFileSync(join(root, "components/marketplace/MarketplaceTourCard.tsx"), "utf8");
-    expect(source).toContain('aspect="4/3"');
+    expect(source).toContain('className="aspect-[16/10] sm:aspect-[4/3]"');
     expect(source).toContain("resolvePartnerTourBadge");
     expect(source).toContain("ContentCard");
   });
@@ -84,9 +84,10 @@ describe("Sprint 7 — tours catalog & detail", () => {
     expect(dayOnePoints.length).toBeGreaterThan(0);
   });
 
-  it("MobileBookingBar uses a clear booking CTA", () => {
+  it("MobileBookingBar uses the shared capability CTA", () => {
     const source = readFileSync(join(root, "components/tour-detail/MobileBookingBar.tsx"), "utf8");
-    expect(source).toContain('"Забронировать"');
+    expect(source).toContain("offerCapabilities.primaryActionLabel");
+    expect(source).toContain('offerCapabilities.bookingMode === "disabled"');
     expect(source).toContain("FormattedPrice");
   });
 

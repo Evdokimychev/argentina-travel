@@ -29,7 +29,7 @@ import { serializeMapArgentinaKinds } from "@/lib/map-argentina-url-state";
 import { ARGENTINA_MAP_VIEW } from "@/lib/map-view-config";
 import type { MapMarkerKind, MapObject } from "@/lib/map-types";
 import { spotsToMapObjects } from "@/lib/quick-explore/spot-to-map-object";
-import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-open";
+import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-events";
 import type {
   QuickExploreProvince,
   QuickExploreSpot,

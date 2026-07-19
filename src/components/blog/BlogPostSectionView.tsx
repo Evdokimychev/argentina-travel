@@ -1,10 +1,10 @@
-import { PageSlotImage } from "@/components/media/ContentSectionImage";
+import ContentSectionImage from "@/components/media/ContentSectionImage";
 import BlogSectionBody from "@/components/blog/BlogSectionBody";
 import BlogInlineRelatedPosts from "@/components/blog/BlogInlineRelatedPosts";
 import BlogInlineMapBlock from "@/components/blog/BlogInlineMapBlock";
 import BlogExpandableSection from "@/components/blog/BlogExpandableSection";
 import { getBlogSectionKind } from "@/lib/blog-section-body";
-import { hasContentSlotImage } from "@/lib/media-resolver";
+import { getDistinctBlogSectionImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
 import type { ArticleMapPoint } from "@/lib/article-map-points";
@@ -31,7 +31,7 @@ type BlogPostSectionViewProps = {
   section: BlogPostSection;
   headingId: string;
   index: number;
-  postSlug: string;
+  post: BlogPost;
   totalSections: number;
   inlineRelatedPosts?: BlogPost[];
   sectionMapPoints?: ArticleMapPoint[];
@@ -70,7 +70,7 @@ export default function BlogPostSectionView({
   section,
   headingId,
   index,
-  postSlug,
+  post,
   totalSections,
   inlineRelatedPosts,
   sectionMapPoints = [],
@@ -78,13 +78,14 @@ export default function BlogPostSectionView({
   const kind = getBlogSectionKind(section.title, section.blockType);
   const accent = sectionAccentClass(section);
   const imageSlot = sectionImageSlot(index, totalSections);
+  const sectionImage = imageSlot ? getDistinctBlogSectionImage(post, imageSlot) : undefined;
   const isShortPost = totalSections < 6;
   const imagePriority = imageSlot === "section-1" && isShortPost;
   const imageLoading: "lazy" | undefined =
     imageSlot === "section-1" && isShortPost ? undefined : "lazy";
   const expandable = EXPANDABLE_KINDS.has(kind);
 
-  const body = <BlogSectionBody section={section} postSlug={postSlug} linkifyText />;
+  const body = <BlogSectionBody section={section} postSlug={post.slug} linkifyText />;
 
   return (
     <div className="space-y-6">
@@ -116,10 +117,9 @@ export default function BlogPostSectionView({
         <BlogInlineMapBlock points={sectionMapPoints} />
       ) : null}
 
-      {imageSlot ? (
-        <PageSlotImage
-          pageId={`blog:${postSlug}`}
-          slotId={imageSlot}
+      {sectionImage ? (
+        <ContentSectionImage
+          image={sectionImage}
           role="section"
           priority={imagePriority}
           loading={imageLoading}
@@ -127,7 +127,7 @@ export default function BlogPostSectionView({
       ) : null}
 
       {inlineRelatedPosts?.length ? (
-        <BlogInlineRelatedPosts posts={inlineRelatedPosts} sourceSlug={postSlug} />
+        <BlogInlineRelatedPosts posts={inlineRelatedPosts} sourceSlug={post.slug} />
       ) : null}
     </div>
   );

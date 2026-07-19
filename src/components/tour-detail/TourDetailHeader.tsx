@@ -93,6 +93,7 @@ export default function TourDetailHeader({
 
       <div className={cn(siteContainerClass, "relative py-6 md:py-8 lg:py-10")}>
         <PageBreadcrumbs
+          compactOnMobile
           items={[
             { label: "Главная", href: "/" },
             {
@@ -124,11 +125,11 @@ export default function TourDetailHeader({
               />
             </Link>
 
-            <div className="mt-4 flex items-start justify-between gap-4">
-              <h1 className="min-w-0 flex-1 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+            <div className="relative mt-4 flex items-start justify-between gap-4">
+              <h1 className="min-w-0 flex-1 font-display text-[1.75rem] font-bold leading-[1.08] tracking-[-0.025em] text-charcoal sm:text-4xl sm:leading-[1.12] lg:text-[2.35rem]">
                 {tour.title}
               </h1>
-              <div className="flex shrink-0 items-center gap-1.5">
+              <div className="absolute -top-[3.75rem] right-0 flex shrink-0 items-center gap-1.5 sm:static">
                 <FavoriteButton
                   tourId={tour.id}
                   tourSlug={tour.slug}
@@ -152,7 +153,7 @@ export default function TourDetailHeader({
             </div>
 
             {tour.shortDescription?.trim() ? (
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+              <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-relaxed text-slate sm:text-[1.05rem]">
                 {plainTextFromRichContent(tour.shortDescription)}
               </p>
             ) : null}

@@ -22,6 +22,7 @@ const ADMIN_NAV_SECTION_HREFS: Record<AdminNavSectionId, string> = {
 const SEGMENT_LABELS: Record<string, string> = {
   preview: "Превью",
   documents: "Документы",
+  knowledge: "База знаний",
   "content-freshness": "Актуальность контента",
   bookings: "Бронирования",
   payments: "Платежи",

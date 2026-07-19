@@ -6,13 +6,14 @@ import type {
 } from "@/types/place";
 import { getPlaceCoverImage, getPlaceGallery } from "@/lib/media-resolver";
 import { PLACES_KB_IMPORT } from "@/data/places-kb-import.generated";
-
-const MEDIA_FALLBACK = "/logo-light.svg";
+import { withPlacePlanningDefaults } from "@/data/places-planning";
 
 function placeMedia(slug: string) {
+  const coverImage = getPlaceCoverImage(slug);
+  const gallery = getPlaceGallery(slug);
   return {
-    coverImage: getPlaceCoverImage(slug),
-    gallery: getPlaceGallery(slug),
+    coverImage,
+    gallery: gallery.length > 0 ? gallery : coverImage ? [coverImage] : [],
   };
 }
 
@@ -119,7 +120,7 @@ export const PLACES_SEED: SeedPlace[] = [
     name: "Барилоче",
     shortDescription: "Озёрная Патагония, шоколад и горнолыжный Cerro Catedral.",
     fullDescription:
-      "San Carlos de Bariloche стоит на берегу озера Nahuel Huapi у подножия Анд. Летом — треккинг, kayaking и Circuito Chico; зимой — Cerro Catedral. Отсюда удобно ехать в Villa La Angostura и на Seven Lakes Route.",
+      "Сан-Карлос-де-Барилоче стоит на берегу озера Науэль-Уапи у подножия Анд. Летом здесь занимаются треккингом и каякингом, проезжают Малое кольцо; зимой едут на Серро-Катедраль. Отсюда удобно добираться до Вилья-Ла-Ангостуры и Дороги семи озёр.",
     category: "city",
     region: "Патагония",
     province: "Río Negro",
@@ -159,9 +160,9 @@ export const PLACES_SEED: SeedPlace[] = [
     id: "place-maipu",
     slug: "maipu",
     name: "Maipú",
-    shortDescription: "Главный винный район у Мендосы — bodegas, olivas и веломаршруты.",
+    shortDescription: "Ближайший к Мендосе винный район с винодельнями, оливковыми хозяйствами и веломаршрутами.",
     fullDescription:
-      "Maipú — ближайший к городу Мендоса винный район: десятки bodegas с дегустациями, музеи olive oil и винные веломаршруты по Ruta del Vino. Большинство туров и трансферов из центра Мендосы — 20–30 мин.",
+      "Майпу — ближайший к городу Мендоса винный район: десятки виноделен с дегустациями, хозяйства по производству оливкового масла и веломаршруты по Винной дороге. Дорога из центра Мендосы обычно занимает 20–30 минут.",
     category: "winery",
     region: "Куйо",
     province: "Mendoza",
@@ -182,7 +183,7 @@ export const PLACES_SEED: SeedPlace[] = [
     name: "Luján de Cuyo",
     shortDescription: "Премиальные винодельни Malbec и виды на Cordillera de los Andes.",
     fullDescription:
-      "Luján de Cuyo — исторический центр виноделия Мендосы с культовыми bodegas и виноградниками у подножия Анд. Здесь же начинаются маршруты к Aconcagua viewpoint и винные отели с видом на горы.",
+      "Лухан-де-Куйо — исторический центр виноделия Мендосы с известными винодельнями и виноградниками у подножия Анд. Здесь есть винные отели с видом на горы, а дальше к западу начинается дорога к Аконкагуа.",
     category: "winery",
     region: "Куйо",
     province: "Mendoza",
@@ -201,9 +202,9 @@ export const PLACES_SEED: SeedPlace[] = [
     id: "place-uco-valley",
     slug: "uco-valley",
     name: "Valle de Uco",
-    shortDescription: "Высокогорные виноградники и современные bodegas на 1000+ м.",
+    shortDescription: "Высокогорные виноградники и современные винодельни на высоте более 1000 метров.",
     fullDescription:
-      "Valle de Uco (Tunuyán, Tupungato, San Carlos) — высокогорный винный регион с премиальными Malbec и Chardonnay. Дегустации с видом на Анд, рестораны при bodegas и архитектурные винодельни — полный день из Мендосы.",
+      "Долина Уко (Тунуян, Тупунгато, Сан-Карлос) — высокогорный винный регион, известный мальбеком и шардоне. Дегустации с видом на Анды, рестораны при винодельнях и выразительная современная архитектура требуют полного дня из Мендосы.",
     category: "winery",
     region: "Куйо",
     province: "Mendoza",
@@ -320,7 +321,7 @@ export const PLACES_SEED: SeedPlace[] = [
     rating: 4.9,
     visitDuration: "1–2 дня",
     season: "Март–май и август–ноябрь",
-    ticketPrice: "от ~USD 20 (парк, уточняйте на сайте)",
+    ticketPrice: "Платный вход; проверяйте актуальный тариф на официальном сайте парка",
     website: "https://www.argentina.gob.ar/interior/ambiente/parquesnacionales/iguazu",
     source: "manual",
     popularity: 95,
@@ -342,7 +343,7 @@ export const PLACES_SEED: SeedPlace[] = [
     rating: 4.9,
     visitDuration: "Полный день",
     season: "Октябрь–апрель",
-    ticketPrice: "от ~USD 25 (парк + трансфер)",
+    ticketPrice: "Вход в парк и трансфер оплачиваются отдельно; проверяйте актуальные тарифы",
     source: "manual",
     popularity: 98,
   },
@@ -466,7 +467,7 @@ export const PLACES_SEED: SeedPlace[] = [
     rating: 4.3,
     visitDuration: "Полный день",
     season: "Апрель–октябрь (когда ходит)",
-    ticketPrice: "от ~USD 100 (уточняйте)",
+    ticketPrice: "Тариф зависит от выбранной программы; проверяйте его перед бронированием",
     source: "manual",
     popularity: 65,
   },
@@ -571,7 +572,7 @@ export const PLACES_SEED: SeedPlace[] = [
     rating: 4.7,
     visitDuration: "2–4 дня",
     season: "Апрель–октябрь — меньше дождей и комаров",
-    ticketPrice: "Экскурсии от ~30 000 ARS (уточняйте на месте)",
+    ticketPrice: "Стоимость зависит от лоджа и программы; уточняйте перед бронированием",
     source: "manual",
     popularity: 65,
   },
@@ -602,7 +603,7 @@ export const PLACES_SEED: SeedPlace[] = [
     name: "Кафаяте",
     shortDescription: "Винный городок Сальты с высокогорным Торронтесом.",
     fullDescription:
-      "Cafayate — центр виноделия долины Кальчаки (Valles Calchaquíes) на высоте около 1700 м. Здесь делают ароматный белый Torrontés и высокогорный Malbec; многие bodegas открыты для дегустаций в пешей доступности от центральной площади. Дорога из Сальты проходит через каньон Quebrada de las Conchas с красными скалами-формациями (Garganta del Diablo, Anfiteatro).",
+      "Кафаяте — центр виноделия долины Кальчаки на высоте около 1700 метров. Здесь делают ароматный белый торронтес и высокогорный мальбек; многие винодельни открыты для дегустаций в пешей доступности от центральной площади. Дорога из Сальты проходит через ущелье Лас-Кончас с красными скалами, Глоткой Дьявола и природным амфитеатром.",
     category: "winery",
     region: "Северо-запад",
     province: "Salta",
@@ -2015,7 +2016,7 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
     title: "Винный маршрут Мендосы",
     subtitle: "Винодельни и Анды",
     description:
-      "Мендоса и окрестности — дегустации Malbec, bodegas Maipú и Luján de Cuyo, высокогорный Valle de Uco и озеро Potrerillos у подножия Cordillera de los Andes.",
+      "Мендоса и окрестности: дегустации мальбека, винодельни Майпу и Лухан-де-Куйо, высокогорная долина Уко и озеро Потрерильос у подножия Анд.",
     coverImage: getPlaceCoverImage("mendoza"),
     tags: ["вино", "мендоса"],
     placeSlugs: ["mendoza", "maipu", "lujan-de-cuyo", "uco-valley", "potrerillos"],
@@ -2263,7 +2264,7 @@ export const ITINERARIES_SEED: ItinerarySeed[] = [
 ];
 
 export function toPlaceListing(place: SeedPlace): PlaceListing {
-  return {
+  return withPlacePlanningDefaults({
     id: place.id,
     slug: place.slug,
     name: place.name,
@@ -2282,7 +2283,7 @@ export function toPlaceListing(place: SeedPlace): PlaceListing {
     ticketPrice: place.ticketPrice,
     kbSlug: place.kbSlug,
     popularity: place.popularity,
-  };
+  });
 }
 
 export function getAllPlaceListings(): PlaceListing[] {

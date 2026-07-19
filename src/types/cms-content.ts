@@ -15,6 +15,7 @@ import {
 export type CmsDocType =
   | "legal"
   | "blog"
+  | "knowledge"
   | "guide"
   | "destination"
   | "place"
@@ -37,6 +38,25 @@ export type CmsBlogSection = {
   blocks?: BlogBodyBlock[];
 };
 
+export type CmsCollectorProvenance = {
+  schemaVersion: number;
+  identity: string;
+  source: string;
+  sourceId: string;
+  sourceItemId: string | number | null;
+  sourceUrl?: string;
+  fingerprint: string;
+  qualityScore: number;
+  scoreBreakdown: Record<string, number>;
+  flags: string[];
+  category?: string;
+  province?: string;
+  city?: string;
+  tags: string[];
+  media: string[];
+  collectedAt?: string;
+};
+
 export type CmsBlogBody = {
   kind: "blog";
   excerpt?: string;
@@ -44,6 +64,7 @@ export type CmsBlogBody = {
   content?: string;
   featured?: boolean;
   relatedDestinations?: string[];
+  collector?: CmsCollectorProvenance;
 };
 
 export type CmsGuideBody = {
@@ -261,6 +282,22 @@ export function authorArticleFromCms(doc: CmsDocument, fallback?: BlogPost): Blo
 
 export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost | null {
   if (doc.body.kind !== "blog") return null;
+
+  const fallbackModifiedAt = fallback?.dateModified
+    ? Date.parse(`${fallback.dateModified}T23:59:59.999Z`)
+    : Number.NaN;
+  const cmsModifiedAt = Date.parse(doc.updatedAt);
+
+  // A reviewed file publication may land before the matching CMS sync. Do not let
+  // an older CMS snapshot silently roll the public article back to stale content.
+  if (
+    fallback &&
+    Number.isFinite(fallbackModifiedAt) &&
+    Number.isFinite(cmsModifiedAt) &&
+    fallbackModifiedAt > cmsModifiedAt
+  ) {
+    return { ...fallback, image: resolveBlogPostCardImage(fallback) };
+  }
 
   const sections = doc.body.sections ?? fallback?.sections;
   const content =

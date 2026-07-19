@@ -101,7 +101,7 @@ export default function AuthModal() {
   };
 
   function completeAuthSuccess(
-    destination: "/profile" | "/organizer",
+    destination: "/profile" | "/organizer" | "/join#join-application",
     sessionUser?: { fullName?: string | null } | null
   ) {
     if (isFavoriteFlow) {
@@ -400,7 +400,10 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", result.user);
+      completeAuthSuccess(
+        isOrganizerFlow ? "/join#join-application" : "/profile",
+        result.user,
+      );
       return;
     }
 

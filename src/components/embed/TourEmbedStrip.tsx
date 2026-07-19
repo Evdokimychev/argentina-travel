@@ -6,16 +6,22 @@ import { getTourListingReactKey } from "@/lib/tour-public-display";
 
 interface TourEmbedStripProps {
   tours: TourListing[];
+  matchReasons?: Record<string, string>;
 }
 
-export default function TourEmbedStrip({ tours }: TourEmbedStripProps) {
+export default function TourEmbedStrip({ tours, matchReasons }: TourEmbedStripProps) {
   if (!tours.length) return null;
 
   return (
     <div className="-mx-1 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
       <div className="flex snap-x snap-mandatory gap-4">
         {tours.map((tour) => (
-          <TourEmbedCompactCard key={getTourListingReactKey(tour)} tour={tour} layout="vertical" />
+          <TourEmbedCompactCard
+            key={getTourListingReactKey(tour)}
+            tour={tour}
+            layout="vertical"
+            matchReason={matchReasons?.[tour.slug]}
+          />
         ))}
       </div>
     </div>

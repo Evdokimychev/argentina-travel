@@ -3,30 +3,36 @@
  */
 import type { AnalyticsPeriod, DailyCountPoint } from "@/types/admin-analytics";
 
-/** Wildcard grants all capabilities. */
-export type AdminCapability =
-  | "*"
-  | "dashboard.view"
-  | "operations.leads"
-  | "operations.bookings"
-  | "operations.shop"
-  | "marketplace.tours"
-  | "marketplace.excursions"
-  | "marketplace.moderation"
-  | "content.edit"
-  | "content.publish"
-  | "users.view"
-  | "users.manage"
-  | "analytics.view"
-  | "system.settings"
-  | "system.audit";
+/** Runtime allowlist used by admin APIs; wildcard grants all capabilities. */
+export const ADMIN_CAPABILITIES = [
+  "*",
+  "dashboard.view",
+  "operations.leads",
+  "operations.bookings",
+  "operations.shop",
+  "marketplace.tours",
+  "marketplace.excursions",
+  "marketplace.moderation",
+  "content.edit",
+  "content.publish",
+  "users.view",
+  "users.manage",
+  "analytics.view",
+  "system.settings",
+  "system.audit",
+] as const;
 
-export type AdminPresetId =
-  | "super_admin"
-  | "operations_manager"
-  | "marketplace_manager"
-  | "content_editor"
-  | "support_agent";
+export type AdminCapability = (typeof ADMIN_CAPABILITIES)[number];
+
+export const ADMIN_PRESET_IDS = [
+  "super_admin",
+  "operations_manager",
+  "marketplace_manager",
+  "content_editor",
+  "support_agent",
+] as const;
+
+export type AdminPresetId = (typeof ADMIN_PRESET_IDS)[number];
 
 export type AdminNavSectionId =
   | "dashboard"
@@ -52,6 +58,7 @@ export type AdminNavItemId =
   | "marketplace-experts"
   | "marketplace-moderation"
   | "content-documents"
+  | "content-knowledge"
   | "content-map"
   | "content-media"
   | "content-social-feed"

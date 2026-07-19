@@ -31,4 +31,8 @@ export interface TourEmbedConfig {
   catalogLabel?: string;
   tone?: TourEmbedTone;
   theme?: TourEmbedTheme;
+  /** Показывать проверяемое объяснение связи предложения с материалом. */
+  showMatchReasons?: boolean;
+  /** Более точные причины от контекстного резолвера, ключ — slug тура. */
+  matchReasons?: Record<string, string>;
 }

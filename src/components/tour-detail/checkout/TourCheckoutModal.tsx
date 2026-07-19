@@ -81,6 +81,7 @@ import BookingCheckoutProgress from "@/components/booking/BookingCheckoutProgres
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -399,6 +400,9 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const [company, setCompany] = useState("");
   const idempotencyKeyRef = useRef(crypto.randomUUID());
   const feedback = useSiteFeedback();
 
@@ -486,6 +490,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       );
       setSubmitted(false);
       setSavedToProfile(false);
+      setCaptchaToken("");
+      setCompany("");
       setError(null);
       setCheckoutCurrency(resolveDefaultCheckoutCurrency(localeCurrency));
       setForm(() => {
@@ -630,57 +636,62 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             .slice(0, 10)
         : selectedDate?.endDate;
 
-    const bookingResult = await createBookingFromCheckout({
-      actor: user,
-      userId: user?.id,
-      tour,
-      guests,
-      startDate,
-      endDate,
-      totalPriceUsd: totalUsd,
-      form,
-      checkoutCurrency,
-      checkoutRates,
-      checkoutRatesUpdatedAt: ratesUpdatedAt,
-      checkoutRatesSource: ratesSource,
-      payNowUsd,
-      attribution: getStoredFirstTouchAttribution() ?? undefined,
-      optionId: selectedDate?.id,
-      idempotencyKey: idempotencyKeyRef.current,
-    });
-
-    if ("error" in bookingResult) {
-      const normalized = normalizeSiteError(bookingResult.error, {
-        title: "Не удалось отправить заявку",
-        steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+    try {
+      const bookingResult = await createBookingFromCheckout({
+        actor: user,
+        userId: user?.id,
+        tour,
+        guests,
+        startDate,
+        endDate,
+        totalPriceUsd: totalUsd,
+        form,
+        checkoutCurrency,
+        checkoutRates,
+        checkoutRatesUpdatedAt: ratesUpdatedAt,
+        checkoutRatesSource: ratesSource,
+        payNowUsd,
+        attribution: getStoredFirstTouchAttribution() ?? undefined,
+        optionId: selectedDate?.id,
+        idempotencyKey: idempotencyKeyRef.current,
+        captchaToken,
+        honeypot: company,
       });
-      setError(normalized);
-      feedback.showError(normalized);
-      setSubmitting(false);
-      return;
-    }
 
-    if (user) {
-      setSavedToProfile(true);
+      if ("error" in bookingResult) {
+        const normalized = normalizeSiteError(bookingResult.error, {
+          title: "Не удалось отправить заявку",
+          steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+        });
+        setError(normalized);
+        feedback.showError(normalized);
+        return;
+      }
+
+      if (user) {
+        setSavedToProfile(true);
+      }
+      setCreatedBookingId(bookingResult.id);
+      setSubmitted(true);
+      trackBookingSubmit({
+        productType: "tour",
+        slug: tour.slug,
+        title: tour.title,
+        guests,
+        valueUsd: totalUsd,
+        source: "checkout_modal",
+      });
+      feedback.success({
+        title: "Заявка отправлена",
+        description: savedToProfile || user
+          ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
+          : "Организатор свяжется с вами по указанному email.",
+        action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
+      });
+    } finally {
+      setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
-    setCreatedBookingId(bookingResult.id);
-    setSubmitted(true);
-    trackBookingSubmit({
-      productType: "tour",
-      slug: tour.slug,
-      title: tour.title,
-      guests,
-      valueUsd: totalUsd,
-      source: "checkout_modal",
-    });
-    setSubmitting(false);
-    feedback.success({
-      title: "Заявка отправлена",
-      description: savedToProfile || user
-        ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
-        : "Организатор свяжется с вами по указанному email.",
-      action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
-    });
   }
 
   function goBack() {
@@ -1310,6 +1321,22 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         и отправьте заявку организатору.
                       </div>
                     )}
+
+                    <input
+                      type="text"
+                      name="company"
+                      value={company}
+                      onChange={(event) => setCompany(event.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      aria-hidden="true"
+                    />
+                    <TurnstileField
+                      formId="native_booking"
+                      onToken={setCaptchaToken}
+                      resetSignal={captchaResetSignal}
+                    />
 
                   </section>
                 )}

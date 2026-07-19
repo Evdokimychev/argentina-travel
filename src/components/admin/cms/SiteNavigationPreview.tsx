@@ -7,18 +7,27 @@ type Props = {
 const MAIN_LINKS = [
   ["showTours", "Туры"],
   ["showExcursions", "Экскурсии"],
-  ["showGeography", "Направления и места"],
+  ["showDestinations", "Регионы"],
+  ["showPlaces", "Места"],
   ["showServices", "Сервисы"],
   ["showGuide", "Путеводитель"],
   ["showImmigration", "Переезд"],
   ["showJournal", "Блог"],
   ["showGallery", "Галерея"],
   ["showShop", "Магазин"],
+  ["showKnowledgeBase", "База знаний"],
+  ["showForum", "Форум"],
   ["showAbout", "О проекте"],
 ] as const;
 
 export default function SiteNavigationPreview({ values }: Props) {
   const navigation = normalizeSiteNavigation(values);
+  const visibleMainLinks = MAIN_LINKS.filter(([key]) => {
+    if (key === "showDestinations" || key === "showPlaces") {
+      return navigation.showGeography && navigation[key];
+    }
+    return navigation[key];
+  });
   const utilityLinks = [
     [navigation.utilityToursLabel, navigation.utilityToursUrl],
     [navigation.utilityOrganizerLabel, navigation.utilityOrganizerUrl],
@@ -29,7 +38,7 @@ export default function SiteNavigationPreview({ values }: Props) {
     <section className="border-y border-border-subtle bg-white px-4 py-5 sm:px-6">
       <p className="text-xs font-semibold uppercase text-slate">Предпросмотр меню</p>
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-charcoal">
-        {MAIN_LINKS.filter(([key]) => navigation[key]).map(([, label]) => (
+        {visibleMainLinks.map(([, label]) => (
           <span key={label}>{label}</span>
         ))}
       </div>

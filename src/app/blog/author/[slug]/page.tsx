@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import BlogPostView from "@/components/blog/BlogPostView";
+import { fetchSiteBlog, fetchSiteForms } from "@/lib/site-settings-server";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BlogFaqJsonLd from "@/components/seo/BlogFaqJsonLd";
@@ -9,6 +10,8 @@ import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
+import { fetchContentExcursionsServer } from "@/lib/content-excursions-server";
+import { resolveExcursionsForBlogPost } from "@/lib/content-excursion-match";
 
 interface AuthorArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -50,7 +53,13 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
   }
 
   const cmsMetadata = getCmsResolverMetadata(post);
-  const initialTours = await fetchMarketplaceTours();
+  const [initialTours, blogSettings, forms, contentExcursions] = await Promise.all([
+    fetchMarketplaceTours(),
+    fetchSiteBlog(),
+    fetchSiteForms(),
+    fetchContentExcursionsServer(),
+  ]);
+  const excursionMatches = resolveExcursionsForBlogPost(post, contentExcursions);
   return (
     <>
       {cmsMetadata?.showTranslationBanner ? (
@@ -58,7 +67,13 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
       ) : null}
       <ArticleJsonLd post={post} />
       <BlogFaqJsonLd post={post} />
-      <BlogPostView post={post} initialTours={initialTours} />
+      <BlogPostView
+        post={post}
+        initialTours={initialTours}
+        excursionMatches={excursionMatches}
+        settings={blogSettings}
+        newsletterEnabled={forms.newsletterEnabled}
+      />
     </>
   );
 }

@@ -6,7 +6,7 @@ export const TRIPSTER_PARTNER_TOUR_TYPE = "tour";
 export const PARTNER_TRIPSTER_BADGE_LABEL = "Партнёр Tripster";
 
 export const PARTNER_TRIPSTER_BADGE_HINT =
-  "Бронирование и оплата проходят на Tripster. Мы получаем партнёрскую комиссию при бронировании.";
+  "Бронирование и оплата проходят на Tripster.";
 
 export function resolveTripsterExperienceKind(
   row: { experience_type?: string | null; payload?: unknown }

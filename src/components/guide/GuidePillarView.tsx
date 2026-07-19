@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import GuideNextTopic from "@/components/guide/GuideNextTopic";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
@@ -13,6 +12,7 @@ import GuideRelatedArticlesGrid, {
 import GuideSectionNav from "@/components/guide/GuideSectionNav";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
+import ContentSectionBody from "@/components/content/ContentSectionBody";
 import HubHero from "@/components/guide/hub/HubHero";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
@@ -25,6 +25,7 @@ import { getGuidePracticalTips } from "@/data/guide-pillar-practical-tips";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { buildGuidePillarArticleJsonLd } from "@/lib/content-json-ld";
 import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
+import { assignHeadingIds } from "@/lib/content-heading-id";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { guideTopicHref } from "@/lib/guide-topics";
@@ -58,6 +59,21 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
   const hasLiveFacts = pillar.quickFacts.some((f) => f.live);
   const practicalTips = pillar.practicalTips ?? getGuidePracticalTips(topic.slug);
   const path = guideTopicHref(topic.slug);
+  const cmsSections = topic.cmsPage?.sections.filter((section) =>
+    Boolean(
+      section.heading?.trim() ||
+        section.html?.trim() ||
+        section.paragraphs?.some((paragraph) => paragraph.trim()) ||
+        section.list?.some((item) => item.trim()) ||
+        section.blocks?.length,
+    ),
+  );
+  const cmsSectionHeadings = cmsSections?.map(
+    (section, index) => section.heading?.trim() || (index === 0 ? "Главное" : `Раздел ${index + 1}`),
+  );
+  const cmsSectionNavigation = cmsSectionHeadings
+    ? assignHeadingIds(cmsSectionHeadings)
+    : undefined;
 
   const relatedArticles: GuideRelatedArticle[] = [
     ...pillar.blogLinks.map((link) => ({
@@ -75,6 +91,7 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
   const tocItems = buildGuidePillarToc(pillar, {
     hasPracticalTips: Boolean(practicalTips),
     hasReadMore: relatedArticles.length > 0,
+    sectionItems: cmsSectionNavigation?.items,
   });
 
   return (
@@ -134,13 +151,38 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
 
               <PageSlotImage pageId={`guide:${topic.slug}`} slotId="content" />
 
-              {pillar.sections.map((section) => (
-                <GuidePillarSectionBlock
-                  key={section.id}
-                  section={section}
-                  initialTours={initialTours}
-                />
-              ))}
+              {cmsSections && cmsSectionNavigation && cmsSectionHeadings ? (
+                cmsSections.map((section, index) => {
+                  const staticSection = pillar.sections.find(
+                    (candidate) => candidate.title === cmsSectionHeadings[index],
+                  );
+                  return (
+                    <HubSection
+                      key={`${cmsSectionNavigation.ids[index]}-${index}`}
+                      id={cmsSectionNavigation.ids[index]}
+                      title={cmsSectionHeadings[index]}
+                    >
+                      <ContentSectionBody section={section} className="text-charcoal/90" />
+                      {staticSection?.widgetSlot ? (
+                        <div className="mt-5">
+                          <GuideWidgetSlot
+                            slot={staticSection.widgetSlot}
+                            initialTours={initialTours}
+                          />
+                        </div>
+                      ) : null}
+                    </HubSection>
+                  );
+                })
+              ) : (
+                pillar.sections.map((section) => (
+                  <GuidePillarSectionBlock
+                    key={section.id}
+                    section={section}
+                    initialTours={initialTours}
+                  />
+                ))
+              )}
 
               {widgetSlots.length > 0 ? (
                 <div className="space-y-8" aria-label="Интерактивные блоки">

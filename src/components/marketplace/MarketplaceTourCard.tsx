@@ -38,6 +38,7 @@ import {
   TourListingThematicTags,
 } from "./TourListingCatalogBadges";
 import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
+import { resolveTourOfferCapabilities } from "@/lib/product-capabilities";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -68,11 +69,16 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
   const cityDisplay = formatTourLocationCompactPlain(tour);
   const isPartnerTour = isPartnerTourListing(tour);
   const partnerBadge = resolvePartnerTourBadge(tour);
+  const offerCapabilities = resolveTourOfferCapabilities(tour);
 
   return (
     <ContentCard>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
-        <ContentCardMedia aspect="4/3" gradient="none">
+        <ContentCardMedia
+          aspect="auto"
+          gradient="none"
+          className="aspect-[16/10] sm:aspect-[4/3]"
+        >
           <TourCardGallery
             images={tour.gallery}
             alt={tourCoverAlt(tour.title)}
@@ -148,8 +154,8 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
           </div>
         </ContentCardMedia>
 
-        <ContentCardBody>
-          <div className="flex items-center justify-between gap-3 text-sm">
+        <ContentCardBody className="!p-3 sm:!p-4">
+          <div className="flex items-center justify-between gap-2 text-xs sm:gap-3 sm:text-sm">
             <span className="flex min-w-0 items-center gap-1.5 text-slate">
               <span className="truncate">{cityDisplay}</span>
             </span>
@@ -164,10 +170,10 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
             )}
           </div>
 
-          <ContentCardTitle>{tour.title}</ContentCardTitle>
+          <ContentCardTitle className="text-base sm:text-lg">{tour.title}</ContentCardTitle>
 
           {tour.shortDescription ? (
-            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
+            <p className="mt-2 hidden line-clamp-3 text-sm leading-relaxed text-slate sm:block">
               {plainTextFromRichContent(tour.shortDescription)}
             </p>
           ) : null}
@@ -225,8 +231,8 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
             </p>
           ) : null}
 
-          <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
-            {tour.bookingMode === "on_request" && (
+          <div className="mt-3 hidden flex-wrap gap-1.5 border-t border-gray-100 pt-3 sm:flex">
+            {offerCapabilities.bookingMode === "internal_request" && (
               <span className="inline-flex items-center gap-1 rounded-md border border-sky/15 bg-sky/5 px-2 py-0.5 text-[11px] font-medium text-sky-ink">
                 <UserRound className="h-3 w-3 shrink-0" aria-hidden />
                 Индивидуально

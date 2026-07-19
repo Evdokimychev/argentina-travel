@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
 import path from "node:path";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const hasExternalMediaCdn = Boolean(process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim());
 const disableNextImageOptimization =
-  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true" || hasExternalMediaCdn;
+  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true";
 const isDemoBuild =
   process.env.NEXT_PUBLIC_APP_MODE === "demo" ||
   (!process.env.NEXT_PUBLIC_APP_MODE &&
@@ -129,10 +129,16 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    // Vercel image optimization can return 402 when quota/billing blocks optimizer requests.
-    // The project serves curated media from its own CDN, so prefer visible images over broken cards.
+    // Keep the emergency bypass explicit. Merely enabling the media CDN must not disable
+    // responsive variants for every public image.
     unoptimized: disableNextImageOptimization,
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1440, 1920],
+    imageSizes: [32, 48, 64, 96, 128, 160, 256, 384],
     localPatterns: [
+      {
+        pathname: "/media/**",
+      },
       {
         pathname: "/api/media/partner-image",
       },
@@ -210,4 +216,21 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+const analyzedConfig = withBundleAnalyzer(nextConfig);
+
+export default withSentryConfig(analyzedConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+    deleteSourcemapsAfterUpload: true,
+  },
+  webpack: {
+    automaticVercelMonitors: true,
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
+});

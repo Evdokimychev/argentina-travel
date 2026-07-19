@@ -102,7 +102,7 @@ export default function ContentReadingLayout({
         </div>
 
         {hasSidebar ? (
-          <aside className="hidden min-w-0 lg:block">
+          <aside className="hidden min-w-0 self-stretch lg:block">
             <div className={readingAsideStickyScrollClass}>{sidebarContent}</div>
           </aside>
         ) : null}

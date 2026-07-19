@@ -137,10 +137,14 @@ export function getSectionMeta(id: string): KbSectionMeta | undefined {
 
 /** Записи раздела (по id site_section), хабы вынесены вперёд, затем по типу. */
 export function getSectionEntries(sectionId: string): KbEntry[] {
-  const entries = loadEntries().filter((entry) =>
+  return getSectionEntriesFrom(loadEntries(), sectionId);
+}
+
+export function getSectionEntriesFrom(entries: KbEntry[], sectionId: string): KbEntry[] {
+  const matching = entries.filter((entry) =>
     (entry.site_sections ?? []).includes(sectionId),
   );
-  return entries.sort((a, b) => {
+  return matching.sort((a, b) => {
     const aHub = isHub(a.id) ? 0 : 1;
     const bHub = isHub(b.id) ? 0 : 1;
     if (aHub !== bHub) return aHub - bHub;
@@ -149,7 +153,11 @@ export function getSectionEntries(sectionId: string): KbEntry[] {
 }
 
 export function getSectionCount(sectionId: string): number {
-  return loadEntries().filter((entry) =>
+  return getSectionCountFrom(loadEntries(), sectionId);
+}
+
+export function getSectionCountFrom(entries: KbEntry[], sectionId: string): number {
+  return entries.filter((entry) =>
     (entry.site_sections ?? []).includes(sectionId),
   ).length;
 }
@@ -235,7 +243,14 @@ export function getSectionGroups(sectionId: string): {
   hubs: KbEntry[];
   groups: { type: string; label: string; entries: KbEntry[] }[];
 } {
-  const all = getSectionEntries(sectionId);
+  return getSectionGroupsFrom(loadEntries(), sectionId);
+}
+
+export function getSectionGroupsFrom(entries: KbEntry[], sectionId: string): {
+  hubs: KbEntry[];
+  groups: { type: string; label: string; entries: KbEntry[] }[];
+} {
+  const all = getSectionEntriesFrom(entries, sectionId);
   const hubs = all.filter((entry) => isHub(entry.id));
   const rest = all.filter((entry) => !isHub(entry.id));
   const groups = KB_TYPE_GROUP_ORDER.map(({ type, label }) => ({
@@ -287,7 +302,11 @@ export function getSectionNeighbours(entry: KbEntry): {
 }
 
 export function getSearchIndex(): KbSearchItem[] {
-  return loadEntries().map((entry) => ({
+  return getSearchIndexFrom(loadEntries());
+}
+
+export function getSearchIndexFrom(entries: KbEntry[]): KbSearchItem[] {
+  return entries.map((entry) => ({
     id: entry.id,
     title: entry.title,
     summary: entry.summary ?? "",

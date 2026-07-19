@@ -16,6 +16,10 @@ import { getBlogAdjacentPosts } from "@/lib/blog-adjacent-posts";
 import { buildBlogPostBreadcrumbJsonLd, buildBlogPostUiBreadcrumbs } from "@/lib/blog-breadcrumbs";
 import { buildBlogQuickFacts, sortBlogPostsByUpdated } from "@/lib/blog-utils";
 import {
+  getBlogPostHeroResolved,
+  getDistinctBlogSectionImage,
+} from "@/lib/media-resolver";
+import {
   getBlogPostFooterLinks,
   getBlogPostSidebarRelatedResources,
   isValidBlogRelatedResourceHref,
@@ -131,6 +135,63 @@ describe("blog internal links", () => {
     expect(rules.some((r) => r.href.startsWith("/destinations/"))).toBe(true);
     expect(rules.some((r) => r.href.startsWith("/guide/"))).toBe(true);
   });
+
+  it("does not turn generic wine mentions into a Mendoza link", () => {
+    const segments = linkifyBlogText(
+      "В отличие от зоопарка, здесь птицы свободно подходят к тропе. Вино к маршруту отношения не имеет.",
+    );
+
+    expect(
+      segments.some((segment) => segment.type === "link" && segment.href === "/destinations/mendoza"),
+    ).toBe(false);
+  });
+
+  it("limits auto-links and does not repeat the same destination", () => {
+    const segments = linkifyBlogText(
+      "Буэнос-Айрес и Buenos Aires, затем Эль-Калафате, Барилоче, Мендоса и Игуасу.",
+    );
+    const links = segments.filter((segment) => segment.type === "link");
+
+    expect(links.length).toBeLessThanOrEqual(3);
+    expect(new Set(links.map((link) => link.href)).size).toBe(links.length);
+  });
+});
+
+describe("blog article media", () => {
+  it("prefers bundled copies for resolved manifest media", () => {
+    const source = readFileSync(join(root, "components/media/PageImage.tsx"), "utf8");
+    expect(source).toContain("preferLocalMedia={Boolean(resolved.localPath)}");
+  });
+
+  it(
+    "does not repeat hero and section image sources in long articles",
+    () => {
+      for (const article of blogPosts.filter((entry) => (entry.sections?.length ?? 0) >= 6)) {
+        const images = [
+          getBlogPostHeroResolved(article),
+          getDistinctBlogSectionImage(article, "section-1"),
+          getDistinctBlogSectionImage(article, "section-2"),
+          getDistinctBlogSectionImage(article, "section-3"),
+        ].filter((image): image is NonNullable<typeof image> => Boolean(image));
+        const sources = images.map((image) => image.localPath ?? image.src);
+
+        expect(new Set(sources).size, article.slug).toBe(sources.length);
+      }
+    },
+    20_000,
+  );
+});
+
+describe("blog article structure", () => {
+  it("does not repeat section headings inside an article", () => {
+    for (const article of blogPosts) {
+      const headings = (article.sections ?? [])
+        .map((section) => section.title.trim().toLocaleLowerCase("ru"))
+        .filter(Boolean);
+
+      expect(new Set(headings).size, article.slug).toBe(headings.length);
+    }
+  });
 });
 
 describe("blog destinations and affiliate zones", () => {
@@ -143,6 +204,19 @@ describe("blog destinations and affiliate zones", () => {
       }),
     );
     expect(destinations.map((d) => d.id)).toEqual(["calafate", "ba"]);
+  });
+
+  it("does not infer Mendoza from the word Пингвино", () => {
+    const destinations = resolveBlogPostDestinations(
+      post({
+        slug: "penguins",
+        title: "Остров Пингвино",
+        category: "Патагония",
+        tags: ["пингвины"],
+      }),
+    );
+
+    expect(destinations.some((destination) => destination.id === "mendoza")).toBe(false);
   });
 
   it("resolves affiliate cards by category", () => {

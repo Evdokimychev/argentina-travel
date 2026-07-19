@@ -242,6 +242,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           .split(",")
           .map((item) => item.trim())
           .filter(Boolean),
+        collector: doc.body.collector,
       };
     }
     if (doc?.body.kind === "author_article") {
@@ -557,17 +558,20 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
   const isLegal = doc.body.kind === "legal";
   const isGuide = doc.body.kind === "guide";
-  const isBlog = doc.body.kind === "blog";
+  const isKnowledge = doc.docType === "knowledge";
+  const isBlog = doc.body.kind === "blog" && !isKnowledge;
   const isAuthorArticle = doc.body.kind === "author_article";
-  const isBlogLike = isBlog || isAuthorArticle;
+  const isBlogLike = doc.body.kind === "blog" || isAuthorArticle;
   const isDestination = doc.body.kind === "destination";
   const isPlace = doc.body.kind === "place";
   const publicPathWithoutLocale = isLegal
     ? `/legal/${doc.slug}`
     : isGuide
       ? `/guide/${doc.slug}`
-      : isBlog
-        ? `/blog/${doc.slug}`
+      : isKnowledge
+        ? `/baza-znaniy/${doc.slug}`
+        : isBlog
+          ? `/blog/${doc.slug}`
         : isAuthorArticle
           ? `/blog/author/${doc.slug}`
           : isDestination
@@ -834,6 +838,47 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           </section>
 
           <aside className="space-y-4">
+            {doc.body.kind === "blog" && doc.body.collector ? (
+              <section className={`${cabinetCardClass} p-4 text-sm`}>
+                <h2 className="font-heading text-sm font-bold text-charcoal">Источник материала</h2>
+                <dl className="mt-3 space-y-2 text-xs">
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-slate">Оценка</dt>
+                    <dd className="font-semibold text-charcoal">{doc.body.collector.qualityScore}/100</dd>
+                  </div>
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-slate">Источник</dt>
+                    <dd className="text-right text-charcoal">
+                      {doc.body.collector.source}:{doc.body.collector.sourceId}
+                    </dd>
+                  </div>
+                  {doc.body.collector.city || doc.body.collector.province ? (
+                    <div className="flex items-start justify-between gap-3">
+                      <dt className="text-slate">География</dt>
+                      <dd className="text-right text-charcoal">
+                        {[doc.body.collector.city, doc.body.collector.province].filter(Boolean).join(", ")}
+                      </dd>
+                    </div>
+                  ) : null}
+                </dl>
+                {doc.body.collector.sourceUrl ? (
+                  <a
+                    href={doc.body.collector.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-block text-xs text-sky hover:underline"
+                  >
+                    Открыть первоисточник
+                  </a>
+                ) : null}
+                {doc.body.collector.flags.length ? (
+                  <p className="mt-3 text-xs text-amber-700">
+                    Проверить: {doc.body.collector.flags.join(", ")}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
+
             {isBlogLike ? (
               <BlogInternalLinksPreview
                 excerpt={excerpt}

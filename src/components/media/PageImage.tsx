@@ -61,6 +61,7 @@ export default function PageImage({
       src={resolved.src}
       alt={resolved.alt}
       title={resolved.title}
+      preferLocalMedia={Boolean(resolved.localPath)}
       fill={fill}
       width={width}
       height={height}

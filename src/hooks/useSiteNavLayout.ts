@@ -56,6 +56,7 @@ function computeVisiblePrimaryCount(
 
 export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
   const itemWidthsRef = useRef<Map<string, number>>(new Map());
+  const lastMeasuredWidthRef = useRef(-1);
   const [visiblePrimaryCount, setVisiblePrimaryCount] = useState(5);
   const [navWidth, setNavWidth] = useState(0);
 
@@ -70,12 +71,14 @@ export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
     [],
   );
 
-  const remeasure = useCallback(() => {
+  const remeasure = useCallback((force = false) => {
     const nav = navRef.current;
     if (!nav) return;
 
     const width = nav.clientWidth;
-    setNavWidth(width);
+    if (!force && lastMeasuredWidthRef.current === width) return;
+    lastMeasuredWidthRef.current = width;
+    setNavWidth((current) => (current === width ? current : width));
     if (width <= 0) return;
 
     const showIndex = width >= 1080;
@@ -89,8 +92,8 @@ export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
   }, [navRef]);
 
   useLayoutEffect(() => {
-    remeasure();
-  }, [remeasure, visiblePrimaryCount]);
+    remeasure(true);
+  }, [remeasure]);
 
   useEffect(() => {
     const nav = navRef.current;

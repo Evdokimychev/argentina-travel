@@ -4,16 +4,19 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, FileText, MessageCircle, ShoppingBag } from "lucide-react";
-import type { ShopProduct } from "@/data/shop-products";
+import { SHOP_PRODUCTS, type ShopProduct } from "@/data/shop-products";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import { siteContainerClass } from "@/lib/site-container";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
+import ShopProductCard from "@/components/shop/ShopProductCard";
+import type { SiteCommerceGlobal } from "@/types/site-globals";
 
 interface ShopProductDetailViewProps {
   product: ShopProduct;
+  settings: SiteCommerceGlobal;
 }
 
-export default function ShopProductDetailView({ product }: ShopProductDetailViewProps) {
+export default function ShopProductDetailView({ product, settings }: ShopProductDetailViewProps) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const shopCheckoutEnabled = isSupabaseShopEnabled();
 
@@ -38,10 +41,12 @@ export default function ShopProductDetailView({ product }: ShopProductDetailView
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
             />
-            <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1.5 text-sm font-medium text-charcoal">
-              <FileText className="h-4 w-4" aria-hidden />
-              {product.format}
-            </span>
+            {settings.showProductFormat ? (
+              <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1.5 text-sm font-medium text-charcoal">
+                <FileText className="h-4 w-4" aria-hidden />
+                {product.format}
+              </span>
+            ) : null}
           </div>
 
           <div>
@@ -49,10 +54,12 @@ export default function ShopProductDetailView({ product }: ShopProductDetailView
               {product.title}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-slate">{product.description}</p>
-            <p className="mt-6 font-heading text-3xl font-bold text-charcoal">
-              ${product.price}{" "}
-              <span className="text-lg font-normal text-slate">{product.currency}</span>
-            </p>
+            {settings.showProductPrice ? (
+              <p className="mt-6 font-heading text-3xl font-bold text-charcoal">
+                ${product.price}{" "}
+                <span className="text-lg font-normal text-slate">{product.currency}</span>
+              </p>
+            ) : null}
 
             <p className="mt-4 text-sm leading-relaxed text-slate">
               {shopCheckoutEnabled
@@ -79,17 +86,37 @@ export default function ShopProductDetailView({ product }: ShopProductDetailView
                   Запросить
                 </Link>
               )}
-              <Link
-                href={`/contacts?product=${product.slug}`}
-                className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-6 py-3 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
-              >
-                <MessageCircle className="h-4 w-4" aria-hidden />
-                Задать вопрос
-              </Link>
+              {settings.showProductQuestions ? (
+                <Link
+                  href={`/contacts?product=${product.slug}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-6 py-3 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+                >
+                  <MessageCircle className="h-4 w-4" aria-hidden />
+                  Задать вопрос
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>
       </section>
+
+      {settings.showRelatedProducts ? (
+        <section className="border-t border-gray-100 bg-surface-muted py-12">
+          <div className={siteContainerClass}>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">Другие материалы</h2>
+            <p className="mt-2 text-sm text-slate">
+              Гиды и списки, которые помогут подготовить поездку.
+            </p>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {SHOP_PRODUCTS.filter((item) => item.id !== product.id)
+                .slice(0, Number(settings.relatedProductsCount))
+                .map((item) => (
+                  <ShopProductCard key={item.id} product={item} settings={settings} />
+                ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {shopCheckoutEnabled ? (
         <ShopCheckoutModal

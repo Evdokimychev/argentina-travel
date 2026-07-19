@@ -30,41 +30,17 @@ import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
-import { KB_SECTIONS, getAllEntryIds, getEntry } from "@/lib/knowledge-base/content";
+import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
+import { filterPublicPaths, isTravelModulePathEnabled } from "@/lib/public-module-visibility";
+import { KB_SECTIONS } from "@/lib/knowledge-base/content";
+import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
 import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
+import {
+  filterRuSitemapPaths,
+  findRuUrlDecision,
+} from "@/lib/seo/publication-registry";
 import type { BlogPost } from "@/types";
-
-// Partner city exists in aggregate counters but its detail lookup is not stable,
-// so exposing it in sitemap would intermittently produce a noindex/not-found page.
-const EXCURSION_CITY_SITEMAP_EXCLUSIONS = new Set([
-  "puerto_iguazu",
-  "puerto_iguasu",
-]);
-
-function isIndexableInternalPath(href: string): boolean {
-  if (!href.startsWith("/")) return false;
-  if (href.includes("?")) return false;
-  if (href.startsWith("/organizer")) return false;
-  if (href.startsWith("/profile")) return false;
-  if (href === "/booking/find") return false;
-  if (href.startsWith("/booking/pay")) return false;
-  if (href.startsWith("/booking/travelers")) return false;
-  if (href === "/baza-znaniy/poisk") return false;
-
-  const excursionCitySlug = href.match(/^\/excursions\/city\/([^/]+)$/)?.[1];
-  if (
-    excursionCitySlug &&
-    EXCURSION_CITY_SITEMAP_EXCLUSIONS.has(decodeURIComponent(excursionCitySlug).toLowerCase())
-  ) {
-    return false;
-  }
-
-  const kbSlug = href.match(/^\/baza-znaniy\/([^/]+)$/)?.[1];
-  if (kbSlug && !getEntry(kbSlug)) return false;
-
-  return true;
-}
 
 function uniquePaths(paths: string[]): string[] {
   return [...new Set(paths)];
@@ -123,7 +99,7 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
     );
     const indexableCities = await Promise.all(
       cities.map(async (city) => {
-        if (EXCURSION_CITY_SITEMAP_EXCLUSIONS.has(city.slug.toLowerCase())) return null;
+        if (findRuUrlDecision(`/excursions/city/${city.slug}`)) return null;
         if (!citySlugsWithPublishedExcursions.has(city.slug.toLowerCase())) return null;
         return (await fetchExcursionCityServer(city.slug)) ? city : null;
       }),
@@ -153,11 +129,8 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
       paths.push(`/excursions/${slug}`);
     }
 
-    const { fetchGuideIdsServer } = await import("@/lib/tripster/guide-server");
-    const guideIds = await fetchGuideIdsServer();
-    for (const guideId of guideIds) {
-      paths.push(`/excursions/guide/${guideId}`);
-    }
+    // Partner guide IDs currently resolve inconsistently and previously added
+    // stable 404s to sitemap. Re-enable only from a publication-aware detail source.
   } catch {
     // static /excursions only
   }
@@ -198,7 +171,7 @@ export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
     for (const section of KB_SECTIONS) {
       paths.push(sectionHref(section.slug));
     }
-    for (const id of getAllEntryIds()) {
+    for (const id of await listPublishedKnowledgeSlugs()) {
       paths.push(entryHref(id));
     }
     return uniquePaths(paths);
@@ -210,12 +183,12 @@ export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
 export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
-    .filter(isIndexableInternalPath);
+    .filter((path) => filterRuSitemapPaths([path]).length > 0);
 
   const footerPaths = [
     ...SITE_FOOTER_NAV.map((link) => link.href),
     ...SITE_FOOTER_CONTACTS.map((link) => link.href),
-  ].filter(isIndexableInternalPath);
+  ].filter((path) => filterRuSitemapPaths([path]).length > 0);
 
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
@@ -255,7 +228,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     (user) => `/organizers/${user.id}`
   );
 
-  return uniquePaths([
+  return filterRuSitemapPaths([
     ...YANDEX_PRIORITY_HUB_PATHS,
     ...navPaths,
     ...footerPaths,
@@ -272,7 +245,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
-  ]).filter(isIndexableInternalPath);
+  ]);
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
@@ -286,7 +259,17 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const paths = expandI18nSitemapPaths(await collectSitemapPaths({ blogCatalog }));
+  const [navigation, modules] = await Promise.all([
+    fetchSiteNavigation(),
+    fetchSiteModules(),
+  ]);
+  const visiblePaths = filterPublicPaths(
+    await collectSitemapPaths({ blogCatalog }),
+    navigation,
+  );
+  const paths = expandI18nSitemapPaths(
+    visiblePaths.filter((path) => isTravelModulePathEnabled(path, modules)),
+  );
 
   return paths.map((path) => {
     const lastModified =

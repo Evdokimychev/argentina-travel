@@ -1,13 +1,16 @@
-import { GUIDE_INDEX_INTRO, GUIDE_TOPICS } from "@/data/guide-topics";
-import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
-import { guideTopicHref } from "@/lib/guide-topics";
+import {
+  SITE_NAV_GUIDE_ABOUT_HREF,
+  SITE_NAV_GUIDE_INTRO,
+  SITE_NAV_GUIDE_TOPICS,
+  type SiteNavGuideTopicSlug,
+} from "@/data/site-nav-guide-topics";
 import { GUIDE_ABOUT_LINK_ID, GUIDE_HUB_LINK_ID } from "@/lib/guide-nav-icons";
 import type { SiteNavColumn, SiteNavLink } from "@/types/site-nav";
 
 export const GUIDE_NAV_PROMO_TITLE = "Путеводитель по Аргентине";
 
 /** Two-line intro shown in the guide mega-menu promo block. */
-export const GUIDE_NAV_PROMO_INTRO = GUIDE_INDEX_INTRO;
+export const GUIDE_NAV_PROMO_INTRO = SITE_NAV_GUIDE_INTRO;
 
 /** Featured topics in the «Популярное» row. */
 export const GUIDE_NAV_FEATURED_SLUGS = [
@@ -17,7 +20,7 @@ export const GUIDE_NAV_FEATURED_SLUGS = [
 ] as const;
 
 /** First link in mega-menu promo row */
-export const GUIDE_NAV_ABOUT_HREF = GUIDE_ABOUT_ARGENTINA_PATH;
+export const GUIDE_NAV_ABOUT_HREF = SITE_NAV_GUIDE_ABOUT_HREF;
 
 const GUIDE_PRACTICE_SLUGS = [
   "kak-dobratsya",
@@ -36,21 +39,18 @@ const GUIDE_TRAVEL_SLUGS = [
 
 const GUIDE_COUNTRY_SLUGS = ["yazyk", "kultura", "istoriya", "kukhnya", "shopping"] as const;
 
-function guideTopicToNavLink(slug: string): SiteNavLink {
-  const topic = GUIDE_TOPICS[slug];
-  if (!topic) {
-    throw new Error(`Missing guide topic: ${slug}`);
-  }
+function guideTopicToNavLink(slug: SiteNavGuideTopicSlug): SiteNavLink {
+  const topic = SITE_NAV_GUIDE_TOPICS[slug];
   return {
     id: `guide-${slug}`,
     label: topic.title,
-    href: guideTopicHref(slug),
+    href: `/guide/${slug}`,
     description: topic.shortDescription,
     topicSlug: slug,
   };
 }
 
-export function buildGuideNavLinks(slugs: readonly string[]): SiteNavLink[] {
+export function buildGuideNavLinks(slugs: readonly SiteNavGuideTopicSlug[]): SiteNavLink[] {
   return slugs.map(guideTopicToNavLink);
 }
 
@@ -64,7 +64,7 @@ export function buildGuideNavColumns(): SiteNavColumn[] {
         {
           id: GUIDE_ABOUT_LINK_ID,
           label: "Об Аргентине",
-          href: GUIDE_ABOUT_ARGENTINA_PATH,
+          href: SITE_NAV_GUIDE_ABOUT_HREF,
           description: "Страна, регионы, маршруты — главная страница путеводителя",
         },
         {

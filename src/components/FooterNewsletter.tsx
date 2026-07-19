@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SmartInput } from "@/components/ui/smart-input";
@@ -12,6 +12,7 @@ import { trackNewsletterSubscribe } from "@/lib/analytics/gtm-events";
 import { tokenCardSurfaceClass } from "@/lib/design-tokens";
 import { cn } from "@/lib/cn";
 import { validateEmail } from "@/lib/form-validation";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 export default function FooterNewsletter() {
   const [email, setEmail] = useState("");
@@ -20,10 +21,14 @@ export default function FooterNewsletter() {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const feedback = useSiteFeedback();
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const value = email.trim();
+    const honeypot = String(new FormData(event.currentTarget as HTMLFormElement).get("company") ?? "");
     const validationError = validateEmail(value);
     if (validationError) {
       setEmailError(validationError);
@@ -38,7 +43,7 @@ export default function FooterNewsletter() {
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: value, source: "footer" }),
+        body: JSON.stringify({ email: value, source: "footer", captchaToken, honeypot }),
       });
 
       if (!response.ok) {
@@ -60,6 +65,7 @@ export default function FooterNewsletter() {
       setError(normalized);
     } finally {
       setLoading(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
@@ -83,6 +89,10 @@ export default function FooterNewsletter() {
         "border-sky/15 bg-gradient-to-br from-sky/[0.07] via-surface-elevated to-surface-elevated dark:from-sky/[0.1]",
       )}
     >
+      <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+        Компания
+        <input name="company" tabIndex={-1} autoComplete="off" />
+      </label>
       <div
         className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-sky/10 blur-2xl"
         aria-hidden
@@ -106,6 +116,11 @@ export default function FooterNewsletter() {
           className="relative mt-3"
         />
       ) : null}
+      <TurnstileField
+        formId="newsletter"
+        onToken={handleCaptchaToken}
+        resetSignal={captchaResetSignal}
+      />
       <div className="relative mt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:items-end">
         <div className="min-w-0 flex-1">
           <SmartInput

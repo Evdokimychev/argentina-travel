@@ -4,11 +4,20 @@ import {
   resolveContactKind,
   submitContact,
 } from "@/lib/lead-capture";
-import { fetchSiteFeatures } from "@/lib/site-settings-server";
+import { fetchSiteFeatures, fetchSiteForms } from "@/lib/site-settings-server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { ContactSubmissionKind } from "@/types/database";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
 export async function POST(request: Request) {
+  const forms = await fetchSiteForms();
+  if (!forms.contactEnabled) {
+    return NextResponse.json(
+      { error: "Форма обращений временно отключена. Используйте доступные контакты." },
+      { status: 404 },
+    );
+  }
+
   const ip = getClientIp(request);
   const limit = await checkRateLimit(`contact:ip:${ip}`, 10, 60_000);
   if (!limit.ok) {
@@ -31,7 +40,22 @@ export async function POST(request: Request) {
       productSlug?: string | null;
       serviceSlug?: string | null;
       organizerApplication?: boolean;
+      captchaToken?: string | null;
+      honeypot?: string | null;
     };
+
+    const protection = await verifyGuestFormProtection({
+      request,
+      formId: "contact",
+      captchaToken: body.captchaToken,
+      honeypot: body.honeypot,
+    });
+    if (!protection.ok) {
+      if (protection.kind === "configuration") {
+        return NextResponse.json({ error: "Защита формы временно недоступна." }, { status: 503 });
+      }
+      return NextResponse.json({ ok: true });
+    }
 
     if (!body.name?.trim()) {
       return NextResponse.json({ error: "Name is required." }, { status: 400 });

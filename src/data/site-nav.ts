@@ -1,24 +1,17 @@
 import { EXCURSION_CITY_LINKS, excursionCityHref } from "@/data/excursion-city-links";
-import { blogPosts } from "@/data/blog";
-import { POPULAR_DESTINATIONS, SEARCH_DESTINATIONS } from "@/data/filters";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
+import { SITE_NAV_RECENT_BLOG_LINKS } from "@/data/site-nav-blog-links";
+import {
+  SITE_NAV_PLANNING_SEARCH_LINKS,
+  SITE_NAV_POPULAR_DESTINATIONS,
+  SITE_NAV_POPULAR_PLACE_LINKS,
+} from "@/data/site-nav-geography";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 import { TOUR_COLLECTION_OPTIONS } from "@/data/tour-collections";
-import { destinationHref } from "@/lib/destinations";
-import { filterIndexableBlogPosts, sortBlogPostsByDate } from "@/lib/blog-utils";
 import { buildGuideNavColumns } from "@/lib/guide-nav";
 import { buildImmigrationNavColumns } from "@/lib/immigration-nav";
-import { buildPopularPlaceNavLinks } from "@/lib/places-nav";
-import { searchLabelToHref } from "@/lib/geography-links";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
-
-/** Recent indexable posts for mega-menu (not the full 290-post catalog). */
-const BLOG_NAV_RECENT_LIMIT = 12;
-const blogNavRecentPosts = sortBlogPostsByDate(filterIndexableBlogPosts(blogPosts)).slice(
-  0,
-  BLOG_NAV_RECENT_LIMIT
-);
 
 /** Utility links in the header top bar. */
 export const SITE_NAV_UTILITY_LINKS: SiteNavLink[] = [
@@ -43,12 +36,12 @@ export const SITE_NAV_UTILITY_LINKS: SiteNavLink[] = [
 ];
 
 const REGION_LINKS: SiteNavLink[] = [
-  { id: "region-patagonia", label: "Патагония", href: destinationHref("patagonia") },
-  { id: "region-ba", label: "Буэнос-Айрес", href: destinationHref("ba") },
-  { id: "region-misiones", label: "Игуасу и Misiones", href: destinationHref("iguazu") },
-  { id: "region-salta", label: "Сальта и северо-запад", href: destinationHref("salta") },
-  { id: "region-mendoza", label: "Мендоса и винодельни", href: destinationHref("mendoza") },
-  { id: "region-tierra", label: "Огненная Земля", href: destinationHref("ushuaia") },
+  { id: "region-patagonia", label: "Патагония", href: "/destinations/patagonia" },
+  { id: "region-ba", label: "Буэнос-Айрес", href: "/destinations/ba" },
+  { id: "region-misiones", label: "Игуасу и Misiones", href: "/destinations/iguazu" },
+  { id: "region-salta", label: "Сальта и северо-запад", href: "/destinations/salta" },
+  { id: "region-mendoza", label: "Мендоса и винодельни", href: "/destinations/mendoza" },
+  { id: "region-tierra", label: "Огненная Земля", href: "/destinations/ushuaia" },
 ];
 
 /** Compact service links — footer strip in every mega-menu dropdown. */
@@ -270,10 +263,10 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             href: "/destinations",
             description: "8 направлений с гидами, сезонами и турами",
           },
-          ...POPULAR_DESTINATIONS.map((dest) => ({
+          ...SITE_NAV_POPULAR_DESTINATIONS.map((dest) => ({
             id: `dest-${dest.id}`,
             label: dest.name,
-            href: destinationHref(dest.id),
+            href: `/destinations/${dest.id}`,
             description: dest.description,
           })),
         ],
@@ -296,7 +289,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             href: "/places",
             description: "Парки, города, ледники — карта и фильтры",
           },
-          ...buildPopularPlaceNavLinks(),
+          ...SITE_NAV_POPULAR_PLACE_LINKS,
         ],
       },
       {
@@ -317,18 +310,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             description: "Готовые планы поездок",
           },
           ...REGION_LINKS.slice(0, 4),
-          ...SEARCH_DESTINATIONS.filter(
-            (item) =>
-              !POPULAR_DESTINATIONS.some((pop) => pop.name === item.label) &&
-              !REGION_LINKS.some((region) => region.label.includes(item.label)),
-          )
-            .slice(0, 3)
-            .map((item) => ({
-              id: `geo-search-${item.label}`,
-              label: item.label,
-              href: searchLabelToHref(item.label),
-              description: item.region,
-            })),
+          ...SITE_NAV_PLANNING_SEARCH_LINKS,
         ],
       },
     ],
@@ -378,7 +360,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             href: "/excursions",
             description: "Полный каталог экскурсий",
           },
-          ...POPULAR_DESTINATIONS.slice(0, 5).map((dest) => ({
+          ...SITE_NAV_POPULAR_DESTINATIONS.slice(0, 5).map((dest) => ({
             id: `excursions-${dest.id}`,
             label: dest.name,
             href: `/excursions?query=${encodeURIComponent(dest.name)}`,
@@ -467,12 +449,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "journal-recent",
         title: "Последние публикации",
         titleKey: "nav.columns.recentPosts",
-        links: blogNavRecentPosts.map((post) => ({
-          id: `blog-${post.slug}`,
-          label: post.title,
-          href: `/blog/${post.slug}`,
-          description: post.category,
-        })),
+        links: SITE_NAV_RECENT_BLOG_LINKS,
       },
       {
         id: "journal-more",
@@ -484,6 +461,13 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         ],
       },
     ],
+  },
+  {
+    id: "community",
+    label: "Форум",
+    href: "/forum",
+    activePathPrefixes: ["/forum"],
+    description: "Обсуждения путешествий, переезда и жизни в Аргентине",
   },
   {
     id: "about",

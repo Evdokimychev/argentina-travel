@@ -1,7 +1,9 @@
 import FlightPriceTeaserGrid from "@/components/flights/FlightPriceTeaserGrid";
 import ServicesPageView from "@/components/services/ServicesPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { getServiceCategoriesForModules } from "@/data/services-hub";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { fetchSiteModules } from "@/lib/site-settings-server";
 
 const PAGE_TITLE = "Сервисы для поездки";
 const PAGE_DESCRIPTION =
@@ -14,10 +16,14 @@ export const metadata = buildPublicPageMetadata({
 });
 
 export default async function ServicesPage() {
+  const modules = await fetchSiteModules();
+  const categories = getServiceCategoriesForModules(modules);
+
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/services" />
       <ServicesPageView
+        categories={categories}
         flightsTeaser={<FlightPriceTeaserGrid title="Примеры цен на популярные маршруты" />}
       />
     </>

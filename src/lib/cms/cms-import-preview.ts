@@ -8,6 +8,7 @@ type DbClient = SupabaseClient<Database>;
 export const CMS_IMPORT_TYPE_LABELS: Record<CmsDocType, string> = {
   legal: "Юридические",
   blog: "Блог",
+  knowledge: "База знаний",
   guide: "Путеводитель",
   destination: "Направления",
   place: "Места",

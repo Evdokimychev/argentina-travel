@@ -40,6 +40,7 @@ import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { isLowAvailability } from "@/lib/tour-departure-countdown";
 import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
+import { resolveTourOfferCapabilities } from "@/lib/product-capabilities";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -92,7 +93,8 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const comfortLevel = resolveListingComfortLevel(tour);
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;
   const ActivityIcon = activityIcon;
-  const isIndividualOnly = tour.bookingMode === "on_request";
+  const offerCapabilities = resolveTourOfferCapabilities(tour);
+  const isIndividualOnly = offerCapabilities.bookingMode === "internal_request";
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
   const cityDisplay = resolveTourCityDisplay(tour);
   const isPartnerTour = isPartnerTourListing(tour);

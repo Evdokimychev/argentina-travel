@@ -2,6 +2,7 @@ import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { GUIDE_TOPICS } from "@/data/guide-topics";
 import { blogPosts } from "@/data/blog";
 import { buildPublishedBlogSlugSet } from "@/lib/blog-slug-resolve";
+import { getSafeBlogDestinationTerms } from "@/lib/blog-destination-terms";
 
 export type BlogInternalLinkRule = {
   id: string;
@@ -52,7 +53,7 @@ function blogSlugRules(): BlogInternalLinkRule[] {
 function destinationRules(): BlogInternalLinkRule[] {
   return POPULAR_DESTINATIONS.map((dest) => ({
     id: `dest-${dest.id}`,
-    terms: [dest.name, ...dest.keywords.slice(0, 4)],
+    terms: getSafeBlogDestinationTerms(dest).slice(0, 5),
     href: `/destinations/${dest.id}`,
     minLength: 4,
   }));
@@ -78,6 +79,8 @@ export type BlogInternalLinkSegment =
   | { type: "text"; value: string }
   | { type: "link"; value: string; href: string; label: string };
 
+const MAX_AUTO_LINKS_PER_TEXT = 3;
+
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -85,7 +88,7 @@ function escapeRegExp(value: string): string {
 function buildTermPattern(term: string): RegExp {
   const escaped = escapeRegExp(term);
   // Русские склонения: корень + до 3 букв окончания
-  if (/[\u0400-\u04FF]/u.test(term) && term.length >= 5) {
+  if (/^[а-яё]+$/iu.test(term) && term.length >= 5) {
     const stem = escapeRegExp(term.slice(0, term.length - 1));
     return new RegExp(`(?<![\\w/])(${stem}[а-яё]{0,3})(?![\\w])`, "iu");
   }
@@ -93,11 +96,14 @@ function buildTermPattern(term: string): RegExp {
 }
 
 /** Разбивает текст на сегменты с одной автоссылкой (первое совпадение). */
-export function linkifyBlogText(
+function linkifyBlogTextInternal(
   text: string,
-  rules: BlogInternalLinkRule[] = getBlogInternalLinkRules(),
+  rules: BlogInternalLinkRule[],
+  linkedHrefs: Set<string>,
+  remainingLinks: number,
 ): BlogInternalLinkSegment[] {
   if (!text.trim()) return [{ type: "text", value: text }];
+  if (remainingLinks <= 0) return [{ type: "text", value: text }];
 
   const sortedTerms = rules.flatMap((rule) =>
     rule.terms.map((term) => ({
@@ -109,6 +115,7 @@ export function linkifyBlogText(
 
   for (const { term, href, minLength } of sortedTerms) {
     if (term.length < minLength) continue;
+    if (linkedHrefs.has(href)) continue;
 
     const pattern = buildTermPattern(term);
     const match = pattern.exec(text);
@@ -121,9 +128,22 @@ export function linkifyBlogText(
     const segments: BlogInternalLinkSegment[] = [];
     if (before) segments.push({ type: "text", value: before });
     segments.push({ type: "link", value: label, href, label });
-    if (after) segments.push(...linkifyBlogText(after, rules));
+    linkedHrefs.add(href);
+    if (after) {
+      segments.push(
+        ...linkifyBlogTextInternal(after, rules, linkedHrefs, remainingLinks - 1),
+      );
+    }
     return segments;
   }
 
   return [{ type: "text", value: text }];
+}
+
+/** Разбивает текст максимум на три разные смысловые автоссылки. */
+export function linkifyBlogText(
+  text: string,
+  rules: BlogInternalLinkRule[] = getBlogInternalLinkRules(),
+): BlogInternalLinkSegment[] {
+  return linkifyBlogTextInternal(text, rules, new Set(), MAX_AUTO_LINKS_PER_TEXT);
 }

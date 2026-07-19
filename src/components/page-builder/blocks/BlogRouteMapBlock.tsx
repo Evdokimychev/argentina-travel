@@ -20,7 +20,7 @@ export default function BlogRouteMapBlock({ points, caption }: Props) {
     <div className="space-y-3">
       <BlogMapBlock lat={first.lat} lng={first.lng} label={label} />
       {filtered.length > 1 ? (
-        <ol className="space-y-1 rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm text-slate">
+        <ol className="m-0 list-none space-y-1 rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm text-slate">
           {filtered.map((point, index) => (
             <li key={`${point.lat}-${point.lng}-${index}`}>
               <span className="font-medium text-charcoal">{index + 1}.</span> {point.label}

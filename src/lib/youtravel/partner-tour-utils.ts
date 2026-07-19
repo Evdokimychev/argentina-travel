@@ -4,7 +4,7 @@ import type { TourDetail, TourListing } from "@/types";
 export const PARTNER_YOUTRAVEL_BADGE_LABEL = "Партнёр YouTravel.me";
 
 export const PARTNER_YOUTRAVEL_BADGE_HINT =
-  "Бронирование и оплата проходят на YouTravel.me. Мы получаем партнёрскую комиссию при бронировании.";
+  "Бронирование и оплата проходят на YouTravel.me.";
 
 export function youtravelTourListingId(youtravelId: number | string): string {
   return `youtravel-${youtravelId}`;

@@ -56,12 +56,19 @@ import { getRichArticleGallery } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { BlogPost, TourListing } from "@/types";
+import type { SiteBlogGlobal } from "@/types/site-globals";
+import { DEFAULT_SITE_BLOG } from "@/lib/cms/site-globals/normalize";
+import ContentExcursionSection from "@/components/content/ContentExcursionSection";
+import type { ContentExcursionMatch } from "@/lib/content-excursion-match";
 
 type BlogPostViewProps = {
   post: BlogPost;
   /** Published catalog; defaults to TS seed for admin preview routes. */
   catalog?: BlogPost[];
   initialTours?: TourListing[];
+  excursionMatches?: ContentExcursionMatch[];
+  settings?: SiteBlogGlobal;
+  newsletterEnabled?: boolean;
 };
 
 const TOC_MIN_SECTIONS = 4;
@@ -70,6 +77,9 @@ export default function BlogPostView({
   post,
   catalog = filterIndexableBlogPosts(blogPosts),
   initialTours = [],
+  excursionMatches = [],
+  settings = DEFAULT_SITE_BLOG,
+  newsletterEnabled = true,
 }: BlogPostViewProps) {
   const publishedBlogSlugs = buildPublishedBlogSlugSet(catalog.map((entry) => entry.slug));
   const richArticle = post.richArticleId
@@ -207,28 +217,22 @@ export default function BlogPostView({
             articleClassName="content-reading-prose--wide"
             footer={
               <footer className="space-y-8">
-                <BlogShareBar post={post} />
+                {settings.showShare ? <BlogShareBar post={post} /> : null}
                 {!post.noIndex ? (
                   <BlogArticleFeedback slug={post.slug} title={post.title} />
                 ) : null}
-                {!post.noIndex ? (
+                {!post.noIndex && settings.showComments ? (
                   <BlogCommentsSection slug={post.slug} title={post.title} />
                 ) : null}
-                <BlogAuthorCard post={post} />
+                {settings.showAuthor ? <BlogAuthorCard post={post} /> : null}
                 <BlogPostFooterLinks links={footerLinks} />
-                {!post.noIndex ? (
+                {!post.noIndex && settings.showNewsletter && newsletterEnabled ? (
                   <BlogNewsletterBlock source={`blog:${post.slug}`} />
                 ) : null}
               </footer>
             }
           >
             {!post.noIndex ? <BlogQuickFacts post={post} className="mb-8" /> : null}
-            {!post.noIndex && postDestinations.length > 0 ? (
-              <BlogDestinationGallery destinations={postDestinations} className="mb-8" />
-            ) : null}
-            {!post.noIndex ? (
-              <BlogTopicClusterNav post={post} catalog={catalog} className="mb-8" />
-            ) : null}
             <div className="space-y-4">
               {canonicalTarget ? (
                 <aside className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm leading-relaxed text-amber-950">
@@ -262,7 +266,7 @@ export default function BlogPostView({
                       section={section}
                       headingId={headingId}
                       index={index}
-                      postSlug={post.slug}
+                      post={post}
                       totalSections={sectionsWithIds.length}
                       inlineRelatedPosts={inlineRelatedBySection.get(index)}
                       sectionMapPoints={extractSectionMapPoints(section)}
@@ -278,6 +282,15 @@ export default function BlogPostView({
               ) : null}
             </div>
 
+            {!post.noIndex ? (
+              <div className="mt-10 space-y-8 border-t border-gray-100 pt-8">
+                <BlogTopicClusterNav post={post} catalog={catalog} />
+                {postDestinations.length > 0 ? (
+                  <BlogDestinationGallery destinations={postDestinations} />
+                ) : null}
+              </div>
+            ) : null}
+
             {!post.noIndex ? <BlogAffiliateZone post={post} className="mt-10" /> : null}
 
             {post.tourEmbeds?.length && initialTours.length > 0 ? (
@@ -291,9 +304,19 @@ export default function BlogPostView({
                 ))}
               </div>
             ) : null}
+
+            {!post.noIndex && excursionMatches.length > 0 ? (
+              <div className="mt-10 border-t border-gray-100 pt-8">
+                <ContentExcursionSection
+                  matches={excursionMatches}
+                  title="Экскурсии по теме статьи"
+                  subtitle="Точные совпадения из каталогов Tripster и Sputnik8 — откройте карточку, чтобы проверить условия"
+                />
+              </div>
+            ) : null}
           </ContentReadingLayout>
 
-          {!post.noIndex ? (
+          {!post.noIndex && settings.showPrevNext ? (
             <BlogPostNav
               prev={adjacentPosts.prev}
               next={adjacentPosts.next}
@@ -301,8 +324,11 @@ export default function BlogPostView({
             />
           ) : null}
 
-          {!post.noIndex && relatedPosts.length > 0 ? (
-            <BlogRelatedPosts posts={relatedPosts} className="mt-10" />
+          {!post.noIndex && settings.showRelatedPosts && relatedPosts.length > 0 ? (
+            <BlogRelatedPosts
+              posts={relatedPosts.slice(0, Number(settings.relatedPostsCount))}
+              className="mt-10"
+            />
           ) : null}
 
           {!post.noIndex ? <BlogEngagementCta post={post} className="mt-8" /> : null}

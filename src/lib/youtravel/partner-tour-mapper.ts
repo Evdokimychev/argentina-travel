@@ -236,7 +236,7 @@ export function youtravelRowToDetail(
       label: "Забронировать на YouTravel.me",
       openInNewTab: true,
       passContext: true,
-      hint: "Выберите дату и число туристов — мы перенаправим на YouTravel.me с партнёрской меткой.",
+      hint: "Выберите дату и число туристов — продолжим оформление на YouTravel.me.",
     },
     partnerSource: "youtravel",
     partnerExperienceId: row.id,

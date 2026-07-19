@@ -13,13 +13,15 @@ import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-ca
 import TourCardImageVignette from "@/components/marketplace/TourCardImageVignette";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import TourEmbedMatchReason from "./TourEmbedMatchReason";
 
 interface TourEmbedSpotlightCardProps {
   tour: TourListing;
   className?: string;
+  matchReason?: string;
 }
 
-export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpotlightCardProps) {
+export default function TourEmbedSpotlightCard({ tour, className, matchReason }: TourEmbedSpotlightCardProps) {
   const rating = resolveTourRatingLabel(tour);
   const cityDisplay = resolveTourCityDisplay(tour);
   const href = `/tours/${tour.slug}`;
@@ -55,6 +57,7 @@ export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpo
           {tour.title}
         </h3>
         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate">{tour.shortDescription}</p>
+        <TourEmbedMatchReason reason={matchReason} className="mt-3" />
         <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate">
           <span className="inline-flex items-center gap-1">
             <MapPin className="h-4 w-4 text-sky/70" aria-hidden />

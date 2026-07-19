@@ -2,20 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  CalendarDays,
-  Clock,
-  ExternalLink,
-  MapPin,
-  Ticket,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
 import DetailPhotoGallery from "@/components/shared/DetailPhotoGallery";
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import PlaceTransportMapSection from "@/components/places/PlaceTransportMapSection";
+import PlacePracticalSummary from "@/components/places/PlacePracticalSummary";
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
@@ -25,10 +19,11 @@ import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
 import { pairedDestinationIdForPlace } from "@/lib/geography-links";
-import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
+import { resolveRelatedTourMatchesForPlace } from "@/lib/cms-content-cross-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { collectionHref, itineraryHref } from "@/lib/places-urls";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
+import { destinationIdForPlaceRegion } from "@/lib/places-nav";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
 import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
@@ -44,14 +39,23 @@ export default function PlaceDetailView({
   initialTours?: TourListing[];
 }) {
   const tours = useRepositoryTourListings(initialTours);
-  const matchedTours = resolveRelatedToursForPlace(place, tours);
+  const tourMatches = resolveRelatedTourMatchesForPlace(place, tours);
+  const matchedTours = tourMatches.map((match) => match.tour);
   const galleryAlts = getPlaceGalleryAlts(place.slug);
-  const destinationId = pairedDestinationIdForPlace(place.slug);
+  const destinationId =
+    pairedDestinationIdForPlace(place.slug) ?? destinationIdForPlaceRegion(place.region);
   const destinationPage = destinationId ? getDestinationPageById(destinationId) : undefined;
+  const detailNavigation = [
+    ["#place-planning", "План поездки"],
+    ["#place-map", "Как добраться"],
+    ...(place.gallery.length > 1 ? [["#place-gallery", "Фотографии"]] : []),
+    ...(matchedTours.length > 0 ? [["#place-tours", "Туры рядом"]] : []),
+    ["#place-nearby", "Что посмотреть рядом"],
+  ];
 
   return (
     <article className="pb-16">
-      <div className="relative aspect-[21/9] min-h-[360px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
+      <div className="relative aspect-[21/9] min-h-[320px] w-full overflow-hidden bg-charcoal sm:min-h-[360px]">
         {place.coverImage ? (
           <Image
             src={place.coverImage}
@@ -94,6 +98,23 @@ export default function PlaceDetailView({
 
       <div className={cn(siteContainerClass, "mt-8 grid gap-10 lg:grid-cols-[1fr_320px]")}>
         <div className="min-w-0 space-y-8">
+          <nav
+            aria-label="Разделы страницы"
+            className="scrollbar-hide -mx-1 flex gap-2 overflow-x-auto px-1 pb-1"
+          >
+            {detailNavigation.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-border-subtle bg-surface-elevated px-3 text-sm font-medium text-charcoal transition hover:border-sky/30 hover:text-sky-ink"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <PlacePracticalSummary place={place} />
+
           <section className="prose prose-slate max-w-none">
             <p className="whitespace-pre-line text-base leading-relaxed text-charcoal">
               {place.fullDescription}
@@ -112,7 +133,7 @@ export default function PlaceDetailView({
           <PlaceDetailContentSections place={place} />
 
           {place.gallery.length > 1 ? (
-            <section>
+            <section id="place-gallery" className="scroll-mt-28">
               <h2 className="font-heading text-xl font-bold text-charcoal">Галерея</h2>
               <DetailPhotoGallery
                 images={place.gallery}
@@ -127,19 +148,25 @@ export default function PlaceDetailView({
           <PlaceTransportMapSection place={place} relatedPlaces={place.relatedPlaces} />
 
           {matchedTours.length > 0 ? (
-            <TourEmbedSection
-              config={{
-                variant: "strip",
-                title: `Туры рядом с ${place.name}`,
-                subtitle: "Проверенные маршруты с гидом — логистика уже продумана",
-                limit: 6,
-                source: { kind: "slugs", slugs: matchedTours.map((t) => t.slug) },
-                catalogHref: `/tours?query=${encodeURIComponent(place.region)}`,
-                catalogLabel: "Все туры региона",
-                tone: "muted",
-              }}
-              initialTours={matchedTours}
-            />
+            <div id="place-tours" className="scroll-mt-28">
+              <TourEmbedSection
+                config={{
+                  variant: "strip",
+                  title: `Туры рядом с ${place.name}`,
+                  subtitle: "Маршруты подобраны по месту и региону — логистика уже продумана",
+                  limit: 6,
+                  source: { kind: "slugs", slugs: matchedTours.map((t) => t.slug) },
+                  catalogHref: `/tours?query=${encodeURIComponent(place.region)}`,
+                  catalogLabel: "Все туры региона",
+                  tone: "muted",
+                  showMatchReasons: true,
+                  matchReasons: Object.fromEntries(
+                    tourMatches.map((match) => [match.tour.slug, match.reasons.join(". ")]),
+                  ),
+                }}
+                initialTours={matchedTours}
+              />
+            </div>
           ) : null}
 
           <RelatedPlacesSection places={place.relatedPlaces} />
@@ -173,61 +200,6 @@ export default function PlaceDetailView({
               </Link>
             </div>
           )}
-
-          <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
-            <h2 className="font-heading text-lg font-bold text-charcoal">Практическая информация</h2>
-            <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                <div>
-                  <dt className="text-slate">Регион</dt>
-                  <dd className="font-medium text-charcoal">{place.region}</dd>
-                  {place.province ? (
-                    <dd className="text-slate">{place.province}</dd>
-                  ) : null}
-                </div>
-              </div>
-              {place.visitDuration ? (
-                <div className="flex gap-3">
-                  <Clock className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Время посещения</dt>
-                    <dd className="font-medium text-charcoal">{place.visitDuration}</dd>
-                  </div>
-                </div>
-              ) : null}
-              {place.season ? (
-                <div className="flex gap-3">
-                  <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Лучший сезон</dt>
-                    <dd className="font-medium text-charcoal">{place.season}</dd>
-                  </div>
-                </div>
-              ) : null}
-              {place.ticketPrice ? (
-                <div className="flex gap-3">
-                  <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Стоимость</dt>
-                    <dd className="font-medium text-charcoal">{place.ticketPrice}</dd>
-                  </div>
-                </div>
-              ) : null}
-            </dl>
-
-            {place.website ? (
-              <a
-                href={place.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-sky-ink hover:underline"
-              >
-                Официальный сайт
-                <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-              </a>
-            ) : null}
-          </div>
 
           {place.tags.length > 0 ? (
             <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">

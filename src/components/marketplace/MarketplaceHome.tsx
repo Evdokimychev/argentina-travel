@@ -45,6 +45,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 import type { ExcursionCity } from "@/types/excursion";
+import type { SiteNavigationGlobal } from "@/types/site-globals";
 
 const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
@@ -55,11 +56,11 @@ interface MarketplaceHomeProps {
   platformStats: PlatformStats;
   excursionCities?: ExcursionCity[];
   travelPrepStrip?: React.ReactNode;
-  heroBackdropSrc?: string;
   heroCollage?: React.ReactNode;
   showHomepageRecommendationsV2?: boolean;
   personalizedTours?: TourListing[];
   personalizedActive?: boolean;
+  navigation: SiteNavigationGlobal;
 }
 
 function TourGrid({
@@ -109,11 +110,11 @@ export default function MarketplaceHome({
   platformStats,
   excursionCities = [],
   travelPrepStrip,
-  heroBackdropSrc,
   heroCollage,
   showHomepageRecommendationsV2 = false,
   personalizedTours = [],
   personalizedActive = false,
+  navigation,
 }: MarketplaceHomeProps) {
   const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
@@ -122,7 +123,17 @@ export default function MarketplaceHome({
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)
   );
-  const [searchTab, setSearchTab] = useState<HomeSearchTab>("tours");
+  const enabledSearchTabs = useMemo<HomeSearchTab[]>(
+    () => [
+      ...(navigation.showTours ? (["tours"] as const) : []),
+      ...(navigation.showExcursions ? (["excursions"] as const) : []),
+      "flights",
+    ],
+    [navigation.showExcursions, navigation.showTours],
+  );
+  const [searchTab, setSearchTab] = useState<HomeSearchTab>(
+    enabledSearchTabs[0] ?? "flights",
+  );
 
   useSyncPriceFilters(tours, currency, setFilters);
 
@@ -200,19 +211,6 @@ export default function MarketplaceHome({
         data-editorial-theme="city"
         className="editorial-hero relative overflow-hidden border-b border-[var(--editorial-line)]"
       >
-        {heroBackdropSrc ? (
-          <div className="absolute inset-0 bg-charcoal lg:hidden" aria-hidden>
-            <Image
-              src={heroBackdropSrc}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[62%_center]"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_24_36/0.48),rgb(10_24_36/0.76)_52%,rgb(10_24_36/0.94))]" />
-          </div>
-        ) : null}
         <div
           className={cn(
             siteContainerClass,
@@ -239,7 +237,7 @@ export default function MarketplaceHome({
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5">
                 <Link
-                  href="/podbor"
+                  href={navigation.showTours ? "/podbor" : navigation.showExcursions ? "/excursions" : "/services"}
                   className={buttonVariants({
                     variant: "default",
                     size: "default",
@@ -249,18 +247,20 @@ export default function MarketplaceHome({
                   <Compass className="h-4 w-4" aria-hidden />
                   {t("home.hero.ctaRoute")}
                 </Link>
-                <Link
+                {navigation.showTours ? <Link
                   href="/podbor"
                   className="hidden items-center gap-1 text-sm font-medium text-white/90 hover:text-white hover:underline sm:inline-flex lg:text-sky-ink"
                 >
                   {t("home.hero.ctaHint")}
                   <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
+                </Link> : null}
               </div>
             </div>
 
             {heroCollage ? (
-              <div className="order-3 hidden lg:order-2 lg:block">{heroCollage}</div>
+              <div className="pointer-events-none absolute inset-y-0 left-1/2 order-3 w-screen -translate-x-1/2 lg:pointer-events-auto lg:static lg:order-2 lg:w-auto lg:translate-x-0">
+                {heroCollage}
+              </div>
             ) : null}
 
             <div className="order-2 lg:order-3 lg:col-span-2 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20">
@@ -283,6 +283,7 @@ export default function MarketplaceHome({
                   }))
                 }
                 onTabChange={setSearchTab}
+                enabledTabs={enabledSearchTabs}
                 onToursSearch={() => {
                   const hasCriteria =
                     filters.query.trim() ||
@@ -300,13 +301,13 @@ export default function MarketplaceHome({
             </div>
           </div>
 
-          {searchTab === "tours" ? (
+          {navigation.showTours && searchTab === "tours" ? (
             <div className="mt-3 min-h-11">
               <FilterBar tours={tours} filters={filters} onChange={setFilters} />
             </div>
           ) : null}
 
-          {searchTab === "excursions" ? (
+          {navigation.showExcursions && searchTab === "excursions" ? (
             <div className="mt-4">
               <HomeExcursionFilterStrip />
             </div>
@@ -314,9 +315,9 @@ export default function MarketplaceHome({
         </div>
       </section>
 
-      {!hasActiveSearch && travelPrepStrip ? travelPrepStrip : null}
+      {!hasActiveSearch && navigation.showServices && travelPrepStrip ? travelPrepStrip : null}
 
-      {hasActiveSearch ? (
+      {navigation.showTours && hasActiveSearch ? (
         <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-6">
             <p className="text-sm text-slate">
@@ -376,7 +377,7 @@ export default function MarketplaceHome({
             </div>
           ) : null}
         </section>
-      ) : (
+      ) : navigation.showTours ? (
         <SectionShell
           reveal
           tone="muted"
@@ -406,20 +407,21 @@ export default function MarketplaceHome({
             </Link>
           </div>
         </SectionShell>
-      )}
+      ) : null}
 
-      <PlatformStatsBlock initialStats={platformStats} />
+      {navigation.showTours ? <PlatformStatsBlock initialStats={platformStats} /> : null}
 
       {/* Regions & places */}
+      {navigation.showGeography && (navigation.showDestinations || navigation.showPlaces) ? (
       <SectionShell
         reveal
         eyebrow="География"
-        title="Регионы и места"
+        title={navigation.showDestinations ? "Регионы и места" : "Места Аргентины"}
         subtitle="Региональные гиды для планирования и справочник парков, городов и достопримечательностей"
-        href="/destinations"
-        linkLabel="Обзор регионов"
+        href={navigation.showDestinations ? "/destinations" : "/places"}
+        linkLabel={navigation.showDestinations ? "Обзор регионов" : "Все места"}
       >
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-12 sm:gap-4">
+        {navigation.showDestinations ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-12 sm:gap-4">
           {HOME_FEATURED_REGIONS.map((dest, index) => (
             <Link
               key={dest.id}
@@ -448,8 +450,8 @@ export default function MarketplaceHome({
               </div>
             </Link>
           ))}
-        </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+        </div> : null}
+        {navigation.showPlaces ? <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
           <Link
             href="/places"
             className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 font-medium text-charcoal hover:border-sky hover:text-sky"
@@ -469,11 +471,12 @@ export default function MarketplaceHome({
           >
             Подборки
           </Link>
-        </div>
+        </div> : null}
       </SectionShell>
+      ) : null}
 
       {/* One ranked offer shelf keeps the primary choice focused. */}
-      <section className="border-y border-gray-100 bg-white py-12 md:py-14">
+      {navigation.showTours ? <section className="border-y border-gray-100 bg-white py-12 md:py-14">
         <div className={siteContainerClass}>
           <TourGrid
             id="recommended"
@@ -483,12 +486,12 @@ export default function MarketplaceHome({
             variant="strip"
           />
         </div>
-      </section>
+      </section> : null}
 
-      {!hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
+      {navigation.showTours && !hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
 
       {/* Blog */}
-      {!hasActiveSearch ? (
+      {navigation.showJournal && !hasActiveSearch ? (
         <SectionShell
           reveal
           eyebrow="Блог"
@@ -508,7 +511,7 @@ export default function MarketplaceHome({
       ) : null}
 
       {/* Guide & immigration */}
-      {!hasActiveSearch ? (
+      {(navigation.showGuide || navigation.showImmigration) && !hasActiveSearch ? (
         <SectionShell
           reveal
           tone="dark"
@@ -519,20 +522,20 @@ export default function MarketplaceHome({
           scrollRailTone="dark"
         >
           <div className="flex flex-wrap gap-3">
-            <Link
+            {navigation.showGuide ? <Link
               href="/guide"
               className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
             >
               Путеводитель
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
+            </Link> : null}
+            {navigation.showImmigration ? <Link
               href="/immigration"
               className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
             >
               Иммиграция
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </Link> : null}
           </div>
         </SectionShell>
       ) : null}

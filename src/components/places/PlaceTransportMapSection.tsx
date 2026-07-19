@@ -26,7 +26,10 @@ export default function PlaceTransportMapSection({ place, relatedPlaces }: Props
   if (!place.howToGetThere && (place.latitude == null || place.longitude == null)) return null;
 
   return (
-    <section className="overflow-hidden rounded-card border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white shadow-sm">
+    <section
+      id="place-map"
+      className="scroll-mt-28 overflow-hidden rounded-card border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white shadow-sm"
+    >
       <div className="border-b border-sky/10 px-5 py-4 sm:px-6">
         <h2 className="font-heading text-xl font-bold text-charcoal">Как добраться</h2>
         {place.howToGetThere ? (

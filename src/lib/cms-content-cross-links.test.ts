@@ -4,6 +4,7 @@ import {
   parseContentSlugList,
   resolvePlaceListingsBySlugs,
   resolveRelatedPlacesForTour,
+  resolveRelatedTourMatchesForPlace,
   resolveRelatedToursForPlace,
   resolveTourListingsBySlugs,
 } from "@/lib/cms-content-cross-links";
@@ -144,6 +145,21 @@ describe("cms-content-cross-links", () => {
 
     const resolved = resolveRelatedToursForPlace(place, sampleTours);
     expect(resolved.map((tour) => tour.slug)).toEqual(["buenos-aires-weekend"]);
+  });
+
+  it("resolveRelatedTourMatchesForPlace keeps editorial order and exposes an honest reason", () => {
+    const place = {
+      slug: "el-calafate",
+      name: "El Calafate",
+      region: "Патагония",
+      relatedTourSlugs: ["buenos-aires-weekend"],
+    } satisfies Pick<PlaceDetail, "slug" | "name" | "region" | "relatedTourSlugs">;
+
+    const resolved = resolveRelatedTourMatchesForPlace(place, sampleTours);
+    expect(resolved[0]?.tour.slug).toBe("buenos-aires-weekend");
+    expect(resolved[0]?.source).toBe("editorial");
+    expect(resolved[0]?.reasons.join(" ")).toContain("редакцией");
+    expect(resolved.map((match) => match.tour.slug)).toContain("patagonia-glaciers");
   });
 
   it("resolveRelatedPlacesForTour prefers explicit slugs over heuristic", () => {

@@ -153,7 +153,6 @@ export default function DestinationDetailView({
           alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
           fill
           priority
-          unoptimized
           preferLocalMedia
           className="editorial-media-zoom object-cover object-[center_35%] sm:object-center"
           sizes="100vw"

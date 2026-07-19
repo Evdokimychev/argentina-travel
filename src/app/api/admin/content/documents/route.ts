@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
+import {
+  createCmsDocument,
+  getCmsDocumentById,
+  listCmsDocuments,
+} from "@/lib/cms/content-server";
 import { groupCmsDocuments } from "@/lib/cms/cms-locale";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import { getBlogPostBySlug } from "@/data/blog";
-import { getContentPage } from "@/lib/content-pages";
+import { getGuideCmsSourcePage } from "@/lib/cms/guide-topic-source";
 import { getDestinationBySlug } from "@/lib/destinations";
 import { fetchPlaceBySlugServer } from "@/lib/places-repository";
 import {
@@ -15,6 +19,7 @@ import {
   guideBodyFromTs,
   destinationBodyFromTs,
   placeBodyFromTs,
+  cmsDocumentId,
   type CmsDocType,
   type CmsDocumentBody,
 } from "@/types/cms-content";
@@ -79,8 +84,23 @@ export async function POST(request: Request) {
     cmsBody = blogBodyFromTs(source);
   }
 
+  if (body.importFromSource && docType === "knowledge") {
+    const source = await getCmsDocumentById(
+      createSupabaseAdminClient(),
+      cmsDocumentId("knowledge", slug, "ru"),
+    );
+    if (!source || source.body.kind !== "blog") {
+      return NextResponse.json(
+        { error: "Исходный материал базы знаний не найден" },
+        { status: 404 },
+      );
+    }
+    title = title || source.title;
+    cmsBody = source.body;
+  }
+
   if (body.importFromSource && docType === "guide") {
-    const source = getContentPage("guide", slug);
+    const source = getGuideCmsSourcePage(slug);
     if (!source) {
       return NextResponse.json({ error: "Исходная страница путеводителя не найдена" }, { status: 404 });
     }

@@ -5,7 +5,9 @@ import {
   BLOG_COMMENT_REPORT_REASON_LABELS,
   type BlogCommentReportReason,
 } from "@/lib/blog-comments-types";
+import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type ReportBody = {
@@ -15,6 +17,11 @@ type ReportBody = {
 };
 
 export async function POST(request: Request) {
+  const navigation = await fetchSiteNavigation();
+  if (!isPublicPathEnabled("/blog", navigation)) {
+    return NextResponse.json({ error: "Блог отключён" }, { status: 404 });
+  }
+
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json({ error: "Жалобы недоступны" }, { status: 503 });
   }

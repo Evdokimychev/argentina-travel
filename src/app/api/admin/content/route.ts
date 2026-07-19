@@ -11,7 +11,7 @@ import {
 } from "@/lib/cms/destination-resolver";
 import { placeOverrideId, resolvePlaceCatalog } from "@/lib/cms/place-resolver";
 import { legalOverrideId } from "@/lib/cms/legal-resolver";
-import { getPagesBySection } from "@/lib/content-pages";
+import { getGuideCmsSourcePages } from "@/lib/cms/guide-topic-source";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import { getEditorialBlogPosts } from "@/data/blog";
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
     };
   });
 
-  const guideEditable = getPagesBySection("guide").map((page) => {
+  const guideEditable = getGuideCmsSourcePages().map((page) => {
     const cmsId = guideOverrideId(page.slug);
     const override = cmsMap.get(cmsId);
     const localeCoverage = buildCmsLocaleCoverage("guide", page.slug, cmsMap);

@@ -1,4 +1,5 @@
 import { getYandexMetrikaCounterId } from "@/lib/analytics/yandex-metrika-config";
+import { hasAnalyticsConsent } from "@/lib/cookie-consent";
 
 declare global {
   interface Window {
@@ -30,6 +31,7 @@ type YandexMetrikaFn = {
   (counterId: number, method: "init", options: YandexMetrikaInitOptions): void;
   (counterId: number, method: "hit", url: string, options?: YandexMetrikaHitOptions): void;
   (counterId: number, method: "reachGoal", goal: string, params?: Record<string, unknown>): void;
+  (counterId: number, method: "destruct"): void;
   a?: unknown[];
   l?: number;
 };
@@ -106,6 +108,7 @@ export function initYandexMetrika(counterId: number): boolean {
 }
 
 export function reachYandexMetrikaGoal(goal: string, params?: Record<string, unknown>): void {
+  if (!hasAnalyticsConsent()) return;
   const counterId = getConfiguredYandexMetrikaCounterId();
   if (counterId === null || typeof window === "undefined" || typeof window.ym !== "function") return;
   window.ym(counterId, "reachGoal", goal, params);
@@ -139,8 +142,23 @@ export function waitForYandexMetrikaReady(counterId: number, timeoutMs = 15000):
 }
 
 export function hitYandexMetrikaPage(counterId: number, url: string, options?: YandexMetrikaHitOptions): void {
+  if (!hasAnalyticsConsent()) return;
   if (typeof window === "undefined" || typeof window.ym !== "function") return;
   window.ym(counterId, "hit", url, options);
+}
+
+/** Stop the direct counter immediately when analytics consent is revoked. */
+export function teardownYandexMetrika(counterId: number): void {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  try {
+    window.ym?.(counterId, "destruct");
+  } catch {
+    /* A partially initialized counter may not support destruct yet. */
+  }
+  document.querySelector(`script[src="${YANDEX_METRIKA_TAG_JS}"]`)?.remove();
+  delete window[`yaCounter${counterId}`];
+  delete window.__goArgentinaYmInited;
+  delete window.__goArgentinaYmFirstHitSent;
 }
 
 export function resolveYandexMetrikaPageUrl(pathname: string, search: string): string {

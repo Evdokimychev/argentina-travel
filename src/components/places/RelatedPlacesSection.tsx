@@ -5,7 +5,7 @@ export default function RelatedPlacesSection({ places }: { places: PlaceListing[
   if (places.length === 0) return null;
 
   return (
-    <section>
+    <section id="place-nearby" className="scroll-mt-28">
       <h2 className="font-heading text-xl font-bold text-charcoal">Похожие места</h2>
       <p className="mt-1 text-sm text-slate">Подобрано по региону, категории и темам</p>
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

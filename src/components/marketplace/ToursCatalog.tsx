@@ -285,6 +285,7 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
                   filters={filters}
                   onChange={handleFiltersChange}
                   activeFilterCount={activeFilterCount}
+                  defaultFilters={getDefaultFilters(currency, tours)}
                 />
                 <div className="hidden min-w-0 flex-1 lg:block">
                   <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />

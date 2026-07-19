@@ -26,7 +26,6 @@ import BookingWaitlistPrompt from "./BookingWaitlistPrompt";
 import ExternalBookingButton from "./ExternalBookingButton";
 import PartnerTourPrepaymentNotice from "./PartnerTourPrepaymentNotice";
 import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
-import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -143,20 +142,13 @@ export default function TourBookingPanel({
           selectedDateId
         );
 
-  const externalHint =
-    externalBookingLink?.hint?.trim() || DEFAULT_CUSTOM_BOOKING_HINT;
-
   const primaryLabel = usesExternalBooking
     ? offerCapabilities.primaryActionLabel
     : offerCapabilities.bookingMode === "disabled"
       ? offerCapabilities.primaryActionLabel
-      : priceOnRequest
-      ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Встать в лист ожидания"
-        : dateMode === "custom" || bookingMode === "on_request"
-          ? "Забронировать индивидуально"
-          : "Забронировать";
+        : offerCapabilities.primaryActionLabel;
 
   function handleBookClick() {
     if (bookingValidationError) {
@@ -355,11 +347,11 @@ export default function TourBookingPanel({
             </div>
           ) : usesExternalBooking && externalBookingHref && externalBookingLink ? (
             <>
-              <p className="mt-4 text-xs leading-relaxed text-slate">{externalHint}</p>
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
-                className="mt-3"
+                label={offerCapabilities.primaryActionLabel}
+                className="mt-5"
                 onClick={handleExternalBookingClick}
               />
               {isYouTravel ? <PartnerTourPrepaymentNotice tour={tour} className="mt-4" /> : null}

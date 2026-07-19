@@ -11,17 +11,20 @@ import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import TourEmbedMatchReason from "./TourEmbedMatchReason";
 
 interface TourEmbedCompactCardProps {
   tour: TourListing;
   layout?: "vertical" | "horizontal";
   className?: string;
+  matchReason?: string;
 }
 
 export default function TourEmbedCompactCard({
   tour,
   layout = "vertical",
   className,
+  matchReason,
 }: TourEmbedCompactCardProps) {
   const rating = resolveTourRatingLabel(tour);
   const cityDisplay = resolveTourCityDisplay(tour);
@@ -57,6 +60,7 @@ export default function TourEmbedCompactCard({
             <span aria-hidden>·</span>
             <span>{formatDurationShort(tour.durationDays, tour.durationNights)}</span>
           </p>
+          <TourEmbedMatchReason reason={matchReason} className="mt-1.5 line-clamp-2" />
           <div className="mt-2 flex items-center justify-between gap-2">
             <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
@@ -109,6 +113,7 @@ export default function TourEmbedCompactCard({
           <MapPin className="h-3 w-3 shrink-0" aria-hidden />
           <span className="truncate">{cityDisplay}</span>
         </p>
+        <TourEmbedMatchReason reason={matchReason} className="mt-2 line-clamp-2" />
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           <TourPublicPriceDisplay
             priceUsd={tour.priceUsd}

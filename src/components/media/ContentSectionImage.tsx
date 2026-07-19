@@ -16,7 +16,7 @@ function needsAttributionCaption(resolved: ResolvedImage): boolean {
   const source = resolved.attribution.source;
   if (source === "unsplash" || source === "pexels") return true;
   const html = resolved.attributionHtml ?? "";
-  return /Unsplash|Pexels/.test(html);
+  return Boolean(html && html !== "© Пора в Аргентину");
 }
 
 type ContentSectionImageProps = {

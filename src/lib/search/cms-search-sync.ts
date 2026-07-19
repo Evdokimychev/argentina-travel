@@ -36,6 +36,8 @@ export function cmsDocumentSearchId(doc: Pick<CmsDocument, "docType" | "slug">):
   switch (doc.docType) {
     case "blog":
       return `blog-${doc.slug}`;
+    case "knowledge":
+      return `knowledge-${doc.slug}`;
     case "guide":
       return `guide-${doc.slug}`;
     case "legal":
@@ -56,6 +58,16 @@ export function cmsDocumentToSearchIndexItem(doc: CmsDocument): SearchIndexItem 
 
   switch (doc.body.kind) {
     case "blog":
+      if (doc.docType === "knowledge") {
+        return {
+          id: `knowledge-${doc.slug}`,
+          type: "knowledge",
+          title: doc.title,
+          description: doc.seo.description ?? doc.body.excerpt ?? "",
+          href: `/baza-znaniy/${doc.slug}`,
+          keywords: ["база знаний", ...(doc.body.collector?.tags ?? []), ...keywords],
+        };
+      }
       return {
         id: `blog-${doc.slug}`,
         type: "blog",

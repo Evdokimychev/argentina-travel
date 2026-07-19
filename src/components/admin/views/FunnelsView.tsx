@@ -54,7 +54,9 @@ export default function FunnelsView() {
     `/api/admin/analytics/funnels?period=${period}`
   );
   const funnels = data?.funnels;
-  const hasFunnelData = (funnels?.funnel ?? []).some((step) => step.count > 0);
+  const hasFunnelData =
+    funnels?.meta.trustedForKpi === true &&
+    (funnels?.funnel ?? []).some((step) => step.count > 0);
   const maxCohort = Math.max(1, ...(funnels?.cohorts ?? []).map((c) => c.bookings));
 
   return (
@@ -87,9 +89,9 @@ export default function FunnelsView() {
               : "Период: всё время"}
             {" · "}
             Обновлено {formatAdminWhen(funnels.generatedAt)}
-            {funnels.meta.tourViewsSource === "estimate" ? (
+            {!funnels.meta.trustedForKpi ? (
               <span className="ml-1 text-amber-700">
-                · Просмотры тура оценены по заявкам и вопросам (события пока не накоплены)
+                · Воронка скрыта: нет достоверных данных
               </span>
             ) : null}
           </p>
@@ -107,6 +109,14 @@ export default function FunnelsView() {
             {loading ? (
               <div className="mt-6">
                 <FunnelSkeleton />
+              </div>
+            ) : funnels && !funnels.meta.trustedForKpi ? (
+              <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+                <p className="text-sm font-semibold text-amber-950">Нет достоверных данных</p>
+                <p className="mt-2 text-sm text-amber-900">
+                  {funnels.meta.reason ??
+                    "Воронка появится после проверки источника событий. Заявки не используются как замена просмотров."}
+                </p>
               </div>
             ) : hasFunnelData && funnels ? (
               <div className="mt-6">

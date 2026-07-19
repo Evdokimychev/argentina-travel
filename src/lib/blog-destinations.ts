@@ -1,6 +1,10 @@
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import type { Destination } from "@/types";
 import type { BlogPost } from "@/types";
+import {
+  blogDestinationTermMatches,
+  getSafeBlogDestinationTerms,
+} from "@/lib/blog-destination-terms";
 
 function haystackForPost(post: BlogPost): string {
   return [
@@ -15,8 +19,9 @@ function haystackForPost(post: BlogPost): string {
 }
 
 function destinationMatchesPost(dest: Destination, haystack: string): boolean {
-  const terms = [dest.name, dest.region, ...dest.keywords];
-  return terms.some((term) => haystack.includes(term.toLowerCase()));
+  return getSafeBlogDestinationTerms(dest).some((term) =>
+    blogDestinationTermMatches(haystack, term),
+  );
 }
 
 /** Направления, релевантные статье — из метаданных или эвристики по тексту. */

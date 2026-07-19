@@ -46,7 +46,7 @@ function ViewToggle({
 }) {
   return (
     <div
-      className="flex shrink-0 items-center rounded-full bg-gray-100 p-1"
+      className="hidden shrink-0 items-center rounded-full bg-gray-100 p-1 sm:flex"
       role="group"
       aria-label="Вид каталога"
     >

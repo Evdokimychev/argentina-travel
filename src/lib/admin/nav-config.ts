@@ -116,6 +116,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "content.edit",
   },
   {
+    id: "content-knowledge",
+    section: "content",
+    href: "/admin/content/knowledge",
+    label: "База знаний",
+    description: "Отбор материалов и подготовка статей",
+    capability: "content.edit",
+  },
+  {
     id: "content-map",
     section: "content",
     href: "/admin/content/map",

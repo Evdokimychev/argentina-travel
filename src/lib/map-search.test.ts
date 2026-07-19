@@ -53,4 +53,11 @@ describe("map-search", () => {
   it("matches category labels", () => {
     expect(findBestMapObjectMatch(sampleObjects, "экскурсии")?.kind).toBe("tour");
   });
+
+  it("matches editorial tags that are not repeated in the title", () => {
+    const tagged = sampleObjects.map((item) =>
+      item.id === "place:bariloche" ? { ...item, tags: ["шоколад", "озёра"] } : item,
+    );
+    expect(findBestMapObjectMatch(tagged, "шоколад")?.id).toBe("place:bariloche");
+  });
 });

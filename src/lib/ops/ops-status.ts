@@ -50,6 +50,8 @@ export type CronHealthReport = {
   status: "ok" | "degraded";
   generatedAt: string;
   source: "file" | "memory" | "none";
+  dataAvailable: boolean;
+  durable: boolean;
   failingRoutes: string[];
   latestByRoute: Record<string, CronRouteRunEntry>;
   recent: CronRouteRunEntry[];
@@ -210,13 +212,17 @@ export function readCronHealthReport(recentLimit = 20): CronHealthReport {
     .map((entry) => entry.route)
     .sort((a, b) => a.localeCompare(b));
 
-  const ok = failingRoutes.length === 0;
+  const dataAvailable = source !== "none";
+  const durable = false;
+  const ok = dataAvailable && durable && failingRoutes.length === 0;
 
   return {
     ok,
     status: ok ? "ok" : "degraded",
     generatedAt: new Date().toISOString(),
     source,
+    dataAvailable,
+    durable,
     failingRoutes,
     latestByRoute,
     recent: sorted.slice(0, resolvedRecentLimit),

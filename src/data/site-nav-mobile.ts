@@ -5,6 +5,7 @@ import {
   Compass,
   Info,
   MapPinned,
+  MessageCircle,
   Newspaper,
   Plane,
   ShoppingBag,
@@ -44,8 +45,8 @@ export const SITE_NAV_MOBILE_GROUPS: SiteNavMobileGroup[] = [
   {
     id: "platform",
     label: "О платформе",
-    description: "Команда, документы и поддержка",
-    sectionIds: ["about"],
+    description: "Сообщество, команда, документы и поддержка",
+    sectionIds: ["community", "about"],
   },
 ];
 
@@ -60,6 +61,7 @@ export const SITE_NAV_SECTION_ICONS: Record<string, LucideIcon> = {
   shop: ShoppingBag,
   services: Wrench,
   journal: Newspaper,
+  community: MessageCircle,
   about: Info,
 };
 

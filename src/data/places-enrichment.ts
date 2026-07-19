@@ -148,7 +148,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Автобус из El Calafate (ежедневно в сезон) или из Bariloche через Ruta 40 (долго, живописно). Ближайший аэропорт — FTE (Calafate). Из Chaltén до Fitz Roy — пешком по тропам.",
     nearbyHighlights: [
       "Fitz Roy и Laguna de los Tres",
-      "Glaciar Viedma — boat tours с Estancia",
+      "Ледник Вьедма — прогулки на лодке и поездки к эстансиям",
       "Reserva Los Huemules — частные тропы",
     ],
     faq: [
@@ -191,7 +191,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Зимой Cerro Catedral — один из крупнейших горнолыжных курортов Южного полушария.",
     ],
     howToGetThere:
-      "Аэропорт BRC (San Carlos de Bariloche). Circuito Chico — аренда авто, такси или guided tour. К Colonia Suiza и Cerro Campanario — автобусы из центра Bariloche.",
+      "Аэропорт BRC находится в Сан-Карлос-де-Барилоче. Малое кольцо удобно смотреть на автомобиле, такси или с экскурсией. К Колонии-Суиса и Серро-Кампанарио ходят автобусы из центра Барилоче.",
     nearbyHighlights: [
       "Bariloche — шоколад, пиво, архитектура",
       "Villa La Angostura — тихая альтернатива",
@@ -207,7 +207,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "valdes-peninsula": {
     history:
-      "Полуостров Valdés — объект UNESCO с 1999 года как ключевое место размножения китов и морских птиц. С 1983 года — заповедная зона Provincia Chubut с строгими правилами приближения к wildlife.",
+      "Полуостров Вальдес входит в список Всемирного наследия ЮНЕСКО с 1999 года как ключевое место размножения китов и морских птиц. На охраняемой территории Чубута действуют строгие правила наблюдения за животными.",
     interestingFacts: [
       "С июня по декабрь здесь можно увидеть southern right whales в заливе Puerto Pirámides.",
       "Orcas на пляже Punta Norte охотятся на sea lion pups — редкое зрелище (февраль–апрель).",
@@ -281,7 +281,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Озеро Nahuel Huapi — легенда о lake monster Nahuelito.",
     ],
     howToGetThere:
-      "Аэропорт BRC. Circuito Chico — аренда авто, такси или tour. До Villa La Angostura — 1,5 ч на автобусе. Зимой проверяйте цепи на колёсах для Catedral.",
+      "Из аэропорта BRC Малое кольцо удобно смотреть на автомобиле, такси или с экскурсией. До Вилья-Ла-Ангостуры — около полутора часов на автобусе. Зимой заранее проверяйте требования к цепям на колёсах для дороги к Катедралю.",
     nearbyHighlights: [
       "Cerro Campanario",
       "Colonia Suiza",
@@ -303,15 +303,15 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Harvest festival (Fiesta Nacional de la Vendimia) — в марте.",
     ],
     howToGetThere:
-      "Аэропорт MDZ. Maipú — 20 мин на такси; Uco Valley — 1–1,5 ч. Bodega tours бронируйте заранее; designated driver или van tour если дегустацию.",
+      "Из аэропорта MDZ до Майпу около 20 минут на такси, до долины Уко — 1–1,5 часа. Посещения виноделен бронируйте заранее; после дегустации используйте трансфер или заранее назначьте водителя, который не будет пить.",
     nearbyHighlights: [
-      "Maipú и Luján de Cuyo — bodegas",
+      "Винодельни Майпу и Лухан-де-Куйо",
       "Potrerillos — dam и outdoor",
       "Aconcagua Provincial Park (вид, не восхождение без подготовки)",
     ],
     faq: [
       {
-        question: "Сколько bodega за день?",
+        question: "Сколько виноделен посетить за день?",
         answer: "2–3 с дегустацию — комфортный темп; больше — только с трансфер и без вождения.",
       },
     ],
@@ -347,7 +347,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Museum of High Altitude Archaeology (MAAM) — дети Llullaillaco.",
     ],
     howToGetThere:
-      "Аэропорт SLA. Quebrada de Humahuaca — аренда авто или tour (Purmamarca, Tilcara). Tren a las Nubes — сезонный, бронь заранее.",
+      "Из аэропорта SLA в ущелье Умауака едут на арендованном автомобиле или с экскурсией через Пурмамарку и Тилькару. Поезд в облака ходит по сезонному расписанию, билеты покупайте заранее.",
     nearbyHighlights: [
       "Cafayate и винодельни Torrontés",
       "Purmamarca и Cerro 7 Colores",
@@ -372,7 +372,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Из Salta ~2,5 ч на автобусе или авто по RN9. Часто совмещают с Tilcara и Humahuaca за один день — лучше ночёвка в Purmamarca для фото на рассвете.",
     nearbyHighlights: [
       "Cerro de los Siete Colores",
-      "Salinas Grandes (с Altiplano tour)",
+      "Салинас-Грандес с поездкой по Альтиплано",
       "Tilcara и Pucará",
     ],
     faq: [
@@ -391,12 +391,12 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Вход может быть платным — уточняйте на месте.",
     ],
     howToGetThere:
-      "Пешком из Purmamarca; парковка у начала тропы. Комбинируйте с Salinas Grandes tour из Purmamarca.",
+      "К началу тропы можно дойти из Пурмамарки; рядом есть парковка. Поездку удобно совместить с экскурсией к Салинас-Грандес.",
     nearbyHighlights: ["Purmamarca", "Salta", "Tilcara"],
     faq: [
       {
         question: "Нужен ли гид?",
-        answer: "Нет для короткого подъёма; для Salinas Grandes на высоте 4000+ м — tour с acclimatization предпочтительнее.",
+        answer: "Для короткого подъёма гид не обязателен. Для поездки к Салинас-Грандес через перевал выше 4000 метров безопаснее выбрать экскурсию и заранее акклиматизироваться.",
       },
     ],
   },
@@ -406,7 +406,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     interestingFacts: [
       "Максимальная высота маршрута — около 4200 м — возможна altitude sickness.",
       "La Polvorilla — viaduct в форме полукруга без прямых опор в центре.",
-      "Альтернатива — bus tour по тому же маршруту, если поезд не ходит.",
+      "Если поезд не ходит, часть маршрута можно проехать с автобусной экскурсией.",
     ],
     howToGetThere:
       "Станция отправления из Salta или Campo Quijano — уточняйте у оператора сезон. Бронируйте online; берите тёплую одежду и воду.",
@@ -427,7 +427,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Доступ только с guide в organized groups — для preservation.",
     ],
     howToGetThere:
-      "Из Perito Moreno (Santa Cruz province, не ледник!) или Los Antiguos — длинный gravel RN40. Лучше combined tour из Calafate/Chaltén region или overnight в Perito Moreno town.",
+      "Из города Перито-Морено или Лос-Антигуос предстоит длинный участок по гравийной RN40. Поездку лучше планировать отдельно, с ночёвкой в городе Перито-Морено; не путайте его с одноимённым ледником у Эль-Калафате.",
     nearbyHighlights: [
       "Los Antiguos — cherry region",
       "Lago Buenos Aires",
@@ -436,7 +436,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Путаница с Perito Moreno?",
-        answer: "Да — город Perito Moreno ≠ ледник. Пещеры в другой части Santa Cruz; планируйте отдельный день или tour.",
+        answer: "Да. Город Перито-Морено и ледник Перито-Морено находятся в разных частях Санта-Круса. Для пещеры планируйте отдельный день или экскурсию.",
       },
     ],
   },
@@ -449,7 +449,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Рыбный порт — свежие морепродукты на рынке.",
     ],
     howToGetThere:
-      "Автобус или авто из BA (~5 ч); рейсы MDQ seasonally. Летом пробки на RN2 — выезжайте рано.",
+      "Из Буэнос-Айреса — около пяти часов на автобусе или автомобиле; рейсы в аэропорт MDQ выполняются не во все сезоны. Летом на RN2 бывают пробки, поэтому выезжайте рано.",
     nearbyHighlights: [
       "Pinamar и Cariló — pinewood beaches",
       "Sierra de los Padres",
@@ -458,20 +458,20 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Когда сезон?",
-        answer: "Декабрь–март — пик и цены; shoulder months — прохладнее океан, но меньше людей.",
+        answer: "Декабрь–март — пик сезона и самые высокие цены. В межсезонье океан прохладнее, зато на пляжах заметно меньше людей.",
       },
     ],
   },
   "tierra-del-fuego-national-park": {
     history:
-      "Создан в 1960 году — единственный аргентинский национальный парк с морским coast и subantarctic forest. End of the World Train исторически связан с Ushuaia prison logging.",
+      "Парк создан в 1960 году и сочетает морское побережье с субантарктическим лесом. История Поезда на край света связана с лесозаготовками бывшей тюрьмы Ушуайи.",
     interestingFacts: [
       "Bay Lapataia — конец RN3, символический «fin del mundo» на дороге.",
-      "Senda Costera — coastal trail 8 km к Zaratiegui.",
-      "Beaver (introduced) — проблема для леса; не кормите wildlife.",
+      "Прибрежная тропа протяжённостью около 8 километров ведёт к бухте Энсенада-Саратьеги.",
+      "Завезённые бобры нарушают экосистему леса; не кормите диких животных.",
     ],
     howToGetThere:
-      "Из Ushuaia — 12 km, автобус или taxi. End of the World Train — отдельный ticket. Запаситесь ветровку даже летом.",
+      "Из Ушуайи до парка около 12 километров: можно ехать на автобусе или такси. На Поезд на край света нужен отдельный билет. Даже летом берите ветровку.",
     nearbyHighlights: ["Ushuaia", "Beagle Channel", "Emerald Lagoon trek"],
     faq: [
       {
@@ -502,7 +502,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       },
       {
         question: "Нужен ли автомобиль?",
-        answer: "Для центра — нет. Для Sierras и Alta Gracia удобнее аренда или tour на день.",
+        answer: "В центре автомобиль не нужен. Для поездки в Сьерры и Альта-Грасию удобнее аренда машины или однодневная экскурсия.",
       },
     ],
   },
@@ -515,7 +515,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Ночные сафари дают шанс увидеть caiman и ночных птиц.",
     ],
     howToGetThere:
-      "Из Posadas (~4–5 ч) или Corrientes — наземный transfer до Pellegrini (грунтовка, лучше 4×4 в дождь). Некоторые lodges включают трансфер из аэропорта PSS.",
+      "Из Посадаса или Корриентеса до Колонии-Карлос-Пеллегрини едут около 4–5 часов. Часть дороги грунтовая, в дождь предпочтителен полноприводный автомобиль. Некоторые лоджи включают трансфер из аэропорта PSS.",
     nearbyHighlights: [
       "Posadas — транспортный узел",
       "San Ignacio Mini (руины Jesuit mission) — по пути из Posadas",
@@ -528,7 +528,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       },
       {
         question: "Нужен ли гид?",
-        answer: "Да — самостоятельный доступ ограничен; экскурсии на лодках и пешие маршруты бронируют через lodges.",
+        answer: "Да — самостоятельный доступ ограничен; экскурсии на лодках и пешие маршруты бронируют через лоджи.",
       },
     ],
   },
@@ -541,7 +541,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Высота каньонов — до 150 м; ландшафт напоминает юго-запад США.",
     ],
     howToGetThere:
-      "База — город Villa Unión (La Rioja) или San Juan для связки с Ischigualasto. Из Salta/Córdoba — длинный переезд, обычно включают в tour по NOA/Cuyo.",
+      "Удобные базы — Вилья-Уньон в Ла-Риохе или Сан-Хуан, если совмещать поездку с Исчигуаласто. Из Сальты и Кордовы переезд длинный, поэтому парк обычно включают в многодневный маршрут по северо-западу и Куйо.",
     nearbyHighlights: [
       "Ischigualasto (Valle de la Luna) — 63 км, UNESCO",
       "San Juan — винодельни и база для Cuyo",
@@ -560,7 +560,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   cafayate: {
     history:
-      "Виноделие в долине Кальчаки развивалось при иезуитских миссиях ещё с XVII–XVIII веков, а современные bodegas Cafayate известны прежде всего высокогорным белым Torrontés. Город вырос как центр Valles Calchaquíes на пересечении винных и ремесленных маршрутов северо-запада.",
+      "Виноделие в долине Кальчаки развивалось при иезуитских миссиях ещё в XVII–XVIII веках. Современные винодельни Кафаяте прежде всего известны высокогорным белым торронтесом. Город вырос на пересечении винных и ремесленных маршрутов северо-запада.",
     interestingFacts: [
       "Torrontés — характерный для Аргентины ароматный белый сорт; в Кафаяте его выращивают на высоте около 1700 м и выше.",
       "Дорога из Сальты идёт через каньон Quebrada de las Conchas с эффектными красными формациями Garganta del Diablo и Anfiteatro.",
@@ -570,14 +570,14 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Из Сальты — около 185 км (3–4 ч) по RN68 через Quebrada de las Conchas; есть регулярные автобусы и экскурсии. Удобнее с арендой авто, чтобы останавливаться у скал-формаций по пути.",
     nearbyHighlights: [
       "Quebrada de las Conchas — красные каньоны по дороге из Сальты",
-      "Bodegas долины Кальчаки — дегустации Torrontés",
+      "Винодельни долины Кальчаки и дегустации торронтеса",
       "Cachi и Ruta 40 — высокогорные посёлки севернее",
     ],
     faq: [
       {
         question: "Сколько дней закладывать на Кафаяте?",
         answer:
-          "Обычно 1–2 дня: день на bodegas и центр, плюс время на дорогу через Quebrada de las Conchas с остановками.",
+          "Обычно 1–2 дня: день на винодельни и центр, плюс время на дорогу через ущелье Лас-Кончас с остановками.",
       },
     ],
   },

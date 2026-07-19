@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import { LeadCaptureError, submitNewsletter } from "@/lib/lead-capture";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { fetchSiteForms } from "@/lib/site-settings-server";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
 export async function POST(request: Request) {
+  const forms = await fetchSiteForms();
+  if (!forms.newsletterEnabled) {
+    return NextResponse.json({ error: "Подписка временно отключена." }, { status: 404 });
+  }
+
   const ip = getClientIp(request);
   const limit = await checkRateLimit(`newsletter:ip:${ip}`, 5, 60_000);
   if (!limit.ok) {
@@ -17,7 +24,22 @@ export async function POST(request: Request) {
       email?: string;
       source?: string;
       locale?: string | null;
+      captchaToken?: string | null;
+      honeypot?: string | null;
     };
+
+    const protection = await verifyGuestFormProtection({
+      request,
+      formId: "newsletter",
+      captchaToken: body.captchaToken,
+      honeypot: body.honeypot,
+    });
+    if (!protection.ok) {
+      if (protection.kind === "configuration") {
+        return NextResponse.json({ error: "Защита подписки временно недоступна." }, { status: 503 });
+      }
+      return NextResponse.json({ ok: true });
+    }
 
     if (!body.email?.trim()) {
       return NextResponse.json({ error: "Укажите email." }, { status: 400 });

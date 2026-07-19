@@ -11,12 +11,13 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const DOCS = path.join(ROOT, "docs", "articles");
 const OUT = path.join(ROOT, "src/data/blog-manual-from-md");
 
-/** @type {Array<{ md: string; category: string; replacesSlug?: string; featured?: boolean }>} */
+/** @type {Array<{ md: string; category: string; replacesSlug?: string; featured?: boolean; dateModified?: string }>} */
 const MANUAL_ARTICLES = [
   {
     md: "Маршрут-по-Аргентине-2-недели.md",
     category: "Маршруты",
     featured: true,
+    dateModified: "2026-07-17",
   },
   {
     md: "Маршруты-10-дней-и-3-недели.md",
@@ -183,7 +184,7 @@ function estimateReadMinutes(sections) {
   return Math.min(28, Math.max(8, Math.round(words / 140)));
 }
 
-function generatePost(config, index) {
+function generatePost(config) {
   const mdPath = path.join(DOCS, config.md);
   const content = fs.readFileSync(mdPath, "utf8");
   const mdChecksum = crypto.createHash("sha256").update(content).digest("hex").slice(0, 16);
@@ -241,7 +242,7 @@ ${sectionsTs}
   author: "",
   authorBio: "",
   date: "2026-06-21",
-  dateModified: "2026-06-21",
+  dateModified: "${escapeTs(config.dateModified ?? "2026-06-21")}",
   image: "",
   category: "${escapeTs(config.category)}",
   readTimeMinutes: ${readTimeMinutes},
@@ -286,8 +287,8 @@ if (!checkMode && !fs.existsSync(OUT)) {
 /** @type {Array<{ file: string; exportName: string; slug: string }>} */
 const exports = [];
 
-for (const [index, config] of MANUAL_ARTICLES.entries()) {
-  const ts = generatePost(config, index);
+for (const config of MANUAL_ARTICLES) {
+  const ts = generatePost(config);
   const slugMatch = ts.match(/slug: "([^"]+)"/);
   const slug = slugMatch?.[1] ?? config.md;
   const exportName = slug.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "");

@@ -16,15 +16,18 @@ type PublicApiHandler = (
 export async function handlePublicApiRequest(
   request: Request,
   scope: PublicApiScope,
-  handler: PublicApiHandler
+  handler: PublicApiHandler,
+  allowedMethods: readonly string[] = ["GET"]
 ): Promise<Response> {
+  const corsMethods = [...allowedMethods, "OPTIONS"].join(", ");
+  const corsOptions = { methods: corsMethods };
   if (request.method === "OPTIONS") {
-    return publicApiPreflightResponse(request);
+    return publicApiPreflightResponse(request, corsOptions);
   }
 
-  if (request.method !== "GET") {
+  if (!allowedMethods.includes(request.method)) {
     const response = NextResponse.json({ error: "Method not allowed" }, { status: 405 });
-    return applyPublicApiCorsHeaders(response, request);
+    return applyPublicApiCorsHeaders(response, request, corsOptions);
   }
 
   const ip = getClientIp(request);
@@ -34,13 +37,13 @@ export async function handlePublicApiRequest(
       ipLimit.retryAfterSec,
       "Слишком много запросов к публичному API. Повторите позже."
     );
-    return applyPublicApiCorsHeaders(response, request);
+    return applyPublicApiCorsHeaders(response, request, corsOptions);
   }
 
   const endpoint = new URL(request.url).pathname;
   const auth = await resolvePublicApiKey(request);
   if (!auth.ok) {
-    return applyPublicApiCorsHeaders(auth.response, request);
+    return applyPublicApiCorsHeaders(auth.response, request, corsOptions);
   }
 
   const scopeError = requirePublicApiScope(auth.key, scope);
@@ -50,7 +53,7 @@ export async function handlePublicApiRequest(
       endpoint,
       status: scopeError.status,
     });
-    return applyPublicApiCorsHeaders(scopeError, request);
+    return applyPublicApiCorsHeaders(scopeError, request, corsOptions);
   }
 
   try {
@@ -60,7 +63,7 @@ export async function handlePublicApiRequest(
       endpoint,
       status: response.status,
     });
-    return applyPublicApiCorsHeaders(response, request);
+    return applyPublicApiCorsHeaders(response, request, corsOptions);
   } catch (error) {
     const response = NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },
@@ -71,7 +74,7 @@ export async function handlePublicApiRequest(
       endpoint,
       status: response.status,
     });
-    return applyPublicApiCorsHeaders(response, request);
+    return applyPublicApiCorsHeaders(response, request, corsOptions);
   }
 }
 

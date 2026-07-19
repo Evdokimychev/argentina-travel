@@ -2,7 +2,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database";
 
 export type AuditLogInput = {
-  actorUserId: string;
+  actorUserId: string | null;
   action: string;
   entityType?: string;
   entityId?: string;

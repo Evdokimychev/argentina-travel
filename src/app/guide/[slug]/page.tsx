@@ -6,12 +6,15 @@ import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
-import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
+import {
+  listPublishedGuideSlugs,
+  resolveGuidePage,
+  resolveGuideTopic,
+} from "@/lib/cms/guide-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import {
   getAllGuideTopics,
-  getGuideTopicBySlug,
   getGuideTopicMetadata,
   isGuideTopicSlug,
 } from "@/lib/guide-topics";
@@ -38,12 +41,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const topicMeta = getGuideTopicMetadata(slug);
   if (topicMeta) {
+    const resolvedTopic = await resolveGuideTopic(slug, locale);
     const path = `/guide/${slug}`;
     if (slug === "kak-dobratsya") {
       return {
         ...buildPublicPageMetadata({
-          title: KAK_DOBRATSYA_HUB.heroTitle,
-          description: KAK_DOBRATSYA_HUB.heroSubtitle,
+          title: resolvedTopic?.cmsPage?.title ?? KAK_DOBRATSYA_HUB.heroTitle,
+          description: resolvedTopic?.cmsPage?.description ?? KAK_DOBRATSYA_HUB.heroSubtitle,
           path,
           image: getGuideTopicHeroImage(slug),
         }),
@@ -52,8 +56,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
     return {
       ...buildPublicPageMetadata({
-        title: topicMeta.title,
-        description: topicMeta.description,
+        title: resolvedTopic?.cmsPage?.title
+          ? `${resolvedTopic.cmsPage.title} — Путеводитель`
+          : topicMeta.title,
+        description:
+          resolvedTopic?.cmsPage?.description ??
+          resolvedTopic?.pillarPage?.heroSubtitle ??
+          topicMeta.description,
         path,
         image: getGuideTopicHeroImage(slug),
       }),
@@ -77,9 +86,14 @@ export default async function GuideSlugPage({ params }: PageProps) {
   const { slug } = await params;
 
   if (isGuideTopicSlug(slug)) {
-    const topic = getGuideTopicBySlug(slug);
+    const locale = await getServerI18nLocale();
+    const topic = await resolveGuideTopic(slug, locale);
     if (!topic) notFound();
     if (slug === "kak-dobratsya") {
+      if (topic.cmsPage && topic.pillarPage) {
+        const initialTours = await fetchMarketplaceTours();
+        return <GuidePillarView topic={topic} initialTours={initialTours} />;
+      }
       return <KakDobratsyaHubView topic={topic} />;
     }
     if (topic.pillarPage) {

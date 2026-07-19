@@ -31,7 +31,14 @@ import { openSiteMap, prefetchQuickExploreMap } from "@/lib/site-map-open";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
-import type { SiteDesignGlobal, SiteNavigationGlobal } from "@/types/site-globals";
+import type {
+  SiteBrandingGlobalResolved,
+  SiteDesignGlobal,
+  SiteNavigationGlobal,
+  SiteMarketingGlobal,
+  SiteModulesGlobal,
+} from "@/types/site-globals";
+import { filterPublicLinks, filterSiteNavSections } from "@/lib/public-module-visibility";
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -80,26 +87,18 @@ const CircleButton = forwardRef<
   );
 });
 
-const SECTION_VISIBILITY_KEYS: Partial<Record<string, keyof SiteNavigationGlobal>> = {
-  geography: "showGeography",
-  tours: "showTours",
-  excursions: "showExcursions",
-  guide: "showGuide",
-  gallery: "showGallery",
-  immigration: "showImmigration",
-  knowledgeBase: "showKnowledgeBase",
-  shop: "showShop",
-  services: "showServices",
-  journal: "showJournal",
-  about: "showAbout",
-};
-
 export default function Header({
   navigation,
   design,
+  branding,
+  marketing,
+  modules,
 }: {
   navigation?: SiteNavigationGlobal;
   design?: SiteDesignGlobal;
+  branding?: SiteBrandingGlobalResolved;
+  marketing?: SiteMarketingGlobal;
+  modules?: SiteModulesGlobal;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -112,8 +111,11 @@ export default function Header({
   const { t } = useLocaleCurrency();
   const { isAuthenticated, openAuth } = useAuth();
   const compact = design?.headerVariant === "compact";
-  const showUtilityBar = design?.showUtilityBar === true;
+  const showAnnouncement = marketing?.announcementEnabled === true && Boolean(marketing.announcementText.trim());
+  const showUtilityBar = design?.showUtilityBar === true || showAnnouncement;
+  const showUtilityBarMobile = showAnnouncement && marketing?.announcementOnMobile === true;
   const showMapButton = design?.showHeaderMapButton !== false;
+  const showSiteSearch = design?.showSiteSearch !== false;
   const showThemeToggle = design?.showThemeToggle !== false;
 
   const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
@@ -142,18 +144,16 @@ export default function Header({
 
   const utilityLinks = useMemo(() => {
     if (!navigation) return SITE_NAV_UTILITY_LINKS;
-    return [
+    return filterPublicLinks([
       { ...SITE_NAV_UTILITY_LINKS[0], label: navigation.utilityToursLabel, labelKey: undefined, href: navigation.utilityToursUrl },
       { ...SITE_NAV_UTILITY_LINKS[1], label: navigation.utilityOrganizerLabel, labelKey: undefined, href: navigation.utilityOrganizerUrl },
       { ...SITE_NAV_UTILITY_LINKS[2], label: navigation.utilityContactLabel, labelKey: undefined, href: navigation.utilityContactUrl },
-    ];
-  }, [navigation]);
+    ], navigation, modules);
+  }, [modules, navigation]);
+  const utilityCtaLink = utilityLinks.at(-1);
   const navSections = useMemo(
-    () => SITE_NAV_SECTIONS.filter((section) => {
-      const key = SECTION_VISIBILITY_KEYS[section.id];
-      return !key || navigation?.[key] !== false;
-    }),
-    [navigation],
+    () => navigation ? filterSiteNavSections(SITE_NAV_SECTIONS, navigation, modules) : SITE_NAV_SECTIONS,
+    [modules, navigation],
   );
   const mobileNavSections = useMemo(
     () => navSections.filter((section) => section.id !== "home"),
@@ -177,17 +177,19 @@ export default function Header({
           <MapPinned className="h-4 w-4" strokeWidth={1.75} aria-hidden />
         </button>
       ) : null}
-      <button
-        type="button"
-        onClick={() => {
-          setMobileMenuOpen(false);
-          openSiteSearch();
-        }}
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-        aria-label="Поиск по сайту"
-      >
-        <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden />
-      </button>
+      {showSiteSearch ? (
+        <button
+          type="button"
+          onClick={() => {
+            setMobileMenuOpen(false);
+            openSiteSearch();
+          }}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+          aria-label="Поиск по сайту"
+        >
+          <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+        </button>
+      ) : null}
       {isAuthenticated ? (
         <Link
           href="/profile"
@@ -231,7 +233,10 @@ export default function Header({
       <div
         className={cn(
           "site-header-utility-bar hidden border-b border-charcoal/[0.04] dark:border-white/[0.06]",
-          showUtilityBar && "md:block",
+          showUtilityBar && (showUtilityBarMobile ? "block" : "md:block"),
+          showAnnouncement && marketing?.announcementTone === "sky" && "bg-sky/10",
+          showAnnouncement && marketing?.announcementTone === "wine" && "bg-rose-950/10",
+          showAnnouncement && marketing?.announcementTone === "neutral" && "bg-surface-muted",
         )}
       >
         <div className="min-h-0 overflow-hidden">
@@ -242,9 +247,11 @@ export default function Header({
             )}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="font-medium text-foreground/80">{t("header.tagline")}</span>
+              <span className="font-medium text-foreground/80">
+                {showAnnouncement ? marketing?.announcementText : t("header.tagline")}
+              </span>
               <span className="hidden text-charcoal/15 md:inline">|</span>
-              {utilityLinks.slice(0, 2).map((link) => (
+              {!showAnnouncement ? utilityLinks.slice(0, -1).map((link) => (
                 <Link
                   key={link.id}
                   href={link.href}
@@ -253,13 +260,17 @@ export default function Header({
                   {resolveNavLabel(link, t)}
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
-              ))}
+              )) : null}
             </div>
             <Link
-              href={utilityLinks[2]?.href ?? "/contacts"}
+              href={showAnnouncement ? marketing?.announcementHref ?? "/services" : utilityCtaLink?.href ?? "/contacts"}
               className="flex shrink-0 items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky"
             >
-              {utilityLinks[2] ? resolveNavLabel(utilityLinks[2], t) : t("nav.contacts")}
+              {showAnnouncement
+                ? marketing?.announcementCtaLabel || "Подробнее"
+                : utilityCtaLink
+                  ? resolveNavLabel(utilityCtaLink, t)
+                  : t("nav.contacts")}
               <ArrowUpRight className="h-3 w-3" />
             </Link>
           </div>
@@ -297,6 +308,8 @@ export default function Header({
           <Link href="/" className="relative z-10 shrink-0" aria-label={t("nav.home")}>
             <ArgentinaLogo
               className={cn(canGoBack && "max-sm:h-9", compact && "!h-9")}
+              src={branding?.primaryLogoUrl}
+              alt={branding?.logoAlt}
             />
           </Link>
 
@@ -322,13 +335,15 @@ export default function Header({
                 Карта
               </button>
             ) : null}
-            <CircleButton
-              ariaLabel="Поиск по сайту"
-              onClick={() => openSiteSearch()}
-              className={canGoBack ? "max-[374px]:hidden" : undefined}
-            >
-              <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </CircleButton>
+            {showSiteSearch ? (
+              <CircleButton
+                ariaLabel="Поиск по сайту"
+                onClick={() => openSiteSearch()}
+                className={canGoBack ? "max-[374px]:hidden" : undefined}
+              >
+                <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </CircleButton>
+            ) : null}
             {showThemeToggle ? (
               <div className="hidden xl:block"><ThemeToggle /></div>
             ) : null}

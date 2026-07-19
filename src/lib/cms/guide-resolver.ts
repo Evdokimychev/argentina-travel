@@ -20,6 +20,8 @@ import {
   guidePageFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
+import { getGuideTopicBySlug } from "@/lib/guide-topics";
+import type { GuideTopicPage } from "@/types/guide-topic";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedGuideOverride,
@@ -106,4 +108,54 @@ export async function listPublishedGuideSlugs(locale = "ru"): Promise<string[]> 
   const cutover = await getCmsCutoverFlags();
   const fallbackSlugs = getPagesBySection("guide").map((page) => page.slug);
   return listPublishedCmsSlugs("guide", fallbackSlugs, locale, { cmsOnly: cutover.guide });
+}
+
+/**
+ * Core guide topics used to win routing before the CMS resolver ran. Attach a
+ * published CMS page as the editable editorial body while preserving the rich
+ * pillar shell (facts, widgets, FAQ and recommendations).
+ */
+export function mergeGuideTopicWithCmsPage(
+  topic: GuideTopicPage,
+  cmsPage: ContentPage | null,
+): GuideTopicPage {
+  const hasEditorialBody = cmsPage?.sections.some((section) =>
+    Boolean(
+      section.heading?.trim() ||
+        section.html?.trim() ||
+        section.paragraphs?.some((paragraph) => paragraph.trim()) ||
+        section.list?.some((item) => item.trim()) ||
+        section.blocks?.length,
+    ),
+  );
+  if (!cmsPage || !hasEditorialBody) return topic;
+
+  const relatedByHref = new Map(
+    (topic.relatedArticles ?? []).map((item) => [item.href, item] as const),
+  );
+  for (const item of cmsPage.relatedLinks ?? []) {
+    relatedByHref.set(item.href, {
+      label: item.label,
+      href: item.href,
+      description: item.description,
+    });
+  }
+
+  return {
+    ...topic,
+    title: cmsPage.title.trim() || topic.title,
+    shortDescription: cmsPage.description.trim() || topic.shortDescription,
+    relatedArticles: [...relatedByHref.values()],
+    cmsPage,
+  };
+}
+
+export async function resolveGuideTopic(
+  slug: string,
+  locale = "ru",
+): Promise<GuideTopicPage | null> {
+  const topic = getGuideTopicBySlug(slug);
+  if (!topic) return null;
+  const cmsPage = await resolveGuidePage(slug, locale);
+  return mergeGuideTopicWithCmsPage(topic, cmsPage);
 }

@@ -29,6 +29,7 @@ export type SearchResultType =
   | "excursion"
   | "place"
   | "blog"
+  | "knowledge"
   | "faq"
   | "page"
   | "legal"
@@ -50,6 +51,7 @@ export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
   excursion: "Экскурсии",
   place: "Места",
   blog: "Блог",
+  knowledge: "База знаний",
   faq: "FAQ",
   page: "Страницы",
   legal: "Документы",
@@ -194,6 +196,7 @@ const SEARCH_TYPE_PRIORITY: Record<SearchResultType, number> = {
   excursion: 9,
   place: 8,
   blog: 7,
+  knowledge: 7,
   guide: 6,
   immigration: 5,
   destination: 4,

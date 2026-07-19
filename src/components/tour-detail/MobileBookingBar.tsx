@@ -18,6 +18,7 @@ import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
 import ExternalBookingButton from "./ExternalBookingButton";
+import PartnerTourListedPrice from "./PartnerTourListedPrice";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -193,14 +194,12 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   }
 
   const primaryLabel = usesExternalBooking
-    ? offerCapabilities.primaryActionLabel
+    ? "Забронировать"
     : offerCapabilities.bookingMode === "disabled"
       ? offerCapabilities.primaryActionLabel
-      : priceOnRequest
-      ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Лист ожидания"
-        : "Забронировать";
+        : offerCapabilities.primaryActionLabel;
 
   const showFromPrefix = resolveTourPriceFromPrefix({
     priceUsd: tour.priceUsd,
@@ -252,7 +251,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       ) : null}
 
       <div className="py-2.5">
-        <div className={cn(siteContainerClass, "flex flex-col gap-2")}>
+        <div className={cn(siteContainerClass, "flex flex-col gap-1.5")}>
           {error ? (
             <InlineFeedback
               variant="error"
@@ -266,7 +265,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-1 text-left text-xs text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
+              className="flex min-h-9 w-full items-center justify-between gap-3 rounded-lg px-1 text-left text-xs text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
             >
               <span className="min-w-0 truncate">
                 <span className="font-medium text-charcoal">{dateSummary}</span>
@@ -285,6 +284,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                   size="sm"
                 />
               </div>
+            ) : isPartnerTour && tour.partnerPriceDisplay ? (
+              <PartnerTourListedPrice tour={tour} showFrom size="sm" className="min-w-0 shrink" />
             ) : priceOnRequest ? (
               <TourPublicPriceDisplay
                 priceUsd={tour.priceUsd}
@@ -304,7 +305,9 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
-                className="flex-1 rounded-xl py-3 text-sm font-semibold"
+                label={primaryLabel}
+                showIcon={false}
+                className="min-h-11 max-w-[13rem] flex-1 rounded-xl px-5 py-3 text-sm font-semibold"
                 onClick={handleExternalBookingClick}
               />
             ) : (

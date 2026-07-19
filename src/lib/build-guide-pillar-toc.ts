@@ -4,6 +4,7 @@ import type { TravelHubTocItem } from "@/types/guide-travel-hub";
 type BuildGuidePillarTocOptions = {
   hasPracticalTips?: boolean;
   hasReadMore?: boolean;
+  sectionItems?: TravelHubTocItem[];
 };
 
 export function buildGuidePillarToc(
@@ -12,8 +13,12 @@ export function buildGuidePillarToc(
 ): TravelHubTocItem[] {
   const items: TravelHubTocItem[] = [{ id: "quick-30", label: "Кратко за 30 секунд" }];
 
-  for (const section of pillar.sections) {
-    items.push({ id: section.id, label: section.title });
+  if (options.sectionItems) {
+    items.push(...options.sectionItems);
+  } else {
+    for (const section of pillar.sections) {
+      items.push({ id: section.id, label: section.title });
+    }
   }
 
   for (const slot of pillar.widgetSlots ?? []) {

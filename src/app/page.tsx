@@ -21,6 +21,7 @@ import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/m
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import type { TourListing } from "@/types";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -55,9 +56,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [actor, tours] = await Promise.all([
+  const [actor, tours, navigation] = await Promise.all([
     resolveInteractionActor(),
     fetchMarketplaceTours(),
+    fetchSiteNavigation(),
   ]);
   const actorId = actor.userId ?? actor.anonymousId ?? null;
   const homepageRecommendationsV2Enabled = await getFlag(
@@ -83,6 +85,7 @@ export default async function HomePage() {
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/" />
       <HomePrimarySectionsItemListJsonLd />
       <MarketplaceHome
+        navigation={navigation}
         tours={homeTours}
         blogPosts={blogPosts.slice(0, 3)}
         testimonials={testimonials}
@@ -93,7 +96,6 @@ export default async function HomePage() {
             <TravelPrepStrip />
           </Suspense>
         }
-        heroBackdropSrc={heroSrc}
         heroCollage={
           <HomeHeroCollage
             key="home-hero-collage"

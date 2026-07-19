@@ -25,10 +25,12 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   completed: "Завершена",
 };
 
-export const BOOKING_STATUS_TONE: Record<BookingStatusActive, string> = {
+export const BOOKING_STATUS_TONE: Record<BookingStatus, string> = {
   new: "bg-sky/10 text-sky ring-sky/20",
   pending: "bg-warning-muted text-warning ring-warning/30",
   confirmed: "bg-success-muted text-success ring-success/30",
+  waiting_payment: "bg-amber-50 text-amber-800 ring-amber-200",
+  paid: "bg-emerald-50 text-emerald-800 ring-emerald-200",
   cancelled: "bg-gray-100 text-slate ring-gray-200/60",
   completed: "bg-sky/10 text-sky ring-sky/20",
 };
@@ -56,8 +58,5 @@ export function isActiveBookingStatus(status: BookingStatus): status is BookingS
 }
 
 export function getVisibleBookingStatusLabel(status: BookingStatus): string {
-  if (isActiveBookingStatus(status)) {
-    return BOOKING_STATUS_LABELS[status];
-  }
-  return BOOKING_STATUS_LABELS.pending;
+  return BOOKING_STATUS_LABELS[status];
 }

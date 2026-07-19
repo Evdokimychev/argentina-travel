@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import type { ShopProduct } from "@/data/shop-products";
@@ -16,6 +16,7 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 interface ShopCheckoutModalProps {
   product: ShopProduct;
@@ -39,7 +40,11 @@ export default function ShopCheckoutModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<SiteFeedbackMessage | null>(null);
   const [order, setOrder] = useState<ShopOrder | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const idempotencyKeyRef = useRef(crypto.randomUUID());
   const feedback = useSiteFeedback();
+  const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   useEffect(() => {
     if (!open) return;
@@ -50,10 +55,15 @@ export default function ShopCheckoutModal({
     setCustomerEmail(user?.email ?? "");
     setCustomerPhone(user?.phone ?? "");
     setNotes("");
+    setCaptchaToken("");
+    idempotencyKeyRef.current = crypto.randomUUID();
   }, [open, user]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    const honeypot = String(
+      new FormData(event.currentTarget as HTMLFormElement).get("company") ?? "",
+    );
     setError(null);
     setSubmitting(true);
 
@@ -64,6 +74,9 @@ export default function ShopCheckoutModal({
         customerEmail,
         customerPhone,
         notes: notes.trim() || undefined,
+        idempotencyKey: idempotencyKeyRef.current,
+        captchaToken,
+        honeypot,
       });
       setOrder(created);
       setStep("success");
@@ -81,6 +94,7 @@ export default function ShopCheckoutModal({
       feedback.showError(normalized);
     } finally {
       setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
@@ -89,6 +103,13 @@ export default function ShopCheckoutModal({
       <DialogContent className="max-w-lg gap-0 overflow-hidden p-0">
         {step === "form" ? (
           <form onSubmit={handleSubmit} className="flex flex-col">
+            <label
+              className="absolute -left-[10000px] h-px w-px overflow-hidden"
+              aria-hidden="true"
+            >
+              Компания
+              <input name="company" tabIndex={-1} autoComplete="off" />
+            </label>
             <div className="border-b border-gray-100 px-6 py-5">
               <p className="text-xs font-medium uppercase tracking-wide text-slate">Заказ PDF</p>
               <DialogTitle className="mt-1 font-heading text-xl font-bold text-charcoal">
@@ -172,6 +193,12 @@ export default function ShopCheckoutModal({
                   className="mt-1.5"
                 />
               </div>
+
+              <TurnstileField
+                formId="shop_order"
+                onToken={handleCaptchaToken}
+                resetSignal={captchaResetSignal}
+              />
             </div>
 
             <div className="flex flex-col gap-2 border-t border-gray-100 px-6 py-4 sm:flex-row sm:justify-end">
@@ -195,9 +222,15 @@ export default function ShopCheckoutModal({
               Заказ PDF успешно создан, менеджер свяжется с вами для оплаты
             </DialogDescription>
             <p className="mt-2 text-sm leading-relaxed text-slate">
-              Номер заказа: <span className="font-medium text-charcoal">{order?.id}</span>.
-              Менеджер свяжется с вами для оплаты и отправит PDF на{" "}
-              <span className="font-medium text-charcoal">{order?.customerEmail}</span>.
+              {order ? (
+                <>
+                  Номер заказа: <span className="font-medium text-charcoal">{order.id}</span>.
+                  Менеджер свяжется с вами для оплаты и отправит PDF на{" "}
+                  <span className="font-medium text-charcoal">{order.customerEmail}</span>.
+                </>
+              ) : (
+                "Менеджер свяжется с вами для оплаты и отправки PDF."
+              )}
             </p>
             <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
               {user ? (

@@ -19,7 +19,13 @@ export function generatePublicApiKey(): { rawKey: string; keyHash: string; keyPr
 
 export function parsePublicApiScopes(raw: unknown): PublicApiScope[] {
   if (!Array.isArray(raw)) return ["tours:read", "excursions:read"];
-  const allowed = new Set<PublicApiScope>(["tours:read", "excursions:read", "*"]);
+  const allowed = new Set<PublicApiScope>([
+    "tours:read",
+    "excursions:read",
+    "content:write",
+    "content:status",
+    "*",
+  ]);
   const scopes = raw.filter((item): item is PublicApiScope => typeof item === "string" && allowed.has(item as PublicApiScope));
   return scopes.length ? scopes : ["tours:read", "excursions:read"];
 }

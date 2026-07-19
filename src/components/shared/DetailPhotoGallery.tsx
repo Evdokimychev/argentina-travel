@@ -35,10 +35,11 @@ export default function DetailPhotoGallery({
     <>
       <div
         className={cn(
-          "grid gap-3",
-          hasMultiple ? "sm:grid-cols-3" : "max-w-3xl",
+          "flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:overflow-visible sm:pb-0",
+          hasMultiple ? "sm:grid-cols-3" : "max-w-3xl sm:block",
           className,
         )}
+        aria-label={hasMultiple ? `Фотографии: ${title}` : undefined}
       >
         {uniqueImages.map((src, index) => (
           <button
@@ -46,7 +47,8 @@ export default function DetailPhotoGallery({
             type="button"
             onClick={() => setActiveIndex(index)}
             className={cn(
-              "group relative block overflow-hidden rounded-card bg-surface-muted text-left shadow-card transition hover:-translate-y-0.5 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 motion-reduce:transform-none",
+              "group relative block shrink-0 snap-center overflow-hidden rounded-card bg-surface-muted text-left shadow-card transition hover:-translate-y-0.5 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 motion-reduce:transform-none sm:w-auto",
+              hasMultiple ? "w-[88%]" : "w-full",
               index === 0 && hasMultiple ? "sm:col-span-2 sm:row-span-2" : "",
             )}
             aria-label={`Открыть фото ${index + 1} из ${uniqueImages.length}: ${title}`}

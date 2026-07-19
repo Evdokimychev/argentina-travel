@@ -15,7 +15,8 @@ import {
   shouldBlockInternalRoute,
 } from "@/lib/internal-route-access";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteFeaturesEdge } from "@/lib/site-settings-edge";
+import { fetchSiteFeaturesEdge, fetchSiteModulesEdge, fetchSiteNavigationEdge } from "@/lib/site-settings-edge";
+import { isPublicPathEnabled, isTravelModulePathEnabled } from "@/lib/public-module-visibility";
 import { matchUrlRedirectEdge } from "@/lib/redirects/url-redirect-edge";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import { getAppRuntimeMode } from "@/lib/runtime-mode";
@@ -250,6 +251,36 @@ export async function middleware(request: NextRequest) {
       }
     } catch {
       // Redirect lookup unavailable — continue request
+    }
+  }
+
+  if (
+    (request.method === "GET" || request.method === "HEAD") &&
+    !routePathname.startsWith("/api") &&
+    !routePathname.startsWith("/admin")
+  ) {
+    try {
+      const [navigation, modules] = await Promise.all([
+        fetchSiteNavigationEdge(),
+        fetchSiteModulesEdge(),
+      ]);
+      if (
+        !isPublicPathEnabled(routePathname, navigation) ||
+        !isTravelModulePathEnabled(routePathname, modules)
+      ) {
+        const notFoundUrl = request.nextUrl.clone();
+        notFoundUrl.pathname = "/_not-found";
+        notFoundUrl.search = "";
+        return NextResponse.rewrite(notFoundUrl, {
+          status: 404,
+          headers: {
+            "Cache-Control": "public, max-age=60, s-maxage=60",
+            "X-Robots-Tag": "noindex, nofollow",
+          },
+        });
+      }
+    } catch {
+      // Settings unavailable — keep the public site available.
     }
   }
 

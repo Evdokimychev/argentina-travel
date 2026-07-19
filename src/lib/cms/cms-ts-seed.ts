@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { blogPosts } from "@/data/blog";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
-import { getPagesBySection } from "@/lib/content-pages";
+import { getGuideCmsSourcePages } from "@/lib/cms/guide-topic-source";
 import { getAllDestinations } from "@/lib/destinations";
 import { PLACES_SEED } from "@/data/places-seed";
 import { cmsDocumentToRow } from "@/lib/cms/content-mapper";
@@ -79,7 +79,7 @@ export function buildCmsSeedEntries(locale = "ru"): CmsSeedEntry[] {
     });
   }
 
-  for (const page of getPagesBySection("guide")) {
+  for (const page of getGuideCmsSourcePages()) {
     entries.push({
       docType: "guide",
       slug: page.slug,
@@ -370,7 +370,7 @@ function resolveRuSourceFromTs(
       };
     }
     case "guide": {
-      const page = getPagesBySection("guide").find((item) => item.slug === slug);
+      const page = getGuideCmsSourcePages().find((item) => item.slug === slug);
       if (!page) return null;
       return {
         title: page.title,

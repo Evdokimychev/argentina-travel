@@ -29,6 +29,21 @@ describe("enrichSeedBodyWithRichHtml", () => {
     expect(withParagraphs?.html).toContain("<p>");
   });
 
+  it("includes core guide topics in the admin seed catalog", () => {
+    const cuisine = buildCmsSeedEntries().find(
+      (entry) => entry.docType === "guide" && entry.slug === "kukhnya",
+    );
+    expect(cuisine).toBeDefined();
+    expect(cuisine?.body.kind).toBe("guide");
+    if (!cuisine || cuisine.body.kind !== "guide") return;
+    expect(cuisine.body.sections.length).toBeGreaterThanOrEqual(7);
+    expect(
+      cuisine.body.sections.some((section) =>
+        section.blocks?.some((block) => block.type === "table"),
+      ),
+    ).toBe(true);
+  });
+
   it("leaves blog body unchanged", () => {
     const blogEntry = buildCmsSeedEntries().find((entry) => entry.docType === "blog");
     expect(blogEntry).toBeDefined();

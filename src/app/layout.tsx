@@ -14,6 +14,9 @@ import {
   fetchSiteBranding,
   fetchSiteDesign,
   fetchSiteNavigation,
+  fetchSiteMarketing,
+  fetchSiteForms,
+  fetchSiteModules,
   fetchSitePublicMeta,
 } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
@@ -112,10 +115,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [siteFooter, siteNavigation, siteDesign] = await Promise.all([
+  const [siteFooter, siteNavigation, siteDesign, siteBranding, siteMarketing, siteForms, siteModules] = await Promise.all([
     loadSiteFooterInfo(),
     fetchSiteNavigation(),
     fetchSiteDesign(),
+    fetchSiteBranding(),
+    fetchSiteMarketing(),
+    fetchSiteForms(),
+    fetchSiteModules(),
   ]);
   const i18nLocale = await getServerI18nLocale();
   const locale = localeCodeFromI18n(i18nLocale);
@@ -127,24 +134,40 @@ export default async function RootLayout({
       data-site-header="visible"
       data-site-palette={siteDesign.palettePreset}
       data-site-heading-font={siteDesign.headingFont}
+      data-site-typography-scale={siteDesign.typographyScale}
+      data-site-corner-style={siteDesign.cornerStyle}
       data-site-header-variant={siteDesign.headerVariant}
       data-site-footer-variant={siteDesign.footerVariant}
-      data-site-utility-bar={siteDesign.showUtilityBar ? "visible" : "hidden"}
+      data-site-utility-bar={siteDesign.showUtilityBar || siteMarketing.announcementEnabled ? "visible" : "hidden"}
+      data-site-announcement-mobile={siteMarketing.announcementEnabled && siteMarketing.announcementOnMobile ? "visible" : "hidden"}
       suppressHydrationWarning
     >
       <head>
         <GtmHeadScripts />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var c=d.dataset.siteHeaderVariant==="compact";var u=w&&d.dataset.siteUtilityBar==="visible";var h=c?64:(w?86:80);if(u)h+=28;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var c=d.dataset.siteHeaderVariant==="compact";var m=d.dataset.siteAnnouncementMobile==="visible";var u=(w||m)&&d.dataset.siteUtilityBar==="visible";var h=c?64:(w?86:80);if(u)h+=28;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
           }}
         />
       </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <ThemeScript />
         <SiteJsonLd />
-        <Providers locale={locale}>
-          <SiteChrome siteFooter={siteFooter} siteNavigation={siteNavigation} siteDesign={siteDesign}>
+        <Providers
+          locale={locale}
+          siteDesign={siteDesign}
+          siteForms={siteForms}
+          captchaSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || null}
+        >
+          <SiteChrome
+            siteFooter={siteFooter}
+            siteNavigation={siteNavigation}
+            siteDesign={siteDesign}
+            siteBranding={siteBranding}
+            siteMarketing={siteMarketing}
+            siteForms={siteForms}
+            siteModules={siteModules}
+          >
             {children}
           </SiteChrome>
         </Providers>

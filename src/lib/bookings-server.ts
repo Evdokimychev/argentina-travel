@@ -110,7 +110,9 @@ export function canAccessBooking(
   const email = profileEmail ?? actor.email;
   if (email && bookingMatchesContactEmail(booking, email)) return true;
 
-  if (userHasAccountRole(actor, "organizer") || userHasAccountRole(actor, "admin")) {
+  // Generic booking endpoints are for the booking owner and the owning organizer.
+  // Staff access must go through /api/admin/* where admin_staff capabilities are enforced.
+  if (userHasAccountRole(actor, "organizer")) {
     if (organizerCanAccessBooking(booking, actor.id)) {
       return true;
     }

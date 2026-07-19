@@ -29,6 +29,7 @@ import {
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { absoluteUrl } from "@/lib/site-url";
 import type { NotificationCategory } from "@/types/notifications-hub";
+import { fetchSiteEmail } from "@/lib/site-settings-server";
 
 type ReviewModerationAction = "approve" | "reject";
 
@@ -181,17 +182,34 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<bo
   if (!input.to.length) return false;
 
   try {
+    const settings = await fetchSiteEmail();
+    const senderName = settings.senderName.replace(/[\r\n<>]+/g, " ").trim().slice(0, 120);
+    const senderAddress = config.from.match(/<([^>]+)>/)?.[1] ?? config.from;
+    const from = senderName ? `${senderName} <${senderAddress}>` : config.from;
+    const replyTo = settings.replyToEmail?.trim();
+    const footerFallback = "Настройки уведомлений можно изменить в личном кабинете.";
+    const html = settings.footerText
+      ? input.html.replace(footerFallback, escapeHtml(settings.footerText))
+      : input.html;
+    const text = settings.footerText
+      ? input.text.replace(footerFallback, settings.footerText)
+      : input.text;
     const supabase = createSupabaseAdminClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase as any)
       .from("email_delivery_outbox")
       .insert({
-        from_email: config.from,
+        from_email: from,
         recipients: input.to,
         subject: input.subject,
-        html_body: input.html,
-        text_body: input.text,
-        headers: input.headers ?? {},
+        html_body: html,
+        text_body: text,
+        headers: {
+          ...(input.headers ?? {}),
+          ...(replyTo && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyTo)
+            ? { "Reply-To": replyTo }
+            : {}),
+        },
         status: "pending",
         next_attempt_at: new Date().toISOString(),
       })
@@ -203,6 +221,41 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<bo
   } catch {
     return false;
   }
+}
+
+/**
+ * Queues non-preference operational mail through the same durable outbox as
+ * transactional messages. Callers must pass already escaped HTML fragments.
+ */
+export async function sendOperationalEmail(input: {
+  recipientEmails?: Array<string | null | undefined>;
+  includeAdminCopy?: boolean;
+  subject: string;
+  html: string;
+  text: string;
+  category?: "lead" | "organizer" | "required";
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+  const settings = await fetchSiteEmail();
+  if (input.category === "lead" && !settings.leadAlertsEnabled) return false;
+  if (input.category === "organizer" && !settings.organizerAlertsEnabled) return false;
+
+  const subject = input.subject.replace(/[\r\n]+/g, " ").trim().slice(0, 300);
+  if (!subject) return false;
+
+  const recipients = normalizeRecipients([
+    ...(input.recipientEmails ?? []),
+    input.includeAdminCopy ? config.adminEmail : null,
+  ]);
+  if (!recipients.length) return false;
+
+  return sendEmail(config, {
+    to: recipients,
+    subject,
+    html: input.html,
+    text: input.text,
+  });
 }
 
 export async function processEmailOutboxRetries(limit = 50): Promise<{
@@ -586,6 +639,7 @@ export async function sendContentFreshnessReportEmail(input: {
   generatedAt?: string;
   dashboardUrl?: string;
 }): Promise<boolean> {
+  if (!(await fetchSiteEmail()).contentFreshnessAlertsEnabled) return false;
   if (input.items.length === 0) return false;
   const recipients = normalizeRecipients(input.recipientEmails);
   if (!recipients.length) return false;
@@ -614,6 +668,7 @@ export async function sendDailyDigestEmail(input: {
   events: DigestEvent[];
   scopeLabel: string;
 }): Promise<boolean> {
+  if (!(await fetchSiteEmail()).dailyDigestEnabled) return false;
   const config = resolveEmailConfig();
   if (!config) return false;
 

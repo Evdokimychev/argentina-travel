@@ -53,7 +53,8 @@ describe("Sprint 8 — geography & map", () => {
     const view = readFileSync(join(root, "components/places/PlaceDetailView.tsx"), "utf8");
     expect(view).toContain("PlaceTransportMapSection");
     expect(view).toContain('variant: "strip"');
-    expect(view).toContain("resolveRelatedToursForPlace");
+    expect(view).toContain("resolveRelatedTourMatchesForPlace");
+    expect(view).toContain("matchReasons");
     const transport = readFileSync(join(root, "components/places/PlaceTransportMapSection.tsx"), "utf8");
     expect(transport).toContain("PlaceDetailMap");
     expect(transport).toContain("buildMapPlaceDeepLink");

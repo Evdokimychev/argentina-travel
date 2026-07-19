@@ -1,4 +1,5 @@
 import { extractFaqFromBody } from "@/lib/blog-faq";
+import { cleanLegacyBlogSourceMarkers } from "@/lib/blog-editorial-cleanup";
 import type {
   BlogBodyBlock,
   BlogCalloutVariant,
@@ -300,10 +301,11 @@ export function parseBlogSectionBody(
   const kind = sectionTitle
     ? getBlogSectionKind(sectionTitle, blockType)
     : blockType ?? "default";
-  const rawBlocks = splitRawBlocks(body);
+  const cleanedBody = cleanLegacyBlogSourceMarkers(body);
+  const rawBlocks = splitRawBlocks(cleanedBody);
 
   if (kind === "faq") {
-    const items = extractFaqFromBody(body);
+    const items = extractFaqFromBody(cleanedBody);
     if (items.length > 0) {
       return [{ type: "faq", items }];
     }
