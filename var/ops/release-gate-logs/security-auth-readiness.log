@@ -2,10 +2,10 @@
 > argentina-travel@0.1.0 auth:readiness
 > node scripts/auth-readiness.mjs
 
-Auth environment: local
+Auth environment: production
 Supabase project ref: uooxrypocahomoqzdvzy
 Expected project ref: uooxrypocahomoqzdvzy
 Canonical site URL: https://www.goargentina.ru
-Release SHA: local
+Release SHA: ad17989ff70b
 Supabase Auth: enabled
 Auth readiness: OK

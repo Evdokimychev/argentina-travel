@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T11:59:32.030Z",
+  "generatedAt": "2026-07-18T01:06:00.782Z",
   "scope": "knowledge-base",
   "counts": {
     "total": 689,
@@ -5253,8 +5253,8 @@
       },
       "canonicalEntityId": "el-chalten",
       "duplicateGroup": null,
-      "sourceCount": 1,
-      "verifiedAt": "2026-07-07",
+      "sourceCount": 2,
+      "verifiedAt": "2026-07-17",
       "severity": "none",
       "issues": []
     },

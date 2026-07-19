@@ -1,18 +1,18 @@
 
- RUN  v3.2.6 /Users/Study/Projects/argentina-travel-readiness-90
+ RUN  v3.2.6 /private/tmp/argentina-travel-release-ad17989f
 
- ✓ src/lib/booking-cancellation-integrity.test.ts (1 test) 5ms
+ ✓ src/lib/booking-cancellation-integrity.test.ts (1 test) 11ms
  ✓ src/lib/booking-state-machine.test.ts (3 tests) 2ms
+ ✓ src/lib/database-url.test.ts (1 test) 2ms
  ✓ src/lib/payments/payment-integrity.test.ts (9 tests) 3ms
  ✓ src/lib/payments/provider-contract.test.ts (5 tests) 4ms
- ✓ src/lib/database-url.test.ts (1 test) 2ms
- ✓ src/lib/payments/payment-idempotency.test.ts (9 tests) 5ms
- ✓ src/lib/payments/webhook-handler.test.ts (9 tests) 7ms
- ✓ src/lib/booking-create-pricing.test.ts (3 tests) 4ms
+ ✓ src/lib/payments/payment-idempotency.test.ts (9 tests) 16ms
+ ✓ src/lib/payments/webhook-handler.test.ts (9 tests) 9ms
+ ✓ src/lib/booking-create-pricing.test.ts (3 tests) 5ms
  ✓ src/lib/booking-create-command-integrity.test.ts (2 tests) 2ms
 
  Test Files  9 passed (9)
       Tests  42 passed (42)
-   Start at  05:44:29
-   Duration  1.97s (transform 855ms, setup 0ms, collect 2.39s, tests 34ms, environment 2ms, prepare 563ms)
+   Start at  22:08:31
+   Duration  3.58s (transform 1.75s, setup 0ms, collect 4.52s, tests 55ms, environment 3ms, prepare 1.08s)
 

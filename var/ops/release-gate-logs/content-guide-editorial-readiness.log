@@ -1,0 +1,10 @@
+
+> argentina-travel@0.1.0 guide:editorial-readiness:check
+> tsx scripts/guide-editorial-readiness.ts --strict
+
+{
+  "total": 29,
+  "passed": 29,
+  "failed": 0
+}
+Guide editorial readiness: passed. Report: var/ops/guide-editorial-readiness.json

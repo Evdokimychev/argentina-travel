@@ -2,9 +2,9 @@
   "schemaVersion": 3,
   "evidenceScope": "candidate",
   "candidateTree": "507a2d1ff8d4c09e373dc5ab1ace398a899eea92",
-  "evidenceRunId": "1ab237af-1c39-40b1-8e01-f8067cb1946b",
-  "evidenceStartedAt": "2026-07-18T01:08:30.570Z",
-  "evidenceGeneratedAt": "2026-07-18T01:08:35.754Z",
+  "evidenceRunId": "e4c2097c-31f6-46f1-befc-0432c7b6ff6f",
+  "evidenceStartedAt": "2026-07-18T01:08:36.124Z",
+  "evidenceGeneratedAt": "2026-07-18T01:12:08.827Z",
   "evidenceEnvironment": "local-production",
   "evidenceBaseUrl": "http://127.0.0.1:3000",
   "evidenceIntegrity": {
@@ -21,8 +21,8 @@
     "branch": null,
     "dirtyTree": {
       "isDirty": true,
-      "entryCount": 22,
-      "fingerprint": "9e9a8a98f3b3a17e6d0cc29b5813004c692c29433e80bd9566a1cbd43605fa66",
+      "entryCount": 24,
+      "fingerprint": "a3b065705acee0aa3036a8edb5aff88ad09a14ec99a4c9f1abcffd556c706e8b",
       "entries": [
         "M docs/audit/content-audit-2026-07-14.md",
         " M var/ops/blog-editorial-readiness.json",
@@ -30,6 +30,8 @@
         " M var/ops/content-fix-manifest.json",
         " M var/ops/guide-editorial-readiness.json",
         " M var/ops/project-readiness-last.json",
+        " M var/ops/release-gate-commerce-last.json",
+        " M var/ops/release-gate-logs/commerce-booking-payment-integrity.log",
         " M var/ops/release-gate-logs/content-content-lint.log",
         " M var/ops/release-gate-logs/content-media-rights.log",
         " M var/ops/release-gate-logs/contracts-unit-integration-contracts.log",
@@ -58,19 +60,28 @@
       "sha256": "7fc1702a7a1e6e37d506b9e0fa7d81120125165170377c27752fe4394963464d"
     }
   },
-  "timestamp": "2026-07-18T01:08:35.754Z",
+  "timestamp": "2026-07-18T01:12:08.828Z",
   "environment": "production",
-  "requestedGroup": "commerce",
+  "requestedGroup": "production",
   "status": "passed",
   "checks": [
     {
-      "id": "commerce:booking-payment-integrity",
-      "group": "commerce",
+      "id": "production:production-build",
+      "group": "production",
       "status": "passed",
-      "durationMs": 4734,
+      "durationMs": 210682,
       "blocking": true,
-      "artifact": "var/ops/release-gate-logs/commerce-booking-payment-integrity.log",
-      "command": "npx vitest run src/lib/booking-create-command-integrity.test.ts src/lib/booking-cancellation-integrity.test.ts src/lib/booking-create-pricing.test.ts src/lib/booking-state-machine.test.ts src/lib/payments/payment-integrity.test.ts src/lib/payments/webhook-handler.test.ts src/lib/payments/payment-idempotency.test.ts src/lib/payments/provider-contract.test.ts src/lib/database-url.test.ts"
+      "artifact": "var/ops/release-gate-logs/production-production-build.log",
+      "command": "npm run build"
+    },
+    {
+      "id": "production:production-isolation",
+      "group": "production",
+      "status": "passed",
+      "durationMs": 1649,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/production-production-isolation.log",
+      "command": "node scripts/scan-production-artifacts.mjs"
     }
   ]
 }

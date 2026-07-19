@@ -4,10 +4,10 @@
 
 {
   "total": 689,
-  "critical": 367,
-  "high": 65,
+  "critical": 396,
+  "high": 67,
   "medium": 2,
   "low": 0,
-  "none": 255,
-  "notIndexable": 434
+  "none": 224,
+  "notIndexable": 465
 }
