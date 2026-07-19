@@ -22,6 +22,19 @@ export type CmsDocType =
   | "author_article";
 
 export type CmsDocumentStatus = "draft" | "scheduled" | "published" | "archived";
+export type CmsWorkflowStage =
+  | "draft"
+  | "research"
+  | "fact_check"
+  | "editorial_review"
+  | "legal_review"
+  | "media_review"
+  | "ready"
+  | "scheduled"
+  | "published"
+  | "stale"
+  | "archived";
+export type CmsRiskLevel = "low" | "medium" | "high" | "critical";
 
 export type CmsLegalBody = {
   kind: "legal";
@@ -156,6 +169,13 @@ export type CmsDocument = {
   publishedAt: string | null;
   /** Set when status=scheduled; auto-publish via cron at this time (UTC). */
   scheduledPublishAt: string | null;
+  workflowStage?: CmsWorkflowStage;
+  riskLevel?: CmsRiskLevel;
+  reviewerId?: string | null;
+  lastFactCheckedAt?: string | null;
+  nextReviewAt?: string | null;
+  lastSubstantiveUpdateAt?: string | null;
+  schemaVersion?: number;
   createdBy: string | null;
   updatedBy: string | null;
   /** Optimistic concurrency token supplied back with every write. */

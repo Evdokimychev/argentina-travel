@@ -141,20 +141,10 @@ function scoreRelatedCandidates(
     return new Date(b.candidate.date).getTime() - new Date(a.candidate.date).getTime();
   });
 
-  const withScore = scored.filter(({ score }) => score > 0).map(({ candidate }) => candidate);
-  if (withScore.length >= limit) return withScore.slice(0, limit);
-
-  const fallback = scored.map(({ candidate }) => candidate);
-  const seen = new Set(withScore.map((p) => p.slug));
-  for (const item of fallback) {
-    if (withScore.length >= limit) break;
-    if (!seen.has(item.slug)) {
-      withScore.push(item);
-      seen.add(item.slug);
-    }
-  }
-
-  return withScore.slice(0, limit);
+  return scored
+    .filter(({ score }) => score > 0)
+    .slice(0, limit)
+    .map(({ candidate }) => candidate);
 }
 
 /** 1–2 статьи с учётом контекста секции для inline-блоков. */

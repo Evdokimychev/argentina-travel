@@ -10,6 +10,8 @@ Route handlers в `src/app/api/`. Основные группы:
 | Tours | `/api/tours/` |
 | Organizer | `/api/organizer/` |
 | CMS | `/api/cms/` |
+| CMS governance | `/api/admin/content/documents/:id/governance` |
+| Official Argentina FX | `/api/exchange-rates/argentina` |
 | Webhooks | `/api/webhooks/` |
 
 Подробнее: [public-api-e70.md](../public-api-e70.md)
@@ -52,3 +54,11 @@ npm test -- src/lib/tripster/
 npm run tripster:verify
 npm run smoke
 ```
+
+## Content governance API
+
+`GET /api/admin/content/documents/:id/governance` возвращает publication gate, связанные sources, claims, media usages, widgets и доступных reviewers. `POST` добавляет источник/claim или подтверждает claim; `DELETE` удаляет claim либо отвязывает source. Все операции требуют `content.edit`, проходят server-side validation и пишутся в admin audit log.
+
+`PATCH /api/admin/content/documents/:id` также принимает `workflowStage`, `riskLevel`, `reviewerId`, `lastFactCheckedAt`, `nextReviewAt` и `lastSubstantiveUpdateAt`. Публикация и планирование отдельно требуют `content.publish` и всегда вызывают database-backed gate.
+
+`GET /api/exchange-rates/argentina` использует официальный BCRA endpoint, отдаёт только справочный официальный курс, тип котировки, источник и время наблюдения. При ошибке возвращается `503` с `no-store`; статичного «свежего» fallback нет.

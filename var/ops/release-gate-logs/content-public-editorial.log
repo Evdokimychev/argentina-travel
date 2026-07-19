@@ -1,0 +1,12 @@
+
+> argentina-travel@0.1.0 content:public-editorial
+> tsx scripts/public-editorial-audit.ts
+
+{
+  "generatedAt": "2026-07-15T22:45:25.425Z",
+  "status": "passed",
+  "publicKnowledgeBaseEntries": 127,
+  "publicBlogPosts": 40,
+  "navigationLinks": 123,
+  "errors": []
+}

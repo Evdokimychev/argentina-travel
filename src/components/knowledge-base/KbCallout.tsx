@@ -33,14 +33,19 @@ function renderCalloutText(text: string): ReactNode[] {
     if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
     const [, id, label] = match;
     const entry = getEntry(id.trim());
+    const display = (label ?? entry?.title ?? id).trim();
     nodes.push(
-      <Link
-        key={key++}
-        href={entryHref(id.trim())}
-        className="text-sky-ink underline decoration-sky/40 underline-offset-2 hover:decoration-sky-ink"
-      >
-        {(label ?? entry?.title ?? id).trim()}
-      </Link>,
+      entry ? (
+        <Link
+          key={key++}
+          href={entryHref(entry.id)}
+          className="text-sky-ink underline decoration-sky/40 underline-offset-2 hover:decoration-sky-ink"
+        >
+          {display}
+        </Link>
+      ) : (
+        display
+      ),
     );
     lastIndex = WIKILINK_RE.lastIndex;
   }

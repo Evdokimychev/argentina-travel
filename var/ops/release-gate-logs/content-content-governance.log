@@ -1,0 +1,27 @@
+
+> argentina-travel@0.1.0 content:governance
+> node scripts/content-governance-audit.mjs
+
+{
+  "generatedAt": "2026-07-15T22:45:25.951Z",
+  "ok": true,
+  "structuralErrors": [],
+  "counts": {
+    "inventory": 1131,
+    "actions": 1131,
+    "sources": 173,
+    "activeHttpsSources": 1,
+    "sourcesNeedingReview": 172,
+    "claims": 132,
+    "sensitiveClaims": 132,
+    "verifiedClaims": 0,
+    "claimsNeedingReview": 132,
+    "mediaRightsRecords": 14,
+    "verifiedMediaRights": 0,
+    "missingMedia": 199,
+    "dynamicFacts": 16,
+    "activeWidgets": 4,
+    "widgets": 25,
+    "unresolvedLinks": 0
+  }
+}

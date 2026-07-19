@@ -93,7 +93,8 @@ export default function CatalogFiltersSheet({
               Сбросить
             </Button>
             <Button type="button" className="min-w-0 sm:w-auto" onClick={applyFilters}>
-              Показать {formatTours(draftResultCount)}
+              <span className="sm:hidden">Показать</span>
+              <span className="hidden sm:inline">Показать {formatTours(draftResultCount)}</span>
             </Button>
           </DialogFooter>
         </DialogContent>

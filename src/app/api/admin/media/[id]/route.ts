@@ -21,6 +21,14 @@ export async function PATCH(request: Request, context: RouteContext) {
     category?: string;
     role?: string;
     tags?: string[];
+    sourcePageUrl?: string | null;
+    creator?: string | null;
+    license?: string | null;
+    licenseUrl?: string | null;
+    attributionText?: string | null;
+    captionRu?: string | null;
+    focalPoint?: { x: number; y: number };
+    rightsStatus?: "review_required" | "verified" | "restricted" | "expired" | "rejected";
   };
 
   const supabase = createSupabaseAdminClient();

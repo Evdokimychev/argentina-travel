@@ -12,7 +12,7 @@ describe("site-sections-json-ld", () => {
     expect(paths).toContain("/tours");
     expect(paths).toContain("/excursions");
     expect(paths).toContain("/guide");
-    expect(paths).toContain("/immigration");
+    expect(paths).not.toContain("/immigration");
     expect(paths).toContain("/blog");
     expect(paths).toContain("/faq");
     expect(links.every((link) => link.name.length >= 4)).toBe(true);

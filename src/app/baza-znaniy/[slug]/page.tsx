@@ -31,7 +31,6 @@ import {
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { cmsFallbackRobots } from "@/lib/cms/content-resolver";
 import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
-import SocialFeed from "@/components/social-feed/SocialFeed";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
@@ -260,7 +259,6 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
 
             <KbRelated entries={related} />
 
-            <SocialFeed placement={`kb:${entry.id}`} compact />
           </article>
 
           {/* Оглавление — липкая правая колонка на широких экранах */}

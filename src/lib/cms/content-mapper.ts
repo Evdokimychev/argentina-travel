@@ -153,6 +153,13 @@ export function rowToCmsDocument(row: ContentDocumentRow): CmsDocument {
     seo: parseSeo(row.seo),
     publishedAt: row.published_at,
     scheduledPublishAt: row.scheduled_publish_at ?? null,
+    workflowStage: row.workflow_stage as CmsDocument["workflowStage"],
+    riskLevel: row.risk_level as CmsDocument["riskLevel"],
+    reviewerId: row.reviewer_id,
+    lastFactCheckedAt: row.last_fact_checked_at,
+    nextReviewAt: row.next_review_at,
+    lastSubstantiveUpdateAt: row.last_substantive_update_at,
+    schemaVersion: row.schema_version,
     createdBy: row.created_by,
     updatedBy: row.updated_by,
     rowVersion: row.row_version,
@@ -187,6 +194,13 @@ export function cmsDocumentToRow(
     | "seo"
     | "publishedAt"
     | "scheduledPublishAt"
+    | "workflowStage"
+    | "riskLevel"
+    | "reviewerId"
+    | "lastFactCheckedAt"
+    | "nextReviewAt"
+    | "lastSubstantiveUpdateAt"
+    | "schemaVersion"
   > & { createdBy?: string | null; updatedBy?: string | null }
 ): Database["public"]["Tables"]["content_documents"]["Insert"] {
   return {
@@ -200,6 +214,13 @@ export function cmsDocumentToRow(
     seo: doc.seo as Json,
     published_at: doc.publishedAt,
     scheduled_publish_at: doc.scheduledPublishAt ?? null,
+    workflow_stage: doc.workflowStage ?? "draft",
+    risk_level: doc.riskLevel ?? "low",
+    reviewer_id: doc.reviewerId ?? null,
+    last_fact_checked_at: doc.lastFactCheckedAt ?? null,
+    next_review_at: doc.nextReviewAt ?? null,
+    last_substantive_update_at: doc.lastSubstantiveUpdateAt ?? null,
+    schema_version: doc.schemaVersion ?? 1,
     created_by: doc.createdBy ?? null,
     updated_by: doc.updatedBy ?? null,
   };

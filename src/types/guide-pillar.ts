@@ -79,7 +79,7 @@ export type GuideQuickFact = {
   /** @deprecated Используйте headline + detail */
   value?: string;
   /** Render live exchange rate instead of static headline */
-  live?: "exchange-oficial" | "exchange-blue";
+  live?: "exchange-oficial";
 };
 
 export type GuidePillarHeroCta = {

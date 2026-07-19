@@ -14,6 +14,7 @@ import {
   Globe,
   HelpCircle,
   Landmark,
+  LibraryBig,
   Loader2,
   MapPin,
   Mountain,
@@ -49,11 +50,11 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   excursion: Landmark,
   place: Mountain,
   blog: BookOpen,
-  knowledge: BookOpen,
   faq: HelpCircle,
   page: Compass,
   legal: FileText,
   destination: MapPin,
+  knowledge: LibraryBig,
   guide: Globe,
   immigration: Stamp,
 };
@@ -151,6 +152,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
     "blog",
     "guide",
     "destination",
+    "knowledge",
     "immigration",
     "page",
     "faq",
@@ -463,8 +465,35 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
             ) : loading && results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm text-muted">Ищем…</div>
             ) : results.length === 0 ? (
-              <div className="px-3 py-8 text-center text-sm text-muted">
-                Ничего не найдено по запросу «{trimmedQuery}»
+              <div className="px-3 py-7 text-center text-sm text-muted">
+                <p>Ничего не найдено по запросу «{trimmedQuery}»</p>
+                {kindFilter !== "all" ? (
+                  <button
+                    type="button"
+                    className="mt-3 font-medium text-sky hover:underline"
+                    onClick={() => setKindFilter("all")}
+                  >
+                    Искать во всех разделах
+                  </button>
+                ) : null}
+                <p className="mt-4 text-xs">Попробуйте название на русском или испанском либо откройте раздел:</p>
+                <div className="mt-3 flex flex-wrap justify-center gap-2">
+                  {[
+                    ["Путеводитель", "/guide"],
+                    ["База знаний", "/baza-znaniy"],
+                    ["Регионы", "/destinations"],
+                    ["Места", "/places"],
+                  ].map(([label, href]) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="rounded-full border border-border-subtle px-3 py-1.5 text-xs font-medium text-foreground hover:border-sky/40 hover:text-sky"
+                      onClick={() => handleSelect(href)}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="space-y-4 pb-2">

@@ -6,7 +6,7 @@ describe("nav section active state", () => {
   it("highlights only tours on /tours despite cross-links in other menus", () => {
     expect(getActiveNavSectionId("/tours", SITE_NAV_SECTIONS)).toBe("tours");
 
-    const activePrimary = ["geography", "tours", "excursions", "guide", "immigration"].filter(
+    const activePrimary = ["geography", "tours", "excursions", "guide"].filter(
       (id) => isNavSectionActive("/tours", SITE_NAV_SECTIONS.find((s) => s.id === id)!, SITE_NAV_SECTIONS),
     );
 

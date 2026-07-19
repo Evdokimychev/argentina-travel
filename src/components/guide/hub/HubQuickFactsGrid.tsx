@@ -8,7 +8,7 @@ export type HubQuickFactItem = {
   headline?: string;
   detail?: string;
   value?: string;
-  live?: "exchange-oficial" | "exchange-blue";
+  live?: "exchange-oficial";
 };
 
 type HubQuickFactsGridProps = {

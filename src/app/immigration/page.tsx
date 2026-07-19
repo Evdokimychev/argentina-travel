@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ImmigrationFlightHint from "@/components/flights/ImmigrationFlightHint";
 import ImmigrationHubView from "@/components/immigration/ImmigrationHubView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
@@ -30,10 +31,12 @@ export async function generateMetadata(): Promise<Metadata> {
       image: getImmigrationHubHeroImage(),
     }),
     alternates: buildHreflangAlternates("/immigration"),
+    robots: { index: false, follow: false },
   };
 }
 
 export default async function ImmigrationPage() {
+  notFound();
   const locale = await getServerI18nLocale();
   const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
     { labelKey: "nav.home", path: "/", fallback: "Главная" },

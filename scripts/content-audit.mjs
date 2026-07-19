@@ -39,11 +39,14 @@ function issuesFor(entry) {
   if (summaryScript.latin >= 20 && summaryScript.latin > summaryScript.ru * 2) issues.push({ code: "non_russian_summary", severity: "critical" });
   if (PLACEHOLDER_RE.test(visible)) issues.push({ code: "placeholder_content", severity: "critical" });
   if (entry.editorial?.sensitive && entry.editorial?.missing_sources) issues.push({ code: "missing_sensitive_source", severity: "critical" });
+  if (entry.editorial?.sensitive && entry.editorial?.missing_primary_source) issues.push({ code: "missing_primary_source", severity: "critical" });
+  if (entry.editorial?.sensitive && entry.editorial?.missing_reviewer) issues.push({ code: "missing_sensitive_reviewer", severity: "critical" });
+  if (entry.editorial?.missing_media_rights) issues.push({ code: "missing_media_rights", severity: "critical" });
   if (entry.status === "published" && (entry.editorial?.word_count ?? 0) < 120) issues.push({ code: "thin_content", severity: "high" });
   if (entry.site_ready && !entry.media?.hero && ["city", "national_park", "attraction", "region", "route"].includes(entry.type)) {
     issues.push({ code: "missing_hero", severity: "high" });
   }
-  if (entry.editorial?.review_due) issues.push({ code: "verification_due", severity: "medium" });
+  if (entry.editorial?.review_due) issues.push({ code: "verification_due", severity: "critical" });
   return issues;
 }
 

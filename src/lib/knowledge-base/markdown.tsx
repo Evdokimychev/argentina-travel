@@ -31,11 +31,29 @@ const STRIP_SECTION_TITLES = new Set([
 ]);
 // Разделы-заглушки «См. … в метаданных» — их тоже убираем.
 const STRIP_IF_PLACEHOLDER = new Set(["Рекомендации", "Предупреждения"]);
+const UNWRAP_SECTION_TITLES = new Set(["Текст"]);
 
 const KNOWN_SECTION_TITLES = [
   "Описание",
+  "Программа по дням",
+  "Логистика и перелёты",
+  "Логистика",
+  "Бюджет",
+  "Бюджет на человека (14 дней, без межконтинентального перелёта)",
+  "Когда ехать",
+  "Как выбрать между вариантами",
+  "Варианты маршрута",
+  "Варианты под интересы",
+  "Что взять с собой",
   "Что нужно",
+  "Что делать",
+  "Что учесть",
+  "Что посмотреть и чем заняться",
   "Что посмотреть и сделать",
+  "Что смотреть и делать",
+  "Немного фактов о названии",
+  "Билеты и деньги",
+  "Краткая информация",
   "Как добраться",
   "К чему ведёт",
   "Деньги за учёбу",
@@ -45,6 +63,7 @@ const KNOWN_SECTION_TITLES = [
   "Предупреждения",
   "Связанные объекты",
   "Источники",
+  "Текст",
 ];
 
 const KNOWN_SECTION_RE = new RegExp(
@@ -55,7 +74,7 @@ const KNOWN_SECTION_RE = new RegExp(
 );
 
 /** Импортные записи иногда приходят как `## Описание текст ## Факты ...` в одну строку. */
-function normalizeMarkdownSections(body: string): string {
+export function normalizeMarkdownSections(body: string): string {
   return body
     .replace(KNOWN_SECTION_RE, (_match, prefix, hashes, title) => {
       const before = prefix.trim() === "" ? "\n" : `${prefix}\n`;
@@ -76,6 +95,10 @@ export function stripRedundantSections(body: string): string {
     const title = heading.replace(/^##\s+/, "").trim();
     if (STRIP_SECTION_TITLES.has(title)) continue;
     if (STRIP_IF_PLACEHOLDER.has(title) && /в метаданных/i.test(content)) continue;
+    if (UNWRAP_SECTION_TITLES.has(title)) {
+      out += content;
+      continue;
+    }
     out += heading + content;
   }
   return out.trim();

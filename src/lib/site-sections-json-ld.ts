@@ -10,7 +10,6 @@ export const HOME_PRIMARY_SECTION_IDS = [
   "tours",
   "excursions",
   "guide",
-  "immigration",
   "journal",
 ] as const;
 
@@ -73,7 +72,6 @@ export const YANDEX_PRIORITY_HUB_PATHS = [
   "/tours",
   "/excursions",
   "/guide",
-  "/immigration",
   "/blog",
   "/faq",
   "/about",

@@ -25,6 +25,137 @@ export type ContactSubmissionStatus =
 
 export type AccountRoleDb = "tourist" | "organizer" | "admin";
 
+type DatabaseTable<Row, Insert, Update> = {
+  Row: Row;
+  Insert: Insert;
+  Update: Update;
+  Relationships: [];
+};
+
+type ContentSourceRow = {
+  id: string;
+  title: string;
+  authority: string;
+  url: string;
+  source_type: string;
+  jurisdiction: string | null;
+  language: string;
+  published_at: string | null;
+  source_updated_at: string | null;
+  checked_at: string;
+  accessed_at: string;
+  content_hash: string | null;
+  archive_reference: string | null;
+  trust_level: string;
+  status: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type KnowledgeClaimRow = {
+  id: string;
+  content_document_id: string;
+  section_id: string;
+  statement: string;
+  locale: string;
+  topic: string;
+  risk_level: string;
+  jurisdiction: string | null;
+  source_id: string;
+  effective_from: string | null;
+  effective_to: string | null;
+  last_verified_at: string;
+  next_review_at: string;
+  verified_by: string | null;
+  status: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type DynamicFactRow = {
+  id: string;
+  kind: string;
+  entity_id: string;
+  label: string;
+  value: number | null;
+  min_value: number | null;
+  max_value: number | null;
+  currency: string | null;
+  unit: string | null;
+  source_id: string;
+  observed_at: string;
+  verified_at: string;
+  expires_at: string;
+  fetch_method: string;
+  fallback: string | null;
+  status: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type ContentSourceLinkRow = {
+  content_document_id: string;
+  source_id: string;
+  section_id: string;
+  purpose: string;
+  is_primary: boolean;
+  created_at: string;
+};
+
+type EntityRelationRow = {
+  source_entity_id: string;
+  target_entity_id: string;
+  relation_type: string;
+  relevance_score: number;
+  editorial_priority: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type ContentWidgetRegistryRow = {
+  id: string;
+  type: string;
+  purpose: string;
+  owner: string;
+  allowed_content_types: string[];
+  required_data: Json;
+  source_requirements: Json;
+  loading_state: string;
+  empty_state: string;
+  error_state: string;
+  stale_state: string;
+  analytics_event: string;
+  accessibility_requirements: string;
+  performance_budget: Json;
+  schema_version: number;
+  status: string;
+  last_used_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type ContentWidgetUsageRow = {
+  content_document_id: string;
+  widget_id: string;
+  section_id: string;
+  config: Json;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type ContentMediaUsageRow = {
+  content_document_id: string;
+  media_asset_id: string;
+  role: string;
+  section_id: string;
+  created_at: string;
+};
+
 export interface Database {
   public: {
     Tables: {
@@ -2816,6 +2947,23 @@ export interface Database {
           tags: string[];
           role: string;
           manifest_synced: boolean;
+          original_url: string | null;
+          source_platform: string | null;
+          source_page_url: string | null;
+          creator: string | null;
+          creator_profile_url: string | null;
+          license: string | null;
+          license_url: string | null;
+          attribution_text: string | null;
+          accessed_at: string | null;
+          rights_verified_at: string | null;
+          rights_verified_by: string | null;
+          location_entity_id: string | null;
+          capture_date: string | null;
+          caption_ru: string | null;
+          focal_point: Json;
+          content_hash: string | null;
+          rights_status: string;
           created_by: string | null;
           updated_by: string | null;
           created_at: string;
@@ -2835,6 +2983,23 @@ export interface Database {
           tags?: string[];
           role?: string;
           manifest_synced?: boolean;
+          original_url?: string | null;
+          source_platform?: string | null;
+          source_page_url?: string | null;
+          creator?: string | null;
+          creator_profile_url?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          attribution_text?: string | null;
+          accessed_at?: string | null;
+          rights_verified_at?: string | null;
+          rights_verified_by?: string | null;
+          location_entity_id?: string | null;
+          capture_date?: string | null;
+          caption_ru?: string | null;
+          focal_point?: Json;
+          content_hash?: string | null;
+          rights_status?: string;
           created_by?: string | null;
           updated_by?: string | null;
           created_at?: string;
@@ -2854,6 +3019,23 @@ export interface Database {
           tags?: string[];
           role?: string;
           manifest_synced?: boolean;
+          original_url?: string | null;
+          source_platform?: string | null;
+          source_page_url?: string | null;
+          creator?: string | null;
+          creator_profile_url?: string | null;
+          license?: string | null;
+          license_url?: string | null;
+          attribution_text?: string | null;
+          accessed_at?: string | null;
+          rights_verified_at?: string | null;
+          rights_verified_by?: string | null;
+          location_entity_id?: string | null;
+          capture_date?: string | null;
+          caption_ru?: string | null;
+          focal_point?: Json;
+          content_hash?: string | null;
+          rights_status?: string;
           created_by?: string | null;
           updated_by?: string | null;
           created_at?: string;
@@ -2912,6 +3094,13 @@ export interface Database {
           seo: Json;
           published_at: string | null;
           scheduled_publish_at: string | null;
+          workflow_stage: string;
+          risk_level: string;
+          reviewer_id: string | null;
+          last_fact_checked_at: string | null;
+          next_review_at: string | null;
+          last_substantive_update_at: string | null;
+          schema_version: number;
           created_by: string | null;
           updated_by: string | null;
           row_version: number;
@@ -2929,6 +3118,13 @@ export interface Database {
           seo?: Json;
           published_at?: string | null;
           scheduled_publish_at?: string | null;
+          workflow_stage?: string;
+          risk_level?: string;
+          reviewer_id?: string | null;
+          last_fact_checked_at?: string | null;
+          next_review_at?: string | null;
+          last_substantive_update_at?: string | null;
+          schema_version?: number;
           created_by?: string | null;
           updated_by?: string | null;
           row_version?: number;
@@ -2946,6 +3142,13 @@ export interface Database {
           seo?: Json;
           published_at?: string | null;
           scheduled_publish_at?: string | null;
+          workflow_stage?: string;
+          risk_level?: string;
+          reviewer_id?: string | null;
+          last_fact_checked_at?: string | null;
+          next_review_at?: string | null;
+          last_substantive_update_at?: string | null;
+          schema_version?: number;
           created_by?: string | null;
           updated_by?: string | null;
           row_version?: number;
@@ -2954,6 +3157,46 @@ export interface Database {
         };
         Relationships: [];
       };
+      content_sources: DatabaseTable<
+        ContentSourceRow,
+        Partial<ContentSourceRow> & Pick<ContentSourceRow, "title" | "authority" | "url" | "source_type" | "checked_at">,
+        Partial<ContentSourceRow>
+      >;
+      content_source_links: DatabaseTable<
+        ContentSourceLinkRow,
+        Partial<ContentSourceLinkRow> & Pick<ContentSourceLinkRow, "content_document_id" | "source_id">,
+        Partial<ContentSourceLinkRow>
+      >;
+      knowledge_claims: DatabaseTable<
+        KnowledgeClaimRow,
+        Partial<KnowledgeClaimRow> & Pick<KnowledgeClaimRow, "content_document_id" | "statement" | "topic" | "source_id" | "last_verified_at" | "next_review_at">,
+        Partial<KnowledgeClaimRow>
+      >;
+      dynamic_facts: DatabaseTable<
+        DynamicFactRow,
+        Partial<DynamicFactRow> & Pick<DynamicFactRow, "kind" | "entity_id" | "label" | "source_id" | "observed_at" | "verified_at" | "expires_at">,
+        Partial<DynamicFactRow>
+      >;
+      entity_relations: DatabaseTable<
+        EntityRelationRow,
+        Partial<EntityRelationRow> & Pick<EntityRelationRow, "source_entity_id" | "target_entity_id" | "relation_type">,
+        Partial<EntityRelationRow>
+      >;
+      content_widget_registry: DatabaseTable<
+        ContentWidgetRegistryRow,
+        Partial<ContentWidgetRegistryRow> & Pick<ContentWidgetRegistryRow, "id" | "type" | "purpose" | "owner" | "loading_state" | "empty_state" | "error_state" | "stale_state" | "analytics_event" | "accessibility_requirements">,
+        Partial<ContentWidgetRegistryRow>
+      >;
+      content_widget_usages: DatabaseTable<
+        ContentWidgetUsageRow,
+        Partial<ContentWidgetUsageRow> & Pick<ContentWidgetUsageRow, "content_document_id" | "widget_id">,
+        Partial<ContentWidgetUsageRow>
+      >;
+      content_media_usages: DatabaseTable<
+        ContentMediaUsageRow,
+        Partial<ContentMediaUsageRow> & Pick<ContentMediaUsageRow, "content_document_id" | "media_asset_id" | "role">,
+        Partial<ContentMediaUsageRow>
+      >;
       content_revisions: {
         Row: {
           id: string;
@@ -4599,6 +4842,10 @@ export interface Database {
           published_at: string | null;
           rank: number;
         }[];
+      };
+      content_publication_gate: {
+        Args: { p_document_id: string };
+        Returns: Json;
       };
     };
     Enums: Record<string, never>;

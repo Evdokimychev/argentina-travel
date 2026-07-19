@@ -21,6 +21,31 @@ type ContentFreshnessResponse = {
     criticalCount: number;
     total: number;
   };
+  knowledgeBase: {
+    counts: Record<string, number>;
+    issues: Array<{ code: string; count: number }>;
+    criticalEntries: Array<{
+      id: string;
+      route: string;
+      title?: string;
+      issues?: Array<{ code: string }>;
+    }>;
+  };
+};
+
+const KB_ISSUE_LABELS: Record<string, string> = {
+  not_publication_ready: "не готово к публикации",
+  mixed_script_word: "смешение алфавитов",
+  non_russian_title: "заголовок не на русском",
+  non_russian_summary: "описание не на русском",
+  placeholder_content: "текст-заглушка",
+  missing_sensitive_source: "нет источника у чувствительного материала",
+  missing_primary_source: "нет первичного источника",
+  missing_sensitive_reviewer: "не назначен проверяющий",
+  verification_due: "истёк срок проверки",
+  missing_media_rights: "не подтверждены права на медиа",
+  thin_content: "слишком мало полезного текста",
+  missing_hero: "нет обложки",
 };
 
 const DOC_TYPE_LABELS: Record<ContentFreshnessDocType, string> = {
@@ -86,6 +111,60 @@ export default function ContentFreshnessView() {
             <p className="mt-2 font-heading text-2xl font-bold text-red-700">
               {data?.summary.criticalCount ?? 0}
             </p>
+          </div>
+        </section>
+
+        <section className={`${cabinetCardClass} space-y-5 p-5`}>
+          <div>
+            <h2 className="font-heading text-lg font-bold text-charcoal">Здоровье базы знаний</h2>
+            <p className="mt-1 text-sm text-slate">
+              Критичные записи автоматически исключаются из публичных страниц, поиска, карты и sitemap.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-4">
+            {[
+              ["Всего записей", data?.knowledgeBase.counts.total ?? 0],
+              ["В карантине", data?.knowledgeBase.counts.critical ?? 0],
+              ["Высокий приоритет", data?.knowledgeBase.counts.high ?? 0],
+              ["Не индексируются", data?.knowledgeBase.counts.notIndexable ?? 0],
+            ].map(([label, value]) => (
+              <div key={String(label)} className="rounded-2xl border border-gray-100 bg-surface-muted/60 p-4">
+                <p className="text-xs text-slate">{label}</p>
+                <p className="mt-1 font-heading text-xl font-bold text-charcoal">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-semibold text-charcoal">Основные причины карантина</h3>
+              <ul className="mt-3 space-y-2 text-sm">
+                {(data?.knowledgeBase.issues ?? []).slice(0, 10).map((issue) => (
+                  <li key={issue.code} className="flex items-center justify-between gap-4">
+                    <span className="text-slate">{KB_ISSUE_LABELS[issue.code] ?? issue.code}</span>
+                    <span className="rounded-full bg-red-50 px-2.5 py-1 font-medium text-red-700">
+                      {issue.count}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-charcoal">Первые записи в очереди</h3>
+              <ul className="mt-3 space-y-2 text-sm">
+                {(data?.knowledgeBase.criticalEntries ?? []).slice(0, 10).map((entry) => (
+                  <li key={entry.id} className="rounded-xl border border-gray-100 p-3">
+                    <a href={entry.route} target="_blank" rel="noreferrer" className="font-medium text-charcoal hover:text-sky">
+                      {entry.title || entry.id}
+                    </a>
+                    <p className="mt-1 text-xs text-slate">
+                      {(entry.issues ?? []).map((issue) => KB_ISSUE_LABELS[issue.code] ?? issue.code).join("; ")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 

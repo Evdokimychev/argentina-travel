@@ -18,6 +18,8 @@ export type SearchIndexItem = {
   description?: string;
   href: string;
   keywords?: string[];
+  /** Full body text for server-side indexing; removed from the public API payload. */
+  searchText?: string;
 };
 
 export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {

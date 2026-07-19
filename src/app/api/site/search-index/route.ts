@@ -8,7 +8,14 @@ export async function GET() {
     buildSiteSearchIndexServer(),
     fetchSiteNavigation(),
   ]);
+  const clientItems = items
+    .filter((item) => isPublicPathEnabled(item.href, navigation))
+    .map((item) => {
+      const clientItem = { ...item };
+      delete clientItem.searchText;
+      return clientItem;
+    });
   return NextResponse.json(
-    items.filter((item) => isPublicPathEnabled(item.href, navigation)),
+    clientItems,
   );
 }
