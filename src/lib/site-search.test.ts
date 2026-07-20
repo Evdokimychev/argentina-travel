@@ -19,4 +19,29 @@ describe("searchSiteIndex", () => {
     expect(groups[0]?.type).toBe("place");
     expect(groups[0]?.items[0]?.href).toBe("/places/iguazu-falls");
   });
+
+  it("removes visually duplicate results while preserving the best-ranked item", () => {
+    const groups = searchSiteIndex(
+      [
+        {
+          id: "blog-food-malbec",
+          type: "blog",
+          title: "Malbec в Мендосе: сорта, bodega и дегустации",
+          href: "/blog/food-malbec",
+          keywords: ["Мендоса", "Malbec"],
+        },
+        {
+          id: "blog-wine-malbec",
+          type: "blog",
+          title: "Malbec в Мендосе: сорта, bodega и дегустации",
+          href: "/blog/wine-malbec",
+          keywords: ["Мендоса"],
+        },
+      ],
+      "Мендоса"
+    );
+
+    expect(groups[0]?.items).toHaveLength(1);
+    expect(groups[0]?.items[0]?.href).toBe("/blog/food-malbec");
+  });
 });

@@ -57,7 +57,7 @@ describe("Places catalog integrity", () => {
 
   it("never renders the logo placeholder as a place cover", () => {
     for (const place of PLACES_SEED) {
-      expect(getPlaceCoverImage(place.slug), place.slug).not.toBe(MEDIA_LOGO_FALLBACK);
+      expect(place.coverImage, place.slug).not.toBe(MEDIA_LOGO_FALLBACK);
     }
   });
 

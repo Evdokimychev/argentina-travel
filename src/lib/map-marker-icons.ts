@@ -9,6 +9,7 @@ const KIND_ICON_PATHS: Partial<Record<MapMarkerKind, string>> = {
   national_park: `<path d="M10 10v.2A3 3 0 0 1 8.8 13H5a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2"/><path d="M14 10v.2A3 3 0 0 0 15.2 13H19a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2h-2"/><path d="M12 22v-7l-2-2-2 2v7"/><path d="M12 11V3"/><path d="M8 7h8"/>`,
   attraction: `<line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>`,
   tour: `<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>`,
+  excursion: `<path d="M4 16.5c1.5-2 3-3 5-3.5l2-5 3 1 1 4c2 .5 3.5 1.7 5 3.5"/><path d="M6 19h12"/><circle cx="9" cy="5" r="2"/>`,
   airport: `<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.2 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>`,
   transport: `<path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.1-.8 0-1.2A6 6 0 0 0 16 9H4a6 6 0 0 0-3.8 5c-.1.4-.1.8 0 1.2.3 1.1.8 2.8.8 2.8h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/>`,
 };
@@ -18,6 +19,7 @@ const MARKER_KINDS_WITH_ICONS: MapMarkerKind[] = [
   "national_park",
   "attraction",
   "tour",
+  "excursion",
   "airport",
   "transport",
 ];

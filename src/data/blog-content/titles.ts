@@ -62,7 +62,9 @@ export function buildBlogArticleTitle(category: BlogContentCategory, topic: stri
     return "Whale watching в Аргентине: Valdés, сезоны и бронирование";
   }
   if (topic === "malbec") {
-    return "Malbec в Мендосе: сорта, bodega и дегустации";
+    return category === "food"
+      ? "Malbec к аргентинской кухне: сорта, сочетания и подача"
+      : "Malbec в Мендосе: сорта, bodega и дегустации";
   }
   if (topic === "asado") {
     return "Asado в Аргентине: как заказать, куда идти и сколько ждать";

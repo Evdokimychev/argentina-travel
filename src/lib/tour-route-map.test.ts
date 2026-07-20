@@ -4,6 +4,7 @@ import {
   clusterRoutePointsByScreenDistance,
   formatRouteMapClusterLabel,
   formatRoutePointDisplayName,
+  ROUTE_MAP_POPUP_OPTIONS,
 } from "@/lib/tour-route-map";
 
 describe("formatRoutePointDisplayName", () => {
@@ -60,6 +61,11 @@ describe("buildRouteMapPopupHtml", () => {
     expect(html).toContain('class="route-map-popup-photo"');
     expect(html).toContain("https://cf.youtravel.me/photos/sample.jpg");
     expect(html).toContain("Старт тура");
+  });
+
+  it("keeps popup cards wide enough to remain visible on the map", () => {
+    expect(ROUTE_MAP_POPUP_OPTIONS.minWidth).toBeGreaterThanOrEqual(168);
+    expect(ROUTE_MAP_POPUP_OPTIONS.keepInView).toBe(true);
   });
 });
 

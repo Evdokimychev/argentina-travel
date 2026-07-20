@@ -31,8 +31,8 @@ export const MAP_OVERLAY_LAYERS: Record<MapOverlayLayerId, MapOverlayLayerMeta> 
   },
   contours: {
     id: "contours",
-    label: "Изолинии",
-    description: "Топографический слой с высотами поверх текущей карты",
+    label: "Топокарта",
+    description: "Дороги, рельеф и линии высот поверх текущей подложки",
     attribution: "© OpenTopoMap · OpenStreetMap",
   },
   labels: {

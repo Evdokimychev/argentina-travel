@@ -19,8 +19,9 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
     const coordKey = `${city.lat.toFixed(3)}:${city.lng.toFixed(3)}`;
     if (coveredCoords.has(coordKey)) continue;
 
-    const kbEntry = getEntry(city.slug);
-    const href = kbEntry ? `/baza-znaniy/${city.slug}` : "/places";
+    const kbEntryId = city.knowledgeBaseId ?? city.slug;
+    const kbEntry = getEntry(kbEntryId);
+    const href = kbEntry ? `/baza-znaniy/${kbEntryId}` : "/places";
     objects.push({
       id: `city:${city.slug}`,
       slug: city.slug,
@@ -32,6 +33,17 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
       region: city.macroRegionRu,
       href,
       meta: city.provinceRu,
+      category: "city",
+      popularity: 30,
+      importance: 68,
+      featured: false,
+      editorialPriority: 68,
+      qualityScore: kbEntry ? 84 : 74,
+      source: "Редакционный справочник городов GoArgentina",
+      minZoom: 6,
+      maxZoom: 18,
+      tags: ["city", city.nameRu, ...city.aliases],
+      status: "published",
       relatedArticles: kbEntry ? [{ title: city.nameRu, href }] : [],
     });
   }

@@ -71,7 +71,11 @@ type Props = {
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
   thematic: MapThematicState;
+  enableThematicInteractions?: boolean;
+  onThematicLayerLoadState?: (layerId: MapThematicLayerId, loading: boolean) => void;
   onSelect: (object: MapObject | null) => void;
+  selectedFlightDestinationIata?: string | null;
+  onSelectFlightDestination?: (iata: string | null) => void;
   userLocation?: {
     latitude: number;
     longitude: number;
@@ -94,6 +98,9 @@ function objectsToGeoJson(objects: MapObject[], selectedId: string | null): Feat
         title: obj.title,
         color: MAP_KIND_COLORS[obj.kind] ?? "#2563eb",
         selected: obj.id === selectedId ? 1 : 0,
+        featured: obj.featured ? 1 : 0,
+        importance: obj.importance ?? 0,
+        minZoom: obj.minZoom ?? (obj.featured ? 3 : 7),
       },
     })),
   };
@@ -144,7 +151,10 @@ function buildArcCoordinates(
   return coords;
 }
 
-function flightArcsToGeoJson(selected: MapObject | undefined): FeatureCollection<LineString> {
+function flightArcsToGeoJson(
+  selected: MapObject | undefined,
+  selectedDestinationIata: string | null = null,
+): FeatureCollection<LineString> {
   if (!selected || selected.kind !== "airport" || !selected.flightDestinations?.length) {
     return { type: "FeatureCollection", features: [] };
   }
@@ -159,7 +169,12 @@ function flightArcsToGeoJson(selected: MapObject | undefined): FeatureCollection
           [dest.longitude, dest.latitude]
         ),
       },
-      properties: { iata: dest.iata, city: dest.city },
+      properties: {
+        iata: dest.iata,
+        city: dest.city,
+        selected: dest.iata === selectedDestinationIata ? 1 : 0,
+        dimmed: selectedDestinationIata && dest.iata !== selectedDestinationIata ? 1 : 0,
+      },
     })),
   };
 }
@@ -172,7 +187,11 @@ export default function ArgentinaMapLibreCanvas({
   theme,
   overlays,
   thematic,
+  enableThematicInteractions = true,
+  onThematicLayerLoadState,
   onSelect,
+  selectedFlightDestinationIata = null,
+  onSelectFlightDestination,
   userLocation = null,
   className,
   view = ARGENTINA_MAP_VIEW,
@@ -181,16 +200,20 @@ export default function ArgentinaMapLibreCanvas({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const userLocationMarkerRef = useRef<maplibregl.Marker | null>(null);
   const onSelectRef = useRef(onSelect);
+  const onSelectFlightDestinationRef = useRef(onSelectFlightDestination);
   const viewRef = useRef(view);
   const objectsRef = useRef(objects);
   const routesRef = useRef(routes);
   const activeKindsRef = useRef(activeKinds);
   const selectedIdRef = useRef(selectedId);
+  const selectedFlightDestinationIataRef = useRef(selectedFlightDestinationIata);
   const themeRef = useRef(theme);
   const overlaysRef = useRef(overlays);
   const thematicRef = useRef(thematic);
   const thematicCleanupRef = useRef<(() => void) | null>(null);
   const loadedThematicRef = useRef<Set<MapThematicLayerId>>(new Set());
+  const loadingThematicRef = useRef<Set<MapThematicLayerId>>(new Set());
+  const onThematicLayerLoadStateRef = useRef(onThematicLayerLoadState);
   const terrainControlRef = useRef<maplibregl.TerrainControl | null>(null);
   const didFitBoundsRef = useRef(false);
   const layersReadyRef = useRef(false);
@@ -200,13 +223,16 @@ export default function ArgentinaMapLibreCanvas({
   const lastArcsKeyRef = useRef<string | null>(null);
 
   onSelectRef.current = onSelect;
+  onSelectFlightDestinationRef.current = onSelectFlightDestination;
   objectsRef.current = objects;
   routesRef.current = routes;
   activeKindsRef.current = activeKinds;
   selectedIdRef.current = selectedId;
+  selectedFlightDestinationIataRef.current = selectedFlightDestinationIata;
   themeRef.current = theme;
   overlaysRef.current = overlays;
   thematicRef.current = thematic;
+  onThematicLayerLoadStateRef.current = onThematicLayerLoadState;
   viewRef.current = view;
 
   const applyLayerData = useCallback((map: maplibregl.Map) => {
@@ -237,10 +263,14 @@ export default function ArgentinaMapLibreCanvas({
     const flightArcsSource = map.getSource("flight-arcs") as maplibregl.GeoJSONSource | undefined;
     if (flightArcsSource) {
       const selectedObject = objectsRef.current.find((obj) => obj.id === selectedIdRef.current);
-      const arcsKey = selectedObject?.kind === "airport" ? selectedObject.id : "";
+      const arcsKey = selectedObject?.kind === "airport"
+        ? `${selectedObject.id}:${selectedFlightDestinationIataRef.current ?? ""}`
+        : "";
       if (arcsKey !== lastArcsKeyRef.current) {
         lastArcsKeyRef.current = arcsKey;
-        flightArcsSource.setData(flightArcsToGeoJson(selectedObject));
+        flightArcsSource.setData(
+          flightArcsToGeoJson(selectedObject, selectedFlightDestinationIataRef.current),
+        );
       }
     }
 
@@ -327,12 +357,28 @@ export default function ArgentinaMapLibreCanvas({
   }, []);
 
   const syncActiveThematicLayers = useCallback(async (map: maplibregl.Map, state: MapThematicState) => {
-    for (const layerId of MAP_THEMATIC_LAYER_IDS) {
-      if (!state[layerId]) continue;
-      if (loadedThematicRef.current.has(layerId)) continue;
-      const ok = await ensureThematicLayerData(map, layerId);
-      if (ok) loadedThematicRef.current.add(layerId);
-    }
+    const pending = MAP_THEMATIC_LAYER_IDS.filter(
+      (layerId) =>
+        state[layerId] &&
+        !loadedThematicRef.current.has(layerId) &&
+        !loadingThematicRef.current.has(layerId),
+    );
+    await Promise.all(
+      pending.map(async (layerId) => {
+        loadingThematicRef.current.add(layerId);
+        onThematicLayerLoadStateRef.current?.(layerId, true);
+        try {
+          const ok = await ensureThematicLayerData(map, layerId);
+          if (ok) loadedThematicRef.current.add(layerId);
+        } catch {
+          // Слой остаётся выключенным; повторное включение даст пользователю
+          // возможность загрузить его снова после временной сетевой ошибки.
+        } finally {
+          loadingThematicRef.current.delete(layerId);
+          onThematicLayerLoadStateRef.current?.(layerId, false);
+        }
+      }),
+    );
   }, []);
 
   useEffect(() => {
@@ -340,6 +386,7 @@ export default function ArgentinaMapLibreCanvas({
 
     const initialTheme = themeRef.current;
     const loadedThematic = loadedThematicRef.current;
+    const loadingThematic = loadingThematicRef.current;
     containerRef.current.style.backgroundColor = MAP_BASEMAP_THEMES[initialTheme].backgroundColor;
 
     const map = new maplibregl.Map({
@@ -426,6 +473,41 @@ export default function ArgentinaMapLibreCanvas({
       });
     };
 
+    // Крупные ориентиры видны на масштабе страны, локальные места раскрываются
+    // при приближении. Выбранный объект остаётся видимым независимо от масштаба.
+    const syncSemanticMarkerVisibility = () => {
+      const zoom = map.getZoom();
+      const visibleAtZoom: maplibregl.FilterSpecification = [
+        "all",
+        ["!", ["has", "point_count"]],
+        [
+          "any",
+          ["==", ["get", "selected"], 1],
+          ["<=", ["get", "minZoom"], zoom],
+        ],
+      ];
+      if (map.getLayer("object-markers-dot")) {
+        map.setFilter("object-markers-dot", visibleAtZoom);
+      }
+      if (map.getLayer("unclustered-marker")) {
+        map.setFilter("unclustered-marker", visibleAtZoom);
+      }
+      if (map.getLayer("featured-object-labels")) {
+        map.setFilter("featured-object-labels", [
+          "all",
+          ["!", ["has", "point_count"]],
+          ["==", ["get", "featured"], 1],
+          [
+            "any",
+            ["==", ["get", "selected"], 1],
+            ["<=", ["get", "minZoom"], zoom],
+          ],
+        ]);
+      }
+    };
+
+    map.on("zoomend", syncSemanticMarkerVisibility);
+
     map.on("load", () => {
       for (const themeId of MAP_BASEMAP_THEME_IDS) {
         const themeConfig = MAP_BASEMAP_THEMES[themeId];
@@ -509,7 +591,9 @@ export default function ArgentinaMapLibreCanvas({
 
       installThematicLayerShells(map);
       applyThematicLayerVisibility(map, thematicRef.current);
-      thematicCleanupRef.current = bindThematicLayerInteractions(map, () => thematicRef.current);
+      if (enableThematicInteractions) {
+        thematicCleanupRef.current = bindThematicLayerInteractions(map, () => thematicRef.current);
+      }
       void syncActiveThematicLayers(map, thematicRef.current);
 
       map.addSource("flight-arcs", { type: "geojson", data: flightArcsToGeoJson(undefined) });
@@ -518,12 +602,29 @@ export default function ArgentinaMapLibreCanvas({
         type: "line",
         source: "flight-arcs",
         paint: {
-          "line-color": "#0ea5e9",
-          "line-width": 2,
-          "line-opacity": 0.75,
+          "line-color": ["case", ["==", ["get", "selected"], 1], "#0369a1", "#0ea5e9"],
+          "line-width": ["case", ["==", ["get", "selected"], 1], 4, 2],
+          "line-opacity": [
+            "case",
+            ["==", ["get", "selected"], 1],
+            1,
+            ["==", ["get", "dimmed"], 1],
+            0.25,
+            0.75,
+          ],
           "line-dasharray": [1.5, 1.5],
         },
         layout: { "line-cap": "round" },
+      });
+      map.on("click", "flight-arcs-line", (event) => {
+        const iata = event.features?.[0]?.properties?.iata;
+        if (typeof iata === "string") onSelectFlightDestinationRef.current?.(iata);
+      });
+      map.on("mouseenter", "flight-arcs-line", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "flight-arcs-line", () => {
+        map.getCanvas().style.cursor = "";
       });
 
       map.addSource("routes", { type: "geojson", data: routesToGeoJson([]) });
@@ -569,7 +670,14 @@ export default function ArgentinaMapLibreCanvas({
         filter: ["!", ["has", "point_count"]],
         paint: {
           "circle-color": ["get", "color"],
-          "circle-radius": ["case", ["==", ["get", "selected"], 1], 11, 8],
+          "circle-radius": [
+            "case",
+            ["==", ["get", "selected"], 1],
+            12,
+            ["==", ["get", "featured"], 1],
+            9,
+            6.5,
+          ],
           "circle-stroke-width": 2.5,
           "circle-stroke-color": "#ffffff",
           "circle-opacity": 0.92,
@@ -619,6 +727,7 @@ export default function ArgentinaMapLibreCanvas({
 
       bindClusterInteractions();
       bindMarkerInteractions("object-markers-dot");
+      syncSemanticMarkerVisibility();
       layersReadyRef.current = true;
       setMapLayersReady(true);
       applyLayerData(map);
@@ -638,13 +747,49 @@ export default function ArgentinaMapLibreCanvas({
                 ["get", "kind"],
                 ["case", ["==", ["get", "selected"], 1], "-selected", ""],
               ],
-              "icon-size": 0.72,
+              "icon-size": [
+                "case",
+                ["==", ["get", "selected"], 1],
+                0.86,
+                ["==", ["get", "featured"], 1],
+                0.76,
+                0.6,
+              ],
               "icon-allow-overlap": true,
               "icon-anchor": "bottom",
               "icon-offset": [0, 4],
+              "symbol-sort-key": ["get", "importance"],
             },
           });
           bindMarkerInteractions("unclustered-marker");
+          map.addLayer({
+            id: "featured-object-labels",
+            type: "symbol",
+            source: "objects",
+            minzoom: 4.5,
+            filter: [
+              "all",
+              ["!", ["has", "point_count"]],
+              ["==", ["get", "featured"], 1],
+            ],
+            layout: {
+              "text-field": ["get", "title"],
+              "text-font": [...MAP_CLUSTER_TEXT_FONT],
+              "text-size": 11,
+              "text-offset": [0, 1.15],
+              "text-anchor": "top",
+              "text-max-width": 12,
+              "text-allow-overlap": false,
+              "symbol-sort-key": ["get", "importance"],
+            },
+            paint: {
+              "text-color": "#0f172a",
+              "text-halo-color": "rgba(255,255,255,0.96)",
+              "text-halo-width": 2,
+            },
+          });
+          bindMarkerInteractions("featured-object-labels");
+          syncSemanticMarkerVisibility();
           if (map.getLayer("object-markers-dot")) {
             map.setPaintProperty("object-markers-dot", "circle-opacity", 0);
           }
@@ -666,6 +811,7 @@ export default function ArgentinaMapLibreCanvas({
       thematicCleanupRef.current?.();
       thematicCleanupRef.current = null;
       loadedThematic.clear();
+      loadingThematic.clear();
       map.remove();
       mapRef.current = null;
       layersReadyRef.current = false;
@@ -675,7 +821,7 @@ export default function ArgentinaMapLibreCanvas({
       lastArcsKeyRef.current = null;
       didFitBoundsRef.current = false;
     };
-  }, [applyLayerData, applyMapOverlays, syncActiveThematicLayers]);
+  }, [applyLayerData, applyMapOverlays, enableThematicInteractions, syncActiveThematicLayers]);
 
   useLayoutEffect(() => {
     const map = mapRef.current;
@@ -727,10 +873,13 @@ export default function ArgentinaMapLibreCanvas({
     if (!obj) return;
 
     if (obj.kind === "airport" && obj.flightDestinations?.length) {
-      // Показать аэропорт вместе со всеми направлениями перелётов
+      const selectedDestination = selectedFlightDestinationIata
+        ? obj.flightDestinations.find((destination) => destination.iata === selectedFlightDestinationIata)
+        : null;
+      // После выбора линии показываем пару аэропортов; до выбора — всю сеть из точки.
       const bounds = new maplibregl.LngLatBounds();
       bounds.extend([obj.longitude, obj.latitude]);
-      for (const dest of obj.flightDestinations) {
+      for (const dest of selectedDestination ? [selectedDestination] : obj.flightDestinations) {
         bounds.extend([dest.longitude, dest.latitude]);
       }
       map.fitBounds(bounds, {
@@ -746,7 +895,7 @@ export default function ArgentinaMapLibreCanvas({
       zoom: Math.max(map.getZoom(), 9),
       essential: true,
     });
-  }, [selectedId, objects]);
+  }, [selectedId, selectedFlightDestinationIata, objects]);
 
   return (
     <div

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   trackSearchResultClick,
   trackSearchSubmit,
@@ -33,6 +32,7 @@ import { SITE_SEARCH_OPEN_EVENT } from "@/lib/site-search-open";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
 import {
   SEARCH_DEBOUNCE_MS,
+  dedupeSearchHits,
   fetchSiteSearch,
   type SearchHit,
   type SearchSource,
@@ -44,6 +44,10 @@ import {
   type SearchResultType,
 } from "@/lib/site-search-schema";
 import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
+import {
+  navigateAfterDialogClose,
+  useDialogBackClose,
+} from "@/hooks/useDialogBackClose";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   tour: Plane,
@@ -163,7 +167,6 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
 }
 
 export default function SiteSearch({ initialOpen = false }: { initialOpen?: boolean }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState<SearchResultType | "all">("all");
@@ -295,7 +298,7 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
 
   const results: SearchResultGroup[] = useMemo(() => {
     if (!hasQuery) return [];
-    if (apiHits !== null) return groupHitsByKind(apiHits);
+    if (apiHits !== null) return groupHitsByKind(dedupeSearchHits(apiHits));
     return fallbackResults;
   }, [apiHits, fallbackResults, hasQuery]);
 
@@ -330,6 +333,8 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
     }
   }, []);
 
+  useDialogBackClose(open, handleOpenChange);
+
   function handleSelect(href: string, item?: SearchResultItem, position?: number) {
     if (item && position != null) {
       trackSearchResultClick({
@@ -341,12 +346,10 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
       });
     }
 
-    setOpen(false);
-    setQuery("");
-    setKindFilter("all");
-    setApiHits(null);
-    setActiveIndex(-1);
-    router.push(href);
+    navigateAfterDialogClose(
+      () => window.location.assign(href),
+      () => handleOpenChange(false),
+    );
   }
 
   function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -572,7 +575,10 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
               ) : null}
               <Link
                 href={`/tours?query=${encodeURIComponent(trimmedQuery)}`}
-                onClick={() => handleOpenChange(false)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleSelect(`/tours?query=${encodeURIComponent(trimmedQuery)}`);
+                }}
                 className="inline-flex min-h-11 items-center font-medium text-sky hover:underline"
               >
                 Показать туры в каталоге →

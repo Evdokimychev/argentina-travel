@@ -3,6 +3,9 @@ import { executeSiteSearch } from "@/lib/search/search-query";
 import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
+import { filterSearchHitsByPublicCatalog } from "@/lib/search/public-catalog-results";
 
 export async function GET(request: Request) {
   const startedAt = Date.now();
@@ -19,16 +22,26 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
   }
 
-  const [payload, navigation] = await Promise.all([
+  const [payload, navigation, tours, excursionsResult] = await Promise.all([
     executeSiteSearch(q, {
       kind,
       limit: Number.isFinite(limit) ? limit : undefined,
     }),
     fetchSiteNavigation(),
+    fetchMarketplaceTours(),
+    fetchExcursionsServer({ pageSize: 500 }).catch(() => ({ items: [], cities: [] })),
   ]);
+  const currentCatalogResults = filterSearchHitsByPublicCatalog(payload.results, {
+    tours: new Set(tours.map((tour) => `/tours/${tour.slug}`)),
+    excursions: new Set(
+      excursionsResult.items.map((excursion) => `/excursions/${excursion.slug}`),
+    ),
+  });
   const visiblePayload = {
     ...payload,
-    results: payload.results.filter((result) => isPublicPathEnabled(result.url, navigation)),
+    results: currentCatalogResults.filter((result) =>
+      isPublicPathEnabled(result.url, navigation),
+    ),
   };
 
   const tookMs = payload.tookMs ?? Date.now() - startedAt;

@@ -48,6 +48,7 @@ type Props = {
   onThemeChange: (theme: MapBasemapThemeId) => void;
   overlays: MapOverlayState;
   onToggleOverlay: (layerId: MapOverlayLayerId) => void;
+  onActivateTerrainPreset: () => void;
   className?: string;
 };
 
@@ -60,6 +61,7 @@ export default function MapStyleLayersControl({
   onThemeChange,
   overlays,
   onToggleOverlay,
+  onActivateTerrainPreset,
   className,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -84,6 +86,7 @@ export default function MapStyleLayersControl({
   }, [open]);
 
   const activeOverlaysCount = MAP_OVERLAY_LAYER_IDS.filter((id) => overlays[id]).length;
+  const terrainPresetActive = theme === "nature" && overlays.hillshade;
 
   return (
     <div ref={rootRef} className={cn("flex flex-col items-end", className)}>
@@ -109,10 +112,10 @@ export default function MapStyleLayersControl({
       </button>
 
       {open ? (
-        <div className="mt-2 w-[228px] rounded-2xl border border-white/60 bg-white/95 p-3 shadow-elevated backdrop-blur-md">
+        <div className="mt-2 max-h-[min(72vh,560px)] w-[280px] overflow-y-auto rounded-2xl border border-white/60 bg-white/95 p-3 shadow-elevated backdrop-blur-md md:max-h-[calc(100dvh-390px)]">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-slate">
-              Стиль карты
+              Вид карты
             </span>
             <button
               type="button"
@@ -124,7 +127,29 @@ export default function MapStyleLayersControl({
             </button>
           </div>
 
-          <div className="mt-1.5 grid grid-cols-5 gap-1">
+          <button
+            type="button"
+            onClick={onActivateTerrainPreset}
+            className={cn(
+              "mt-2 flex w-full items-center gap-2 rounded-xl border px-2.5 py-2 text-left transition",
+              terrainPresetActive
+                ? "border-emerald-500/40 bg-emerald-50 text-emerald-900"
+                : "border-gray-200 bg-white text-charcoal hover:border-emerald-400/50",
+            )}
+            aria-pressed={terrainPresetActive}
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+              <Mountain className="h-4 w-4" aria-hidden />
+            </span>
+            <span>
+              <span className="block text-[11px] font-bold">Горы и высоты</span>
+              <span className="block text-[9px] leading-snug text-slate">
+                Топографическая карта и тени рельефа одним нажатием
+              </span>
+            </span>
+          </button>
+
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
             {MAP_BASEMAP_THEME_IDS.map((themeId) => {
               const meta = MAP_BASEMAP_THEMES[themeId];
               const Icon = THEME_ICONS[themeId];
@@ -136,15 +161,15 @@ export default function MapStyleLayersControl({
                   title={`${meta.label} — ${meta.description}`}
                   onClick={() => onThemeChange(themeId)}
                   className={cn(
-                    "flex flex-col items-center gap-0.5 rounded-lg border px-1 py-1.5 transition",
+                    "flex items-center gap-2 rounded-lg border px-2 py-2 text-left transition",
                     active
                       ? "border-sky/40 bg-sky text-white shadow-sm"
                       : "border-gray-200/80 bg-white text-charcoal hover:border-sky/40 hover:text-sky"
                   )}
                   aria-pressed={active}
                 >
-                  <Icon className="h-3.5 w-3.5" aria-hidden />
-                  <span className="text-[8px] font-semibold leading-none">{meta.label}</span>
+                  <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                  <span className="text-[10px] font-semibold leading-none">{meta.label}</span>
                 </button>
               );
             })}
@@ -163,15 +188,20 @@ export default function MapStyleLayersControl({
                   title={layer.description}
                   onClick={() => onToggleOverlay(layerId)}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-[11px] font-semibold transition",
+                    "flex w-full items-start gap-2 rounded-lg border px-2 py-2 text-left text-[11px] font-semibold transition",
                     active
                       ? "border-emerald-500/40 bg-emerald-50 text-emerald-800"
                       : "border-gray-200/80 bg-white text-charcoal hover:border-emerald-400/40 hover:text-emerald-700"
                   )}
                   aria-pressed={active}
                 >
-                  <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  <span className="flex-1">{layer.label}</span>
+                  <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block">{layer.label}</span>
+                    <span className="mt-0.5 block text-[9px] font-normal leading-snug text-slate">
+                      {layer.description}
+                    </span>
+                  </span>
                   <span
                     className={cn(
                       "h-3.5 w-6 rounded-full transition",

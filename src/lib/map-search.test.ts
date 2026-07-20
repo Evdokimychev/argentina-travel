@@ -37,6 +37,17 @@ const sampleObjects: MapObject[] = [
     href: "/tours/patagonia-tour",
     meta: "Барилоче — Калафате",
   },
+  {
+    id: "excursion:1",
+    slug: "buenos-aires-walk",
+    kind: "excursion",
+    title: "Прогулка по Буэнос-Айресу",
+    region: "Центр и Пампа",
+    latitude: -34.6037,
+    longitude: -58.3816,
+    href: "/excursions/buenos-aires-walk",
+    meta: "Буэнос-Айрес",
+  },
 ];
 
 describe("map-search", () => {
@@ -51,7 +62,8 @@ describe("map-search", () => {
   });
 
   it("matches category labels", () => {
-    expect(findBestMapObjectMatch(sampleObjects, "экскурсии")?.kind).toBe("tour");
+    expect(findBestMapObjectMatch(sampleObjects, "туры")?.kind).toBe("tour");
+    expect(findBestMapObjectMatch(sampleObjects, "экскурсии")?.kind).toBe("excursion");
   });
 
   it("matches editorial tags that are not repeated in the title", () => {

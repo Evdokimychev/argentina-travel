@@ -14,6 +14,8 @@ export const PLACE_COVER_FALLBACK_MAP: Record<string, string> = {
   // Временная привязка обложки к донору того же региона/типа,
   // пока у объекта нет собственных фото (заменяется реальными снимками позже).
   "lujan": "buenos-aires",
+  // В манифесте фото Тревелина пока привязаны к исходному slug Argentina.travel.
+  "trevelin": "trevelin-el-pueblo-del-molino",
   "mar-de-las-pampas": "mar-del-plata",
   "necochea": "mar-del-plata",
   "pinamar": "mar-del-plata",

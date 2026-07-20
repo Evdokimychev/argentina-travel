@@ -10,7 +10,8 @@ export interface RuUrlDecision {
     | "search_results"
     | "missing_self_canonical"
     | "unstable_partner_route"
-    | "duplicate_content";
+    | "duplicate_content"
+    | "editorial_quarantine";
 }
 
 export interface RuPublicationCandidate {
@@ -44,6 +45,12 @@ export interface RuPublicationEvaluation {
  * documents and knowledge-base entries belongs to their source repositories.
  */
 export const RU_URL_DECISIONS: readonly RuUrlDecision[] = [
+  {
+    path: "/immigration",
+    match: "prefix",
+    disposition: "noindex",
+    reason: "editorial_quarantine",
+  },
   {
     path: "/baza-znaniy/ciudad-de-salta",
     match: "exact",

@@ -10,8 +10,10 @@ import {
   Share2,
   SlidersHorizontal,
   X,
+  Loader2,
 } from "lucide-react";
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
+import MapDiscoveryPresets from "@/components/map/MapDiscoveryPresets";
 import MapLegend from "@/components/map/MapLegend";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
 import {
@@ -25,7 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { MapSearchSuggestion } from "@/lib/map-search";
-import type { MapMarkerKind } from "@/lib/map-types";
+import type { MapDiscoveryMode, MapMarkerKind } from "@/lib/map-types";
 
 type Props = {
   objectCount: number;
@@ -37,6 +39,8 @@ type Props = {
   suggestions: MapSearchSuggestion[];
   onSelectSuggestion: (id: string) => void;
   activeKinds: MapMarkerKind[];
+  discoveryMode: MapDiscoveryMode;
+  onDiscoveryModeChange: (mode: MapDiscoveryMode) => void;
   onToggleKind: (kind: MapMarkerKind) => void;
   onSelectAllKinds: () => void;
   onClearAllKinds: () => void;
@@ -54,6 +58,8 @@ export default function MapControlsPanel({
   suggestions,
   onSelectSuggestion,
   activeKinds,
+  discoveryMode,
+  onDiscoveryModeChange,
   onToggleKind,
   onSelectAllKinds,
   onClearAllKinds,
@@ -85,16 +91,18 @@ export default function MapControlsPanel({
 
   return (
     <>
+      <h1 className="sr-only">Интерактивная карта Аргентины</h1>
       <div className="rounded-2xl border border-white/60 bg-white/92 shadow-md backdrop-blur-md md:hidden">
         <div className="flex min-h-14 items-center gap-1.5 px-2 py-1.5">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Map className="h-4 w-4" aria-hidden />
           </span>
           <div className="min-w-0 flex-1">
-            <h1 className="truncate font-display text-sm font-bold leading-tight text-charcoal">
+            <div className="truncate font-display text-sm font-bold leading-tight text-charcoal">
               Карта Аргентины
-            </h1>
-            <p className="truncate text-[11px] text-slate" aria-live="polite">
+            </div>
+            <p className="flex items-center gap-1 truncate text-[11px] text-slate" aria-live="polite">
+              {loading ? <Loader2 className="h-3 w-3 animate-spin" aria-hidden /> : null}
               {loading
                 ? "Обновляем карту…"
                 : activeKinds.length === 0
@@ -139,10 +147,11 @@ export default function MapControlsPanel({
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            <h1 className="font-display text-sm font-bold leading-tight text-charcoal sm:text-base">
+            <div className="font-display text-sm font-bold leading-tight text-charcoal sm:text-base">
               Карта Аргентины
-            </h1>
-            <span className="text-[11px] text-slate">
+            </div>
+            <span className="inline-flex items-center gap-1 text-[11px] text-slate" aria-live="polite">
+              {loading ? <Loader2 className="h-3 w-3 animate-spin" aria-hidden /> : null}
               {loading ? "обновление…" : activeKinds.length === 0 ? "метки скрыты" : `${objectCount} на карте`}
             </span>
           </div>
@@ -216,17 +225,25 @@ export default function MapControlsPanel({
             <span className="mx-1 inline-flex h-4 w-4 items-center justify-center rounded bg-sky/10 align-middle text-sky">▣</span>
             у правого края карты.
           </p>
+          <div className="border-t border-gray-100 pt-2">
+            <p className="mb-2 text-[11px] font-semibold text-charcoal">Точный выбор категорий</p>
+            <MapCategoryFilters
+              activeKinds={activeKinds}
+              onToggle={onToggleKind}
+              onSelectAll={onSelectAllKinds}
+              onClearAll={onClearAllKinds}
+              onReset={onResetKinds}
+              compact
+            />
+          </div>
         </div>
       ) : null}
 
-      <div className="border-t border-gray-100/80 px-3 py-2 sm:px-3.5">
-        <MapCategoryFilters
-          activeKinds={activeKinds}
-          onToggle={onToggleKind}
-          onSelectAll={onSelectAllKinds}
-          onClearAll={onClearAllKinds}
-          onReset={onResetKinds}
-          compact
+      <div className="border-t border-gray-100/80 px-3 pb-1.5 pt-2 sm:px-3.5">
+        <MapDiscoveryPresets
+          value={discoveryMode}
+          onChange={onDiscoveryModeChange}
+          disabled={loading}
         />
       </div>
 
@@ -326,16 +343,28 @@ export default function MapControlsPanel({
 
             <section aria-labelledby="mobile-map-categories-title">
               <h2 id="mobile-map-categories-title" className="mb-2 text-sm font-semibold text-charcoal">
-                Что показать
+                Что вы хотите найти
               </h2>
-              <MapCategoryFilters
-                activeKinds={activeKinds}
-                onToggle={onToggleKind}
-                onSelectAll={onSelectAllKinds}
-                onClearAll={onClearAllKinds}
-                onReset={onResetKinds}
-                compact
+              <MapDiscoveryPresets
+                value={discoveryMode}
+                onChange={onDiscoveryModeChange}
+                disabled={loading}
+                className="flex-wrap overflow-visible"
               />
+              <details className="mt-3 rounded-2xl border border-gray-100 bg-gray-50/70 p-3">
+                <summary className="cursor-pointer text-sm font-semibold text-charcoal">
+                  Точный выбор категорий
+                </summary>
+                <MapCategoryFilters
+                  activeKinds={activeKinds}
+                  onToggle={onToggleKind}
+                  onSelectAll={onSelectAllKinds}
+                  onClearAll={onClearAllKinds}
+                  onReset={onResetKinds}
+                  compact
+                  className="mt-3"
+                />
+              </details>
             </section>
 
             <section aria-labelledby="mobile-map-legend-title">

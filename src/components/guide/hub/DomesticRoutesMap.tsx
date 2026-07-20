@@ -226,7 +226,7 @@ export default function DomesticRoutesMap() {
             onChange={(e) => setShowRegional(e.target.checked)}
             className="rounded border-gray-300"
           />
-          Сезонные прямые между регионами
+          Прямые между регионами
         </label>
       </div>
 

@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import type { MapMarkerKind, MapObject, MapRouteItem } from "@/lib/map-types";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayState } from "@/lib/map-overlay-layers";
-import type { MapThematicState } from "@/lib/map-thematic-layers";
+import type { MapThematicLayerId, MapThematicState } from "@/lib/map-thematic-layers";
 
 export type ArgentinaMapLibreCanvasProps = {
   objects: MapObject[];
@@ -14,7 +14,11 @@ export type ArgentinaMapLibreCanvasProps = {
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
   thematic: MapThematicState;
+  enableThematicInteractions?: boolean;
+  onThematicLayerLoadState?: (layerId: MapThematicLayerId, loading: boolean) => void;
   onSelect: (object: MapObject | null) => void;
+  selectedFlightDestinationIata?: string | null;
+  onSelectFlightDestination?: (iata: string | null) => void;
   userLocation?: {
     latitude: number;
     longitude: number;

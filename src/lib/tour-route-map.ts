@@ -173,9 +173,10 @@ export function buildRouteMapPopupHtml(
 export const ROUTE_MAP_POPUP_OPTIONS = {
   className: "route-map-popup",
   maxWidth: 220,
-  minWidth: 140,
+  minWidth: 168,
   autoPan: true,
   autoPanPadding: [12, 12] as [number, number],
+  keepInView: true,
 } as const;
 
 /** Порог перекрытия маркеров на экране (px). */
@@ -324,4 +325,3 @@ export function buildRouteMapSpiderfyPositions(
     };
   });
 }
-

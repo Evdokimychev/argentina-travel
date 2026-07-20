@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Globe2, MapPinned, X } from "lucide-react";
+import { Globe2, Loader2, MapPinned, X } from "lucide-react";
 import {
   MAP_THEMATIC_GROUP_LABELS,
   MAP_THEMATIC_LAYERS,
@@ -16,6 +16,7 @@ import { cn } from "@/lib/cn";
 type Props = {
   thematic: MapThematicState;
   layerAvailability?: Partial<Record<MapThematicLayerId, boolean>>;
+  loadingLayerIds?: readonly MapThematicLayerId[];
   onToggleThematic: (layerId: MapThematicLayerId) => void;
   onClearThematic: () => void;
   className?: string;
@@ -34,6 +35,7 @@ const GROUP_ORDER: MapThematicLayerGroup[] = [
 export default function MapThematicLayersControl({
   thematic,
   layerAvailability = {},
+  loadingLayerIds = [],
   onToggleThematic,
   onClearThematic,
   className,
@@ -86,7 +88,7 @@ export default function MapThematicLayersControl({
       </button>
 
       {open ? (
-        <div className="mt-2 max-h-[min(70vh,520px)] w-[260px] overflow-y-auto rounded-2xl border border-white/60 bg-white/95 p-3 shadow-elevated backdrop-blur-md">
+        <div className="mt-2 max-h-[min(72vh,560px)] w-[296px] overflow-y-auto rounded-2xl border border-white/60 bg-white/95 p-3 shadow-elevated backdrop-blur-md md:max-h-[calc(100dvh-390px)]">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-slate">
               Тематические слои
@@ -113,7 +115,7 @@ export default function MapThematicLayersControl({
           </div>
 
           <p className="mt-1 text-[10px] leading-snug text-slate">
-            Границы, районы Буэнос-Айреса, парки и маршруты включаются независимо от меток.
+            Изучайте границы, районы, природные территории и дороги отдельно от пинов. Наведите на область, чтобы увидеть её название.
           </p>
 
           <div className="mt-3 space-y-3">
@@ -131,6 +133,7 @@ export default function MapThematicLayersControl({
                     {layers.map((layer) => {
                       const active = thematic[layer.id];
                       const available = layerAvailability[layer.id] === true;
+                      const loading = loadingLayerIds.includes(layer.id);
                       const swatch =
                         layer.fillColor ?? layer.lineColor ?? "#64748b";
                       return (
@@ -139,10 +142,10 @@ export default function MapThematicLayersControl({
                           type="button"
                           title={layer.description}
                           onClick={() => available && onToggleThematic(layer.id)}
-                          disabled={!available}
+                          disabled={!available || loading}
                           className={cn(
-                            "flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-left text-[11px] font-semibold transition",
-                            !available && "cursor-not-allowed opacity-45",
+                            "flex w-full items-start gap-2 rounded-lg border px-2 py-2 text-left text-[11px] font-semibold transition",
+                            (!available || loading) && "cursor-not-allowed opacity-60",
                             available && active
                               ? "border-violet-500/30 bg-violet-50 text-violet-900"
                               : available
@@ -152,7 +155,10 @@ export default function MapThematicLayersControl({
                           aria-pressed={active}
                         >
                           <span
-                            className="h-3 w-3 shrink-0 rounded-sm border border-black/10"
+                            className={cn(
+                              "mt-0.5 h-3 w-3 shrink-0 border border-black/10",
+                              layer.kind === "circle" ? "rounded-full" : "rounded-sm",
+                            )}
                             style={{
                               backgroundColor: swatch,
                               opacity: layer.kind === "line" ? 1 : 0.65,
@@ -160,7 +166,16 @@ export default function MapThematicLayersControl({
                             aria-hidden
                           />
                           <span className="min-w-0 flex-1 leading-snug">
-                            {layer.label}
+                            <span className="block">{layer.label}</span>
+                            <span className="mt-0.5 block text-[9px] font-normal leading-snug text-slate">
+                              {layer.description}
+                            </span>
+                            {loading ? (
+                              <span className="mt-0.5 flex items-center gap-1 text-[9px] font-medium text-violet-700">
+                                <Loader2 className="h-2.5 w-2.5 animate-spin" aria-hidden />
+                                Загружаем слой…
+                              </span>
+                            ) : null}
                           </span>
                           <span
                             className={cn(

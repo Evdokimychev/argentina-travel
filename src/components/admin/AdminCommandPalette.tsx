@@ -16,6 +16,7 @@ import {
   filterAdminNavItems,
 } from "@/lib/admin/nav-config";
 import { cn } from "@/lib/cn";
+import { navigateAfterDialogClose } from "@/hooks/useDialogBackClose";
 
 type PaletteItem = {
   id: string;
@@ -67,9 +68,13 @@ export default function AdminCommandPalette() {
 
   const navigate = useCallback(
     (href: string) => {
-      setOpen(false);
-      setQuery("");
-      router.push(href);
+      navigateAfterDialogClose(
+        () => router.push(href),
+        () => {
+          setOpen(false);
+          setQuery("");
+        },
+      );
     },
     [router]
   );

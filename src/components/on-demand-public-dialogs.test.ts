@@ -15,8 +15,9 @@ describe("public dialog loading", () => {
 
     expect(providers).not.toContain('dynamic(() => import("@/components/SiteSearch")');
     expect(providers).not.toContain("QuickExploreProvider");
-    expect(onDemand).toContain("searchMounted ? <SiteSearch /> : null");
-    expect(onDemand).toContain("mapMounted ? <QuickExploreDialogHost /> : null");
+    expect(onDemand).toContain("searchMounted ? <SiteSearch initialOpen={searchInitiallyOpen} /> : null");
+    expect(onDemand).toContain("mapMounted ? <QuickExploreDialogHost initialOpen={mapInitiallyOpen} /> : null");
+    expect(onDemand).not.toContain("window.setTimeout");
     expect(onDemand).toContain('from "@/lib/site-map-events"');
     expect(onDemand).not.toContain('from "@/lib/site-map-open"');
   });

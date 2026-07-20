@@ -43,6 +43,7 @@ describe("map-argentina-url-state", () => {
       city: "",
       q: "",
       selected: "",
+      focus: "highlights",
       theme: "tourist",
       overlays: {
         hillshade: true,
@@ -61,6 +62,7 @@ describe("map-argentina-url-state", () => {
       city: "",
       q: "",
       selected: "",
+      focus: "all",
       theme: "tourist",
       overlays: {
         hillshade: false,
@@ -82,6 +84,13 @@ describe("map-argentina-url-state", () => {
     expect(state.thematic.biosphere).toBe(false);
     expect(state.thematic.beaches).toBe(false);
     expect(state.thematic.ba_neighborhoods).toBe(true);
+  });
+
+  it("parses and serializes tourist discovery mode", () => {
+    const state = parseMapArgentinaUrlState(new URLSearchParams("focus=nature"));
+    expect(state.focus).toBe("nature");
+    expect(mapArgentinaStateToSearchParams(state).get("focus")).toBe("nature");
+    expect(parseMapArgentinaUrlState(new URLSearchParams("focus=unknown")).focus).toBe("highlights");
   });
 });
 
