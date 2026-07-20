@@ -16,10 +16,6 @@
     {
       "path": "/api/cron/content-factory-publish",
       "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/ingestion",
-      "schedule": "*/15 * * * *"
     }
   ]
 }
