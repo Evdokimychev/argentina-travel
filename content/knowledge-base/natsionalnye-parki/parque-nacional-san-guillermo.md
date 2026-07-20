@@ -5,7 +5,7 @@ title: Национальный парк Сан-Гильермо
 title_es: Parque Nacional San Guillermo
 title_en: San Guillermo National Park
 summary: "Сан-Гильермо в Сан-Хуане — высокогорная пустыня-заповедник с крупнейшими популяциями викуний."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -29.22420446604502
   lng: -69.37466086582937

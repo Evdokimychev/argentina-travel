@@ -5,7 +5,7 @@ title: "Салинас-Грандес (Жужуй)"
 title_es: Salinas Grandes, Jujuy
 title_en: Salinas Grandes, Jujuy
 summary: "Ослепительно белая солёная пустыня на высоте Пуны на границе Жужуя и Сальты — один из самых фотогеничных пейзажей севера."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: salinas-grandes
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

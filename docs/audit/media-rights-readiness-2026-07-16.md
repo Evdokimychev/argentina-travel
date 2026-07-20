@@ -8,15 +8,15 @@
 
 | Показатель | Значение |
 | --- | ---: |
-| Всего записей manifest | 2212 |
-| Уникальных публичных media-путей | 607 |
-| Публичных assets из manifest | 607 |
-| Полный creator/source/license | 607 (100%) |
+| Всего записей manifest | 2227 |
+| Уникальных публичных media-путей | 666 |
+| Публичных assets из manifest | 664 |
+| Полный creator/source/license | 664 (100%) |
 | Строк высокого риска | 0 |
 | Уникальных assets высокого риска | 0 |
-| Средний риск | 10 |
-| Публичные пути вне manifest | 0 |
-| Группы одинаковых файлов (SHA-256) | 80 |
+| Средний риск | 13 |
+| Публичные пути вне manifest | 2 |
+| Группы одинаковых файлов (SHA-256) | 79 |
 | Конфликтующие права у одинаковых файлов | 0 |
 | Публичные контексты с logo/«Нет фото» fallback | 0 |
 
@@ -34,11 +34,17 @@
 
 | Код | Количество |
 | --- | ---: |
-| hero_resolution | 10 |
+| hero_resolution | 11 |
+| unmanaged_asset | 2 |
 
 ## Блокеры и действия владельца
 
 Высоких рисков не найдено.
+
+Публичные файлы вне manifest требуют отдельного решения владельца:
+
+- `media/places/el-chalten/hero.jpg` — добавить подтверждённые creator/source/license metadata или убрать публичную ссылку; контекст: blog:patagonia-за-3-дня:card, blog:patagonia-за-3-дня:hero, blog:patagonia-ошибки:card, blog:patagonia-ошибки:hero.
+- `media/places/purmamarca/hero.jpg` — добавить подтверждённые creator/source/license metadata или убрать публичную ссылку; контекст: blog:northwest-самостоятельно:card, blog:northwest-самостоятельно:hero, literal:src/lib/blog-post-image-bindings.ts.
 
 ## Исправлено в этом спринте
 

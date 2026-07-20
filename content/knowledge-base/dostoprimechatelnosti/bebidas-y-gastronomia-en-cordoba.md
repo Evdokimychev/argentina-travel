@@ -5,7 +5,7 @@ title: Food and Drink in Córdoba
 title_es: Bebidas y Gastronomía en Córdoba
 title_en: Food and Drink in Córdoba
 summary: Alza tu copa y brinda por la vida
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

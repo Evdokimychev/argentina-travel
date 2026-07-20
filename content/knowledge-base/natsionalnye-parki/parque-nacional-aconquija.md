@@ -13,9 +13,9 @@ region_id: noa
 province: Тукуман
 tags:
 - северо-запад
-last_verified: '2026-07-07'
-confidence: medium
-site_ready: false
+last_verified: '2026-07-20'
+confidence: high
+site_ready: true
 coordinates:
   lat: -27.281129939539788
   lng: -65.87576903496198
@@ -48,6 +48,11 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-nacional-aconquija
 sources:
+- title: Administración de Parques Nacionales — Parque Nacional Aconquija
+  url: https://www.argentina.gob.ar/parquesnacionales/region-noroeste/parque-nacional-aconquija
+  lang: es
+  type: official
+  note: режим посещения, сектора, контакты и актуальные предупреждения
 - title: Visit Argentina — Parque Nacional Aconquija
   url: https://www.argentina.travel/actividades/parque-nacional-aconquija
   lang: es
@@ -77,10 +82,16 @@ sources:
 
 Лучшее время для треккинга — с поздней весны до ранней осени (ориентировочно ноябрь–апрель), когда в горах теплее и суше. На больших высотах погода сурова круглый год: у Ла-Сьюдакиты (около 4400 м) снег возможен в любой сезон, поэтому такие маршруты планируют только с гидом и запасом дней.
 
+## Как подготовить визит
+
+У Аконкихи несколько удалённых порталов, и между ними нельзя быстро переехать «внутри парка». Сначала выберите конкретный сектор на странице APN, затем запросите у администрации состояние подъезда, доступные тропы и необходимость регистрации. Для короткого знакомства подходит нижний лесной пояс; Ла-Сьюдакита — самостоятельная многодневная экспедиция с набором высоты, а не продолжение обычной прогулки.
+
+В машине держите воду, еду, запас топлива и офлайн-карту. На маршруте нужны защита от солнца и дождя, тёплый слой и обувь для мокрой тропы. После ливней реки и грунтовые подъезды могут изменить планы, поэтому не ставьте парк между двумя жёстко привязанными бронями. Мусор увозите с собой, огонь разводите только там и тогда, где это прямо разрешено персоналом.
+
 ## Факты
 
 - Хребет Сьеррас-дель-Аконкиха: от юнги до высокогорных лугов и вершин выше 5000 м.
-- Получил статус национального парка в 2018 году (включив прежний Кампо-де-лос-Алисос); площадь около 70 000 га.
+- Получил нынешний статус и границы в 2018 году, включив прежний Кампо-де-лос-Алисос; APN указывает площадь 93 313 га.
 - Провинция Тукуман; ближайший населённый пункт для входа — Альпачири (близ Консепсьона).
 - Ла-Сьюдакита — одни из самых южных руин инкской империи, на высоте ~4400 м.
 - 🚩 Входной билет (APN) индексируется — актуальную стоимость проверяйте на ventaweb.apn.gob.ar.
@@ -92,6 +103,6 @@ sources:
 ## Источники
 
 - [Visit Argentina (INPROTUR) — Parque Nacional Aconquija](https://www.argentina.travel/actividades/parque-nacional-aconquija) — официальный портал (исп.).
-- Administración de Parques Nacionales (APN) — билеты и режим: ventaweb.apn.gob.ar.
+- [Administración de Parques Nacionales — Parque Nacional Aconquija](https://www.argentina.gob.ar/parquesnacionales/region-noroeste/parque-nacional-aconquija) — сектора, доступ и контакты.
 
 > Фотографии — с официального портала Argentina.travel (INPROTUR); указаны источник и автор.

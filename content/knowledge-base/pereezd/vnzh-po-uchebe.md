@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Временная резиденция по учёбе"
 summary: "Студенческая временная резиденция доступна при обучении в официально признанном учреждении и подтверждении записи в электронной системе Migraciones."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: vnzh-argentina
+archive_reason: "Карточка отдельного основания объединена с проверенным руководством по выбору резиденции."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [учёба, резиденция, RaDEX, документы]

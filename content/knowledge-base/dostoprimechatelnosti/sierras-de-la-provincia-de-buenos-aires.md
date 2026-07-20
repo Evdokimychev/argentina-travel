@@ -5,7 +5,7 @@ title: "Сьерры провинции Буэнос-Айрес"
 title_es: Sierras de la Provincia de Buenos Aires
 title_en: Province of Buenos Aires hills
 summary: "Горные островки среди равнинной пампы — Тандиль, Сьерра-де-лос-Падрес и Сьерра-де-ла-Вентана."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

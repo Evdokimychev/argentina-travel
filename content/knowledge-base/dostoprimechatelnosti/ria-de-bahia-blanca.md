@@ -6,7 +6,7 @@ title_es: Ría de Bahía Blanca
 title_en: Bahía Blanca ria
 summary: Disfruta actividades náuticas en un lugar único para la conservación de aves
   playeras en el hemisferio sur.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

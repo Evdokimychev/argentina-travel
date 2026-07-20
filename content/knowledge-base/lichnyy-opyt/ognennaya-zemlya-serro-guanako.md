@@ -4,15 +4,18 @@ type: author_tip
 subtype: hidden_gem
 title: "Огненная Земля: вид сверху, который видят немногие, и торфяники, мимо которых все проходят"
 summary: "Подъём на Серро-Гуанако даёт лучшую панораму парка, а настил над торфяниками Лагуна-Негра показывает экосистему, на которую туристы обычно не обращают внимания."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [треккинг, патагония, природа]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Огненная-Земля.md"
 related: [ognennaya-zemlya]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: ognennaya-zemlya
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Огненная-Земля.md — раздел «Советы местного гида»"
     url: ""

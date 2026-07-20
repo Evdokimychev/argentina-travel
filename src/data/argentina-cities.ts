@@ -7,6 +7,8 @@ export interface ArgentinaCity {
   lng?: number;
   /** Поисковые синонимы: латиница, старые подписи, сокращения */
   aliases: string[];
+  /** Если статья базы знаний называется иначе, чем городской slug. */
+  knowledgeBaseId?: string;
 }
 
 /** Крупные и туристически значимые города Аргентины — единый справочник для туров и поиска */
@@ -55,6 +57,43 @@ export const ARGENTINA_CITIES: ArgentinaCity[] = [
     lat: -37.3217,
     lng: -59.1332,
     aliases: ["tandil"],
+  },
+  {
+    slug: "tigre",
+    nameRu: "Тигре",
+    provinceRu: "Провинция Буэнос-Айрес",
+    macroRegionRu: "Пампа",
+    lat: -34.4258,
+    lng: -58.5796,
+    aliases: ["tigre", "delta del parana", "дельта параны"],
+    knowledgeBaseId: "tigre-i-delta",
+  },
+  {
+    slug: "lujan",
+    nameRu: "Лухан",
+    provinceRu: "Провинция Буэнос-Айрес",
+    macroRegionRu: "Пампа",
+    lat: -34.5703,
+    lng: -59.105,
+    aliases: ["lujan", "luján", "лухан"],
+  },
+  {
+    slug: "pilar",
+    nameRu: "Пилар",
+    provinceRu: "Провинция Буэнос-Айрес",
+    macroRegionRu: "Пампа",
+    lat: -34.4587,
+    lng: -58.9142,
+    aliases: ["pilar", "пилар"],
+  },
+  {
+    slug: "zarate",
+    nameRu: "Сарате",
+    provinceRu: "Провинция Буэнос-Айрес",
+    macroRegionRu: "Пампа",
+    lat: -34.0981,
+    lng: -59.0286,
+    aliases: ["zarate", "zárate", "сарате"],
   },
   {
     slug: "rosario",
@@ -397,6 +436,15 @@ export const ARGENTINA_CITIES: ArgentinaCity[] = [
     lat: -42.9115,
     lng: -71.3195,
     aliases: ["esquel"],
+  },
+  {
+    slug: "trevelin",
+    nameRu: "Тревелин",
+    provinceRu: "Провинция Чубут",
+    macroRegionRu: "Патагония",
+    lat: -43.0847,
+    lng: -71.4592,
+    aliases: ["trevelin", "тревелин", "pueblo del molino"],
   }
 ];
 

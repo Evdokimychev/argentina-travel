@@ -6,7 +6,7 @@ title_es: Catamarán en el río Paraná
 title_en: Catamaran on the Paraná river
 summary: Desde la ciudad de Santa Fe, disfruta el turismo fluvial por uno de los ríos
   más valiosos del planeta.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

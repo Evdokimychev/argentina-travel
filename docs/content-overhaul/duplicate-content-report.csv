@@ -1,7 +1,1 @@
 "duplicate_group","reason","entry_id","url","title","public","action","status","owner","evidence"
-"title:f9a1ffcfd053","exact_normalized_title","ciudad-de-salta","/baza-znaniy/ciudad-de-salta","Сальта","no","REDIRECT","resolved","Content architect","/baza-znaniy/salta; publication registry"
-"title:f9a1ffcfd053","exact_normalized_title","salta","/baza-znaniy/salta","Сальта","yes","REDIRECT","resolved","Content architect","canonical public entry; publication registry"
-"title:71c1d062d66a","exact_normalized_title","los-cardones","/baza-znaniy/los-cardones","Национальный парк Лос-Кардонес","yes","REDIRECT","resolved","Content architect","canonical public entry; publication registry"
-"title:71c1d062d66a","exact_normalized_title","parque-nacional-los-cardones","/baza-znaniy/parque-nacional-los-cardones","Национальный парк Лос-Кардонес","no","REDIRECT","resolved","Content architect","/baza-znaniy/los-cardones; publication registry"
-"title:7a3de42ac66c","exact_normalized_title","ognennaya-zemlya","/baza-znaniy/ognennaya-zemlya","Национальный парк Огненная Земля","yes","REDIRECT","resolved","Content architect","canonical public entry; publication registry"
-"title:7a3de42ac66c","exact_normalized_title","parque-nacional-tierra-del-fuego","/baza-znaniy/parque-nacional-tierra-del-fuego","национальный парк Огненная Земля","no","REDIRECT","resolved","Content architect","/baza-znaniy/ognennaya-zemlya; publication registry"

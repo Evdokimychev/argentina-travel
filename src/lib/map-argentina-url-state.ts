@@ -13,12 +13,18 @@ import {
   type MapThematicState,
 } from "@/lib/map-thematic-layers";
 import { MAP_MARKER_KINDS, type MapMarkerKind } from "@/lib/map-types";
+import {
+  DEFAULT_MAP_DISCOVERY_MODE,
+  parseMapDiscoveryMode,
+} from "@/lib/map-discovery";
+import type { MapDiscoveryMode } from "@/lib/map-types";
 
 export const DEFAULT_MAP_ARGENTINA_KINDS: MapMarkerKind[] = [
   "city",
   "national_park",
   "attraction",
   "tour",
+  "airport",
 ];
 
 /** All point marker kinds available in filter UI (without region polygons). */
@@ -33,6 +39,7 @@ export interface MapArgentinaUrlState {
   city: string;
   q: string;
   selected: string;
+  focus: MapDiscoveryMode;
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
   thematic: MapThematicState;
@@ -65,6 +72,7 @@ export function parseMapArgentinaUrlState(
     city: params.get("city")?.trim() ?? "",
     q: params.get("q")?.trim() ?? "",
     selected: params.get("selected")?.trim() ?? "",
+    focus: parseMapDiscoveryMode(params.get("focus")),
     theme: parseMapBasemapTheme(params.get("theme")),
     overlays: parseMapOverlayLayers(params.get("layers")),
     thematic: parseMapThematicLayers(params.get("tl")),
@@ -79,6 +87,7 @@ export function mapArgentinaStateToSearchParams(state: MapArgentinaUrlState): UR
   if (state.city) params.set("city", state.city);
   if (state.q) params.set("q", state.q);
   if (state.selected) params.set("selected", state.selected);
+  if (state.focus !== DEFAULT_MAP_DISCOVERY_MODE) params.set("focus", state.focus);
   if (state.theme !== "tourist") params.set("theme", state.theme);
   const layersKey = serializeMapOverlayLayers(state.overlays);
   const defaultLayersKey = serializeMapOverlayLayers(DEFAULT_MAP_OVERLAY_STATE);
@@ -100,6 +109,7 @@ export function buildMapTourDeepLink(tour: { id: string; slug: string }): string
     city: "",
     q: "",
     selected: `tour:${tour.id}`,
+    focus: "all",
     theme: "tourist",
     overlays: { ...DEFAULT_MAP_OVERLAY_STATE },
     thematic: { ...DEFAULT_MAP_THEMATIC_STATE },
@@ -113,6 +123,7 @@ export function buildMapPlaceDeepLink(place: { id: string }): string {
     city: "",
     q: "",
     selected: `place:${place.id}`,
+    focus: "all",
     theme: "tourist",
     overlays: { ...DEFAULT_MAP_OVERLAY_STATE },
     thematic: { ...DEFAULT_MAP_THEMATIC_STATE },

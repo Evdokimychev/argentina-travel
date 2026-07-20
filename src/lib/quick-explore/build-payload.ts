@@ -2,7 +2,7 @@ import {
   QUICK_EXPLORE_PROVINCES,
   QUICK_EXPLORE_PROVINCE_BY_ISO,
 } from "@/data/quick-explore/province-registry";
-import { KB_ID_TO_PLACE, PLACE_TO_KB_ID } from "@/data/kb-place-id-map";
+import { KB_ID_TO_PLACE } from "@/data/kb-place-id-map";
 import { getAllEntries, getEntry } from "@/lib/knowledge-base/content";
 import { entryHref } from "@/lib/knowledge-base/urls";
 import type { KbMediaImage } from "@/lib/knowledge-base/types";
@@ -97,20 +97,10 @@ function mapObjectToSpot(
   };
 }
 
-function isArgentinaTravelKb(entry: NonNullable<ReturnType<typeof getEntry>>): boolean {
-  if (entry.media?.hero?.license === "argentina.travel") return true;
-  return (
-    entry.sources?.some(
-      (s) => s.url?.includes("argentina.travel") || s.note?.toLowerCase().includes("inprotur"),
-    ) ?? false
-  );
-}
-
 function kbSpotsWithoutPlace(seenSlugs: Set<string>): QuickExploreSpot[] {
   const out: QuickExploreSpot[] = [];
 
   for (const entry of getAllEntries()) {
-    if (!isArgentinaTravelKb(entry)) continue;
     if (!entry.coordinates?.lat || !entry.coordinates.lng) continue;
     if (!["city", "national_park", "attraction"].includes(entry.type)) continue;
 

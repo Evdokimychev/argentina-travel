@@ -6,7 +6,7 @@ title_es: Parque Marino Makenke
 title_en: Makenke Sea Park
 summary: En la ecorregión Mar Argentino, descubre un lugar donde la vida se preserva
   y la naturaleza se disfruta.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

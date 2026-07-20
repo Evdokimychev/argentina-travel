@@ -101,8 +101,16 @@ export function searchSiteIndex(
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "ru"));
 
   const groups = new Map<SearchResultType, SearchResultGroup>();
+  const seenUrls = new Set<string>();
+  const seenTitles = new Set<string>();
 
   for (const item of scored) {
+    const urlKey = item.href.trim().toLowerCase();
+    const titleKey = `${item.type}:${normalize(item.title).replace(/\s+/g, " ")}`;
+    if (seenUrls.has(urlKey) || seenTitles.has(titleKey)) continue;
+    seenUrls.add(urlKey);
+    seenTitles.add(titleKey);
+
     const existing = groups.get(item.type);
     if (existing) {
       if (existing.items.length < limitPerGroup) {

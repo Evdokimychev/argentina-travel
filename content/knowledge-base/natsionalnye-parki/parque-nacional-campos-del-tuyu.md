@@ -5,7 +5,7 @@ title: "Национальный парк Кампос-дель-Тую"
 title_es: Parque Nacional Campos del Tuyú
 title_en: Campos del Tuyú National Park
 summary: "Небольшой парк на побережье залива Самборомбон в провинции Буэнос-Айрес, охраняющий пампасские луга и последние популяции болотного оленя."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -13,9 +13,11 @@ region_id: buenos-aires-province
 province: Провинция Буэнос-Айрес
 tags:
 - центр и пампа
-last_verified: '2026-07-07'
-confidence: medium
+last_verified: '2026-07-20'
+confidence: high
 site_ready: false
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -36.35595977859673
   lng: -56.90808425079761
@@ -48,6 +50,11 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-nacional-campos-del-tuyu
 sources:
+- title: Administración de Parques Nacionales — Parque Nacional Campos del Tuyú
+  url: https://www.argentina.gob.ar/parquesnacionales/centro/parque-nacional-campos-del-tuyu
+  lang: es
+  type: official
+  note: режим доступа, экосистемы, контакты и текущие условия посещения
 - title: Visit Argentina — Parque Nacional Campos del Tuyú
   url: https://www.argentina.travel/actividades/parque-nacional-campos-del-tuyu
   lang: es
@@ -80,6 +87,12 @@ sources:
 - Планируйте визит заранее и уточняйте порядок доступа — территория охраняемая и труднодоступная.
 - Всё необходимое берите с собой: услуг на месте нет.
 - Репеллент, вода, головной убор и непромокаемая обувь обязательны.
+
+## Что проверить перед поездкой
+
+Campos del Tuyú нельзя планировать как обычный городской парк с гарантированным свободным входом во все сектора. Это низкое прибрежное водно-болотное угодье, поэтому доступ зависит от воды, состояния грунта и природоохранного режима. Перед выездом свяжитесь с администрацией в Хенераль-Лавалье и уточните, открыт ли маршрут, нужна ли предварительная запись и какие активности доступны именно в этот день.
+
+Для наблюдения за птицами берите бинокль, воду, солнцезащиту, закрытую обувь и репеллент; домашние животные и самостоятельный выход за обозначенный маршрут несовместимы с охраной пампасного оленя. Весной и летом проще увидеть активную жизнь болот, но жара и насекомые сильнее. Зимой дождь может ухудшить наземный доступ. Рассматривайте встречу с оленем как удачу, а не обещанный элемент экскурсии.
 
 ## Факты
 

@@ -78,6 +78,13 @@ export type CmsBlogBody = {
   featured?: boolean;
   relatedDestinations?: string[];
   collector?: CmsCollectorProvenance;
+  /** Knowledge documents may carry an explicitly verified personal byline. */
+  authorName?: string;
+  authorSlug?: string;
+  authorBio?: string;
+  authorAvatar?: string;
+  personalExperience?: boolean;
+  verifiedByAuthor?: boolean;
 };
 
 export type CmsGuideBody = {

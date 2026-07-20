@@ -6,7 +6,7 @@ title_es: Centros de esquí en Neuquén
 title_en: Ski resorts in Neuquén
 summary: 'Descubre paraísos de la temporada invernal: Chapelco, Cerro Bayo, Caviahue,
   Batea Mahuida y Primeros Pinos.'
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -4,8 +4,10 @@ type: guide
 subtype: finance
 title: "Инфляция в Аргентине: как читать цены и статистику"
 summary: "Практичный способ работать с меняющимися ценами: использовать официальный IPC INDEC, фиксировать месяц и не смешивать инфляцию, валютный курс и стоимость конкретной услуги."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dengam
+archive_reason: "Короткий обзор экономики объединён с проверенным руководством по деньгам и бюджету."
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: both
 tags: [бюджетно, документы]

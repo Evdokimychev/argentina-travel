@@ -4,12 +4,15 @@ type: faq
 question: "Нужен ли полноприводный автомобиль для Дороги семи озёр и Руты 40?"
 short_answer: "Для Дороги семи озёр — нет, она полностью асфальтирована; для протяжённых грунтовых участков Руты 40 южнее — да, стоит рассмотреть."
 topic: transport
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine]
 tags: [рута 40, роуд-трип, аренда авто]
 related: [ruta-40-sem-ozer, bariloche]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: ruta-40-sem-ozer
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

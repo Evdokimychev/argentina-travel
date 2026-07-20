@@ -6,8 +6,10 @@ title: "Эмпанадас: как читать главную уличную е
 title_es: "Empanadas"
 aliases: ["эмпанадас", "empanada", "эмпанада", "пирожки Аргентина", "repulgue"]
 summary: "Эмпанада — аргентинский пирожок и повседневная классика от севера до юга: региональные варианты (сальтенья, тукумана, кордовеса), печёные и жареные, начинки от рубленого мяса до кукурузы-умиты, и секретный код — repulgue (форма защипа), по которому отличают, что внутри."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: kuhnya
+archive_reason: "Тематическая карточка объединена с основным материалом об аргентинской кухне."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [гастрономия, уличная еда, культура, бюджетно]

@@ -5,7 +5,7 @@ title: "Ла-Риоха: бездорожье"
 title_es: La Rioja off road
 title_en: La Rioja off Road
 summary: "Внедорожные маршруты по каньонам, дюнам и красным горам провинции Ла-Риоха — приключение вне асфальта."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -38,6 +38,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

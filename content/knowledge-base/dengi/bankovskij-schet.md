@@ -4,8 +4,10 @@ type: guide
 subtype: finance
 title: "Банковский счёт для мигранта в Аргентине"
 summary: "Официальная базовая возможность открыть бесплатную caja de ahorro en pesos с документом личности и действующим миграционным статусом, а также различия CBU, CVU и alias."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: banki-i-perevody
+archive_reason: "Материал объединён с актуальным руководством по банкам и переводам, чтобы не дублировать быстро меняющиеся процедуры."
 seo_slug: "bankovskij-schet-argentina"
 site_sections: [pereezd-v-argentinu, finansy-i-ekonomika]
 applies_to: relocant

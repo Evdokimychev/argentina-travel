@@ -59,7 +59,7 @@ sources:
     type: aggregator
     note: "население по переписи 2022 (287 787 в городе, агломерация 500 000+), связь роста города с нефтегазовым бумом Вака-Муэрты"
   - title: "Neuquén (ciudad) — Wikipedia (ES)"
-    url: "https://es.wikipedia.org/wiki/Neuqu%C3%A9n_(ciudad)"
+    url: "https://es.wikipedia.org/wiki/Neuqu%C3%A9n_%28ciudad%29"
     lang: es
     type: aggregator
     note: "год основания (1904), статус самой молодой столицы провинции в стране, аэропорт Presidente Perón, история"
@@ -99,6 +99,6 @@ sources:
 
 - [Vaca Muerta — Wikipedia (ES)](https://es.wikipedia.org/wiki/Vaca_Muerta) — география и масштаб формации.
 - [Neuquén — Wikipedia (EN)](https://en.wikipedia.org/wiki/Neuqu%C3%A9n) — население по переписи 2022, связь роста с нефтегазовым бумом.
-- [Neuquén (ciudad) — Wikipedia (ES)](https://es.wikipedia.org/wiki/Neuqu%C3%A9n_(ciudad)) — история основания, статус столицы, аэропорт.
+- [Neuquén (ciudad) — Wikipedia (ES)](https://es.wikipedia.org/wiki/Neuqu%C3%A9n_%28ciudad%29) — история основания, статус столицы, аэропорт.
 - [Argentinosaurus — Wikipedia (ES)](https://es.wikipedia.org/wiki/Argentinosaurus) — место и год находки Argentinosaurus в провинции Неукен.
 - [Patagotitan — Wikipedia (ES)](https://es.wikipedia.org/wiki/Patagotitan) — уточнение, что Patagotitan найден в Чубуте, а не в Неукене.

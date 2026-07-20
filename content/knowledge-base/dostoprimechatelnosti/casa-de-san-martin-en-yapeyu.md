@@ -6,7 +6,7 @@ title_es: Casa de San Martín en Yapeyú
 title_en: San Martin’s home in Yapeyú
 summary: En la región Литорал, recorre el lugar donde nació un prócer clave de la
   historia argentina.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

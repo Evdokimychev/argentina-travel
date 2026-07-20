@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { MapObject } from "@/lib/map-types";
+import type { NearbyMapObject } from "@/lib/map-discovery";
 import MapObjectCard from "@/components/map/MapObjectCard";
 import {
   Dialog,
@@ -14,9 +15,21 @@ type Props = {
   object: MapObject | null;
   onClose: () => void;
   onSelectObjectId?: (id: string) => void;
+  selectedFlightDestinationIata?: string | null;
+  onSelectFlightDestination?: (iata: string | null) => void;
+  onNavigate?: (href: string) => void;
+  nearbyObjects?: NearbyMapObject[];
 };
 
-export default function MapObjectPopup({ object, onClose, onSelectObjectId }: Props) {
+export default function MapObjectPopup({
+  object,
+  onClose,
+  onSelectObjectId,
+  selectedFlightDestinationIata,
+  onSelectFlightDestination,
+  onNavigate,
+  nearbyObjects,
+}: Props) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -33,6 +46,7 @@ export default function MapObjectPopup({ object, onClose, onSelectObjectId }: Pr
     return (
       <Dialog
         open
+        closeOnBackNavigation={false}
         onOpenChange={(open) => {
           if (!open) onClose();
         }}
@@ -51,6 +65,10 @@ export default function MapObjectPopup({ object, onClose, onSelectObjectId }: Pr
             object={object}
             onClose={onClose}
             onSelectObjectId={onSelectObjectId}
+            selectedFlightDestinationIata={selectedFlightDestinationIata}
+            onSelectFlightDestination={onSelectFlightDestination}
+            onNavigate={onNavigate}
+            nearbyObjects={nearbyObjects}
             variant="sheet"
           />
         </DialogContent>
@@ -59,9 +77,17 @@ export default function MapObjectPopup({ object, onClose, onSelectObjectId }: Pr
   }
 
   return (
-    <div className="pointer-events-none absolute bottom-4 right-4 z-20 max-w-[calc(100%-2rem)] sm:bottom-6 sm:right-6">
+    <div className="pointer-events-none absolute bottom-4 right-4 z-30 max-w-[calc(100%-2rem)] sm:bottom-6 sm:right-6">
       <div className="pointer-events-auto">
-        <MapObjectCard object={object} onClose={onClose} onSelectObjectId={onSelectObjectId} />
+        <MapObjectCard
+          object={object}
+          onClose={onClose}
+          onSelectObjectId={onSelectObjectId}
+          selectedFlightDestinationIata={selectedFlightDestinationIata}
+          onSelectFlightDestination={onSelectFlightDestination}
+          onNavigate={onNavigate}
+          nearbyObjects={nearbyObjects}
+        />
       </div>
     </div>
   );

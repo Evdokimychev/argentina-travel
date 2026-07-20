@@ -5,18 +5,18 @@ import { buildStaticSearchIndexServer } from "./site-search-index-server";
 describe("unified server search index", () => {
   it("includes publication-ready knowledge-base entries with aliases and body text", async () => {
     const index = await buildStaticSearchIndexServer();
-    const airports = index.find((item) => item.href === "/baza-znaniy/aeroporty");
+    const buses = index.find((item) => item.href === "/baza-znaniy/mezhgorodnie-avtobusy");
 
-    expect(airports).toMatchObject({
+    expect(buses).toMatchObject({
       type: "knowledge",
-      title: "Аэропорты Аргентины и трансферы в город",
+      title: "Междугородние автобусы Аргентины (micros)",
     });
-    expect(airports?.keywords).toContain("EZE");
-    expect(airports?.searchText).toContain("Буэнос-Айрес");
+    expect(buses?.keywords).toContain("micro");
+    expect(buses?.searchText).toContain("Междугородний автобус");
   });
 
   it("does not index quarantined knowledge-base entries", async () => {
     const index = await buildStaticSearchIndexServer();
-    expect(index.some((item) => item.href === "/baza-znaniy/aktualen-li-blue-dollar")).toBe(false);
+    expect(index.some((item) => item.href === "/baza-znaniy/aep-eze-stykovka")).toBe(false);
   });
 });

@@ -1,48 +1,60 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-17T11:59:18.195Z",
+  "generatedAt": "2026-07-20T19:32:30.955Z",
   "scope": "publicly-referenced-local-media",
-  "manifestVersion": 7,
+  "manifestVersion": 8,
   "summary": {
-    "manifestAssets": 2212,
-    "publicReferences": 607,
-    "auditedAssets": 607,
-    "unmanagedPaths": 0,
+    "manifestAssets": 2227,
+    "publicReferences": 666,
+    "auditedAssets": 664,
+    "unmanagedPaths": 2,
     "fallbackContexts": 0,
-    "duplicateGroups": 80,
+    "duplicateGroups": 79,
     "conflictingRightsGroups": 0,
     "highRiskAssets": 0,
     "countsBySeverity": {
       "high": 0,
-      "medium": 10,
+      "medium": 13,
       "low": 0
     },
     "countsByCode": {
-      "hero_resolution": 10
+      "hero_resolution": 11,
+      "unmanaged_asset": 2
     }
   },
   "fallbackContexts": [],
   "issues": [
     {
-      "key": "at-parque-nacional-islas-de-santa-fe-hero:hero_resolution:media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388804931-caminatas_y_corrida__1_.jpg",
+      "key": "at-parque-nacional-aconquija-hero:hero_resolution:media/argentina-travel/parque-nacional-aconquija/1623702317321-img_1437.jpg",
       "code": "hero_resolution",
       "severity": "medium",
-      "assetId": "at-parque-nacional-islas-de-santa-fe-hero",
-      "localPath": "media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388804931-caminatas_y_corrida__1_.jpg",
-      "message": "Hero 960×720: ширина меньше 1200 px.",
+      "assetId": "at-parque-nacional-aconquija-hero",
+      "localPath": "media/argentina-travel/parque-nacional-aconquija/1623702317321-img_1437.jpg",
+      "message": "Hero 1178×785: ширина меньше 1200 px.",
       "contexts": [
-        "kb:parque-nacional-islas-de-santa-fe:hero"
+        "kb:parque-nacional-aconquija:hero"
       ]
     },
     {
-      "key": "at-parque-nacional-san-guillermo-hero:hero_resolution:media/argentina-travel/parque-nacional-san-guillermo/1623885866823-san_guillermo_3.jpg",
+      "key": "at-parque-nacional-los-arrayanes-hero:hero_resolution:media/argentina-travel/parque-nacional-los-arrayanes/1624481364379-vla_bosquedearrayanes_canon6d.jpg",
       "code": "hero_resolution",
       "severity": "medium",
-      "assetId": "at-parque-nacional-san-guillermo-hero",
-      "localPath": "media/argentina-travel/parque-nacional-san-guillermo/1623885866823-san_guillermo_3.jpg",
+      "assetId": "at-parque-nacional-los-arrayanes-hero",
+      "localPath": "media/argentina-travel/parque-nacional-los-arrayanes/1624481364379-vla_bosquedearrayanes_canon6d.jpg",
       "message": "Hero 1000×667: ширина меньше 1200 px.",
       "contexts": [
-        "kb:parque-nacional-san-guillermo:hero"
+        "kb:parque-nacional-los-arrayanes:hero"
+      ]
+    },
+    {
+      "key": "at-trevelin-el-pueblo-del-molino-hero:hero_resolution:media/argentina-travel/trevelin-el-pueblo-del-molino/1632251410715-tulipanes_patagonia_lucas_vazquez_2.jpg",
+      "code": "hero_resolution",
+      "severity": "medium",
+      "assetId": "at-trevelin-el-pueblo-del-molino-hero",
+      "localPath": "media/argentina-travel/trevelin-el-pueblo-del-molino/1632251410715-tulipanes_patagonia_lucas_vazquez_2.jpg",
+      "message": "Hero 1080×1350: ширина меньше 1200 px.",
+      "contexts": [
+        "place:trevelin:cover"
       ]
     },
     {
@@ -150,6 +162,32 @@
         "literal:src/lib/tour-card-fallback-image.ts",
         "tour:bariloche-lakes:gallery",
         "tour:bariloche-lakes:hero"
+      ]
+    },
+    {
+      "key": "unmanaged:unmanaged_asset:media/places/el-chalten/hero.jpg",
+      "code": "unmanaged_asset",
+      "severity": "medium",
+      "localPath": "media/places/el-chalten/hero.jpg",
+      "message": "Публичный локальный файл не имеет manifest-записи с правами и атрибуцией.",
+      "contexts": [
+        "blog:patagonia-за-3-дня:card",
+        "blog:patagonia-за-3-дня:hero",
+        "blog:patagonia-ошибки:card",
+        "blog:patagonia-ошибки:hero",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ]
+    },
+    {
+      "key": "unmanaged:unmanaged_asset:media/places/purmamarca/hero.jpg",
+      "code": "unmanaged_asset",
+      "severity": "medium",
+      "localPath": "media/places/purmamarca/hero.jpg",
+      "message": "Публичный локальный файл не имеет manifest-записи с правами и атрибуцией.",
+      "contexts": [
+        "blog:northwest-самостоятельно:card",
+        "blog:northwest-самостоятельно:hero",
+        "literal:src/lib/blog-post-image-bindings.ts"
       ]
     }
   ],
@@ -386,13 +424,11 @@
       "sha256": "163da08dff9a68baa85895bcc94384f8847e4b9f6a1732f09a56468292cb0627",
       "assetIds": [
         "guide-turistskie-regiony-hero",
-        "service-blog-index-hero",
         "service-card-insurance",
         "service-insurance-hero"
       ],
       "localPaths": [
         "media/guide/turistskie-regiony/hero.jpg",
-        "media/services/blog/hero.jpg",
         "media/services/cards/insurance.jpg",
         "media/services/insurance/hero.jpg"
       ],
@@ -400,7 +436,6 @@
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts",
         "page:guide:turistskie-regiony:hero",
-        "page:service:blog-index:hero",
         "page:service:insurance:hero"
       ],
       "rightsSignatures": [
@@ -516,13 +551,11 @@
       "sha256": "22be4b763abfcfd7930ea539d926236aa9d157df666a722d554fc5e101475a2d",
       "assetIds": [
         "dest-bariloche-cover",
-        "dest-patagonia-gallery-2",
         "place-bariloche-hero",
         "tour-bariloche-lakes-hero"
       ],
       "localPaths": [
         "media/destinations/bariloche/cover.jpg",
-        "media/destinations/patagonia/gallery-2.jpg",
         "media/places/bariloche/hero.jpg",
         "media/tours/bariloche-lakes/hero.jpg"
       ],
@@ -530,7 +563,6 @@
         "blog:patagonia-фото:card",
         "blog:patagonia-фото:hero",
         "destination:bariloche:gallery",
-        "destination:patagonia:gallery",
         "gallery:bariloche-lakes-4",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
@@ -647,31 +679,6 @@
       "repeatedWithinEntity": false
     },
     {
-      "sha256": "2d14579f79b13282d15c466d69b9f8a0a67ebcdd7ab45189073c83242708bbea",
-      "assetIds": [
-        "place-cerro-de-los-7-colores-hero",
-        "place-purmamarca-hero"
-      ],
-      "localPaths": [
-        "media/places/cerro-de-los-7-colores/hero.jpg",
-        "media/places/purmamarca/hero.jpg"
-      ],
-      "contexts": [
-        "blog:northwest-самостоятельно:card",
-        "blog:northwest-самостоятельно:hero",
-        "literal:src/lib/blog-post-image-bindings.ts",
-        "place:cerro-de-los-7-colores:cover",
-        "place:cerro-de-los-7-colores:gallery",
-        "place:purmamarca:gallery"
-      ],
-      "rightsSignatures": [
-        "wikimedia|https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors"
-      ],
-      "sameEntityKeys": [],
-      "conflictingRights": false,
-      "repeatedWithinEntity": false
-    },
-    {
       "sha256": "2eb3971e6891e752e65a55cf854cb2d9d9e3db16ad8e5d90c731583674755626",
       "assetIds": [
         "place-perito-moreno-glacier-gallery-2",
@@ -700,7 +707,6 @@
         "blog-patagonia-penguins",
         "blog-patagonia-whale-watching",
         "dest-calafate-gallery-3",
-        "dest-patagonia-cover",
         "place-perito-moreno-glacier-hero",
         "tour-fitz-roy-trek-gallery-2",
         "tour-patagonia-glaciers-hero"
@@ -710,14 +716,11 @@
         "media/blog/patagonia-penguins/hero.jpg",
         "media/blog/patagonia-whale-watching/hero.jpg",
         "media/destinations/calafate/gallery-3.jpg",
-        "media/destinations/patagonia/cover.jpg",
         "media/places/perito-moreno-glacier/hero.jpg",
         "media/tours/fitz-roy-trek/gallery-2.jpg",
         "media/tours/patagonia-glaciers/hero.jpg"
       ],
       "contexts": [
-        "blog:patagonia-whale-watching:card",
-        "blog:patagonia-whale-watching:hero",
         "blog:patagonia-авиабилеты:card",
         "blog:patagonia-авиабилеты:hero",
         "blog:patagonia-за-10-дней:card",
@@ -729,18 +732,13 @@
         "blog:patagonia-чек-лист:card",
         "blog:patagonia-чек-лист:hero",
         "destination:calafate:gallery",
-        "destination:patagonia:gallery",
         "gallery:fitz-roy-trek-1",
         "gallery:patagonia-glaciers-4",
         "literal:src/components/about/DesignSystemShowcase.tsx",
-        "literal:src/components/marketplace/ToursCatalog.tsx",
         "literal:src/data/blog-category-meta.ts",
         "literal:src/lib/blog-post-image-bindings.ts",
-        "literal:src/lib/destinations-catalog-seo.ts",
         "literal:src/lib/media/media-placeholders.ts",
-        "literal:src/lib/page-metadata.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
-        "page:destination:patagonia:hero",
         "place:perito-moreno-glacier:cover",
         "place:perito-moreno-glacier:gallery",
         "tour:fitz-roy-trek:gallery",
@@ -809,8 +807,6 @@
       "contexts": [
         "blog:patagonia-camping:card",
         "blog:patagonia-camping:hero",
-        "blog:patagonia-packing-list:card",
-        "blog:patagonia-packing-list:hero",
         "literal:src/data/media-library/stock-cache.json",
         "literal:src/lib/blog-post-image-bindings.ts"
       ],
@@ -893,17 +889,14 @@
     {
       "sha256": "506084d1de1b2d297f79c689e91c811817764abde24bba9bfc39de095f685714",
       "assetIds": [
-        "destination-patagonia-section",
         "guide-dostoprimechatelnosti-content",
         "guide-pogoda-i-sezonnost-hero"
       ],
       "localPaths": [
-        "media/destinations/patagonia/section.jpg",
         "media/guide/dostoprimechatelnosti/content.jpg",
         "media/guide/pogoda-i-sezonnost/hero.jpg"
       ],
       "contexts": [
-        "destination:patagonia:hero",
         "literal:src/data/media-library/stock-cache.json",
         "page:guide:pogoda-i-sezonnost:hero"
       ],
@@ -1258,29 +1251,19 @@
     {
       "sha256": "8a3e397df39e993c42ffc18c2c9c6ad97fe2d2effc8e9f3b302f1bd8be52899b",
       "assetIds": [
-        "dest-patagonia-gallery-1",
-        "place-el-chalten-hero",
         "place-fitz-roy-hero",
         "tour-fitz-roy-trek-hero"
       ],
       "localPaths": [
-        "media/destinations/patagonia/gallery-1.jpg",
-        "media/places/el-chalten/hero.jpg",
         "media/places/fitz-roy/hero.jpg",
         "media/tours/fitz-roy-trek/hero.jpg"
       ],
       "contexts": [
         "blog:patagonia-ветер:card",
         "blog:patagonia-ветер:hero",
-        "blog:patagonia-за-3-дня:card",
-        "blog:patagonia-за-3-дня:hero",
-        "blog:patagonia-ошибки:card",
-        "blog:patagonia-ошибки:hero",
-        "destination:patagonia:gallery",
         "gallery:fitz-roy-trek-4",
         "literal:src/lib/blog-post-image-bindings.ts",
         "literal:src/lib/tour-card-fallback-image.ts",
-        "place:el-chalten:gallery",
         "place:fitz-roy:cover",
         "place:fitz-roy:gallery",
         "tour:fitz-roy-trek:gallery",
@@ -1654,14 +1637,12 @@
     {
       "sha256": "b37a46d241cd250c47cc8b41c0d1b332670ef337812895015ebe4c93a3ef2706",
       "assetIds": [
-        "dest-patagonia-gallery-3",
         "dest-ushuaia-cover",
         "place-ushuaia-hero",
         "tour-fitz-roy-trek-gallery-4",
         "tour-ushuaia-end-of-world-hero"
       ],
       "localPaths": [
-        "media/destinations/patagonia/gallery-3.jpg",
         "media/destinations/ushuaia/cover.jpg",
         "media/places/ushuaia/hero.jpg",
         "media/tours/fitz-roy-trek/gallery-4.jpg",
@@ -1672,7 +1653,6 @@
         "blog:patagonia-за-5-дней:hero",
         "blog:patagonia-за-7-дней:card",
         "blog:patagonia-за-7-дней:hero",
-        "destination:patagonia:gallery",
         "destination:ushuaia:gallery",
         "gallery:fitz-roy-trek-3",
         "gallery:ushuaia-end-of-world-4",
@@ -2028,25 +2008,20 @@
     {
       "sha256": "d550fc8de2d1adbd06c50b1a8e6f6d74b678234b5c7530e854bda65e2e8ae3b8",
       "assetIds": [
-        "destination-mendoza-section",
         "place-mendoza-gallery-2",
         "tour-mendoza-wine-gallery-2"
       ],
       "localPaths": [
-        "media/destinations/mendoza/section.jpg",
         "media/places/mendoza/gallery-2.jpg",
         "media/tours/mendoza-wine/gallery-2.jpg"
       ],
       "contexts": [
-        "destination:mendoza:hero",
         "gallery:mendoza-wine-1",
-        "literal:src/data/media-library/stock-cache.json",
         "place:mendoza:gallery",
         "tour:mendoza-wine:gallery"
       ],
       "rightsSignatures": [
-        "wikimedia|https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors",
-        "wikimedia|https://commons.wikimedia.org/wiki/File:Vignoble_Mendoza_Argentine.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors"
+        "wikimedia|https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg|CC BY-SA / CC BY (Wikimedia Commons)|Wikimedia Commons contributors"
       ],
       "sameEntityKeys": [],
       "conflictingRights": false,
@@ -2146,21 +2121,16 @@
       "sha256": "e6aee02e00e879b8f0f4bc773558a6ed742d9340410a9c1e93975d72361ad976",
       "assetIds": [
         "blog-grazhdanstvo-argentiny",
-        "service-card-visa-support",
-        "service-contacts-hero"
+        "service-card-visa-support"
       ],
       "localPaths": [
         "media/blog/grazhdanstvo-argentiny/hero.jpg",
-        "media/services/cards/visa-support.jpg",
-        "media/services/contacts/hero.jpg"
+        "media/services/cards/visa-support.jpg"
       ],
       "contexts": [
-        "blog:grazhdanstvo-argentiny:card",
-        "blog:grazhdanstvo-argentiny:hero",
         "literal:src/data/blog-author.ts",
         "literal:src/data/media-library/stock-cache.json",
-        "literal:src/lib/blog-post-image-bindings.ts",
-        "page:service:contacts:hero"
+        "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "rightsSignatures": [
         "pexels|https://www.pexels.com/photo/a-large-building-in-the-background-28155412/|Pexels License|Mariano Di Luch"
@@ -2812,33 +2782,6 @@
       "sha256": "9f0565cb2a500a5a44d3e1747ab231d362a957c65a2a39489297a9ac79b4c44a",
       "width": 2560,
       "height": 1563,
-      "format": "jpeg"
-    },
-    {
-      "id": "place-el-chalten-hero",
-      "localPath": "media/places/el-chalten/hero.jpg",
-      "source": "wikimedia",
-      "role": "hero",
-      "contexts": [
-        "blog:patagonia-за-3-дня:card",
-        "blog:patagonia-за-3-дня:hero",
-        "blog:patagonia-ошибки:card",
-        "blog:patagonia-ошибки:hero",
-        "literal:src/lib/blog-post-image-bindings.ts",
-        "place:el-chalten:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1306381,
-      "sha256": "8a3e397df39e993c42ffc18c2c9c6ad97fe2d2effc8e9f3b302f1bd8be52899b",
-      "width": 1440,
-      "height": 2560,
       "format": "jpeg"
     },
     {
@@ -3564,31 +3507,6 @@
       "format": "jpeg"
     },
     {
-      "id": "place-purmamarca-hero",
-      "localPath": "media/places/purmamarca/hero.jpg",
-      "source": "wikimedia",
-      "role": "hero",
-      "contexts": [
-        "blog:northwest-самостоятельно:card",
-        "blog:northwest-самостоятельно:hero",
-        "literal:src/lib/blog-post-image-bindings.ts",
-        "place:purmamarca:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 732268,
-      "sha256": "2d14579f79b13282d15c466d69b9f8a0a67ebcdd7ab45189073c83242708bbea",
-      "width": 1600,
-      "height": 1200,
-      "format": "jpeg"
-    },
-    {
       "id": "at-purmamarca-gallery-1",
       "localPath": "media/argentina-travel/purmamarca/1624745072327-purmamarca___siete_colores__joaqu_n_carrillo.jpg",
       "source": "argentina.travel",
@@ -3799,6 +3717,7 @@
         "blog:banado-la-estrella:rich-gallery",
         "blog:natsionalnyy-park-ibera:rich-gallery",
         "blog:natsionalnyy-park-iguasu:rich-gallery",
+        "kb:iguasu:gallery",
         "place:iguazu-falls:gallery"
       ],
       "exists": true,
@@ -3821,6 +3740,7 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "kb:iguasu:gallery",
         "place:iguazu-falls:gallery"
       ],
       "exists": true,
@@ -3843,6 +3763,7 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
+        "kb:iguasu:gallery",
         "place:iguazu-falls:gallery"
       ],
       "exists": true,
@@ -3865,6 +3786,7 @@
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
+        "kb:iguasu:hero",
         "page:places:index:hero",
         "place:iguazu-falls:gallery"
       ],
@@ -5921,6 +5843,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:bahia-blanca:hero",
         "place:bahia-blanca:cover",
         "place:bahia-blanca:gallery"
       ],
@@ -6078,6 +6001,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:esquel:hero",
         "place:esquel:cover",
         "place:esquel:gallery"
       ],
@@ -6257,6 +6181,28 @@
       "format": "jpeg"
     },
     {
+      "id": "at-trevelin-el-pueblo-del-molino-hero",
+      "localPath": "media/argentina-travel/trevelin-el-pueblo-del-molino/1632251410715-tulipanes_patagonia_lucas_vazquez_2.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "place:trevelin:cover"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 211490,
+      "sha256": "73e61ab7adacfda35c44bddb43e002e97bdf22cd91875dc821c72fc3fc30a8bb",
+      "width": 1080,
+      "height": 1350,
+      "format": "webp"
+    },
+    {
       "id": "place-quebrada-de-las-conchas-hero",
       "localPath": "media/places/quebrada-de-las-conchas/hero.jpg",
       "source": "wikimedia",
@@ -6396,6 +6342,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:lujan:hero",
         "place:lujan:cover",
         "place:lujan:gallery"
       ],
@@ -6414,11 +6361,81 @@
       "format": "jpeg"
     },
     {
+      "id": "place-pilar-hero",
+      "localPath": "media/places/pilar/hero.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "place:pilar:cover",
+        "place:pilar:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 891619,
+      "sha256": "fb8d13080b1f803e4c8182f364e809fb98e06e23fad00bb902870b53c31ddffd",
+      "width": 1600,
+      "height": 1200,
+      "format": "jpeg"
+    },
+    {
+      "id": "place-zarate-hero",
+      "localPath": "media/places/zarate/hero.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "place:zarate:cover",
+        "place:zarate:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 505997,
+      "sha256": "5add746b69498e898167084002faa6a6383af46c28daaceee464546321c4da7b",
+      "width": 1920,
+      "height": 1438,
+      "format": "jpeg"
+    },
+    {
+      "id": "place-cementerio-de-la-chacarita-hero",
+      "localPath": "media/places/cementerio-de-la-chacarita/hero.jpg",
+      "source": "wikimedia",
+      "role": "hero",
+      "contexts": [
+        "place:cementerio-de-la-chacarita:cover",
+        "place:cementerio-de-la-chacarita:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 592128,
+      "sha256": "7b0df2ae727573ce2e96206434ecb6072264b3eca7cbe49435ae99800425180f",
+      "width": 1920,
+      "height": 778,
+      "format": "jpeg"
+    },
+    {
       "id": "place-mar-de-las-pampas-hero",
       "localPath": "media/places/mar-de-las-pampas/hero.jpg",
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:mar-de-las-pampas:hero",
         "place:mar-de-las-pampas:cover",
         "place:mar-de-las-pampas:gallery"
       ],
@@ -6442,6 +6459,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:necochea:hero",
         "place:necochea:cover",
         "place:necochea:gallery"
       ],
@@ -6577,6 +6595,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:sierra-de-la-ventana:hero",
         "place:sierra-de-la-ventana:cover",
         "place:sierra-de-la-ventana:gallery"
       ],
@@ -6600,6 +6619,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:tandil:hero",
         "place:tandil:cover",
         "place:tandil:gallery"
       ],
@@ -6692,6 +6712,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:las-lenas:hero",
         "place:las-lenas:cover",
         "place:las-lenas:gallery"
       ],
@@ -6715,6 +6736,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:merlo:hero",
         "place:merlo:cover",
         "place:merlo:gallery"
       ],
@@ -6939,6 +6961,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:villavicencio:hero",
         "place:villavicencio:cover",
         "place:villavicencio:gallery"
       ],
@@ -6985,6 +7008,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:colon-entre-rios:hero",
         "place:colon-entre-rios:cover",
         "place:colon-entre-rios:gallery"
       ],
@@ -7371,7 +7395,6 @@
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-rio-pilcomayo:hero",
         "place:parque-nacional-rio-pilcomayo:cover",
         "place:parque-nacional-rio-pilcomayo:gallery"
       ],
@@ -7665,6 +7688,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:ruinas-de-quilmes:hero",
         "place:ruinas-de-quilmes:cover",
         "place:ruinas-de-quilmes:gallery"
       ],
@@ -7711,6 +7735,7 @@
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
+        "kb:tafi-del-valle:hero",
         "place:tafi-del-valle:cover",
         "place:tafi-del-valle:gallery"
       ],
@@ -7827,7 +7852,6 @@
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:la-cumbrecita:hero",
         "place:la-cumbrecita:cover",
         "place:la-cumbrecita:gallery"
       ],
@@ -7851,7 +7875,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:la-cumbrecita:gallery",
         "place:la-cumbrecita:gallery"
       ],
       "exists": true,
@@ -7874,7 +7897,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:la-cumbrecita:gallery",
         "place:la-cumbrecita:gallery"
       ],
       "exists": true,
@@ -7897,7 +7919,6 @@
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:la-cumbrecita:gallery",
         "place:la-cumbrecita:gallery"
       ],
       "exists": true,
@@ -8592,10 +8613,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 9445664,
-      "sha256": "7550e5354dc563fbc2234847e8d3ffaa6ff53bf58bf94a7dc5ada6f7fb940bba",
-      "width": 2847,
-      "height": 2982,
+      "bytes": 466139,
+      "sha256": "e895295723ede9d5db7ce6c7d0738a4e0cfe5884d5b27dad7dd24ce944f310a1",
+      "width": 1833,
+      "height": 1920,
       "format": "jpeg"
     },
     {
@@ -8705,8 +8726,8 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 1254761,
-      "sha256": "0ac8ecb19db720b4bb4fa5931340632103d2a7fe56922caf76ad338b414f13f8",
+      "bytes": 658365,
+      "sha256": "93dd12401a1c193540ff779f9869750bf967292c48f540a54ac95b514cc76dbe",
       "width": 1920,
       "height": 1638,
       "format": "jpeg"
@@ -8817,8 +8838,8 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 531799,
-      "sha256": "f15f3af81ed5ba3e3c43b4edc4fc8f73292e30eaf1919192a4e0c4d0a9ba6adc",
+      "bytes": 275068,
+      "sha256": "dff95204b019c276137df51a151c6281f99945e43878043c4c6cf5ddf48a10c1",
       "width": 1920,
       "height": 1280,
       "format": "jpeg"
@@ -8929,8 +8950,8 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 474884,
-      "sha256": "6c74ebec3577c3956e275c5a1599eec623da378ea5bb52fabbcbfa0a3e2e0faf",
+      "bytes": 257729,
+      "sha256": "6747af169330af2e0ecf6241cdf9200429c2b6b3fe6827681a5c6add91b9786a",
       "width": 1920,
       "height": 1280,
       "format": "jpeg"
@@ -9041,8 +9062,8 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 445075,
-      "sha256": "ed0c699f3fc690d207d0e39c2a3fdb31ae4809bab4015ca7aedbb9f6659f3059",
+      "bytes": 247476,
+      "sha256": "d29ee00027296a535b25e32797540254d0ffe6729647485c579c278ae9e99402",
       "width": 1920,
       "height": 1080,
       "format": "jpeg"
@@ -9153,10 +9174,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 930777,
-      "sha256": "d550fc8de2d1adbd06c50b1a8e6f6d74b678234b5c7530e854bda65e2e8ae3b8",
-      "width": 2560,
-      "height": 805,
+      "bytes": 224528,
+      "sha256": "873dc91334917a758647ce6b9d7650fb1953797806147eb330fc2f9550bd6738",
+      "width": 1920,
+      "height": 604,
       "format": "jpeg"
     },
     {
@@ -9243,10 +9264,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 5493621,
-      "sha256": "7bfd0845320f17a2d905424ada76b20ab8099a8972c1e5e98ef75495689177fc",
-      "width": 6000,
-      "height": 4000,
+      "bytes": 409974,
+      "sha256": "7f7581345ed59890191dc0bbc1117aad49497479e7f8ac65fce65ef23611252d",
+      "width": 1920,
+      "height": 1280,
       "format": "jpeg"
     },
     {
@@ -9345,6 +9366,7 @@
       "role": "section",
       "contexts": [
         "destination:patagonia:hero",
+        "literal:src/components/destinations/DestinationDetailView.tsx",
         "literal:src/data/media-library/stock-cache.json"
       ],
       "exists": true,
@@ -9355,10 +9377,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 1919373,
-      "sha256": "506084d1de1b2d297f79c689e91c811817764abde24bba9bfc39de095f685714",
-      "width": 5568,
-      "height": 4000,
+      "bytes": 194233,
+      "sha256": "f1364405f3bce9618e6b14e09d842af36048e0eaac3a9ac5f0d983ffb77219ec",
+      "width": 1920,
+      "height": 1379,
       "format": "jpeg"
     },
     {
@@ -9368,6 +9390,7 @@
       "role": "hero",
       "contexts": [
         "destination:patagonia:gallery",
+        "literal:src/app/tours/region/patagonia/page.tsx",
         "literal:src/components/marketplace/ToursCatalog.tsx",
         "literal:src/lib/destinations-catalog-seo.ts",
         "literal:src/lib/page-metadata.ts",
@@ -9381,10 +9404,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 785630,
-      "sha256": "2fc2cbe0ed567ba8f970f8c345babce290d7b1beeb214a3e48bb5d9645a2f5fe",
-      "width": 2560,
-      "height": 1097,
+      "bytes": 186739,
+      "sha256": "fa9899920ca0a9ab5551abe4e2b4e3ff1bd2e36c137d30ce3a355c0f2670617d",
+      "width": 1920,
+      "height": 822,
       "format": "jpeg"
     },
     {
@@ -9403,10 +9426,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 1306381,
-      "sha256": "8a3e397df39e993c42ffc18c2c9c6ad97fe2d2effc8e9f3b302f1bd8be52899b",
-      "width": 1440,
-      "height": 2560,
+      "bytes": 294356,
+      "sha256": "37eeb32309ac2bb3070145245734ef27f034410af5584be2a0ff372aa42eac63",
+      "width": 1080,
+      "height": 1920,
       "format": "jpeg"
     },
     {
@@ -9425,8 +9448,8 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 602763,
-      "sha256": "22be4b763abfcfd7930ea539d926236aa9d157df666a722d554fc5e101475a2d",
+      "bytes": 126629,
+      "sha256": "e54841b8a89474df2b0d17ab80e6bacc9ea324471b4055ad199562b69a8f668c",
       "width": 1190,
       "height": 803,
       "format": "jpeg"
@@ -9447,10 +9470,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 1143279,
-      "sha256": "b37a46d241cd250c47cc8b41c0d1b332670ef337812895015ebe4c93a3ef2706",
-      "width": 2560,
-      "height": 1387,
+      "bytes": 289065,
+      "sha256": "79588704580c2b3788cc7fdcd7a788c1679ef4e9f7723364912638db36c0549c",
+      "width": 1920,
+      "height": 1040,
       "format": "jpeg"
     },
     {
@@ -10470,40 +10493,11 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-patagonia-packing-list",
-      "localPath": "media/blog/patagonia-packing-list/hero.jpg",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "blog:patagonia-camping:card",
-        "blog:patagonia-camping:hero",
-        "blog:patagonia-packing-list:card",
-        "blog:patagonia-packing-list:hero",
-        "literal:src/data/media-library/stock-cache.json",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 2075690,
-      "sha256": "38da7df636ad5ee91f7bfeda08a09e2ddbe0ea6af2ddb10709327e911f96c5c6",
-      "width": 4032,
-      "height": 3024,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-patagonia-whale-watching",
       "localPath": "media/blog/patagonia-whale-watching/hero.jpg",
       "source": "wikimedia",
       "role": "hero",
       "contexts": [
-        "blog:patagonia-whale-watching:card",
-        "blog:patagonia-whale-watching:hero",
         "blog:patagonia-авиабилеты:card",
         "blog:patagonia-авиабилеты:hero",
         "blog:patagonia-за-10-дней:card",
@@ -12231,30 +12225,6 @@
       "format": "jpeg"
     },
     {
-      "id": "blog-vnzh-argentina-rezidenciya",
-      "localPath": "media/blog/vnzh-argentina-rezidenciya/hero.jpg",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "blog:vnzh-argentina-rezidenciya:card",
-        "blog:vnzh-argentina-rezidenciya:hero",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 4919395,
-      "sha256": "854467faa76d75120b2b291518ef04d3737527c81ff384ed7068226022f4b701",
-      "width": 6720,
-      "height": 4480,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-bankovskij-schet-argentina",
       "localPath": "media/blog/bankovskij-schet-argentina/hero.jpg",
       "source": "pexels",
@@ -12304,31 +12274,6 @@
       "format": "jpeg"
     },
     {
-      "id": "service-card-visa-support",
-      "localPath": "media/services/cards/visa-support.jpg",
-      "source": "pexels",
-      "role": "card",
-      "contexts": [
-        "blog:grazhdanstvo-argentiny:card",
-        "blog:grazhdanstvo-argentiny:hero",
-        "literal:src/data/media-library/stock-cache.json",
-        "literal:src/lib/blog-post-image-bindings.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 1603301,
-      "sha256": "e6aee02e00e879b8f0f4bc773558a6ed742d9340410a9c1e93975d72361ad976",
-      "width": 4497,
-      "height": 2998,
-      "format": "jpeg"
-    },
-    {
       "id": "blog-patagonia-аренда-авто-section-2",
       "localPath": "media/blog/patagonia-arenda-avto/hero.jpg",
       "source": "pexels",
@@ -12355,12 +12300,15 @@
       "format": "jpeg"
     },
     {
-      "id": "at-parque-nacional-bosques-petrificados-hero",
-      "localPath": "media/argentina-travel/parque-nacional-bosques-petrificados/1624476579387-bosque_petrificado_canon__110_.jpg",
-      "source": "argentina.travel",
+      "id": "blog-patagonia-packing-list",
+      "localPath": "media/blog/patagonia-packing-list/hero.jpg",
+      "source": "pexels",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-bosques-petrificados:hero"
+        "blog:patagonia-camping:card",
+        "blog:patagonia-camping:hero",
+        "literal:src/data/media-library/stock-cache.json",
+        "literal:src/lib/blog-post-image-bindings.ts"
       ],
       "exists": true,
       "metadata": {
@@ -12370,19 +12318,525 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 280614,
-      "sha256": "3801273363f06e8f77d149e7fd333d5478fbadfa8f839a0e1c76da961ba9b6bb",
+      "bytes": 2075690,
+      "sha256": "38da7df636ad5ee91f7bfeda08a09e2ddbe0ea6af2ddb10709327e911f96c5c6",
+      "width": 4032,
+      "height": 3024,
+      "format": "jpeg"
+    },
+    {
+      "id": "at-amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes-hero",
+      "localPath": "media/argentina-travel/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes/1623767242450-coplera.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 469590,
+      "sha256": "2da0ace49499f4d76cf0d0b069318c635c215f84db82e5f749565abe9781ec3e",
+      "width": 1538,
+      "height": 769,
+      "format": "webp"
+    },
+    {
+      "id": "at-amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes-gallery-1",
+      "localPath": "media/argentina-travel/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes/1623767249878-_dx_7291.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 364826,
+      "sha256": "5e1ce20fc81a8493f2ddfdca3ef28bb6c6becdf54202b6a9d469ba335306fab3",
+      "width": 2118,
+      "height": 1412,
+      "format": "webp"
+    },
+    {
+      "id": "at-amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes-gallery-2",
+      "localPath": "media/argentina-travel/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes/1623767258622-_dx_9099.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 306966,
+      "sha256": "b0c340d48fb9992f2e3f62d69620e79785c14980d48f12bffea839ab7aa7787a",
+      "width": 2540,
+      "height": 1694,
+      "format": "webp"
+    },
+    {
+      "id": "at-amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes-gallery-3",
+      "localPath": "media/argentina-travel/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes/1623767264065-img_3060.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 245378,
+      "sha256": "0cc8af7f77ecb34bebcb971e3c484b51b41494626ae759227e7650408ca745bf",
+      "width": 2519,
+      "height": 1679,
+      "format": "webp"
+    },
+    {
+      "id": "at-aves-del-chaco-hero",
+      "localPath": "media/argentina-travel/aves-del-chaco/1644341441095-avistaje_colonia_amadeo_chaco_22.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:aves-del-chaco:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 191010,
+      "sha256": "b4c732a83fecf467f9f8c57cb97b7e6f4bb1da71b3d5fff774ca4a2a6279cdb3",
+      "width": 2555,
+      "height": 1703,
+      "format": "webp"
+    },
+    {
+      "id": "at-aves-del-chaco-gallery-1",
+      "localPath": "media/argentina-travel/aves-del-chaco/1644341450938-avistaje_colonia_amadeo_chaco_67.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:aves-del-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 396002,
+      "sha256": "4e89058b2bff7ea112631179547458f53e8b60d84811702fd909105a7266d923",
+      "width": 1508,
+      "height": 1005,
+      "format": "webp"
+    },
+    {
+      "id": "at-aves-del-chaco-gallery-2",
+      "localPath": "media/argentina-travel/aves-del-chaco/1644341458121-avistaje_colonia_amadeo_chaco_23.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:aves-del-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 252090,
+      "sha256": "1abe2731c7bec54c8e951cec1f5ca780bd72d3ab155dfb4b857d1a18402fc487",
+      "width": 2327,
+      "height": 1552,
+      "format": "webp"
+    },
+    {
+      "id": "at-aves-del-chaco-gallery-3",
+      "localPath": "media/argentina-travel/aves-del-chaco/1644341463853-avistaje_colonia_amadeo_chaco_14.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:aves-del-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 120336,
+      "sha256": "7a6f21f28b4634ba78695ddb7dc054a2fb1c7cb5885a962e991644ee2770d5fc",
+      "width": 2340,
+      "height": 1560,
+      "format": "webp"
+    },
+    {
+      "id": "at-bienal-internacional-de-esculturas-en-resistencia-hero",
+      "localPath": "media/argentina-travel/bienal-internacional-de-esculturas-en-resistencia/1644329344055-resistencia_escultura_fernando.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:bienal-internacional-de-esculturas-en-resistencia:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 231092,
+      "sha256": "91c1092e0005c0bba2e5f0778fd2d45ac13ab12d249f886c943156b0372c281c",
+      "width": 2344,
+      "height": 1562,
+      "format": "webp"
+    },
+    {
+      "id": "at-bienal-internacional-de-esculturas-en-resistencia-gallery-1",
+      "localPath": "media/argentina-travel/bienal-internacional-de-esculturas-en-resistencia/1644329370272-resistencia___pasaeo_de_las_esculturas___domo_del_centeario_2__1_.",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:bienal-internacional-de-esculturas-en-resistencia:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 196800,
+      "sha256": "88a88067fe3691d82bd5dfab69b82e1e3d7db17db04f2f1ca58a00d84d69262c",
+      "width": 2009,
+      "height": 1339,
+      "format": "webp"
+    },
+    {
+      "id": "at-bienal-internacional-de-esculturas-en-resistencia-gallery-2",
+      "localPath": "media/argentina-travel/bienal-internacional-de-esculturas-en-resistencia/1644329374854-resistencia_bienal_2016_escultores.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:bienal-internacional-de-esculturas-en-resistencia:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 200102,
+      "sha256": "5f84df40ba351d58ec953e859aa37092d001c65849174dce9aa88338b9c701d5",
+      "width": 2103,
+      "height": 2998,
+      "format": "webp"
+    },
+    {
+      "id": "at-bienal-internacional-de-esculturas-en-resistencia-gallery-3",
+      "localPath": "media/argentina-travel/bienal-internacional-de-esculturas-en-resistencia/1644329382884-resistencia_museum_escultura__1_.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:bienal-internacional-de-esculturas-en-resistencia:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 191014,
+      "sha256": "ae8ad42a0f7fb950d18ad2f3d45c132044557add61dde5bba3ee36f8778c85cc",
+      "width": 2570,
+      "height": 1460,
+      "format": "webp"
+    },
+    {
+      "id": "at-campo-del-cielo-hero",
+      "localPath": "media/argentina-travel/campo-del-cielo/1644336194254-campo_del_cielo_meteorito_chaco_2.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:campo-del-cielo:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 243880,
+      "sha256": "5577279bd76d90295f5f9a8537988b7d688c5ee51bbd3d6c2f78c5c1c2624a4b",
+      "width": 2082,
+      "height": 1171,
+      "format": "webp"
+    },
+    {
+      "id": "at-campo-del-cielo-gallery-1",
+      "localPath": "media/argentina-travel/campo-del-cielo/1644336199886-parque_campo_del_cielo_circuito_de_meteoritos_4.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:campo-del-cielo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 255508,
+      "sha256": "44c577fa794c97afbba214db8ac6553b5b490fe35927850db9fa79ed97e8476b",
+      "width": 1966,
+      "height": 1310,
+      "format": "webp"
+    },
+    {
+      "id": "at-campo-del-cielo-gallery-2",
+      "localPath": "media/argentina-travel/campo-del-cielo/1644336208455-parque_provincial_campo_del_cielo_centro_de_interpretacion_interio",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:campo-del-cielo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 131132,
+      "sha256": "d732c42e0d3c4751bfac36a0c0652c1be4ae5ae36650f1332e27e437dec4e374",
+      "width": 2514,
+      "height": 1676,
+      "format": "webp"
+    },
+    {
+      "id": "at-campo-del-cielo-gallery-3",
+      "localPath": "media/argentina-travel/campo-del-cielo/1644336213405-parque_provincial_campo_del_cielo_centro_de_interpretacion_interio",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:campo-del-cielo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 178448,
+      "sha256": "0fd2316009b52c41ce610116ec23d837e0fa8a68145d446b2a45ff5fdb388ca3",
+      "width": 1816,
+      "height": 1211,
+      "format": "webp"
+    },
+    {
+      "id": "at-caucete-san-juan-hero",
+      "localPath": "media/argentina-travel/caucete-san-juan/1626729970779-sjischigualastodji_0063.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:caucete-san-juan:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 328016,
+      "sha256": "865b95406fad9e7ebc559729b0cdc9b9caa7ddcda22e0b097786c95f51077462",
+      "width": 1790,
+      "height": 1193,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-callejero-de-potrero-de-los-funes-hero",
+      "localPath": "media/argentina-travel/circuito-callejero-de-potrero-de-los-funes/1624374970624-sanluis_potrerodelosfunes_1_14_10.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:circuito-callejero-de-potrero-de-los-funes:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 279334,
+      "sha256": "4504a7c6643a1ea8326d12c8685ea91ff19b927aad796a8014c603ec0b779f21",
+      "width": 2605,
+      "height": 1737,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-callejero-de-potrero-de-los-funes-gallery-1",
+      "localPath": "media/argentina-travel/circuito-callejero-de-potrero-de-los-funes/1624374994377-dji_0085.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-callejero-de-potrero-de-los-funes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 185424,
+      "sha256": "4770148adee724e0ad624f3f12316f9af6ff1f5e9e2fc3d6b4b28a0e4e14087f",
+      "width": 4607,
+      "height": 3070,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-callejero-de-potrero-de-los-funes-gallery-2",
+      "localPath": "media/argentina-travel/circuito-callejero-de-potrero-de-los-funes/1624375000440-sanluis_potrerodelosfunes_1_29_22.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-callejero-de-potrero-de-los-funes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 302228,
+      "sha256": "d7c19f4e9fd73d2db5517c0e6f1bd5003c542f511e7f707910c95c198622d7d6",
+      "width": 2677,
+      "height": 1785,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-callejero-de-potrero-de-los-funes-gallery-3",
+      "localPath": "media/argentina-travel/circuito-callejero-de-potrero-de-los-funes/1624375004995-sanluis_potrerodelosfunes_1_10_7.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-callejero-de-potrero-de-los-funes:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 303626,
+      "sha256": "b1c5de4750d4ff9e5ca71065faf96d4f4a4e7c1341548aa2f317ead25002309b",
+      "width": 2390,
+      "height": 1594,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-cultural-en-formosa-hero",
+      "localPath": "media/argentina-travel/circuito-cultural-en-formosa/1655238421951-vieja_estaci_n_formosa_2.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:circuito-cultural-en-formosa:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 303488,
+      "sha256": "fcb75416ad59de9d2560be705334308580413bcf1017af2a34b5775f65fd477b",
+      "width": 1819,
+      "height": 1213,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-cultural-en-formosa-gallery-1",
+      "localPath": "media/argentina-travel/circuito-cultural-en-formosa/1655238428564-museo_duffard_2.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-cultural-en-formosa:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 217120,
+      "sha256": "d715de42d0a75fb91e61e22b474f470ff2ea68f0d9dda6458b83dbaae1de1e21",
       "width": 2127,
-      "height": 924,
+      "height": 1418,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-bosques-petrificados-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-bosques-petrificados/1624476589618-b__petrificado_santa_cruz__foto_fernando_orengo__1_.jpg",
+      "id": "at-circuito-cultural-en-formosa-gallery-2",
+      "localPath": "media/argentina-travel/circuito-cultural-en-formosa/1655238437040-museo_duffard_5.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-bosques-petrificados:gallery"
+        "kb:circuito-cultural-en-formosa:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12392,19 +12846,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 351294,
-      "sha256": "e5fc20cd2e9d101b6dfddec7cec79cf90f0c211e97b4bd91fc8ad154e55ee034",
-      "width": 1547,
-      "height": 1156,
+      "bytes": 159806,
+      "sha256": "cf10d031ba651989853eb3459c03a7137dc3c4c31a5ac4b4cdd4e6cebe5fd49c",
+      "width": 2358,
+      "height": 1572,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-bosques-petrificados-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-bosques-petrificados/1624476595812-bosque_pet_santa_cruz_foto_f_orengo.jpg",
+      "id": "at-circuito-cultural-en-formosa-gallery-3",
+      "localPath": "media/argentina-travel/circuito-cultural-en-formosa/1655238447348-museo_duffard_6.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-bosques-petrificados:gallery"
+        "kb:circuito-cultural-en-formosa:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12414,41 +12868,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 320612,
-      "sha256": "82c3f460c330eccd92906a4f0bc553079356908d895d1850bdae6305ce3a0928",
-      "width": 1497,
-      "height": 1122,
+      "bytes": 166912,
+      "sha256": "c94ae95b87e712efe4dcd749bd60f2767ffe009cb4ffaf2862fa3a128967bd2b",
+      "width": 2172,
+      "height": 1448,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-bosques-petrificados-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-bosques-petrificados/1624476601387-bosque_petrificado_canon__138_.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-bosques-petrificados:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 238168,
-      "sha256": "ee91f2f7e2d2646f7a413ed345c4732a0a2fb6368956d10288fd4c02fd3cc505",
-      "width": 2303,
-      "height": 1536,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-el-leoncito-hero",
-      "localPath": "media/argentina-travel/parque-nacional-el-leoncito/1627490254427-san_juan___pn_el_leoncito__2_.jpg",
+      "id": "at-circuito-de-cervecerias-en-rosario-hero",
+      "localPath": "media/argentina-travel/circuito-de-cervecerias-en-rosario/1644524630545-34553454_1935441639852536_6786346471424786432_o__1_.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-el-leoncito:hero"
+        "kb:circuito-de-cervecerias-en-rosario:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12458,19 +12890,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 351276,
-      "sha256": "a598a0165f89eb852136913a68bf9e761120749663a3c4033550a4803055d39f",
-      "width": 2113,
-      "height": 1409,
+      "bytes": 88198,
+      "sha256": "3a170608d23cf41dc11abce3e9c19f408033bfdaf4eb93e3794124a632703a53",
+      "width": 1867,
+      "height": 1246,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-el-leoncito-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-el-leoncito/1627490268171-sjbarrealdsc05847.jpg",
+      "id": "at-circuito-de-cervecerias-en-rosario-gallery-1",
+      "localPath": "media/argentina-travel/circuito-de-cervecerias-en-rosario/1644524635394-copia_de_copia_de_1_inicio_capitulos_cap6.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-el-leoncito:gallery"
+        "kb:circuito-de-cervecerias-en-rosario:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12480,19 +12912,195 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 267024,
-      "sha256": "035aef73dc2a13b6a7aeb1014f9ee2bd0fe22d1a3a96f90673f5d1b3825da718",
+      "bytes": 270288,
+      "sha256": "90edc9d36ed69e44f0e1370288d958da3ed9d41b79b643b3ac96e5ab109f2e8a",
+      "width": 2316,
+      "height": 1358,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-de-cervecerias-en-rosario-gallery-2",
+      "localPath": "media/argentina-travel/circuito-de-cervecerias-en-rosario/1644524641257-img_1174_pano.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-de-cervecerias-en-rosario:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 310470,
+      "sha256": "44beef39cc7b2213cd99874da0eff52cc186c22085051f410749676999552622",
+      "width": 2804,
+      "height": 988,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-de-cervecerias-en-rosario-gallery-3",
+      "localPath": "media/argentina-travel/circuito-de-cervecerias-en-rosario/1644524649324-dsc_7873.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-de-cervecerias-en-rosario:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 169190,
+      "sha256": "65a26e17b2a46f01b6873814e7bb62a0333bb5edfa99702a96b2bbf74c2cbcef",
+      "width": 1677,
+      "height": 2521,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-gastronomico-en-el-rio-parana-hero",
+      "localPath": "media/argentina-travel/circuito-gastronomico-en-el-rio-parana/1649771181650-doppio_zero_021.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:circuito-gastronomico-en-el-rio-parana:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 214070,
+      "sha256": "a99b61563b59c154d834edb45c5e32f73b4d112a3e6250242579de254f5009f1",
+      "width": 2614,
+      "height": 1740,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-gastronomico-en-el-rio-parana-gallery-1",
+      "localPath": "media/argentina-travel/circuito-gastronomico-en-el-rio-parana/1649771189806-bajada_espa_a_006__silvio_moriconi_.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-gastronomico-en-el-rio-parana:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 267170,
+      "sha256": "a744a367b5e4059ed29830e1cd04a3f47d3c616d858bafbf4776fc3f0af429c6",
+      "width": 4256,
+      "height": 2832,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-gastronomico-en-el-rio-parana-gallery-2",
+      "localPath": "media/argentina-travel/circuito-gastronomico-en-el-rio-parana/1649771194710-especial___club_fellini_1.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-gastronomico-en-el-rio-parana:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 116982,
+      "sha256": "8d614868cd6ad82f2cecea0155c7c48369cf6be59a62a05ff149b4ffbac4e088",
+      "width": 1500,
+      "height": 1000,
+      "format": "webp"
+    },
+    {
+      "id": "at-circuito-gastronomico-en-el-rio-parana-gallery-3",
+      "localPath": "media/argentina-travel/circuito-gastronomico-en-el-rio-parana/1649771201853-carne_cortada_a_cuchillo___el_gran_chopp_1.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:circuito-gastronomico-en-el-rio-parana:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 89974,
+      "sha256": "afb7d96da73ed34696f1cec2b8f638257f407d902b6df6b5937c940d8e3be4d6",
+      "width": 1500,
+      "height": 1000,
+      "format": "webp"
+    },
+    {
+      "id": "at-gastronomia-de-chaco-hero",
+      "localPath": "media/argentina-travel/gastronomia-de-chaco/1643144803773-sabores_del_chaco_chup_n_de_pescado.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:gastronomia-de-chaco:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 163220,
+      "sha256": "49e50ff6ac43747f31f140295b8abb09b04ed4270cc92cb6d18bebac8c93fb4f",
+      "width": 3843,
+      "height": 2060,
+      "format": "webp"
+    },
+    {
+      "id": "at-gastronomia-de-chaco-gallery-1",
+      "localPath": "media/argentina-travel/gastronomia-de-chaco/1643144808536-sabores_del_chaco_batata.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:gastronomia-de-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 186268,
+      "sha256": "f8849f26ccfd9ef52495484039555d8bcd5f82e85935ae7a4f517733428b3b70",
       "width": 2048,
-      "height": 1365,
+      "height": 1356,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-el-leoncito-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-el-leoncito/1627490277818-san_juan___pn_el_leoncito__3_.jpg",
+      "id": "at-gastronomia-de-chaco-gallery-2",
+      "localPath": "media/argentina-travel/gastronomia-de-chaco/1643144813719-sabores_del_chaco_empanadas.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-el-leoncito:gallery"
+        "kb:gastronomia-de-chaco:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12502,63 +13110,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 313410,
-      "sha256": "a68bea3030a1d2a975e5fc1aeed96c2ab1f60a3cb475882d7ec3cbb5660ae27a",
-      "width": 2580,
-      "height": 1720,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-el-leoncito-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-el-leoncito/1627490284189-carro_a_vela___pampa_el_leoncito_01.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-el-leoncito:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 166980,
-      "sha256": "1f397370283c22ffa8f936608678fa961745e3db3ea4eae6030cfa9df17d47d1",
-      "width": 2500,
-      "height": 1674,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-islas-de-santa-fe-hero",
-      "localPath": "media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388804931-caminatas_y_corrida__1_.jpg",
-      "source": "argentina.travel",
-      "role": "hero",
-      "contexts": [
-        "kb:parque-nacional-islas-de-santa-fe:hero"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 193234,
-      "sha256": "223df4eb5197c2ba17ec61c5ece4e132e7cbfc2ad65faa515c965c74f973218c",
+      "bytes": 40440,
+      "sha256": "a5e619091a2c281033a0668f8e0fb4cf24ef114a2f441154473e7262ac3a25b5",
       "width": 960,
-      "height": 720,
+      "height": 640,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-islas-de-santa-fe-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388824268-paisaje_isla__2_.jpg",
+      "id": "at-gastronomia-de-chaco-gallery-3",
+      "localPath": "media/argentina-travel/gastronomia-de-chaco/1643144816862-sabores_del_chaco_plato1.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-islas-de-santa-fe:gallery"
+        "kb:gastronomia-de-chaco:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12568,63 +13132,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 230838,
-      "sha256": "305c2de0bee9cff713db1836f8102fad6bbb888ba772df333f46983422e69eb9",
-      "width": 2826,
-      "height": 2120,
+      "bytes": 142538,
+      "sha256": "8764649b27f34953d875372f74c3374864634067127dda54ffc0bbc5c28a4927",
+      "width": 2128,
+      "height": 1416,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-islas-de-santa-fe-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388836136-otros_jaaukanig_s__1_.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-islas-de-santa-fe:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 262102,
-      "sha256": "d31ece1f8ab665cd6254e2fecd374d68cd49740c60cda14683b27b4c7a8645d5",
-      "width": 2836,
-      "height": 2128,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-islas-de-santa-fe-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-islas-de-santa-fe/1624388840988-santa_fe_villa_ocampo_kayak_entre_yacares.jpg",
-      "source": "argentina.travel",
-      "role": "gallery",
-      "contexts": [
-        "kb:parque-nacional-islas-de-santa-fe:gallery"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 315306,
-      "sha256": "beb84820f6f0395b9fb97a4381b555c09c9f6b7f47cf2f272e5b74ac03249060",
-      "width": 1904,
-      "height": 2856,
-      "format": "webp"
-    },
-    {
-      "id": "at-parque-nacional-laguna-blanca-hero",
-      "localPath": "media/argentina-travel/parque-nacional-laguna-blanca/1623891050666-laguna_blanca_avstaje_aves_002.jpg",
+      "id": "at-parque-nacional-aconquija-hero",
+      "localPath": "media/argentina-travel/parque-nacional-aconquija/1623702317321-img_1437.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-laguna-blanca:hero"
+        "kb:parque-nacional-aconquija:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12634,19 +13154,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 264538,
-      "sha256": "1e515e50a49d8d75c8c36f08cc9f42cb2b1afaa9dfbbecf043b4ed22b1ddf95c",
-      "width": 2415,
-      "height": 1156,
+      "bytes": 333734,
+      "sha256": "40c3dbf142b601ae0e277de5fefc0b00710a09e82e7830180ed23719d5deadcb",
+      "width": 1178,
+      "height": 785,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-laguna-blanca-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-laguna-blanca/1623891059455-003.jpg",
+      "id": "at-parque-nacional-aconquija-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-aconquija/1623702331679-img_1191.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-laguna-blanca:gallery"
+        "kb:parque-nacional-aconquija:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12656,19 +13176,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 186370,
-      "sha256": "33a73a46ef218bf00f3c75d9310c75f5dbd8ea0fc85e0fa0647f7053941f6500",
-      "width": 2934,
-      "height": 1956,
+      "bytes": 335644,
+      "sha256": "161bfc2f487faac8bb5546a148dd01eb199ff4eb671e521de0824a40b9a43aef",
+      "width": 1702,
+      "height": 1135,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-laguna-blanca-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-laguna-blanca/1623891065406-laguna_blanca_avstaje_aves_020.jpg",
+      "id": "at-parque-nacional-aconquija-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-aconquija/1623702340583-img_1489.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-laguna-blanca:gallery"
+        "kb:parque-nacional-aconquija:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12678,19 +13198,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 361008,
-      "sha256": "f9d844b75186abef1d49f8bf615bbc78448bad18da081fff330fc564f003b39a",
-      "width": 1285,
-      "height": 855,
+      "bytes": 388526,
+      "sha256": "262ec46bc97b0660daba230ca15de2eb2948818a840537a29547c8f7c6542414",
+      "width": 1310,
+      "height": 874,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-laguna-blanca-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-laguna-blanca/1623891072102-laguna_blanca_avstaje_aves_017.jpg",
+      "id": "at-parque-nacional-aconquija-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-aconquija/1623702345353-img_1177.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-laguna-blanca:gallery"
+        "kb:parque-nacional-aconquija:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12700,19 +13220,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 333814,
-      "sha256": "1a6f5a3b0f69e36c3cefc97d86cd4628c6bb346dd67f43c26f21db74e665f284",
-      "width": 1723,
-      "height": 1022,
+      "bytes": 221054,
+      "sha256": "89d10a2178cbaaddfe74b10e27afbf2bc78c81f4958003fc6c6da4abc64743c0",
+      "width": 1594,
+      "height": 1063,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-los-alerces-patrimonio-de-la-humanidad-hero",
-      "localPath": "media/argentina-travel/parque-nacional-los-alerces-patrimonio-de-la-humanidad/1623885285397-familia_rio_arrayanes_parque_nacional_los_alerces_2__1_.jpg",
+      "id": "at-parque-nacional-baritu-hero",
+      "localPath": "media/argentina-travel/parque-nacional-baritu/1623700883691-salta___pn_los_cardones.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-los-alerces-patrimonio-de-la-humanidad:hero"
+        "kb:parque-nacional-baritu:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12722,19 +13242,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 316516,
-      "sha256": "bfacbf13c7a6e6362b301d6a7556f44f37fbbaa417f50d265b98e199c478a480",
-      "width": 1387,
-      "height": 925,
+      "bytes": 440496,
+      "sha256": "4db4fb451151167f894f9af32d70a664757fe7986eebfeee463f8f7e9382adfe",
+      "width": 1775,
+      "height": 1184,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-los-alerces-patrimonio-de-la-humanidad-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-los-alerces-patrimonio-de-la-humanidad/1623885291488-lago_rivadavia__pnla__3_.jpg",
+      "id": "at-parque-nacional-baritu-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-baritu/1623700889177-cf_2013_003_salta_oran_rosario_5d2_5228.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-los-alerces-patrimonio-de-la-humanidad:gallery"
+        "kb:parque-nacional-baritu:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12744,19 +13264,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 369244,
-      "sha256": "4d8e92f47a9f0b11cafc49ac125bba5403e2c1a5cf8115c94cce0f974c4c6267",
-      "width": 1502,
-      "height": 1001,
+      "bytes": 377010,
+      "sha256": "4a89b3b539f9cea4c33c673509b364f88d462d4a320575e17fbd0c32a754dc4f",
+      "width": 1403,
+      "height": 935,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-los-alerces-patrimonio-de-la-humanidad-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-los-alerces-patrimonio-de-la-humanidad/1623885296871-lago_rivadavia.jpg",
+      "id": "at-parque-nacional-baritu-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-baritu/1623700901761-campamentovespucio_15.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-los-alerces-patrimonio-de-la-humanidad:gallery"
+        "kb:parque-nacional-baritu:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12766,19 +13286,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 286464,
-      "sha256": "b23055dff44141589572f7ea6bd2fa1a7ecc5aaba62e244db2eb29d8e13ce857",
-      "width": 1443,
-      "height": 962,
+      "bytes": 494804,
+      "sha256": "bd9a8e323d1f9182f16381675a8692fcc22ad93be7a4fb02e46b95c5b4ce9e7a",
+      "width": 1252,
+      "height": 834,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-los-alerces-patrimonio-de-la-humanidad-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-los-alerces-patrimonio-de-la-humanidad/1623885303139-rio_menendez__pn_los_alerces.jpg",
+      "id": "at-parque-nacional-baritu-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-baritu/1623700915751-cf_2013_018_salta_baritu_5d3_761.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-los-alerces-patrimonio-de-la-humanidad:gallery"
+        "kb:parque-nacional-baritu:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12788,19 +13308,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 327498,
-      "sha256": "83a917852d015aa0c683ec2e25b551362e9b2b2baedfe9091eca0c45c26e4203",
-      "width": 1457,
-      "height": 820,
+      "bytes": 327202,
+      "sha256": "6dad810690a8c782e745b6b39e60bbb7e4c3067d70c66fc3b9d877cc3bd143e4",
+      "width": 2346,
+      "height": 1564,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-monte-leon-hero",
-      "localPath": "media/argentina-travel/parque-nacional-monte-leon/1624476941469-patagonia_santa_cruz___pn_monte_leon____autor___p_godoy__7_.jpg",
+      "id": "at-parque-nacional-calilegua-hero",
+      "localPath": "media/argentina-travel/parque-nacional-calilegua/1628566176710-jcarrillo_practica_del_simposio_114___calilegua.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-monte-leon:hero"
+        "kb:parque-nacional-calilegua:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12810,19 +13330,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 274264,
-      "sha256": "8c7006b10312b09767781f7f34007dd914f2b58e0fd0293bfea3c7ee432b1fda",
-      "width": 2230,
-      "height": 1492,
+      "bytes": 308524,
+      "sha256": "453b104ad9b53c348da8b26e7f1bff3d20c5f61d77e639582a91723b6b58e7d6",
+      "width": 1352,
+      "height": 900,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-monte-leon-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-monte-leon/1624476946214-monte_leon___antonio_vizcaino__6_.jpg",
+      "id": "at-parque-nacional-calilegua-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-calilegua/1628566212007-pn_calilegua_dsc2770c____hernan_paganini.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-monte-leon:gallery"
+        "kb:parque-nacional-calilegua:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12832,19 +13352,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 202410,
-      "sha256": "911229b6a1f9c421431614b7bfa69ff1e8e14676d75882092435d67ab4cd9a2d",
-      "width": 2205,
-      "height": 1651,
+      "bytes": 264324,
+      "sha256": "84c1f3fdb1a42e72102bd779745758e632b7235b42e58472375e11db82e98681",
+      "width": 1938,
+      "height": 1283,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-monte-leon-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-monte-leon/1624476952744-patagonia_santa_cruz___pn_monte_leon____autor___j_marquioni__6_.jp",
+      "id": "at-parque-nacional-calilegua-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-calilegua/1628566224260-camino_a_ocloyas___01___hernan_paganini___calilegua.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-monte-leon:gallery"
+        "kb:parque-nacional-calilegua:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12854,19 +13374,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 228094,
-      "sha256": "8c841a8d1dccbf9f80de1e25e872f99dad16acb6c162c56a0d1ca25942baf1a2",
-      "width": 2578,
-      "height": 1600,
+      "bytes": 312174,
+      "sha256": "dc7eeb14eff20a2717f26b5d962c55b3bdf9995cbdf5de86e5c1f027f9dfc38f",
+      "width": 1664,
+      "height": 1102,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-monte-leon-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-monte-leon/1624476958746-patagonia_santa_cruz___pn_monte_leon____autor___p_godoy__9_.jpg",
+      "id": "at-parque-nacional-calilegua-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-calilegua/1628566231761-pn_calilegua_dsc2823____hernan_paganini.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-monte-leon:gallery"
+        "kb:parque-nacional-calilegua:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12876,19 +13396,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 290186,
-      "sha256": "7ee5ddd0ba933d854262676454244ffd145d9745db44204ffc5a24b7c4f28885",
-      "width": 2052,
-      "height": 1373,
+      "bytes": 345302,
+      "sha256": "b973e4dd2b87312bfee15e76b4538d6f3ad3badc064f3820ef902e450cfdb5dd",
+      "width": 1519,
+      "height": 1006,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-san-guillermo-hero",
-      "localPath": "media/argentina-travel/parque-nacional-san-guillermo/1623885866823-san_guillermo_3.jpg",
+      "id": "at-parque-nacional-ciervo-de-los-pantanos-hero",
+      "localPath": "media/argentina-travel/parque-nacional-ciervo-de-los-pantanos/1623888963338-paisaje_natural.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-nacional-san-guillermo:hero"
+        "kb:parque-nacional-ciervo-de-los-pantanos:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12898,19 +13418,283 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 191520,
-      "sha256": "bde1cd46604dd0257420fb2b62948d7192e558e8d3dae40783431876755dc594",
+      "bytes": 241780,
+      "sha256": "dc27bf7cdae065edf50d7be7c46ef260d22b84d0047b2c5657c3cda1d6b55670",
+      "width": 2430,
+      "height": 1614,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-ciervo-de-los-pantanos-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-ciervo-de-los-pantanos/1623888968641-09_dp_1__ciervo_de_los_pantanos_dario_podesta__1_.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-ciervo-de-los-pantanos:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 186746,
+      "sha256": "3513fcaefdab5b14e266dd382b3ba8168618e8a093f62cce079bb6537c057a4c",
+      "width": 2500,
+      "height": 1667,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-ciervo-de-los-pantanos-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-ciervo-de-los-pantanos/1623888974062-ciervo.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-ciervo-de-los-pantanos:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 314512,
+      "sha256": "3acd354c6d995deb8c26b3ba5a573ee55e64126b039e7fe43b58a76d080c4d22",
+      "width": 1670,
+      "height": 1036,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-ciervo-de-los-pantanos-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-ciervo-de-los-pantanos/1623888979940-img_5262__2_.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-ciervo-de-los-pantanos:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 365076,
+      "sha256": "12925673bb8bdf5f20fdd34856b4f62fdd69521c55e1bf898da54b6dfd338d2d",
+      "width": 1397,
+      "height": 978,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-el-rey-hero",
+      "localPath": "media/argentina-travel/parque-nacional-el-rey/1623701246345-el_rey_selva_img_7133_____ricardo_cenzano_brandon.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:parque-nacional-el-rey:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 371612,
+      "sha256": "c02edcee7b97daeb7d243f0e7e025be2bae170bbdf182bba5fc66678176238e0",
+      "width": 1280,
+      "height": 853,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-el-rey-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-el-rey/1623701252656-el_rey_arroyo_la_sala_img_7002_____ricardo_cenzano_brandon.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-el-rey:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 328184,
+      "sha256": "7b9240ca7a31ade92e578dd866e21d4c6eacac844f29b2922276e27fc6738c87",
+      "width": 1518,
+      "height": 1012,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-el-rey-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-el-rey/1623701268490-el_rey_cascada_los_lobitos_img_6897_____ricardo_cenzano_brandon.jp",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-el-rey:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 344644,
+      "sha256": "dac5798ce01ce2793c193f6f7d33992ba982354a5f8c0bbc43b13e1339e05468",
+      "width": 899,
+      "height": 1349,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-el-rey-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-el-rey/1623701284534-el_rey_guardap_guiando_en_selva_img_7157_____ricardo_cenzano_brand",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-el-rey:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 324970,
+      "sha256": "89ee4cddf70775c08926ac05847801c1395aaf4e19cd541ae1ad16ecfd77951f",
+      "width": 1473,
+      "height": 982,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-lago-puelo-hero",
+      "localPath": "media/argentina-travel/parque-nacional-lago-puelo/1623890265595-chubut___valle_y_lago_puelo.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:parque-nacional-lago-puelo:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 299460,
+      "sha256": "2ec1e7b902b89f2704720ec60d1aba62b494959a711e21ece359f3161bcea93f",
+      "width": 1903,
+      "height": 1268,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-lago-puelo-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-lago-puelo/1623890270832-puelo.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-lago-puelo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 362972,
+      "sha256": "6027b7afd16daa432ba6084019167a6d177388527b8806f7999f8177343303cd",
+      "width": 1542,
+      "height": 1028,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-lago-puelo-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-lago-puelo/1623890276534-r_o_negro___lago_puelo.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-lago-puelo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 218306,
+      "sha256": "05a489398e937d285e36be8673d0d14ac074047e1ff98d90394a257cea9a1ed0",
+      "width": 2711,
+      "height": 1808,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-lago-puelo-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-lago-puelo/1623890282342-lupines__pn_los_alerces_2.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-lago-puelo:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 354930,
+      "sha256": "e9ec1b57638b389e3a8857b5d80afe97d2c455ce6790aa6cadbd84f0b757c61e",
+      "width": 1009,
+      "height": 1514,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-los-arrayanes-hero",
+      "localPath": "media/argentina-travel/parque-nacional-los-arrayanes/1624481364379-vla_bosquedearrayanes_canon6d.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:parque-nacional-los-arrayanes:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 119452,
+      "sha256": "8cf7f3e927376103795d509bffa1b3cbbed2f1efc53c4b7a9262b75953508bef",
       "width": 1000,
       "height": 667,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-san-guillermo-gallery-1",
-      "localPath": "media/argentina-travel/parque-nacional-san-guillermo/1623885874527-guanacos__reserva_de_san_guillermo__iglesia.jpg",
+      "id": "at-parque-nacional-los-arrayanes-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-los-arrayanes/1624481375473-arrayanes.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-san-guillermo:gallery"
+        "kb:parque-nacional-los-arrayanes:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12920,19 +13704,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 219138,
-      "sha256": "cba16c960f89267ff24d945961cdafecb7d3eaeb2d20edc1720714923b3d0220",
-      "width": 2272,
-      "height": 1510,
+      "bytes": 466874,
+      "sha256": "dcf18db62465d1d095d5c5baa9acf89fdc3961b0d32f129591259718e569fba2",
+      "width": 1538,
+      "height": 1026,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-san-guillermo-gallery-2",
-      "localPath": "media/argentina-travel/parque-nacional-san-guillermo/1623885882067-san_guillermo_2.jpg",
+      "id": "at-parque-nacional-los-arrayanes-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-los-arrayanes/1624481383567-villa_la_angostura__155_.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-san-guillermo:gallery"
+        "kb:parque-nacional-los-arrayanes:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12942,19 +13726,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 85606,
-      "sha256": "608f29fc7b8c5ef9aa857ce7af5d06a336a41c530d2fddb8530d6d90a3bea1d8",
-      "width": 1000,
-      "height": 650,
+      "bytes": 212570,
+      "sha256": "7edcffa31c54a21819088c86861571d93fb4ee841946ac10ba7e0fc18faa6501",
+      "width": 2713,
+      "height": 1809,
       "format": "webp"
     },
     {
-      "id": "at-parque-nacional-san-guillermo-gallery-3",
-      "localPath": "media/argentina-travel/parque-nacional-san-guillermo/1623885888591-san_guillermo.jpg",
+      "id": "at-parque-nacional-los-arrayanes-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-los-arrayanes/1624481390388-vla_bosquedearrayanes_canon6d_2.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-nacional-san-guillermo:gallery"
+        "kb:parque-nacional-los-arrayanes:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -12964,19 +13748,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 202174,
-      "sha256": "0eb30f7c262d1ecb9b7c73c67da6543db1808a6f01911024fa171289fd8085c8",
-      "width": 3275,
-      "height": 2179,
+      "bytes": 424928,
+      "sha256": "063728783719b86f33f74edaffa314d21d01e55b51b28b73807fa3b0dded58b7",
+      "width": 1149,
+      "height": 1723,
       "format": "webp"
     },
     {
-      "id": "at-parque-provincial-ischigualasto-hero",
-      "localPath": "media/argentina-travel/parque-provincial-ischigualasto/1621515012324-sjischigualastomq_06719.jpg",
+      "id": "at-parque-nacional-perito-moreno-hero",
+      "localPath": "media/argentina-travel/parque-nacional-perito-moreno/1623970572917-_mg_8229edit.jpg",
       "source": "argentina.travel",
       "role": "hero",
       "contexts": [
-        "kb:parque-provincial-ischigualasto:hero"
+        "kb:parque-nacional-perito-moreno:hero"
       ],
       "exists": true,
       "metadata": {
@@ -12986,19 +13770,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 414720,
-      "sha256": "9518d39b67d3c3bf2dc891ba8f7b03d3d3956ad47272194fbc654273eec793f9",
-      "width": 1904,
-      "height": 1272,
+      "bytes": 190188,
+      "sha256": "9fb1cb65e4a529fa093f15ba4f4a6ec86c1b9c134d91db3bb7eea6cfc5851d95",
+      "width": 2716,
+      "height": 1108,
       "format": "webp"
     },
     {
-      "id": "at-parque-provincial-ischigualasto-gallery-1",
-      "localPath": "media/argentina-travel/parque-provincial-ischigualasto/1621514923378-hongo_en_ischigualasto___valle_f_rtil_2.jpg",
+      "id": "at-parque-nacional-perito-moreno-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-perito-moreno/1623969244342-_mg_8224edit.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-provincial-ischigualasto:gallery"
+        "kb:parque-nacional-perito-moreno:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -13008,19 +13792,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 319588,
-      "sha256": "6c805072fec534c43d09c784f1477e810f908728396f4e3b5235d1858e7f6f28",
-      "width": 2168,
-      "height": 1626,
+      "bytes": 307570,
+      "sha256": "071e59c47acfbfe5ecab5c088783d6a8bf8999002e0b84ef4e21d0df38365d11",
+      "width": 2228,
+      "height": 1486,
       "format": "webp"
     },
     {
-      "id": "at-parque-provincial-ischigualasto-gallery-2",
-      "localPath": "media/argentina-travel/parque-provincial-ischigualasto/1621514932298-sjischigualastomq_06319.jpg",
+      "id": "at-parque-nacional-perito-moreno-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-perito-moreno/1623969253577-_mg_8375edit.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-provincial-ischigualasto:gallery"
+        "kb:parque-nacional-perito-moreno:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -13030,19 +13814,19 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 405038,
-      "sha256": "5771c1aa1341ae670ee2ab3bde3912a5808ef6bddcb62c599277779c35fda983",
-      "width": 2048,
-      "height": 1368,
+      "bytes": 377416,
+      "sha256": "8392560cdee962e5c3e964dfc870064e01509e66f84c9972d643896f29a42247",
+      "width": 2808,
+      "height": 1872,
       "format": "webp"
     },
     {
-      "id": "at-parque-provincial-ischigualasto-gallery-3",
-      "localPath": "media/argentina-travel/parque-provincial-ischigualasto/1621515020991-sjischigualastomq_06611.jpg",
+      "id": "at-parque-nacional-perito-moreno-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-perito-moreno/1623969262821-_mg_8278edit.jpg",
       "source": "argentina.travel",
       "role": "gallery",
       "contexts": [
-        "kb:parque-provincial-ischigualasto:gallery"
+        "kb:parque-nacional-perito-moreno:gallery"
       ],
       "exists": true,
       "metadata": {
@@ -13052,10 +13836,186 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 351694,
-      "sha256": "8fa4965ca0551916f260652c229e8453f5bb7bb434c5c0b8b724259177a298ae",
-      "width": 2482,
-      "height": 1658,
+      "bytes": 645726,
+      "sha256": "021d0a7a34299a4e140c1a009224263d132cc127ca87e4e9791080ffe751baa5",
+      "width": 2109,
+      "height": 1406,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-pre-delta-hero",
+      "localPath": "media/argentina-travel/parque-nacional-pre-delta/1623887423663-2_diamante_predelta_horizontal__3__baja.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:parque-nacional-pre-delta:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 387950,
+      "sha256": "4b3c813da2ae33d4b1a8bba9257e4fdd92698341ad9e142021d960774535769e",
+      "width": 1384,
+      "height": 923,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-pre-delta-gallery-1",
+      "localPath": "media/argentina-travel/parque-nacional-pre-delta/1623887430365-2_diamante_predelta_horizontal__1__baja.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-pre-delta:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 226590,
+      "sha256": "6f8dd2cefb805488cd037d431e3785d7675c1e2c404b6e1ebf92708de2230279",
+      "width": 1500,
+      "height": 1000,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-pre-delta-gallery-2",
+      "localPath": "media/argentina-travel/parque-nacional-pre-delta/1623887438406-2_diamante_predelta_horizontal__4__baja.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-pre-delta:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 70378,
+      "sha256": "58802b7b267b23fcfddcfc041057b0637c7b496e9efeccfe34620f4fe3d38896",
+      "width": 1500,
+      "height": 1000,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-nacional-pre-delta-gallery-3",
+      "localPath": "media/argentina-travel/parque-nacional-pre-delta/1623887445370-2_diamante_predelta_horizontal__11__baja.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:parque-nacional-pre-delta:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 376680,
+      "sha256": "fe2df9c93d310e73af0a9ba2c1c297d5a446566781c75243f65710dbda135927",
+      "width": 1500,
+      "height": 1000,
+      "format": "webp"
+    },
+    {
+      "id": "at-turismo-aventura-en-chaco-hero",
+      "localPath": "media/argentina-travel/turismo-aventura-en-chaco/1644341173180-impenetrable_rio_fredrik__5___1_.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "kb:turismo-aventura-en-chaco:hero"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 336590,
+      "sha256": "93890b36a1e15c8d355e22bd3c6056186f6e6868969cfc03e09ba40c115463be",
+      "width": 1705,
+      "height": 961,
+      "format": "webp"
+    },
+    {
+      "id": "at-turismo-aventura-en-chaco-gallery-1",
+      "localPath": "media/argentina-travel/turismo-aventura-en-chaco/1644341179359-impenetrable_turistas_fredrik_bye.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:turismo-aventura-en-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 177062,
+      "sha256": "8c3613801a59ea703c7d2cab13d2c4b26354a427694917b6221cdf80b75ca017",
+      "width": 2393,
+      "height": 1348,
+      "format": "webp"
+    },
+    {
+      "id": "at-turismo-aventura-en-chaco-gallery-2",
+      "localPath": "media/argentina-travel/turismo-aventura-en-chaco/1644341187642-canotaje_traves_a_chaco_1.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:turismo-aventura-en-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 310704,
+      "sha256": "57a4686590ef1c89321cf7a86a619dad371622f48636e5e3f967ea9b4f3637d7",
+      "width": 1725,
+      "height": 1149,
+      "format": "webp"
+    },
+    {
+      "id": "at-turismo-aventura-en-chaco-gallery-3",
+      "localPath": "media/argentina-travel/turismo-aventura-en-chaco/1644341194297-impenetrable_rio_fotografo_avistaje_fredrik__98_.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "kb:turismo-aventura-en-chaco:gallery"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 231064,
+      "sha256": "e790c77a649985a2e8c4f6a46cc2a44b3ec802f43e68f8d1be6f296ab3c89b28",
+      "width": 1270,
+      "height": 2254,
       "format": "webp"
     },
     {
@@ -13260,10 +14220,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 4717176,
-      "sha256": "a789c7c79ab3e92af9ad6acece3a217e779e8ce305ea7e3d380a530f62cca0d4",
-      "width": 6000,
-      "height": 4000,
+      "bytes": 402851,
+      "sha256": "b8aaf352141c9ea272393ca21ee1f3f37d02f9d063d484ed3c9606b772e814f5",
+      "width": 1920,
+      "height": 1280,
       "format": "jpeg"
     },
     {
@@ -13448,10 +14408,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 555538,
-      "sha256": "163da08dff9a68baa85895bcc94384f8847e4b9f6a1732f09a56468292cb0627",
-      "width": 3456,
-      "height": 2304,
+      "bytes": 178968,
+      "sha256": "6433815b14d0e12581b42a37f1e314008a4cde11c4d80e7396c5596cebd5b0c4",
+      "width": 1920,
+      "height": 1280,
       "format": "jpeg"
     },
     {
@@ -13471,10 +14431,10 @@
         "sourceUrl": true,
         "license": true
       },
-      "bytes": 1603301,
-      "sha256": "e6aee02e00e879b8f0f4bc773558a6ed742d9340410a9c1e93975d72361ad976",
-      "width": 4497,
-      "height": 2998,
+      "bytes": 200247,
+      "sha256": "ee6b86cff51bd8a7afb502f4ebdec33b17bd6adf8394db156a2c9402ecd3eaa9",
+      "width": 1920,
+      "height": 1280,
       "format": "jpeg"
     },
     {
@@ -14540,6 +15500,95 @@
       "format": "jpeg"
     },
     {
+      "id": "service-blog-index-hero-delivery-mobile",
+      "localPath": "media/services/blog/hero-mobile.webp",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/components/blog/BlogIndexHero.tsx"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 47882,
+      "sha256": "0066cc1a304395b413d503d4d18053f728d676acd36948a32fb7c4626e8b5c46",
+      "width": 960,
+      "height": 640,
+      "format": "webp"
+    },
+    {
+      "id": "blog-best-time-to-visit-argentina-delivery-mobile",
+      "localPath": "media/blog/best-time-to-visit-argentina/hero-mobile.webp",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/components/blog/BlogPostHeroImage.tsx"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 86122,
+      "sha256": "43fa30db3fd7c53286fb9f3f0d88b13a121d0a39a2859c795b3dc74282d8f203",
+      "width": 960,
+      "height": 540,
+      "format": "webp"
+    },
+    {
+      "id": "destination-patagonia-section-delivery-mobile",
+      "localPath": "media/destinations/patagonia/section-mobile.webp",
+      "source": "pexels",
+      "role": "section",
+      "contexts": [
+        "literal:src/components/destinations/DestinationDetailView.tsx"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 52976,
+      "sha256": "f217e7d4a2dd31ed17d83a16f34a075bafadb99ea9f8983e93923e15651d3d45",
+      "width": 960,
+      "height": 690,
+      "format": "webp"
+    },
+    {
+      "id": "service-home-hero-mobile",
+      "localPath": "media/home/hero-mobile.webp",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/components/marketplace/HomeHeroCollage.tsx",
+        "literal:src/lib/organizer-waitlist-server.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 119228,
+      "sha256": "82ddf803f02334d21cedf2209db892efd05915df1f295cf28444500835d440cb",
+      "width": 640,
+      "height": 1231,
+      "format": "webp"
+    },
+    {
       "id": "blog-grazhdanstvo-argentiny",
       "localPath": "media/blog/grazhdanstvo-argentiny/hero.jpg",
       "source": "pexels",
@@ -14739,6 +15788,160 @@
       "width": 6016,
       "height": 4016,
       "format": "jpeg"
+    },
+    {
+      "id": "blog-el-chalten-i-fitts-roy-section-1",
+      "localPath": "media/blog/el-chalten-i-fitts-roy/section-1.jpg",
+      "source": "pexels",
+      "role": "section",
+      "contexts": [
+        "literal:src/data/blog-typed-blocks/index.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 500155,
+      "sha256": "28052dece84130ddb43242d13c4fb444a7d369ca1da3168d014c766191d1aac5",
+      "width": 1920,
+      "height": 1280,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-el-chalten-i-fitts-roy-section-2",
+      "localPath": "media/blog/el-chalten-i-fitts-roy/section-2.jpg",
+      "source": "pexels",
+      "role": "section",
+      "contexts": [
+        "literal:src/data/blog-typed-blocks/index.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1042563,
+      "sha256": "d6bc5ba006961b6712f1f4b3709fb4447ab09013e4c508ea41b08eaad3fd1578",
+      "width": 1920,
+      "height": 1440,
+      "format": "jpeg"
+    },
+    {
+      "id": "at-pinguinos-en-punta-tombo-gallery-1",
+      "localPath": "media/argentina-travel/pinguinos-en-punta-tombo/1636053286869-pinguino_de_magallanes.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/blog.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 290606,
+      "sha256": "0146e35ec43a9fdd47fb03d595627b9f9ebf6e082569057fd390346c89dfb062",
+      "width": 1214,
+      "height": 1821,
+      "format": "webp"
+    },
+    {
+      "id": "at-pinguinos-en-punta-tombo-hero",
+      "localPath": "media/argentina-travel/pinguinos-en-punta-tombo/1636053279380-cabo_dos_bahias_16.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 321812,
+      "sha256": "0ee324ce2bba0fd885759ca6df9011738c2dcca20d2350f2eb29cda5fa6a5f9d",
+      "width": 1814,
+      "height": 1210,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-marino-isla-pinguino-hero",
+      "localPath": "media/argentina-travel/parque-marino-isla-pinguino/1623893176752-dsc_8650web.jpg",
+      "source": "argentina.travel",
+      "role": "hero",
+      "contexts": [
+        "literal:src/data/blog.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 402738,
+      "sha256": "2c02bfb8684b0fbb38710d70ce24489aed74e1e4f81725c2540e4ccecc39fb22",
+      "width": 1670,
+      "height": 1114,
+      "format": "webp"
+    },
+    {
+      "id": "at-parque-marino-isla-pinguino-gallery-2",
+      "localPath": "media/argentina-travel/parque-marino-isla-pinguino/1623893192383-dsc_8011web.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/blog.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 195554,
+      "sha256": "e2e56f05cfab2757ba051dd573180905c50f6096da5c43bca2dadb4f7dad5f1e",
+      "width": 2400,
+      "height": 1600,
+      "format": "webp"
+    },
+    {
+      "id": "at-pinguinos-en-punta-tombo-gallery-3",
+      "localPath": "media/argentina-travel/pinguinos-en-punta-tombo/1636053322157-punta_tombo_2.jpg",
+      "source": "argentina.travel",
+      "role": "gallery",
+      "contexts": [
+        "literal:src/data/blog.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 315944,
+      "sha256": "b7f7463d56d54ca95def1ec5ae0cfd74935c56395210bb8f2aeb589887926b50",
+      "width": 914,
+      "height": 1371,
+      "format": "webp"
     },
     {
       "id": "blog-rich-iguazu-national-park-gallery-1",
@@ -15888,6 +17091,29 @@
       "format": "jpeg"
     },
     {
+      "id": "service-card-visa-support",
+      "localPath": "media/services/cards/visa-support.jpg",
+      "source": "pexels",
+      "role": "card",
+      "contexts": [
+        "literal:src/data/media-library/stock-cache.json",
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 1603301,
+      "sha256": "e6aee02e00e879b8f0f4bc773558a6ed742d9340410a9c1e93975d72361ad976",
+      "width": 4497,
+      "height": 2998,
+      "format": "jpeg"
+    },
+    {
       "id": "blog-iguazu-za-3-dnya",
       "localPath": "media/blog/iguazu-za-3-dnya/hero.jpg",
       "source": "pexels",
@@ -15951,6 +17177,28 @@
       "sha256": "38447b48bf26ae75984f5ae164b0eaf13fae8ef7e064eb8664947301e7007076",
       "width": 6016,
       "height": 4016,
+      "format": "jpeg"
+    },
+    {
+      "id": "blog-vnzh-argentina-rezidenciya",
+      "localPath": "media/blog/vnzh-argentina-rezidenciya/hero.jpg",
+      "source": "pexels",
+      "role": "hero",
+      "contexts": [
+        "literal:src/lib/blog-post-image-bindings.ts"
+      ],
+      "exists": true,
+      "metadata": {
+        "alt": true,
+        "caption": true,
+        "author": true,
+        "sourceUrl": true,
+        "license": true
+      },
+      "bytes": 4919395,
+      "sha256": "854467faa76d75120b2b291518ef04d3737527c81ff384ed7068226022f4b701",
+      "width": 6720,
+      "height": 4480,
       "format": "jpeg"
     },
     {
@@ -16216,28 +17464,6 @@
       "width": 4928,
       "height": 3264,
       "format": "jpeg"
-    },
-    {
-      "id": "service-home-hero-mobile",
-      "localPath": "media/home/hero-mobile.webp",
-      "source": "pexels",
-      "role": "hero",
-      "contexts": [
-        "literal:src/lib/organizer-waitlist-server.ts"
-      ],
-      "exists": true,
-      "metadata": {
-        "alt": true,
-        "caption": true,
-        "author": true,
-        "sourceUrl": true,
-        "license": true
-      },
-      "bytes": 119228,
-      "sha256": "82ddf803f02334d21cedf2209db892efd05915df1f295cf28444500835d440cb",
-      "width": 640,
-      "height": 1231,
-      "format": "webp"
     }
   ]
 }

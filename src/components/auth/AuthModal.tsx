@@ -20,6 +20,7 @@ import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, passwordResetSentMessage, siteFormError } from "@/lib/site-feedback/normalize-error";
 import { clearAuthNextPath, readAuthNextPath } from "@/lib/auth-redirect";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { navigateAfterDialogClose } from "@/hooks/useDialogBackClose";
 
 type AuthMode = "phone" | "email";
 type AuthStep = "sign-in" | "register" | "forgot-password";
@@ -91,6 +92,10 @@ export default function AuthModal() {
   const [resetCooldown, setResetCooldown] = useState(0);
   const feedback = useSiteFeedback();
 
+  function navigateFromAuth(href: string) {
+    navigateAfterDialogClose(() => router.push(href), closeAuth);
+  }
+
   const setError = (value: string | SiteFeedbackMessage | null) => {
     if (value === null) {
       setErrorState(null);
@@ -119,8 +124,7 @@ export default function AuthModal() {
         : "Рады видеть вас снова на «Пора в Аргентину».",
     });
     clearAuthNextPath();
-    closeAuth();
-    router.push(finalDestination);
+    navigateFromAuth(finalDestination);
   }
 
   useEffect(() => {
@@ -460,8 +464,7 @@ export default function AuthModal() {
             type="button"
             className="w-full rounded-xl"
             onClick={() => {
-              closeAuth();
-              router.push("/join#join-application");
+              navigateFromAuth("/join#join-application");
             }}
           >
             Подать заявку организатора
@@ -489,8 +492,7 @@ export default function AuthModal() {
             type="button"
             className="w-full rounded-xl"
             onClick={() => {
-              closeAuth();
-              router.push("/organizer");
+              navigateFromAuth("/organizer");
             }}
           >
             Перейти к размещению туров
@@ -515,8 +517,7 @@ export default function AuthModal() {
           <button
             type="button"
             onClick={() => {
-              closeAuth();
-              router.push("/join#join-application");
+              navigateFromAuth("/join#join-application");
             }}
             className="w-full rounded-xl border border-brand/20 bg-brand-light/30 px-4 py-3 text-left text-sm transition-colors hover:bg-brand-light/50"
           >

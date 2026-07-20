@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Compass, X } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -21,8 +22,10 @@ import {
 import { TOURIST_ONBOARDING_STEPS } from "@/lib/onboarding-progress";
 import { userHasAccountRole } from "@/types/user";
 import { cn } from "@/lib/cn";
+import { navigateAfterDialogClose } from "@/hooks/useDialogBackClose";
 
 export default function TouristOnboardingModal() {
+  const router = useRouter();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -135,7 +138,14 @@ export default function TouristOnboardingModal() {
 
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             {step.href && step.actionLabel ? (
-              <Link href={step.href} className={buttonVariants({ variant: "outline" })}>
+              <Link
+                href={step.href}
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigateAfterDialogClose(() => router.push(step.href!), handleDismiss);
+                }}
+                className={buttonVariants({ variant: "outline" })}
+              >
                 {step.actionLabel}
               </Link>
             ) : null}

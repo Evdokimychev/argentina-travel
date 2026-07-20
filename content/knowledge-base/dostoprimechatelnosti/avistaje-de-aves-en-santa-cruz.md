@@ -5,7 +5,7 @@ title: Наблюдение за птицами в Санта-Крусе
 title_es: Avistaje de aves en Santa Cruz
 title_en: Bird watching in Santa Cruz
 summary: "Наблюдение за птицами в Санта-Крусе: экстремальные, но богатые жизнью местообитания патагонской фауны."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -47.95655361100753
   lng: -69.47275432657281

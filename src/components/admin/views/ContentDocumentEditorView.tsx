@@ -102,6 +102,12 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [blogSections, setBlogSections] = useState<BlogPostSection[]>([]);
   const [blogFeatured, setBlogFeatured] = useState(false);
   const [blogRelatedDestinations, setBlogRelatedDestinations] = useState("");
+  const [knowledgeAuthorName, setKnowledgeAuthorName] = useState<string | undefined>();
+  const [knowledgeAuthorSlug, setKnowledgeAuthorSlug] = useState<string | undefined>();
+  const [knowledgeAuthorBio, setKnowledgeAuthorBio] = useState<string | undefined>();
+  const [knowledgeAuthorAvatar, setKnowledgeAuthorAvatar] = useState<string | undefined>();
+  const [knowledgePersonalExperience, setKnowledgePersonalExperience] = useState<boolean | undefined>();
+  const [knowledgeVerifiedByAuthor, setKnowledgeVerifiedByAuthor] = useState<boolean | undefined>();
   const [destinationIntro, setDestinationIntro] = useState("");
   const [destinationRegionGroup, setDestinationRegionGroup] = useState("");
   const [destinationBestSeason, setDestinationBestSeason] = useState("");
@@ -149,6 +155,12 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     setBlogSections([]);
     setBlogFeatured(false);
     setBlogRelatedDestinations("");
+    setKnowledgeAuthorName(undefined);
+    setKnowledgeAuthorSlug(undefined);
+    setKnowledgeAuthorBio(undefined);
+    setKnowledgeAuthorAvatar(undefined);
+    setKnowledgePersonalExperience(undefined);
+    setKnowledgeVerifiedByAuthor(undefined);
     setDestinationIntro("");
     setDestinationRegionGroup("");
     setDestinationBestSeason("");
@@ -173,6 +185,12 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       setExcerpt(draft.body.excerpt ?? "");
       setBlogFeatured(draft.body.featured ?? false);
       setBlogRelatedDestinations((draft.body.relatedDestinations ?? []).join(", "));
+      setKnowledgeAuthorName(draft.body.authorName);
+      setKnowledgeAuthorSlug(draft.body.authorSlug);
+      setKnowledgeAuthorBio(draft.body.authorBio);
+      setKnowledgeAuthorAvatar(draft.body.authorAvatar);
+      setKnowledgePersonalExperience(draft.body.personalExperience);
+      setKnowledgeVerifiedByAuthor(draft.body.verifiedByAuthor);
       setBlogSections(
         draft.body.sections ?? [
           { title: "Основной текст", body: draft.body.content ?? "", blocks: [] },
@@ -298,6 +316,20 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           .map((item) => item.trim())
           .filter(Boolean),
         collector: doc.body.collector,
+        ...(doc.docType === "knowledge"
+          ? {
+              authorName:
+                knowledgeAuthorName === undefined ? undefined : knowledgeAuthorName.trim(),
+              authorSlug:
+                knowledgeAuthorSlug === undefined ? undefined : knowledgeAuthorSlug.trim(),
+              authorBio:
+                knowledgeAuthorBio === undefined ? undefined : knowledgeAuthorBio.trim(),
+              authorAvatar:
+                knowledgeAuthorAvatar === undefined ? undefined : knowledgeAuthorAvatar.trim(),
+              personalExperience: knowledgePersonalExperience,
+              verifiedByAuthor: knowledgeVerifiedByAuthor,
+            }
+          : {}),
       };
     }
     if (doc?.body.kind === "author_article") {
@@ -992,6 +1024,70 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 />
                 Показывать как избранную статью в каталоге
               </label>
+            ) : null}
+
+            {isKnowledge ? (
+              <fieldset className="space-y-3 rounded-xl border border-gray-200 p-4">
+                <legend className="px-1 text-sm font-semibold text-charcoal">
+                  Авторство базы знаний
+                </legend>
+                <p className="text-xs leading-5 text-slate">
+                  Оставьте поля пустыми для редакционного справочника. Личного автора указывайте
+                  только после его явного подтверждения материала.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-slate">Имя автора</span>
+                    <Input
+                      value={knowledgeAuthorName ?? ""}
+                      onChange={(event) => setKnowledgeAuthorName(event.target.value)}
+                    />
+                  </label>
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-slate">Slug профиля</span>
+                    <Input
+                      value={knowledgeAuthorSlug ?? ""}
+                      onChange={(event) => setKnowledgeAuthorSlug(event.target.value)}
+                      placeholder="ivan"
+                    />
+                  </label>
+                </div>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Краткая биография</span>
+                  <textarea
+                    className="min-h-[88px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={knowledgeAuthorBio ?? ""}
+                    onChange={(event) => setKnowledgeAuthorBio(event.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Фото автора (URL или /media/...)</span>
+                  <Input
+                    value={knowledgeAuthorAvatar ?? ""}
+                    onChange={(event) => setKnowledgeAuthorAvatar(event.target.value)}
+                  />
+                </label>
+                <label className="flex items-center gap-2 text-sm text-charcoal">
+                  <input
+                    type="checkbox"
+                    checked={knowledgePersonalExperience ?? false}
+                    onChange={(event) => {
+                      setKnowledgePersonalExperience(event.target.checked);
+                      if (!event.target.checked) setKnowledgeVerifiedByAuthor(false);
+                    }}
+                  />
+                  Это личный опыт автора
+                </label>
+                <label className="flex items-center gap-2 text-sm text-charcoal">
+                  <input
+                    type="checkbox"
+                    checked={knowledgeVerifiedByAuthor ?? false}
+                    disabled={knowledgePersonalExperience !== true}
+                    onChange={(event) => setKnowledgeVerifiedByAuthor(event.target.checked)}
+                  />
+                  Автор подтвердил текст и публикацию
+                </label>
+              </fieldset>
             ) : null}
 
             <label className="block space-y-1 text-sm">

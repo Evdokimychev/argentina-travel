@@ -4,14 +4,19 @@ type: author_tip
 subtype: route
 title: "Авторский маршрут выходного дня от Ивана"
 summary: "Слот для личного маршрута — куда Иван сам поехал бы на выходные из Буэнос-Айреса (или из другой своей базы) без оглядки на типовые туристические списки."
-status: backlog
+status: archived
+site_ready: false
+redirect_to: buenos-aires
+archive_reason: "Незаполненный шаблон авторского маршрута без подтверждённого личного опыта выведен из корпуса и перенаправлен на канонический городской гид."
 site_sections: [lichnyy-opyt]
 tags: [маршрут, выходные]
 personal_experience: true
+author_name: "Иван"
+author_slug: "ivan"
 verified_by_ivan: false
 extracted_from: ""
 related: [buenos-aires, argentina-10-dney]
-last_verified: ""
+last_verified: "2026-07-20"
 confidence: medium
 sources: []
 ---

@@ -5,7 +5,7 @@ title: Водопады Нивинко и Пичи-Трафуль
 title_es: Cascada Ñivinco y Pichi Traful
 title_en: Ñivinco and Pichi Traful Waterfalls
 summary: "Два водопада в национальном парке Науэль-Уапи: андские тропы к Нивинко и Пичи-Трафуль."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -40.7627426
   lng: -71.6417984

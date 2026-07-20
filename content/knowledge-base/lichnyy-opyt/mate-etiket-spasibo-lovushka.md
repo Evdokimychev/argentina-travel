@@ -4,15 +4,18 @@ type: author_tip
 subtype: observation
 title: "«Спасибо» в кругу мате значит «больше не наливайте» — типичная ловушка для гостя"
 summary: "Базовый этикет мате нигде явно не объясняют новичку: сказать «gracias», принимая бомбилью, — вежливый по-русски жест, который в Аргентине читается как отказ от следующей порции."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, zhizn-v-strane]
 tags: [этикет, кухня]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Культура-Кухня-Аргентины.md"
 related: [kuhnya, ispanskij-dlya-puteshestvennika]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: kuhnya
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Культура-Кухня-Аргентины.md — раздел «Частые ошибки»"
     url: ""

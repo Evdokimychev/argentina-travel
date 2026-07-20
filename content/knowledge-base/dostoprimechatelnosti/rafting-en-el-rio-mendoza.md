@@ -5,7 +5,7 @@ title: Рафтинг по реке Мендоса
 title_es: Rafting en el río Mendoza
 title_en: Rafting in the Mendoza River
 summary: "Рафтинг по талой реке Мендоса с видами на Анды."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -32.952895495478984
   lng: -69.19169480210007

@@ -6,7 +6,7 @@ title_es: Frutas de pepita en el Alto Valle del río Negro
 title_en: Seed fruits in the Alto Valle del Río Negro
 summary: En la Патагония, visita la provincia argentina que produce y exporta más
   frutas de pepita.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: "Природный памятник Лагуна-де-лос-Посуэ�
 title_es: Monumento Natural Laguna de Los Pozuelos
 title_en: Laguna de Los Pozuelos Natural Monument
 summary: "Высокогорная лагуна в Пуне провинции Жужуй — важнейшее место гнездования фламинго и водоплавающих птиц, охраняемая территория площадью более шестнадцати тысяч гектаров."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

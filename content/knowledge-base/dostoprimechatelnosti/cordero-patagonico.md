@@ -6,7 +6,7 @@ title_es: Cordero patagónico
 title_en: Patagonian lamb
 summary: Патагония производит всемирно известное мясо ягненка. Попробуйте и узнайте,
   почему.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,7 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -42.06728540046057
   lng: -68.4804136651172
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: kuhnya
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

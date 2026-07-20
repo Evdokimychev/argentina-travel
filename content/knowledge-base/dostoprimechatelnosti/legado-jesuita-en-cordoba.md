@@ -6,7 +6,7 @@ title_es: Legado jesuita en Córdoba
 title_en: Jesuit legacy in Córdoba
 summary: Recorre la Manzana Jesuítica de la capital de Córdoba y cinco estancias jesuitas
   que te esperan en la provincia.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

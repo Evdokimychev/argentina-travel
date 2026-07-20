@@ -6,7 +6,7 @@ title_es: Corredor de la Puna
 title_en: Puna Route
 summary: Pon en marcha tu aventura por rutas y caminos de las provincias de Salta,
   Jujuy y Catamarca.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -49,6 +49,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

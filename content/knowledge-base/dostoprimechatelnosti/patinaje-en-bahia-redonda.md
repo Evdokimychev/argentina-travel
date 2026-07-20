@@ -6,7 +6,7 @@ title_es: Patinaje en Bahía Redonda
 title_en: Ice-skating in Bahía Redonda
 summary: En la ciudad de Эль-Калафате, lánzate por la pista natural de hielo más grande
   de Sudamérica.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -44,6 +44,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

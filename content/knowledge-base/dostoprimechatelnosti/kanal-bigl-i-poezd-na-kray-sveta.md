@@ -19,18 +19,18 @@ how_to_get_there: "Обе активности стартуют из Ушуай�
 related: [ushuaia, ognennaya-zemlya]
 media:
   hero:
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Les_Eclaireurs_lighthouse%2C_Beagle_Channel%2C_Argentina.jpg/1600px-Les_Eclaireurs_lighthouse%2C_Beagle_Channel%2C_Argentina.jpg"
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Les_Eclaireurs_lighthouse%2C_Beagle_Channel%2C_Argentina.jpg/1280px-Les_Eclaireurs_lighthouse%2C_Beagle_Channel%2C_Argentina.jpg"
     alt: "Маяк Les Éclaireurs на скалистом островке в проливе Бигль у Ушуайи"
     author: "Py4nf"
     license: "CC BY 4.0"
     source_page: "https://commons.wikimedia.org/wiki/File:Les_Eclaireurs_lighthouse,_Beagle_Channel,_Argentina.jpg"
   gallery:
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/El_Tren_del_Fin_del_Mundo.jpg/1600px-El_Tren_del_Fin_del_Mundo.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/El_Tren_del_Fin_del_Mundo.jpg/1280px-El_Tren_del_Fin_del_Mundo.jpg"
       alt: "«Поезд на край света» на узкоколейке в национальном парке Огненная Земля"
       author: "Mark Fischer"
       license: "CC BY-SA 4.0"
       source_page: "https://commons.wikimedia.org/wiki/File:El_Tren_del_Fin_del_Mundo.jpg"
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Ushuaia_and_the_Beagle_Channel_%285525434752%29.jpg/1600px-Ushuaia_and_the_Beagle_Channel_%285525434752%29.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Ushuaia_and_the_Beagle_Channel_%285525434752%29.jpg/1280px-Ushuaia_and_the_Beagle_Channel_%285525434752%29.jpg"
       alt: "Ушуайя и пролив Бигль на фоне Мартиальских гор"
       author: "Liam Quinn"
       license: "CC BY-SA 2.0"

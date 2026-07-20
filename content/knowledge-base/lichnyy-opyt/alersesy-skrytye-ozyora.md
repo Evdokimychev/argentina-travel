@@ -4,15 +4,18 @@ type: author_tip
 subtype: hidden_gem
 title: "Лос-Алерсес: рыбалка и каяк на тихих озёрах, которые пропускают ради одного дерева"
 summary: "Многие ограничивают визит в Лос-Алерсес лодочной экскурсией к «Эль-Абуэло» — а зря пропускают рыбалку, каяк и северную часть парка."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [озёра, треккинг, патагония]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Лос-Алерсес.md"
 related: [los-alerces, bariloche]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: los-alerces
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Лос-Алерсес.md — раздел «Советы местного гида»"
     url: ""

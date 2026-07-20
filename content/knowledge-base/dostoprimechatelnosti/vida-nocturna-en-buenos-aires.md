@@ -6,7 +6,7 @@ title_es: Vida nocturna en Buenos Aires
 title_en: Nightlife in Buenos Aires
 summary: Откройте для себя всемирно известную ночную жизнь в одном из самых соблазнительных
   городов Латинской Америки.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -34.56691669217277
   lng: -58.43301558585955
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: mentalitet-i-etiket
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

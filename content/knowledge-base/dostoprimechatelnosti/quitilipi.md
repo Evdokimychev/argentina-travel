@@ -6,7 +6,7 @@ title_es: Quitilipi
 title_en: Quitilipi
 summary: En el Литорал argentino, encuéntrate con un lugar que te acerca a las comunidades
   indígenas.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -49,6 +49,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

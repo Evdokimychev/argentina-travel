@@ -4,15 +4,18 @@ type: author_tip
 subtype: mistake
 title: "Мендоса: главная ошибка — смешать винные зоны за один день"
 summary: "Майпу, Лухан-де-Куйо и Долина Уко расположены недостаточно далеко друг от друга по карте и достаточно далеко по факту — попытка объединить две зоны в один день почти всегда портит впечатление."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [винный регион, толпы]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Города-Мендоса-винный-гид.md"
 related: [mendoza]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: mendoza
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Города-Мендоса-винный-гид.md — разделы «Практические советы» и «Частые ошибки»"
     url: ""

@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 
 import {
+  getKbMinimumWordCount,
   getPublicationIssues,
   getStrictPublicationIssues,
   isPublicKbEntry,
@@ -53,6 +54,13 @@ type MediaAudit = {
   fallbackContexts?: string[];
 };
 
+type LinkCheckReport = {
+  generatedAt?: string;
+  uniqueUrls?: number;
+  brokenPublic?: number;
+  counts?: Record<string, number>;
+};
+
 type RouteSnapshot = {
   status: number;
   title: string;
@@ -64,6 +72,52 @@ type RouteSnapshot = {
   searchIndexed: "yes" | "no";
   canonical: "yes" | "no" | "missing";
 };
+
+/**
+ * Проверяем не только дефекты отдельных файлов, но и продуктовую полноту.
+ * Список основан на обязательных пользовательских сценариях базы знаний;
+ * evidence хранит конкретные канонические материалы, а не совпадения по словам.
+ */
+const REQUIRED_TOPIC_CLUSTERS = [
+  ["arrival-first-weeks", "Первые дни и недели после приезда", ["gid-relokanta", "pervyj-mesyac-plan"]],
+  ["residency", "Резиденция и легализация", ["vnzh-argentina"]],
+  ["documents", "Документы, апостиль и переводы", ["gid-po-dokumentam"]],
+  ["dni-cuil-cuit", "DNI, CUIL и CUIT", ["gid-po-dokumentam", "chto-takoe-dni-i-cuil"]],
+  ["government-services", "Mi Argentina, turnos, domicilio и antecedentes", ["gosudarstvennye-prilozheniya", "pervye-tramites"]],
+  ["citizenship", "Гражданство", ["grazhdanstvo"]],
+  ["family-immigration", "Переезд семьи, учёба и рождение ребёнка", ["studencheskaya-zhizn", "rody-i-beremennost", "shkola-dlya-detey"]],
+  ["housing-rental", "Туристическое и долгосрочное жильё", ["gid-po-zhilyu", "zhile-dlya-turistov", "zhile-i-arenda"]],
+  ["daily-services", "Коммунальные услуги, интернет, покупки, доставка и аптеки", ["byt-i-zhilyo", "povsednevnaya-zhizn-i-uslugi"]],
+  ["banking-payments", "Банки, карты, переводы и Mercado Pago", ["gid-po-dengam", "banki-i-perevody"]],
+  ["currency-budget", "Обмен валюты, инфляция и бюджет", ["kak-menyat-valyutu", "byudzhet-poezdki"]],
+  ["taxes-monotributo", "Налоги, monotributo и фактуры", ["nalogi-i-monotributo", "otkrytie-biznesa"]],
+  ["work-business", "Работа, удалённая занятость и бизнес", ["rabota-i-poisk-raboty", "udalyonnaya-rabota-i-oplata", "otkrytie-biznesa"]],
+  ["healthcare", "Публичная медицина, obra social и prepaga", ["gid-po-medicine", "sistema-zdravoohraneniya"]],
+  ["emergency-safety", "Экстренная помощь, ограбления и мошенничество", ["bezopasnost-argentina"]],
+  ["digital-safety", "Цифровая безопасность", ["cifrovaya-bezopasnost-i-moshennichestvo", "bezopasnost-argentina"]],
+  ["driver-license", "Иностранные и аргентинские водительские права", ["kak-poluchit-prava-v-argentine", "voditelskie-prava"]],
+  ["car-ownership", "Покупка автомобиля и действия после ДТП", ["pokupka-avtomobilya", "posle-dtp"]],
+  ["transport", "Перелёты, автобусы, SUBE, поезда и аренда авто", ["gid-po-transportu"]],
+  ["mobile-internet", "SIM, eSIM и связь", ["esim-i-svyaz"]],
+  ["useful-apps", "Полезные приложения", ["poleznye-prilozheniya"]],
+  ["trip-planning", "Подготовка, сезонность и маршруты", ["gid-puteshestvennika", "klimat-po-regionam"]],
+  ["travel-children", "Путешествие с детьми", ["s-detmi-po-argentine"]],
+  ["travel-pets", "Путешествие и переезд с животными", ["kak-perevezti-kota-ili-sobaku", "perevoz-veshchey-i-pitomtsev"]],
+  ["accessible-travel", "Доступная среда", ["dostupnaya-sreda-i-invalidnost"]],
+  ["lgbt-travel", "ЛГБТ-путешественники", ["lgbt-travel"]],
+  ["spanish", "Аргентинский испанский и бытовая коммуникация", ["ispanskij-dlya-puteshestvennika", "zhizn-bez-ispanskogo"]],
+  ["etiquette", "Этикет и повседневная коммуникация", ["mentalitet-i-etiket"]],
+  ["culture", "Культура, праздники, мате, асадо и футбол", ["gid-po-kulture", "mate", "asado", "futbol"]],
+  ["buenos-aires", "Буэнос-Айрес", ["buenos-aires", "caba"]],
+  ["patagonia", "Патагония и южный маршрут", ["patagonia", "patagonia-yug"]],
+  ["iguazu", "Игуасу", ["iguasu", "puerto-iguazu"]],
+  ["noa", "Сальта, Жужуй и Северо-Запад", ["noa", "noa-kolco"]],
+  ["cuyo", "Мендоса и Куйо", ["cuyo", "mendoza", "vinnyy-marshrut"]],
+  ["ushuaia", "Ушуайя и Огненная Земля", ["ushuaia", "tierra-del-fuego"]],
+  ["calafate", "Эль-Калафате и ледники", ["el-calafate", "los-glasiares"]],
+  ["bariloche", "Барилоче и озёрная Патагония", ["bariloche", "ruta-40-sem-ozer"]],
+  ["atlantic-coast", "Атлантическое побережье", ["mar-del-plata", "buenos-aires-province"]],
+] as const;
 
 export function csvCell(value: unknown): string {
   const text = value == null ? "" : String(value);
@@ -197,6 +251,12 @@ async function fetchRouteSnapshots(paths: string[]): Promise<Map<string, RouteSn
 function actionFor(entry: KbEntry): string {
   const issues = getPublicationIssues(entry);
   if (issues.includes("missing_sensitive_source")) return "LEGAL_REVIEW";
+  if (issues.includes("missing_source")) return "HUMAN_REVIEW";
+  if (issues.includes("verification_due")) return "HUMAN_REVIEW";
+  if (
+    issues.includes("missing_author") ||
+    issues.includes("unverified_personal_authorship")
+  ) return "HUMAN_REVIEW";
   if (getStrictPublicationIssues(entry).includes("sensitive_provenance_not_ready")) {
     return "HUMAN_REVIEW";
   }
@@ -243,6 +303,10 @@ function qualityScore(entry: KbEntry): number {
     internal_editorial_marker: 50,
     malformed_markdown_heading: 25,
     missing_sensitive_source: 60,
+    missing_source: 30,
+    verification_due: 40,
+    missing_author: 30,
+    unverified_personal_authorship: 50,
     sensitive_provenance_not_ready: 40,
     thin_content: 20,
     missing_hero: 15,
@@ -310,6 +374,17 @@ function routeSource(url: string) {
   };
 }
 
+const LOCAL_ROUTE_BASELINES = [
+  { url: "/", title: "Главная" },
+  { url: "/baza-znaniy", title: "База знаний" },
+  { url: "/blog", title: "Блог" },
+  { url: "/guide", title: "Путеводитель" },
+  { url: "/places", title: "Места" },
+  { url: "/tours", title: "Туры" },
+  { url: "/excursions", title: "Экскурсии" },
+  { url: "/contact", title: "Контакты" },
+] as const;
+
 async function fetchSitemapPaths(): Promise<string[]> {
   const baseUrl = process.env.CONTENT_OVERHAUL_BASE_URL?.trim();
   if (!baseUrl) return [];
@@ -334,6 +409,13 @@ export async function generateContentOverhaulInventory() {
     [...titleBuckets.values()].filter((group) => group.length > 1).flatMap((group) => group.map((entry) => entry.id)),
   );
   const sitemapPaths = await fetchSitemapPaths();
+  const sitemapMeasured = Boolean(process.env.CONTENT_OVERHAUL_BASE_URL?.trim());
+  const routePaths = sitemapMeasured
+    ? sitemapPaths
+    : LOCAL_ROUTE_BASELINES.map((route) => route.url);
+  const localRouteTitles = new Map<string, string>(
+    LOCAL_ROUTE_BASELINES.map((route) => [route.url, route.title]),
+  );
   const routeSnapshots = await fetchRouteSnapshots(sitemapPaths);
   const sitemapSet = new Set(sitemapPaths);
 
@@ -375,7 +457,7 @@ export async function generateContentOverhaulInventory() {
     };
   });
 
-  for (const url of sitemapPaths) {
+  for (const url of routePaths) {
     if (url.startsWith("/baza-znaniy/") && url.split("/").length === 3) continue;
     const snapshot = routeSnapshots.get(url);
     inventoryRows.push({
@@ -383,8 +465,8 @@ export async function generateContentOverhaulInventory() {
       type: "public_route",
       url,
       locale: "ru",
-      title: snapshot?.title ?? "not_recorded",
-      status: "published_public",
+      title: snapshot?.title ?? localRouteTitles.get(url) ?? url,
+      status: sitemapMeasured ? "published_public" : "not_measured",
       author: "not_recorded",
       editor: "not_recorded",
       reviewer: "review_required",
@@ -406,7 +488,9 @@ export async function generateContentOverhaulInventory() {
       owner: routeSource(url).owner,
       notes: snapshot
         ? `present_in_0-error_public_editorial_sitemap;http_status=${snapshot.status};robots_indexable=${snapshot.searchIndexed};content_metrics_from_rendered_main`
-        : "present_in_0-error_public_editorial_sitemap;content_metrics_not_captured",
+        : sitemapMeasured
+          ? "present_in_public_sitemap;content_metrics_not_captured"
+          : "known_local_route;live_sitemap_and_render_not_measured",
     });
   }
 
@@ -418,7 +502,7 @@ export async function generateContentOverhaulInventory() {
   ];
   writeCsv("content-inventory.csv", inventoryHeaders, inventoryRows);
 
-  const routeRows = sitemapPaths.map((url) => {
+  const routeRows = routePaths.map((url) => {
     const source = routeSource(url);
     const snapshot = routeSnapshots.get(url);
     return {
@@ -430,9 +514,15 @@ export async function generateContentOverhaulInventory() {
       search_surface: "public_search_coverage_review_required",
       map_surface: /^(\/places|\/destinations|\/mapa-argentina)/.test(url) ? "yes" : "not_applicable",
       sitemap: sitemapSet.has(url) ? "yes" : "no",
-      editorial_status: snapshot?.status === 200 ? "public_editorial_passed" : "review_required",
+      editorial_status: !sitemapMeasured
+        ? "not_measured"
+        : snapshot?.status === 200
+          ? "public_editorial_passed"
+          : "review_required",
       owner: source.owner,
-      evidence: "var/ops/public-editorial-audit.json + live sitemap",
+      evidence: sitemapMeasured
+        ? "live sitemap + rendered route snapshot"
+        : "local route baseline; live verification required",
     };
   });
   writeCsv(
@@ -447,7 +537,7 @@ export async function generateContentOverhaulInventory() {
       issueCounts.set(issue, (issueCounts.get(issue) ?? 0) + 1);
     }
   }
-  const gapRows = [...issueCounts.entries()].map(([issue, count]) => ({
+  const gapRows: Record<string, unknown>[] = [...issueCounts.entries()].map(([issue, count]) => ({
     gap_id: `kb-${issue}`,
     scope: "knowledge_base_raw_corpus",
     issue_type: issue,
@@ -458,6 +548,28 @@ export async function generateContentOverhaulInventory() {
     evidence: "content.json + publication-quality.ts",
     next_action: issue === "machine_translation_marker" ? "Human rewrite before publication" : "Resolve issue and rerun gate",
   }));
+  const entryById = new Map(entries.map((entry) => [entry.id, entry]));
+  for (const [clusterId, label, candidateIds] of REQUIRED_TOPIC_CLUSTERS) {
+    const publicCandidates = candidateIds.filter((id) => {
+      const entry = entryById.get(id);
+      return entry ? isPublicKbEntry(entry) : false;
+    });
+    gapRows.push({
+      gap_id: `topic-${clusterId}`,
+      scope: "required_topic_coverage",
+      issue_type: label,
+      count: publicCandidates.length > 0 ? 0 : 1,
+      severity: publicCandidates.length > 0 ? "none" : "P0",
+      status: publicCandidates.length > 0 ? "covered" : "missing_or_quarantined",
+      owner: "Content architect",
+      evidence: publicCandidates.length > 0
+        ? publicCandidates.join(";")
+        : `expected one of: ${candidateIds.join(";")}`,
+      next_action: publicCandidates.length > 0
+        ? "Keep canonical coverage current"
+        : "Create or restore a professional canonical material",
+    });
+  }
   writeCsv("content-gap-map.csv", ["gap_id", "scope", "issue_type", "count", "severity", "status", "owner", "evidence", "next_action"], gapRows);
 
   const scoreRows = entries.map((entry) => ({
@@ -748,6 +860,7 @@ export async function generateContentOverhaulInventory() {
       publicEntries.length <= 1 &&
       group.entries.every((entry) => {
         if (isPublicKbEntry(entry)) return true;
+        if (entry.status === "archived" && entry.redirect_to) return true;
         const decision = decisions.get(entry.id);
         return decision?.disposition === "redirect" && Boolean(decision.canonicalPath);
       });
@@ -763,7 +876,7 @@ export async function generateContentOverhaulInventory() {
       status: resolved ? "resolved" : "review_required",
       owner: "Content architect",
       evidence: resolved
-        ? `${decisions.get(entry.id)?.canonicalPath ?? "canonical public entry"}; publication registry`
+        ? `${entry.redirect_to ? `/baza-znaniy/${entry.redirect_to}` : decisions.get(entry.id)?.canonicalPath ?? "canonical public entry"}; generated archive redirect or publication registry`
         : "exact normalization of current content.json",
     }));
   });
@@ -780,7 +893,7 @@ export async function generateContentOverhaulInventory() {
       url: `/baza-znaniy/${entry.id}`,
       title: entry.title,
       word_count: entry.editorial?.word_count ?? "not_measured",
-      threshold: 120,
+      threshold: getKbMinimumWordCount(entry),
       public: isPublicKbEntry(entry) ? "yes" : "no",
       action: "EXPAND",
       status: "quarantined",
@@ -827,25 +940,21 @@ export async function generateContentOverhaulInventory() {
       evidence: "current content IDs",
     });
   }
+  const linkCheckPath = path.join(ROOT, "var/ops/kb-link-check.json");
+  const linkCheck = fs.existsSync(linkCheckPath)
+    ? (JSON.parse(fs.readFileSync(linkCheckPath, "utf8")) as LinkCheckReport)
+    : null;
   brokenRows.push({
-    source_id: "audit-scope:kb-markdown-external",
+    source_id: "audit-scope:published-external-http",
     source_url: "/baza-znaniy",
-    link_kind: "markdown_external_http",
-    target: `${entries.reduce((sum, entry) => sum + countMatches(entry.body ?? "", /\[[^\]]+\]\(https?:\/\/[^)]+\)/g), 0)} recorded links`,
-    status: "not_checked_network",
-    action: "HUMAN_REVIEW",
+    link_kind: "source_markdown_and_media_external_http",
+    target: linkCheck ? `${linkCheck.uniqueUrls ?? 0} unique published URLs` : "published external URLs",
+    status: linkCheck && linkCheck.brokenPublic === 0 ? "verified_no_public_breakage" : "not_checked_network",
+    action: linkCheck && linkCheck.brokenPublic === 0 ? "KEEP" : "HUMAN_REVIEW",
     owner: "Content editor + operations",
-    evidence: "network validation intentionally not inferred by local generator",
-  });
-  brokenRows.push({
-    source_id: "audit-scope:source-registry-external",
-    source_url: "/baza-znaniy",
-    link_kind: "source_external_http",
-    target: `${sourceRows.filter((row) => typeof row.source_url === "string" && row.source_url.trim()).length} recorded source URLs`,
-    status: "not_checked_network",
-    action: "HUMAN_REVIEW",
-    owner: "Fact checker + operations",
-    evidence: "source-registry.csv; live HTTP status not checked",
+    evidence: linkCheck
+      ? `var/ops/kb-link-check.json; brokenPublic=${linkCheck.brokenPublic ?? "unknown"}; generatedAt=${linkCheck.generatedAt ?? "unknown"}`
+      : "run npm run content:links",
   });
   writeCsv(
     "broken-links.csv",
@@ -986,67 +1095,110 @@ export async function generateContentOverhaulInventory() {
   );
 
   let changedKbFiles: string[] = [];
+  const gitStatusByFile = new Map<string, string>();
   try {
-    changedKbFiles = execFileSync("git", ["diff", "--name-only", "--", "content/knowledge-base"], {
+    const statusOutput = execFileSync(
+      "git",
+      ["status", "--porcelain=v1", "--untracked-files=all", "--", "content/knowledge-base"],
+      {
       cwd: ROOT,
       encoding: "utf8",
-    }).split("\n").filter((file) => file.endsWith(".md"));
+      },
+    );
+    for (const line of statusOutput.split("\n")) {
+      if (!line.trim()) continue;
+      const status = line.slice(0, 2);
+      const rawPath = line.slice(3).trim();
+      const file = rawPath.includes(" -> ") ? rawPath.split(" -> ").at(-1)! : rawPath;
+      if (!file.endsWith(".md")) continue;
+      gitStatusByFile.set(file, status);
+    }
+    changedKbFiles = [...gitStatusByFile.keys()];
   } catch {
     changedKbFiles = [];
   }
+
+  const baselineWordCount = (file: string): number | null => {
+    try {
+      const baseline = execFileSync("git", ["show", `HEAD:${file}`], {
+        cwd: ROOT,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      });
+      const body = baseline.split("---", 3)[2] ?? "";
+      return countMatches(body, /[\p{L}\p{N}]+(?:[-’'][\p{L}\p{N}]+)*/gu);
+    } catch {
+      return null;
+    }
+  };
+  const changedRows = changedKbFiles.map((file) => {
+    const id = path.basename(file, ".md");
+    const entry = entryById.get(id);
+    const beforeWords = baselineWordCount(file);
+    const afterWords = entry?.editorial?.word_count ?? 0;
+    return { file, id, entry, beforeWords, afterWords, gitStatus: gitStatusByFile.get(file) ?? "" };
+  });
+  const createdRows = changedRows.filter((row) => row.gitStatus.includes("A") || row.gitStatus === "??");
+  const archivedRows = changedRows.filter((row) => row.entry?.status === "archived");
+  const rewrittenRows = changedRows.filter((row) => row.entry?.status === "published");
+
   writeCsv(
     "created-content.csv",
     ["id", "path", "content_type", "action", "facts_changed", "status", "owner", "evidence"],
-    [{
-      id: "audit-scope:content-overhaul",
-      path: "not_applicable",
-      content_type: "knowledge_base_article",
+    createdRows.map((row) => ({
+      id: row.id,
+      path: row.file,
+      content_type: row.entry?.type ?? "knowledge_base_article",
       action: "CREATE",
-      facts_changed: "no",
-      status: "closed_no_new_articles_in_scope",
+      facts_changed: "yes_review_sources",
+      status: row.entry && isPublicKbEntry(row.entry) ? "published_quality_gate_passed" : "created_not_public",
       owner: "Content editor",
-      evidence: "this sprint normalized existing material and created governance artifacts only",
-    }],
+      evidence: `git status ${row.gitStatus.trim() || "new"}; words=${row.afterWords}`,
+    })),
   );
   writeCsv(
     "rewritten-content.csv",
     ["id", "path", "content_type", "action", "facts_changed", "status", "owner", "evidence"],
-    changedKbFiles.map((file) => ({
-      id: path.basename(file, ".md"),
-      path: file,
-      content_type: "knowledge_base_markdown",
-      action: "MECHANICAL_NORMALIZATION",
-      facts_changed: "no_intentional_fact_change",
-      status: "complete",
-      owner: "Content editor",
-      evidence: "git diff + regenerated KB index",
-    })),
+    rewrittenRows.map((row) => {
+      const delta = row.beforeWords == null ? row.afterWords : row.afterWords - row.beforeWords;
+      const deepRewrite = row.beforeWords == null || delta >= 200 || row.afterWords >= row.beforeWords * 1.5;
+      return {
+        id: row.id,
+        path: row.file,
+        content_type: row.entry?.type ?? "knowledge_base_markdown",
+        action: deepRewrite ? "DEEP_REWRITE_OR_EXPANSION" : "EDITORIAL_UPDATE",
+        facts_changed: "review_current_sources_and_diff",
+        status: row.entry && isPublicKbEntry(row.entry) ? "published_quality_gate_passed" : "published_but_gate_blocked",
+        owner: "Content editor",
+        evidence: `git diff; words ${row.beforeWords ?? "new"}→${row.afterWords}; sources=${row.entry?.sources?.length ?? 0}`,
+      };
+    }),
   );
   writeCsv(
     "merged-content.csv",
     ["source_id", "source_url", "destination_id", "destination_url", "status", "owner", "evidence"],
-    [{
-      source_id: "audit-scope:all-kb-entries",
-      source_url: "/baza-znaniy",
-      destination_id: "not_applicable",
-      destination_url: "not_applicable",
-      status: "closed_no_merges_in_scope",
+    archivedRows.map((row) => ({
+      source_id: row.id,
+      source_url: `/baza-znaniy/${row.id}`,
+      destination_id: row.entry?.redirect_to ?? "missing",
+      destination_url: row.entry?.redirect_to ? `/baza-znaniy/${row.entry.redirect_to}` : "missing",
+      status: "merged_with_generated_permanent_redirect",
       owner: "Content architect",
-      evidence: "no content merge was authorized in this documentation sprint",
-    }],
+      evidence: row.entry?.archive_reason ?? "archive reason missing",
+    })),
   );
   writeCsv(
     "archived-content.csv",
     ["id", "url", "reason", "redirect_to", "status", "owner", "evidence"],
-    [{
-      id: "audit-scope:all-kb-entries",
-      url: "/baza-znaniy",
-      reason: "no archive operation was authorized in this documentation sprint",
-      redirect_to: "not_applicable",
-      status: "closed_no_archives_in_scope",
+    archivedRows.map((row) => ({
+      id: row.id,
+      url: `/baza-znaniy/${row.id}`,
+      reason: row.entry?.archive_reason ?? "missing",
+      redirect_to: row.entry?.redirect_to ? `/baza-znaniy/${row.entry.redirect_to}` : "missing",
+      status: "archived_source_retained",
       owner: "Content architect",
-      evidence: "quarantined entries remain retained and are not treated as archived",
-    }],
+      evidence: `${row.file} + generated Next.js archive redirects`,
+    })),
   );
 
   const ledgerRows: Record<string, unknown>[] = [];
@@ -1098,6 +1250,7 @@ export async function generateContentOverhaulInventory() {
       publicEntries.length <= 1 &&
       group.entries.every((entry) => {
         if (isPublicKbEntry(entry)) return true;
+        if (entry.status === "archived" && entry.redirect_to) return true;
         const decision = findRuUrlDecision(`/baza-znaniy/${entry.id}`);
         return decision?.disposition === "redirect" && Boolean(decision.canonicalPath);
       });
@@ -1174,19 +1327,27 @@ export async function generateContentOverhaulInventory() {
   });
   ledgerRows.push({
     id: "public-editorial-2026-07-16",
-    severity: "P0",
+    severity: sitemapMeasured ? "P0" : "P1",
     content_type: "public_sitemap",
     url: "all sitemap routes",
     issue_type: "technical_or_development_copy",
-    actual: `0 errors across ${sitemapPaths.length} pages`,
+    actual: sitemapMeasured
+      ? `route snapshots collected across ${sitemapPaths.length} sitemap pages`
+      : "not measured: CONTENT_OVERHAUL_BASE_URL is not configured",
     expected: "0 errors",
-    impact: "release gate satisfied",
-    root_cause: "resolved in P0 editorial sprint",
-    action: "KEEP",
+    impact: sitemapMeasured
+      ? "route-level evidence is available for the release decision"
+      : "route quality and sitemap integrity cannot be asserted for this candidate",
+    root_cause: sitemapMeasured
+      ? "crawl completed for the configured candidate"
+      : "no running candidate URL was supplied to the inventory generator",
+    action: sitemapMeasured ? "KEEP" : "HUMAN_REVIEW",
     owner: "Release editor",
-    status: "closed",
+    status: sitemapMeasured ? "closed" : "blocked_external",
     source: "var/ops/public-editorial-audit.json",
-    evidence: `status=passed; uniquePageCount=${sitemapPaths.length}`,
+    evidence: sitemapMeasured
+      ? `route_snapshots_collected; uniquePageCount=${sitemapPaths.length}`
+      : "start a stable local/staging candidate and rerun with CONTENT_OVERHAUL_BASE_URL",
     test: "public-editorial-audit --strict",
   });
   writeCsv(
@@ -1200,11 +1361,80 @@ export async function generateContentOverhaulInventory() {
     kbRaw: entries.length,
     kbPublic: publicEntries.length,
     kbQuarantined: entries.length - publicEntries.length,
-    sitemapPages: sitemapPaths.length,
+    kbArchived: entries.filter((entry) => entry.status === "archived").length,
+    kbQualityBlocked: entries.filter(
+      (entry) => entry.status !== "archived" && !isPublicKbEntry(entry),
+    ).length,
+    sitemapPages: sitemapMeasured ? sitemapPaths.length : "not_measured",
     inventoryRows: inventoryRows.length,
     openIssueRows: ledgerRows.filter((row) => row.status !== "closed").length,
+    createdKnowledgeArticles: createdRows.length,
+    rewrittenKnowledgeArticles: rewrittenRows.length,
+    archivedKnowledgeArticles: archivedRows.length,
+    requiredTopicGaps: gapRows.filter(
+      (row) => row.scope === "required_topic_coverage" && row.status !== "covered",
+    ).length,
   };
   fs.writeFileSync(path.join(OUTPUT_DIR, "inventory-summary.json"), `${JSON.stringify(summary, null, 2)}\n`, "utf8");
+
+  const expandedRows = rewrittenRows.filter((row) => {
+    if (row.beforeWords == null) return true;
+    return row.afterWords - row.beforeWords >= 200 || row.afterWords >= row.beforeWords * 1.5;
+  });
+  const sensitivePublished = publicEntries.filter((entry) => entry.editorial?.sensitive);
+  const strictSensitive = sensitivePublished.filter(
+    (entry) => entry.editorial?.provenance?.strict_ready === true,
+  );
+  const topicGapRows = gapRows.filter(
+    (row) => row.scope === "required_topic_coverage" && row.status !== "covered",
+  );
+  const report = [
+    "# Итоговый отчёт по переработке базы знаний",
+    "",
+    `Обновлено: ${new Date().toLocaleDateString("ru-RU", { dateStyle: "long", timeZone: "America/Argentina/Buenos_Aires" })}.`,
+    "",
+    "## Текущий доказуемый результат",
+    "",
+    `- Проверено сущностей: **${entries.length}**.`,
+    `- Проходит единый публичный quality gate: **${publicEntries.length}**.`,
+    `- Намеренно архивировано с сохранением исходника и редиректом: **${summary.kbArchived}**.`,
+    `- Осталось заблокировано качеством вне архива: **${summary.kbQualityBlocked}**.`,
+    `- Существенно переписано или расширено в рабочем diff: **${expandedRows.length}**; всего редакционно изменённых опубликованных материалов: **${rewrittenRows.length}**.`,
+    `- Создано новых материалов: **${createdRows.length}**; физически удалено: **0**.`,
+    `- Чувствительные публичные материалы со строгой claim-level проверкой: **${strictSensitive.length}/${sensitivePublished.length}**.`,
+    `- Непокрытых обязательных тематических кластеров: **${topicGapRows.length}/${REQUIRED_TOPIC_CLUSTERS.length}**.`,
+    "",
+    "## Тематическое покрытие",
+    "",
+    ...(topicGapRows.length
+      ? topicGapRows.map((row) => `- Требует закрытия: **${row.issue_type}** — ${row.evidence}.`)
+      : ["- Все обязательные пользовательские сценарии имеют хотя бы один канонический материал, прошедший публичный gate."]),
+    "",
+    "## Что изменено системно",
+    "",
+    "- Порог глубины учитывает тип материала: FAQ, авторская заметка, гид, транспорт, город, парк, регион и маршрут проверяются раздельно.",
+    "- Публичные страницы, поиск, карта, рекомендации, sitemap и CMS используют fail-closed публикационный gate.",
+    "- Архивные карточки не удаляются: обязательны причина, прямой канонический id и постоянный редирект без цепочек.",
+    "- Для чувствительных утверждений действует реестр источников и claims с датой, ответственным и первичным источником.",
+    "- Авторские материалы требуют явного автора и подтверждённого личного опыта; неподтверждённые истории не публикуются.",
+    "- Инвентаризация отдельно показывает публичные, архивные и реально заблокированные качеством материалы.",
+    "",
+    "## Проверка выпуска",
+    "",
+    sitemapMeasured
+      ? `- Выполнен HTTP-снимок **${sitemapPaths.length}** URL из sitemap на ${process.env.CONTENT_OVERHAUL_BASE_URL}.`
+      : "- Полный HTTP-crawl ещё не измерен: запустите генератор с `CONTENT_OVERHAUL_BASE_URL` на стабильном local/staging кандидате.",
+    linkCheck
+      ? `- Проверено **${linkCheck.uniqueUrls ?? 0}** уникальных внешних URL опубликованной базы; битых публичных ссылок: **${linkCheck.brokenPublic ?? "не измерено"}**.`
+      : "- Сетевой аудит внешних ссылок ещё не запускался (`npm run content:links`).",
+    "- Результаты typecheck, lint, unit/integration, production build, браузерной проверки, CI и production smoke фиксируются на финальном шаге выпуска; этот файл не подменяет их предположениями.",
+    "",
+    topicGapRows.length || Number(summary.kbQualityBlocked) > 0
+      ? "## Решение\n\nВыпуск пока не может называться полной профессиональной базой: остаются перечисленные тематические или редакционные блокеры."
+      : "## Решение\n\nКонтентный корпус прошёл локальный редакционный gate; окончательное решение о выпуске принимается после build, браузерного crawl и production smoke.",
+    "",
+  ].join("\n");
+  fs.writeFileSync(path.join(OUTPUT_DIR, "final-content-report.md"), report, "utf8");
   return summary;
 }
 

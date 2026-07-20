@@ -4,13 +4,18 @@ import type {
   PlaceItinerary,
   PlaceListing,
 } from "@/types/place";
-import { getPlaceCoverImage, getPlaceGallery } from "@/lib/media-resolver";
+import {
+  getPlaceCoverImage,
+  getPlaceGallery,
+  MEDIA_LOGO_FALLBACK,
+} from "@/lib/media-resolver";
 import { PLACES_KB_IMPORT } from "@/data/places-kb-import.generated";
 import { withPlacePlanningDefaults } from "@/data/places-planning";
 
 function placeMedia(slug: string) {
+  const coverImage = getPlaceCoverImage(slug);
   return {
-    coverImage: getPlaceCoverImage(slug),
+    coverImage: coverImage === MEDIA_LOGO_FALLBACK ? undefined : coverImage,
     gallery: getPlaceGallery(slug),
   };
 }
@@ -1038,6 +1043,28 @@ export const PLACES_SEED: SeedPlace[] = [
     popularity: 46,
   },
   {
+    id: "place-trevelin",
+    slug: "trevelin",
+    name: "Тревелин",
+    shortDescription:
+      "Патагонский город с валлийской культурой, садами и удобным доступом к парку Лос-Алерсес.",
+    fullDescription:
+      "Тревелин расположен в долине 16 Октября к югу от Эскеля. Город известен валлийским наследием, чайными домами и мельницами, а его окрестности — полями тюльпанов, виноградниками, каскадами Нант-и-Фаль и южным въездом в национальный парк Лос-Алерсес. Это спокойная база для поездок по западному Чубуту и знакомства с природой и локальной культурой.",
+    category: "city",
+    region: "Патагония",
+    province: "Chubut",
+    city: "Trevelin",
+    latitude: -43.0847,
+    longitude: -71.4592,
+    ...placeMedia("trevelin"),
+    tags: ["валлийская культура", "тюльпаны", "виноградники", "лос-алерсес", "патагонская природа"],
+    visitDuration: "1–3 дня",
+    season: "Круглый год; тюльпаны цветут примерно в октябре",
+    website: "https://trevelin.tur.ar",
+    source: "manual",
+    popularity: 58,
+  },
+  {
     id: "place-quebrada-conchas",
     slug: "quebrada-de-las-conchas",
     name: "Ущелье Лас-Кончас",
@@ -1086,7 +1113,7 @@ export const PLACES_SEED: SeedPlace[] = [
     shortDescription: "Город в провинции Буэнос-Айрес и главный центр католического паломничества Аргентины с неоготической базиликой Девы Лухан.",
     fullDescription:
       "Город в провинции Буэнос-Айрес, главный центр католического паломничества Аргентины: к неоготической базилике Девы Лухан — покровительницы страны — ежегодно идут пешком из столицы более миллиона человек. Рядом — большой музей транспорта и истории. Классическая поездка из Буэнос-Айреса.",
-    category: "museum",
+    category: "city",
     region: "Центр и Пампа",
     province: "Buenos Aires",
     latitude: -34.5703,
@@ -1096,6 +1123,69 @@ export const PLACES_SEED: SeedPlace[] = [
     source: "manual",
     kbSlug: "lujan",
     popularity: 42,
+  },
+  {
+    id: "place-pilar",
+    slug: "pilar",
+    name: "Пилар",
+    shortDescription:
+      "Город к северо-западу от Буэнос-Айреса с историческим центром и природным резерватом.",
+    fullDescription:
+      "Пилар подходит для спокойной поездки из Буэнос-Айреса. В историческом центре находятся площадь 12 Октября, приходская церковь Нуэстра-Сеньора-дель-Пилар, муниципальный дворец и театр Анхель Алонсо. За городской частью можно добавить прогулку по природному резервату Пилар; перед поездкой стоит проверить часы работы и программу муниципальных пространств.",
+    category: "city",
+    region: "Центр и Пампа",
+    province: "Buenos Aires",
+    city: "Pilar",
+    latitude: -34.4587,
+    longitude: -58.9142,
+    ...placeMedia("pilar"),
+    tags: ["исторический центр", "природный резерват", "поездка из Буэнос-Айреса"],
+    visitDuration: "Полдня–1 день",
+    website: "https://pilar.gov.ar/lugares-de-interes/",
+    source: "manual",
+    popularity: 32,
+  },
+  {
+    id: "place-zarate",
+    slug: "zarate",
+    name: "Сарате",
+    shortDescription:
+      "Город на Паране с набережной, островами и видами на комплекс Сарате — Брасо-Ларго.",
+    fullDescription:
+      "Сарате расположен на северо-востоке провинции Буэнос-Айрес и связан с речной культурой Параны. Для поездки интересны набережная, местные исторические пространства и панорамы комплекса Сарате — Брасо-Ларго; островная часть района подходит для отдыха у воды и наблюдения за природой дельты. Город можно совместить с Кампаной или сельскими поселениями северного коридора.",
+    category: "city",
+    region: "Центр и Пампа",
+    province: "Buenos Aires",
+    city: "Zárate",
+    latitude: -34.0981,
+    longitude: -59.0286,
+    ...placeMedia("zarate"),
+    tags: ["парана", "набережная", "дельта", "сарате-брасо-ларго"],
+    visitDuration: "1 день",
+    website: "https://zarate.gob.ar/conoce-zarate/",
+    source: "manual",
+    popularity: 34,
+  },
+  {
+    id: "place-cementerio-chacarita",
+    slug: "cementerio-de-la-chacarita",
+    name: "Кладбище Чакарита",
+    shortDescription:
+      "Крупнейший некрополь Буэнос-Айреса с монументальной архитектурой и могилами деятелей культуры.",
+    fullDescription:
+      "Кладбище Чакарита — историческое место и самый большой некрополь города. Его планировка, неоклассический главный вход, скульптуры и пантеоны позволяют читать историю Буэнос-Айреса через судьбы музыкантов, писателей, артистов и спортсменов. Это менее очевидная альтернатива Реколете; посещение требует уважительного поведения, а актуальные часы и экскурсии лучше проверять на официальной странице города.",
+    category: "historic",
+    region: "Центр и Пампа",
+    province: "Buenos Aires (CABA)",
+    city: "Buenos Aires",
+    latitude: -34.5910547,
+    longitude: -58.4583031,
+    ...placeMedia("cementerio-de-la-chacarita"),
+    tags: ["чакарита", "кладбище", "архитектура", "история", "культура"],
+    visitDuration: "1–2 часа",
+    website: "https://turismo.buenosaires.gob.ar/es/otros-establecimientos/cementerio-de-la-chacarita",
+    source: "manual",
+    popularity: 38,
   },
   {
     id: "place-mar-de-las-pampas",

@@ -5,7 +5,7 @@ title: Каякинг на озёрах Барилоче
 title_es: Kayak en Bariloche
 title_en: Kayak in Bariloche
 summary: "Каякинг в Барилоче по озёрам Науэль-Уапи и Морено."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: bariloche
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -41.1334722
   lng: -71.3102778

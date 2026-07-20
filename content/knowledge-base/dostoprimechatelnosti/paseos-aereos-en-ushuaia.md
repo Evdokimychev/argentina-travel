@@ -6,7 +6,7 @@ title_es: Paseos aéreos en Ushuaia
 title_en: Air tours in Ushuaia
 summary: En la Патагония Argentina, date el gusto de recorrer desde el aire las tierras
   del fin del mundo.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

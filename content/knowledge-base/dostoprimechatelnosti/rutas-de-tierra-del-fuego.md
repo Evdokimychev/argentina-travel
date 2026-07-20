@@ -6,7 +6,7 @@ title_es: Rutas de Tierra del Fuego
 title_en: Roads in Tierra del Fuego
 summary: Ponte al volante de una aventura por carreteras y caminos de la provincia
   más austral del continente.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

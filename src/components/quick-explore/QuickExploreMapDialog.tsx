@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { navigateAfterDialogClose } from "@/hooks/useDialogBackClose";
 import {
   ArrowLeft,
   ChevronRight,
@@ -77,12 +79,15 @@ function filterSpots(spots: QuickExploreSpot[], query: string): QuickExploreSpot
 }
 
 export default function QuickExploreMapDialog({ initialOpen = false }: { initialOpen?: boolean }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const { payload, loading, error, refresh } = useQuickExplore();
   const [open, setOpen] = useState(false);
   const [provinceIso, setProvinceIso] = useState<string | null>(null);
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const pathnameRef = useRef(pathname);
 
   useEffect(() => {
     if (initialOpen) setOpen(true);
@@ -115,6 +120,12 @@ export default function QuickExploreMapDialog({ initialOpen = false }: { initial
     },
     [resetState]
   );
+
+  useEffect(() => {
+    if (pathnameRef.current === pathname) return;
+    pathnameRef.current = pathname;
+    handleOpenChange(false);
+  }, [handleOpenChange, pathname]);
 
   const selectedProvince = useMemo(
     () => payload?.provinces.find((p) => p.iso === provinceIso) ?? null,
@@ -182,6 +193,10 @@ export default function QuickExploreMapDialog({ initialOpen = false }: { initial
     setSelectedSpotId(obj.id);
   }
 
+  function navigateFromDialog(href: string) {
+    navigateAfterDialogClose(() => router.push(href), () => handleOpenChange(false));
+  }
+
   const fullMapHref = useMemo(() => {
     if (selectedSpot?.id.startsWith("place:")) {
       const params = new URLSearchParams();
@@ -232,6 +247,7 @@ export default function QuickExploreMapDialog({ initialOpen = false }: { initial
                 theme="nature"
                 overlays={DEFAULT_MAP_OVERLAY_STATE}
                 thematic={QUICK_THEMATIC}
+                enableThematicInteractions={false}
                 onSelect={handleMapSelect}
                 view={mapView}
                 className="h-full w-full"
@@ -390,6 +406,7 @@ export default function QuickExploreMapDialog({ initialOpen = false }: { initial
                 <QuickExploreSpotCard
                   spot={selectedSpot}
                   onClose={() => setSelectedSpotId(null)}
+                  onNavigate={navigateFromDialog}
                   className="mx-1 my-1"
                 />
               ) : null}
@@ -398,7 +415,10 @@ export default function QuickExploreMapDialog({ initialOpen = false }: { initial
             <footer className="shrink-0 border-t border-border-subtle px-4 py-3 sm:px-5">
               <Link
                 href={fullMapHref}
-                onClick={() => handleOpenChange(false)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigateFromDialog(fullMapHref);
+                }}
                 className={cn(
                   "flex min-h-11 w-full items-center justify-center gap-2 rounded-pill px-4 py-2.5 text-sm font-semibold transition-colors",
                   tokenButtonOutlineClass,

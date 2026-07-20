@@ -93,6 +93,13 @@ const HERO_TARGETS = [
   { slug: "los-alerces-national-park", name: "Нацпарк Лос-Алерсес", query: "Parque Nacional Los Alerces Chubut lago Futalaufquen" },
   { slug: "quebrada-de-las-conchas", name: "Ущелье Лас-Кончас", query: "Quebrada de las Conchas Cafayate" },
   { slug: "puente-del-inca", name: "Пуэнте-дель-Инка", query: "Puente del Inca Mendoza" },
+  { slug: "pilar", name: "Пилар", query: "Pilar Buenos Aires Plaza 12 de Octubre Argentina" },
+  { slug: "zarate", name: "Сарате", query: "Zárate Buenos Aires costanera puente Argentina" },
+  {
+    slug: "cementerio-de-la-chacarita",
+    name: "Кладбище Чакарита",
+    query: "Cementerio de la Chacarita Buenos Aires entrada",
+  },
   // Места, потерявшие hero после дедупликации (фото было чужим)
   { slug: "purmamarca", name: "Пурмамарка", query: "Purmamarca village Jujuy street" },
   { slug: "el-chalten", name: "Эль-Чальтен", query: "El Chaltén village Santa Cruz Argentina" },

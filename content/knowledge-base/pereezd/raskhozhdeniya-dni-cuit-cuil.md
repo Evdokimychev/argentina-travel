@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Расхождения в DNI, CUIL и CUIT: куда обращаться"
 summary: "Ошибки исправляют в ведомстве, которое ведёт конкретную запись: CUIL и персональные данные — через ANSES, CUIT и налоговые данные — через ARCA."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dokumentam
+archive_reason: "Частный сценарий объединён с проверенным руководством по документам и административным обращениям."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [DNI, CUIL, CUIT, ANSES, ARCA]

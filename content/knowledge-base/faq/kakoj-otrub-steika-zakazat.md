@@ -4,12 +4,15 @@ type: faq
 question: "Bife de chorizo и ojo de bife — в чём разница, и что такое рибай?"
 short_answer: "Bife de chorizo — это стриплойн (тонкий край); рибай в Аргентине называется ojo de bife."
 topic: kuhnya
-status: published
+status: archived
+site_ready: false
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 tags: [асадо, стейк, кухня, факт-чек]
 related: [kuhnya]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: high
+redirect_to: kuhnya
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

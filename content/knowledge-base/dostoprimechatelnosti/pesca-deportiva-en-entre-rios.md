@@ -6,7 +6,7 @@ title_es: Pesca deportiva en Entre Ríos
 title_en: Sport fishing in Entre Ríos
 summary: Acércate a la región Литорал y embárcate en aventuras por los ríos Paraná
   y Uruguay.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

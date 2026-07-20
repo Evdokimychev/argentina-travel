@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Временная резиденция по семейному основанию"
 summary: "Семейная категория доступна близким родственникам гражданина Аргентины или временного либо постоянного резидента; состав семьи и срок определяет текущая процедура DNM."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: vnzh-argentina
+archive_reason: "Карточка отдельного основания объединена с проверенным руководством по выбору резиденции."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [семья, резиденция, документы, Migraciones]

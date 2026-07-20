@@ -6,7 +6,7 @@ title_es: Museo Arqueológico Los Menhires
 title_en: Los Menhires Archaeological Museum
 summary: En la provincia de Tucumán, explora una reserva a cielo abierto que te llevará
   hasta el inicio de la era Cristiana.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -61,10 +61,19 @@ function parseBody(value: Json): CmsDocumentBody {
       excerpt: typeof record.excerpt === "string" ? record.excerpt : undefined,
       content: typeof record.content === "string" ? record.content : undefined,
       featured: typeof record.featured === "boolean" ? record.featured : undefined,
+      relatedDestinations: stringArray(record.relatedDestinations),
       sections: Array.isArray(record.sections)
         ? record.sections.map((section) => parseCmsBlogSection(section))
         : undefined,
       collector: parseCollector(record.collector),
+      authorName: typeof record.authorName === "string" ? record.authorName : undefined,
+      authorSlug: typeof record.authorSlug === "string" ? record.authorSlug : undefined,
+      authorBio: typeof record.authorBio === "string" ? record.authorBio : undefined,
+      authorAvatar: typeof record.authorAvatar === "string" ? record.authorAvatar : undefined,
+      personalExperience:
+        typeof record.personalExperience === "boolean" ? record.personalExperience : undefined,
+      verifiedByAuthor:
+        typeof record.verifiedByAuthor === "boolean" ? record.verifiedByAuthor : undefined,
     };
   }
   if (record.kind === "author_article") {

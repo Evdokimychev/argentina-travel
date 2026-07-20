@@ -6,7 +6,7 @@ title_es: Cabalgata en el lago Roca
 title_en: Horseback riding in the Roca lake
 summary: En la Патагония, disfruta una cabalgata que te lleva a contemplar una vista
   panorámica del Glaciar Перито-Морено.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -4,12 +4,15 @@ type: faq
 question: "Реально ли увидеть главное в Аргентине за 2 недели?"
 short_answer: "Да — это стандартная длительность классического маршрута (Буэнос-Айрес + Игуасу + Патагония), но темп будет плотным."
 topic: marshruty
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine]
 tags: [маршруты, планирование, 2 недели]
 related: [argentina-2-nedeli, iguasu, los-glasiares, vnutrennie-aviabilety, chto-stoit-deneg-prioritety]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: argentina-2-nedeli
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

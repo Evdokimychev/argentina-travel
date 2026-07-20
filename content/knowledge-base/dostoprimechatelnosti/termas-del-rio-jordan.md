@@ -5,7 +5,7 @@ title: "Термы Рио-Жордан"
 title_es: Termas del Río Jordán
 title_en: Río Jordán Hot Springs
 summary: "Горячие источники среди влажной сельвы юнга в провинции Жужуй — дикое термальное место в глубине гор."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -38,6 +38,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

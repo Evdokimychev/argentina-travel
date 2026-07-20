@@ -1,12 +1,11 @@
 ---
 id: peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco
 type: attraction
-title: 'Península Valdés: World Heritage Site'
+title: "Архив: полуостров Вальдес — объект ЮНЕСКО"
 title_es: Península Valdés, Sitio Patrimonio Mundial de la UNESCO
 title_en: 'Península Valdés: World Heritage Site'
-summary: 'Visita el área protegida donde te espera un emblema de las costas patagónicas:
-  la Ballena Franca Austral.'
-status: stub
+summary: "Дублирующая карточка объекта ЮНЕСКО объединена с каноническим путеводителем по полуострову Вальдес."
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -17,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: peninsula-valdes
+archive_reason: "Дублирует сущность peninsula-valdes, её географию и объект Всемирного наследия; сохранена для перенаправления старого URL."
 coordinates:
   lat: -42.50399555463521
   lng: -63.88117028253682
@@ -56,14 +57,9 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание
+## Почему запись объединена
 
-Visita el área protegida donde te espera un emblema de las costas patagónicas: la Ballena Franca Austral.
-
-## Практическая информация
-
-- **Координаты:** -42.5040, -63.8812
-- **Провинция:** Чубут
+Импортная страница повторяла каноническую сущность `peninsula-valdes`: ту же охраняемую территорию, статус ЮНЕСКО и сезон наблюдения за южным китом. Разделять одну поездку на две конкурирующие страницы не полезно, поэтому старый URL сохранён как архивное перенаправление.
 
 ## Источники
 

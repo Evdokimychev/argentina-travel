@@ -6,7 +6,7 @@ title_es: Museos de Buenos Aires
 title_en: Museums of Buenos Aires
 summary: Посетите музеи, которые предлагают широкий спектр национальной и международной
   культуры и искусства.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -34.604614241280295
   lng: -58.37239366382491
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

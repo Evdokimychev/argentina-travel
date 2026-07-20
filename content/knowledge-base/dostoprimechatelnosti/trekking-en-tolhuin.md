@@ -5,7 +5,7 @@ title: Треккинг в Тольуине
 title_es: Trekking en Tolhuin
 title_en: Trekking in Tolhuin
 summary: "Треккинг в окрестностях Тольуина на Огненной Земле — маршруты разной сложности."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - огненная земля
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -54.50454508679188
   lng: -67.19052678258277

@@ -134,7 +134,7 @@ describe("homepage client bundle boundaries", () => {
 
     expect(onDemand).toContain("SITE_SEARCH_OPEN_EVENT");
     expect(onDemand).toContain('dynamic(() => import("@/components/SiteSearch")');
-    expect(onDemand).toContain("searchMounted ? <SiteSearch /> : null");
+    expect(onDemand).toContain("searchMounted ? <SiteSearch initialOpen={searchInitiallyOpen} /> : null");
     expect(search).toContain("initialOpen = false");
     expect(search).toContain("const [open, setOpen] = useState(false)");
     expect(search).toContain("if (initialOpen) setOpen(true)");
@@ -156,7 +156,7 @@ describe("homepage client bundle boundaries", () => {
 
     expect(onDemand).toContain("SITE_MAP_OPEN_EVENT");
     expect(onDemand).toContain('import("@/components/quick-explore/QuickExploreDialogHost")');
-    expect(onDemand).toContain("mapMounted ? <QuickExploreDialogHost /> : null");
+    expect(onDemand).toContain("mapMounted ? <QuickExploreDialogHost initialOpen={mapInitiallyOpen} /> : null");
     expect(mapDialog).toContain("const [open, setOpen] = useState(false)");
     expect(mapDialog).toContain("if (initialOpen) setOpen(true)");
     expect(quickExploreProvider).not.toContain("scheduleQuickExplorePrefetch");

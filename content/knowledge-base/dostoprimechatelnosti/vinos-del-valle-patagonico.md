@@ -6,7 +6,7 @@ title_es: Vinos del valle patagónico
 title_en: Patagonian valley wines
 summary: En las provincias de Río Negro y La Pampa, disfruta variedades de vinos con
   sabores autóctonos.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: "Вилья-Мерседес"
 title_es: Villa Mercedes, San Luis
 title_en: Villa Mercedes, San Luis
 summary: "Второй по величине город провинции Сан-Луис — оживлённый центр с гастрономией, фестивалями и рекой."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -4,15 +4,18 @@ type: author_tip
 subtype: mistake
 title: "Дорога семи озёр за полтора часа — формально возможно, но это упущенная поездка"
 summary: "Семь озёр можно проехать насквозь за полтора часа без остановок — но именно так теряется весь смысл маршрута. Плюс предупреждение про ripio в договоре аренды авто."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [озёра, патагония, треккинг]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Маршруты-Дорога-семи-озёр-и-Рута-40.md"
 related: [ruta-40-sem-ozer, lanin, nauel-uapi]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: ruta-40-sem-ozer
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Маршруты-Дорога-семи-озёр-и-Рута-40.md — разделы «Практические советы» и «Частые ошибки»"
     url: ""

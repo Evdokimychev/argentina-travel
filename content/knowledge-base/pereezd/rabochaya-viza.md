@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Резиденция по работе в Аргентине"
 summary: "Для работы по найму существует residencia temporaria como trabajador migrante: работодатель и предварительный трудовой договор входят в официальный комплект."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: vnzh-argentina
+archive_reason: "Карточка основания резиденции объединена с проверенным руководством по выбору статуса."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [работа, резиденция, Migraciones, документы]

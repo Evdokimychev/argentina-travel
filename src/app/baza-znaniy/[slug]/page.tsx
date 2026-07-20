@@ -33,6 +33,10 @@ import { cmsFallbackRobots } from "@/lib/cms/content-resolver";
 import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
+import {
+  getKbAuthorSlug,
+  isVerifiedKbAuthorEntry,
+} from "@/lib/knowledge-base/authors";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
 import type { KbEntry } from "@/lib/knowledge-base/types";
 import { entryHref } from "@/lib/knowledge-base/urls";
@@ -113,6 +117,8 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
     : { ...entry, last_verified: null };
   const contentExcursions = await fetchContentExcursionsServer();
   const excursionMatches = resolveExcursionsForKnowledgeEntry(entry, contentExcursions);
+  const verifiedAuthor = isVerifiedKbAuthorEntry(entry);
+  const authorSlug = verifiedAuthor ? getKbAuthorSlug(entry) : undefined;
 
   return (
     <>
@@ -166,6 +172,20 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
                 <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium text-slate">
                   Короткая справка
                 </span>
+              )}
+              {verifiedAuthor && entry.author_name && (
+                authorSlug ? (
+                  <Link
+                    href={`/baza-znaniy/avtory/${authorSlug}`}
+                    className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium text-slate hover:text-sky-ink"
+                  >
+                    Автор: {entry.author_name}
+                  </Link>
+                ) : (
+                  <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium text-slate">
+                    Автор: {entry.author_name}
+                  </span>
+                )
               )}
             </div>
 

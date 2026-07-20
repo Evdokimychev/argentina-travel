@@ -5,7 +5,10 @@ title: "Национальный парк Окаменевшие леса Хар
 title_es: "Parque Nacional Bosques Petrificados de Jaramillo"
 aliases: ["Окаменевший лес", "Окаменевшие леса", "Bosques Petrificados", "petrified forest Argentina"]
 summary: "Национальный парк в засушливой степи провинции Санта-Крус, где посреди патагонского плато лежат гигантские окаменевшие стволы араукарий возрастом около 150 миллионов лет — целый доисторический лес, обращённый в камень, среди сегодняшней пустыни."
-status: published
+status: archived
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Дублирующая страница объединена с канонической карточкой национального парка, где сохранены медиа и расширяется практическая информация."
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 region_id: patagonia
 province: "Санта-Крус"
@@ -16,7 +19,6 @@ best_time: ["октябрь-апрель (тёплый сезон); днём в�
 duration: "Полдня-день (осмотр троп + дорога)"
 how_to_get_there: "Удалённый парк в центре Санта-Крус; съезд с национальной трассы RN 3 и грунтовая дорога. Обычно посещается на своём авто по пути между атлантическим побережьем и RN 40."
 related: [puerto-deseado, patagonia, patagonia-park]
-site_ready: false
 media:
   note: "Фото пока нет — подготовить под добавление изображения (Wikimedia Commons: Bosques Petrificados de Jaramillo)."
 last_verified: "2026-07-06"

@@ -4,8 +4,10 @@ type: national_park
 title: "Национальный парк Рио-Пилькомайо"
 title_es: "Parque Nacional Río Pilcomayo"
 summary: "Водно-болотный национальный парк в Формосе площадью 51 889 га: Sitio Ramsar, Laguna Blanca, два портала и грунтовые подъезды, состояние которых нужно проверять после дождей."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 site_sections: [goroda-i-regiony, puteshestviya-po-argentine]
 region_id: litoral
 province: Formosa

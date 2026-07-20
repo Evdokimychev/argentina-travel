@@ -10,7 +10,8 @@ export interface RuUrlDecision {
     | "search_results"
     | "missing_self_canonical"
     | "unstable_partner_route"
-    | "duplicate_content";
+    | "duplicate_content"
+    | "editorial_quarantine";
 }
 
 export interface RuPublicationCandidate {
@@ -45,6 +46,12 @@ export interface RuPublicationEvaluation {
  */
 export const RU_URL_DECISIONS: readonly RuUrlDecision[] = [
   {
+    path: "/immigration",
+    match: "prefix",
+    disposition: "noindex",
+    reason: "editorial_quarantine",
+  },
+  {
     path: "/baza-znaniy/ciudad-de-salta",
     match: "exact",
     disposition: "redirect",
@@ -63,6 +70,13 @@ export const RU_URL_DECISIONS: readonly RuUrlDecision[] = [
     match: "exact",
     disposition: "redirect",
     canonicalPath: "/baza-znaniy/ognennaya-zemlya",
+    reason: "duplicate_content",
+  },
+  {
+    path: "/baza-znaniy/aep-eze-stykovka",
+    match: "exact",
+    disposition: "redirect",
+    canonicalPath: "/baza-znaniy/aeroporty",
     reason: "duplicate_content",
   },
   {

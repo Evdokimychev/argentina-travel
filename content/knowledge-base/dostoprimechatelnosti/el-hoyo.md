@@ -5,7 +5,7 @@ title: Эль-Ойо
 title_es: El Hoyo
 title_en: El Hoyo
 summary: "Эль-Ойо в Патагонии (Чубут) — «национальная столица мелких ягод» среди гор и садов."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -42.06603436456272
   lng: -71.52369009743992

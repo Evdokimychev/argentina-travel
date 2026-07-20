@@ -6,8 +6,10 @@ title: "Подготовка к поездке в Аргентину: прове
 title_es: "Preparar el viaje: lista de control"
 aliases: ["подготовка к поездке Аргентина", "чек-лист поездки", "что нужно для поездки", "что взять в Аргентину", "сборы Патагония Игуасу"]
 summary: "Чек-лист для туриста: условия въезда, страховка, законные способы оплаты, здоровье, сезонность маршрута и документы, которые нужно сохранить офлайн."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-puteshestvennika
+archive_reason: "Короткий чек-лист объединён с проверенным практическим маршрутом поездки."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: tourist
 tags: [подготовка, чек-лист, планирование, сборы, поездка]

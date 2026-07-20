@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "assets": [
     {
       "id": "place-buenos-aires-hero",
@@ -49293,44 +49293,6 @@
       "role": "hero"
     },
     {
-      "id": "place-el-chalten-hero",
-      "title": "Эль-Чалтен и массив Фиц-Рой — обложка",
-      "alt": "Массив Фиц-Рой у Эль-Чалтена, Аргентина",
-      "caption": "Фиц-Рой у Эль-Чалтена, Wikimedia Commons",
-      "category": "trekking",
-      "tags": [
-        "el-chalten",
-        "fitz-roy",
-        "hero"
-      ],
-      "source": "wikimedia",
-      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
-      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
-      "author": "Wikimedia Commons contributors",
-      "localPath": "media/places/el-chalten/hero.jpg",
-      "placeId": "el-chalten",
-      "role": "hero"
-    },
-    {
-      "id": "place-purmamarca-hero",
-      "title": "Пурмамарка и Серро-де-лос-Сьете-Колорес — обложка",
-      "alt": "Серро-де-лос-Сьете-Колорес у Пурмамарки, Аргентина",
-      "caption": "Серро-де-лос-Сьете-Колорес, Wikimedia Commons",
-      "category": "attraction",
-      "tags": [
-        "purmamarca",
-        "cerro-de-los-7-colores",
-        "hero"
-      ],
-      "source": "wikimedia",
-      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
-      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
-      "author": "Wikimedia Commons contributors",
-      "localPath": "media/places/purmamarca/hero.jpg",
-      "placeId": "purmamarca",
-      "role": "hero"
-    },
-    {
       "id": "service-home-hero-mobile",
       "title": "Площадь Майо в Буэнос-Айресе — мобильная обложка",
       "alt": "Историческая архитектура и цветущая жакаранда на площади Майо",
@@ -49691,6 +49653,60 @@
       "role": "gallery",
       "contentHash": "e5c58599380e1b692fc37d92ade1486c",
       "derivedFrom": "dest-patagonia-gallery-3"
+    },
+    {
+      "id": "place-pilar-hero",
+      "title": "Пилар — обложка",
+      "alt": "Пилар, Аргентина",
+      "caption": "Пилар, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "pilar",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Plaza_12_de_Octubre._Pilar,_BA_2017.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Cesar Pérez",
+      "localPath": "media/places/pilar/hero.jpg",
+      "placeId": "pilar",
+      "role": "hero"
+    },
+    {
+      "id": "place-zarate-hero",
+      "title": "Сарате — обложка",
+      "alt": "Сарате, Аргентина",
+      "caption": "Сарате, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "zarate",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Puente_Mitre_desde_la_costanera_de_Z%C3%A1rate.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Dario Alpern",
+      "localPath": "media/places/zarate/hero.jpg",
+      "placeId": "zarate",
+      "role": "hero"
+    },
+    {
+      "id": "place-cementerio-de-la-chacarita-hero",
+      "title": "Кладбище Чакарита — обложка",
+      "alt": "Кладбище Чакарита, Аргентина",
+      "caption": "Кладбище Чакарита, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cementerio-de-la-chacarita",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cementerio_de_la_Chacarita_entrada.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Roberto Fiadone",
+      "localPath": "media/places/cementerio-de-la-chacarita/hero.jpg",
+      "placeId": "cementerio-de-la-chacarita",
+      "role": "hero"
     }
   ]
 }

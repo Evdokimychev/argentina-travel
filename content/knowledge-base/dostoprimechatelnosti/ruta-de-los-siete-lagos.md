@@ -5,7 +5,7 @@ title: Дорога семи озёр
 title_es: Ruta de los Siete Lagos
 title_en: Route of Seven Lakes
 summary: "«Дорога семи озёр» между Сан-Мартин-де-лос-Андес и Вилья-Ла-Ангостурой — классический маршрут озёрного края."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -40.175841796818055
   lng: -71.36151730027784

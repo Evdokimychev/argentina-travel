@@ -3,8 +3,10 @@ import type { KbEntry } from "./types";
 const MIXED_SCRIPT_WORD_RE = /(?=[\p{L}\p{M}-]*\p{Script=Latin})(?=[\p{L}\p{M}-]*\p{Script=Cyrillic})[\p{L}\p{M}-]+/gu;
 const LATIN_RE = /\p{Script=Latin}/u;
 const CYRILLIC_RE = /\p{Script=Cyrillic}/u;
-const PLACEHOLDER_RE = /\b(?:placeholder|lorem ipsum|todo|tbd|undefined|null)\b/i;
-const MACHINE_TRANSLATION_MARKER_RE = /автоперевод|требует редакторской вычитки/i;
+const PLACEHOLDER_RE = /\b(?:placeholder|lorem ipsum|tbd|undefined|null)\b/i;
+const TODO_MARKER_RE = /\bTODO\b/;
+const MACHINE_TRANSLATION_MARKER_RE =
+  /текст\s+автоперевед[её]н|требует редакторской вычитки/i;
 const INTERNAL_EDITORIAL_MARKER_RE =
   /См\.\s*`?(?:recommendations|warnings)`?\s*в метаданных|Архивный лонгрид|в корне проекта/i;
 const MALFORMED_HEADING_RE =
@@ -25,6 +27,12 @@ function hasMixedScriptWord(value: string): boolean {
   );
 }
 
+function hasVerifiableSource(entry: Pick<KbEntry, "sources">): boolean {
+  return (entry.sources ?? []).some((source) =>
+    /^https?:\/\/\S+$/i.test(source.url?.trim() ?? ""),
+  );
+}
+
 export type PublicationIssue =
   | "not_publication_ready"
   | "mixed_script_word"
@@ -35,25 +43,61 @@ export type PublicationIssue =
   | "internal_editorial_marker"
   | "malformed_markdown_heading"
   | "missing_sensitive_source"
+  | "missing_source"
+  | "verification_due"
+  | "missing_author"
+  | "unverified_personal_authorship"
   | "sensitive_provenance_not_ready"
   | "thin_content"
   | "missing_hero";
 
+/**
+ * Минимальная глубина зависит от задачи материала. Короткий FAQ может дать
+ * законченный ответ, но такой же объём не делает полноценным маршрут, город
+ * или практическое руководство. Значения совпадают с редакционной моделью
+ * инвентаризации в scripts/generate-content-overhaul-inventory.ts.
+ */
+export const KB_MIN_WORDS_BY_TYPE: Readonly<Record<KbEntry["type"], number>> = {
+  attraction: 500,
+  national_park: 500,
+  city: 500,
+  region: 800,
+  route: 800,
+  transport: 600,
+  guide: 600,
+  faq: 120,
+  author_tip: 250,
+};
+
+export function getKbMinimumWordCount(entry: Pick<KbEntry, "type">): number {
+  return KB_MIN_WORDS_BY_TYPE[entry.type];
+}
+
 export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   const issues: PublicationIssue[] = [];
+  const intentionalArchive =
+    entry.status === "archived" &&
+    entry.site_ready === false &&
+    Boolean(entry.redirect_to?.trim()) &&
+    Boolean(entry.archive_reason?.trim());
+  if (intentionalArchive) return issues;
   const title = entry.title ?? "";
   const summary = entry.summary ?? "";
   const visibleText = `${title} ${summary} ${entry.body ?? ""}`;
   const titleScripts = scriptCounts(title);
   const summaryScripts = scriptCounts(summary);
 
-  if (entry.site_ready === false) issues.push("not_publication_ready");
+  if (entry.status !== "published" || entry.site_ready === false) {
+    issues.push("not_publication_ready");
+  }
   if (hasMixedScriptWord(visibleText)) issues.push("mixed_script_word");
   if (titleScripts.latin >= 4 && titleScripts.cyrillic === 0) issues.push("non_russian_title");
   if (summaryScripts.latin >= 20 && summaryScripts.latin > summaryScripts.cyrillic * 2) {
     issues.push("non_russian_summary");
   }
-  if (PLACEHOLDER_RE.test(visibleText)) issues.push("placeholder_content");
+  if (PLACEHOLDER_RE.test(visibleText) || TODO_MARKER_RE.test(visibleText)) {
+    issues.push("placeholder_content");
+  }
   if (MACHINE_TRANSLATION_MARKER_RE.test(visibleText)) {
     issues.push("machine_translation_marker");
   }
@@ -66,6 +110,20 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   if (entry.editorial?.sensitive && entry.editorial.missing_sources) {
     issues.push("missing_sensitive_source");
   }
+  if (
+    entry.status === "published" &&
+    entry.type !== "author_tip" &&
+    !hasVerifiableSource(entry)
+  ) {
+    issues.push("missing_source");
+  }
+  if (entry.editorial?.review_due) {
+    issues.push("verification_due");
+  }
+  if (entry.type === "author_tip" && entry.personal_experience) {
+    if (!entry.verified_by_ivan) issues.push("unverified_personal_authorship");
+    if (!entry.author_name?.trim()) issues.push("missing_author");
+  }
   const provenanceMode = entry.provenance?.mode ?? entry.editorial?.provenance?.mode;
   if (
     entry.editorial?.sensitive &&
@@ -77,7 +135,7 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   if (
     entry.status === "published" &&
     typeof entry.editorial?.word_count === "number" &&
-    entry.editorial.word_count < 120
+    entry.editorial.word_count < getKbMinimumWordCount(entry)
   ) {
     issues.push("thin_content");
   }

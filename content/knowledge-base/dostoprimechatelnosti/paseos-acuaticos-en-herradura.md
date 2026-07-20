@@ -6,7 +6,7 @@ title_es: Paseos acuáticos en Herradura
 title_en: Water rides in Herradura
 summary: Embárcate en una aventura de navegación entre paisajes verdes de la provincia
   de Formosa.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

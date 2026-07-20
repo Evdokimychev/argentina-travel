@@ -8,6 +8,7 @@ export const MAP_MARKER_KINDS = [
   "national_park",
   "attraction",
   "tour",
+  "excursion",
   "airport",
   "route",
   "region",
@@ -16,11 +17,23 @@ export const MAP_MARKER_KINDS = [
 
 export type MapMarkerKind = (typeof MAP_MARKER_KINDS)[number];
 
+export const MAP_DISCOVERY_MODES = [
+  "highlights",
+  "things_to_do",
+  "nature",
+  "culture",
+  "getting_around",
+  "all",
+] as const;
+
+export type MapDiscoveryMode = (typeof MAP_DISCOVERY_MODES)[number];
+
 export const MAP_MARKER_KIND_LABELS: Record<MapMarkerKind, string> = {
   city: "Города",
   national_park: "Национальные парки",
   attraction: "Достопримечательности",
-  tour: "Экскурсии",
+  tour: "Туры",
+  excursion: "Экскурсии",
   airport: "Аэропорты",
   route: "Маршруты",
   region: "Регионы",
@@ -42,6 +55,12 @@ export interface MapFlightDestination {
   longitude: number;
   /** id объекта-аэропорта на карте, чтобы перейти к нему по клику */
   mapObjectId: string;
+  service: "regular" | "seasonal_or_limited";
+  durationMinutes?: number;
+  airlines?: string[];
+  frequencyNote?: string;
+  verifiedAt: string;
+  sourceUrl: string;
 }
 
 export interface MapObject {
@@ -68,6 +87,10 @@ export interface MapObject {
   minZoom?: number;
   maxZoom?: number;
   tags?: string[];
+  /** Исходная категория места: ледник, винодельня, музей и т. п. */
+  category?: string;
+  /** Редакционная популярность 0–100, если она есть в каталоге мест. */
+  popularity?: number;
   status?: "published" | "hidden" | "needs_review";
   curatorNote?: string;
   airportDetails?: {
@@ -80,6 +103,17 @@ export interface MapObject {
   };
   /** Только для kind === "airport": куда можно улететь прямым рейсом */
   flightDestinations?: MapFlightDestination[];
+}
+
+export function formatMapObjectListSubtitle(
+  object: Pick<MapObject, "region" | "meta" | "kind">,
+): string {
+  const region = object.region.trim();
+  const meta = object.meta?.trim();
+  if (!meta || meta.localeCompare(region, "ru", { sensitivity: "base" }) === 0) {
+    return region || MAP_MARKER_KIND_LABELS[object.kind];
+  }
+  return region ? `${region} · ${meta}` : meta;
 }
 
 export interface MapTourPoint {

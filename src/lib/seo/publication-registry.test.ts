@@ -45,6 +45,8 @@ describe("RU SEO publication registry", () => {
         "/en/blog/article",
         "/booking/find",
         "/baza-znaniy/poisk",
+        "/immigration",
+        "/immigration/vnzh-i-pmzh",
         "/excursions/city/Puerto_Iguazu",
         "/excursions/city/city-151",
         "/excursions/guide/470707",
@@ -69,6 +71,10 @@ describe("RU SEO publication registry", () => {
     expect(findRuUrlDecision("/excursions/city/Puerto_Iguazu")).toMatchObject({
       disposition: "redirect",
       canonicalPath: "/destinations/iguazu",
+    });
+    expect(findRuUrlDecision("/immigration/vnzh-i-pmzh")).toMatchObject({
+      disposition: "noindex",
+      reason: "editorial_quarantine",
     });
   });
 

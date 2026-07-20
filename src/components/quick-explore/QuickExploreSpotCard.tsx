@@ -11,10 +11,11 @@ import { tokenButtonPrimaryClass, tokenFocusRingClass } from "@/lib/design-token
 type Props = {
   spot: QuickExploreSpot;
   onClose: () => void;
+  onNavigate?: (href: string) => void;
   className?: string;
 };
 
-export default function QuickExploreSpotCard({ spot, onClose, className }: Props) {
+export default function QuickExploreSpotCard({ spot, onClose, onNavigate, className }: Props) {
   const primaryHref = spot.hrefPlace ?? spot.hrefKb;
 
   return (
@@ -100,6 +101,11 @@ export default function QuickExploreSpotCard({ spot, onClose, className }: Props
           {primaryHref ? (
             <Link
               href={primaryHref}
+              onClick={(event) => {
+                if (!onNavigate) return;
+                event.preventDefault();
+                onNavigate(primaryHref);
+              }}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-pill px-4 py-2 text-sm font-semibold transition-colors",
                 tokenButtonPrimaryClass,
@@ -123,6 +129,11 @@ export default function QuickExploreSpotCard({ spot, onClose, className }: Props
           {spot.hrefKb && spot.hrefPlace ? (
             <Link
               href={spot.hrefKb}
+              onClick={(event) => {
+                if (!onNavigate) return;
+                event.preventDefault();
+                onNavigate(spot.hrefKb!);
+              }}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-pill border border-border-subtle px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-sky/30 hover:bg-sky/5",
                 tokenFocusRingClass

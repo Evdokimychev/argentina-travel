@@ -5,7 +5,7 @@ title: Scuba diving at the San Matías Gulf
 title_es: Buceo en el Golfo San Matías
 title_en: Scuba diving at the San Matías Gulf
 summary: Sumérgete en el placer de contemplar la diversidad de la vida bajo el agua.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

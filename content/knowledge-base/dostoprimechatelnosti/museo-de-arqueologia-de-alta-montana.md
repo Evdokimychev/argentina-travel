@@ -6,7 +6,7 @@ title_es: Museo de Arqueología de Alta Montaña
 title_en: High Mountain Archeological Museum [Museo de Arqueología de Alta Montaña]
 summary: Visita un museo donde la tecnología permite preservar un tesoro arqueológico
   de más de quinientos años.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

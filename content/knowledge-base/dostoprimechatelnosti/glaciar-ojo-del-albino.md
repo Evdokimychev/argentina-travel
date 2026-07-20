@@ -5,7 +5,7 @@ title: "Ледник Охо-дель-Альбино"
 title_es: Glaciar Ojo del Albino
 title_en: Ojo del Albino Glacier
 summary: "Горный ледник в окрестностях Ушуайи, к которому идут по дикой долине «края света»."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -38,6 +38,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

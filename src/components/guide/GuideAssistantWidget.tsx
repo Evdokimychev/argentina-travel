@@ -49,7 +49,13 @@ function getOrCreateSessionId(): string {
   }
 }
 
-function SourceLinks({ sources }: { sources: GuideAssistantSource[] }) {
+function SourceLinks({
+  sources,
+  onNavigate,
+}: {
+  sources: GuideAssistantSource[];
+  onNavigate?: () => void;
+}) {
   if (sources.length === 0) return null;
 
   return (
@@ -60,6 +66,7 @@ function SourceLinks({ sources }: { sources: GuideAssistantSource[] }) {
           <li key={source.id}>
             <Link
               href={source.url}
+              onClick={onNavigate}
               className="block rounded-lg border border-border-subtle bg-surface-muted/40 px-3 py-2 text-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
             >
               <span className="font-medium text-foreground">{source.title}</span>
@@ -74,7 +81,13 @@ function SourceLinks({ sources }: { sources: GuideAssistantSource[] }) {
   );
 }
 
-function AssistantMessage({ message }: { message: ChatMessage }) {
+function AssistantMessage({
+  message,
+  onNavigate,
+}: {
+  message: ChatMessage;
+  onNavigate?: () => void;
+}) {
   const isUser = message.role === "user";
 
   return (
@@ -96,7 +109,9 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
         )}
       >
         <p className="whitespace-pre-wrap">{message.text}</p>
-        {!isUser && message.sources ? <SourceLinks sources={message.sources} /> : null}
+        {!isUser && message.sources ? (
+          <SourceLinks sources={message.sources} onNavigate={onNavigate} />
+        ) : null}
         {!isUser && message.mode === "search_fallback" ? (
           <p className="mt-2 text-xs text-muted">
             Подобрано по материалам сайта.
@@ -246,7 +261,11 @@ export default function GuideAssistantWidget() {
               ) : null}
 
               {messages.map((message) => (
-                <AssistantMessage key={message.id} message={message} />
+                <AssistantMessage
+                  key={message.id}
+                  message={message}
+                  onNavigate={() => setOpen(false)}
+                />
               ))}
 
               {loading ? (

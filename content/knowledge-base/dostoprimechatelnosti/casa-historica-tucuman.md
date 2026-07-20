@@ -14,59 +14,54 @@ coordinates: { lat: -26.8285, lng: -65.2057 }
 tags: [колониальная архитектура, столица]
 cost:
   level: "$"
-  details: "Вход в музей в обычные часы работы бесплатный. Платное — только вечернее шоу света и звука «Luces y Sonidos de la Independencia» (ориентировочная стоимость на момент проверки около 6000 песо за билет — уточняйте перед поездкой, цена быстро меняется)."
+  details: "Вход в основную экспозицию бесплатный; расписание и стоимость вечерних программ проверяйте на официальном сайте в день визита."
 duration: "1-1,5 часа на музей; вечернее шоу добавляет ещё около часа"
 how_to_get_there: "Расположен в центре Сан-Мигель-де-Тукумана по адресу Congreso 141, в паре кварталов от Площади Независимости — легко дойти пешком из центра города. См. [[san-miguel-de-tucuman]] о том, как добраться до самого города."
 related: [san-miguel-de-tucuman, noa, salta, argentina-3-nedeli]
 media:
   hero:
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n.jpg/1600px-Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n.jpg"
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n.jpg/1280px-Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n.jpg"
     alt: "Белый фасад Каса-Историки-де-ла-Индепенденсия в Сан-Мигель-де-Тукумане"
     author: "Tubby3"
     license: "CC BY-SA 4.0"
     source_page: "https://commons.wikimedia.org/wiki/File:Casa_Histórica_de_la_Independencia_•_Casa_de_Tucumán.jpg"
   gallery:
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Casa_historica_Tucuman.jpg/1600px-Casa_historica_Tucuman.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Casa_historica_Tucuman.jpg/1280px-Casa_historica_Tucuman.jpg"
       alt: "Зал присяги (Sala de la Jura) внутри Дома Независимости в Тукумане"
       author: "Edicioneswiki"
       license: "CC BY-SA 3.0"
       source_page: "https://commons.wikimedia.org/wiki/File:Casa_historica_Tucuman.jpg"
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n_%2829038%29.jpg/1600px-Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n_%2829038%29.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n_%2829038%29.jpg/1280px-Casa_Hist%C3%B3rica_de_la_Independencia_%E2%80%A2_Casa_de_Tucum%C3%A1n_%2829038%29.jpg"
       alt: "Фасад и вход Дома Независимости в Тукумане крупным планом"
       author: "Tubby3"
       license: "CC BY-SA 4.0"
       source_page: "https://commons.wikimedia.org/wiki/File:Casa_Histórica_de_la_Independencia_•_Casa_de_Tucumán_(29038).jpg"
 warnings:
-  - "Часы работы музея варьируются по дням недели (в проверенных источниках — вторник-пятница 9:00-13:00 и 16:00-20:00, суббота-воскресенье и праздники 9:00-20:00) и могут меняться в дни государственных торжеств (особенно 9 июля) — уточняйте актуальный график перед визитом."
+  - "Часы работы меняются по сезону и в дни государственных торжеств, особенно около 9 июля; проверяйте официальный календарь музея перед визитом."
   - "Нынешнее здание — не полностью оригинальная постройка: в начале XX века большая часть исторического дома была снесена, сохранился только зал заседаний (Sala de la Jura), а само здание было реконструировано в 1940-х годах по историческим документам."
   - "Билеты на вечернее шоу света и звука обычно продаются с ограниченного времени перед началом (кассы открываются заранее) — уточняйте расписание и бронирование на месте, дни показа ограничены (по проверенным данным — четверг-воскресенье и праздники)."
 recommendations:
   - "Сочетайте визит с прогулкой по Площади Независимости в нескольких кварталах — оба места легко закрыть за одно утро или день в Тукумане."
   - "Если планируете вечернее шоу света и звука «Luces y Sonidos de la Independencia» — уточните расписание заранее: показы проходят не каждый день."
   - "Первую половину дня используйте на сам музей (Зал присяги, исторические документы), информации по маршруту достаточно на час-полтора без спешки."
-last_verified: "2026-07-02"
+last_verified: "2026-07-20"
 confidence: high
 sources:
-  - title: "Kupibilet — Сан-Мигель-де-Тукуман: история, достопримечательности и советы туристам (раздел о Доме Независимости)"
-    url: "https://www.kupibilet.ru/gid/argentina/san-migel-de-tukuman"
-    lang: ru
-    type: ru_blog
-    note: "историческая роль, факт о частичном сносе и реконструкции здания"
-  - title: "Tucumán Turismo (официальный туристический портал провинции) — Museo Casa Histórica de la Independencia"
-    url: "https://www.tucumanturismo.gob.ar/articulos/articulo/121/museo-casa-historica-de-la-independencia?lang=EN"
-    lang: en
-    type: official
-    note: "статус музея, значение"
-  - title: "Tucumán Turismo — Espectáculo \"Luces y Sonidos de la Independencia\""
-    url: "https://www.tucumanturismo.gob.ar/articulos/articulo/66/espectaculo-luces-y-sonidos-de-la-independencia?lang=EN"
+  - title: "Museo Nacional de la Independencia — официальный сайт"
+    url: "https://casadelaindependencia.cultura.gob.ar/"
     lang: es
     type: official
-    note: "подтверждение регулярного вечернего шоу света и звука, формат показа"
-  - title: "LV12 — ¿En qué horarios se puede visitar Casa Histórica?"
-    url: "https://www.lv12.com.ar/casa-historica/en-que-horarios-se-puede-visitar-casa-historica-n181805"
+    note: "адрес, бесплатный вход, часы и актуальная программа"
+  - title: "Secretaría de Cultura — Casa Histórica de Tucumán"
+    url: "https://www.argentina.gob.ar/node/506983"
     lang: es
-    type: es_source
-    note: "часы работы музея, бесплатный вход, стоимость и часы показа вечернего шоу"
+    type: official
+    note: "история здания, реконструкция и национальный статус"
+  - title: "Museo Nacional de la Independencia — доступность"
+    url: "https://casadelaindependencia.cultura.gob.ar/info/accesibilidad/"
+    lang: es
+    type: official
+    note: "коляски, пандусы, санитарные помещения и материалы Брайлем"
 ---
 
 ## Описание
@@ -79,8 +74,16 @@ sources:
 - 9 июля 1816 года здесь Конгресс Тукумана подписал Акт независимости Аргентины.
 - В начале XX века большая часть здания была снесена — сохранился только зал заседаний (сегодня Sala de la Jura, Зал присяги).
 - Объявлен национальным историческим памятником Аргентины в 1941 году; реконструированное здание открыто 24 сентября 1943 года.
-- По будням музей обычно открыт вторник-пятница 9:00-13:00 и 16:00-20:00, по выходным и праздникам — 9:00-20:00 (уточняйте перед визитом, часы могут меняться, особенно в дни государственных торжеств).
-- По вечерам в отдельные дни недели проходит платное шоу света и звука «Luces y Sonidos de la Independencia» — регулярная традиция, подтверждённая официальным туристическим порталом провинции Тукуман.
+- Основная экспозиция бесплатна; часы и временные выставки публикуются в календаре музея.
+- По вечерам в отдельные сезоны проходит платное шоу «Luces y Sonidos de la Independencia»; расписание зависит от программы и погоды.
+
+## План визита и доступность
+
+Начните с залов, посвящённых Конгрессу и политическому контексту 1816 года, а Зал присяги оставьте на завершение: так историческое помещение воспринимается не как декорация, а как итог рассказа. В дни школьных групп и около 9 июля закладывайте дополнительное время. Фотосъёмку, экскурсию и вечерний показ уточняйте у музея отдельно.
+
+Официальная страница доступности указывает коляски, мобильные пандусы, адаптированные санитарные помещения, допуск собак-проводников и материалы Брайлем. Если нужна помощь на конкретном маршруте, свяжитесь с музеем заранее: исторические пороги и организация временной экспозиции могут влиять на проход.
+
+Перед выходом откройте раздел `Visita` на сайте музея: там публикуют изменения режима работы, временные выставки и контакты. В центре Тукумана летний полдень бывает жарким, поэтому музей удобно ставить между утренней прогулкой и поздним обедом, не привязываясь к вечернему показу.
 
 ## Связанные объекты
 
@@ -91,7 +94,6 @@ sources:
 
 ## Источники
 
-- [Kupibilet — Сан-Мигель-де-Тукуман: история, достопримечательности и советы туристам](https://www.kupibilet.ru/gid/argentina/san-migel-de-tukuman)
-- [Tucumán Turismo — Museo Casa Histórica de la Independencia](https://www.tucumanturismo.gob.ar/articulos/articulo/121/museo-casa-historica-de-la-independencia?lang=EN)
-- [Tucumán Turismo — Espectáculo "Luces y Sonidos de la Independencia"](https://www.tucumanturismo.gob.ar/articulos/articulo/66/espectaculo-luces-y-sonidos-de-la-independencia?lang=EN)
-- [LV12 — ¿En qué horarios se puede visitar Casa Histórica?](https://www.lv12.com.ar/casa-historica/en-que-horarios-se-puede-visitar-casa-historica-n181805)
+- [Museo Nacional de la Independencia](https://casadelaindependencia.cultura.gob.ar/) — часы, вход и актуальная программа.
+- [Secretaría de Cultura — история Casa Histórica](https://www.argentina.gob.ar/node/506983) — история здания и реконструкции.
+- [Музей — доступность](https://casadelaindependencia.cultura.gob.ar/info/accesibilidad/) — доступные сервисы.

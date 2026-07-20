@@ -25,6 +25,29 @@ export async function fetchSiteSearch(
   return (await response.json()) as SearchResponse;
 }
 
+function normalizeResultIdentity(value: string): string {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+/**
+ * The generated editorial catalogue can contain distinct legacy URLs with the
+ * same visible article title. Keep the highest-ranked occurrence so the search
+ * dialog never presents visually indistinguishable choices.
+ */
+export function dedupeSearchHits(hits: SearchHit[]): SearchHit[] {
+  const seenUrls = new Set<string>();
+  const seenTitles = new Set<string>();
+
+  return hits.filter((hit) => {
+    const urlKey = normalizeResultIdentity(hit.url);
+    const titleKey = `${hit.kind}:${normalizeResultIdentity(hit.title)}`;
+    if (seenUrls.has(urlKey) || seenTitles.has(titleKey)) return false;
+    seenUrls.add(urlKey);
+    seenTitles.add(titleKey);
+    return true;
+  });
+}
+
 export function debounce<T extends (...args: never[]) => void>(
   fn: T,
   delayMs: number

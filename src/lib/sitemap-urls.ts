@@ -36,7 +36,8 @@ import {
   isTravelModulePathEnabled,
 } from "@/lib/public-module-visibility";
 import { KB_SECTIONS } from "@/lib/knowledge-base/content";
-import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
+import { buildKbAuthorProfiles } from "@/lib/knowledge-base/authors";
+import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
 import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
 import {
@@ -207,12 +208,16 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
 
 export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
   try {
-    const paths = ["/baza-znaniy"];
+    const paths = ["/baza-znaniy", "/baza-znaniy/avtory"];
     for (const section of KB_SECTIONS) {
       paths.push(sectionHref(section.slug));
     }
-    for (const id of await listPublishedKnowledgeSlugs()) {
-      paths.push(entryHref(id));
+    const catalog = await resolveKnowledgeCatalog();
+    for (const entry of catalog) {
+      paths.push(entryHref(entry.id));
+    }
+    for (const author of buildKbAuthorProfiles(catalog)) {
+      paths.push(`/baza-znaniy/avtory/${author.slug}`);
     }
     return uniquePaths(paths);
   } catch {

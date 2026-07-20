@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-17 00:00",
+  "generated_at": "2026-07-20 00:00",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -36,7 +36,7 @@
           "id": "aktualen-li-blue-dollar",
           "type": "faq",
           "subtype": null,
-          "title": "Актуален ли «блю-доллар» в Аргентине в 2026 году?"
+          "title": "Актуален ли blue dollar в Аргентине в 2026 году?"
         },
         {
           "id": "alero-charcamata",
@@ -66,7 +66,7 @@
           "id": "amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
           "type": "attraction",
           "subtype": null,
-          "title": "Amaicha del Valle and Sagrada de los Quilmes City"
+          "title": "Амайча-дель-Валье и Священный город Кильмес"
         },
         {
           "id": "andinismo-y-montanismo-en-neuquen",
@@ -168,7 +168,7 @@
           "id": "aves-del-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Birds from Chaco"
+          "title": "Наблюдение за птицами в Чако"
         },
         {
           "id": "avistaje-de-aves-en-formosa",
@@ -252,7 +252,7 @@
           "id": "bienal-internacional-de-esculturas-en-resistencia",
           "type": "attraction",
           "subtype": null,
-          "title": "International Sculpture Biennale in Resistencia"
+          "title": "Биеннале скульптуры в Ресистенсии"
         },
         {
           "id": "bodega-submarina-en-las-grutas",
@@ -354,7 +354,7 @@
           "id": "cachi",
           "type": "attraction",
           "subtype": null,
-          "title": "Cachi"
+          "title": "Архив: Качи"
         },
         {
           "id": "cafayate",
@@ -378,7 +378,7 @@
           "id": "campo-del-cielo",
           "type": "attraction",
           "subtype": null,
-          "title": "Campo del Cielo"
+          "title": "Кампо-дель-Сьело: метеориты у Ганседо"
         },
         {
           "id": "campo-del-cielo-y-saenz-pena",
@@ -474,7 +474,7 @@
           "id": "caucete-san-juan",
           "type": "attraction",
           "subtype": null,
-          "title": "Caucete, San Juan"
+          "title": "Каусете и окрестности: восток провинции Сан-Хуан"
         },
         {
           "id": "caviahue-copahue",
@@ -564,55 +564,55 @@
           "id": "circuito-callejero-de-potrero-de-los-funes",
           "type": "attraction",
           "subtype": null,
-          "title": "Street circuit in Potrero de los Funes"
+          "title": "Озеро и кольцевая дорога Потреро-де-лос-Фунес"
         },
         {
           "id": "circuito-cultural-en-formosa",
           "type": "attraction",
           "subtype": null,
-          "title": "Cultural circuit in Formosa"
+          "title": "Культурный маршрут по Формосе"
         },
         {
           "id": "circuito-de-cervecerias-en-rosario",
           "type": "attraction",
           "subtype": null,
-          "title": "Brewers’ circuit in Rosario"
+          "title": "Крафтовое пиво и вечерний маршрут по Росарио"
         },
         {
           "id": "circuito-gastronomico-en-el-rio-parana",
           "type": "attraction",
           "subtype": null,
-          "title": "Food circuit on the Paraná river"
+          "title": "Гастрономический маршрут вдоль Параны в Росарио"
         },
         {
           "id": "ciudad-de-corrientes",
           "type": "attraction",
           "subtype": null,
-          "title": "Коррьентес"
+          "title": "Архив: город Корриентес"
         },
         {
           "id": "ciudad-de-formosa",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Формоса"
+          "title": "Архив: город Формоса"
         },
         {
           "id": "ciudad-de-salta",
           "type": "attraction",
           "subtype": null,
-          "title": "Сальта"
+          "title": "Архив: город Сальта"
         },
         {
           "id": "ciudad-de-san-juan",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Сан-Хуан"
+          "title": "Архив: город Сан-Хуан"
         },
         {
           "id": "ciudad-de-santa-fe",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Санта-Фе"
+          "title": "Архив: город Санта-Фе"
         },
         {
           "id": "clorinda",
@@ -1074,7 +1074,7 @@
           "id": "gastronomia-de-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Food in Chaco"
+          "title": "Гастрономия Чако: река, чакра и Эль-Импенетрабле"
         },
         {
           "id": "gastronomia-de-entre-rios",
@@ -2046,7 +2046,7 @@
           "id": "parque-nacional-baritu",
           "type": "national_park",
           "subtype": null,
-          "title": "Национальный парк Баритý"
+          "title": "Национальный парк Бариту"
         },
         {
           "id": "parque-nacional-bosques-petrificados",
@@ -2142,7 +2142,7 @@
           "id": "parque-nacional-los-cardones",
           "type": "national_park",
           "subtype": null,
-          "title": "Национальный парк Лос-Кардонес"
+          "title": "Архив: Национальный парк Лос-Кардонес"
         },
         {
           "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
@@ -2184,7 +2184,7 @@
           "id": "parque-nacional-tierra-del-fuego",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Огненная Земля"
+          "title": "Архив: Национальный парк Огненная Земля"
         },
         {
           "id": "parque-natural-valle-fertil",
@@ -2286,7 +2286,7 @@
           "id": "peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco",
           "type": "attraction",
           "subtype": null,
-          "title": "Península Valdés: World Heritage Site"
+          "title": "Архив: полуостров Вальдес — объект ЮНЕСКО"
         },
         {
           "id": "perito-moreno",
@@ -2817,10 +2817,16 @@
           "title": "Rutas de Огненная Земля"
         },
         {
+          "id": "s-detmi-po-argentine",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "С детьми по Аргентине: как спланировать спокойную поездку"
+        },
+        {
           "id": "sabores-de-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Flavors from Chaco"
+          "title": "Архив: вкусы Чако"
         },
         {
           "id": "sabores-riojanos",
@@ -2868,7 +2874,7 @@
           "id": "saltos-del-mocona",
           "type": "attraction",
           "subtype": null,
-          "title": "Сальтос-дель-Моконá"
+          "title": "Сальтос-дель-Мокона"
         },
         {
           "id": "san-antonio-de-areco",
@@ -3012,7 +3018,7 @@
           "id": "skam-s-falshivoj-policiej",
           "type": "faq",
           "subtype": null,
-          "title": "Что за мошенничество с «фальшивой полицией» в Аргентине?"
+          "title": "Что делать, если в Аргентине «полицейский» просит показать деньги или пройти к банкомату?"
         },
         {
           "id": "skolko-deneg-brat-na-poezdku",
@@ -3270,7 +3276,7 @@
           "id": "turismo-aventura-en-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Adventure tourism in Chaco"
+          "title": "Эль-Импенетрабле: самостоятельная поездка и активности"
         },
         {
           "id": "turismo-cultural-en-rosario",
@@ -3522,7 +3528,7 @@
           "id": "viza-v-braziliyu-dlya-iguasu",
           "type": "faq",
           "subtype": null,
-          "title": "Нужна ли виза в Бразилию, чтобы посмотреть водопады Игуасу с бразильской стороны?"
+          "title": "Нужна ли россиянину виза в Бразилию, чтобы посмотреть Игуасу с бразильской стороны?"
         },
         {
           "id": "vnutrennie-aviabilety",
@@ -3611,7 +3617,7 @@
           "id": "amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
           "type": "attraction",
           "subtype": null,
-          "title": "Amaicha del Valle and Sagrada de los Quilmes City"
+          "title": "Амайча-дель-Валье и Священный город Кильмес"
         },
         {
           "id": "andinismo-y-montanismo-en-neuquen",
@@ -3683,7 +3689,7 @@
           "id": "aves-del-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Birds from Chaco"
+          "title": "Наблюдение за птицами в Чако"
         },
         {
           "id": "avistaje-de-aves-en-formosa",
@@ -3755,7 +3761,7 @@
           "id": "bienal-internacional-de-esculturas-en-resistencia",
           "type": "attraction",
           "subtype": null,
-          "title": "International Sculpture Biennale in Resistencia"
+          "title": "Биеннале скульптуры в Ресистенсии"
         },
         {
           "id": "bodega-submarina-en-las-grutas",
@@ -3851,7 +3857,7 @@
           "id": "cachi",
           "type": "attraction",
           "subtype": null,
-          "title": "Cachi"
+          "title": "Архив: Качи"
         },
         {
           "id": "cafayate",
@@ -3875,7 +3881,7 @@
           "id": "campo-del-cielo",
           "type": "attraction",
           "subtype": null,
-          "title": "Campo del Cielo"
+          "title": "Кампо-дель-Сьело: метеориты у Ганседо"
         },
         {
           "id": "campo-del-cielo-y-saenz-pena",
@@ -3977,7 +3983,7 @@
           "id": "caucete-san-juan",
           "type": "attraction",
           "subtype": null,
-          "title": "Caucete, San Juan"
+          "title": "Каусете и окрестности: восток провинции Сан-Хуан"
         },
         {
           "id": "caviahue-copahue",
@@ -4037,55 +4043,55 @@
           "id": "circuito-callejero-de-potrero-de-los-funes",
           "type": "attraction",
           "subtype": null,
-          "title": "Street circuit in Potrero de los Funes"
+          "title": "Озеро и кольцевая дорога Потреро-де-лос-Фунес"
         },
         {
           "id": "circuito-cultural-en-formosa",
           "type": "attraction",
           "subtype": null,
-          "title": "Cultural circuit in Formosa"
+          "title": "Культурный маршрут по Формосе"
         },
         {
           "id": "circuito-de-cervecerias-en-rosario",
           "type": "attraction",
           "subtype": null,
-          "title": "Brewers’ circuit in Rosario"
+          "title": "Крафтовое пиво и вечерний маршрут по Росарио"
         },
         {
           "id": "circuito-gastronomico-en-el-rio-parana",
           "type": "attraction",
           "subtype": null,
-          "title": "Food circuit on the Paraná river"
+          "title": "Гастрономический маршрут вдоль Параны в Росарио"
         },
         {
           "id": "ciudad-de-corrientes",
           "type": "attraction",
           "subtype": null,
-          "title": "Коррьентес"
+          "title": "Архив: город Корриентес"
         },
         {
           "id": "ciudad-de-formosa",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Формоса"
+          "title": "Архив: город Формоса"
         },
         {
           "id": "ciudad-de-salta",
           "type": "attraction",
           "subtype": null,
-          "title": "Сальта"
+          "title": "Архив: город Сальта"
         },
         {
           "id": "ciudad-de-san-juan",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Сан-Хуан"
+          "title": "Архив: город Сан-Хуан"
         },
         {
           "id": "ciudad-de-santa-fe",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Санта-Фе"
+          "title": "Архив: город Санта-Фе"
         },
         {
           "id": "clorinda",
@@ -4505,7 +4511,7 @@
           "id": "gastronomia-de-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Food in Chaco"
+          "title": "Гастрономия Чако: река, чакра и Эль-Импенетрабле"
         },
         {
           "id": "gastronomia-de-entre-rios",
@@ -5201,7 +5207,7 @@
           "id": "parque-nacional-baritu",
           "type": "national_park",
           "subtype": null,
-          "title": "Национальный парк Баритý"
+          "title": "Национальный парк Бариту"
         },
         {
           "id": "parque-nacional-bosques-petrificados",
@@ -5297,7 +5303,7 @@
           "id": "parque-nacional-los-cardones",
           "type": "national_park",
           "subtype": null,
-          "title": "Национальный парк Лос-Кардонес"
+          "title": "Архив: Национальный парк Лос-Кардонес"
         },
         {
           "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
@@ -5339,7 +5345,7 @@
           "id": "parque-nacional-tierra-del-fuego",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Огненная Земля"
+          "title": "Архив: Национальный парк Огненная Земля"
         },
         {
           "id": "parque-natural-valle-fertil",
@@ -5435,7 +5441,7 @@
           "id": "peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco",
           "type": "attraction",
           "subtype": null,
-          "title": "Península Valdés: World Heritage Site"
+          "title": "Архив: полуостров Вальдес — объект ЮНЕСКО"
         },
         {
           "id": "perito-moreno",
@@ -5891,7 +5897,7 @@
           "id": "sabores-de-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Flavors from Chaco"
+          "title": "Архив: вкусы Чако"
         },
         {
           "id": "sabores-riojanos",
@@ -5933,7 +5939,7 @@
           "id": "saltos-del-mocona",
           "type": "attraction",
           "subtype": null,
-          "title": "Сальтос-дель-Моконá"
+          "title": "Сальтос-дель-Мокона"
         },
         {
           "id": "samyj-yuzhnyj-gorod-mira",
@@ -6293,7 +6299,7 @@
           "id": "turismo-aventura-en-chaco",
           "type": "attraction",
           "subtype": null,
-          "title": "Adventure tourism in Chaco"
+          "title": "Эль-Импенетрабле: самостоятельная поездка и активности"
         },
         {
           "id": "turismo-cultural-en-rosario",
@@ -6521,7 +6527,7 @@
           "id": "viza-v-braziliyu-dlya-iguasu",
           "type": "faq",
           "subtype": null,
-          "title": "Нужна ли виза в Бразилию, чтобы посмотреть водопады Игуасу с бразильской стороны?"
+          "title": "Нужна ли россиянину виза в Бразилию, чтобы посмотреть Игуасу с бразильской стороны?"
         },
         {
           "id": "volcan-lanin",
@@ -6591,8 +6597,8 @@
         {
           "id": "falshivye-policejskie-i-obmenniki",
           "type": "author_tip",
-          "subtype": "mistake",
-          "title": "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться"
+          "subtype": "safety_note",
+          "title": "Подозрительный обмен и человек в форме: как не усугубить риск"
         },
         {
           "id": "futbol-kak-popast-bez-skama",
@@ -6670,7 +6676,7 @@
           "id": "nablyudenie-pro-dengi-i-banki",
           "type": "author_tip",
           "subtype": "observation",
-          "title": "Личное наблюдение Ивана о деньгах и банках в Аргентине"
+          "title": "Личное наблюдение о деньгах и банках — архивный слот"
         },
         {
           "id": "obzornaya-loma-pliege-tumbado",
@@ -6957,7 +6963,7 @@
           "id": "kovorkingi-i-rabota-nomada",
           "type": "guide",
           "subtype": "communication",
-          "title": "Коворкинги и удалённая работа: безопасная проверка условий"
+          "title": "Коворкинги и удалённая работа в Аргентине"
         },
         {
           "id": "kuhnya",
@@ -7041,7 +7047,7 @@
           "id": "nuzhna-li-viza-cifrovomu-kochevniku",
           "type": "faq",
           "subtype": null,
-          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать по безвизу на 90 дней?"
+          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать без визы?"
         },
         {
           "id": "nuzhno-li-ostavlyat-chaevye",
@@ -7173,7 +7179,7 @@
           "id": "skam-s-falshivoj-policiej",
           "type": "faq",
           "subtype": null,
-          "title": "Что за мошенничество с «фальшивой полицией» в Аргентине?"
+          "title": "Что делать, если в Аргентине «полицейский» просит показать деньги или пройти к банкомату?"
         },
         {
           "id": "skolko-stoit-zhizn-v-buenos-ajrese",
@@ -7286,7 +7292,7 @@
           "id": "aktualen-li-blue-dollar",
           "type": "faq",
           "subtype": null,
-          "title": "Актуален ли «блю-доллар» в Аргентине в 2026 году?"
+          "title": "Актуален ли blue dollar в Аргентине в 2026 году?"
         },
         {
           "id": "argentina-vs-drugie-strany",
@@ -7316,13 +7322,13 @@
           "id": "chto-takoe-mep",
           "type": "faq",
           "subtype": null,
-          "title": "Что такое MEP в Аргентине и зачем он нужен?"
+          "title": "Что такое dólar MEP в Аргентине и зачем он нужен?"
         },
         {
           "id": "falshivye-policejskie-i-obmenniki",
           "type": "author_tip",
-          "subtype": "mistake",
-          "title": "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться"
+          "subtype": "safety_note",
+          "title": "Подозрительный обмен и человек в форме: как не усугубить риск"
         },
         {
           "id": "gid-po-dengam",
@@ -7358,7 +7364,7 @@
           "id": "mozhno-li-otkryt-schet-nerezidentu",
           "type": "faq",
           "subtype": null,
-          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без резиденции?"
+          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без DNI или постоянной резиденции?"
         },
         {
           "id": "nalogi-i-monotributo",
@@ -7477,7 +7483,7 @@
           "id": "chto-takoe-dni-i-cuil",
           "type": "faq",
           "subtype": null,
-          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
+          "title": "Что такое DNI, CUIL, CUIT и CDI в Аргентине и зачем они нужны?"
         },
         {
           "id": "chto-takoe-prekariya",
@@ -7513,7 +7519,7 @@
           "id": "grazhdanstvo",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Гражданство Аргентины: где проверять действующую процедуру"
+          "title": "Гражданство Аргентины: условия и действующая процедура"
         },
         {
           "id": "kak-perevezti-kota-ili-sobaku",
@@ -7543,7 +7549,7 @@
           "id": "kakoj-dohod-nuzhen-dlya-rantye",
           "type": "faq",
           "subtype": null,
-          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
+          "title": "Какой доход нужен для временной резиденции rentista в Аргентине?"
         },
         {
           "id": "mozhno-li-delat-vizaran",
@@ -7580,6 +7586,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Переезд с вещами и домашними животными"
+        },
+        {
+          "id": "pervye-tramites",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Первые административные действия после переезда в Аргентину"
         },
         {
           "id": "plan-podgotovki-6-mesyacev",
@@ -7627,7 +7639,7 @@
           "id": "skolko-stoit-oformit-vnzh",
           "type": "faq",
           "subtype": null,
-          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+          "title": "Сколько стоит оформить резиденцию или статус цифрового кочевника в Аргентине?"
         },
         {
           "id": "status-expediente-migraciones",
@@ -7645,7 +7657,7 @@
           "id": "viza-cifrovogo-kochevnika-chto-daet",
           "type": "faq",
           "subtype": null,
-          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
+          "title": "Что даёт статус цифрового кочевника в Аргентине и ведёт ли он к ПМЖ?"
         },
         {
           "id": "viza-kochevnika-ne-vnzh",
@@ -7746,13 +7758,13 @@
           "id": "chto-takoe-dni-i-cuil",
           "type": "faq",
           "subtype": null,
-          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
+          "title": "Что такое DNI, CUIL, CUIT и CDI в Аргентине и зачем они нужны?"
         },
         {
           "id": "chto-takoe-mep",
           "type": "faq",
           "subtype": null,
-          "title": "Что такое MEP в Аргентине и зачем он нужен?"
+          "title": "Что такое dólar MEP в Аргентине и зачем он нужен?"
         },
         {
           "id": "chto-takoe-prekariya",
@@ -7788,7 +7800,7 @@
           "id": "grazhdanstvo",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Гражданство Аргентины: где проверять действующую процедуру"
+          "title": "Гражданство Аргентины: условия и действующая процедура"
         },
         {
           "id": "kak-dobratsya-iz-rossii",
@@ -7836,7 +7848,7 @@
           "id": "kakoj-dohod-nuzhen-dlya-rantye",
           "type": "faq",
           "subtype": null,
-          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
+          "title": "Какой доход нужен для временной резиденции rentista в Аргентине?"
         },
         {
           "id": "kogda-uchebnyj-god-v-argentine",
@@ -7848,7 +7860,7 @@
           "id": "kovorkingi-i-rabota-nomada",
           "type": "guide",
           "subtype": "communication",
-          "title": "Коворкинги и удалённая работа: безопасная проверка условий"
+          "title": "Коворкинги и удалённая работа в Аргентине"
         },
         {
           "id": "medicina-i-strahovka",
@@ -7872,7 +7884,7 @@
           "id": "mozhno-li-otkryt-schet-nerezidentu",
           "type": "faq",
           "subtype": null,
-          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без резиденции?"
+          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без DNI или постоянной резиденции?"
         },
         {
           "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
@@ -7908,7 +7920,7 @@
           "id": "nuzhna-li-viza-cifrovomu-kochevniku",
           "type": "faq",
           "subtype": null,
-          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать по безвизу на 90 дней?"
+          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать без визы?"
         },
         {
           "id": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
@@ -7933,6 +7945,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Переезд с вещами и домашними животными"
+        },
+        {
+          "id": "pervye-tramites",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Первые административные действия после переезда в Аргентину"
         },
         {
           "id": "pervyj-mesyac-plan",
@@ -8016,7 +8034,7 @@
           "id": "skolko-stoit-oformit-vnzh",
           "type": "faq",
           "subtype": null,
-          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+          "title": "Сколько стоит оформить резиденцию или статус цифрового кочевника в Аргентине?"
         },
         {
           "id": "soobshestvo-i-adaptaciya",
@@ -8058,7 +8076,7 @@
           "id": "viza-cifrovogo-kochevnika-chto-daet",
           "type": "faq",
           "subtype": null,
-          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
+          "title": "Что даёт статус цифрового кочевника в Аргентине и ведёт ли он к ПМЖ?"
         },
         {
           "id": "viza-i-granica-dlya-rossiyan",

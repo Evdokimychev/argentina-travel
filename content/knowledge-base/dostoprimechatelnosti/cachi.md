@@ -1,12 +1,11 @@
 ---
 id: cachi
 type: attraction
-title: Cachi
+title: "Архив: Качи"
 title_es: Cachi
 title_en: Cachi
-summary: En el corazón de los Valles Calchaquíes, explora un lugar donde el paisaje
-  convive con la historia.
-status: stub
+summary: "Испаноязычная импортная карточка объединена с каноническим путеводителем по Качи."
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -17,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: kachi
+archive_reason: "Дублирует сущность kachi; сохранена для перенаправления старого URL и истории импорта INPROTUR."
 coordinates:
   lat: -25.120354091820097
   lng: -66.16167473116705

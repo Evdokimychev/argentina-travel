@@ -5,7 +5,7 @@ title: "Строгий природный заповедник Сан-Антон
 title_es: Reserva Natural Estricta San Antonio
 title_en: Estricta San Antonio Nature Reserve
 summary: "Заповедник в провинции Мисьонес, охраняющий редкие леса бразильской араукарии (сосны Парана) в атлантической сельве."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

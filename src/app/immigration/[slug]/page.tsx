@@ -14,6 +14,8 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllImmigrationTopics().map((topic) => ({ slug: topic.slug }));
 }

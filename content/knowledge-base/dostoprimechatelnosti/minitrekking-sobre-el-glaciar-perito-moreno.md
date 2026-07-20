@@ -6,7 +6,7 @@ title_es: Minitrekking sobre el Glaciar Perito Moreno
 title_en: Minitrekking on the Perito Moreno Glacier
 summary: Vive la experiencia única de caminar sobre uno de los glaciares más grandes
   del planeta.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

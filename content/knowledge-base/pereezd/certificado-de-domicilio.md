@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Как подтвердить адрес в Аргентине"
 summary: "В Аргентине нет одной справки об адресе для всех случаев: сначала уточните, какой документ принимает конкретное ведомство."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dokumentam
+archive_reason: "Карточка объединена с единым руководством по документам и подтверждению адреса."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [документы, адрес, DNI, миграция]

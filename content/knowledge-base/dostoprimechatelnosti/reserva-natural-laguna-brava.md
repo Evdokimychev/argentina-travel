@@ -5,7 +5,7 @@ title: "Природный заповедник Лагуна-Брава"
 title_es: Reserva Natural Laguna Brava
 title_en: Laguna Brava Natural Reserve
 summary: "Высокогорный заповедник Ла-Риохи у подножия шеститысячников Анд: солёная лагуна-Рамсар, викуньи и фламинго на высоте более четырёх тысяч метров."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

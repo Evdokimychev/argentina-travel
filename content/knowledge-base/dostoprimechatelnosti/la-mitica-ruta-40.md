@@ -5,7 +5,7 @@ title: "Легендарная Рута 40"
 title_es: La mítica Ruta 40
 title_en: The mythical Ruta 40
 summary: "Знаменитое шоссе длиной более 5000 км вдоль Анд от боливийской границы до Патагонии — мечта роуд-трипа по Аргентине."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

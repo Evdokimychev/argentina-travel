@@ -5,7 +5,7 @@ title: "Биосферный заповедник Яботи"
 title_es: Reserva de Biósfera Yabotí
 title_en: Yabotí Biosphere Reserve
 summary: "Крупный массив атлантической сельвы в провинции Мисьонес, объединяющий несколько охраняемых территорий, включая водопады Моконá."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

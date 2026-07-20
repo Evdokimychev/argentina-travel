@@ -4,12 +4,15 @@ type: faq
 question: "Когда лучше ехать в Аргентину?"
 short_answer: "Однозначного ответа нет — зависит от региона: в Аргентине одновременно и жаркая субтропическая сельва, и снежные Анды."
 topic: klimat
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [климат, планирование, сезонность]
 related: [klimat-po-regionam, argentina-2-nedeli, stoit-li-ehat-v-argentinu, kakoj-mesyats-kuda-ehat]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: klimat-po-regionam
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

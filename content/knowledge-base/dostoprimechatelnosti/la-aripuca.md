@@ -5,7 +5,7 @@ title: "Ла-Арипука"
 title_es: La Aripuca
 title_en: La Aripuca
 summary: "Этнокультурный центр у Пуэрто-Игуасу с гигантской деревянной конструкцией гуарани и темой устойчивого отношения к лесу."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,6 +58,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

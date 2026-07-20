@@ -6,7 +6,7 @@ title_es: Ruta del Vino en la Patagonia
 title_en: Wine Route in Patagonia
 summary: Descubre el sur argentino a través de un circuito de bodegas que te conectarán
   con aromas y sabores típicos.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

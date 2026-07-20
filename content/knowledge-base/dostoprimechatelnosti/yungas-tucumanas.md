@@ -6,7 +6,7 @@ title_es: Yungas tucumanas
 title_en: Tucuman Yungas
 summary: A un paso de la capital de Tucumán, recorre el Circuito de las Yungas y descubre
   Raco, San Javier y Villa Nogués.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -6,8 +6,10 @@ title: "Музыка Аргентины: фольклор, рок и куарт�
 title_es: "Folclore y música argentina"
 aliases: ["фольклор Аргентины", "folclore", "peña", "самба", "чакарера", "rock nacional", "cuarteto", "куартето", "кумбия", "Коскин"]
 summary: "Помимо танго у Аргентины богатейшая музыкальная сцена: фольклор севера (самба, чакарера) с его пеньями и фестивалем в Коскине, национальный рок (rock nacional) как культурная сила, кордовское куартето и кумбия. Что послушать и как поймать живую музыку в поездке."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mentalitet-i-etiket
+archive_reason: "Краткий культурный обзор объединён с проверенным материалом о повседневных культурных кодах страны."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [культура, музыка, фольклор, рок, традиции]

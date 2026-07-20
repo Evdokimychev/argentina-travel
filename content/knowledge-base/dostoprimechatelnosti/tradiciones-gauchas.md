@@ -6,7 +6,7 @@ title_es: Tradiciones gauchas
 title_en: Gaucho Traditions
 summary: En la provincia de Буэнос-Айрес, acércate a la identidad y a las costumbres
   de las poblaciones rurales.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -49,6 +49,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

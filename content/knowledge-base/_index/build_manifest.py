@@ -43,8 +43,51 @@ CLAIM_ID_RE = SOURCE_ID_RE
 PROVENANCE_SCHEMA_VERSION = 1
 PROVENANCE_MODES = {"diagnostic", "strict"}
 SOURCE_AUTHORITIES = {"primary", "secondary", "community"}
+
+
+def atomic_write_json(path, payload):
+    """Publish generated indexes atomically so readers never observe half-written JSON."""
+    temporary_path = f"{path}.tmp-{os.getpid()}"
+    try:
+        with open(temporary_path, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+        os.replace(temporary_path, path)
+    finally:
+        if os.path.exists(temporary_path):
+            os.unlink(temporary_path)
+
+
+def atomic_write_text(path, value):
+    temporary_path = f"{path}.tmp-{os.getpid()}"
+    try:
+        with open(temporary_path, "w", encoding="utf-8") as handle:
+            handle.write(value)
+        os.replace(temporary_path, path)
+    finally:
+        if os.path.exists(temporary_path):
+            os.unlink(temporary_path)
 SOURCE_URL_STATUSES = {"verified", "redirected", "unreachable", "unchecked"}
 EDITORIAL_TYPES = {"city", "national_park", "attraction", "region", "route", "guide", "transport"}
+MIN_WORDS_BY_TYPE = {
+    "attraction": 500,
+    "national_park": 500,
+    "city": 500,
+    "region": 800,
+    "route": 800,
+    "transport": 600,
+    "guide": 600,
+    "faq": 120,
+    "author_tip": 250,
+}
+
+
+def minimum_words_for(data):
+    return MIN_WORDS_BY_TYPE.get(data.get("type"), 400)
+
+
+def optional_fields(data, *keys):
+    return {key: data.get(key) for key in keys if data.get(key) is not None}
 
 
 def resolve_generated_at(entities, environ=None):
@@ -551,7 +594,12 @@ def build_editorial_meta(data, word_count=None, today=None):
     last_verified = parse_iso_date(data.get("last_verified"))
     review_due_at = last_verified + timedelta(days=policy_days) if last_verified else None
     today = today or datetime.now().date()
-    source_count = len(data.get("sources") or [])
+    source_count = sum(
+        1
+        for source in (data.get("sources") or [])
+        if isinstance(source, dict)
+        and re.match(r"^https?://\S+$", str(source.get("url") or "").strip(), re.IGNORECASE)
+    )
     missing_sources = sensitive and source_count == 0
     review_due = review_due_at is None or review_due_at < today
     provenance = build_provenance_meta(data, sensitive, policy_days, today=today)
@@ -579,7 +627,7 @@ def is_release_candidate_sensitive(data, editorial_meta):
         and not editorial_meta.get("missing_sources")
         and (
             data.get("type") not in EDITORIAL_TYPES
-            or (editorial_meta.get("word_count") or 0) >= 120
+            or (editorial_meta.get("word_count") or 0) >= minimum_words_for(data)
         )
     )
 
@@ -628,6 +676,41 @@ def main():
             if ref not in all_ids:
                 dangling.append(f"{eid} ({data['_path']}) → '{ref}' (записи с таким id нет — форвард-ссылка либо опечатка)")
 
+    # Архив — это SEO-контракт, а не просто статус. Каждый старый URL обязан
+    # вести напрямую на живой канонический материал, без цепочек и циклов.
+    for eid, data in entities.items():
+        if data.get("status") != "archived":
+            continue
+        redirect_to = str(data.get("redirect_to") or "").strip()
+        archive_reason = str(data.get("archive_reason") or "").strip()
+        if data.get("site_ready") is not False:
+            problems.append(
+                f"[АРХИВ] {data['_path']}: site_ready должен быть false"
+            )
+        if not archive_reason:
+            problems.append(
+                f"[АРХИВ] {data['_path']}: нет archive_reason"
+            )
+        if not redirect_to:
+            problems.append(
+                f"[АРХИВ] {data['_path']}: нет redirect_to"
+            )
+            continue
+        if redirect_to == eid:
+            problems.append(
+                f"[АРХИВ] {data['_path']}: redirect_to ссылается на саму запись"
+            )
+            continue
+        target = entities.get(redirect_to)
+        if target is None:
+            problems.append(
+                f"[АРХИВ] {data['_path']}: redirect_to '{redirect_to}' не существует"
+            )
+        elif target.get("status") != "published":
+            problems.append(
+                f"[АРХИВ] {data['_path']}: redirect_to '{redirect_to}' должен вести прямо на published, сейчас {target.get('status')!r}"
+            )
+
     # Битые [[вики-ссылки]] в телах статей + граф входящих ссылок
     broken_wikilinks = []
     body_links = {}
@@ -645,8 +728,10 @@ def main():
         for ref in refs:
             if ref in inbound and ref != eid:
                 inbound[ref] += 1
+    # Архивные карточки намеренно исключены из публичной навигации. Не считаем их
+    # осиротевшими: это создавало ложный редакционный долг после консолидации.
     orphans = [eid for eid, n in sorted(inbound.items())
-               if n == 0 and eid not in HUBS and entities[eid].get("status") != "backlog"]
+               if n == 0 and eid not in HUBS and entities[eid].get("status") == "published"]
     site_ready_without_hero = [
         eid for eid, data in sorted(entities.items())
         if data.get("site_ready") is True
@@ -663,11 +748,16 @@ def main():
         word_count = len(WORD_RE.findall(body))
         editorial_meta_by_id[eid] = build_editorial_meta(data, word_count=word_count)
         title = data.get("title") or data.get("question") or ""
-        if data.get("status") == "published" and data.get("type") in EDITORIAL_TYPES and word_count < 120:
-            short_published.append((eid, word_count))
-        if data.get("type") in geo_title_types and title and not re.search(r"[А-Яа-яЁё]", str(title)):
+        minimum_words = minimum_words_for(data)
+        if data.get("status") == "published" and word_count < minimum_words:
+            short_published.append((eid, word_count, minimum_words))
+        if (data.get("status") == "published"
+                and data.get("type") in geo_title_types
+                and title
+                and not re.search(r"[А-Яа-яЁё]", str(title))):
             unlocalized_titles.append(eid)
-        if "Материал подготовлен на основе официального портала INPROTUR" in body:
+        if (data.get("status") == "published"
+                and "Материал подготовлен на основе официального портала INPROTUR" in body):
             template_import_bodies.append(eid)
 
     published_sensitive_ids = [
@@ -726,36 +816,67 @@ def main():
             "long_form_source": data.get("long_form_source"),
             "site_id_map": data.get("site_id_map"),
             "site_ready": data.get("site_ready"),
+            **optional_fields(
+                data,
+                "author_name",
+                "personal_experience",
+                "verified_by_ivan",
+                "redirect_to",
+                "archive_reason",
+            ),
             "editorial": editorial_output(editorial_meta),
             "path": data.get("_path"),
         })
 
+    # Не заменяем последний согласованный набор индексов данными, которые уже
+    # не прошли обязательный gate. Иначе атомарность отдельного файла всё равно
+    # оставляет потребителям новый, но заведомо некорректный снимок.
+    structural_problem_count = (
+        len(problems) + len(duplicates) + len(dangling) + len(broken_wikilinks)
+    )
+    if structural_problem_count:
+        raise SystemExit(
+            "Структурная проверка базы знаний не пройдена: "
+            f"{structural_problem_count} проблем файлов, id или ссылок"
+        )
+    if strict_provenance_gate and not editorial_readiness["strict_ready"]:
+        raise SystemExit(
+            "Строгая claim-level проверка не пройдена: "
+            f"готово {len(strict_ready_release_candidate_ids)}/"
+            f"{len(release_candidate_sensitive_ids)} чувствительных кандидатов публикации"
+        )
+
     out_dir = os.path.join(BASE_DIR, "_index")
     os.makedirs(out_dir, exist_ok=True)
 
-    with open(os.path.join(out_dir, "manifest.json"), "w", encoding="utf-8") as f:
-        json.dump({
-            "generated_at": generated_at,
-            "total_entities": len(manifest),
-            "editorial_readiness": editorial_readiness,
-            "entities": manifest,
-        }, f, ensure_ascii=False, indent=2)
+    atomic_write_json(os.path.join(out_dir, "manifest.json"), {
+        "generated_at": generated_at,
+        "total_entities": len(manifest),
+        "editorial_readiness": editorial_readiness,
+        "entities": manifest,
+    })
 
     csv_path = os.path.join(out_dir, "manifest.csv")
-    with open(csv_path, "w", encoding="utf-8", newline="") as f:
-        w = csv.writer(f, lineterminator="\n")
-        w.writerow([
-            "id", "type", "subtype", "title", "status", "region_id", "confidence",
-            "last_verified", "sensitive", "review_due_at", "needs_attention", "word_count",
-            "strict_provenance_ready", "provenance_issue_count", "path",
-        ])
-        for e in manifest:
-            w.writerow([e["id"], e["type"], e.get("subtype") or "", e["title"], e["status"],
-                        e.get("region_id") or "", e["confidence"], e["last_verified"],
-                        e["editorial"]["sensitive"], e["editorial"]["review_due_at"],
-                        e["editorial"]["needs_attention"], e["editorial"]["word_count"],
-                        (e["editorial"].get("provenance") or {}).get("strict_ready", ""),
-                        (e["editorial"].get("provenance") or {}).get("issue_count", ""), e["path"]])
+    csv_temporary_path = f"{csv_path}.tmp-{os.getpid()}"
+    try:
+        with open(csv_temporary_path, "w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f, lineterminator="\n")
+            w.writerow([
+                "id", "type", "subtype", "title", "status", "region_id", "confidence",
+                "last_verified", "sensitive", "review_due_at", "needs_attention", "word_count",
+                "strict_provenance_ready", "provenance_issue_count", "path",
+            ])
+            for e in manifest:
+                w.writerow([e["id"], e["type"], e.get("subtype") or "", e["title"], e["status"],
+                            e.get("region_id") or "", e["confidence"], e["last_verified"],
+                            e["editorial"]["sensitive"], e["editorial"]["review_due_at"],
+                            e["editorial"]["needs_attention"], e["editorial"]["word_count"],
+                            (e["editorial"].get("provenance") or {}).get("strict_ready", ""),
+                            (e["editorial"].get("provenance") or {}).get("issue_count", ""), e["path"]])
+        os.replace(csv_temporary_path, csv_path)
+    finally:
+        if os.path.exists(csv_temporary_path):
+            os.unlink(csv_temporary_path)
 
     # Навигационное дерево для сайта: раздел (site_section) → записи, плюс список хабов.
     # Сайт использует его для меню, хлебных крошек, категорий блога, FAQ-раздела и путеводителя.
@@ -769,8 +890,7 @@ def main():
                 "id": eid, "type": data.get("type"), "subtype": data.get("subtype"),
                 "title": data.get("title") or data.get("question"),
             })
-    with open(os.path.join(out_dir, "navigation.json"), "w", encoding="utf-8") as f:
-        json.dump(navigation, f, ensure_ascii=False, indent=2)
+    atomic_write_json(os.path.join(out_dir, "navigation.json"), navigation)
 
     # content.json — полные данные записей (frontmatter + тело markdown) для рендера страниц сайта.
     # Node-сборка сайта читает этот JSON напрямую (в проекте нет runtime-парсера markdown).
@@ -809,6 +929,17 @@ def main():
             "last_verified": str(lv) if lv else None,
             "seo_slug": data.get("seo_slug"),
             "site_ready": data.get("site_ready"),
+            **optional_fields(
+                data,
+                "author_name",
+                "author_slug",
+                "author_avatar",
+                "author_bio",
+                "personal_experience",
+                "verified_by_ivan",
+                "redirect_to",
+                "archive_reason",
+            ),
             "editorial": editorial_output(editorial_meta),
             "coordinates": data.get("coordinates"),
             "region_id": data.get("region_id"),
@@ -819,11 +950,12 @@ def main():
             "duration": data.get("duration"),
             "body": body,
         })
-    with open(os.path.join(out_dir, "content.json"), "w", encoding="utf-8") as f:
-        json.dump({"generated_at": generated_at,
-                   "total_entities": len(content_entries),
-                   "editorial_readiness": editorial_readiness,
-                   "entities": content_entries}, f, ensure_ascii=False, indent=2)
+    atomic_write_json(os.path.join(out_dir, "content.json"), {
+        "generated_at": generated_at,
+        "total_entities": len(content_entries),
+        "editorial_readiness": editorial_readiness,
+        "entities": content_entries,
+    })
 
     # Отчёт
     published_ids = [
@@ -850,21 +982,23 @@ def main():
         eid for eid in published_ids
         if entities[eid].get("confidence") == "low"
     ]
+    status_counts = Counter(data.get("status") or "unknown" for data in entities.values())
     report_lines = [
         f"# Отчёт валидации базы знаний",
         f"",
         f"Сгенерировано: {generated_at}",
         f"",
         f"Всего валидных записей: **{len(entities)}**",
+        f"Опубликовано: **{status_counts.get('published', 0)}**; архивировано с сохранением истории: **{status_counts.get('archived', 0)}**; backlog: **{status_counts.get('backlog', 0)}**",
         f"Проблемных файлов: **{len(problems)}**",
         f"Дублей id: **{len(duplicates)}**",
         f"Форвард-ссылок / потенциальных опечаток в related: **{len(dangling)}**",
         f"Битых [[вики-ссылок]] в телах: **{len(broken_wikilinks)}**",
-        f"Осиротевших записей (0 входящих ссылок): **{len(orphans)}**",
+        f"Осиротевших опубликованных записей (0 входящих ссылок): **{len(orphans)}**",
         f"Записей `site_ready: true` без hero-фото: **{len(site_ready_without_hero)}**",
-        f"Коротких опубликованных записей (<120 слов): **{len(short_published)}**",
-        f"Гео-заголовков без русской адаптации: **{len(unlocalized_titles)}**",
-        f"Шаблонных импортных текстов INPROTUR: **{len(template_import_bodies)}**",
+        f"Опубликованных записей короче минимума своего формата: **{len(short_published)}**",
+        f"Опубликованных гео-заголовков без русской адаптации: **{len(unlocalized_titles)}**",
+        f"Опубликованных шаблонных импортных текстов INPROTUR: **{len(template_import_bodies)}**",
         f"Чувствительных опубликованных материалов: **{len(sensitive_entries)}**",
         f"Чувствительных материалов без источников: **{len(sensitive_without_sources)}**",
         f"Чувствительных кандидатов публичного gate: **{len(release_candidate_sensitive_ids)}**",
@@ -928,7 +1062,7 @@ def main():
         report_lines.extend(f"- {d}" for d in sorted(broken_wikilinks))
         report_lines.append("")
     if orphans:
-        report_lines.append("## Осиротевшие записи (никто не ссылается — стоит добавить входящую ссылку)\n")
+        report_lines.append("## Осиротевшие опубликованные записи (никто не ссылается — стоит добавить входящую ссылку)\n")
         report_lines.extend(f"- `{o}` ({entities[o].get('type')}, {entities[o]['_path']})" for o in orphans)
         report_lines.append("")
     if site_ready_without_hero:
@@ -940,15 +1074,16 @@ def main():
         report_lines.append("")
     if short_published:
         report_lines.append("## Редакционный долг: короткие опубликованные записи\n")
-        for o, word_count in short_published[:80]:
+        for o, word_count, minimum_words in short_published[:80]:
             report_lines.append(
-                f"- `{o}` ({entities[o].get('type')}, {entities[o]['_path']}) — {word_count} слов"
+                f"- `{o}` ({entities[o].get('type')}, {entities[o]['_path']}) — "
+                f"{word_count} слов при минимуме {minimum_words}"
             )
         if len(short_published) > 80:
             report_lines.append(f"- …и ещё {len(short_published) - 80}")
         report_lines.append("")
     if unlocalized_titles:
-        report_lines.append("## Редакционный долг: заголовки без русской адаптации\n")
+        report_lines.append("## Редакционный долг: опубликованные заголовки без русской адаптации\n")
         for o in unlocalized_titles[:80]:
             report_lines.append(
                 f"- `{o}` ({entities[o].get('type')}, {entities[o]['_path']}) — {entities[o].get('title')}"
@@ -957,7 +1092,7 @@ def main():
             report_lines.append(f"- …и ещё {len(unlocalized_titles) - 80}")
         report_lines.append("")
     if template_import_bodies:
-        report_lines.append("## Редакционный долг: шаблонные импортные тексты INPROTUR\n")
+        report_lines.append("## Редакционный долг: опубликованные шаблонные импортные тексты INPROTUR\n")
         for o in template_import_bodies[:80]:
             report_lines.append(
                 f"- `{o}` ({entities[o].get('type')}, {entities[o]['_path']})"
@@ -996,17 +1131,10 @@ def main():
         report_lines.append("")
 
     report = "\n".join(report_lines)
-    with open(os.path.join(out_dir, "validation-report.md"), "w", encoding="utf-8") as f:
-        f.write(report)
+    atomic_write_text(os.path.join(out_dir, "validation-report.md"), report)
 
     print(report)
     print(f"\nmanifest.json и manifest.csv сохранены в {out_dir}")
-    if strict_provenance_gate and not editorial_readiness["strict_ready"]:
-        raise SystemExit(
-            "Строгая claim-level проверка не пройдена: "
-            f"готово {len(strict_ready_release_candidate_ids)}/"
-            f"{len(release_candidate_sensitive_ids)} чувствительных кандидатов публикации"
-        )
 
 
 if __name__ == "__main__":

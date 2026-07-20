@@ -6,7 +6,7 @@ title_es: Expedición al avión de los uruguayos
 title_en: Expedition to the Uruguayan team’s plane
 summary: Visita el paraje extremo donde un accidente aéreo inspiró el libro y la película
   Viven.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

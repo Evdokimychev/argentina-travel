@@ -5,7 +5,7 @@ title: "Сан-Хосе"
 title_es: San José
 title_en: San José
 summary: "Городок в Энтре-Риосе рядом с историческим дворцом Сан-Хосе и термами, среди природы речного Литораля."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,6 +58,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

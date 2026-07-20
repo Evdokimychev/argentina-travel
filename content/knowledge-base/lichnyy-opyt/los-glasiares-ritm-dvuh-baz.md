@@ -11,14 +11,19 @@ personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Лос-Гласьярес.md"
 related: [los-glasiares, el-calafate, el-chalten, argentina-2-nedeli]
-last_verified: "2026-06-30"
-confidence: medium
+last_verified: "2026-07-20"
+confidence: high
 sources:
-  - title: "Национальный-парк-Лос-Гласьярес.md — раздел «Советы местного гида»"
-    url: ""
-    lang: ru
-    type: aggregator
-    note: "извлечено из готового лонгрида проекта"
+  - title: "APN — Parque Nacional Los Glaciares: actividades"
+    url: "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/actividades"
+    lang: es
+    type: official
+    note: "две туристические базы, расстояние, тропы и способы посещения Перито-Морено"
+  - title: "APN — recomendaciones para visitar Los Glaciares"
+    url: "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/recomendaciones-para-visitar-el-parque-nacional-los-glaciares"
+    lang: es
+    type: official
+    note: "погода, экипировка, регистрация и сезонные ограничения"
 ---
 
 ## Текст
@@ -29,7 +34,16 @@ sources:
 
 Менее раскрученная, но равноценная смотровая в Эль-Чальтене — Лома-дель-Плиегуэ-Тумбадо: туда идёт заметно меньше людей, а панорама шире, чем у популярных озёр. Если погода на главный трек так и не открылась, Лагуна-Капри по пути к Фицрою — достойная «запасная» цель с открыточным видом.
 
+Между Эль-Калафате и Эль-Чальтеном около 200 километров асфальтированной дороги, поэтому это не один общий курорт. Не ставьте длинный трек на день переезда и не покупайте обратный билет сразу после расчётного окончания похода. Оставьте запас до последнего автобуса и вылета: ветер, состояние тропы и собственный темп важнее времени из приложения.
+
+Официальная служба парка просит проверять состояние маршрутов перед выходом и брать воду, еду, утепление, дождевик, фонарь и защиту от солнца. Для удалённых зон и восхождений требуется регистрация; с мая по сентябрь отдельные маршруты требуют зимнего снаряжения и регистрации даже для обычного треккинга. Если прогноз плохой, безопасная короткая прогулка — не «потерянный день», а нормальная патагонская стратегия.
+
 ## Связанные объекты
 
 - [[los-glasiares|Национальный парк Лос-Гласьярес]] — нацпарк.
 - [[el-calafate|Эль-Калафате]] и [[el-chalten|Эль-Чальтен]] — две базы, между которыми строится маршрут.
+
+## Источники
+
+- [APN — активности в Лос-Гласьярес](https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/actividades)
+- [APN — рекомендации посетителям](https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/recomendaciones-para-visitar-el-parque-nacional-los-glaciares)

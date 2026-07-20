@@ -17,7 +17,7 @@ type ContentRow = Database["public"]["Tables"]["content_documents"]["Row"];
 type RevisionRow = Database["public"]["Tables"]["content_revisions"]["Row"];
 
 const longContent = Array.from(
-  { length: 130 },
+  { length: 650 },
   (_, index) => `рекомендация${index + 1}`,
 ).join(" ");
 

@@ -6,8 +6,10 @@ title: "Народные святые Аргентины: Гаучито Хил�
 title_es: "Santos populares"
 aliases: ["Гаучито Хиль", "Gauchito Gil", "Дифунта Корреа", "Difunta Correa", "народные святые", "santos populares", "придорожные святилища"]
 summary: "Красные придорожные святилища с флажками и горы бутылок с водой у трасс — это народная религиозность Аргентины: Гаучито Хиль и Дифунта Корреа, почитаемые вне официальной церкви. Что означают эти места, откуда легенды и как путешественнику относиться к ним с уважением."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mentalitet-i-etiket
+archive_reason: "Краткий культурный сюжет объединён с проверенным материалом о культурном контексте."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [культура, религия, традиции, дороги, туризм]

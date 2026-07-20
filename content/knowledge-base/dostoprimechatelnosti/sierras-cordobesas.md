@@ -5,7 +5,7 @@ title: "Сьерры Кордовы"
 title_es: Sierras cordobesas
 title_en: Córdoba hills
 summary: "Живописные горы в центре Аргентины с реками, ущельями и десятками курортных городков — популярнейшее направление внутреннего туризма."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

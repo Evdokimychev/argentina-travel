@@ -3,8 +3,10 @@ id: kak-dobratsya-iz-rossii
 type: transport
 title: "Как добраться из России и стран СНГ в Аргентину"
 summary: "Как собрать авиамаршрут до Буэнос-Айреса без устаревших расписаний: единый билет, проверка пересадок, багажа, транзитных правил и условий въезда."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: skolko-letet-iz-rossii
+archive_reason: "Краткий обзор перелёта объединён с проверенным материалом о длительности и вариантах маршрута."
 site_sections: [puteshestviya-po-argentine, pereezd-v-argentinu]
 applies_to: tourist
 tags: [перелёт, документы, пересадки, Аргентина]

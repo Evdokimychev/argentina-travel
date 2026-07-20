@@ -4,12 +4,15 @@ type: faq
 question: "Как купить внутренние авиабилеты по Аргентине дешевле?"
 short_answer: "Сравнивайте все три авиакомпании (Aerolíneas, JetSMART, Flybondi) и бронируйте заранее — лоукостеры сильно дорожают ближе к дате вылета."
 topic: transport
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine]
 tags: [авиабилеты, транспорт, бюджет]
 related: [vnutrennie-aviabilety, argentina-2-nedeli]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: vnutrennie-aviabilety
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

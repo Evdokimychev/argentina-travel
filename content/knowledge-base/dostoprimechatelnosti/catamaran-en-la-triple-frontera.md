@@ -5,7 +5,7 @@ title: Катамаран у Тройной границы
 title_es: Catamarán en la Triple Frontera
 title_en: Catamaran at the Triple Frontier
 summary: "Прогулка на катамаране к «тройной границе», где сходятся воды Аргентины, Бразилии и Парагвая."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -25.594587461371265
   lng: -54.59217123156601

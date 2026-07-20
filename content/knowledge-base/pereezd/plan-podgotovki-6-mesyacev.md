@@ -6,8 +6,10 @@ title: "Подготовка к переезду в Аргентину за 6 м
 title_es: "Preparación en 6 meses: cronograma"
 aliases: ["план подготовки переезда", "за сколько готовиться к переезду", "чек-лист до отъезда", "6 месяцев до переезда", "апостиль заранее"]
 summary: "Гибкий таймлайн подготовки: основание резиденции, индивидуальный комплект документов, апостиль или легализация, перевод в Аргентине, финансы, страховка и первые недели."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: chek-list-pereezda
+archive_reason: "Подготовительный план объединён с проверенным чек-листом переезда."
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 applies_to: relocant
 tags: [релокация, подготовка, документы, таймлайн, чек-лист]

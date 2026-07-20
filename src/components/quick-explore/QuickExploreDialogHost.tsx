@@ -3,10 +3,10 @@
 import QuickExploreMapDialog from "@/components/quick-explore/QuickExploreMapDialog";
 import { QuickExploreProvider } from "@/context/QuickExploreContext";
 
-export default function QuickExploreDialogHost() {
+export default function QuickExploreDialogHost({ initialOpen = false }: { initialOpen?: boolean }) {
   return (
     <QuickExploreProvider>
-      <QuickExploreMapDialog />
+      <QuickExploreMapDialog initialOpen={initialOpen} />
     </QuickExploreProvider>
   );
 }

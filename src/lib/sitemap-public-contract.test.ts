@@ -43,6 +43,8 @@ describe("public sitemap contract", () => {
           "/transfers",
           "/transfers/airport",
           "/baza-znaniy/poisk",
+          "/immigration",
+          "/immigration/vnzh-i-pmzh",
         ],
         DEFAULT_SITE_NAVIGATION,
         modules,

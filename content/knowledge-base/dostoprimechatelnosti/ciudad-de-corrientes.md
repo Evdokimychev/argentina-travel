@@ -1,11 +1,11 @@
 ---
 id: ciudad-de-corrientes
 type: attraction
-title: Коррьентес
+title: "Архив: город Корриентес"
 title_es: Ciudad de Corrientes
 title_en: City of Corrientes
-summary: "Коррьентес — столица провинции на берегу Параны: четыре века истории, карнавал и чамаме."
-status: published
+summary: "Короткая импортная карточка города объединена с каноническим путеводителем по Корриентесу."
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: korrientes
+archive_reason: "Дублирует сущность города korrientes; сохранена для перенаправления старого URL и истории импорта INPROTUR."
 coordinates:
   lat: -27.46849559527569
   lng: -58.82772033600126
@@ -55,14 +57,9 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание
+## Почему запись объединена
 
-Recorre cuatro siglos de historia
-
-## Практическая информация
-
-- **Координаты:** -27.4685, -58.8277
-- **Провинция:** Корриентес
+Карточка повторяла городскую сущность `korrientes`, но содержала только рекламную фразу и координаты. Источник и полезные связи перенесены в редакционный контур канонического путеводителя. Старый идентификатор сохранён, чтобы прямые ссылки вели на полную страницу города.
 
 ## Источники
 

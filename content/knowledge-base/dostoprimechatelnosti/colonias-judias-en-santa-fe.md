@@ -5,7 +5,7 @@ title: "Еврейские колонии в Санта-Фе"
 title_es: Colonias judías en Santa Fe
 title_en: Jewish colonies in Santa Fe
 summary: "Земля первых еврейских переселенцев-земледельцев Аргентины — синагоги, музеи и память о «еврейских гаучо»."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

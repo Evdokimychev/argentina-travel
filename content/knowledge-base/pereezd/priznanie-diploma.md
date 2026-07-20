@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Как признать иностранный диплом в Аргентине"
 summary: "Маршрут зависит от уровня образования, страны выдачи и цели: университетский диплом, школьный аттестат и профессиональная лицензия оформляются по разным процедурам."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dokumentam
+archive_reason: "Короткий материал о признании диплома объединён с проверенным руководством по документам; процедура зависит от профессии и учреждения."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [диплом, образование, документы, работа]

@@ -5,7 +5,7 @@ title: National Sun Festival in San Juan
 title_es: Fiesta Nacional del Sol en San Juan
 title_en: National Sun Festival in San Juan
 summary: En tierras cuyanas, acércate a la celebración del sol más importante de Argentina.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -48,6 +48,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

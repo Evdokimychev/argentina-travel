@@ -30,16 +30,30 @@ function readJson<T>(fileName: string): T {
 
 // ── Кэши (модуль загружается один раз на процесс сборки) ────────────────────
 
+let allEntriesCache: KbEntry[] | null = null;
 let entriesCache: KbEntry[] | null = null;
 let byIdCache: Map<string, KbEntry> | null = null;
+let archivedIdsCache: Set<string> | null = null;
 let navigationCache: KbNavigation | null = null;
+
+function loadAllEntries(): KbEntry[] {
+  if (!allEntriesCache) {
+    const data = readJson<{ entities: KbEntry[] }>("content.json");
+    allEntriesCache = data.entities;
+    archivedIdsCache = new Set(
+      allEntriesCache
+        .filter((entry) => entry.status === "archived")
+        .map((entry) => entry.id),
+    );
+  }
+  return allEntriesCache;
+}
 
 function loadEntries(): KbEntry[] {
   if (!entriesCache) {
-    const data = readJson<{ entities: KbEntry[] }>("content.json");
     // Один фильтр управляет всеми публичными каналами: страницами, поиском,
     // картой, рекомендациями и sitemap. Исходники карантинных записей сохраняются.
-    entriesCache = data.entities.filter(isPublicKbEntry);
+    entriesCache = loadAllEntries().filter(isPublicKbEntry);
     byIdCache = new Map(entriesCache.map((entry) => [entry.id, entry]));
   }
   return entriesCache;
@@ -61,6 +75,12 @@ export function getEntry(id: string): KbEntry | undefined {
 
 export function getAllEntryIds(): string[] {
   return loadEntries().map((entry) => entry.id);
+}
+
+/** Архивные id — tombstone: CMS не может случайно вернуть их в публичную выдачу. */
+export function getArchivedEntryIds(): ReadonlySet<string> {
+  loadAllEntries();
+  return archivedIdsCache ?? new Set<string>();
 }
 
 // ── Канонические разделы сайта (site_sections) ──────────────────────────────

@@ -8,7 +8,7 @@ status: published
 site_ready: true
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [документы, релокация, визы]
-related: [vnzh-argentina, vnzh-rantye, apostil-i-perevod-dokumentov]
+related: [vnzh-argentina, vnzh-rantye, apostil-i-perevod-dokumentov, kak-perevezti-kota-ili-sobaku]
 last_verified: "2026-07-17"
 confidence: high
 provenance:

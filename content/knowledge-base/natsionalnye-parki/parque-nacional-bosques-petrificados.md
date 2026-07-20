@@ -5,7 +5,7 @@ title: Национальный парк Боске-Петрификадос
 title_es: Parque Nacional Bosques Petrificados
 title_en: Bosques Petrificados [Petrified Forests] National Park
 summary: "Окаменелый лес в Санта-Крусе (Харамийо): стволы араукарий, погребённые около 150 млн лет назад."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная импортная карточка объединена с канонической русскоязычной страницей национального парка; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -47.18485680000001
   lng: -67.1425766

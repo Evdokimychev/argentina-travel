@@ -5,7 +5,7 @@ title: "Вилья-Паранасито"
 title_es: Villa Paranacito
 title_en: Villa Paranacito
 summary: "Городок в дельте Параны на юге Энтре-Риоса — водный мир проток, островов и рыбалки."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,6 +58,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

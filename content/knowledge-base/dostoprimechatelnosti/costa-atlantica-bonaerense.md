@@ -5,7 +5,7 @@ title: Атлантическое побережье провинции Буэн
 title_es: Costa Atlántica Bonaerense
 title_en: Buenos Aires Atlantic Coast
 summary: "Атлантическое побережье провинции Буэнос-Айрес: длинные пляжи и курорты от Мар-дель-Платы до юга."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -37.2017285
   lng: -59.84106969999999

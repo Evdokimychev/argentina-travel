@@ -7,7 +7,7 @@ aliases: '[\"Гуалегуайчу\", \"Gualeguaychú\", \"Карнавал-д�
   карнавал\"]'
 summary: En el Литорал argentino, visita una ciudad donde se disfruta la naturaleza
   y se celebra el carnaval.
-status: stub
+status: archived
 site_sections:
 - goroda-i-regiony
 - puteshestviya-po-argentine
@@ -63,6 +63,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

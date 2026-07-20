@@ -6,7 +6,7 @@ title_es: Deportes extremos en La Rioja
 title_en: Extreme Sports in La Rioja
 summary: Recorre una tierra que te invita a subir la adrenalina entre paisajes llenos
   de vida.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -39,6 +39,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Статус цифрового кочевника в Аргентине"
 summary: "Транзитная резиденция для граждан безвизовых стран, которые удалённо оказывают услуги людям или организациям за пределами Аргентины."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: nuzhna-li-viza-cifrovomu-kochevniku
+archive_reason: "Короткая карточка статуса объединена с проверенным ответом на ключевой вопрос о цифровом кочевнике."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [цифровые кочевники, удалённая работа, Migraciones]

@@ -967,15 +967,17 @@ body {
 }
 
 .route-map-canvas .route-map-popup.leaflet-popup {
-  max-width: calc(100% - 1rem);
+  width: min(220px, calc(100dvw - 3rem));
+  max-width: min(220px, calc(100dvw - 3rem));
 }
 
 .route-map-popup .leaflet-popup-content-wrapper {
+  width: 100%;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(26, 26, 46, 0.14);
   padding: 0;
   overflow: hidden;
-  max-width: min(220px, calc(100% - 1rem));
+  max-width: 100%;
 }
 
 .route-map-popup .leaflet-popup-content {
@@ -983,7 +985,7 @@ body {
   font-size: 12px;
   line-height: 1.35;
   color: #1a1a2e;
-  width: auto !important;
+  width: 100% !important;
 }
 
 .route-map-popup .leaflet-popup-tip-container {
@@ -993,8 +995,9 @@ body {
 .route-map-popup-card {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-width: 0;
-  max-width: 220px;
+  max-width: 100%;
 }
 
 .route-map-popup-photo {

@@ -6,7 +6,7 @@ title_es: Ruta del vino en San Juan
 title_en: Wine route in San Juan
 summary: Recorre los viñedos y las bodegas que producen vinos y espumantes nacidos
   en los valles sanjuaninos.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: 'Национальный парк Лос-Алерсес — объект
 title_es: 'Parque Nacional Los Alerces: Patrimonio de la Humanidad'
 title_en: 'Los Alerces National Park: World Heritage Site'
 summary: "Лос-Алерсес в Чубуте (ЮНЕСКО) — реликтовые леса с одними из древнейших в мире деревьев алерсе."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: los-alerces
+archive_reason: "Дублирующая импортная карточка объединена с канонической русскоязычной страницей национального парка; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -42.9741301
   lng: -71.6438598

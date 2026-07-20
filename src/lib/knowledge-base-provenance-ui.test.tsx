@@ -73,6 +73,26 @@ describe("knowledge-base public provenance", () => {
     expect(html).not.toContain("employee-42");
   });
 
+  it("recognizes the editorial source-review role used by the knowledge corpus", () => {
+    const entry = strictEntry();
+    entry.claims = [
+      {
+        ...entry.claims![0],
+        reviewer: {
+          id: "goargentina-editorial",
+          role: "Редакционная проверка источников",
+        },
+      },
+    ];
+
+    const html = renderToStaticMarkup(
+      <KbProvenance data={buildKbPublicProvenance(entry)} />,
+    );
+
+    expect(html).toContain("Редактор");
+    expect(html).not.toContain("goargentina-editorial");
+  });
+
   it("adds a marker to a matching fact bullet", () => {
     const entry = strictEntry();
     const provenance = buildKbPublicProvenance(entry);

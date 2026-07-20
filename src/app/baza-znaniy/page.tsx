@@ -15,10 +15,11 @@ import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
 import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { pluralRu } from "@/lib/pluralize";
 
 const PAGE_TITLE = "База знаний об Аргентине — путеводитель, переезд, документы, деньги";
 const PAGE_DESCRIPTION =
-  "Структурированная база знаний «Пора в Аргентину»: путешествия, переезд, документы и легализация, деньги, жизнь в стране и личный опыт. Сотни проверенных материалов с поиском и навигацией.";
+  "Структурированная база знаний «Пора в Аргентину»: проверенные материалы о путешествиях, переезде, документах, деньгах и повседневной жизни.";
 
 export const metadata: Metadata = buildPublicPageMetadata({
   title: PAGE_TITLE,
@@ -56,12 +57,17 @@ export default async function KnowledgeBaseHomePage() {
         </h1>
         <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-muted">
           Честные, практичные и проверенные материалы для путешественников и тех,
-          кто переезжает: {total}+ статей о поездках, документах, деньгах и жизни в
+          кто переезжает: {total} {pluralRu(total, "материал", "материала", "материалов")} о поездках, документах, деньгах и жизни в
           стране. Начните с поиска или выберите точку входа.
         </p>
         <div className="mx-auto mt-6 max-w-xl">
           <KbSearchBox autoFocus />
         </div>
+        <p className="mt-3 text-sm text-muted">
+          <Link href="/baza-znaniy/avtory" className="font-medium text-sky-ink hover:underline">
+            Авторы и подтверждённые личные материалы
+          </Link>
+        </p>
       </header>
 
       {/* Точки входа (хабы) */}

@@ -5,7 +5,7 @@ title: Horseback riding in Tafí del Valle
 title_es: Cabalgatas en Tafí del Valle
 title_en: Horseback riding in Tafí del Valle
 summary: Vive una experiencia gaucha en un lugar lleno de historia.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

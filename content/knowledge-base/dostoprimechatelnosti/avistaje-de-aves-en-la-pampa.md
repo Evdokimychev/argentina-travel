@@ -5,7 +5,7 @@ title: Наблюдение за птицами в Ла-Пампа
 title_es: Avistaje de aves en La Pampa
 title_en: Bird-watching in La Pampa
 summary: В одной провинции вас ждет почти треть птиц, населяющих всю страну.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -36.86344070239784
   lng: -65.33158105910096
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

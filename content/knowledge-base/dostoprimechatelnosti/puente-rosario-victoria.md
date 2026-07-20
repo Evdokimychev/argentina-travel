@@ -5,7 +5,7 @@ title: Мост Росарио — Виктория
 title_es: Puente Rosario-Victoria
 title_en: Rosario-Victoria Bridge
 summary: "Мост Росарио-Виктория — монументальный виадук через Парану, связывающий Санта-Фе и Энтре-Риос."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: rosario
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -32.8706169
   lng: -60.6892104

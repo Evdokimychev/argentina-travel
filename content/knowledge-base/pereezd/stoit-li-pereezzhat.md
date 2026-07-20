@@ -6,8 +6,10 @@ title: "Стоит ли переезжать в Аргентину: рамка �
 title_es: "¿Vale la pena mudarse?"
 aliases: ["стоит ли переезжать в Аргентину", "плюсы и минусы Аргентины", "кому подходит Аргентина", "типичные ошибки эмигрантов", "переезд за и против"]
 summary: "Практическая рамка решения: легальный статус, доход, язык, медицина, расстояние и пробный период без обещания, что одна страна подходит всем."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: argentina-vs-drugie-strany
+archive_reason: "Короткая рамка решения объединена с проверенным сравнительным материалом о переезде."
 site_sections: [pereezd-v-argentinu, zhizn-v-strane]
 applies_to: relocant
 tags: [переезд, релокация, решение, плюсы минусы]

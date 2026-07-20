@@ -5,7 +5,7 @@ title: Патагонский поезд
 title_es: El Tren Patagónico
 title_en: Patagonian Train
 summary: "Легендарный патагонский поезд через степь Рио-Негро, связывающий Анды и Атлантику."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -41.16042042709777
   lng: -71.3509712211587

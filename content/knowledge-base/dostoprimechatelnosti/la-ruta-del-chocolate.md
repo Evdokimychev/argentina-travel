@@ -5,7 +5,7 @@ title: "Шоколадный путь"
 title_es: La Ruta del Chocolate
 title_en: The Chocolate Route
 summary: "Гастрономический маршрут по шоколадным мастерским Барилоче и озёрной Патагонии."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -27,12 +27,19 @@ import {
   type MapThematicLayerId,
 } from "@/lib/map-thematic-layers";
 import { mapObjectsToSuggestions, searchMapObjects } from "@/lib/map-search";
+import {
+  DEFAULT_MAP_DISCOVERY_MODE,
+  findNearbyMapObjects,
+  MAP_DISCOVERY_MODE_KINDS,
+  matchesMapDiscoveryMode,
+} from "@/lib/map-discovery";
 import { probeThematicLayerAvailability } from "@/lib/map-thematic-loader";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayLayerId } from "@/lib/map-overlay-layers";
 import {
-  MAP_MARKER_KIND_LABELS,
+  formatMapObjectListSubtitle,
   type MapMarkerKind,
+  type MapDiscoveryMode,
   type MapObject,
   type MapObjectsPayload,
 } from "@/lib/map-types";
@@ -49,16 +56,19 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   const searchParams = useSearchParams();
 
   const [data, setData] = useState(initialData);
+  const [searchObjects, setSearchObjects] = useState(initialData.objects);
   const [state, setState] = useState<MapArgentinaUrlState>(initialState);
   const stateRef = useRef(state);
   stateRef.current = state;
   const [searchDraft, setSearchDraft] = useState(initialState.q);
   const [selected, setSelected] = useState<MapObject | null>(null);
+  const [selectedFlightDestinationIata, setSelectedFlightDestinationIata] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [layerAvailability, setLayerAvailability] = useState<
     Partial<Record<MapThematicLayerId, boolean>>
   >({});
+  const [loadingThematicLayers, setLoadingThematicLayers] = useState<MapThematicLayerId[]>([]);
   const [listOpen, setListOpen] = useState(false);
   const [locationPanelOpen, setLocationPanelOpen] = useState(false);
   const [locationStatus, setLocationStatus] = useState<"idle" | "requesting" | "error">("idle");
@@ -67,10 +77,17 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     longitude: number;
     requestId: number;
   } | null>(null);
+  const requestControllerRef = useRef<AbortController | null>(null);
+  const requestSequenceRef = useRef(0);
+  const searchControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     void probeThematicLayerAvailability().then(setLayerAvailability);
     trackProductEvent("map_opened", { source: "map_page" });
+    return () => {
+      requestControllerRef.current?.abort();
+      searchControllerRef.current?.abort();
+    };
   }, []);
 
   useEffect(() => {
@@ -87,6 +104,10 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     const obj = data.objects.find((item) => item.id === state.selected) ?? null;
     setSelected(obj);
   }, [state.selected, data.objects]);
+
+  useEffect(() => {
+    setSelectedFlightDestinationIata(null);
+  }, [selected?.id]);
 
   const replaceUrl = useCallback(
     (nextState: MapArgentinaUrlState) => {
@@ -112,10 +133,16 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   }, [selected, listOpen, locationPanelOpen, replaceUrl]);
 
   const refreshData = useCallback(async (nextState: MapArgentinaUrlState) => {
+    requestControllerRef.current?.abort();
     if (nextState.kinds.length === 0) {
       setData({ objects: [], routes: [], totals: {} });
+      setLoading(false);
       return;
     }
+
+    const controller = new AbortController();
+    requestControllerRef.current = controller;
+    const requestSequence = ++requestSequenceRef.current;
 
     const params = new URLSearchParams();
     params.set("kind", serializeMapArgentinaKinds(nextState.kinds));
@@ -125,16 +152,27 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     setLoading(true);
     setLoadError(null);
     try {
-      const response = await fetch(`/api/map/objects?${params.toString()}`);
+      const response = await fetch(`/api/map/objects?${params.toString()}`, {
+        signal: controller.signal,
+      });
       await assertOkResponse(response);
       const payload = (await response.json()) as MapObjectsPayload;
       setData(payload);
+      setSearchObjects((current) => {
+        const merged = new Map(current.map((object) => [object.id, object]));
+        for (const object of payload.objects) merged.set(object.id, object);
+        return [...merged.values()];
+      });
     } catch (error) {
+      if (controller.signal.aborted) return;
       const message =
         error instanceof Error ? error.message : "Не удалось обновить данные карты";
       setLoadError(message);
     } finally {
-      setLoading(false);
+      if (requestSequence === requestSequenceRef.current) {
+        setLoading(false);
+        requestControllerRef.current = null;
+      }
     }
   }, []);
 
@@ -150,12 +188,48 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   const suggestions = useMemo(() => {
     const needle = searchDraft.trim();
     if (!needle) return [];
-    return mapObjectsToSuggestions(searchMapObjects(data.objects, needle, 6));
-  }, [data.objects, searchDraft]);
+    return mapObjectsToSuggestions(searchMapObjects(searchObjects, needle, 6));
+  }, [searchObjects, searchDraft]);
+
+  useEffect(() => {
+    const query = searchDraft.trim();
+    if (query.length < 2 || searchMapObjects(searchObjects, query, 1).length > 0) return;
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      searchControllerRef.current?.abort();
+      searchControllerRef.current = controller;
+      const params = new URLSearchParams({
+        kind: "city,national_park,attraction,tour,airport,transport",
+        q: query,
+        limit: "12",
+      });
+      void fetch(`/api/map/objects?${params.toString()}`, { signal: controller.signal })
+        .then(async (response) => {
+          await assertOkResponse(response);
+          return response.json() as Promise<MapObjectsPayload>;
+        })
+        .then((payload) => {
+          setSearchObjects((current) => {
+            const merged = new Map(current.map((object) => [object.id, object]));
+            for (const object of payload.objects) merged.set(object.id, object);
+            return [...merged.values()];
+          });
+        })
+        .catch((error) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+        });
+    }, 250);
+
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [searchDraft, searchObjects]);
 
   const visibleObjects = useMemo(() => {
-    return data.objects.filter((obj) => state.kinds.includes(obj.kind));
-  }, [data.objects, state.kinds]);
+    return data.objects.filter((obj) => matchesMapDiscoveryMode(obj, state.focus));
+  }, [data.objects, state.focus]);
 
   const visibleRoutes = state.kinds.includes("route") ? data.routes : [];
   const visibleItemCount = visibleObjects.length + visibleRoutes.length;
@@ -170,6 +244,11 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     return null;
   }, [selected, state.selected, visibleObjects]);
 
+  const nearbyObjects = useMemo(
+    () => findNearbyMapObjects(selected, data.objects, { limit: 6, maxDistanceKm: 120 }),
+    [selected, data.objects],
+  );
+
   function ensureKindsForObject(obj: MapObject, kinds: MapMarkerKind[]): MapMarkerKind[] {
     if (kinds.includes(obj.kind)) return kinds;
     return [...kinds, obj.kind];
@@ -177,9 +256,13 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   function selectMapObject(obj: MapObject, q = "") {
     const nextKinds = ensureKindsForObject(obj, stateRef.current.kinds);
+    const nextFocus = matchesMapDiscoveryMode(obj, stateRef.current.focus)
+      ? stateRef.current.focus
+      : "all";
     const nextState: MapArgentinaUrlState = {
       ...stateRef.current,
       kinds: nextKinds,
+      focus: nextFocus,
       q,
       selected: obj.id,
     };
@@ -190,10 +273,10 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   function handleSearchSubmit() {
     const q = searchDraft.trim();
     trackProductEvent("site_search_started", { source: "map", entityType: "map_object" });
-    const match = q ? searchMapObjects(data.objects, q, 1)[0] : undefined;
+    const match = q ? searchMapObjects(searchObjects, q, 1)[0] : undefined;
     if (match) {
       trackProductEvent("site_search_completed", { source: "map", entityType: match.kind, entityId: match.id, count: 1 });
-      selectMapObject(match, q);
+      selectMapObject(match);
       return;
     }
     trackProductEvent("site_search_zero_results", { source: "map", entityType: "map_object", count: 0 });
@@ -219,25 +302,62 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     applyState({
       ...state,
       kinds: nextKinds,
+      focus: "all",
       selected: keepSelected ? state.selected : "",
     });
   }
 
   function handleSelectAllKinds() {
-    applyState({ ...state, kinds: selectAllMapFilterKinds() });
+    applyState({ ...state, kinds: selectAllMapFilterKinds(), focus: "all" });
   }
 
   function handleClearAllKinds() {
-    applyState({ ...state, kinds: clearAllMapFilterKinds(), selected: "" });
+    applyState({ ...state, kinds: clearAllMapFilterKinds(), selected: "", focus: "all" });
     setSelected(null);
   }
 
   function handleResetKinds() {
-    applyState({ ...state, kinds: resetMapFilterKinds() });
+    applyState({ ...state, kinds: resetMapFilterKinds(), focus: DEFAULT_MAP_DISCOVERY_MODE });
+  }
+
+  function handleDiscoveryModeChange(focus: MapDiscoveryMode) {
+    trackProductEvent("map_filter_changed", {
+      source: "discovery_mode",
+      entityType: "map_focus",
+      entityId: focus,
+    });
+    applyState({
+      ...state,
+      kinds: [...MAP_DISCOVERY_MODE_KINDS[focus]],
+      focus,
+      selected: "",
+    });
+    setSelected(null);
   }
 
   function handleThemeChange(theme: MapBasemapThemeId) {
-    const nextState = { ...state, theme };
+    const nextState = {
+      ...state,
+      theme,
+      overlays:
+        theme === "satellite" && !state.overlays.labels
+          ? { ...state.overlays, labels: true }
+          : state.overlays,
+    };
+    setState(nextState);
+    replaceUrl(nextState);
+  }
+
+  function handleActivateTerrainPreset() {
+    const nextState = {
+      ...state,
+      theme: "nature" as const,
+      overlays: {
+        ...state.overlays,
+        hillshade: true,
+        contours: false,
+      },
+    };
     setState(nextState);
     replaceUrl(nextState);
   }
@@ -267,11 +387,24 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     replaceUrl(nextState);
   }
 
+  const handleThematicLayerLoadState = useCallback(
+    (layerId: MapThematicLayerId, isLoading: boolean) => {
+      setLoadingThematicLayers((current) =>
+        isLoading
+          ? current.includes(layerId)
+            ? current
+            : [...current, layerId]
+          : current.filter((id) => id !== layerId),
+      );
+    },
+    [],
+  );
+
   function handleSelectSuggestion(id: string) {
-    const obj = data.objects.find((item) => item.id === id);
+    const obj = searchObjects.find((item) => item.id === id);
     if (!obj) return;
     setSearchDraft(obj.title);
-    selectMapObject(obj, obj.title);
+    selectMapObject(obj);
   }
 
   function handleSelectObject(obj: MapObject | null) {
@@ -288,7 +421,16 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   function handleSelectObjectById(id: string) {
     const obj = data.objects.find((item) => item.id === id) ?? null;
-    if (obj) handleSelectObject(obj);
+    if (obj) selectMapObject(obj);
+  }
+
+  function navigateFromMapObject(href: string) {
+    setSelected(null);
+    setSelectedFlightDestinationIata(null);
+    window.setTimeout(() => {
+      if (/^https?:\/\//i.test(href)) window.location.assign(href);
+      else router.push(href);
+    }, 0);
   }
 
   function requestCurrentLocation() {
@@ -348,7 +490,10 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         theme={state.theme}
         overlays={state.overlays}
         thematic={state.thematic}
+        onThematicLayerLoadState={handleThematicLayerLoadState}
         onSelect={handleSelectObject}
+        selectedFlightDestinationIata={selectedFlightDestinationIata}
+        onSelectFlightDestination={setSelectedFlightDestinationIata}
         userLocation={userLocation}
         className="absolute inset-0"
       />
@@ -365,6 +510,8 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
             suggestions={suggestions}
             onSelectSuggestion={handleSelectSuggestion}
             activeKinds={state.kinds}
+            discoveryMode={state.focus}
+            onDiscoveryModeChange={handleDiscoveryModeChange}
             onToggleKind={handleToggleKind}
             onSelectAllKinds={handleSelectAllKinds}
             onClearAllKinds={handleClearAllKinds}
@@ -394,12 +541,26 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         </div>
       </div>
 
+      {loading ? (
+        <div
+          className="pointer-events-none absolute bottom-20 left-1/2 z-30 -translate-x-1/2 rounded-full border border-sky/15 bg-white/95 px-4 py-2.5 shadow-elevated backdrop-blur-md"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="flex items-center gap-2 whitespace-nowrap text-sm font-semibold text-charcoal">
+            <Loader2 className="h-4 w-4 animate-spin text-sky" aria-hidden />
+            Обновляем точки — прежние остаются на карте
+          </span>
+        </div>
+      ) : null}
+
       <MapThematicLayersControl
         thematic={state.thematic}
         layerAvailability={layerAvailability}
+        loadingLayerIds={loadingThematicLayers}
         onToggleThematic={handleToggleThematic}
         onClearThematic={handleClearThematic}
-        className="absolute left-2 top-[72px] z-20 [&>button]:!h-11 [&>button]:!w-11 md:left-[9px] md:top-[248px]"
+        className="absolute left-2 top-[72px] z-30 [&>button]:!h-11 [&>button]:!w-11 md:left-[9px] md:top-[176px]"
       />
 
       <MapStyleLayersControl
@@ -407,13 +568,18 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         onThemeChange={handleThemeChange}
         overlays={state.overlays}
         onToggleOverlay={handleToggleOverlay}
-        className="absolute right-2 top-[72px] z-20 [&>button]:!h-11 [&>button]:!w-11 md:right-[9px] md:top-[248px]"
+        onActivateTerrainPreset={handleActivateTerrainPreset}
+        className="absolute right-2 top-[72px] z-30 [&>button]:!h-11 [&>button]:!w-11 md:right-[9px] md:top-[176px]"
       />
 
       <MapObjectPopup
         object={selected}
+        nearbyObjects={nearbyObjects}
         onClose={() => handleSelectObject(null)}
         onSelectObjectId={handleSelectObjectById}
+        selectedFlightDestinationIata={selectedFlightDestinationIata}
+        onSelectFlightDestination={setSelectedFlightDestinationIata}
+        onNavigate={navigateFromMapObject}
       />
 
       <div className="absolute bottom-12 right-3 z-20 flex flex-col gap-2 sm:right-4">
@@ -537,7 +703,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
                   >
                     <span className="block text-sm font-semibold text-charcoal">{object.title}</span>
                     <span className="mt-0.5 block text-xs text-slate">
-                      {object.region} · {object.meta ?? MAP_MARKER_KIND_LABELS[object.kind]}
+                      {formatMapObjectListSubtitle(object)}
                     </span>
                   </button>
                 </li>

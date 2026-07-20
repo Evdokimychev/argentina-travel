@@ -5,7 +5,7 @@ title: "Эль-Соснеадо"
 title_es: El Sosneado
 title_en: El Sosneado
 summary: "Горная местность в Мендосе с термами и трагически известным местом падения уругвайского самолёта в Андах (1972)."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: Горнолыжные центры Серро-Катедраль и Се
 title_es: Cerros Catedral y Perito Moreno
 title_en: Cerro Catedral and Perito Moreno hills
 summary: "Крупнейшие горнолыжные центры Патагонии — Серро-Катедраль у Барилоче и Серро-Перито-Морено."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: bariloche
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -41.226551844960554
   lng: -71.49138259864785

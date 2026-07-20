@@ -1,11 +1,11 @@
 ---
 id: parque-nacional-los-cardones
 type: national_park
-title: Национальный парк Лос-Кардонес
+title: "Архив: Национальный парк Лос-Кардонес"
 title_es: Parque Nacional Los Cardones
 title_en: Los Cardones National Park
 summary: "Лос-Кардонес в Сальте: гигантские кактусы-кардоны и прямая Ректа-дель-Тин-Тин среди разных экорегионов."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: los-cardones
+archive_reason: "Импортная карточка INPROTUR дублирует канонический материал los-cardones; запись сохранена для перенаправления старого URL и истории источника."
 coordinates:
   lat: -25.233715192987987
   lng: -65.94914828265313

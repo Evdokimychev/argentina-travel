@@ -14,20 +14,20 @@ const QuickExploreDialogHost = dynamic(
 export default function OnDemandPublicDialogs({ searchEnabled = true }: { searchEnabled?: boolean }) {
   const [searchMounted, setSearchMounted] = useState(false);
   const [mapMounted, setMapMounted] = useState(false);
-  const [pendingSearchOpen, setPendingSearchOpen] = useState(false);
-  const [pendingMapOpen, setPendingMapOpen] = useState(false);
+  const [searchInitiallyOpen, setSearchInitiallyOpen] = useState(false);
+  const [mapInitiallyOpen, setMapInitiallyOpen] = useState(false);
 
   useEffect(() => {
     function requestSearch() {
       if (!searchEnabled) return;
       if (searchMounted) return;
-      setPendingSearchOpen(true);
+      setSearchInitiallyOpen(true);
       setSearchMounted(true);
     }
 
     function requestMap() {
       if (mapMounted) return;
-      setPendingMapOpen(true);
+      setMapInitiallyOpen(true);
       setMapMounted(true);
     }
 
@@ -48,28 +48,10 @@ export default function OnDemandPublicDialogs({ searchEnabled = true }: { search
     };
   }, [mapMounted, searchEnabled, searchMounted]);
 
-  useEffect(() => {
-    if (!pendingSearchOpen || !searchMounted) return;
-    const timer = window.setTimeout(() => {
-      setPendingSearchOpen(false);
-      window.dispatchEvent(new CustomEvent(SITE_SEARCH_OPEN_EVENT));
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [pendingSearchOpen, searchMounted]);
-
-  useEffect(() => {
-    if (!pendingMapOpen || !mapMounted) return;
-    const timer = window.setTimeout(() => {
-      setPendingMapOpen(false);
-      window.dispatchEvent(new CustomEvent(SITE_MAP_OPEN_EVENT));
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [mapMounted, pendingMapOpen]);
-
   return (
     <>
-      {searchMounted ? <SiteSearch /> : null}
-      {mapMounted ? <QuickExploreDialogHost /> : null}
+      {searchMounted ? <SiteSearch initialOpen={searchInitiallyOpen} /> : null}
+      {mapMounted ? <QuickExploreDialogHost initialOpen={mapInitiallyOpen} /> : null}
     </>
   );
 }
