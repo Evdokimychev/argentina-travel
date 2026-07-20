@@ -1,6 +1,7 @@
 import "server-only";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
+import { Agent } from "undici";
 import type { IngestionSourceRecord } from "@/types/ingestion";
 
 const MAX_RESPONSE_BYTES = 5 * 1024 * 1024;
@@ -18,13 +19,20 @@ function isPrivateAddress(address: string): boolean {
     (parts[0] === 100 && parts[1] >= 64 && parts[1] <= 127);
 }
 
+async function publicAddresses(hostname: string) {
+  const addresses = isIP(hostname)
+    ? [{ address: hostname, family: isIP(hostname) }]
+    : await lookup(hostname, { all: true });
+  if (!addresses.length || addresses.some(({ address }) => isPrivateAddress(address))) throw new Error("PRIVATE_ADDRESS_FORBIDDEN");
+  return addresses;
+}
+
 export async function validateExternalUrl(rawUrl: string, source?: IngestionSourceRecord): Promise<URL> {
   const url = new URL(rawUrl);
   if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error("UNSUPPORTED_URL_PROTOCOL");
   if (url.username || url.password) throw new Error("URL_CREDENTIALS_FORBIDDEN");
   if (url.hostname === "localhost" || url.hostname.endsWith(".local")) throw new Error("LOCAL_ADDRESS_FORBIDDEN");
-  const addresses = isIP(url.hostname) ? [{ address: url.hostname }] : await lookup(url.hostname, { all: true });
-  if (!addresses.length || addresses.some(({ address }) => isPrivateAddress(address))) throw new Error("PRIVATE_ADDRESS_FORBIDDEN");
+  await publicAddresses(url.hostname);
   const allowed = source?.connectionConfig.allowedPaths ?? [];
   const blocked = source?.connectionConfig.blockedPaths ?? [];
   if (allowed.length && !allowed.some((path) => url.pathname.startsWith(path))) throw new Error("PATH_NOT_ALLOWED");
@@ -41,13 +49,16 @@ export async function safeFetchText(
   for (let redirects = 0; redirects <= 4; redirects += 1) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), (source?.timeoutSeconds ?? 30) * 1000);
+    const [pinned] = await publicAddresses(current.hostname);
+    const dispatcher = new Agent({ connect: { lookup: (_hostname, _options, callback) => callback(null, pinned.address, pinned.family) } });
     try {
       const response = await fetch(current, {
         ...init,
         redirect: "manual",
         signal: controller.signal,
         headers: { "user-agent": "ArgentinaTravelKnowledgeBot/1.0 (+https://www.goargentina.ru)", ...init.headers },
-      });
+        dispatcher,
+      } as RequestInit);
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get("location");
         if (!location) throw new Error(`HTTP_${response.status}`);
@@ -66,6 +77,7 @@ export async function safeFetchText(
       };
     } finally {
       clearTimeout(timer);
+      await dispatcher.close();
     }
   }
   throw new Error("TOO_MANY_REDIRECTS");

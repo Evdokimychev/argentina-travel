@@ -15,13 +15,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!source || source.sourceType !== "manual") return NextResponse.json({ error: "Ручной источник не найден" }, { status: 404 });
   if (!source.enabled) return NextResponse.json({ error: "Сначала проверьте и включите источник" }, { status: 409 });
   const manualItem = { id: `manual-${Date.now()}`, title: body.title?.trim() || "Материал редакции", body: body.content.trim(), url: body.sourceUrl?.trim() || undefined, publishedAt: body.publishedAt || undefined };
-  await db.from("ingestion_sources").update({ connection_config: { ...source.connectionConfig, manualItems: [manualItem] } }).eq("id", id);
-  try {
-    const queued = await enqueueIngestionRun(db, id, { triggerKind: "manual", actorId: auth.actorId });
-    const result = queued.existing ? queued : await processIngestionRun(db, queued.runId);
-    await writeAdminAuditLog({ actorUserId: auth.actorId, action: "ingestion.manual.upload", entityType: "ingestion_source", entityId: id, payload: { runId: queued.runId, hasSourceUrl: Boolean(manualItem.url) }, ipAddress: clientIpFromRequest(request) });
-    return NextResponse.json({ run: result });
-  } finally {
-    await db.from("ingestion_sources").update({ connection_config: { ...source.connectionConfig, manualItems: [] } }).eq("id", id);
-  }
+  const queued = await enqueueIngestionRun(db, id, { triggerKind: "manual", actorId: auth.actorId, manualItems: [manualItem] });
+  if (queued.existing) return NextResponse.json({ error: "Предыдущая ручная загрузка ещё обрабатывается", runId: queued.runId }, { status: 409 });
+  const result = await processIngestionRun(db, queued.runId);
+  await writeAdminAuditLog({ actorUserId: auth.actorId, action: "ingestion.manual.upload", entityType: "ingestion_source", entityId: id, payload: { runId: queued.runId, hasSourceUrl: Boolean(manualItem.url) }, ipAddress: clientIpFromRequest(request) });
+  return NextResponse.json({ run: result });
 }

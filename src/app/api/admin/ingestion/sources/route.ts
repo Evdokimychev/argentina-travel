@@ -5,6 +5,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createIngestionSource, listIngestionSources } from "@/lib/ingestion/repository-server";
 import { sourcePatchFromBody } from "@/lib/ingestion/api-validation";
 import { getSourceAdapter } from "@/lib/ingestion/adapters";
+import { hasAdminCapability } from "@/lib/admin/capabilities";
 import type { IngestionSourceRecord } from "@/types/ingestion";
 
 export async function GET(request: Request) {
@@ -18,10 +19,12 @@ export async function POST(request: Request) {
   try {
     const patch = sourcePatchFromBody(await request.json() as Record<string, unknown>);
     if (!patch.name || !patch.sourceType) return NextResponse.json({ error: "Укажите название и тип источника" }, { status: 400 });
-    const draft = { ...patch, id: "draft", status: patch.status ?? "draft", language: patch.language ?? "ru", categories: patch.categories ?? [], connectionConfig: patch.connectionConfig ?? {}, credentialRef: patch.credentialRef ?? null } as IngestionSourceRecord;
+    if (patch.credentialRef && !hasAdminCapability(auth.capabilities, "source_credentials.manage")) return NextResponse.json({ error: "Нет права назначать секреты источника" }, { status: 403 });
+    const safePatch = { ...patch, enabled: false, status: "draft" as const, nextRunAt: null };
+    const draft = { ...safePatch, id: "draft", language: safePatch.language ?? "ru", categories: safePatch.categories ?? [], connectionConfig: safePatch.connectionConfig ?? {}, credentialRef: safePatch.credentialRef ?? null } as IngestionSourceRecord;
     const validation = getSourceAdapter(patch.sourceType).validateConfig(draft);
     if (!validation.ok) return NextResponse.json({ error: validation.errors.join("; ") }, { status: 400 });
-    const source = await createIngestionSource(createSupabaseAdminClient(), { ...patch, name: patch.name, sourceType: patch.sourceType });
+    const source = await createIngestionSource(createSupabaseAdminClient(), { ...safePatch, name: patch.name, sourceType: patch.sourceType });
     await writeAdminAuditLog({ actorUserId: auth.actorId, action: "ingestion.source.create", entityType: "ingestion_source", entityId: source.id, payload: { sourceType: source.sourceType, enabled: source.enabled, credentialRef: source.credentialRef }, ipAddress: clientIpFromRequest(request) });
     return NextResponse.json({ source }, { status: 201 });
   } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Не удалось создать источник" }, { status: 400 }); }

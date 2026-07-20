@@ -23,7 +23,7 @@ describe("native ingestion architecture contract", () => {
 
   it("migrates with checksums and an idempotency ledger", () => {
     expect(migrationScript).toContain("ingestion_migration_ledger");
-    expect(migrationScript).toContain("onConflict: \"source_system,entity_type,legacy_id\"");
+    expect(migrationScript).toContain("onConflict: \"migration_id,source_system,entity_type,legacy_id\"");
     expect(migrationScript).toContain("ingestion-raw");
   });
 });

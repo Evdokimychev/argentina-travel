@@ -69,10 +69,18 @@ export type IngestionConnectionConfig = {
   fieldMap?: Record<string, string>;
   languages?: string[];
   includeTranscript?: boolean;
+  maxTranscriptSegments?: number;
+  fetchFullText?: boolean;
   importMedia?: boolean;
   telegramMode?: "mtproto" | "bot_api";
   historyDepth?: number;
   manualItems?: Array<{ id: string; title?: string; body: string; url?: string; publishedAt?: string }>;
+};
+
+export type YouTubeTranscriptSegment = {
+  startMs: number;
+  endMs: number;
+  text: string;
 };
 
 export type IngestionSourceRecord = {
