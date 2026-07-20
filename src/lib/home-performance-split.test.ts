@@ -181,6 +181,10 @@ describe("homepage client bundle boundaries", () => {
       join(process.cwd(), "src/data/site-nav-mobile.ts"),
       "utf8",
     );
+    const staticServices = readFileSync(
+      join(process.cwd(), "src/data/site-nav-client-static.ts"),
+      "utf8",
+    );
 
     expect(layout).toContain('from "@/data/site-nav"');
     expect(layout).toContain("siteNavSections={SITE_NAV_SECTIONS}");
@@ -189,5 +193,6 @@ describe("homepage client bundle boundaries", () => {
     expect(services).not.toContain('from "@/data/site-nav"');
     expect(layoutHook).not.toContain('from "@/data/site-nav"');
     expect(mobileNav).not.toContain('from "@/data/site-nav"');
+    expect(staticServices).not.toContain('href: "/transfers"');
   });
 });
