@@ -36,6 +36,20 @@ describe("settings control-plane integration", () => {
     expect(middleware).toContain("controlPlane.modules");
   });
 
+  it("uses the same public snapshot for routing, shell, discovery and public policies", () => {
+    const layout = source("src/app/layout.tsx");
+    const homeTeaser = source("src/components/flights/TravelPrepStrip.tsx");
+    const services = source("src/app/services/page.tsx");
+    const search = source("src/app/api/search/route.ts");
+    const searchIndex = source("src/app/api/site/search-index/route.ts");
+    const serverSettings = source("src/lib/site-settings-server.ts");
+
+    for (const publicSurface of [layout, homeTeaser, services, search, searchIndex]) {
+      expect(publicSurface).toContain("fetchSiteControlPlaneEdge");
+    }
+    expect(serverSettings).toContain("const result = await fetchSiteControlPlaneEdge()");
+  });
+
   it("requires versions and binds confirmation to the exact risky batch", () => {
     const route = source("src/app/api/admin/settings/route.ts");
     const view = source("src/components/admin/views/SettingsView.tsx");

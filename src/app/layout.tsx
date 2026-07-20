@@ -14,12 +14,11 @@ import {
   fetchSiteBranding,
   fetchSiteContact,
   fetchSiteDesign,
-  fetchSiteNavigation,
   fetchSiteMarketing,
   fetchSiteForms,
-  fetchSiteModules,
   fetchSitePublicMeta,
 } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import { SITE_NAV_SECTIONS, SITE_NAV_UTILITY_LINKS } from "@/data/site-nav";
 import { filterSiteNavSections } from "@/lib/public-module-visibility";
@@ -120,26 +119,25 @@ export default async function RootLayout({
 }>) {
   const [
     siteFooter,
-    siteNavigation,
+    siteControlPlane,
     siteDesign,
     siteBranding,
     siteContact,
     siteMarketing,
     siteForms,
-    siteModules,
     i18nLocale,
   ] = await Promise.all([
     loadSiteFooterInfo(),
-    fetchSiteNavigation(),
+    fetchSiteControlPlaneEdge(),
     fetchSiteDesign(),
     fetchSiteBranding(),
     fetchSiteContact(),
     fetchSiteMarketing(),
     fetchSiteForms(),
-    fetchSiteModules(),
     getServerI18nLocale(),
   ]);
   const locale = localeCodeFromI18n(i18nLocale);
+  const { navigation: siteNavigation, modules: siteModules } = siteControlPlane;
   const publicNavSections = filterSiteNavSections(
     SITE_NAV_SECTIONS,
     siteNavigation,

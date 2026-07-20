@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import { resolveSiteGlobalForLocale } from "@/lib/cms/site-globals/locale-resolve";
 import {
   DEFAULT_SITE_BRANDING,
@@ -216,13 +217,13 @@ export type SiteModuleControlSnapshot =
  * invalidation after an admin update.
  */
 export async function fetchSiteModuleControlSnapshot(): Promise<SiteModuleControlSnapshot> {
-  const result = await loadSettingsSnapshot();
+  const result = await fetchSiteControlPlaneEdge();
   if (!result.ok) return { ok: false };
 
   return {
     ok: true,
-    navigation: normalizeSiteNavigation(result.values["site.navigation"]),
-    modules: normalizeSiteModules(result.values["site.modules"]),
+    navigation: result.navigation,
+    modules: result.modules,
   };
 }
 
