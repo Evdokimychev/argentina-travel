@@ -4,7 +4,7 @@ import { submitForumPostReport } from "@/lib/forum/forum-server";
 import { FORUM_REPORT_REASONS, type ForumReportReason } from "@/lib/forum/forum-types";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type PostBody = {
@@ -16,8 +16,8 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ postId: string }> }
 ) {
-  const navigation = await fetchSiteNavigation();
-  if (!isPublicPathEnabled("/forum", navigation)) {
+  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
+  if (!isPublicPathEnabled("/forum", navigation, modules)) {
     return NextResponse.json({ error: "Форум отключён" }, { status: 404 });
   }
 

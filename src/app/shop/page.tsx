@@ -2,8 +2,7 @@ import ShopPageView from "@/components/shop/ShopPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
-import { fetchSiteCommerce } from "@/lib/site-settings-server";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteCommerce, fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { fetchPublishedShopProducts } from "@/lib/shop-products-server";
 
@@ -18,12 +17,13 @@ export const metadata = buildPublicPageMetadata({
 });
 
 export default async function ShopPage() {
-  const [settings, navigation, catalog] = await Promise.all([
+  const [settings, navigation, modules, catalog] = await Promise.all([
     fetchSiteCommerce(),
     fetchSiteNavigation(),
+    fetchSiteModules(),
     fetchPublishedShopProducts(),
   ]);
-  if (!isPublicPathEnabled("/shop", navigation)) notFound();
+  if (!isPublicPathEnabled("/shop", navigation, modules)) notFound();
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/shop" />
