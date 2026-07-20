@@ -187,12 +187,24 @@ describe("homepage client bundle boundaries", () => {
     );
 
     expect(layout).toContain('from "@/data/site-nav"');
-    expect(layout).toContain("siteNavSections={SITE_NAV_SECTIONS}");
+    expect(layout).toContain("const publicNavSections = filterSiteNavSections(");
+    expect(layout).toContain("siteNavSections={publicNavSections}");
     expect(header).not.toContain('from "@/data/site-nav"');
     expect(overflow).not.toContain('from "@/data/site-nav"');
     expect(services).not.toContain('from "@/data/site-nav"');
     expect(layoutHook).not.toContain('from "@/data/site-nav"');
     expect(mobileNav).not.toContain('from "@/data/site-nav"');
     expect(staticServices).not.toContain('href: "/transfers"');
+  });
+
+  it("fails closed before rendering the homepage transfer teaser", () => {
+    const travelPrep = readFileSync(
+      join(process.cwd(), "src/components/flights/TravelPrepStrip.tsx"),
+      "utf8",
+    );
+
+    expect(travelPrep).toContain("evaluatePublicModuleAccess(");
+    expect(travelPrep).toContain('"transfers",');
+    expect(travelPrep).toContain('"public_read",');
   });
 });

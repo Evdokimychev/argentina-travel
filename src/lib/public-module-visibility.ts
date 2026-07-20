@@ -70,11 +70,13 @@ function isPublicPathDiscoverable(
   modules: SiteModulesGlobal,
   field: "includeInSearch" | "includeInSitemap",
 ): boolean {
+  const normalizedPathname = internalPathnameFromHref(pathname) ?? pathname;
+  if (!isTravelModulePathEnabled(normalizedPathname, modules)) return false;
   const rule = PUBLIC_MODULE_RULES.find((candidate) =>
-    candidate.prefixes.some((prefix) => matchesPrefix(pathname, prefix)),
+    candidate.prefixes.some((prefix) => matchesPrefix(normalizedPathname, prefix)),
   );
   if (!rule) return true;
-  if (!isPublicPathEnabled(pathname, navigation, modules)) return false;
+  if (!isPublicPathEnabled(normalizedPathname, navigation, modules)) return false;
   const state = modules.publicModules[rule.moduleId];
   const parentState = rule.parentModuleId
     ? modules.publicModules[rule.parentModuleId]

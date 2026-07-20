@@ -104,6 +104,24 @@ describe("public site settings latency guard", () => {
     expect(from).toHaveBeenCalledTimes(2);
   });
 
+  it("keeps transactional travel modules closed during a cold settings failure", async () => {
+    const from = vi.fn(() => queryBuilder(
+      Promise.resolve<QueryResult>({ data: null, error: { message: "offline" } }),
+    ));
+    createSupabaseAdminClientMock.mockReturnValue({ from });
+
+    const settings = await import("@/lib/site-settings-server");
+    await expect(settings.fetchSiteModules()).resolves.toMatchObject({
+      apartmentsMode: "disabled",
+      carRentalMode: "disabled",
+      transfersMode: "disabled",
+      hotelsMode: "disabled",
+      showApartmentsInServices: false,
+      showCarRentalInServices: false,
+      showTransfersInServices: false,
+    });
+  });
+
   it("serves the last successful public shell snapshot during a later outage", async () => {
     const responses = [
       Promise.resolve<QueryResult>({
