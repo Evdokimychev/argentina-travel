@@ -18,12 +18,13 @@ Argentina Knowledge has been absorbed into Argentina Travel as a native module. 
 
 ## Production evidence
 
-- 105 migrations in the canonical journal; the final migration reasserts least-privilege Data API grants.
+- 107 migrations in the canonical journal; the final migration reasserts least-privilege Data API grants.
 - Migrated baseline: 3 source records, 22 raw rows, 2 moderation candidates.
 - Live state: active 15-minute Telegram source, 25 raw rows and 5 candidates.
 - 20 media plus 101 archive objects, all download-verified by SHA-256.
 - Second apply produced 0 new candidates and unchanged database counts.
 - First live run processed 3 items with 0 failures; checkpoint replay processed 0.
+- Repository-owned dispatch completed from `main` and persisted its protected cron result in Postgres.
 - Production deployment `dpl_2LwK3EEmVJ6ReQKb5dFwqen1P7zW` serves the canonical domains.
 - Full encrypted Collector archive with Git history, secrets and 8,104 entries.
 - The legacy entrypoint is fail-closed and documented by `DECOMMISSIONED.md`.
