@@ -53,12 +53,6 @@ export const NAV_FOOTER_SERVICE_LINKS: SiteNavLink[] = [
     href: "/flights",
   },
   {
-    id: "footer-transfers",
-    label: "Трансферы",
-    labelKey: "nav.transfers",
-    href: "/transfers",
-  },
-  {
     id: "footer-esim",
     label: "eSIM",
     labelKey: "nav.esim",
