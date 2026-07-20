@@ -169,6 +169,8 @@ export function buildArticleSchema(input: {
   dateModified?: string;
   authorName: string;
   authorAvatar?: string;
+  authorUrl?: string;
+  authorType?: "Person" | "Organization";
   publisherName?: string;
   schemaType?: ArticleSchemaType;
   about?: string[];
@@ -181,6 +183,7 @@ export function buildArticleSchema(input: {
 }): WithContext<Article> {
   const imageUrl = input.image ? resolvePublicUrl(input.image) : undefined;
   const authorAvatarUrl = input.authorAvatar ? resolvePublicUrl(input.authorAvatar) : undefined;
+  const authorUrl = input.authorUrl ? resolvePublicUrl(input.authorUrl) : undefined;
   const pagePath = input.path ?? `/blog/${input.slug ?? ""}`;
   const pageUrl = absoluteUrl(pagePath);
   const articleUrl = `${pageUrl}#article`;
@@ -217,11 +220,12 @@ export function buildArticleSchema(input: {
           },
         }
       : {}),
-    author: authorAvatarUrl
+    author: authorAvatarUrl || input.authorType === "Person"
       ? {
           "@type": "Person",
           name: input.authorName,
-          image: authorAvatarUrl,
+          ...(authorAvatarUrl ? { image: authorAvatarUrl } : {}),
+          ...(authorUrl ? { url: authorUrl } : {}),
         }
       : {
           "@type": "Organization",

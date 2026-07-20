@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "DNI, CUIL и CUIT: что нужно иностранцу"
 summary: "DNI удостоверяет личность, CUIL используется в трудовой и социальной системе, а CUIT — в налоговых процедурах. Важно не создавать дубликаты и вовремя объединить временный и окончательный CUIL."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dokumentam
+archive_reason: "Справка об идентификаторах объединена с единым проверенным руководством по документам для переезда."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [DNI, CUIL, CUIT, документы, налоги]

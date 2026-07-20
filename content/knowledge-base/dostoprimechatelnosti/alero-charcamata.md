@@ -6,7 +6,7 @@ title_es: Alero Charcamata
 title_en: Alero Charcamata
 summary: Entre paisajes de la cordillera andina, explora un lugar que esconde dibujos
   de nueve mil años de antigüedad.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

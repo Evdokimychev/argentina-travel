@@ -5,7 +5,7 @@ title: "Серро-Тронадор"
 title_es: Cerro Tronador
 title_en: Cerro Tronador
 summary: "Мощный ледниковый массив на границе Аргентины и Чили у Барилоче — высшая точка национального парка Науэль-Уапи с «чёрным ледником»."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

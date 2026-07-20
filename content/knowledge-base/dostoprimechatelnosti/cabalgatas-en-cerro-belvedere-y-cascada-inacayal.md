@@ -5,7 +5,7 @@ title: Конные прогулки к Серро-Бельведере и во�
 title_es: Cabalgatas en cerro Belvedere y cascada Inacayal
 title_en: Horseback rides in Belvedere Hill and Inacayal waterfall
 summary: "Конные прогулки у Вилья-Ла-Ангостуры: тропы к смотровой Бельведере и водопаду Инакайаль."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: villa-la-angostura
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -40.75710579893187
   lng: -71.66516373925089

@@ -6,7 +6,7 @@ title_es: Parque Provincial Cordón del Plata
 title_en: Cordón del Plata Provincial Park
 summary: Окунитесь в экстремальное приключение рядом с горным хребтом в аргентинских
   Андах.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -32.99243896303327
   lng: -69.31615052597036

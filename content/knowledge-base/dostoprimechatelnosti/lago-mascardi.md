@@ -5,7 +5,7 @@ title: "Озеро Маскарди"
 title_es: Lago Mascardi
 title_en: Mascardi Lake
 summary: "Бирюзовое ледниковое озеро в национальном парке Науэль-Уапи по дороге к Серро-Тронадор."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

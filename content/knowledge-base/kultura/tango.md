@@ -4,8 +4,10 @@ type: guide
 subtype: culture
 title: "Танго в Аргентине: культура, милонги, где смотреть и танцевать"
 summary: "Танго — не только шоу для туристов, а живая социальная культура Буэнос-Айреса: милонги (танцевальные вечера), история жанра из портовых кварталов, разница между шоу и настоящей милонгой, и где к ней прикоснуться."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mentalitet-i-etiket
+archive_reason: "Краткая культурная карточка объединена с проверенным материалом о культурных нормах страны."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [танго, столица, ночная жизнь, гастрономия]

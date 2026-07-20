@@ -10,7 +10,7 @@ seo_slug: "kak-menyat-dengi-argentina"
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: both
 tags: [бюджетно, документы]
-related: [kak-oplatit-tur-i-zhilyo-zaranee, zashchita-nakoplenij-ot-inflyacii, udalyonnaya-rabota-i-oplata]
+related: [kak-oplatit-tur-i-zhilyo-zaranee, zashchita-nakoplenij-ot-inflyacii, udalyonnaya-rabota-i-oplata, skolko-nalichnyh-mozhno-vvezti]
 warnings:
   - "Курс, комиссии и валютные правила меняются; проверяйте их у банка, платёжной системы или уполномоченного обменного пункта в день операции."
   - "Не меняйте деньги у уличных посредников: BCRA указывает, что обмен проводят банки и уполномоченные обменные организации."

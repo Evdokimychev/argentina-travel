@@ -4,12 +4,15 @@ type: faq
 question: "Ушуайя — правда самый южный город в мире?"
 short_answer: "Титул спорный: с 2019 года на него претендует и чилийский Пуэрто-Уильямс — корректнее «один из самых южных»."
 topic: goroda
-status: published
+status: archived
+site_ready: false
 site_sections: [goroda-i-regiony]
 tags: [ушуайя, огненная земля, факт-чек]
 related: [ushuaia, ognennaya-zemlya]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: high
+redirect_to: ushuaia
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

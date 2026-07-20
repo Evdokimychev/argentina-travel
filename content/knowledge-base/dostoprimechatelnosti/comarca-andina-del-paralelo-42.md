@@ -6,7 +6,7 @@ title_es: Comarca Andina del Paralelo 42
 title_en: Comarca Andina del Paralelo 42
 summary: Recorre seis poblaciones que forman una de las rutas más bellas de la Патагония
   andina.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

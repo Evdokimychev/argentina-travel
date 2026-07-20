@@ -151,6 +151,16 @@ export interface KbEntry {
   confidence?: string;
   last_verified?: string | null;
   reviewer?: string | null;
+  author_name?: string | null;
+  author_slug?: string | null;
+  author_avatar?: string | null;
+  author_bio?: string | null;
+  personal_experience?: boolean;
+  verified_by_ivan?: boolean;
+  /** Канонический id назначения для намеренно архивированной записи. */
+  redirect_to?: string | null;
+  /** Редакторское объяснение консолидации; обязательно для intentional archive. */
+  archive_reason?: string | null;
   seo_slug?: string | null;
   /** Гео-поля (для мест/регионов/карты; присутствуют у city/region/national_park/attraction). */
   coordinates?: { lat: number; lng: number } | null;

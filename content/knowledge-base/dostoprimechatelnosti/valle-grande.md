@@ -5,7 +5,7 @@ title: "Валье-Гранде"
 title_es: Valle Grande
 title_en: Valle Grande
 summary: "Каньон реки Атуэль в провинции Мендоса у Сан-Рафаэля — центр рафтинга и активного отдыха у воды."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

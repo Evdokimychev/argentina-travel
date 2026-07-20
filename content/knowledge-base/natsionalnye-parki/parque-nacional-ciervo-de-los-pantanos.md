@@ -13,9 +13,9 @@ region_id: buenos-aires-province
 province: Провинция Буэнос-Айрес
 tags:
 - центр и пампа
-last_verified: '2026-07-07'
-confidence: medium
-site_ready: false
+last_verified: '2026-07-20'
+confidence: high
+site_ready: true
 coordinates:
   lat: -34.22093807134319
   lng: -58.89809126595633
@@ -48,6 +48,11 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-nacional-ciervo-de-los-pantanos
 sources:
+- title: Administración de Parques Nacionales — Parque Nacional Ciervo de los Pantanos
+  url: https://www.argentina.gob.ar/parquesnacionales/centro/parque-nacional-ciervo-de-los-pantanos
+  lang: es
+  type: official
+  note: часы, маршруты, площадь, контакты и природоохранный статус
 - title: Visit Argentina — Parque Nacional Ciervo de los Pantanos
   url: https://www.argentina.travel/actividades/parque-nacional-ciervo-de-los-pantanos
   lang: es
@@ -81,6 +86,12 @@ sources:
 - Возьмите бинокль, репеллент и воду; на болотах открыто и влажно.
 - Обувь — непромокаемая: тропы местами сырые.
 - Часы работы сектора для посетителей уточняйте заранее.
+
+## Реалистичный формат визита
+
+Это удобная однодневная природная поездка из CABA, но не сафари с гарантированным наблюдением оленя. Начните в центре для посетителей, выберите открытые тропы и спросите персонал о состоянии низин после дождей. Лучшие шансы увидеть птиц — утром; в жаркий полдень активность ниже. Бинокль даст больше, чем попытка подойти ближе, а телеобъектив не оправдывает выход за ограждение.
+
+Парк объединяет влажные низины, пампу, эспиналь и исторический ландшафт бывшей Эстансии Отаменди. Поэтому стоит читать таблички не только о животных, но и о кирпичном производстве, железной дороге и восстановлении среды. Возьмите воду, репеллент и закрытую обувь, увезите мусор, не приводите питомца. Часы и открытые участки проверяйте в день визита: разлив реки Лухан и работы по восстановлению могут менять маршрут.
 
 ## Факты
 

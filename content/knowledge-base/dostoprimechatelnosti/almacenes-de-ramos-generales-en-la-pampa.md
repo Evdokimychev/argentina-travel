@@ -6,7 +6,7 @@ title_es: Almacenes de ramos generales en La Pampa
 title_en: Old general stores in La Pampa
 summary: Подойдите поближе к многовековым складам, которые были центром торговой и
   общественной жизни пампасских народов.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -37.259791682013955
   lng: -64.51774575575148
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

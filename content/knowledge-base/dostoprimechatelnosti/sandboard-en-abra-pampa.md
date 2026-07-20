@@ -6,7 +6,7 @@ title_es: Sandboard en Abra Pampa
 title_en: Sandboarding in Abra Pampa
 summary: 'En la Puna jujeña, encuentra un paraíso para la práctica del sandboard:
   el cerro Huancar.'
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

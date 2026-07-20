@@ -6,7 +6,7 @@ title_es: Bodega submarina en Las Grutas
 title_en: An underwater winery in Las Grutas
 summary: Acércate a una bodega única en el país, que produce sus vinos en tierras
   de Río Negro y los añeja en el fondo del mar.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -39,6 +39,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

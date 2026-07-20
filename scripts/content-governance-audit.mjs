@@ -73,19 +73,33 @@ const links = readCsv("broken-links.csv");
 const inventory = readCsv("content-inventory.csv");
 const actions = readCsv("content-action-plan.csv");
 
-const sourceIds = new Set(sources.map((source) => source.id));
+const publicEntryIds = new Set(
+  inventory.filter((entry) => entry.status === "published_public").map((entry) => entry.id)
+);
+const publicSources = sources.filter((source) => publicEntryIds.has(source.entry_id));
+const publicClaims = claims.filter((claim) => publicEntryIds.has(claim.entry_id));
+const publicSensitiveClaims = publicClaims.filter((claim) => claim.sensitive === "yes");
+const publicSensitiveEntries = sensitiveClaims.filter((entry) => entry.public === "yes");
+const sourceKeys = new Set(sources.map((source) => `${source.entry_id}:${source.source_id}`));
 const unknownClaimSources = claims.flatMap((claim) =>
-  (claim.source_ids || "")
-    .split("|")
-    .filter(Boolean)
-    .filter((sourceId) => !sourceIds.has(sourceId))
-    .map((sourceId) => ({ claimId: claim.id, sourceId }))
+  (claim.item_source_id || "")
+    .split(/[;|]/)
+    .filter((sourceId) => sourceId && sourceId !== "not_recorded")
+    .filter((sourceId) => !sourceKeys.has(`${claim.entry_id}:${sourceId}`))
+    .map((sourceId) => ({ claimId: claim.claim_id, sourceId }))
 );
 
+const sourceKeysForDuplicateCheck = sources.map((source) => ({
+  id: `${source.entry_id}:${source.source_id}`,
+}));
+const claimKeysForDuplicateCheck = claims.map((claim) => ({
+  id: `${claim.entry_id}:${claim.claim_id}`,
+}));
+
 const structuralErrors = [
-  ...duplicateIds(sources).map((id) => `duplicate source id: ${id}`),
-  ...duplicateIds(claims).map((id) => `duplicate claim id: ${id}`),
-  ...duplicateIds(widgets).map((id) => `duplicate widget id: ${id}`),
+  ...duplicateIds(sourceKeysForDuplicateCheck).map((id) => `duplicate entry/source id: ${id}`),
+  ...duplicateIds(claimKeysForDuplicateCheck).map((id) => `duplicate entry/claim id: ${id}`),
+  ...duplicateIds(widgets, "widget_id").map((id) => `duplicate widget id: ${id}`),
   ...duplicateIds(inventory).map((id) => `duplicate content id: ${id}`),
   ...unknownClaimSources.map(({ claimId, sourceId }) =>
     `claim ${claimId} references unknown source ${sourceId}`
@@ -99,22 +113,27 @@ const report = {
   counts: {
     inventory: inventory.length,
     actions: actions.length,
-    sources: sources.length,
+    sources: publicSources.length,
     activeHttpsSources: sources.filter(
-      (source) => source.status === "active" && source.url.startsWith("https://")
+      (source) =>
+        publicEntryIds.has(source.entry_id) &&
+        ["verified", "recorded_article_level"].includes(source.status) &&
+        source.source_url.startsWith("https://")
     ).length,
-    sourcesNeedingReview: sources.filter((source) => source.status !== "active").length,
-    claims: claims.length,
-    sensitiveClaims: sensitiveClaims.length,
-    verifiedClaims: claims.filter((claim) => claim.status === "verified").length,
-    claimsNeedingReview: claims.filter((claim) => claim.status !== "verified").length,
+    sourcesNeedingReview: publicSources.filter((source) => source.status === "review_required").length,
+    claims: publicClaims.length,
+    sensitiveClaims: publicSensitiveEntries.length,
+    verifiedClaims: publicSensitiveClaims.filter((claim) => claim.review_status === "verified").length,
+    claimsNeedingReview: publicSensitiveClaims.filter((claim) => claim.review_status !== "verified").length,
     mediaRightsRecords: mediaRights.length,
     verifiedMediaRights: mediaRights.filter((item) => item.rights_status === "verified").length,
     missingMedia: missingMedia.length,
     dynamicFacts: dynamicFacts.length,
-    activeWidgets: widgets.filter((widget) => widget.status === "active").length,
+    activeWidgets: widgets.filter((widget) => ["active", "implemented"].includes(widget.status)).length,
     widgets: widgets.length,
-    unresolvedLinks: links.filter((link) => !["resolved", "ok"].includes(link.status)).length,
+    unresolvedLinks: links.filter((link) =>
+      !["resolved", "ok", "closed_no_broken_links", "verified_no_public_breakage"].includes(link.status)
+    ).length,
   },
 };
 
@@ -127,6 +146,7 @@ if (
   process.argv.includes("--strict") &&
   (report.counts.claimsNeedingReview > 0 ||
     report.counts.sourcesNeedingReview > 0 ||
+    publicSensitiveEntries.some((entry) => entry.status !== "strict_ready") ||
     report.counts.unresolvedLinks > 0)
 ) {
   process.exitCode = 1;

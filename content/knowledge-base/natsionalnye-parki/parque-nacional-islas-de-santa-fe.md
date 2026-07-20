@@ -5,7 +5,7 @@ title: Национальный парк Ислас-де-Санта-Фе
 title_es: Parque Nacional Islas de Santa Fe
 title_en: Islas de Santa Fe National Park
 summary: "Островной парк на Паране в Санта-Фе — почти три тысячи гектаров нетронутой дельты."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -32.39483871190514
   lng: -60.72680724000876

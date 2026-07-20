@@ -1,14 +1,22 @@
 {
-  "schemaVersion": 1,
-  "status": "passed",
-  "baseUrl": "http://127.0.0.1:3112",
-  "protectedLocalPreview": true,
-  "sitemapUrlCount": 625,
-  "uniquePageCount": 625,
-  "checkedAt": "2026-07-16T23:57:19.119Z",
-  "summary": {
-    "passed": 625,
-    "failed": 0
-  },
-  "errors": []
+  "generatedAt": "2026-07-20T19:59:20.464Z",
+  "status": "failed",
+  "publicKnowledgeBaseEntries": 243,
+  "publicBlogPosts": 75,
+  "navigationLinks": 138,
+  "errors": [
+    "Navigation immigration: юридический раздел не прошёл ревью",
+    "Navigation immigration-all: юридический раздел не прошёл ревью",
+    "Navigation immigration-life: юридический раздел не прошёл ревью",
+    "Navigation immigration-process: юридический раздел не прошёл ревью",
+    "Navigation immigration-birth: юридический раздел не прошёл ревью",
+    "Navigation immigration-citizenship: юридический раздел не прошёл ревью",
+    "Navigation immigration-residency: юридический раздел не прошёл ревью",
+    "Navigation immigration-opportunities: юридический раздел не прошёл ревью",
+    "Navigation immigration-links: юридический раздел не прошёл ревью",
+    "Navigation immigration-visas: юридический раздел не прошёл ревью",
+    "Navigation immigration-residency-overview: юридический раздел не прошёл ревью",
+    "Navigation immigration-documents: юридический раздел не прошёл ревью",
+    "Navigation immigration-extension: юридический раздел не прошёл ревью"
+  ]
 }

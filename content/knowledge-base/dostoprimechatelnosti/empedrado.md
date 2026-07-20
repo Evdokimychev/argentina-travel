@@ -5,7 +5,7 @@ title: Эмпедрадо
 title_es: Empedrado
 title_en: Empedrado
 summary: "Эмпедрадо в Корриентесе — тихое место на Паране, известное спортивной рыбалкой."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -27.952497
   lng: -58.80319209999999

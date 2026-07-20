@@ -211,7 +211,7 @@ const KNOWLEDGE_BASE_ENTRY_LINKS: SiteNavLink[] = [
     id: "kb-hub-traveler",
     label: "Гид путешественника",
     href: "/baza-znaniy/gid-puteshestvennika",
-    description: "Путь туриста: 10 шагов",
+    description: "Подготовка и маршруты по стране",
   },
   {
     id: "kb-hub-relocant",

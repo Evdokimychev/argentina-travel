@@ -5,7 +5,7 @@ title: "Термы Энтре-Риоса"
 title_es: Termas en Entre Ríos
 title_en: Hot springs in Entre Ríos
 summary: "Провинция Энтре-Риос — главный термальный регион Аргентины с наибольшим числом термальных парков и курортов."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

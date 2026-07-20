@@ -5,7 +5,7 @@ title: Guaraní Culture in Misiones
 title_es: Cultura guaraní en Misiones
 title_en: Guaraní Culture in Misiones
 summary: Vive una experiencia auténtica en las profundidades de la selva misionera.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

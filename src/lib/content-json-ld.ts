@@ -24,6 +24,10 @@ import { getBlogUpdatedDate } from "@/lib/blog-utils";
 import { contentPageHref } from "@/lib/content-pages";
 import { guideTopicHref } from "@/lib/guide-topics";
 import { entryHref } from "@/lib/knowledge-base/urls";
+import {
+  getKbAuthorSlug,
+  isVerifiedKbAuthorEntry,
+} from "@/lib/knowledge-base/authors";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export function buildCollectionItemListJsonLd(collection: PlaceCollection) {
@@ -146,6 +150,8 @@ export function buildGuidePillarArticleJsonLd(input: {
 export function buildKbEntryArticleJsonLd(entry: KbEntry) {
   const description = entry.summary?.trim() || entry.title;
   const verifiedAt = entry.last_verified?.trim();
+  const verifiedAuthor = isVerifiedKbAuthorEntry(entry);
+  const authorSlug = verifiedAuthor ? getKbAuthorSlug(entry) : undefined;
 
   return buildArticleSchema({
     title: entry.title,
@@ -153,7 +159,10 @@ export function buildKbEntryArticleJsonLd(entry: KbEntry) {
     path: entryHref(entry.id),
     text: kbEntryPlainText(entry),
     ...(verifiedAt ? { datePublished: verifiedAt, dateModified: verifiedAt } : {}),
-    authorName: BLOG_EDITORIAL.name,
+    authorName: verifiedAuthor ? entry.author_name!.trim() : BLOG_EDITORIAL.name,
+    authorType: verifiedAuthor ? "Person" : "Organization",
+    ...(verifiedAuthor && entry.author_avatar ? { authorAvatar: entry.author_avatar } : {}),
+    ...(authorSlug ? { authorUrl: `/baza-znaniy/avtory/${authorSlug}` } : {}),
     about: entry.tags?.length ? entry.tags : undefined,
   });
 }

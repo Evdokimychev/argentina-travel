@@ -1,12 +1,11 @@
 ---
 id: sabores-de-chaco
 type: attraction
-title: Flavors from Chaco
+title: "Архив: вкусы Чако"
 title_es: Sabores de Chaco
 title_en: Flavors from Chaco
-summary: Descubre los secretos de una cocina que integra tradiciones autóctonas y
-  europeas.
-status: stub
+summary: Дублирующая импортная карточка объединена с полным материалом о гастрономии провинции Чако.
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -17,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: gastronomia-de-chaco
+archive_reason: "Дублирует тему, источники и иллюстративный набор записи gastronomia-de-chaco; сохранена как редакционный архив с постоянным перенаправлением."
 related:
 - aves-del-chaco
 - bienal-internacional-de-esculturas-en-resistencia
@@ -53,14 +54,10 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание
+## Почему запись объединена
 
-Descubre los secretos de una cocina que integra tradiciones autóctonas y europeas.
-
-- **Провинция:** Чако
+Импортная карточка «Sabores de Chaco» повторяла тему, перечень блюд, официальные источники и визуальный материал страницы `gastronomia-de-chaco`. Самостоятельной пользовательской задачи у неё не было. Содержание проверено и объединено с каноническим материалом о гастрономии провинции Чако; этот идентификатор сохранён для истории и перенаправления старых ссылок.
 
 ## Источники
 
-- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/sabores-de-chaco) (исп.; адаптировано 2026-07-07).
-
-> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.
+- [Visit Argentina — Sabores de Chaco](https://www.argentina.travel/actividades/sabores-de-chaco)

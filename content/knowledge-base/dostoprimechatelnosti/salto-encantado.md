@@ -6,7 +6,7 @@ title_es: Salto Encantado
 title_en: Salto Encantado
 summary: Descubre este espectáculo natural en un провинциальный парк que protege miles
   de гектаров de selva misionera.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -59,6 +59,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

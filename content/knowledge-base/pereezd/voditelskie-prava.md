@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Иностранные водительские права и аргентинская лицензия"
 summary: "Возможность водить по иностранным правам зависит от международных соглашений и срока после въезда; резиденту нужна местная лицензия по правилам своей юрисдикции."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mozhno-li-vodit-po-rossijskim-pravam
+archive_reason: "Материал объединён с проверенным ответом о вождении по иностранным правам."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: both
 tags: [водительские права, автомобиль, документы, безопасность]

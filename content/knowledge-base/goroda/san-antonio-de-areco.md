@@ -7,7 +7,7 @@ aliases: '[\"Сан-Антонио-де-Ареко\", \"San Antonio de Areco\", 
   \"День традиции\"]'
 summary: Encuéntrate con la Argentina gaucha a solo 113 kilómetros de la Ciudad de
   Буэнос-Айрес.
-status: stub
+status: archived
 site_sections:
 - goroda-i-regiony
 - puteshestviya-po-argentine
@@ -58,6 +58,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

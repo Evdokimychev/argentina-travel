@@ -5,7 +5,7 @@ title: Водные прогулки по рекам Лимай и Неукен
 title_es: Navegación en los ríos Limay y Neuquén
 title_en: Sailing on the Limay and Neuquén rivers
 summary: "Навигация по рекам Лимай и Неукен — там, где сливаются две главные реки северной Патагонии."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -39.31521949856471
   lng: -68.91182656627191

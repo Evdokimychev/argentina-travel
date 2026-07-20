@@ -5,7 +5,7 @@ title: Каньон Атуэль
 title_es: Cañón del Atuel
 title_en: Atuel Canyon
 summary: "Каньон реки Атуэль в Мендосе (Сан-Рафаэль): живописное ущелье и активный отдых на воде."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -34.8462697
   lng: -68.51116259999999

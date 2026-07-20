@@ -5,7 +5,7 @@ title: Renca, San Luis
 title_es: Renca, San Luis
 title_en: Renca, San Luis
 summary: Date el gusto de disfrutar del agua en un paisaje serrano de vegetación frondosa.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

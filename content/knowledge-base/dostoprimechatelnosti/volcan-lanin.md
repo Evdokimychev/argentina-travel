@@ -5,7 +5,7 @@ title: Вулкан Ланин
 title_es: Volcán Lanín
 title_en: Lanín volcano
 summary: "Вулкан Ланин в Патагонии — восхождение к конусу высотой более 3700 метров на границе с Чили."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: lanin
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей национального парка; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -39.817626196781276
   lng: -71.45442863534637

@@ -1,11 +1,11 @@
 ---
 id: ciudad-de-salta
 type: attraction
-title: Сальта
+title: "Архив: город Сальта"
 title_es: Ciudad de Salta
 title_en: City of Salta
-summary: "Сальта «Ла Линда» — самая большая столица аргентинского северо-запада: колониальный центр и ворота в кальчакские долины."
-status: published
+summary: "Импортная карточка объединена с каноническим путеводителем по Сальте."
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: salta
+archive_reason: "Дублирует сущность города salta; сохранена для перенаправления старого URL и истории импорта INPROTUR."
 coordinates:
   lat: -24.7821269
   lng: -65.4231976
@@ -55,14 +57,9 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание
+## Почему запись объединена
 
-Elige tu forma de disfrutar la capital más grande del noroeste argentino.
-
-## Практическая информация
-
-- **Координаты:** -24.7821, -65.4232
-- **Провинция:** Сальта
+Карточка повторяла сущность `salta` и состояла из одной рекламной фразы. Канонический городской материал сохраняет полноценный маршрут, логистику и тематические связи; старый идентификатор работает как перенаправление.
 
 ## Источники
 

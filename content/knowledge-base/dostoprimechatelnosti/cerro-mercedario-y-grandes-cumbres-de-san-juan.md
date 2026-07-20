@@ -5,7 +5,7 @@ title: "Серро-Меркедарио и большие вершины Сан-
 title_es: Cerro Mercedario y grandes cumbres de San Juan
 title_en: Cerro Mercedario and High Mountains of San Juan
 summary: "Один из высочайших шеститысячников Анд в провинции Сан-Хуан — цель серьёзных высотных восхождений вдали от толп."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

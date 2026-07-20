@@ -57,7 +57,7 @@ sources:
     type: official
     note: "дата основания (3 апреля 1588), основатель Хуан Торрес де Вера-и-Арагон, происхождение названия"
   - title: "Wikipedia (ES) — Corrientes (ciudad)"
-    url: "https://es.wikipedia.org/wiki/Corrientes_(ciudad)"
+    url: "https://es.wikipedia.org/wiki/Corrientes_%28ciudad%29"
     lang: es
     type: aggregator
     note: "статус столицы, население, география, статус старейшего города Северо-Востока"
@@ -105,6 +105,6 @@ sources:
 ## Источники
 
 - [Municipalidad de Corrientes — Fundación de la Ciudad de Corrientes](https://ciudaddecorrientes.gov.ar/la-ciudad/fundaci-n-de-la-ciudad-de-corrientes)
-- [Wikipedia (ES) — Corrientes (ciudad)](https://es.wikipedia.org/wiki/Corrientes_(ciudad))
+- [Wikipedia (ES) — Corrientes (ciudad)](https://es.wikipedia.org/wiki/Corrientes_%28ciudad%29)
 - [Municipalidad de Corrientes — Carnavales Correntinos](https://ciudaddecorrientes.gov.ar/carnavales)
 - [Argentina.gob.ar — El Chamamé es patrimonio de la humanidad](https://www.argentina.gob.ar/noticias/el-chamame-es-patrimonio-de-la-humanidad)

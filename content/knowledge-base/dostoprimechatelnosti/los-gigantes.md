@@ -5,7 +5,7 @@ title: "Лос-Хигантес"
 title_es: Los Gigantes
 title_en: Los Gigantes
 summary: "Скальный массив в Сьеррас-Гранде Кордовы возрастом свыше 300 млн лет — популярное место скалолазания и треккинга."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

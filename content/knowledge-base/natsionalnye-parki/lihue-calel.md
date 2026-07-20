@@ -67,11 +67,11 @@ sources:
     lang: es
     type: es_source
     note: "биография касика Винсенте Пинсена, контекст Кампанья-дель-Дезьерто 1878-79"
-  - title: "Ermak Vagus — Национальный парк Лихуэ Каэль"
-    url: "https://ermakvagus.com/South%20america/argentina/lixua-kael-rus.htm"
-    lang: ru
-    type: ru_blog
-    note: "перевод названия (мапудунгун: «горы жизни»), общее описание для русскоязычного читателя"
+  - title: "Administración de Parques Nacionales — Parque Nacional Lihué Calel"
+    url: "https://www.argentina.gob.ar/parquesnacionales/regionpatagonia/parque-nacional-lihue-calel"
+    lang: es
+    type: official
+    note: "официальное описание, площадь, доступ и природоохранный контекст"
 ---
 
 ## Описание
@@ -99,4 +99,4 @@ sources:
 - [APN — Parque Nacional Lihué Calel](https://www.argentina.gob.ar/parquesnacionales/regionpatagonia/parque-nacional-lihue-calel)
 - [Wikipedia (ES) — Parque nacional Lihué Calel](https://es.wikipedia.org/wiki/Parque_nacional_Lihu%C3%A9_Calel)
 - [La Gazeta Federal — El Cacique Pincén](http://www.lagazeta.com.ar/pincen.htm)
-- [Ermak Vagus — Национальный парк Лихуэ Каэль](https://ermakvagus.com/South%20america/argentina/lixua-kael-rus.htm)
+- [Администрация национальных парков — Лиуэ-Калель](https://www.argentina.gob.ar/parquesnacionales/regionpatagonia/parque-nacional-lihue-calel)

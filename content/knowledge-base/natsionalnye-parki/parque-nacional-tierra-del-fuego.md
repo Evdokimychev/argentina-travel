@@ -1,11 +1,11 @@
 ---
 id: parque-nacional-tierra-del-fuego
 type: national_park
-title: национальный парк Огненная Земля
+title: "Архив: Национальный парк Огненная Земля"
 title_es: Parque Nacional Tierra del Fuego
 title_en: Tierra del Fuego National Park
 summary: "Самый южный национальный парк Аргентины у Ушуайи: патагонские леса, залив Лапатайя и «поезд на край света»."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,6 +16,8 @@ tags:
 last_verified: '2026-07-07'
 confidence: medium
 site_ready: false
+redirect_to: ognennaya-zemlya
+archive_reason: "Импортная карточка INPROTUR дублирует канонический материал ognennaya-zemlya; запись сохранена для перенаправления старого URL и истории источника."
 coordinates:
   lat: -54.841904762215165
   lng: -68.55441815467337

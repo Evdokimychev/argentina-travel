@@ -6,7 +6,7 @@ title_es: Colonia menonita en La Pampa
 title_en: Mennonite Colony in La Pampa
 summary: Познакомьтесь с религиозной общиной, которая сохраняет свои обычаи более
   четырех веков.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,9 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -37.66477392634194
   lng: -63.53886749290447

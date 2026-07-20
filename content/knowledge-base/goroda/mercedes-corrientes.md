@@ -5,7 +5,7 @@ title: "Мерседес (Корриентес)"
 title_es: "Mercedes (Corrientes)"
 aliases: "[\"Мерседес\", \"Mercedes Corrientes\", \"ворота Иберá\", \"Гаучито-Хиль Мерседес\"]"
 summary: "Спокойный традиционный городок в провинции Корриентес — главные южные ворота к болотам Иберá (через Колонию-Карлос-Пеллегрини). Рядом находится знаменитый придорожный святыня Гаучито-Хиля, куда 8 января стекаются тысячи паломников со всей страны."
-status: "published"
+status: "archived"
 site_sections: "[goroda-i-regiony, puteshestviya-po-argentine]"
 region_id: "litoral"
 province: "Корриентес"
@@ -16,10 +16,12 @@ best_time: "[\"для Иберá — весна и осень (мягче, ме�
 duration: "Транзит (ночёвка по пути в Иберá) или полдня"
 how_to_get_there: "На юге провинции Корриентес; автобусом или на машине; отсюда идёт дорога (частью грунтовая) в Колонию-Карлос-Пеллегрини — базовую деревню Иберá."
 related: "[ibera, korrientes]"
-site_ready: true
-last_verified: "2026-07-06"
+site_ready: false
+last_verified: "2026-07-20"
 confidence: "medium"
 seo_slug: "mercedes-corrientes-vorota-ibera"
+redirect_to: ibera
+archive_reason: "Краткая транзитная карточка объединена с полноценным практическим гидом по Ибере; отдельная публикация не давала читателю достаточной глубины."
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: Озёра Огненной Земли
 title_es: Lagos de Tierra del Fuego
 title_en: Tierra del Fuego lakes
 summary: "Озёра Огненной Земли: лагуна Эсмеральда и озёра Фаньяно, Эскондидо и Асигами (Рока)."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - огненная земля
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -54.55879560020095
   lng: -67.99474326770279

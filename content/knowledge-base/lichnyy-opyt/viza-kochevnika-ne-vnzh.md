@@ -4,15 +4,17 @@ type: author_tip
 subtype: mistake
 title: "Статус цифрового кочевника — не автоматический путь к ВНЖ"
 summary: "Это временная категория для удалённой работы в пользу заказчиков за пределами Аргентины; смена категории возможна только по отдельному основанию и решению DNM."
-status: published
-site_ready: true
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, dokumenty-i-legalizatsiya]
 tags: [визы, документы, релокация, цифровые кочевники]
 personal_experience: false
 verified_by_ivan: false
 related: [viza-cifrovogo-kochevnika, vnzh-argentina]
-last_verified: "2026-07-17"
+last_verified: "2026-07-20"
 confidence: high
+redirect_to: nuzhna-li-viza-cifrovomu-kochevniku
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; правовая информация собрана в каноническом материале."
 provenance:
   schema_version: 1
   mode: strict

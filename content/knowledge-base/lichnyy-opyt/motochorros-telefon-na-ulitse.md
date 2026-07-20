@@ -4,16 +4,18 @@ type: author_tip
 subtype: observation
 title: "Как снизить риск кражи телефона и вещей в Буэнос-Айресе"
 summary: "Практичные меры предосторожности в большом городе: держать сумку закрытой и в поле зрения, заранее защитить данные телефона и знать экстренный номер."
-status: published
-site_ready: true
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, zhizn-v-strane]
 tags: [мегаполис, безопасность]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Практика-Безопасность-в-Аргентине.md"
 related: [bezopasnost-argentina, buenos-aires]
-last_verified: "2026-07-17"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: bezopasnost-argentina
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; рекомендации по безопасности собраны в каноническом материале."
 provenance:
   schema_version: 1
   mode: strict

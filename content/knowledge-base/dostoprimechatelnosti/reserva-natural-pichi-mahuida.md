@@ -5,7 +5,7 @@ title: "Природный заповедник Пичи-Мауида"
 title_es: Reserva Natural Pichi Mahuida
 title_en: Pichi Mahuida Natural Reserve
 summary: "Охраняемый уголок провинции Ла-Пампа на реке Колорадо — переходная зона между пампой и патагонской степью."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

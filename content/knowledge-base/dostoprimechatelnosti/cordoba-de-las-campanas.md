@@ -6,7 +6,7 @@ title_es: Córdoba de las campanas
 title_en: Córdoba with Bells
 summary: Recorre el patrimonio histórico, artístico y arquitectónico de los templos
   católicos cordobeses.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -39,6 +39,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

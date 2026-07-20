@@ -6,7 +6,7 @@ title_es: Playas de la Patagonia
 title_en: Patagonia beaches
 summary: En el sur del planeta te esperan kilómetros de playas con aguas frías y aguas
   cálidas, para recorrer y disfrutar.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

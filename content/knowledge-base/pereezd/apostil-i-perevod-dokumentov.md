@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Апостиль и перевод документов для Аргентины"
 summary: "Как подготовить иностранный документ: проверить требования принимающего ведомства, оформить апостиль или легализацию в стране выдачи и сделать подходящий перевод на испанский."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dokumentam
+archive_reason: "Короткая карточка объединена с проверенным руководством по документам, где поддерживается единая процедура подготовки и легализации."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [документы, апостиль, перевод, легализация]

@@ -5,7 +5,7 @@ title: "Природный заповедник Эль-Ногаляр-де-ло�
 title_es: Reserva Natural El Nogalar de los Toldos
 title_en: El Nogalar de los Toldos Natural Reserve
 summary: "Заповедник влажных горных лесов юнга на севере Сальты, известный рощами южноамериканского грецкого ореха (nogal criollo)."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

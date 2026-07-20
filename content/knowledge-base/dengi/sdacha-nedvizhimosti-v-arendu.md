@@ -4,8 +4,10 @@ type: guide
 subtype: finance
 title: "Сдача недвижимости в аренду: регистрация и документы"
 summary: "Официальные обязанности собственника перед ARCA: регистрация, договор, счета и выбор режима по фактическим параметрам. Без обещания универсальной налоговой льготы."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-relokanta
+archive_reason: "Короткий юридически чувствительный обзор снят с публикации до расширения первичными источниками; вход сохранён через путеводитель по переезду."
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: relocant
 tags: [недвижимость, аренда, налоги, инвестиции]

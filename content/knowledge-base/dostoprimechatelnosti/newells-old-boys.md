@@ -5,7 +5,7 @@ title: «Ньюэллс Олд Бойз» в Росарио
 title_es: Newell's Old Boys
 title_en: Newell's Old Boys
 summary: "«Ньюэллс Олд Бойз» в Росарио — клуб, где в детстве начинал Лионель Месси."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: rosario
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -32.9587022
   lng: -60.69304159999999

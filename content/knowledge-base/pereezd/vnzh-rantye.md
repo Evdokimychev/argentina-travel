@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Временная резиденция rentista"
 summary: "Категория rentista предназначена для человека, который живёт на подтверждаемую зарубежную ренту от собственных активов, а не на оплату личного труда."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: kakoj-dohod-nuzhen-dlya-rantye
+archive_reason: "Карточка rentista объединена с проверенным ответом о требуемом доходе и условиях основания."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [rentista, резиденция, доход, документы]

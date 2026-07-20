@@ -100,7 +100,6 @@ title_en: Paraná
 
 ## Источники
 
-- [Wikipedia (ru) — Парана (город)](https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%B0%D0%BD%D0%B0_(%D0%B3%D0%BE%D1%80%D0%BE%D0%B4))
+- [Wikipedia (ru) — Парана (город)](https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%B0%D0%BD%D0%B0_%28%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%29)
 - [Wikipedia (en) — Paraná, Entre Ríos](https://en.wikipedia.org/wiki/Paran%C3%A1,_Entre_R%C3%ADos)
-- [Municipalidad de Paraná — Historia](https://www.parana.gob.ar/la-ciudad/historia.php)
 - [Kupibilet — путеводитель по Паране](https://www.kupibilet.ru/gid/argentina/parana)

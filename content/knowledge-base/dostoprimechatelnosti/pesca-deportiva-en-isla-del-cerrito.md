@@ -6,7 +6,7 @@ title_es: Pesca deportiva en Isla del Cerrito
 title_en: Sport fishing at Isla del Cerrito
 summary: Visita la región Литорал y lánzate a una aventura acuática en los ríos Paraná
   y Paraguay.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

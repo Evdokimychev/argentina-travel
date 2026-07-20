@@ -4,12 +4,15 @@ type: faq
 question: "Что выбрать в Аргентине — eSIM или локальную SIM-карту?"
 short_answer: "eSIM — удобнее и быстрее (активация до прилёта), локальная SIM — обычно дешевле по данным при более длительном пребывании."
 topic: svyaz
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [esim, связь, интернет]
 related: [esim-i-svyaz]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: esim-i-svyaz
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

@@ -5,7 +5,7 @@ title: Долина Уко в Мендосе
 title_es: Valle de Uco, Mendoza
 title_en: Uco Valley, Mendoza
 summary: "Долина Уко в Мендосе — высокогорные винодельни и гастрономия среди горных пейзажей."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -33.25172866894235
   lng: -68.896121509538

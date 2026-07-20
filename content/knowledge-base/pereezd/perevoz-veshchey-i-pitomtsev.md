@@ -4,8 +4,10 @@ type: guide
 subtype: immigration
 title: "Переезд с вещами и домашними животными"
 summary: "Личные вещи и животные проходят по разным правилам: багаж проверяет таможня, а ввоз собак и кошек — SENASA."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: kakie-dokumenty-vezti-s-soboj
+archive_reason: "Короткий материал о подготовке к переезду объединён с проверенным списком документов; правила перевозки животных нужно сверять с перевозчиком и госорганами."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [багаж, питомцы, таможня, документы]

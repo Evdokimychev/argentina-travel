@@ -4,15 +4,18 @@ type: author_tip
 subtype: observation
 title: "Пустынные парки NOA и Куйо: один и тот же приём — ловить рассвет и закат, избегать полдня"
 summary: "Талампая, Исчигуаласто и Лос-Кардонес работают по одному правилу света: косые лучи «зажигают» красные скалы и кактусы, а полуденное солнце их «гасит» и выматывает жарой."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [пустыня, фотосъёмка, толпы]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Талампая.md"
 related: [talampaya, ischigualasto, los-cardones, salta]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: talampaya
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Талампая.md, Парк-Исчигуаласто-Долина-Луны.md, Национальный-парк-Лос-Кардонес.md — разделы «Советы местного гида»"
     url: ""

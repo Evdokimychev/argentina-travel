@@ -5,7 +5,7 @@ title: Провинциальный парк Исчигуаласто
 title_es: Parque Provincial Ischigualasto
 title_en: Ischigualasto Provincial Park
 summary: "Исчигуаласто (Долина Луны) в Сан-Хуане — инопланетные пейзажи и палеонтология, объект ЮНЕСКО."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -30.10340525765087
   lng: -68.016357421875

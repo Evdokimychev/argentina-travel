@@ -5,7 +5,7 @@ title: "Плотина Писку-Яку"
 title_es: Dique Piscu Yacu
 title_en: Piscu Yacu dam
 summary: "Водохранилище в получасе от курортного городка Мерло (Сан-Луис) — место для купания и спокойного отдыха у воды."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

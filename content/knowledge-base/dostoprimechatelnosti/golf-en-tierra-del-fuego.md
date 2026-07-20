@@ -5,7 +5,7 @@ title: Golf en Огненная Земля
 title_es: Golf en Tierra del Fuego
 title_en: Golf in Tierra del Fuego
 summary: En la Патагония Argentina, te espera el campo de golf más austral del planeta.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

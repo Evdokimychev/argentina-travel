@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
+import fs from "node:fs";
 import path from "node:path";
 
 const withBundleAnalyzer = bundleAnalyzer({
@@ -42,6 +43,65 @@ const isDemoBuild =
     process.env.NODE_ENV !== "production" &&
     process.env.DEPLOY_ENV !== "production" &&
     process.env.DEPLOY_ENV !== "staging");
+
+type ArchivedKnowledgeEntry = {
+  id?: unknown;
+  status?: unknown;
+  redirect_to?: unknown;
+};
+
+// Эти четыре исторических URL также перечислены в SEO registry, где они
+// документируют старые внешние каноникалы. Остальные архивные URL генерируются.
+const explicitlyRegisteredKnowledgeRedirectIds = new Set([
+  "ciudad-de-salta",
+  "parque-nacional-los-cardones",
+  "parque-nacional-tierra-del-fuego",
+  "aep-eze-stykovka",
+]);
+
+/**
+ * Консолидация контента не должна превращать старые URL в 404. Редиректы
+ * генерируются из того же индекса, который управляет публичным gate базы знаний,
+ * поэтому архивная карточка и её канонический адрес не расходятся вручную.
+ */
+function loadKnowledgeArchiveRedirects() {
+  const indexPath = path.join(
+    process.cwd(),
+    "content",
+    "knowledge-base",
+    "_index",
+    "content.json",
+  );
+  const parsed = JSON.parse(fs.readFileSync(indexPath, "utf8")) as {
+    entities?: ArchivedKnowledgeEntry[];
+  };
+
+  if (!Array.isArray(parsed.entities)) {
+    throw new Error(`Knowledge-base index has no entities array: ${indexPath}`);
+  }
+
+  return parsed.entities.flatMap((entry) => {
+    if (
+      entry.status !== "archived" ||
+      typeof entry.id !== "string" ||
+      typeof entry.redirect_to !== "string" ||
+      !entry.id.trim() ||
+      !entry.redirect_to.trim() ||
+      entry.id === entry.redirect_to ||
+      explicitlyRegisteredKnowledgeRedirectIds.has(entry.id)
+    ) {
+      return [];
+    }
+
+    return [{
+      source: `/baza-znaniy/${entry.id}`,
+      destination: `/baza-znaniy/${entry.redirect_to}`,
+      permanent: true,
+    }];
+  });
+}
+
+const knowledgeArchiveRedirects = loadKnowledgeArchiveRedirects();
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -105,6 +165,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...knowledgeArchiveRedirects,
       {
         source: "/map",
         destination: "/mapa-argentina",
@@ -158,6 +219,11 @@ const nextConfig: NextConfig = {
       {
         source: "/baza-znaniy/parque-nacional-tierra-del-fuego",
         destination: "/baza-znaniy/ognennaya-zemlya",
+        permanent: true,
+      },
+      {
+        source: "/baza-znaniy/aep-eze-stykovka",
+        destination: "/baza-znaniy/aeroporty",
         permanent: true,
       },
       {

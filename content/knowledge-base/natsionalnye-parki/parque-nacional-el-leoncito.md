@@ -5,7 +5,7 @@ title: Национальный парк Эль-Леонсито
 title_es: Parque Nacional El Leoncito
 title_en: El Leoncito National Park
 summary: "Эль-Леонсито в Сан-Хуане на высоте ~2250 м — одно из самых чистых небес Земли и астрономические обсерватории."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - куйо
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -31.772982965959145
   lng: -69.35902277392547

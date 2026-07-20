@@ -9,6 +9,9 @@ site_sections: [lichnyy-opyt]
 tags: [релокация, наблюдение, первый опыт]
 personal_experience: true
 verified_by_ivan: true
+author_name: "Иван"
+author_slug: "ivan"
+author_bio: "Автор проекта «Пора в Аргентину»; живёт в Буэнос-Айресе и делится подтверждённым личным опытом жизни и поездок по стране."
 extracted_from: "личная история Ивана, февраль 2023 (записана 2026-07-04)"
 related: [buenos-aires, ispanskij-dlya-puteshestvennika, klimat-po-regionam, chto-takoe-sube, esim-i-svyaz, oshibka-s-zhilyom, oshibka-s-dokumentami, lyubimoe-mesto-ne-iz-putevoditelej, pervyj-mesyac-plan]
 last_verified: "2026-07-04"

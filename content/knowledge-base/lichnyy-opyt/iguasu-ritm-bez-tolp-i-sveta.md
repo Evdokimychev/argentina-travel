@@ -4,15 +4,18 @@ type: author_tip
 subtype: lifehack
 title: "Игуасу без толп: как выстроить день по свету, а не по расписанию автобусов"
 summary: "Порядок посещения водопадов Игуасу, который сильно меняет впечатление: что смотреть утром, что — под вечер, и где почти никого нет."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [водопады, фотосъёмка, толпы, патагония, треккинг]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Игуасу.md"
 related: [iguasu, argentina-2-nedeli]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: iguasu
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Игуасу.md — раздел «Советы местного гида»"
     url: ""

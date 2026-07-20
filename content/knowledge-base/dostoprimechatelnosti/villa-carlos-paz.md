@@ -5,7 +5,7 @@ title: "Вилья-Карлос-Пас"
 title_es: Villa Carlos Paz
 title_en: Villa Carlos Paz
 summary: "Один из главных курортных городов Кордовы у озера Сан-Роке — шумный центр летнего отдыха, театров и развлечений."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: pampa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -6,7 +6,7 @@ title_es: Vinos de Tolombón
 title_en: Tolombón Wines
 summary: En un pueblo pintoresco, junto a una ciudad prehispánica, degusta vinos de
   altura premiados en el mundo.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

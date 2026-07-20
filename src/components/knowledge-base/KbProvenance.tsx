@@ -24,6 +24,7 @@ const REVIEWER_ROLE_LABELS: Record<string, string> = {
   travel_editor: "Редактор путеводителя",
   редактор: "Редактор",
   фактчекер: "Фактчекер",
+  "редакционная проверка источников": "Редактор",
 };
 
 export function normalizeKbClaimText(value: string): string {

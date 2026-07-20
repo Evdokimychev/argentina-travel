@@ -4,8 +4,10 @@ type: guide
 subtype: transport
 title: "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
 summary: "Актуальный комплект документов для автомобиля, правила для иностранного водителя и новый порядок авторизации на чужую машину без обязательной cédula azul."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: arenda-avto-i-vozhdenie
+archive_reason: "Короткий список документов объединён с проверенным руководством по аренде и вождению."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane, dokumenty-i-legalizatsiya]
 applies_to: both
 tags: [транспорт, авто, документы, поездка, логистика]

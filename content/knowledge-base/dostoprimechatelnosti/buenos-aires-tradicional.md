@@ -5,7 +5,7 @@ title: Традиционный Буэнос-Айрес
 title_es: Buenos Aires tradicional
 title_en: Traditional Buenos Aires
 summary: Тур по Пласа-де-Майо и Сан-Тельмо, Ла-Бока и Реколета, Палермо и Пуэрто-Мадеро.
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -34.61577229677821
   lng: -58.377775338299465
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

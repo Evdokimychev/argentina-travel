@@ -6,7 +6,7 @@ title_es: Cruce de los Andes
 title_en: Andean crossing
 summary: Atrévete a seguir los pasos de un prócer que hace más de doscientos años
   cruzó los Andes en una gesta libertadora.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -64,16 +64,29 @@ recommendations:
   - "Сравнивайте внутренние перелёты заранее: итоговую цену с багажом, аэропорт, время наземного переезда и условия изменения билета."
   - "Лучшее окно по сезону — октябрь-ноябрь и март-апрель: Патагония открыта и не переполнена."
   - "Альтернатива при акценте на вино: БА → Игуасу → Мендоса → Сальта и Кальчакские долины → БА (меньше холода, больше юга страны не видно)."
-last_verified: "2026-07-01"
+last_verified: "2026-07-20"
 confidence: high
 long_form_merged: true
 seo_slug: "argentina-2-nedeli-marshrut"
 sources:
-  - title: "Внутренняя база «Пора в Аргентину» — практика логистики перелётов и расстояний"
-    url: ""
-    lang: ru
-    type: ru_blog
-    note: "обобщение практики поездок; конкретные цены и расписания меняются"
+  - id: argentina-national-parks-route-planning
+    title: "Administración de Parques Nacionales — парки Аргентины"
+    url: "https://www.argentina.gob.ar/parquesnacionales"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-20"
+    note: "Официальная точка входа для проверки режима Игуасу, Лос-Гласьярес, Огненной Земли и Науэль-Уапи."
+  - id: aeropuertos-argentina-route-planning
+    title: "Aeropuertos Argentina — сеть аэропортов"
+    url: "https://www.aeropuertosargentina.com/es/nuestros-aeropuertos"
+    lang: es
+    type: official
+    authority: primary
+    url_status: verified
+    checked_at: "2026-07-20"
+    note: "Официальный справочник аэропортов для проверки кодов и наземной логистики."
 ---
 
 ## Описание

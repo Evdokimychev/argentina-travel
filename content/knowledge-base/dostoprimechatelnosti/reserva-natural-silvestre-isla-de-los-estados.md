@@ -5,7 +5,7 @@ title: "Природный заповедник Исла-де-лос-Эстад�
 title_es: Reserva Natural Silvestre Isla de los Estados
 title_en: Isla de los Estados Natural Reserve
 summary: "Дикий, почти недоступный остров у восточной оконечности Огненной Земли — «край света» с историческим маяком, вдохновившим Жюля Верна."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

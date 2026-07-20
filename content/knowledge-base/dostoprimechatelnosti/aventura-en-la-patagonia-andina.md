@@ -6,7 +6,7 @@ title_es: Aventura en la Patagonia andina
 title_en: Adventure in the Andean Patagonia
 summary: Junto a la Cordillera de los Andes, descubre la diversidad de propuestas
   de los parques nacionales patagónicos.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

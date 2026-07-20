@@ -8,8 +8,10 @@ aliases:
 summary: Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на
   северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями
   возрастом около 120 млн лет и уникальным птерозавром Pterodaustro.
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Неотредактированная импортная карточка объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony

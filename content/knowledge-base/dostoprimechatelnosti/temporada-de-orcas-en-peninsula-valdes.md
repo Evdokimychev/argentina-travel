@@ -6,7 +6,7 @@ title_es: Temporada de orcas en Península Valdés
 title_en: Orca season at Península Valdés
 summary: Visita el único lugar del mundo donde verás a las orcas enseñar a sus crías
   a cazar lobitos de mar.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

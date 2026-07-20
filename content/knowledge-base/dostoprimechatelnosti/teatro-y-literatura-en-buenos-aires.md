@@ -6,7 +6,7 @@ title_es: Teatro y literatura en Buenos Aires
 title_en: Theater and literature in Buenos Aires
 summary: 'Прогуляйтесь по одной из великих культурных осей города Буэнос-Айрес: мифическому
   проспекту Корриентес.'
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -16,7 +16,7 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
 coordinates:
   lat: -34.583418262297414
   lng: -58.42191405003809
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: mentalitet-i-etiket
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

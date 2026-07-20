@@ -5,7 +5,7 @@ title: Valle Fértil Natural Park
 title_es: Parque Natural Valle Fértil
 title_en: Valle Fértil Natural Park
 summary: En la región de Куйо, emprende una aventura al pie de la cordillera andina.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

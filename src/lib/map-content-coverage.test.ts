@@ -16,16 +16,16 @@ describe("map content coverage", () => {
 
   it("uses the complete public knowledge base instead of one source domain", () => {
     const objects = buildKbAttractionObjects([]);
-    const tigre = objects.find((object) => object.id === "kb:tigre-i-delta");
+    const glacier = objects.find((object) => object.id === "kb:perito-moreno");
 
-    expect(tigre).toMatchObject({
-      title: "Тигре и Дельта Параны",
+    expect(glacier).toMatchObject({
+      title: "Ледник Перито-Морено",
       kind: "attraction",
-      href: "/baza-znaniy/tigre-i-delta",
+      href: "/places/perito-moreno-glacier",
     });
   }, 30_000);
 
-  it("links supplementary city markers to their differently named articles", () => {
+  it("links supplementary city markers to articles only after they pass the public gate", () => {
     const objects = buildSupplementaryCityObjects([]);
 
     expect(objects.find((object) => object.slug === "tigre")).toMatchObject({
@@ -33,6 +33,12 @@ describe("map content coverage", () => {
       kind: "city",
       href: "/baza-znaniy/tigre-i-delta",
       minZoom: 6,
+      relatedArticles: [
+        {
+          title: "Тигре",
+          href: "/baza-znaniy/tigre-i-delta",
+        },
+      ],
     });
   });
 

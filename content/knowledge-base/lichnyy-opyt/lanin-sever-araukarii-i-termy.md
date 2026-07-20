@@ -4,15 +4,18 @@ type: author_tip
 subtype: hidden_gem
 title: "Ланин: тихий север парка с араукариями и дикими термами, куда мало кто доезжает"
 summary: "Северная часть нацпарка Ланин (Алумине) и термы Лауэн-Ко — альтернатива популярному Сан-Мартин-де-лос-Андесу для тех, кто хочет меньше туристов."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [озёра, горы, треккинг, патагония]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Ланин.md"
 related: [lanin, ruta-40-sem-ozer, bariloche]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: lanin
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Ланин.md — раздел «Советы местного гида»"
     url: ""

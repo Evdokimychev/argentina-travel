@@ -5,7 +5,7 @@ title: "Куранто"
 title_es: El curanto
 title_en: Curanto
 summary: "Традиционное патагонское блюдо: мясо, овощи и морепродукты, томлённые в земляной яме на раскалённых камнях."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

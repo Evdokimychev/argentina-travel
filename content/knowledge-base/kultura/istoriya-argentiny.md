@@ -4,8 +4,10 @@ type: guide
 subtype: culture
 title: "История Аргентины: три опорные темы для путешественника"
 summary: "Краткий проверенный контекст: независимость 1816 года, массовая иммиграция 1880–1930 годов и государственный террор последней диктатуры 1976–1983 годов."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mentalitet-i-etiket
+archive_reason: "Короткий исторический обзор объединён с проверенным материалом о культурном контексте."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [история, культура, независимость, иммиграция, память]

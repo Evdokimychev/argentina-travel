@@ -4,15 +4,18 @@ type: author_tip
 subtype: observation
 title: "«Все едут в Палермо» — не всегда лучший совет туристу или релоканту"
 summary: "Палермо удобен и универсален, но Бельграно и Вилья-Креспо часто дают то же качество жизни за меньшие деньги и с меньшим шумом — особенно тем, кто остаётся надолго."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, goroda-i-regiony]
 tags: [мегаполис, аренда, релокация]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Города-Буэнос-Айрес-районы.md"
 related: [buenos-aires, stoimost-zhizni-ba]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: buenos-aires
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Города-Буэнос-Айрес-районы.md — разделы «Практические советы» и «Частые ошибки»"
     url: ""

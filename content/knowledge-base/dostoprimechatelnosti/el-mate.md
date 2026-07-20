@@ -5,7 +5,7 @@ title: "Мате"
 title_es: El Mate
 title_en: Mate
 summary: "Национальный напиток Аргентины — настой йерба-мате, который пьют через металлическую трубочку-бомбилью и передают по кругу."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: mate
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

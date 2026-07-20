@@ -28,9 +28,9 @@ import type { RelatedContentItem } from "@/types/content-reading";
 
 const GUIDE_KB_LINKS: RelatedContentItem[] = [
   {
-    title: "Подготовка к поездке",
-    href: "/baza-znaniy/podgotovka-k-poezdke",
-    description: "Что проверить перед вылетом: документы, страховка, связь, деньги и маршрут.",
+    title: "Гид путешественника",
+    href: "/baza-znaniy/gid-puteshestvennika",
+    description: "Подготовка, маршрут, сезонность, деньги и безопасность первой поездки.",
     kind: "link",
   },
   {
@@ -48,7 +48,7 @@ const GUIDE_KB_LINKS: RelatedContentItem[] = [
   {
     title: "Безопасность в Аргентине",
     href: "/baza-znaniy/bezopasnost-argentina",
-    description: "Риски больших городов, тропы, погода и спокойная базовая осмотрительность.",
+    description: "Риски больших городов, природные условия и базовая осмотрительность.",
     kind: "link",
   },
   {
@@ -59,8 +59,8 @@ const GUIDE_KB_LINKS: RelatedContentItem[] = [
   },
   {
     title: "Водительские права",
-    href: "/baza-znaniy/voditelskie-prava",
-    description: "Что важно знать перед арендой автомобиля и поездками между регионами.",
+    href: "/baza-znaniy/kak-poluchit-prava-v-argentine",
+    description: "Как получить аргентинскую лицензию и что проверить перед поездкой на автомобиле.",
     kind: "link",
   },
 ];

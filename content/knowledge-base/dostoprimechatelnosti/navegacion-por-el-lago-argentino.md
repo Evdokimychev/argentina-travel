@@ -5,7 +5,7 @@ title: Водные прогулки по озеру Архентино
 title_es: Navegación por el Lago Argentino
 title_en: Sailing along Lago Argentino
 summary: "Навигация по озеру Архентино от Пуэрто-Бандеры к ледникам парка Лос-Гласьярес."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: el-calafate
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -50.36399224653598
   lng: -72.493653125

@@ -4,8 +4,10 @@ type: guide
 subtype: shopping
 title: "Tax free в Аргентине: как оформить возврат"
 summary: "Проверенный порядок ARCA: покупка аргентинских товаров в участвующем магазине, документы и таможенная проверка при выезде."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-po-dengam
+archive_reason: "Карточка Tax Free объединена с проверенным руководством по деньгам; условия возврата и участники программы регулярно меняются."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: tourist
 tags: [покупки, tax free, НДС, документы]

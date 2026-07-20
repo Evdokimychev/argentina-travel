@@ -5,8 +5,10 @@ title: "Поезда дальнего следования в Аргентине
 title_es: "Trenes de larga distancia"
 aliases: ["поезда Аргентина", "Trenes Argentinos", "поезд Буэнос-Айрес Мар-дель-Плата", "железная дорога", "La Trochita"]
 summary: "Пассажирские поезда Аргентины — нишевый, но дешёвый и атмосферный способ передвижения по центру страны: Trenes Argentinos связывают Буэнос-Айрес с Мар-дель-Платой, Росарио, Кордовой и Тукуманом. Сеть ограничена (не покрывает Патагонию и большую часть севера), зато билеты недорогие. Плюс отдельные туристические поезда-аттракционы."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mezhgorodnie-avtobusy
+archive_reason: "Короткий обзор поездов объединён с проверенным разделом междугороднего транспорта; расписания следует проверять у перевозчика."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: both
 tags: [транспорт, поезда, бюджетно, логистика]

@@ -6,8 +6,10 @@ title: "Первый месяц в Аргентине: практический 
 title_es: "Primer mes: plan práctico"
 aliases: ["первый месяц план", "что делать по приезде", "план по дням", "первые дни в Аргентине", "чек-лист первого месяца"]
 summary: "Гибкий план первого месяца: связь и транспорт, законный обмен денег, временное жильё, выбор миграционного основания, CUIL и банковский счёт."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: gid-relokanta
+archive_reason: "План первого месяца объединён с проверенным пошаговым путеводителем по переезду."
 site_sections: [pereezd-v-argentinu, zhizn-v-strane]
 applies_to: relocant
 tags: [релокация, первый месяц, план, чек-лист, адаптация]

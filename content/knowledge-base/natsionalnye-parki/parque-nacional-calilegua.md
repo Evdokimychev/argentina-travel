@@ -13,9 +13,9 @@ region_id: noa
 province: Жужуй
 tags:
 - северо-запад
-last_verified: '2026-07-07'
-confidence: medium
-site_ready: false
+last_verified: '2026-07-20'
+confidence: high
+site_ready: true
 coordinates:
   lat: -23.66968188094229
   lng: -64.8687744140625
@@ -48,6 +48,11 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-nacional-calilegua
 sources:
+- title: Administración de Parques Nacionales — Parque Nacional Calilegua
+  url: https://www.argentina.gob.ar/parquesnacionales/region-noroeste/parque-nacional-calilegua
+  lang: es
+  type: official
+  note: маршруты, доступ, биоразнообразие и текущие предупреждения
 - title: Visit Argentina — Parque Nacional Calilegua
   url: https://www.argentina.travel/actividades/parque-nacional-calilegua
   lang: es
@@ -77,6 +82,12 @@ sources:
 
 Комфортнее всего в сухой сезон — с поздней осени до ранней весны (ориентировочно апрель–ноябрь): дороги суше, а зелень юнги остаётся густой круглый год. Летом (декабрь–март) идут обильные тропические дожди, из-за которых грунтовые участки RP 83 и броды становятся труднопроходимыми.
 
+## Как спланировать день
+
+Не пытайтесь за один визит проехать весь парк и вернуться: RP 83 медленная, а туман, дождь и дорожные работы меняют темп. Для первого знакомства выберите сектор Агуас-Неграс, одну-две официальные тропы и несколько остановок вдоль дороги. До выезда откройте страницу APN с режимом и картой: проходимость верхнего участка нельзя выводить только из прогноза в Либертадоре.
+
+В нижней юнге жарко и влажно, выше может быть прохладно. Нужны закрытая обувь, репеллент, вода, дождевой слой и офлайн-навигация. Не сходите с маркированной тропы ради встречи с животными и не оставляйте еду: парк охраняет ягуара и другие уязвимые виды, но наблюдение не гарантировано. На узкой дороге уступайте, не останавливайтесь в слепом повороте и рассчитывайте вернуться засветло.
+
 ## Факты
 
 - Крупнейший в Аргентине национальный парк, охраняющий экосистему юнга (влажные горные леса).
@@ -92,6 +103,6 @@ sources:
 ## Источники
 
 - [Visit Argentina (INPROTUR) — Parque Nacional Calilegua](https://www.argentina.travel/actividades/parque-nacional-calilegua) — официальный портал (исп.).
-- Administración de Parques Nacionales (APN) — билеты и режим: ventaweb.apn.gob.ar.
+- [Administración de Parques Nacionales — Parque Nacional Calilegua](https://www.argentina.gob.ar/parquesnacionales/region-noroeste/parque-nacional-calilegua) — доступ, тропы и контакты.
 
 > Фотографии — с официального портала Argentina.travel (INPROTUR); указаны источник и автор.

@@ -4,8 +4,10 @@ type: guide
 subtype: transport
 title: "Штрафы, баллы и проверка нарушений за рулём в Аргентине"
 summary: "Как проверить дорожные нарушения в национальной и местной системе и как устроен Scoring Nacional с исходными 20 баллами."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: arenda-avto-i-vozhdenie
+archive_reason: "Частная карточка правил дорожного движения объединена с проверенным руководством по вождению."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane, dokumenty-i-legalizatsiya]
 applies_to: both
 tags: [транспорт, авто, документы, безопасность, штрафы]

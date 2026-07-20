@@ -6,7 +6,7 @@ title_es: Costa Atlántica de la provincia de Buenos Aires
 title_en: Atlantic coast of the Province of Buenos Aires
 summary: Surfea las olas, explora parques temáticos y disfruta opciones de aventura
   muy cerca del mar.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -6,7 +6,7 @@ title_es: Gastronomía de Entre Ríos
 title_en: Food in Entre Ríos
 summary: Entre ríos y paisajes de ensueño, saborea las delicias de la gastronomía
   regional y descubre su tradición vitivinícola.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

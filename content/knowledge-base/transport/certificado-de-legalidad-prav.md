@@ -4,8 +4,10 @@ type: guide
 subtype: transport
 title: "Certificado de legalidad водительских прав: что это и зачем"
 summary: "Как не перепутать подтверждение аргентинской лицензии для другой страны с подтверждением иностранных прав для аргентинской процедуры."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: arenda-avto-i-vozhdenie
+archive_reason: "Частный документ для водителя объединён с проверенным руководством по вождению и аренде автомобиля."
 site_sections: [dokumenty-i-legalizatsiya, puteshestviya-po-argentine, pereezd-v-argentinu]
 applies_to: both
 tags: [транспорт, авто, документы, легализация]

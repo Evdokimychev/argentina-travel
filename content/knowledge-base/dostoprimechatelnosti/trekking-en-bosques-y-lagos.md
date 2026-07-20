@@ -5,7 +5,7 @@ title: Треккинг среди лесов и озёр Патагонии
 title_es: Trekking en bosques y lagos
 title_en: Trekking in forests and lakes
 summary: "Треккинг среди лесов и озёр андской Патагонии — от лёгких прогулок до серьёзных маршрутов."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -41.45317451891712
   lng: -71.46667700163266

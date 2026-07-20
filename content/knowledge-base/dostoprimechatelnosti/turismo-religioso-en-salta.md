@@ -6,7 +6,7 @@ title_es: Turismo Religioso en Salta
 title_en: Religious Tourism in Salta
 summary: Recorre iglesias, templos, capillas y festividades populares donde se celebra
   la fe.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -39,6 +39,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

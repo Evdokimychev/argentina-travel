@@ -5,7 +5,7 @@ title: Конные прогулки в сьеррах провинции Буэ
 title_es: Cabalgatas en las sierras bonaerenses
 title_en: Horseback riding in the hills of Buenos Aires
 summary: "Конные прогулки по сьеррам провинции Буэнос-Айрес — традиционное занятие этих мест."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - центр и пампа
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -36.025145894632736
   lng: -60.509509734018074

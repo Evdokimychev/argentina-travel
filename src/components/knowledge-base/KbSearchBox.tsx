@@ -35,8 +35,15 @@ export default function KbSearchBox({
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
         aria-label="Поиск по базе знаний"
-        className="w-full rounded-full border border-border-subtle bg-surface-elevated py-3 pl-11 pr-4 text-sm text-foreground shadow-card outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-sky/40"
+        className="w-full rounded-full border border-border-subtle bg-surface-elevated py-3 pl-11 pr-12 text-sm text-foreground shadow-card outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-sky/40"
       />
+      <button
+        type="submit"
+        aria-label="Найти в базе знаний"
+        className="absolute right-1.5 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-sky-pale text-lg font-semibold text-sky-ink transition hover:bg-sky/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+      >
+        →
+      </button>
     </form>
   );
 }

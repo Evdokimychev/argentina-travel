@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getCmsKnowledgePublicationIssues,
+  isCmsKnowledgeContentReady,
   isCmsKnowledgePublicDocument,
   knowledgeEntryFromCms,
   mergeKnowledgeCatalog,
@@ -9,7 +10,7 @@ import type { KbEntry } from "@/lib/knowledge-base/types";
 import type { CmsBlogBody, CmsDocument } from "@/types/cms-content";
 
 const longBody = `Начните с центра города. ${Array.from(
-  { length: 125 },
+  { length: 620 },
   (_, index) => `рекомендация${index + 1}`,
 ).join(" ")}`;
 
@@ -66,12 +67,91 @@ describe("knowledgeEntryFromCms", () => {
       province: "Mendoza",
       confidence: "high",
       body: longBody,
-      editorial: { word_count: 129, source_count: 1 },
+      editorial: { word_count: 624, source_count: 1 },
     });
   });
 
   it("does not treat ordinary blog documents as KB pages", () => {
     expect(knowledgeEntryFromCms({ ...document, docType: "blog" })).toBeNull();
+  });
+
+  it("maps an explicitly verified personal byline from the CMS", () => {
+    const entry = knowledgeEntryFromCms({
+      ...document,
+      body: {
+        ...knowledgeBody,
+        authorName: "Иван",
+        authorSlug: "ivan",
+        authorBio: "Автор проекта.",
+        authorAvatar: "/media/authors/ivan.jpg",
+        personalExperience: true,
+        verifiedByAuthor: true,
+      },
+    });
+
+    expect(entry).toMatchObject({
+      author_name: "Иван",
+      author_slug: "ivan",
+      author_bio: "Автор проекта.",
+      author_avatar: "/media/authors/ivan.jpg",
+      personal_experience: true,
+      verified_by_ivan: true,
+    });
+  });
+
+  it("blocks a CMS byline until personal authorship is explicitly verified", () => {
+    const unverified = {
+      ...document,
+      body: {
+        ...knowledgeBody,
+        authorName: "Иван",
+        authorSlug: "ivan",
+      },
+    } satisfies CmsDocument;
+
+    expect(getCmsKnowledgePublicationIssues(unverified)).toContain(
+      "unverified_personal_authorship",
+    );
+    expect(isCmsKnowledgePublicDocument(unverified)).toBe(false);
+  });
+
+  it("preserves absent fallback authorship but honors explicit clearing", () => {
+    const fallback: KbEntry = {
+      id: document.slug,
+      type: "author_tip",
+      title: document.title,
+      body: longBody,
+      status: "published",
+      site_ready: true,
+      author_name: "Иван",
+      author_slug: "ivan",
+      personal_experience: true,
+      verified_by_ivan: true,
+    };
+
+    expect(knowledgeEntryFromCms(document, fallback)).toMatchObject({
+      author_name: "Иван",
+      personal_experience: true,
+      verified_by_ivan: true,
+    });
+    expect(
+      knowledgeEntryFromCms(
+        {
+          ...document,
+          body: {
+            ...knowledgeBody,
+            authorName: "",
+            personalExperience: false,
+            verifiedByAuthor: false,
+          },
+        },
+        fallback,
+      ),
+    ).toMatchObject({
+      author_name: undefined,
+      personal_experience: false,
+      verified_by_ivan: false,
+    });
   });
 
   it("merges publications into the catalog and excludes noindex overrides", () => {
@@ -93,6 +173,12 @@ describe("knowledgeEntryFromCms", () => {
     expect(mergeKnowledgeCatalog([fallback], [document, noIndexOverride])).toEqual([
       expect.objectContaining({ id: "mendoza-guide", title: "Гид по Мендосе" }),
     ]);
+  });
+
+  it("does not let a CMS publication resurrect an archived knowledge slug", () => {
+    expect(
+      mergeKnowledgeCatalog([], [document], new Set([document.slug])),
+    ).toEqual([]);
   });
 
   it("keeps thin or source-less CMS knowledge drafts out of the public catalog", () => {
@@ -160,6 +246,20 @@ describe("knowledgeEntryFromCms", () => {
   });
 
   it("never exposes an explicitly noindex CMS knowledge document", () => {
-    expect(isCmsKnowledgePublicDocument({ ...document, seo: { noIndex: true } })).toBe(false);
+    const noIndex = { ...document, seo: { noIndex: true } } satisfies CmsDocument;
+
+    expect(isCmsKnowledgeContentReady(noIndex)).toBe(true);
+    expect(isCmsKnowledgePublicDocument(noIndex)).toBe(false);
+  });
+
+  it("does not let noindex bypass the content publication gate", () => {
+    const unverifiedNoIndex = {
+      ...document,
+      seo: { noIndex: true },
+      body: { ...knowledgeBody, authorName: "Иван" },
+    } satisfies CmsDocument;
+
+    expect(isCmsKnowledgeContentReady(unverifiedNoIndex)).toBe(false);
+    expect(isCmsKnowledgePublicDocument(unverifiedNoIndex)).toBe(false);
   });
 });

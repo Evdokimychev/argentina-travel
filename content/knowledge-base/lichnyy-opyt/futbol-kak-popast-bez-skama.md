@@ -11,7 +11,7 @@ personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Культура-Футбол-в-Аргентине.md"
 related: [futbol, buenos-aires]
-last_verified: "2026-07-17"
+last_verified: "2026-07-20"
 confidence: high
 site_ready: true
 provenance:
@@ -21,11 +21,11 @@ provenance:
 sources:
   - id: river-official-ticket-guide
     title: "River Plate — как купить билеты"
-    url: "https://www.riverplate.com/venta-de-entradas/como-comprar-entradas"
+    url: "https://www.cariverplate.com.ar/venta-de-entradas/como-comprar-entradas"
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-17"
+    checked_at: "2026-07-20"
     url_status: verified
     note: "Подтверждает официальный порядок продажи, включая возможную продажу остатка широкой публике и отдельный процесс для международных покупателей."
   - id: boca-membership-and-ticket-information
@@ -51,7 +51,7 @@ claims:
     text: "River Plate описывает возможную продажу остатка широкой публике и отдельный порядок для международных покупателей."
     sensitive: true
     source_ids: [river-official-ticket-guide]
-    verified_at: "2026-07-17"
+    verified_at: "2026-07-20"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: boca-socios-ticket-context
     text: "Boca Juniors публикует категории socios и связанные с членством условия, а доступ на конкретный матч требует отдельной проверки."
@@ -75,6 +75,8 @@ claims:
 
 Не покупайте билеты с рук, в социальных сетях или по ссылке из случайного сообщения: AFA отдельно предупреждает о подделках. На матч возьмите тот документ, который указан при покупке, и следуйте опубликованным клубом правилам доступа. Если матч недоступен, официальный музей или стадионный тур остаётся самостоятельной альтернативой, но расписание также нужно проверять у клуба.
 
+Практический порядок проверки посредника: откройте юридические реквизиты продавца, получите сектор и способ входа, уточните, можно ли передать билет на ваше имя, и сохраните условия на случай переноса матча. Фраза «официальный билет» без ссылки на клуб, номера заказа или объяснения идентификации ничего не доказывает. Не бронируйте невозвратный перелёт вокруг предварительной даты: сверяйте время по AFA и клубу повторно перед поездкой.
+
 ## Связанные объекты
 
 - [[futbol|Футбол в Аргентине]] — общий гайд по футболу в Аргентине.
@@ -82,6 +84,6 @@ claims:
 
 ## Источники
 
-- [River Plate — как купить билеты](https://www.riverplate.com/venta-de-entradas/como-comprar-entradas)
+- [River Plate — как купить билеты](https://www.cariverplate.com.ar/venta-de-entradas/como-comprar-entradas)
 - [Boca Juniors — категории socios и условия](https://www.bocajuniors.com.ar/socios-valores)
 - [AFA — предупреждение о поддельных билетах](https://www.afa.com.ar/7/posts/la-afa-contra-la-falsificacion2)

@@ -6,8 +6,10 @@ title: "Землетрясения, вулканы и природные рис�
 title_es: "Terremotos y volcanes"
 aliases: ["землетрясения Аргентина", "вулканы Аргентины", "сейсмика", "почему растут Анды", "Сан-Хуан 1944", "пепел вулкана", "природные катастрофы"]
 summary: "Где сосредоточена сейсмическая опасность, как вулканический пепел влияет на Патагонию и какие официальные предупреждения нужны путешественнику."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: bezopasnost-argentina
+archive_reason: "Короткий обзор природных рисков объединён с проверенным руководством по безопасности."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [безопасность, природа, землетрясения, вулканы]

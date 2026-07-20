@@ -4,8 +4,10 @@ type: guide
 subtype: accommodation
 title: "Кемпинг в национальных парках Аргентины"
 summary: "Как различаются кемпинги APN, когда нужна бронь и какие правила действуют для огня, мусора и выбора разрешённой площадки."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: patagonia-park
+archive_reason: "Общий материал о кемпинге объединён с проверенной страницей природной территории; условия ночёвок нужно проверять у конкретного парка."
 site_sections: [puteshestviya-po-argentine]
 applies_to: both
 tags: [кемпинг, палатки, национальные парки, безопасность]

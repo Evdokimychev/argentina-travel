@@ -4,15 +4,18 @@ type: author_tip
 subtype: lifehack
 title: "Как снимать водопады Игуасу так, чтобы по фото было видно их реальный размер"
 summary: "Несколько технических приёмов фотосъёмки на Игуасу: масштаб через людей в кадре, защита от брызг, поляризационный фильтр и охота за вылетом стрижей на рассвете."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [водопады, фотосъёмка, сельва]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Игуасу.md"
 related: [iguasu, iguasu-ritm-bez-tolp-i-sveta]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: iguasu
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Игуасу.md — раздел «Советы местного гида»"
     url: ""

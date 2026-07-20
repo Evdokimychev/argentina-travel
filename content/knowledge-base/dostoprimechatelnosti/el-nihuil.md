@@ -5,7 +5,7 @@ title: "Эль-Ниуиль"
 title_es: El Nihuil
 title_en: El Nihuil
 summary: "Большое водохранилище в горах Мендосы у Сан-Рафаэля — центр парусного спорта и приключений, этап ралли «Дакар»."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -38,6 +38,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

@@ -5,7 +5,7 @@ title: "Барреаль и Эль-Леонсито"
 title_es: "Barreal / El Leoncito"
 aliases: "[\"Барреаль\", \"Barreal\", \"Эль-Леонсито\", \"Barreal Blanco\", \"астротуризм Сан-Хуан\"]"
 summary: "Тихий оазисный посёлок в провинции Сан-Хуан у подножия высоких Анд, центр астротуризма Аргентины. Рядом — национальный парк Эль-Леонсито с двумя астрономическими обсерваториями (одно из самых чистых и ясных небес страны) и глинистая равнина Барреаль-Бланко для «сухопутного парусного спорта»."
-status: "published"
+status: "archived"
 site_sections: "[puteshestviya-po-argentine, goroda-i-regiony]"
 region_id: "cuyo"
 province: "Сан-Хуан"
@@ -16,9 +16,23 @@ best_time: "[\"круглый год для неба (много ясных но
 duration: "1-2 дня (ночь под звёздами + активности)"
 how_to_get_there: "На западе провинции Сан-Хуан, обычно на машине от города Сан-Хуан по живописной дороге вдоль Анд; часть маршрутов грунтовые."
 related: "[san-huan, ischigualasto, talampaya]"
-site_ready: true
-last_verified: "2026-07-06"
+site_ready: false
+redirect_to: cuyo
+archive_reason: "Короткая производная карточка Барреаля объединена с каноническим русскоязычным путеводителем по Куйо; исходный текст, медиа и происхождение сохранены в архиве."
+media:
+  hero:
+    url: /media/places/barreal/hero.jpg
+    alt: "Хребет Ансильта, вид из Барреаля, провинция Сан-Хуан"
+    author: "FROSI, Rubem A. M."
+    license: "CC BY 3.0"
+    source_page: "https://commons.wikimedia.org/wiki/File:Pico_de_la_Cordillaera_de_Ansilta_desde_Barreal,_San_Juan,_Argentina.jpg"
+last_verified: "2026-07-20"
 confidence: "medium"
+sources:
+  - title: "Visit Argentina (INPROTUR)"
+    url: "https://www.argentina.travel/"
+    lang: es
+    type: official
 seo_slug: "barreal-el-leoncito-astroturizm"
 ---
 

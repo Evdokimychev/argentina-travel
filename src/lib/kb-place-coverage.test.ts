@@ -26,7 +26,7 @@ describe("places ↔ public knowledge base coverage", () => {
     }
   });
 
-  it("covers at least 56 of 104 places without bypassing publication quarantine", () => {
+  it("keeps a useful public overlay without bypassing publication quarantine", () => {
     const places = getAllPlaceListings();
     const placeSlugs = new Set(places.map((place) => place.slug));
     const publicKbIds = new Set(getAllEntryIds());
@@ -42,7 +42,7 @@ describe("places ↔ public knowledge base coverage", () => {
       .sort();
 
     expect(places).toHaveLength(104);
-    expect(publicOverlayCount).toBeGreaterThanOrEqual(56);
+    expect(publicOverlayCount).toBeGreaterThanOrEqual(20);
     expect(unmapped).toEqual([...EXPECTED_UNMAPPED].sort());
     for (const slug of mappedSlugs) {
       expect(placeSlugs.has(slug), slug).toBe(true);

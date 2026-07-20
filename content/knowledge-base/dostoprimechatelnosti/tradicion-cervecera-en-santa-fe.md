@@ -5,7 +5,7 @@ title: Пивные традиции Санта-Фе
 title_es: Tradición cervecera en Santa Fe
 title_en: Brewing tradition in Santa Fe
 summary: "Пивная традиция Санта-Фе: бокал «лисо» и уникальный «пивопровод» длиной 850 метров."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -31.748679584644144
   lng: -60.50950405155951

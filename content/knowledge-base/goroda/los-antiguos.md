@@ -5,7 +5,10 @@ title: Los Antiguos
 title_es: Los Antiguos
 summary: En la Патагония Argentina, recorre un pueblo con historia junto al национальный
   парк Перито-Морено.
-status: stub
+status: archived
+site_ready: false
+redirect_to: patagonia
+archive_reason: "Неотредактированная импортная городская карточка объединена с каноническим русскоязычным гидом по Патагонии; исходник и лицензированные медиа сохранены."
 site_sections:
 - goroda-i-regiony
 - puteshestviya-po-argentine
@@ -22,7 +25,6 @@ how_to_get_there: На трассе RN 40 у озера Буэнос-Айрес,
   (переход к Чиле-Чико); автобусами связан с патагонскими городами. Отсюда удобно
   ехать к Куэва-де-лас-Манос.
 related: '[\"cueva-de-las-manos\", \"patagonia\", \"patagonia-park\"]'
-site_ready: false
 last_verified: '2026-07-07'
 confidence: medium
 seo_slug: los-antiguos-vishnyovaya-stolica

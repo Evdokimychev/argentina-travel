@@ -4,12 +4,15 @@ type: faq
 question: "Можно ли увидеть ледник Перито-Морено без специальной подготовки и трекинга?"
 short_answer: "Да — прогулочные настилы (pasarelas) у ледника не требуют физподготовки и подходят почти всем."
 topic: parki
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine]
 tags: [лос-гласьярес, перито-морено, треккинг]
 related: [los-glasiares, el-calafate]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: high
+redirect_to: los-glasiares
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

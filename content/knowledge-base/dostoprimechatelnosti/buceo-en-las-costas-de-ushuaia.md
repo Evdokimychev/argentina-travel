@@ -5,7 +5,7 @@ title: Дайвинг у берегов Ушуайи
 title_es: Buceo en las costas de Ushuaia
 title_en: Diving off the shores of Ushuaia
 summary: "Дайвинг в водах канала Бигл у Ушуайи — погружение в подводный мир самой южной Патагонии."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - огненная земля
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: ushuaia
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -54.85959543980891
   lng: -68.12169492244965

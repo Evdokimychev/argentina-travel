@@ -6,8 +6,10 @@ title: "Рестораны и как здесь едят: часы, типы з�
 title_es: "Restaurantes y costumbres a la mesa"
 aliases: ["рестораны Аргентины", "где поесть", "во сколько ужинают", "cubierto", "propina", "чаевые", "паррилья", "бодегон", "menú del día"]
 summary: "Как устроен общепит в Аргентине и как в нём не растеряться: поздние часы приёма пищи (ужин с 21:00!), типы заведений (паррилья, бодегон, историческое кафе, кантина), что такое cubierto и propina, где искать выгодный menú del día и как оставлять чаевые."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: kuhnya
+archive_reason: "Карточка о заведениях объединена с основным проверенным материалом об аргентинской кухне."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [гастрономия, рестораны, культура, быт, практика]

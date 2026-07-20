@@ -5,7 +5,7 @@ title: "Природный заповедник Кебрада-де-лос-Ко�
 title_es: Reserva Natural Quebrada de Los Cóndores
 title_en: Quebrada de Los Cóndores Natural Reserve
 summary: "Ущелье в горах Ла-Риохи с одной из крупнейших колоний андских кондоров: птицы парят буквально над головой."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

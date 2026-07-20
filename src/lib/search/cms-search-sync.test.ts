@@ -24,7 +24,7 @@ const baseDoc: CmsDocument = {
 };
 
 const knowledgeContent = Array.from(
-  { length: 125 },
+  { length: 620 },
   (_, index) => `проверенный-совет-${index + 1}`,
 ).join(" ");
 

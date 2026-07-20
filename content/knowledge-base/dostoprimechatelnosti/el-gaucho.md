@@ -5,7 +5,7 @@ title: "Гаучо"
 title_es: El Gaucho
 title_en: The Gaucho
 summary: "Вольный пастух аргентинских равнин — символ национального характера, с его конём, ножом, серебром и мате."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

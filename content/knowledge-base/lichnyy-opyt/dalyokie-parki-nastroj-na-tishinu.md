@@ -4,15 +4,18 @@ type: author_tip
 subtype: observation
 title: "Патагония-парк и Баньядо-ла-Эстрелья: места, в которые едут не за зрелищем, а за тишиной"
 summary: "Самые удалённые и малопосещаемые парки страны разочаровывают тех, кто ждёт «аттракционов», и вознаграждают тех, кто готов ждать у воды и ехать ради простора."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [патагония, природа, толпы]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Патагония.md"
 related: [patagonia-park, banado-la-estrella]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: patagonia-park
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Патагония.md, Баньядо-ла-Эстрелья.md — разделы «Советы местного гида»"
     url: ""

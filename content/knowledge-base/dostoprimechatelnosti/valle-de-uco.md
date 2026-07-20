@@ -5,7 +5,7 @@ title: "Валье-де-Уко"
 title_es: "Valle de Uco"
 aliases: "[\"долина Уко\", \"Valle de Uco\", \"винная долина Мендосы\", \"Тупунгато\", \"Тунуян\"]"
 summary: "Высокогорная винная долина в провинции Мендоса (около 900-1500 м) у подножия Анд — самый премиальный и модный винный регион Аргентины. Здесь сосредоточены знаковые винодельни с архитектурой и ресторанами, а высота даёт особенно выразительный мальбек."
-status: "published"
+status: "archived"
 site_sections: "[puteshestviya-po-argentine, goroda-i-regiony]"
 region_id: "cuyo"
 province: "Мендоса"
@@ -16,7 +16,9 @@ best_time: "[\"март-апрель (вендимия, сбор виногра�
 duration: "1-2 дня (винный тур с обедами)"
 how_to_get_there: "Около 1-1,5 часов на юг от города Мендоса на машине или в организованном винном туре; долина объединяет департаменты Тупунгато, Тунуян и Сан-Карлос."
 related: "[mendoza, vino-argentiny, vinnyy-marshrut, san-rafael]"
-site_ready: true
+site_ready: false
+redirect_to: cuyo
+archive_reason: "До появления лицензированного hero-изображения материал сохранён в архиве и ведёт на опубликованный региональный путеводитель; исходный текст и источники сохранены."
 last_verified: "2026-07-06"
 confidence: "medium"
 seo_slug: "valle-de-uco-vinnaya-dolina"

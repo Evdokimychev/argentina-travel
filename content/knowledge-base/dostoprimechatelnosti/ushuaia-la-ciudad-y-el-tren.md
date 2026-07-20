@@ -6,7 +6,7 @@ title_es: 'Ushuaia: la ciudad y el tren'
 title_en: 'Ushuaia: the city and the train'
 summary: En la ciudad más austral del planeta, te esperan la prisión de los confines
   y el tren del fin del mundo.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: tierra-del-fuego
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

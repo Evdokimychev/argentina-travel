@@ -5,8 +5,10 @@ title: "История железных дорог Аргентины: расц�
 title_es: "Historia de los ferrocarriles"
 aliases: ["история железных дорог Аргентины", "почему пришли в упадок поезда", "британские железные дороги", "национализация Перона", "ramal que para"]
 summary: "Почему в Аргентине когда-то была одна из крупнейших железнодорожных сетей мира — и почему сегодня поезда играют скромную роль. От британского «золотого века» и пика в 47 000 км до национализации Пероном, дефицитов и роковой приватизации 1990-х с лозунгом «ramal que para, ramal que cierra»."
-status: published
-site_ready: true
+status: archived
+site_ready: false
+redirect_to: mezhgorodnie-avtobusy
+archive_reason: "Историческая карточка объединена с практическим разделом междугороднего транспорта."
 site_sections: [zhizn-v-strane, puteshestviya-po-argentine]
 applies_to: both
 tags: [история, железные дороги, транспорт, почему, экономика]

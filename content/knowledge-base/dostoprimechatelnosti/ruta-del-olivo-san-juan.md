@@ -6,7 +6,7 @@ title_es: Ruta del Olivo, San Juan
 title_en: The Olive Route, San Juan
 summary: En la región de Куйо, vive la experiencia de recorrer olivares entre valles
   y paisajes de montaña.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -39,6 +39,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: cuyo
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

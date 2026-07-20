@@ -4,14 +4,19 @@ type: author_tip
 subtype: hidden_gem
 title: "Любимая паррилья или место для асадо у Ивана"
 summary: "Слот для личной рекомендации — конкретное место, куда Иван сам ходит за асадо, а не общий совет «попробуйте стейк в паррилье»."
-status: backlog
+status: archived
+site_ready: false
+redirect_to: kuhnya
+archive_reason: "Незаполненный шаблон личной истории без подтверждения автора выведен из редакционного корпуса; практическая информация доступна в проверенном гайде по кухне."
 site_sections: [lichnyy-opyt]
 tags: [кухня, скрытые места]
 personal_experience: true
+author_name: "Иван"
+author_slug: "ivan"
 verified_by_ivan: false
 extracted_from: ""
 related: [kuhnya, buenos-aires]
-last_verified: ""
+last_verified: "2026-07-20"
 confidence: medium
 sources: []
 ---

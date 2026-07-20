@@ -5,7 +5,7 @@ title: Реконкиста
 title_es: Reconquista
 title_en: Reconquista
 summary: "Реконкиста в Санта-Фе — город Литораля с историческим, археологическим и палеонтологическим наследием."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - северо-восток
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: litoral
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -29.1448193
   lng: -59.64352419999999

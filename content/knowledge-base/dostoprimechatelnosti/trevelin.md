@@ -8,7 +8,7 @@ summary: 'Небольшой городок валлийских пересел�
   рядом с Эскелем. Сохранил валлийский колорит: чайные домики с домашней выпечкой,
   старая мельница-музей и тюльпановые поля, а рядом — водопад Науэль-Пан и национальный
   парк Лос-Алерсес.'
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -26,7 +26,9 @@ duration: Полдня-день, часто как поездка из Эске�
 how_to_get_there: Около 25 км от [[esquel]] по трассе; на машине, такси или автобусе;
   удобно совмещать с национальным парком Лос-Алерсес.
 related: '[esquel, los-alerces, patagonia]'
-site_ready: true
+site_ready: false
+redirect_to: patagonia
+archive_reason: "До появления лицензированного hero-изображения материал сохранён в архиве и ведёт на опубликованный региональный путеводитель; исходный текст и источники сохранены."
 last_verified: '2026-07-06'
 confidence: medium
 seo_slug: trevelin-vallijskaya-patagoniya

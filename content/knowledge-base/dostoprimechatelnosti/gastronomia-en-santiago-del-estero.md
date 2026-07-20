@@ -6,7 +6,7 @@ title_es: Gastronomía en Santiago del Estero
 title_en: Food in Santiago del Estero
 summary: Date el placer de degustar las empanadas, las tortillas, el cabrito y otros
   manjares de una gastronomía rica en matices.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -54,6 +54,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

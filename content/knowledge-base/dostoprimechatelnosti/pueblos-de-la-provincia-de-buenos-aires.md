@@ -5,7 +5,7 @@ title: "Городки провинции Буэнос-Айрес"
 title_es: Pueblos de la provincia de Buenos Aires
 title_en: Villages in the Province of Buenos Aires
 summary: "Тихие пампасские городки вокруг столицы — гаучо-традиции, усадьбы и неспешный сельский ритм."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,6 +53,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: buenos-aires-province
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

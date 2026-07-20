@@ -4,15 +4,18 @@ type: author_tip
 subtype: route
 title: "Один день из Сальты через перевал в Качи и Кальчакские долины — связка, которую часто недооценивают по времени"
 summary: "Авторская последовательность дня по дороге Куэста-дель-Обиспо, Прямой Тин-Тин и Кальчакским долинам: ранний выезд, утренний перевал, обед в Качи, по возможности — ночёвка вместо спешки назад."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [горы, пустыня, винный регион, треккинг]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Лос-Кардонес.md"
 related: [los-cardones, salta]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: los-cardones
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Лос-Кардонес.md — раздел «Советы местного гида»"
     url: ""

@@ -5,7 +5,7 @@ title: Конные прогулки по степям Барилоче
 title_es: Cabalgatas en la estepa de Bariloche
 title_en: Horseback riding on the Bariloche steppe
 summary: "Верховые прогулки по патагонской степи в окрестностях Барилоче."
-status: published
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -15,7 +15,9 @@ tags:
 - патагония
 last_verified: '2026-07-07'
 confidence: medium
-site_ready: true
+site_ready: false
+redirect_to: bariloche
+archive_reason: "Неотредактированная карточка активности объединена с канонической русскоязычной страницей города; исходник и атрибуция сохранены для редакционного архива."
 coordinates:
   lat: -41.1318810894026
   lng: -71.28442170931238

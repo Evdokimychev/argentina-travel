@@ -4,15 +4,18 @@ type: author_tip
 subtype: hidden_gem
 title: "Барилоче: смотровые и берега озера Науэль-Уапи в обход толпы у Кампанарио"
 summary: "Серро-Лопес, Серро-Льяо-Льяо, Пуэрто-Блест и Колония-Суиса — те же виды и атмосфера озёрного края, что и у популярного Кампанарио, но без очередей."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, goroda-i-regiony]
 tags: [озёра, горы, треккинг, патагония]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Науэль-Уапи.md"
 related: [nauel-uapi, bariloche, ruta-40-sem-ozer]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: nauel-uapi
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Науэль-Уапи.md — раздел «Советы местного гида»"
     url: ""

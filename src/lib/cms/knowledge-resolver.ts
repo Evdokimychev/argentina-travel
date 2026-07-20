@@ -7,7 +7,12 @@ import {
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
 import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
-import { getAllEntries, getEntry, KB_SECTIONS } from "@/lib/knowledge-base/content";
+import {
+  getAllEntries,
+  getArchivedEntryIds,
+  getEntry,
+  KB_SECTIONS,
+} from "@/lib/knowledge-base/content";
 import {
   getPublicationIssues,
   isPublicKbEntry,
@@ -46,6 +51,10 @@ function normalizeBody(value: string | undefined): string {
 
 function countWords(value: string): number {
   return value.match(/[\p{L}\p{N}]+(?:[-’'][\p{L}\p{N}]+)*/gu)?.length ?? 0;
+}
+
+function optionalCmsString(value: string | undefined, fallback: string | null | undefined) {
+  return value === undefined ? fallback : (value.trim() || undefined);
 }
 
 export type CmsKnowledgePublicationIssue =
@@ -93,6 +102,18 @@ export function knowledgeEntryFromCms(doc: CmsDocument, fallback?: KbEntry): KbE
     site_ready: true,
     confidence: fallback?.confidence ?? (collector && collector.qualityScore >= 80 ? "high" : "medium"),
     last_verified: doc.publishedAt?.slice(0, 10) ?? doc.updatedAt.slice(0, 10),
+    author_name: optionalCmsString(doc.body.authorName, fallback?.author_name),
+    author_slug: optionalCmsString(doc.body.authorSlug, fallback?.author_slug),
+    author_bio: optionalCmsString(doc.body.authorBio, fallback?.author_bio),
+    author_avatar: optionalCmsString(doc.body.authorAvatar, fallback?.author_avatar),
+    personal_experience:
+      typeof doc.body.personalExperience === "boolean"
+        ? doc.body.personalExperience
+        : fallback?.personal_experience,
+    verified_by_ivan:
+      typeof doc.body.verifiedByAuthor === "boolean"
+        ? doc.body.verifiedByAuthor
+        : fallback?.verified_by_ivan,
     seo_slug: doc.slug,
     editorial: {
       ...fallbackEditorial,
@@ -121,6 +142,22 @@ export function getCmsKnowledgePublicationIssues(
   const entry = knowledgeEntryFromCms(doc, fallback);
   if (!entry) return ["incomplete_document"];
   issues.push(...getPublicationIssues(entry));
+
+  const hasCmsByline = Boolean(
+    doc.body.authorName?.trim() ||
+      doc.body.authorSlug?.trim() ||
+      doc.body.authorBio?.trim() ||
+      doc.body.authorAvatar?.trim() ||
+      doc.body.personalExperience ||
+      doc.body.verifiedByAuthor,
+  );
+  if (hasCmsByline && !entry.author_name?.trim()) issues.push("missing_author");
+  if (
+    hasCmsByline &&
+    (entry.personal_experience !== true || entry.verified_by_ivan !== true)
+  ) {
+    issues.push("unverified_personal_authorship");
+  }
 
   const collector = doc.body.collector;
   const preservesFallbackBody = Boolean(
@@ -152,10 +189,16 @@ export function isCmsKnowledgePublicDocument(
   doc: CmsDocument,
   fallback: KbEntry | undefined = getEntry(doc.slug),
 ): boolean {
+  return doc.seo.noIndex !== true && isCmsKnowledgeContentReady(doc, fallback);
+}
+
+export function isCmsKnowledgeContentReady(
+  doc: CmsDocument,
+  fallback: KbEntry | undefined = getEntry(doc.slug),
+): boolean {
   return (
     doc.docType === "knowledge" &&
     doc.status === "published" &&
-    doc.seo.noIndex !== true &&
     getCmsKnowledgePublicationIssues(doc, fallback).length === 0
   );
 }
@@ -170,8 +213,12 @@ const CMS_KNOWLEDGE_ISSUE_LABELS: Record<CmsKnowledgePublicationIssue, string> =
   internal_editorial_marker: "в тексте осталась внутренняя редакционная пометка",
   malformed_markdown_heading: "нарушена структура заголовков",
   missing_sensitive_source: "для чувствительного утверждения нет источника",
+  missing_source: "не указан проверяемый источник материала",
+  verification_due: "наступил срок повторной проверки фактов",
+  missing_author: "для личного материала не указан автор",
+  unverified_personal_authorship: "личный материал не подтверждён автором",
   sensitive_provenance_not_ready: "чувствительные утверждения не прошли проверку источников",
-  thin_content: "основной текст короче 120 слов",
+  thin_content: "основной текст короче редакционного минимума для этого формата",
   missing_hero: "для географического материала не выбрано главное изображение",
   incomplete_document: "не заполнены заголовок или основной текст",
   missing_source_provenance: "не указан проверяемый первоисточник",
@@ -189,10 +236,15 @@ export function describeCmsKnowledgePublicationIssues(
 export function mergeKnowledgeCatalog(
   fallbackEntries: KbEntry[],
   documents: CmsDocument[],
+  blockedIds: ReadonlySet<string> = new Set(),
 ): KbEntry[] {
   const byId = new Map(fallbackEntries.map((entry) => [entry.id, entry]));
 
   for (const document of documents) {
+    if (blockedIds.has(document.slug)) {
+      byId.delete(document.slug);
+      continue;
+    }
     if (document.docType !== "knowledge" || !isCmsDocumentComplete(document)) continue;
     if (document.seo.noIndex) {
       byId.delete(document.slug);
@@ -216,11 +268,12 @@ export async function resolveKnowledgeCatalog(locale = "ru"): Promise<KbEntry[]>
     "knowledge",
     locale,
   );
-  return mergeKnowledgeCatalog(fallback, documents);
+  return mergeKnowledgeCatalog(fallback, documents, getArchivedEntryIds());
 }
 
 /** Published CMS content overrides a generated KB entry and may add a new detail page. */
 export async function resolveKnowledgeEntry(slug: string, locale = "ru"): Promise<KbEntry | null> {
+  if (getArchivedEntryIds().has(slug)) return null;
   const fallback = getEntry(slug) ?? null;
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
@@ -236,8 +289,15 @@ export async function resolveKnowledgeEntry(slug: string, locale = "ru"): Promis
     locale,
     fallback,
     supabase,
-    isUsable: (doc) => isCmsKnowledgePublicDocument(doc, fallback ?? undefined),
-    merge: knowledgeEntryFromCms,
+    // A published noIndex override must still be observed so the static
+    // fallback receives noindex robots. Its content may replace the fallback
+    // only after the ordinary publication gate succeeds.
+    isUsable: (doc) =>
+      doc.seo.noIndex === true || isCmsKnowledgePublicDocument(doc, fallback ?? undefined),
+    merge: (doc, staticFallback) =>
+      isCmsKnowledgeContentReady(doc, staticFallback)
+        ? knowledgeEntryFromCms(doc, staticFallback)
+        : (staticFallback ?? null),
     onResolvedDocument: (doc) => {
       resolvedSeo = doc.seo;
     },

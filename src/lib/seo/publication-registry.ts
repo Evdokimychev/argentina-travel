@@ -73,6 +73,13 @@ export const RU_URL_DECISIONS: readonly RuUrlDecision[] = [
     reason: "duplicate_content",
   },
   {
+    path: "/baza-znaniy/aep-eze-stykovka",
+    match: "exact",
+    disposition: "redirect",
+    canonicalPath: "/baza-znaniy/aeroporty",
+    reason: "duplicate_content",
+  },
+  {
     path: "/excursions/city/city-151",
     match: "exact",
     disposition: "redirect",

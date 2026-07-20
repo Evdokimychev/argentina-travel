@@ -11,10 +11,10 @@ province: "Формоса"
 coordinates: { lat: -26.1833, lng: -58.1833 }
 airport_codes: ["FMA"]
 tags: [столица, граница, малотуристический]
-cost: { level: "$", details: "Один из самых бюджетных провинциальных центров Аргентины — цены на жильё и еду ниже, чем в Мисьонес или Корриентесе" }
+cost: { level: "$", details: "Сравнивайте жильё и транспорт на свои даты: предложение меньше, чем в крупных туристических центрах, а цены меняются на праздники" }
 best_time: ["апрель-сентябрь (более мягкие температуры и суше; с декабря по март изнуряющая жара и высокая влажность)"]
 duration: "1 день в самом городе — этого достаточно для исторического центра и набережной"
-how_to_get_there: "Самолётом из Буэнос-Айреса до аэропорта El Pucú (FMA, ~7 км от центра, ~1 ч 45 мин, единственное регулярное направление — Aerolíneas Argentinas). Автобусом дальнего следования из Буэнос-Айреса, Росарио, Корриентеса, Ресистенсии, Кордовы, Мендосы, Посадаса и Сальты. От автовокзала Формосы также ходят рейсовые автобусы в Клоринду, откуда идёт международный автобус до Асунсьона (Парагвай)."
+how_to_get_there: "Самолётом до аэропорта El Pucú (FMA) или междугородним автобусом; действующие направления и расписание проверяйте у перевозчика. Для наземного въезда провинциальный портал указывает RN 11 с севера и RN 81 с запада."
 related: [litoral, parque-nacional-rio-pilcomayo, banado-la-estrella]
 media:
   hero:
@@ -35,38 +35,62 @@ media:
       license: "CC BY-SA 3.0"
       source_page: "https://commons.wikimedia.org/wiki/File:Ciudad_de_Formosa.jpg"
 site_ready: true
+provenance:
+  schema_version: 1
+  mode: strict
+  stale_after_days: 30
 warnings:
   - "Город малотуристический: инфраструктура для иностранных путешественников (англоязычные гиды, туристическая навигация) развита значительно слабее, чем в Игуасу или Мендосе — не ждите насыщенной туристической программы или широкого выбора отелей международного уровня."
-  - "Лето (декабрь-март) — одно из самых жарких и влажных в Аргентине: дневные температуры регулярно превышают +35°C, а в пиковые волны жары — и +40°C, при высокой влажности (более 70% в среднем)."
+  - "Лето жаркое и влажное; дневные прогулки переносите на утро или вечер и проверяйте предупреждения о жаре."
   - "Прямая переправа на лодках в парагвайский Альберди — это официальный, но ограниченный по времени работы пограничный пункт (только для людей и ручного багажа, без машин); для въезда в Парагвай на автомобиле нужен мост Сан-Игнасио-де-Лойола в Клоринде, примерно в 120 км к северу."
 recommendations:
   - "Честно закладывайте город как транзитную остановку на 1 день или как базу для поездки в нацпарк Рио-Пилькомайо и Баньядо-ла-Эстрелья, а не как самостоятельную цель поездки."
   - "Прогулка по Костанере (набережной вдоль реки Парагвай) и площадь Сан-Мартин — компактный и приятный вечерний маршрут, особенно когда спадает дневная жара."
   - "Если нужен доступ в Парагвай на машине или туристическом автобусе — выбирайте мост в Клоринде, а не паромную переправу из порта Формосы."
   - "Бронируйте отели заранее в высокий сезон местных праздников (16 июля — день Богоматери Кармен, ноябрьская Fiesta del Río) — свободный номерной фонд в городе ограничен."
-last_verified: "2026-07-02"
+last_verified: "2026-07-20"
 confidence: high
 sources:
-  - title: "Wikipedia (EN) — Formosa, Argentina"
-    url: "https://en.wikipedia.org/wiki/Formosa,_Argentina"
-    lang: en
-    type: aggregator
-    note: "население, координаты, аэропорт, порт на Альберди, климат Кёппена"
-  - title: "Wikipedia (ES) — Formosa (ciudad)"
-    url: "https://es.wikipedia.org/wiki/Formosa_(ciudad)"
+  - id: formosa-official-city
+    title: "Ministerio de Turismo de Formosa — Ciudad de Formosa"
+    url: "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/"
     lang: es
-    type: aggregator
-    note: "перепись 2010 (222 226 чел.), основание 1879, мост в Клоринде vs паром на Альберди, климатические данные"
-  - title: "Argentina.gob.ar — Pasos Internacionales: Puerto Formosa - Puerto Alberdi"
+    type: official
+    authority: primary
+    checked_at: "2026-07-20"
+    expires_at: "2026-08-19"
+    url_status: verified
+  - id: formosa-official-things-to-do
+    title: "Ministerio de Turismo de Formosa — Qué hacer"
+    url: "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/que-hacer/"
+    lang: es
+    type: official
+    authority: primary
+    checked_at: "2026-07-20"
+    expires_at: "2026-08-19"
+    url_status: verified
+  - id: argentina-formosa-alberdi-border
+    title: "Argentina.gob.ar — Puerto Formosa - Puerto Alberdi"
     url: "https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/rio/70/Puerto-Formosa-Puerto-Alberdi"
     lang: es
     type: official
-    note: "официальное подтверждение: переправа Формоса-Альберди — только лодка (lancha de pasajeros), без проезда транспорта, ограниченный график работы"
-  - title: "Tourister.ru — Формоса, Аргентина: путеводитель"
-    url: "https://www.tourister.ru/world/america/argentina/city/formosa"
-    lang: ru
-    type: ru_blog
-    note: "общая характеристика малотуристического статуса города"
+    authority: primary
+    checked_at: "2026-07-20"
+    expires_at: "2026-08-19"
+    url_status: verified
+claims:
+  - id: formosa-city-access
+    text: "К городу ведут RN 11 и RN 81, а коммерческие рейсы принимаются в аэропорту El Pucú."
+    sensitive: true
+    source_ids: [formosa-official-city]
+    verified_at: "2026-07-20"
+    reviewer: { id: goargentina-editorial, role: "Редакционная проверка источников" }
+  - id: formosa-alberdi-passenger-crossing
+    text: "Пограничный переход Puerto Formosa–Puerto Alberdi является пассажирской речной переправой; режим работы нужно проверять перед поездкой."
+    sensitive: true
+    source_ids: [argentina-formosa-alberdi-border]
+    verified_at: "2026-07-20"
+    reviewer: { id: goargentina-editorial, role: "Редакционная проверка источников" }
 ---
 
 ## Описание
@@ -80,7 +104,19 @@ sources:
 - Расположен примерно в 1100–1200 км от Буэнос-Айреса (по разным маршрутам и источникам) на правом берегу реки Парагвай.
 - Прямая переправа с Парагваем (город Альберди) организована только лодками-пассажирками (lancha) через порт Формосы — это официальный пограничный пункт, но без проезда автомобилей и с ограниченным расписанием работы (будни, укороченный день по субботам).
 - Автомобильная и автобусная граница с Парагваем проходит через мост Сан-Ихнасио-де-Лойола в городе Клоринда, примерно в 120 км к северу от Формосы.
-- Аэропорт Эль-Пуку (FMA) в 7 км от центра принимает только регулярные рейсы на Буэнос-Айрес.
+- Аэропорт Эль-Пуку имеет код FMA; маршрутную сеть и частоту рейсов проверяйте у перевозчика на свои даты.
+
+## Маршрут на один день
+
+Утром пройдите исторический центр и музей Juan Pablo Duffard, затем зайдите в Casa de la Artesanía. После дневной жары оставьте время на Costanera Vuelta Fermoza: официальный портал описывает семикилометровую набережную с велодорожкой, местами отдыха и бывшей железнодорожной зоной. Конкретные часы музеев и культурных пространств проверяйте в день визита.
+
+Формоса подходит как спокойная остановка, а не как база для нескольких удалённых природных объектов в один день. Национальный парк Río Pilcomayo и Баньядо-ла-Эстрелья находятся в разных направлениях и требуют отдельной логистики, состояния дорог и ночёвок. Не покупайте программу, где обе точки обещают как короткую вылазку из города.
+
+## Транспорт и граница
+
+Аэропорт и автовокзал находятся вне компактного прогулочного маршрута, поэтому заранее сохраните адрес жилья и способ трансфера. Расписание рейсов и автобусов меняется: проверяйте его у перевозчика, а не в поле `how_to_get_there` этой статьи.
+
+Лодка в Альберди — международный пограничный переход, а не обычная речная прогулка. Перед поездкой проверьте часы, миграционные документы, погодные ограничения и обратный рейс на официальной странице. Для автомобиля выбирают другой пограничный маршрут через Клоринду; не приезжайте в порт Формосы в расчёте перевезти машину.
 
 ## Связанные объекты
 
@@ -90,7 +126,6 @@ sources:
 
 ## Источники
 
-- [Wikipedia (EN) — Formosa, Argentina](https://en.wikipedia.org/wiki/Formosa,_Argentina) — общие данные, аэропорт, порт, климат.
-- [Wikipedia (ES) — Formosa (ciudad)](https://es.wikipedia.org/wiki/Formosa_(ciudad)) — перепись, история основания, транспортная инфраструктура.
-- [Argentina.gob.ar — Puerto Formosa - Puerto Alberdi](https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/rio/70/Puerto-Formosa-Puerto-Alberdi) — официальное подтверждение формата переправы в Парагвай.
-- [Tourister.ru — Формоса](https://www.tourister.ru/world/america/argentina/city/formosa) — общая туристическая характеристика.
+- [Министерство туризма Формосы — город и транспорт](https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/)
+- [Министерство туризма Формосы — что посмотреть](https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/que-hacer/)
+- [Argentina.gob.ar — Puerto Formosa–Puerto Alberdi](https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/rio/70/Puerto-Formosa-Puerto-Alberdi)

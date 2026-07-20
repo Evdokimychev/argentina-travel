@@ -6,7 +6,7 @@ title_es: 'Parques Naturales Ischigualasto y Talampaya: Patrimonios de la Humani
 title_en: 'Ischigualasto and Talampaya Natural Parks: World Heritage Sites'
 summary: En las provincias de San Juan y de La Rioja, te esperan paisajes que son
   de otro tiempo y parecen de otro planeta.
-status: stub
+status: archived
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -55,6 +55,9 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+redirect_to: noa
+archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+
 ---
 
 ## Описание

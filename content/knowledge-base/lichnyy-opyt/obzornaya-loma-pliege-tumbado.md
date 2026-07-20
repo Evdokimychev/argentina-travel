@@ -4,15 +4,18 @@ type: author_tip
 subtype: hidden_gem
 title: "Недооценённая смотровая Эль-Чальтена в обход очереди на Лагуна-де-лос-Трес"
 summary: "Лома-дель-Плиегуэ-Тумбадо — менее раскрученный трек в Эль-Чальтене с панорамой шире, чем у популярных озёр, и почти без людей."
-status: published
+status: archived
+site_ready: false
 site_sections: [lichnyy-opyt, puteshestviya-po-argentine]
 tags: [треккинг, патагония, ледники]
 personal_experience: false
 verified_by_ivan: false
 extracted_from: "../../Национальный-парк-Лос-Гласьярес.md"
 related: [los-glasiares, el-chalten]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: medium
+redirect_to: el-chalten
+archive_reason: "Материал был создан как авторский совет, но личный опыт и авторская проверка не подтверждены; содержательные сведения перенесены в канонический материал."
 sources:
   - title: "Национальный-парк-Лос-Гласьярес.md — раздел «Советы местного гида»"
     url: ""

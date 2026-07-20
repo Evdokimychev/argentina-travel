@@ -4,12 +4,15 @@ type: faq
 question: "Сколько дней нужно на парк Игуасу?"
 short_answer: "Минимум один полный день на аргентинскую сторону; оптимально — два (действует скидка 50% на второй день)."
 topic: parki
-status: published
+status: archived
+site_ready: false
 site_sections: [puteshestviya-po-argentine]
 tags: [игуасу, планирование]
 related: [iguasu, argentina-2-nedeli]
-last_verified: "2026-06-30"
+last_verified: "2026-07-20"
 confidence: high
+redirect_to: iguasu
+archive_reason: "Короткий ответ не имеет подтверждённых первичных источников и не прошёл редакционную проверку; читатель перенаправляется к каноническому материалу для обновления."
 sources: []
 ---
 

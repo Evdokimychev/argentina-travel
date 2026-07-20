@@ -19,18 +19,18 @@ how_to_get_there: "Из Посадаса (столицы провинции Ми
 related: [iguasu, litoral, ibera]
 media:
   hero:
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Ruins_of_San_Ignacio_Min%C3%AD.jpg/1600px-Ruins_of_San_Ignacio_Min%C3%AD.jpg"
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Ruins_of_San_Ignacio_Min%C3%AD.jpg/1280px-Ruins_of_San_Ignacio_Min%C3%AD.jpg"
     alt: "Резной фасад иезуитской церкви в руинах Сан-Игнасио-Мини"
     author: "Fernando"
     license: "CC BY-SA 4.0"
     source_page: "https://commons.wikimedia.org/wiki/File:Ruins_of_San_Ignacio_Miní.jpg"
   gallery:
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ruins_of_San_Ignacio_Min%C3%AD_-_Church.jpg/1600px-Ruins_of_San_Ignacio_Min%C3%AD_-_Church.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ruins_of_San_Ignacio_Min%C3%AD_-_Church.jpg/1280px-Ruins_of_San_Ignacio_Min%C3%AD_-_Church.jpg"
       alt: "Стены церкви миссии Сан-Игнасио-Мини из красного песчаника"
       author: "Fernando"
       license: "CC BY-SA 4.0"
       source_page: "https://commons.wikimedia.org/wiki/File:Ruins_of_San_Ignacio_Miní_-_Church.jpg"
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/San_Ignacio_Min%C3%AD_mission_ruins.jpg/1600px-San_Ignacio_Min%C3%AD_mission_ruins.jpg"
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/San_Ignacio_Min%C3%AD_mission_ruins.jpg/1280px-San_Ignacio_Min%C3%AD_mission_ruins.jpg"
       alt: "Общий вид руин иезуитской миссии Сан-Игнасио-Мини"
       author: "Miguel Vieira"
       license: "CC BY 2.0"
@@ -93,7 +93,7 @@ sources:
 ## Связанные объекты
 
 - [[iguasu|Национальный парк Игуасу]] — водопады Игуасу, главная достопримечательность региона; логично комбинировать в единый маршрут по провинции Мисьонес (3-4 часа в пути между точками).
-- [[litoral|Литораль (Северо-Восток / Месопотамия)]] — макрорегион Северо-Востока (Месопотамии), в который входит провинция Мисьонес и все иезуitские миссии.
+- [[litoral|Литораль (Северо-Восток / Месопотамия)]] — макрорегион Северо-Востока (Месопотамии), в который входит провинция Мисьонес и все иезуитские миссии.
 - [[ibera|Национальный парк Ибера]] — природный резерват Ибера в том же макрорегионе Литораль, логичное дополнение к культурно-историческому визиту в миссию для более длинного маршрута по региону.
 
 ## Источники
