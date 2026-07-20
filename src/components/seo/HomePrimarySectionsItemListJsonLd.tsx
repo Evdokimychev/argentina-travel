@@ -1,15 +1,16 @@
 import JsonLdScript from "@/components/seo/JsonLdScript";
-import { fetchSiteBranding, fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteBranding } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import { buildHomePrimarySectionsItemListJsonLd } from "@/lib/site-sections-json-ld";
 
 export default async function HomePrimarySectionsItemListJsonLd() {
-  const [branding, navigation] = await Promise.all([
+  const [branding, controlPlane] = await Promise.all([
     fetchSiteBranding(),
-    fetchSiteNavigation(),
+    fetchSiteControlPlaneEdge(),
   ]);
   return (
     <JsonLdScript
-      data={buildHomePrimarySectionsItemListJsonLd(branding.siteName, navigation)}
+      data={buildHomePrimarySectionsItemListJsonLd(branding.siteName, controlPlane.navigation)}
     />
   );
 }

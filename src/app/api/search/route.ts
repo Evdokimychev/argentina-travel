@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { executeSiteSearch } from "@/lib/search/search-query";
 import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
-import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import { isPublicPathIncludedInSearch } from "@/lib/public-module-visibility";
 
 export async function GET(request: Request) {
@@ -19,18 +19,21 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
   }
 
-  const [payload, navigation, modules] = await Promise.all([
+  const [payload, controlPlane] = await Promise.all([
     executeSiteSearch(q, {
       kind,
       limit: Number.isFinite(limit) ? limit : undefined,
     }),
-    fetchSiteNavigation(),
-    fetchSiteModules(),
+    fetchSiteControlPlaneEdge(),
   ]);
   const visiblePayload = {
     ...payload,
     results: payload.results.filter((result) =>
-      isPublicPathIncludedInSearch(result.url, navigation, modules),
+      isPublicPathIncludedInSearch(
+        result.url,
+        controlPlane.navigation,
+        controlPlane.modules,
+      ),
     ),
   };
 

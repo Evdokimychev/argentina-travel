@@ -25,7 +25,7 @@ import { getRecommendedListings } from "@/lib/tour-listing-ranking";
 import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
 import type { Testimonial, TourListing } from "@/types";
 import type { InteractionActor } from "@/lib/personalization/interactions-server";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -105,7 +105,7 @@ export default function HomePage() {
   const catalogData = loadMarketplaceHomeCatalogData(actorPromise, toursPromise);
   const testimonials = loadMarketplaceHomeTestimonials();
   const excursionCities = fetchExcursionCitiesServer();
-  const navigation = fetchSiteNavigation();
+  const navigation = fetchSiteControlPlaneEdge().then((snapshot) => snapshot.navigation);
   const heroSrc = getHomeHeroImage();
 
   return (
