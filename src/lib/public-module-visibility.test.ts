@@ -78,6 +78,9 @@ describe("public module visibility", () => {
     expect(isTravelModulePathEnabled("/transfers/airport", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/apartments", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/services", modules)).toBe(true);
+    expect(isPublicPathIncludedInSearch("/transfers?from=eze", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+    expect(isPublicPathIncludedInSitemap("/transfers", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+    expect(isPublicPathIncludedInSearch("/car-rental", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
   });
 
   it("separates route publication, menu visibility, search and sitemap", () => {

@@ -2,6 +2,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { resolveSiteGlobalForLocale } from "@/lib/cms/site-globals/locale-resolve";
 import {
   DEFAULT_SITE_BRANDING,
+  DEFAULT_SITE_MODULES,
   normalizeSiteBranding,
   normalizeSiteBlog,
   normalizeSiteCommerce,
@@ -182,7 +183,22 @@ export async function fetchSiteCommerce(): Promise<SiteCommerceGlobal> {
 }
 
 export async function fetchSiteModules(): Promise<SiteModulesGlobal> {
-  return normalizeSiteModules(await loadSettingsKey("site.modules"));
+  const result = await loadSettingsSnapshot();
+  if (result.ok) return normalizeSiteModules(result.values["site.modules"]);
+
+  // Match the edge control plane: established read-only sections may keep
+  // their defaults, but travel modules must not expose links to routes whose
+  // middleware and APIs fail closed while settings are unavailable.
+  return {
+    ...DEFAULT_SITE_MODULES,
+    apartmentsMode: "disabled",
+    carRentalMode: "disabled",
+    transfersMode: "disabled",
+    hotelsMode: "disabled",
+    showApartmentsInServices: false,
+    showCarRentalInServices: false,
+    showTransfersInServices: false,
+  };
 }
 
 export type SiteModuleControlSnapshot =

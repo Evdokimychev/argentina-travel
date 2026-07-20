@@ -22,6 +22,7 @@ import {
 } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import { SITE_NAV_SECTIONS, SITE_NAV_UTILITY_LINKS } from "@/data/site-nav";
+import { filterSiteNavSections } from "@/lib/public-module-visibility";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -139,6 +140,11 @@ export default async function RootLayout({
     getServerI18nLocale(),
   ]);
   const locale = localeCodeFromI18n(i18nLocale);
+  const publicNavSections = filterSiteNavSections(
+    SITE_NAV_SECTIONS,
+    siteNavigation,
+    siteModules,
+  );
 
   return (
     <html
@@ -180,7 +186,7 @@ export default async function RootLayout({
             siteMarketing={siteMarketing}
             siteForms={siteForms}
             siteModules={siteModules}
-            siteNavSections={SITE_NAV_SECTIONS}
+            siteNavSections={publicNavSections}
             siteNavUtilityLinks={SITE_NAV_UTILITY_LINKS}
           >
             {children}
