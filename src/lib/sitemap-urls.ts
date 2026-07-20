@@ -31,7 +31,10 @@ import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
 import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
-import { isPublicPathIncludedInSitemap } from "@/lib/public-module-visibility";
+import {
+  isPublicPathIncludedInSitemap,
+  isTravelModulePathEnabled,
+} from "@/lib/public-module-visibility";
 import { KB_SECTIONS } from "@/lib/knowledge-base/content";
 import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
@@ -301,7 +304,8 @@ export function filterSitemapPathsByPublicSettings(
   return filterRuSitemapPaths(paths).filter(
     (path) =>
       isIndexableInternalPath(path) &&
-      isPublicPathIncludedInSitemap(path, navigation, modules),
+      isPublicPathIncludedInSitemap(path, navigation, modules) &&
+      isTravelModulePathEnabled(path, modules),
   );
 }
 
