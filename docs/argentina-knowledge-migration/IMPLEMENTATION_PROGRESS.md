@@ -5,7 +5,7 @@ Cutover date: 2026-07-20. Target: production Supabase `uooxrypocahomoqzdvzy` and
 | Workstream | Status | Evidence |
 |---|---|---|
 | Inventory and target architecture | DONE | architecture, source inventory, feature matrix, ADR |
-| Native schema, RLS and rollback | DONE | 105 journaled migrations; latest explicit Data API grants `20260720222912` |
+| Native schema, RLS and rollback | DONE | 107 journaled migrations; latest explicit Data API grants `20260720230600` |
 | Telegram, web, RSS/Atom, JSON, sitemap, YouTube, manual | DONE | shared adapters and admin source registry |
 | Full-text/captions/checkpoints | DONE | bounded backlog, YouTube captions, RSS full text |
 | Pipeline, retry, dedupe and telemetry | DONE | checkpoint-on-success, retryable raw rows, full exact/near scan |
@@ -20,6 +20,7 @@ Cutover date: 2026-07-20. Target: production Supabase `uooxrypocahomoqzdvzy` and
 | Backup and legacy archive | DONE | encrypted DB dump and full 8,104-entry Collector archive |
 | Production deployment and smoke | DONE | deployment `dpl_2LwK3EEmVJ6ReQKb5dFwqen1P7zW`; health/schema/auth guards and public smoke PASS |
 | Live Telegram cutover | DONE | first run processed 3 items; second checkpoint run processed 0 |
+| Durable scheduler telemetry | DONE | GitHub dispatch succeeded and `ops_cron_runs` stored HTTP 200 evidence |
 | Legacy runtime decommission | DONE | fail-closed entrypoint plus `DECOMMISSIONED.md`; encrypted rollback archive retained |
 
 AI enrichment is optional. Vercel AI Gateway authentication is configured through OIDC, but inference currently requires account billing verification. Deterministic scoring, dedupe, ingestion and moderation remain operational without AI.

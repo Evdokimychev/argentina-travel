@@ -12,6 +12,7 @@
 8. Enabled `telegram:vista_argentina`; the first live run processed 3 items with 0 failures.
 9. Forced a second due run; it fetched and created 0 items with checkpoint 785 unchanged.
 10. Replaced the legacy entrypoint with a fail-closed notice and retained the encrypted rollback archive.
+11. Repaired a historical-baseline drift for `ops_cron_runs`; workflow dispatch now stores durable HTTP 200 evidence under RLS.
 
 ## Rollback
 
