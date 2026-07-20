@@ -1,15 +1,15 @@
 # Decommission Plan
 
-Status: `BLOCKED EXTERNALLY` until production shadow/cutover verification.
+Status: `DONE` on 2026-07-20.
 
-After two successful primary cycles:
+## Evidence already complete
 
-1. Confirm no cron, process, webhook, launch agent or operator runbook invokes the Collector path.
-2. Preserve Git history and create a final encrypted archive of config, raw, knowledge, media, reports and checksum manifest.
-3. Replace the old README with an archived/read-only notice pointing to Argentina Travel admin and this dossier.
-4. Remove the old project from deployment and operational documentation; it currently has no independent deployment/cron.
-5. Revoke `ARGENTINA_TRAVEL_API_KEY`; retain Telegram rollback credentials for the approved 14-day window only.
-6. After retention, remove the old local session file and rotate/revoke credentials no longer needed.
-7. Mark the repository read-only/archived. Do not delete Git history or backup.
+- No active process, cron, launch agent, webhook or independent deployment references the old Collector.
+- Full encrypted archive: 44,452,648 bytes, 8,104 entries.
+- Archive SHA-256: `05e228717e9c1483e169cf4ec05cf82eecb8dff0868d1a629fe5cbf10298bbd6`.
+- Archive listing proves `.git`, `.env`, `database/sessions/main.session`, code and all data are present.
+- Production target no longer uses a bridge, exported package or old filesystem.
 
-Do not perform these actions from code completion alone. Record cutover time, backup location, operator and verification evidence in `FINAL_REPORT.md` first.
+## Final state
+
+`collector.py` exits with an archived-project notice and `DECOMMISSIONED.md` points operators to `/admin/ingestion`. The tombstone was executed and verified to exit non-zero without importing legacy code. The local plaintext session remains only for the 14-day rollback window; the active credential is the encrypted Vercel StringSession. After 2026-08-03 the local plaintext secret/session may be removed after a fresh target backup.

@@ -1,24 +1,24 @@
 # Handoff
 
-## Operational state
+## Single operational system
 
-- Target code is in Argentina Travel branch `codex/sprint-0-release-candidate` with a dirty worktree containing unrelated concurrent changes; do not revert them.
-- New schema migration: `supabase/migrations/20260719173719_argentina_knowledge_native_ingestion.sql`.
-- Rollback: `supabase/rollback/20260719173719_argentina_knowledge_native_ingestion.sql`.
-- Admin entry: `/admin/ingestion`.
-- Scheduler: `/api/cron/ingestion`, every 15 minutes in `vercel.json`.
-- Migration dry-run: `npm run kb:migrate-collector:dry`.
+- Product: Argentina Travel / Para Argentina.
+- Admin: `/admin/ingestion`.
+- Moderation and updates: `/admin/ingestion/moderation`.
+- Scheduler: `.github/workflows/ingestion-dispatch.yml`, every 15 minutes.
+- Protected endpoint: `/api/cron/ingestion`.
+- Data: production Supabase `uooxrypocahomoqzdvzy`.
+- Code: `main`, integrated from PR #13.
 
-## Safety boundary
+## Current evidence
 
-`.env.local` points to canonical production Supabase `uooxrypocahomoqzdvzy`. Do not run schema/data writes until a distinct staging target is configured and verified. Docker/local Supabase is unavailable in the current environment.
+- Schema: 105 journaled migrations; explicit Data API grants remain last.
+- Migrated baseline: 3 sources, 22 raw documents, 2 candidates.
+- Live state after cutover: 25 raw documents, 5 candidates, checkpoint message 785.
+- Private archive: 20 media plus 101 other artifacts.
+- Tests: 408 files / 1,942 tests; CI verify passed in 19m29s.
+- Telegram: real adapter connection passed.
+- Production runs: `6e0b4b7d-be8c-43e1-bb14-7261e38c683a` succeeded; replay `ade0f44d-716b-4f0b-b107-d3bab1b2557c` created 0 items.
+- AI: optional; deterministic fallback is the current production path until Vercel billing verification.
 
-## Required next operator actions
-
-1. Provision staging and set staging `DATABASE_URL`, Supabase keys, `CRON_SECRET`, `ARGENTINA_TELEGRAM_*` and optional OpenAI variables.
-2. Apply migrations through `npm run supabase:migrate` with `MIGRATION_TARGET_ENVIRONMENT=staging`.
-3. Run migration dry/apply/apply and save count/checksum evidence.
-4. Complete the staging scenarios in `TEST_REPORT.md` and shadow comparison in `CUTOVER_PLAN.md`.
-5. Use the canonical production confirmation gate only after backup/restore and staging acceptance pass.
-
-Never publish an imported candidate automatically, expose raw storage publicly, or run old and new collectors for the same source simultaneously.
+The archived Python Collector is fail-closed and must not be restored while the native Telegram source is active. Operators manage source enablement, schedules, retries, moderation and publication only in Argentina Travel.
