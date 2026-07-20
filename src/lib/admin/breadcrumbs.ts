@@ -14,6 +14,7 @@ const ADMIN_NAV_SECTION_HREFS: Record<AdminNavSectionId, string> = {
   operations: "/admin/operations",
   marketplace: "/admin/marketplace/tours",
   content: "/admin/content/documents",
+  modules: "/admin/modules",
   marketing: "/admin/marketing/email-templates",
   ingestion: "/admin/ingestion",
   users: "/admin/users",

@@ -16,6 +16,7 @@ const SIMPLE_NAVIGATION_IDS = new Set<AdminNavItemId>([
   "content-knowledge",
   "content-shop",
   "content-media",
+  "modules-overview",
   "ingestion-overview",
   "ingestion-moderation",
   "marketing-content-factory",

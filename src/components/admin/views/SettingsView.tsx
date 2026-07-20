@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -176,6 +177,7 @@ async function submitSettingsPatch(payload: SettingsPatchPayload): Promise<void>
 
 type SettingsTab =
   | "appearance"
+  | "navigation"
   | "content"
   | "commerce"
   | "marketing"
@@ -184,21 +186,27 @@ type SettingsTab =
 
 const TAB_LABELS: Record<SettingsTab, string> = {
   appearance: "Внешний вид",
+  navigation: "Навигация",
   content: "Контент",
   commerce: "Туры и магазин",
-  marketing: "SEO и коммуникации",
+  marketing: "SEO, контакты и интеграции",
   access: "Команда и правила",
   operations: "Работа сайта",
 };
 
 const TAB_DESCRIPTIONS: Record<SettingsTab, string> = {
-  appearance: "Логотипы, палитра, типографика, шапка, подвал и главное меню.",
+  appearance: "Логотипы, палитра, типографика, шапка, подвал и визуальный предпросмотр.",
+  navigation: "Публичные разделы, служебные ссылки и переход к полному управлению модулями.",
   content: "Состав статей, медиатека, страницы, переводы и публикации.",
   commerce: "Каталог товаров и рабочие разделы туров, экскурсий и организаторов.",
   marketing: "Поисковая видимость, социальные каналы, аналитика и воронки.",
   access: "Юридические данные, функции сайта, сотрудники, роли и журнал действий.",
   operations: "Обслуживание, резервные копии, здоровье сайта и техническая готовность.",
 };
+
+function isSettingsTab(value: string | null): value is SettingsTab {
+  return Boolean(value && value in TAB_LABELS);
+}
 
 type ModuleLink = {
   href: string;
@@ -207,6 +215,10 @@ type ModuleLink = {
 };
 
 const MODULE_LINKS: Partial<Record<SettingsTab, ModuleLink[]>> = {
+  navigation: [
+    { href: "/admin/modules", label: "Модули сайта", description: "Публикация, меню, поиск, sitemap и зависимости." },
+    { href: "/admin/system/redirects", label: "Переадресации", description: "Старые URL и безопасные постоянные перенаправления." },
+  ],
   content: [
     { href: "/admin/content/documents", label: "Страницы и статьи", description: "Редактирование и публикация материалов." },
     { href: "/admin/media", label: "Медиафайлы", description: "Изображения, документы и права использования." },
@@ -242,7 +254,8 @@ const MODULE_LINKS: Partial<Record<SettingsTab, ModuleLink[]>> = {
 };
 
 const TAB_GLOBAL_KEYS: Record<SettingsTab, SiteGlobalKey[]> = {
-  appearance: ["site.branding", "site.design", "site.navigation"],
+  appearance: ["site.branding", "site.design"],
+  navigation: ["site.navigation"],
   content: ["site.blog"],
   commerce: ["site.commerce", "site.modules"],
   marketing: ["site.marketing", "site.seo", "site.contact", "site.forms", "site.email"],
@@ -307,8 +320,12 @@ function emptyGlobalsState(): Record<SiteGlobalKey, Record<string, unknown>> {
 }
 
 export default function SettingsView() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { data, loading, error, refresh } = useAdminApi<SettingsResponse>("/api/admin/settings");
-  const [tab, setTab] = useState<SettingsTab>("appearance");
+  const requestedTab = searchParams.get("tab");
+  const tab: SettingsTab = isSettingsTab(requestedTab) ? requestedTab : "appearance";
   const [globals, setGlobals] = useState(emptyGlobalsState);
   const [baselines, setBaselines] = useState(emptyGlobalsState);
   const globalsRef = useRef(globals);
@@ -323,6 +340,12 @@ export default function SettingsView() {
     variant: "success" | "error";
     message: string;
   } | null>(null);
+
+  const selectTab = useCallback((nextTab: SettingsTab) => {
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.set("tab", nextTab);
+    router.push(`${pathname}?${nextSearchParams.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams]);
 
   useEffect(() => {
     if (!data?.settings) return;
@@ -625,7 +648,7 @@ export default function SettingsView() {
           <NativeSelect
             id="mobile-settings-section"
             value={tab}
-            onChange={(event) => setTab(event.target.value as SettingsTab)}
+            onChange={(event) => selectTab(event.target.value as SettingsTab)}
             className="mt-1"
           >
             {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
@@ -635,12 +658,16 @@ export default function SettingsView() {
           <p className="mt-2 text-xs leading-5 text-slate">{TAB_DESCRIPTIONS[tab]}</p>
         </div>
 
-        <div className="hidden gap-2 sm:grid sm:grid-cols-2 xl:grid-cols-3">
+        <div className="hidden gap-2 sm:grid sm:grid-cols-2 xl:grid-cols-3" role="tablist" aria-label="Разделы настроек">
           {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (
             <button
               key={tabKey}
               type="button"
-              onClick={() => setTab(tabKey)}
+              role="tab"
+              aria-selected={tab === tabKey}
+              aria-controls={`settings-panel-${tabKey}`}
+              id={`settings-tab-${tabKey}`}
+              onClick={() => selectTab(tabKey)}
               className={`min-h-20 rounded-2xl border px-4 py-3 text-left transition-colors ${
                 tab === tabKey
                   ? "border-sky-ink bg-sky-ink text-white"
@@ -655,7 +682,12 @@ export default function SettingsView() {
           ))}
         </div>
 
-        <div className="space-y-6">
+        <div
+          id={`settings-panel-${tab}`}
+          role="tabpanel"
+          aria-labelledby={`settings-tab-${tab}`}
+          className="space-y-6"
+        >
           {selectedDefinitions.map((definition) => (
             <SiteGlobalForm
               key={definition.key}
@@ -675,9 +707,12 @@ export default function SettingsView() {
           {tab === "appearance" ? (
             <>
               <SiteDesignPreview values={globals["site.design"]} />
-              <SiteNavigationPreview values={globals["site.navigation"]} />
               <ThemeSettingsSection />
             </>
+          ) : null}
+
+          {tab === "navigation" ? (
+            <SiteNavigationPreview values={globals["site.navigation"]} />
           ) : null}
 
           {tab === "content" || tab === "commerce" ? (
