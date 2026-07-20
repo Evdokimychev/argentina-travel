@@ -15,6 +15,7 @@ describe("map accessibility and location privacy", () => {
   it("offers a keyboard-accessible list alternative", () => {
     expect(hub).toContain('aria-label="Объекты карты списком"');
     expect(hub).toContain('aria-label="Показать объекты списком"');
+    expect(hub).toContain('aria-controls={listOpen ? "map-accessible-list" : undefined}');
   });
 
   it("explains location use before requesting browser permission", () => {
