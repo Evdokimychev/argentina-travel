@@ -2,8 +2,7 @@ import { notFound } from "next/navigation";
 import ShopProductDetailView from "@/components/shop/ShopProductDetailView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { fetchSiteCommerce } from "@/lib/site-settings-server";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteCommerce, fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { fetchPublishedShopProductBySlug, fetchPublishedShopProducts } from "@/lib/shop-products-server";
 
@@ -24,13 +23,14 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function ShopProductPage({ params }: PageProps) {
-  const [{ slug }, settings, navigation, catalog] = await Promise.all([
+  const [{ slug }, settings, navigation, modules, catalog] = await Promise.all([
     params,
     fetchSiteCommerce(),
     fetchSiteNavigation(),
+    fetchSiteModules(),
     fetchPublishedShopProducts(),
   ]);
-  if (!isPublicPathEnabled("/shop", navigation)) notFound();
+  if (!isPublicPathEnabled("/shop", navigation, modules)) notFound();
   const product = catalog.find((item) => item.slug === slug);
   if (!product) notFound();
 

@@ -6,7 +6,7 @@ import {
 } from "@/lib/forum/forum-server";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(
@@ -45,8 +45,8 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ slug: string }> }
 ) {
-  const navigation = await fetchSiteNavigation();
-  if (!isPublicPathEnabled("/forum", navigation)) {
+  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
+  if (!isPublicPathEnabled("/forum", navigation, modules)) {
     return NextResponse.json({ error: "Форум отключён" }, { status: 404 });
   }
 

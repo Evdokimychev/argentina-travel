@@ -23,6 +23,7 @@ import type {
   SiteGlobalKey,
   SiteGlobalsMap,
 } from "@/types/site-globals";
+import { SITE_PUBLIC_MODULE_IDS } from "@/types/site-globals";
 
 export const DEFAULT_SITE_BRANDING_LOCALES: SiteGlobalLocaleOverrides<SiteBrandingTranslatable> = {
   en: {
@@ -194,6 +195,17 @@ export const DEFAULT_SITE_MODULES: SiteModulesGlobal = {
   showApartmentsInServices: true,
   showCarRentalInServices: true,
   showTransfersInServices: true,
+  publicModules: Object.fromEntries(
+    SITE_PUBLIC_MODULE_IDS.map((id) => [
+      id,
+      {
+        activated: true,
+        published: true,
+        includeInSearch: true,
+        includeInSitemap: true,
+      },
+    ]),
+  ) as SiteModulesGlobal["publicModules"],
 };
 
 export const DEFAULT_SITE_FORMS: SiteFormsGlobal = {
@@ -468,6 +480,28 @@ export function normalizeSiteModules(value: unknown): SiteModulesGlobal {
     return DEFAULT_SITE_MODULES;
   }
   const row = value as Record<string, unknown>;
+  const rawPublicModules =
+    row.publicModules && typeof row.publicModules === "object" && !Array.isArray(row.publicModules)
+      ? (row.publicModules as Record<string, unknown>)
+      : {};
+  const publicModules = Object.fromEntries(
+    SITE_PUBLIC_MODULE_IDS.map((id) => {
+      const defaults = DEFAULT_SITE_MODULES.publicModules[id];
+      const raw = rawPublicModules[id];
+      const moduleRow = raw && typeof raw === "object" && !Array.isArray(raw)
+        ? (raw as Record<string, unknown>)
+        : {};
+      return [
+        id,
+        {
+          activated: asBool(moduleRow.activated, defaults.activated),
+          published: asBool(moduleRow.published, defaults.published),
+          includeInSearch: asBool(moduleRow.includeInSearch, defaults.includeInSearch),
+          includeInSitemap: asBool(moduleRow.includeInSitemap, defaults.includeInSitemap),
+        },
+      ];
+    }),
+  ) as SiteModulesGlobal["publicModules"];
   return {
     apartmentsMode: asAllowedValue(
       row.apartmentsMode,
@@ -501,6 +535,7 @@ export function normalizeSiteModules(value: unknown): SiteModulesGlobal {
       row.showTransfersInServices,
       DEFAULT_SITE_MODULES.showTransfersInServices,
     ),
+    publicModules,
   };
 }
 

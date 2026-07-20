@@ -1,15 +1,16 @@
 import type { AdminNavItem, AdminNavSectionId } from "@/types/admin";
 
 export const ADMIN_NAV_SECTION_LABELS: Record<AdminNavSectionId, string> = {
-  dashboard: "Сегодня",
-  operations: "Продажи",
-  marketplace: "Туры и предложения",
-  content: "Контент и сайт",
-  ingestion: "Сбор и обработка данных",
-  marketing: "Маркетинг и коммуникации",
-  users: "Пользователи и авторы",
-  analytics: "Отчёты",
-  system: "Расширенные настройки",
+  dashboard: "Обзор",
+  operations: "Заявки и бронирования",
+  marketplace: "Каталог и партнёры",
+  content: "Контент",
+  modules: "Модули",
+  ingestion: "Источники контента",
+  marketing: "Продвижение",
+  users: "Пользователи и доступ",
+  analytics: "Аналитика",
+  system: "Система",
 };
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
@@ -220,6 +221,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     label: "Актуальность",
     description: "Контроль сроков проверки материалов",
     capability: "content.edit",
+  },
+  {
+    id: "modules-overview",
+    section: "modules",
+    href: "/admin/modules",
+    label: "Все модули",
+    description: "Публичные URL, меню, поиск, sitemap и зависимости",
+    capability: "system.settings",
   },
   {
     id: "ingestion-overview",

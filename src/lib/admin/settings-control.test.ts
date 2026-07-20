@@ -4,6 +4,7 @@ import {
   detectDangerousSettingsChanges,
   settingsConfirmationMatches,
 } from "@/lib/admin/settings-control";
+import { DEFAULT_SITE_MODULES } from "@/lib/cms/site-globals/normalize";
 
 describe("admin settings control plane", () => {
   it("requires explicit acknowledgement for operational shutdowns", () => {
@@ -41,6 +42,27 @@ describe("admin settings control plane", () => {
         [{ key: "site.branding", expectedVersion: 1, value: { siteName: "После" } }],
       ),
     ).toEqual([]);
+  });
+
+  it("requires confirmation before a public module is disabled", () => {
+    const nextModules = {
+      ...DEFAULT_SITE_MODULES,
+      publicModules: {
+        ...DEFAULT_SITE_MODULES.publicModules,
+        immigration: {
+          ...DEFAULT_SITE_MODULES.publicModules.immigration,
+          activated: false,
+        },
+      },
+    };
+    const risks = detectDangerousSettingsChanges(
+      { "site.modules": DEFAULT_SITE_MODULES },
+      [{ key: "site.modules", value: nextModules, expectedVersion: 1 }],
+    );
+
+    expect(risks.map((risk) => risk.id)).toContain(
+      "site.modules:publicModules:immigration:off",
+    );
   });
 
   it("binds a confirmation token to values, versions and risks", () => {

@@ -15,7 +15,7 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isValidBookingOperationKey } from "@/lib/partner-booking/idempotency";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import type { ShopOrder } from "@/types/shop-order";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
@@ -35,8 +35,8 @@ function isSameShopOrderRequest(existing: ShopOrder, requested: ShopOrder): bool
 }
 
 async function postShopOrder(request: Request) {
-  const navigation = await fetchSiteNavigation();
-  if (!isPublicPathEnabled("/shop", navigation)) {
+  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
+  if (!isPublicPathEnabled("/shop", navigation, modules)) {
     return NextResponse.json({ error: "Магазин отключён" }, { status: 404 });
   }
 

@@ -262,7 +262,29 @@ describe("normalizeSiteModules", () => {
       showApartmentsInServices: false,
       showCarRentalInServices: false,
       showTransfersInServices: true,
+      publicModules: DEFAULT_SITE_MODULES.publicModules,
     });
+  });
+
+  it("normalizes independent public lifecycle states without losing defaults", () => {
+    const result = normalizeSiteModules({
+      publicModules: {
+        immigration: {
+          activated: true,
+          published: false,
+          includeInSearch: false,
+          includeInSitemap: true,
+        },
+      },
+    });
+
+    expect(result.publicModules.immigration).toEqual({
+      activated: true,
+      published: false,
+      includeInSearch: false,
+      includeInSitemap: true,
+    });
+    expect(result.publicModules.tours).toEqual(DEFAULT_SITE_MODULES.publicModules.tours);
   });
 
   it("rejects unsupported modes without enabling unfinished products", () => {

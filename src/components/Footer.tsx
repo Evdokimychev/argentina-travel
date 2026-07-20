@@ -37,7 +37,7 @@ function FooterColumn({
 }) {
   return (
     <div className={className}>
-      <h3 className="font-heading text-sm font-semibold text-foreground">{title}</h3>
+      <h2 className="font-heading text-sm font-semibold text-foreground">{title}</h2>
       <div className="mt-4">{children}</div>
     </div>
   );
@@ -235,9 +235,9 @@ export default function Footer({
                 <Compass className="h-3.5 w-3.5" aria-hidden />
                 {t("footer.routeEyebrow")}
               </p>
-              <h3 className="mt-2 font-heading text-lg font-bold text-foreground">
+              <h2 className="mt-2 font-heading text-lg font-bold text-foreground">
                 {t("footer.routeTitle")}
-              </h3>
+              </h2>
               <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate dark:text-muted">
                 {t("footer.routeBody")}
               </p>

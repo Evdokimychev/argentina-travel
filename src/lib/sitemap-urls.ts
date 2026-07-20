@@ -31,7 +31,10 @@ import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
 import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
-import { filterPublicPaths } from "@/lib/public-module-visibility";
+import {
+  isPublicPathIncludedInSitemap,
+  isTravelModulePathEnabled,
+} from "@/lib/public-module-visibility";
 import { KB_SECTIONS } from "@/lib/knowledge-base/content";
 import { listPublishedKnowledgeSlugs } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
@@ -41,6 +44,7 @@ import {
   findRuUrlDecision,
 } from "@/lib/seo/publication-registry";
 import type { BlogPost } from "@/types";
+import type { SiteModulesGlobal, SiteNavigationGlobal } from "@/types/site-globals";
 
 /**
  * Conservative compatibility guard for public paths whose stable,
@@ -294,13 +298,14 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
  */
 export function filterSitemapPathsByPublicSettings(
   paths: string[],
-  navigation: Parameters<typeof filterPublicPaths>[1],
-  modules: NonNullable<Parameters<typeof filterPublicPaths>[2]>,
+  navigation: SiteNavigationGlobal,
+  modules: SiteModulesGlobal,
 ): string[] {
-  return filterPublicPaths(
-    filterRuSitemapPaths(paths).filter(isIndexableInternalPath),
-    navigation,
-    modules,
+  return filterRuSitemapPaths(paths).filter(
+    (path) =>
+      isIndexableInternalPath(path) &&
+      isPublicPathIncludedInSitemap(path, navigation, modules) &&
+      isTravelModulePathEnabled(path, modules),
   );
 }
 
