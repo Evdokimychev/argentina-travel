@@ -65,6 +65,8 @@ jobs:
           if-no-files-found: error
 
       - name: Bundle size report
+        env:
+          BUNDLE_REPORT_FILE: var/ops/bundle-report.md
         run: npm run bundle:report
         continue-on-error: true
 

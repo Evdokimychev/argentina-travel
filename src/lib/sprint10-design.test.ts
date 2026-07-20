@@ -98,7 +98,11 @@ describe("Sprint 10 — Design System v2 & performance trim", () => {
     const script = readFileSync(join(process.cwd(), "scripts/bundle-report.mjs"), "utf8");
     expect(script).toContain("SPRINT10_BASELINE_TOTAL_KB");
     expect(script).toContain("PUBLIC_LAYOUT_BUDGET_KB");
+    expect(script).toContain("process.env.BUNDLE_REPORT_FILE");
     expect(script).toContain("organizer");
+
+    const workflow = readFileSync(join(process.cwd(), ".github/workflows/ci.yml"), "utf8");
+    expect(workflow).toContain("BUNDLE_REPORT_FILE: var/ops/bundle-report.md");
   });
 
   it("tour card shell delegates to ContentCard", () => {
