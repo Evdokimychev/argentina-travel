@@ -15,7 +15,7 @@ export const telegramAdapter: SourceAdapter = withCommonAdapterMethods({
     const apiHash = secret(source.credentialRef, "API_HASH");
     const session = secret(source.credentialRef, "SESSION");
     if (!Number.isSafeInteger(apiId) || !apiHash || !session) throw new Error("TELEGRAM_CREDENTIALS_NOT_CONFIGURED");
-    const [{ TelegramClient }, { StringSession }] = await Promise.all([import("teleproto"), import("teleproto/sessions")]);
+    const [{ TelegramClient }, { StringSession }] = await Promise.all([import("teleproto"), import("teleproto/sessions/index.js")]);
     const client = new TelegramClient(new StringSession(session), apiId, apiHash, { connectionRetries: 2, autoReconnect: false });
     await client.connect();
     try {
@@ -32,6 +32,7 @@ export const telegramAdapter: SourceAdapter = withCommonAdapterMethods({
         const attachments: NonNullable<AdapterRawItem["attachments"]> = [];
         if (source.connectionConfig.importMedia !== false) for (const message of group.filter((value) => Boolean(value.media))) {
           const downloaded = await client.downloadMedia(message, {}); if (!downloaded || typeof downloaded === "string") continue;
+          if (downloaded.byteLength > 25 * 1024 * 1024) continue;
           const media = message.media as unknown as { className?: string; document?: { mimeType?: string } };
           const mimeType = media.document?.mimeType ?? (media.className?.includes("Photo") ? "image/jpeg" : "application/octet-stream");
           const extension = mimeType === "image/jpeg" ? "jpg" : mimeType.split("/")[1]?.replace(/[^a-z0-9]/gi, "") || "bin";

@@ -1,35 +1,24 @@
 # Cutover Plan
 
-## Preconditions
+## Executed
 
-- Verified staging project and environment fingerprint distinct from production.
-- Database backup plus restore rehearsal.
-- Migration applied and migration script run twice successfully.
-- Telegram credential reference tested in the new admin; OpenAI optional path tested.
-- Named operator, rollback owner and observation window.
+1. Created and validated encrypted production database backup before DDL.
+2. Applied two additive migrations through the canonical transaction/checksum runner.
+3. Migrated all Collector data and media, then repeated the apply.
+4. Verified database counts, ledger groups and private Storage bytes.
+5. Installed encrypted Telegram credentials and rotated `CRON_SECRET`.
+6. Replaced unsupported Vercel Hobby 15-minute cron with one GitHub Actions dispatcher in this repository.
+7. Deployed commit `3dcfa836` as production deployment `dpl_2LwK3EEmVJ6ReQKb5dFwqen1P7zW` and verified schema 105, direct Postgres and route guards.
+8. Enabled `telegram:vista_argentina`; the first live run processed 3 items with 0 failures.
+9. Forced a second due run; it fetched and created 0 items with checkpoint 785 unchanged.
+10. Replaced the legacy entrypoint with a fail-closed notice and retained the encrypted rollback archive.
 
-## Phase 1: shadow
+## Rollback
 
-1. Keep migrated sources paused, test each connection, then enable only in staging/shadow.
-2. Run at least two complete source cycles with CMS publication disabled by process.
-3. Compare source counts, external IDs, raw hashes, duplicates, failures, latency and checkpoints with the Collector.
-4. Acceptance: no unexplained misses/duplicates, no stuck runs, checkpoint delta zero, all errors categorized.
+Disable the migrated source first and stop the GitHub workflow. Preserve current run/checkpoint evidence. The database changes are additive; rollback SQL exists for both 2026-07-20 migrations. Raw rows and private objects are retained. The old Collector may be re-enabled only from the encrypted archive during the 14-day rollback window, and never while the native source is active.
 
-## Phase 2: old system read-only
+Production backup:
+`/Users/Study/.codex/private-archives/argentina-travel/pre-cutover-20260720/database`
 
-1. Create final Collector filesystem/Git backup and checksum manifest.
-2. Prevent new source/config changes in Collector.
-3. Stop its manual/operator collection window only after the new scheduler is ready.
-
-## Phase 3: Argentina Travel primary
-
-1. Apply `20260719173719_argentina_knowledge_native_ingestion.sql` through the canonical migration journal.
-2. Run `npm run kb:migrate-collector`, verify counts, then test/enable real sources.
-3. Confirm `/api/cron/ingestion` heartbeat and no old process is collecting.
-4. Observe two additional cycles before decommission approval.
-
-## Rollback trigger and procedure
-
-Trigger on unexplained data loss, checkpoint regression, repeated credential failure, duplicate storm or inability to moderate. Disable new sources first; record current checkpoints and runs; stop new cron; re-enable exactly one old Collector operator path from the backup checkpoint; never run both schedulers. New raw rows remain retained. CMS drafts/update proposals created after cutover are reviewed individually and are not deleted automatically.
-
-Recommended rollback window: 14 days after primary cutover. Owner: production operator designated in the change record.
+Legacy archive:
+`/Users/Study/.codex/private-archives/argentina-knowledge-collector/decommission-20260720`

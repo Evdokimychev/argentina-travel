@@ -8,10 +8,10 @@
 | RSS/Atom | feedparser | частично | typed XML adapter | DONE |
 | Sitemap | prototype | scripts | discovery + bounded HTML fetch | DONE |
 | JSON API | prototype | partner-specific | field-mapped generic adapter | DONE |
-| YouTube | yt-dlp prototype | отсутствовал | RSS/oEmbed with graceful transcript status | DONE |
+| YouTube | yt-dlp prototype | отсутствовал | videos/channels/playlists, metadata and captions via `youtubei.js` | DONE |
 | Manual input | CLI/file | CMS direct | manual source through shared pipeline | DONE |
 | Browser rendering | отсутствовал | Playwright dev only | use only as future custom adapter when a proven source requires it | NOT APPLICABLE |
-| Scheduling | отсутствовал | Vercel cron | due-source dispatcher every 15 minutes | DONE |
+| Scheduling | отсутствовал | daily Vercel cron limit | GitHub Actions due-source dispatcher every 15 minutes | DONE |
 | Locks/idempotency | file state | job patterns | active-run unique index + idempotency keys | DONE |
 | Cancel/retry/DLQ | partial | ops patterns | cancel flag, exponential backoff, retry cap, dead letter | DONE |
 | Checkpoints | JSON | mixed | source/run JSON checkpoints | DONE |
@@ -32,4 +32,4 @@
 | Audit | reports | admin log | source/run/prompt/moderation/publication audit | DONE |
 | Monitoring | JSON report | health/cron | overview, heartbeat, stuck jobs, provider readiness | DONE |
 | Data migration | manual exports | bridge importer | idempotent ledger/checksum script | DONE |
-| Production shadow/cutover | none | production | controlled runbook | BLOCKED EXTERNALLY |
+| Production shadow/cutover | none | production | schema/data/live checkpoint cycle complete | DONE |

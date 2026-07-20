@@ -1,57 +1,32 @@
 # Final Report
 
-Status: code integration `VERIFYING`; production migration/cutover `BLOCKED EXTERNALLY`.
+Status: `DONE` on 2026-07-20.
 
-## Result summary
-
-Argentina Travel now contains the complete native source-management and ingestion implementation. There is no runtime API dependency on Argentina Knowledge, no second database and no second scheduler in the target. The legacy repository remains untouched as rollback evidence because production cutover has not been authorized.
+Argentina Knowledge has been absorbed into Argentina Travel as a native module. There is one source registry, one database, one moderation workflow, one CMS and one scheduler. No runtime bridge or manual package exchange remains.
 
 ## Delivered
 
-- One operational registry and durable run/raw/normalized/candidate/step/prompt/update/migration model.
-- Telegram, web, RSS, sitemap, JSON, YouTube and manual adapters behind one contract.
-- Private raw/media retention, source attribution, copyright-safe moderator boundary.
-- Checkpoints, idempotency, exact/near duplicates, cancellation, retry/backoff/dead-letter and stuck detection.
-- Deterministic intelligence plus optional structured OpenAI analysis/translation/fallback.
-- Native admin section, detail/preview, run queue, duplicate comparison, moderation and prompt versions.
-- Existing CMS draft creation, existing-page update proposals, content source links and search-compatible workflow.
-- Granular permissions, backend guards and admin audit events.
-- Repeatable data migration with dry-run/checksums/ledger and rollback SQL.
+- Telegram MTProto with albums/media/checkpoints and migrated encrypted session.
+- YouTube videos/channels/playlists, metadata, captions and graceful fallbacks.
+- RSS/Atom full-text extraction, HTML/sitemap/JSON and manual upload paths.
+- DNS-pinned SSRF protection, rate limits, response limits and robots handling.
+- Durable raw, normalized, candidate, duplicate, run, step, prompt and migration records.
+- Checkpoint-safe retries, stuck-run recovery, dead-letter behavior and idempotency.
+- Provenance, signed private-media preview, CMS media promotion and source citations.
+- Human-only moderation, draft creation and atomic versioned page-update proposals.
+- One admin module and a repository-owned 15-minute production dispatcher.
 
-## Counts and verification
+## Production evidence
 
-- Legacy inventory: 3 configured sources; 69 raw files; 22 canonical article objects; 20 canonical messages; 20 media files; 24 Markdown files; 2 reports.
-- Migration dry-run: 22 raw retained, 2 content candidates, 20 raw-only/skipped album/test records, 20 private media files totaling 4,338,870 bytes.
-- Targeted lint: PASS.
-- Native ingestion tests: 5 files / 14 tests PASS.
-- Full baseline before edits: 387 files / 1850 tests PASS.
+- 105 migrations in the canonical journal; the final migration reasserts least-privilege Data API grants.
+- Migrated baseline: 3 source records, 22 raw rows, 2 moderation candidates.
+- Live state: active 15-minute Telegram source, 25 raw rows and 5 candidates.
+- 20 media plus 101 archive objects, all download-verified by SHA-256.
+- Second apply produced 0 new candidates and unchanged database counts.
+- First live run processed 3 items with 0 failures; checkpoint replay processed 0.
+- Production deployment `dpl_2LwK3EEmVJ6ReQKb5dFwqen1P7zW` serves the canonical domains.
+- Full encrypted Collector archive with Git history, secrets and 8,104 entries.
+- The legacy entrypoint is fail-closed and documented by `DECOMMISSIONED.md`.
+- Typecheck, build, audit, RLS audit and 1,942 tests passed.
 
-## Readiness criteria
-
-| Criterion | Status | Note |
-|---|---|---|
-| Both projects and modules inventoried | DONE | dossier and source inventory |
-| Useful collector functions moved | DONE | native TypeScript implementation |
-| Single source registry/pipeline/admin | DONE | no runtime bridge |
-| Telegram/web/RSS/API/YouTube/manual code | DONE | connection evidence needs staging |
-| Scheduling/locks/retry/checkpoints | DONE | 15-minute bounded dispatcher |
-| Dedupe/AI/moderation/publication | DONE | human gate, drafts/update proposals |
-| CMS/knowledge/blog/place/map mapping | DONE | target mapper and citations |
-| Roles/audit/monitoring | DONE | backend capabilities and health overview |
-| Migration script/dry-run/rollback | DONE | production writes not run |
-| Full current typecheck/build | VERIFYING | concurrent content-factory mapping errors |
-| Staging schema/data verification | BLOCKED EXTERNALLY | no staging/Docker available |
-| Telegram/OpenAI live verification | BLOCKED EXTERNALLY | deployment secrets not exposed to task |
-| Production migration/deployment | BLOCKED EXTERNALLY | protected production target |
-| Old scheduler disabled | NOT APPLICABLE | no autonomous Collector scheduler found |
-| Old repo read-only/archived | BLOCKED EXTERNALLY | requires successful cutover and owner action |
-| Backup/restore evidence | BLOCKED EXTERNALLY | production operator responsibility |
-| No double import | DONE in design | unique active run/idempotency; production evidence pending |
-
-## Known limitations
-
-- Browser-rendered scraping is intentionally not deployed without a proven source that cannot use API/RSS/sitemap/HTML; it is not a legacy capability.
-- YouTube transcript availability is recorded gracefully; a licensed captions provider/API may be configured later for channels where captions are essential.
-- Vercel work is batch-limited. A future high-volume worker may be deployed from this repository against the same control plane, never as a revival of Argentina Knowledge.
-
-The separate Collector cannot yet be truthfully declared decommissioned: staging, production shadow evidence, backup and operator-approved cutover are objective external prerequisites.
+AI enrichment is not a migration dependency. Vercel AI Gateway rejected inference until the account adds billing verification; the application records this as unavailable and continues with deterministic analysis.

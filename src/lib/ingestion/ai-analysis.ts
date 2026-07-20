@@ -33,18 +33,22 @@ function outputText(payload: Record<string, unknown>): string | null {
 }
 
 export async function analyzeWithOpenAi(document: NormalizedIngestionDocument, prompt: { id: string; model: string; systemPrompt: string }) {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const openAiKey = process.env.OPENAI_API_KEY?.trim();
+  const gatewayToken = process.env.AI_GATEWAY_API_KEY?.trim() || process.env.VERCEL_OIDC_TOKEN?.trim();
+  const apiKey = openAiKey || gatewayToken;
   if (!apiKey) return null;
+  const gateway = !openAiKey;
   const started = Date.now();
-  const primary = process.env.OPENAI_INGESTION_MODEL?.trim() || prompt.model;
-  const fallback = process.env.OPENAI_INGESTION_FALLBACK_MODEL?.trim();
+  const qualify = (model: string) => gateway && !model.includes("/") ? `openai/${model}` : model.replace(/^openai\//, gateway ? "openai/" : "");
+  const primary = qualify(process.env.OPENAI_INGESTION_MODEL?.trim() || prompt.model);
+  const fallback = qualify(process.env.OPENAI_INGESTION_FALLBACK_MODEL?.trim() || (gateway ? "openai/gpt-5.4-mini" : ""));
   const models = [...new Set([primary, fallback].filter(Boolean) as string[])];
   let payload: Record<string, unknown> | null = null; let lastStatus = 0;
   for (const model of models) {
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch(gateway ? "https://ai-gateway.vercel.sh/v1/responses" : "https://api.openai.com/v1/responses", {
       method: "POST", headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
       signal: AbortSignal.timeout(60_000),
-      body: JSON.stringify({ model, store: false, instructions: prompt.systemPrompt, input: JSON.stringify({ title: document.title, body: document.body.slice(0, 24000), language: document.language, sourceUrl: document.sourceUrl }), text: { format: { type: "json_schema", name: "argentina_content_analysis", strict: true, schema } } }),
+      body: JSON.stringify({ model, store: false, instructions: prompt.systemPrompt, input: JSON.stringify({ title: document.title, body: document.body.slice(0, 24000), language: document.language, sourceUrl: document.sourceUrl }), text: { format: { type: "json_schema", name: "argentina_content_analysis", strict: true, schema } }, metadata: { feature: "argentina-travel-ingestion", prompt_version: prompt.id } }),
     });
     lastStatus = response.status;
     if (response.ok) { payload = await response.json() as Record<string, unknown>; break; }
@@ -55,5 +59,5 @@ export async function analyzeWithOpenAi(document: NormalizedIngestionDocument, p
   if (!text) throw new Error("OPENAI_EMPTY_STRUCTURED_OUTPUT");
   const analysis = JSON.parse(text) as AiIngestionAnalysis;
   const usage = (payload.usage ?? {}) as Record<string, unknown>;
-  return { analysis, model: String(payload.model ?? primary), promptVersion: prompt.id, latencyMs: Date.now() - started, inputTokens: Number(usage.input_tokens ?? 0), outputTokens: Number(usage.output_tokens ?? 0), raw: { responseId: payload.id, status: payload.status, usedFallback: String(payload.model ?? primary) !== primary, analysis } as Json };
+  return { analysis, model: String(payload.model ?? primary), promptVersion: prompt.id, latencyMs: Date.now() - started, inputTokens: Number(usage.input_tokens ?? 0), outputTokens: Number(usage.output_tokens ?? 0), raw: { responseId: payload.id, status: payload.status, provider: gateway ? "vercel-ai-gateway" : "openai", usedFallback: String(payload.model ?? primary) !== primary, analysis } as Json };
 }

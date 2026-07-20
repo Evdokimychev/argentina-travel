@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { publishIngestionCandidateAsDraft } from "@/lib/ingestion/pipeline-server";
+import { publishIngestionCandidateAsDraft, reprocessIngestionCandidate } from "@/lib/ingestion/pipeline-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { AdminCapability } from "@/types/admin";
 
@@ -18,6 +18,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       await writeAdminAuditLog({ actorUserId: auth.actorId, action: "ingestion.candidate.publish_draft", entityType: "ingestion_candidate", entityId: id, payload: { cmsDocumentId: document.id }, ipAddress: clientIpFromRequest(request) });
       return NextResponse.json({ document });
     }
+    if (body.action === "reprocess") {
+      const candidate = await reprocessIngestionCandidate(db, id);
+      await writeAdminAuditLog({ actorUserId: auth.actorId, action: "ingestion.candidate.reprocess", entityType: "ingestion_candidate", entityId: id, payload: { status: candidate.status }, ipAddress: clientIpFromRequest(request) });
+      return NextResponse.json({ candidate });
+    }
     if (body.action?.startsWith("duplicate_")) {
       const resolution = body.action === "duplicate_keep_primary" ? "keep_primary" : body.action === "duplicate_keep_both" ? "keep_both" : body.action === "duplicate_as_update" ? "as_update" : "related";
       const candidateStatus = resolution === "keep_primary" ? "rejected" : resolution === "as_update" ? "approved" : "awaiting_moderation";
@@ -28,7 +33,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       await writeAdminAuditLog({ actorUserId: auth.actorId, action: `ingestion.duplicate.${resolution}`, entityType: "ingestion_candidate", entityId: id, ipAddress: clientIpFromRequest(request) });
       return NextResponse.json({ ok: true, resolution, status: candidateStatus });
     }
-    const status = body.action === "approve" ? "approved" : body.action === "reject" ? "rejected" : body.action === "defer" ? "deferred" : "reprocess";
+    const status = body.action === "approve" ? "approved" : body.action === "reject" ? "rejected" : "deferred";
     const { data, error } = await db.from("ingestion_candidates").update({ status, moderation_notes: body.notes?.slice(0, 2000), moderated_by: /^[0-9a-f-]{36}$/i.test(auth.actorId) ? auth.actorId : null, moderated_at: new Date().toISOString(), ...(body.title ? { title: body.title.slice(0, 180) } : {}), ...(body.summary ? { summary: body.summary.slice(0, 1000) } : {}), ...(body.content ? { processed_content: body.content } : {}), ...(body.suggestedTarget ? { suggested_target: body.suggestedTarget } : {}) }).eq("id", id).select("*").single();
     if (error) throw error;
     await writeAdminAuditLog({ actorUserId: auth.actorId, action: `ingestion.candidate.${body.action}`, entityType: "ingestion_candidate", entityId: id, payload: { notes: Boolean(body.notes), edited: Boolean(body.title || body.summary || body.content) }, ipAddress: clientIpFromRequest(request) });

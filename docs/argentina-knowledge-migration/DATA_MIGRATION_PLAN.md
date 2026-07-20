@@ -1,34 +1,26 @@
 # Data Migration Plan
 
-## Mapping
+Status: `DONE` on 2026-07-20.
 
-| Legacy | Target | Identity |
+| Legacy | Target | Identity / result |
 |---|---|---|
-| `config/sources.json` | `ingestion_sources` | `legacy_key` |
-| Telegram messages/articles | `ingestion_raw_documents` | source + external ID + content hash |
-| Content-bearing articles | `ingestion_normalized_documents`, `ingestion_candidates` | raw ID / normalized ID |
-| Local media | private Storage bucket `ingestion-raw` | SHA-256 + legacy relative path |
-| Editorial metadata | candidate score/reasons/flags | legacy identity |
-| Migration state | `ingestion_migration_ledger` | source system + entity type + legacy ID |
+| `config/sources.json` | `ingestion_sources` | 3 disabled migration records, keyed by `legacy_key` |
+| Telegram articles/messages | `ingestion_raw_documents` | 22 rows by source/external ID/content hash |
+| Publishable articles | normalized documents and candidates | 2 moderation candidates |
+| Non-publishable/test rows | raw archive and ledger | 20 retained as skipped, not lost |
+| `media/` | private `ingestion-raw` | 20 files / 4,338,870 bytes |
+| `raw`, `knowledge`, `exports`, `config` | private Storage archive | 101 files / 97,660 bytes |
+| Migration evidence | `ingestion_migration_ledger` | migration-scoped four-part unique identity |
 
-## Commands
+Production apply used the explicit guard:
 
 ```bash
-npm run kb:migrate-collector:dry
-npm run kb:migrate-collector
+npx tsx scripts/migrate-argentina-knowledge.ts \
+  --apply \
+  --allow-production \
+  --confirm=uooxrypocahomoqzdvzy:argentina-knowledge-native-v1
 ```
 
-`kb:migrate-collector` is allowed only after the new migration has been applied to staging and environment variables point to staging. It must not be run with the current production `.env.local` during development.
+The command was run twice. Both runs verified 2 article, 20 media and 101 artifact checksums. The second run created zero new candidates. Storage-safe ASCII keys are deterministic; original Unicode paths remain unchanged in the ledger.
 
-## Dry-run result, 2026-07-19
-
-- Sources discovered: 3.
-- Canonical raw documents: 22.
-- Valid moderation candidates: 2.
-- Raw-only/skipped candidates: 20.
-- Media: 20 files / 4,338,870 bytes.
-- Script performed no writes and emitted SHA-256 inventory.
-
-## Verification queries
-
-Compare ledger grouped counts, orphan raw/normalized/candidate references, unique source/external/hash identities, source checkpoints, media checksums and run counts. A second `--apply` must migrate zero new candidates and verify existing checksums.
+After cutover, production run `6e0b4b7d-be8c-43e1-bb14-7261e38c683a` advanced the Telegram checkpoint to message 785 and added 3 raw documents. Forced replay `ade0f44d-716b-4f0b-b107-d3bab1b2557c` fetched and created zero rows. The live totals are 25 raw documents and 5 candidates; the original migrated baseline remains 22 and 2 respectively.

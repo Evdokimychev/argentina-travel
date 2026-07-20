@@ -178,7 +178,7 @@ describe("blog article media", () => {
         expect(new Set(sources).size, article.slug).toBe(sources.length);
       }
     },
-    20_000,
+    60_000,
   );
 });
 

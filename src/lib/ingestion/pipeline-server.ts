@@ -10,6 +10,7 @@ import { INGESTION_EDITORIAL_POLICY } from "@/lib/ingestion/policy";
 import { getIngestionSource } from "@/lib/ingestion/repository-server";
 import { nextSourceRunAt } from "@/lib/ingestion/schedule";
 import { createCmsDocument, getCmsDocumentById } from "@/lib/cms/content-server";
+import { uploadCmsMediaAsset } from "@/lib/media/cms-media-server";
 import type { CmsDocType, CmsDocumentBody } from "@/types/cms-content";
 
 type Db = SupabaseClient<Database>;
@@ -51,19 +52,29 @@ async function storeRaw(db: Db, source: IngestionSourceRecord, runId: string, it
     raw_payload: item.rawPayload ?? {}, content_hash: hash, media, title: item.title, author: item.author,
     language: item.language, source_published_at: item.publishedAt, source_updated_at: item.updatedAt, status: "fetched",
   }).select("id").single();
-  if (error?.code === "23505") return null;
+  if (error?.code === "23505") {
+    const { data: existing, error: existingError } = await db.from("ingestion_raw_documents").select("id").eq("source_id", source.id).eq("external_id", item.externalId).eq("content_hash", hash).single();
+    if (existingError) throw existingError;
+    return { id: existing.id, existing: true };
+  }
   if (error) throw error;
-  return data;
+  return { id: data.id, existing: false };
 }
 
 async function findDuplicate(db: Db, document: NormalizedIngestionDocument) {
-  const { data } = await db.from("ingestion_normalized_documents").select("id,body,fingerprint").order("created_at", { ascending: false }).limit(150);
-  const exact = data?.find((row) => row.fingerprint === document.fingerprint);
+  const { data: exact, error: exactError } = await db.from("ingestion_normalized_documents").select("id").eq("fingerprint", document.fingerprint).limit(1).maybeSingle();
+  if (exactError) throw exactError;
   if (exact) return { normalizedId: exact.id, relation: "exact", similarity: 1 };
   let best: { normalizedId: string; relation: string; similarity: number } | null = null;
-  for (const row of data ?? []) {
-    const similarity = contentSimilarity(document.body, row.body);
-    if (similarity >= INGESTION_EDITORIAL_POLICY.duplicateSimilarity && (!best || similarity > best.similarity)) best = { normalizedId: row.id, relation: "near", similarity };
+  const pageSize = 500;
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await db.from("ingestion_normalized_documents").select("id,body").order("created_at", { ascending: false }).range(from, from + pageSize - 1);
+    if (error) throw error;
+    for (const row of data ?? []) {
+      const similarity = contentSimilarity(document.body, row.body);
+      if (similarity >= INGESTION_EDITORIAL_POLICY.duplicateSimilarity && (!best || similarity > best.similarity)) best = { normalizedId: row.id, relation: "near", similarity };
+    }
+    if (!data || data.length < pageSize) break;
   }
   return best;
 }
@@ -83,7 +94,7 @@ async function findRelatedCmsDocument(db: Db, document: NormalizedIngestionDocum
   return best;
 }
 
-export async function enqueueIngestionRun(db: Db, sourceId: string, input: { triggerKind: string; actorId: string | null; retryOfRunId?: string | null; idempotencyKey?: string }) {
+export async function enqueueIngestionRun(db: Db, sourceId: string, input: { triggerKind: string; actorId: string | null; retryOfRunId?: string | null; idempotencyKey?: string; manualItems?: Array<{ id: string; title: string; body: string; url?: string; publishedAt?: string }> }) {
   const source = await getIngestionSource(db, sourceId);
   if (!source) throw new Error("SOURCE_NOT_FOUND");
   if (!source.enabled && input.triggerKind !== "migration" && input.triggerKind !== "shadow") throw new Error("SOURCE_DISABLED");
@@ -93,7 +104,8 @@ export async function enqueueIngestionRun(db: Db, sourceId: string, input: { tri
   const attempt = (retryRun?.data?.attempt ?? 0) + 1; const maxAttempts = retryRun?.data?.max_attempts ?? source.retryPolicy.maxAttempts;
   if (attempt > maxAttempts) throw new Error("RUN_RETRY_LIMIT_REACHED");
   const idempotencyKey = input.idempotencyKey ?? `${sourceId}:${input.triggerKind}:${new Date().toISOString().slice(0, 16)}:${randomUUID()}`;
-  const { data, error } = await db.from("ingestion_source_runs").insert({ source_id: sourceId, trigger_kind: input.triggerKind, idempotency_key: idempotencyKey, retry_of_run_id: input.retryOfRunId, attempt, max_attempts: maxAttempts, actor_user_id: actorUuid(input.actorId), checkpoint_before: source.checkpoint, status: "pending" }).select("id").single();
+  const checkpointBefore = input.manualItems?.length ? { ...source.checkpoint, __manualItems: input.manualItems } : source.checkpoint;
+  const { data, error } = await db.from("ingestion_source_runs").insert({ source_id: sourceId, trigger_kind: input.triggerKind, idempotency_key: idempotencyKey, retry_of_run_id: input.retryOfRunId, attempt, max_attempts: maxAttempts, actor_user_id: actorUuid(input.actorId), checkpoint_before: checkpointBefore as Json, status: "pending" }).select("id").single();
   if (error) throw error;
   return { runId: data.id, existing: false };
 }
@@ -103,15 +115,18 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
   if (runError) throw runError;
   const source = await getIngestionSource(db, run.source_id);
   if (!source) throw new Error("SOURCE_NOT_FOUND");
+  const checkpointBefore = run.checkpoint_before && typeof run.checkpoint_before === "object" && !Array.isArray(run.checkpoint_before) ? run.checkpoint_before as Record<string, Json | undefined> : {};
+  const manualItems = Array.isArray(checkpointBefore.__manualItems) ? checkpointBefore.__manualItems : null;
+  const executionSource = manualItems ? { ...source, connectionConfig: { ...source.connectionConfig, manualItems: manualItems as IngestionSourceRecord["connectionConfig"]["manualItems"] } } : source;
   const counts: Counts = { fetched: 0, rawStored: 0, normalized: 0, candidates: 0, duplicates: 0, rejected: 0, failed: 0 };
-  const adapter = getSourceAdapter(source.sourceType);
-  const check = adapter.validateConfig(source);
+  const adapter = getSourceAdapter(executionSource.sourceType);
+  const check = adapter.validateConfig(executionSource);
   if (!check.ok) throw new Error(check.errors.join("; "));
   const startedAt = new Date().toISOString();
   await db.from("ingestion_source_runs").update({ status: "fetching", started_at: startedAt, heartbeat_at: startedAt }).eq("id", runId);
   await db.from("ingestion_sources").update({ last_run_at: startedAt, last_error: null }).eq("id", source.id);
   try {
-    const fetched = await step(db, { runId, name: "fetch" }, () => adapter.fetch(source));
+    const fetched = await step(db, { runId, name: "fetch" }, () => adapter.fetch(executionSource));
     counts.fetched = fetched.items.length;
     await db.from("ingestion_source_runs").update({ status: "normalizing", counts: counts as unknown as Json, heartbeat_at: new Date().toISOString() }).eq("id", runId);
     const prompt = await activePrompt(db);
@@ -119,17 +134,20 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
       const cancel = await db.from("ingestion_source_runs").select("cancel_requested_at").eq("id", runId).single();
       if (cancel.data?.cancel_requested_at) throw new Error("RUN_CANCELLED");
       try {
-        const item = await adapter.parse(inputItem, source);
-        const raw = await step(db, { runId, name: "persist_raw" }, () => storeRaw(db, source, runId, item));
-        if (!raw) { counts.duplicates += 1; continue; }
-        counts.rawStored += 1;
-        const document = await step(db, { runId, name: "normalize", rawId: raw.id }, () => adapter.normalize(item, source));
+        const item = await adapter.parse(inputItem, executionSource);
+        const raw = await step(db, { runId, name: "persist_raw" }, () => storeRaw(db, executionSource, runId, item));
+        if (raw.existing) {
+          const { data: alreadyProcessed, error: alreadyProcessedError } = await db.from("ingestion_normalized_documents").select("id").eq("raw_document_id", raw.id).maybeSingle();
+          if (alreadyProcessedError) throw alreadyProcessedError;
+          if (alreadyProcessed) { counts.duplicates += 1; continue; }
+        } else counts.rawStored += 1;
+        const document = await step(db, { runId, name: "normalize", rawId: raw.id }, () => adapter.normalize(item, executionSource));
         const duplicate = await step(db, { runId, name: "deduplicate", rawId: raw.id }, () => findDuplicate(db, document));
         const relatedCms = duplicate ? null : await findRelatedCmsDocument(db, document);
         const { data: normalized, error: normalizedError } = await db.from("ingestion_normalized_documents").insert({ raw_document_id: raw.id, source_id: source.id, source_run_id: runId, title: document.title, body: document.body, summary: document.summary, language: document.language, category: document.category, province: document.province, city: document.city, tags: document.tags, fingerprint: document.fingerprint, metadata: document.metadata as Json }).select("id").single();
         if (normalizedError) throw normalizedError;
         counts.normalized += 1;
-        const decision = await step(db, { runId, name: "quality", rawId: raw.id }, async () => evaluateEditorial(document, source.trustLevel, item.media?.length ?? 0));
+        const decision = await step(db, { runId, name: "quality", rawId: raw.id }, async () => evaluateEditorial(document, executionSource.trustLevel, (item.media?.length ?? 0) + (item.attachments?.length ?? 0)));
         let ai = null;
         const aiFlags: string[] = [];
         if (prompt && decision.selected) {
@@ -144,7 +162,7 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
           title: analysis?.translatedTitle || document.title, summary: analysis?.summary ?? document.summary, processed_content: analysis?.translatedBody || document.body,
           language: document.language, category: analysis?.category ?? document.category, province: analysis?.province ?? document.province,
           city: analysis?.city ?? document.city, tags: analysis?.tags ?? document.tags, quality_score: decision.score,
-          freshness_score: analysis?.freshnessScore ?? decision.freshnessScore, trust_score: source.trustLevel,
+          freshness_score: analysis?.freshnessScore ?? decision.freshnessScore, trust_score: executionSource.trustLevel,
           decision_reasons: decision.reasons, flags: [...decision.flags, ...aiFlags, ...(analysis?.flags ?? []), ...(analysis?.translationApplied ? ["machine_translation_requires_review"] : [])],
           extracted_entities: (analysis?.entities ?? []) as Json, suggested_target: analysis?.suggestedTarget ?? "knowledge",
           ai_result: ai?.raw ?? null, ai_prompt_version: ai?.promptVersion, ai_model: ai?.model, ai_latency_ms: ai?.latencyMs,
@@ -157,11 +175,12 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
       } catch { counts.failed += 1; }
       await db.from("ingestion_source_runs").update({ counts: counts as unknown as Json, heartbeat_at: new Date().toISOString() }).eq("id", runId);
     }
-    const finalStatus = counts.failed > 0 ? (counts.rawStored > counts.failed ? "partial" : "failed") : "succeeded";
+    const finalStatus = counts.failed > 0 ? (counts.fetched > counts.failed ? "partial" : "failed") : "succeeded";
     const completedAt = new Date().toISOString();
     const nextRunAt = nextSourceRunAt(source, new Date(completedAt));
-    await db.from("ingestion_source_runs").update({ status: finalStatus, counts: counts as unknown as Json, checkpoint_after: adapter.checkpoint(fetched) as Json, completed_at: completedAt, heartbeat_at: completedAt }).eq("id", runId);
-    await db.from("ingestion_sources").update({ checkpoint: adapter.checkpoint(fetched) as Json, status: finalStatus === "succeeded" ? "active" : "degraded", last_success_at: finalStatus === "succeeded" ? completedAt : source.lastSuccessAt, next_run_at: nextRunAt, last_error: finalStatus === "succeeded" ? null : `${counts.failed} материалов завершились ошибкой` }).eq("id", source.id);
+    const nextCheckpoint = finalStatus === "succeeded" ? adapter.checkpoint(fetched) : source.checkpoint;
+    await db.from("ingestion_source_runs").update({ status: finalStatus, counts: counts as unknown as Json, checkpoint_after: nextCheckpoint as Json, completed_at: completedAt, heartbeat_at: completedAt }).eq("id", runId);
+    await db.from("ingestion_sources").update({ checkpoint: nextCheckpoint as Json, status: finalStatus === "succeeded" ? "active" : "degraded", last_success_at: finalStatus === "succeeded" ? completedAt : source.lastSuccessAt, next_run_at: nextRunAt, last_error: finalStatus === "succeeded" ? null : `${counts.failed} материалов завершились ошибкой` }).eq("id", source.id);
     return { runId, status: finalStatus, counts };
   } catch (error) {
     const status = errorText(error) === "RUN_CANCELLED" ? "cancelled" : "failed";
@@ -173,19 +192,86 @@ export async function processIngestionRun(db: Db, runId: string): Promise<{ runI
   }
 }
 
+export async function reprocessIngestionCandidate(db: Db, candidateId: string) {
+  const { data: candidate, error: candidateError } = await db.from("ingestion_candidates").select("*").eq("id", candidateId).single();
+  if (candidateError) throw candidateError;
+  if (["publishing", "published"].includes(candidate.status)) throw new Error("PUBLISHED_CANDIDATE_CANNOT_BE_REPROCESSED");
+  const { data: normalized, error: normalizedError } = await db.from("ingestion_normalized_documents").select("*").eq("id", candidate.normalized_document_id).single();
+  if (normalizedError) throw normalizedError;
+  const { data: raw, error: rawError } = await db.from("ingestion_raw_documents").select("*").eq("id", normalized.raw_document_id).single();
+  if (rawError) throw rawError;
+  const source = await getIngestionSource(db, candidate.source_id);
+  if (!source) throw new Error("SOURCE_NOT_FOUND");
+  const metadata = normalized.metadata && typeof normalized.metadata === "object" && !Array.isArray(normalized.metadata) ? normalized.metadata as Record<string, Json | undefined> : {};
+  const document: NormalizedIngestionDocument = {
+    title: normalized.title, body: normalized.body, summary: normalized.summary, language: normalized.language,
+    category: normalized.category ?? "travel", province: normalized.province, city: normalized.city,
+    tags: normalized.tags, fingerprint: normalized.fingerprint, sourceUrl: raw.canonical_url ?? raw.source_url,
+    author: raw.author, publishedAt: raw.source_published_at, metadata,
+  };
+  const mediaCount = Array.isArray(raw.media) ? raw.media.length : 0;
+  const decision = await step(db, { runId: candidate.source_run_id, name: "quality", rawId: raw.id, candidateId }, async () => evaluateEditorial(document, source.trustLevel, mediaCount));
+  const prompt = await activePrompt(db);
+  let ai = null;
+  const aiFlags: string[] = [];
+  if (prompt && decision.selected) {
+    try { ai = await step(db, { runId: candidate.source_run_id, name: "ai", rawId: raw.id, candidateId }, () => analyzeWithOpenAi(document, prompt)); }
+    catch { aiFlags.push("ai_analysis_unavailable"); }
+  }
+  const analysis = ai?.analysis;
+  const { data: updated, error: updateError } = await db.from("ingestion_candidates").update({
+    status: decision.selected ? "awaiting_moderation" : "rejected",
+    title: analysis?.translatedTitle || document.title, summary: analysis?.summary ?? document.summary,
+    processed_content: analysis?.translatedBody || document.body, language: document.language,
+    category: analysis?.category ?? document.category, province: analysis?.province ?? document.province,
+    city: analysis?.city ?? document.city, tags: analysis?.tags ?? document.tags,
+    quality_score: decision.score, freshness_score: analysis?.freshnessScore ?? decision.freshnessScore,
+    trust_score: source.trustLevel, decision_reasons: decision.reasons,
+    flags: [...decision.flags, ...aiFlags, ...(analysis?.flags ?? []), ...(analysis?.translationApplied ? ["machine_translation_requires_review"] : [])],
+    extracted_entities: (analysis?.entities ?? []) as Json, suggested_target: analysis?.suggestedTarget ?? candidate.suggested_target,
+    ai_result: ai?.raw ?? null, ai_prompt_version: ai?.promptVersion ?? null, ai_model: ai?.model ?? null,
+    ai_latency_ms: ai?.latencyMs ?? null, ai_input_tokens: ai?.inputTokens ?? null, ai_output_tokens: ai?.outputTokens ?? null,
+    moderated_by: null, moderated_at: null, moderation_notes: null,
+  }).eq("id", candidateId).select("*").single();
+  if (updateError) throw updateError;
+  return updated;
+}
+
 function slugForCandidate(title: string, id: string): string {
   const translit: Record<string, string> = { а:"a",б:"b",в:"v",г:"g",д:"d",е:"e",ё:"e",ж:"zh",з:"z",и:"i",й:"y",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",с:"s",т:"t",у:"u",ф:"f",х:"h",ц:"ts",ч:"ch",ш:"sh",щ:"sch",ы:"y",э:"e",ю:"yu",я:"ya" };
   const value = title.toLowerCase().split("").map((char) => translit[char] ?? char).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 70);
   return `${value || "argentina-material"}-${id.slice(0, 8)}`;
 }
 
-function draftSpec(candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], normalized: Database["public"]["Tables"]["ingestion_normalized_documents"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"]): { docType: CmsDocType; body: CmsDocumentBody } {
+function draftSpec(candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], normalized: Database["public"]["Tables"]["ingestion_normalized_documents"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"], publicMedia: string[]): { docType: CmsDocType; body: CmsDocumentBody } {
   if (candidate.suggested_target === "source_only") throw new Error("SOURCE_ONLY_CANDIDATE_CANNOT_CREATE_DOCUMENT");
   if (candidate.suggested_target === "place") return { docType: "place", body: { kind: "place", shortDescription: candidate.summary, fullDescription: candidate.processed_content } };
   if (["city", "region"].includes(candidate.suggested_target)) return { docType: "destination", body: { kind: "destination", description: candidate.summary, intro: candidate.processed_content } };
   if (["route", "map"].includes(candidate.suggested_target)) return { docType: "guide", body: { kind: "guide", description: candidate.summary, category: candidate.category ?? "travel", sections: [{ heading: candidate.title, paragraphs: candidate.processed_content.split(/\n\n+/).filter(Boolean) }] } };
   const docType: CmsDocType = ["blog", "news", "event"].includes(candidate.suggested_target) ? "blog" : "knowledge";
-  return { docType, body: { kind: "blog", excerpt: candidate.summary, content: candidate.processed_content, sections: [{ title: candidate.title, body: candidate.processed_content }], collector: { schemaVersion: 2, identity: candidate.id, source: "argentina-travel-ingestion", sourceId: candidate.source_id, sourceItemId: raw.external_id, sourceUrl: raw.canonical_url ?? raw.source_url ?? undefined, fingerprint: normalized.fingerprint, qualityScore: candidate.quality_score, scoreBreakdown: {}, flags: candidate.flags, category: candidate.category ?? undefined, province: candidate.province ?? undefined, city: candidate.city ?? undefined, tags: candidate.tags, media: Array.isArray(raw.media) ? raw.media.flatMap((item) => typeof item === "string" ? [item] : item && typeof item === "object" && !Array.isArray(item) && typeof item.storagePath === "string" ? [item.storagePath] : []) : [], collectedAt: raw.fetched_at } } };
+  return { docType, body: { kind: "blog", excerpt: candidate.summary, content: candidate.processed_content, sections: [{ title: candidate.title, body: candidate.processed_content }], collector: { schemaVersion: 2, identity: candidate.id, source: "argentina-travel-ingestion", sourceId: candidate.source_id, sourceItemId: raw.external_id, sourceUrl: raw.canonical_url ?? raw.source_url ?? undefined, fingerprint: normalized.fingerprint, qualityScore: candidate.quality_score, scoreBreakdown: {}, flags: candidate.flags, category: candidate.category ?? undefined, province: candidate.province ?? undefined, city: candidate.city ?? undefined, tags: candidate.tags, media: publicMedia, collectedAt: raw.fetched_at } } };
+}
+
+async function promoteCandidateMedia(db: Db, candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"], actorId: string): Promise<string[]> {
+  if (!Array.isArray(raw.media)) return [];
+  const urls: string[] = [];
+  for (const value of raw.media.slice(0, 8)) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) continue;
+    const storagePath = typeof value.storagePath === "string" ? value.storagePath : null;
+    const mimeType = typeof value.mimeType === "string" ? value.mimeType : "image/jpeg";
+    if (!storagePath || !mimeType.startsWith("image/")) continue;
+    const { data, error } = await db.storage.from("ingestion-raw").download(storagePath);
+    if (error) throw error;
+    const filename = typeof value.filename === "string" ? value.filename : storagePath.split("/").at(-1) ?? "source-image.jpg";
+    const file = new File([new Uint8Array(await data.arrayBuffer())], filename, { type: mimeType });
+    const uploaded = await uploadCmsMediaAsset(db, { file, title: candidate.title, alt: candidate.title, category: "blog-article", role: "content", tags: candidate.tags, actorId });
+    if ("error" in uploaded) throw new Error(uploaded.error);
+    const sourcePageUrl = raw.canonical_url ?? raw.source_url;
+    const { error: metadataError } = await db.from("cms_media_assets").update({ original_url: `ingestion-raw://${storagePath}`, source_page_url: sourcePageUrl?.startsWith("https://") ? sourcePageUrl : null, content_hash: typeof value.checksum === "string" ? value.checksum : null, rights_status: "review_required" }).eq("id", uploaded.asset.id);
+    if (metadataError) throw metadataError;
+    urls.push(uploaded.asset.public_url);
+  }
+  return urls;
 }
 
 function proposedBody(current: Json, candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"]): Json | null {
@@ -201,28 +287,38 @@ function proposedBody(current: Json, candidate: Database["public"]["Tables"]["in
 
 async function linkCandidateCitation(db: Db, documentId: string, candidate: Database["public"]["Tables"]["ingestion_candidates"]["Row"], raw: Database["public"]["Tables"]["ingestion_raw_documents"]["Row"]) {
   const sourceUrl = raw.canonical_url ?? raw.source_url; if (!sourceUrl?.startsWith("https://")) return;
-  const { data: citation } = await db.from("content_sources").upsert({ title: raw.title ?? candidate.title, authority: "third_party", url: sourceUrl, source_type: raw.raw_format, jurisdiction: "Argentina", language: raw.language ?? candidate.language, published_at: raw.source_published_at, checked_at: raw.fetched_at, accessed_at: raw.fetched_at, content_hash: raw.content_hash, trust_level: candidate.trust_score >= 75 ? "high" : candidate.trust_score >= 50 ? "medium" : "low", status: "active", notes: `Imported by ingestion source ${candidate.source_id}` }, { onConflict: "url" }).select("id").single();
-  if (citation) await db.from("content_source_links").upsert({ content_document_id: documentId, source_id: citation.id, section_id: "source", purpose: "origin", is_primary: true }, { onConflict: "content_document_id,source_id,section_id" });
+  const { data: citation, error: citationError } = await db.from("content_sources").upsert({ title: raw.title ?? candidate.title, authority: "third_party", url: sourceUrl, source_type: raw.raw_format, jurisdiction: "Argentina", language: raw.language ?? candidate.language, published_at: raw.source_published_at, checked_at: raw.fetched_at, accessed_at: raw.fetched_at, content_hash: raw.content_hash, trust_level: candidate.trust_score >= 75 ? "high" : candidate.trust_score >= 50 ? "medium" : "low", status: "active", notes: `Imported by ingestion source ${candidate.source_id}` }, { onConflict: "url" }).select("id").single();
+  if (citationError) throw citationError;
+  if (citation) { const { error } = await db.from("content_source_links").upsert({ content_document_id: documentId, source_id: citation.id, section_id: "source", purpose: "origin", is_primary: true }, { onConflict: "content_document_id,source_id,section_id" }); if (error) throw error; }
 }
 
 export async function publishIngestionCandidateAsDraft(db: Db, candidateId: string, actorId: string, ipAddress?: string | null) {
   const { data: candidate, error } = await db.from("ingestion_candidates").select("*").eq("id", candidateId).single();
   if (error) throw error;
+  if (candidate.cms_document_id) {
+    const existing = await getCmsDocumentById(db, candidate.cms_document_id);
+    if (existing) return existing;
+  }
   if (!["approved", "awaiting_moderation"].includes(candidate.status)) throw new Error("CANDIDATE_NOT_PUBLISHABLE");
   const { data: normalized } = await db.from("ingestion_normalized_documents").select("*").eq("id", candidate.normalized_document_id).single();
   const { data: raw } = normalized ? await db.from("ingestion_raw_documents").select("*").eq("id", normalized.raw_document_id).single() : { data: null };
   if (!normalized || !raw) throw new Error("CANDIDATE_PROVENANCE_MISSING");
-  await db.from("ingestion_candidates").update({ status: "publishing" }).eq("id", candidateId);
+  const { data: claimed, error: claimError } = await db.from("ingestion_candidates").update({ status: "publishing" }).eq("id", candidateId).in("status", ["approved", "awaiting_moderation"]).select("id").maybeSingle();
+  if (claimError) throw claimError;
+  if (!claimed) throw new Error("CANDIDATE_PUBLICATION_ALREADY_IN_PROGRESS");
+  try {
   if (candidate.related_cms_document_id) {
     const current = await getCmsDocumentById(db, candidate.related_cms_document_id); if (!current) throw new Error("RELATED_CMS_DOCUMENT_NOT_FOUND");
     const body = proposedBody(current.body as Json, candidate); if (!body) throw new Error("RELATED_CMS_DOCUMENT_UPDATE_UNSUPPORTED");
     const { error: proposalError } = await db.from("ingestion_update_proposals").upsert({ candidate_id: candidate.id, content_document_id: current.id, base_version: current.rowVersion, proposed_title: current.title, proposed_body: body, diff: { addedSourceCandidateId: candidate.id, addedCharacters: candidate.processed_content.length, sourceTitle: candidate.title }, status: "pending" }, { onConflict: "candidate_id" });
     if (proposalError) throw proposalError;
     await linkCandidateCitation(db, current.id, candidate, raw);
-    await db.from("ingestion_candidates").update({ status: "published", cms_document_id: current.id, publication_target: "cms_update_proposal", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: new Date().toISOString() }).eq("id", candidateId);
+    const { error: candidateUpdateError } = await db.from("ingestion_candidates").update({ status: "approved", cms_document_id: current.id, publication_target: "cms_update_proposal", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: null }).eq("id", candidateId);
+    if (candidateUpdateError) throw candidateUpdateError;
     return current;
   }
-  const spec = draftSpec(candidate, normalized, raw);
+  const publicMedia = await promoteCandidateMedia(db, candidate, raw, actorId);
+  const spec = draftSpec(candidate, normalized, raw, publicMedia);
   const result = await createCmsDocument(db, {
     docType: spec.docType, slug: slugForCandidate(candidate.title, candidate.id),
     title: candidate.title, status: "draft", actorId, ipAddress,
@@ -231,6 +327,11 @@ export async function publishIngestionCandidateAsDraft(db: Db, candidateId: stri
   });
   if ("error" in result) { await db.from("ingestion_candidates").update({ status: "approved", moderation_notes: result.error }).eq("id", candidateId); throw new Error(result.error); }
   await linkCandidateCitation(db, result.document.id, candidate, raw);
-  await db.from("ingestion_candidates").update({ status: "published", cms_document_id: result.document.id, publication_target: "cms_draft", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: new Date().toISOString() }).eq("id", candidateId);
+  const { error: candidateUpdateError } = await db.from("ingestion_candidates").update({ status: "published", cms_document_id: result.document.id, publication_target: "cms_draft", moderated_by: actorUuid(actorId), moderated_at: new Date().toISOString(), published_at: new Date().toISOString() }).eq("id", candidateId);
+  if (candidateUpdateError) throw candidateUpdateError;
   return result.document;
+  } catch (publicationError) {
+    await db.from("ingestion_candidates").update({ status: "approved", moderation_notes: errorText(publicationError) }).eq("id", candidateId).eq("status", "publishing");
+    throw publicationError;
+  }
 }

@@ -4864,6 +4864,14 @@ export interface Database {
         };
         Returns: Json;
       };
+      apply_ingestion_update_proposal_atomic: {
+        Args: {
+          p_proposal_id: string;
+          p_actor_id: string | null;
+          p_ip_address?: string | null;
+        };
+        Returns: Json;
+      };
       cms_publish_due_scheduled_atomic: {
         Args: { p_limit?: number };
         Returns: Json;
