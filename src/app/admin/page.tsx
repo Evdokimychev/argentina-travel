@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BellRing, CreditCard, FileCheck2, HeartPulse, UserCheck } from "lucide-react";
+import { BellRing, Boxes, CreditCard, FileCheck2, HeartPulse, UserCheck } from "lucide-react";
 import AdminTrendChart from "@/components/admin/AdminTrendChart";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
@@ -16,7 +16,16 @@ import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import { ActionQueue, type ActionQueueItem } from "@/components/workspace/ActionQueue";
 import AdminOwnerOnboardingChecklist from "@/components/admin/AdminOwnerOnboardingChecklist";
 
-type DashboardResponse = { widgets?: AdminDashboardWidgets };
+type DashboardResponse = {
+  widgets?: AdminDashboardWidgets;
+  moduleHealth?: {
+    total: number;
+    active: number;
+    disabled: number;
+    attention: Array<{ id: string; label: string; status: string; reason: string | null }>;
+    checkedAt: string;
+  };
+};
 type OperationsSummaryResponse = { summary?: AdminOperationsSummary };
 
 const QUICK_LINKS = [
@@ -32,6 +41,7 @@ const QUICK_LINKS = [
   { href: "/admin/content/translations", label: "Переводы контента" },
   { href: "/admin/analytics", label: "Аналитика" },
   { href: "/admin/analytics/funnels", label: "Воронки" },
+  { href: "/admin/modules", label: "Модули сайта" },
 ];
 
 function formatUsd(value: number): string {
@@ -62,7 +72,20 @@ export default function AdminDashboardPage() {
       : "Период: всё время"
     : null;
   const operations = operationsData?.summary;
+  const moduleAttention = data?.moduleHealth?.attention ?? [];
   const actionItems: ActionQueueItem[] = [
+    ...(moduleAttention.length
+      ? [{
+          id: "modules",
+          title: `${moduleAttention.length} модулей требуют внимания`,
+          description: moduleAttention.slice(0, 2).map((item) => item.label).join(", "),
+          href: "/admin/modules",
+          label: "Проверить модули",
+          priority: "high" as const,
+          count: moduleAttention.length,
+          icon: Boxes,
+        }]
+      : []),
     ...(operations?.moderation.pendingCount
       ? [{
           id: "moderation",
@@ -244,6 +267,7 @@ export default function AdminDashboardPage() {
                 <Link href="/admin/operations" className="font-semibold text-sky hover:underline">Центр операций</Link>
                 <Link href="/admin/system/audit" className="font-semibold text-sky hover:underline">Журнал действий</Link>
                 <Link href="/admin/feature-flags" className="font-semibold text-sky hover:underline">Управление функциями</Link>
+                <Link href="/admin/modules" className="font-semibold text-sky hover:underline">Состояние модулей</Link>
               </div>
             </div>
           </div>

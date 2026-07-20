@@ -591,7 +591,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
             setLocationPanelOpen((open) => !open);
           }}
           aria-expanded={locationPanelOpen}
-          aria-controls="map-location-panel"
+          aria-controls={locationPanelOpen ? "map-location-panel" : undefined}
           aria-label="Моё местоположение"
           title="Моё местоположение"
           className="flex h-11 w-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal shadow-md hover:bg-gray-50 sm:w-auto sm:px-3"
@@ -606,7 +606,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
             setListOpen((open) => !open);
           }}
           aria-pressed={listOpen}
-          aria-controls="map-accessible-list"
+          aria-controls={listOpen ? "map-accessible-list" : undefined}
           aria-label="Показать объекты списком"
           title="Показать объекты списком"
           className="flex h-11 w-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal shadow-md hover:bg-gray-50 sm:w-auto sm:px-3"

@@ -7,7 +7,7 @@ import {
 import { parseBlogCommentBody, parseBlogCommentSlug } from "@/lib/blog-comments-parsers";
 import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type CommentBody = {
@@ -51,8 +51,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const navigation = await fetchSiteNavigation();
-  if (!isPublicPathEnabled("/blog", navigation)) {
+  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
+  if (!isPublicPathEnabled("/blog", navigation, modules)) {
     return NextResponse.json({ error: "Блог отключён" }, { status: 404 });
   }
 

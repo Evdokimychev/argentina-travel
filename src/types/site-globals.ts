@@ -215,6 +215,38 @@ export type CarRentalModuleMode = "disabled" | "partner" | "preparing_hybrid";
 export type TransfersModuleMode = "disabled" | "request" | "partner" | "preparing_hybrid";
 export type HotelsModuleMode = "disabled" | "planned";
 
+export const SITE_PUBLIC_MODULE_IDS = [
+  "geography",
+  "destinations",
+  "places",
+  "tours",
+  "excursions",
+  "guide",
+  "gallery",
+  "immigration",
+  "knowledgeBase",
+  "forum",
+  "shop",
+  "services",
+  "journal",
+  "about",
+] as const;
+
+export type SitePublicModuleId = (typeof SITE_PUBLIC_MODULE_IDS)[number];
+
+/**
+ * Public lifecycle state. Navigation visibility intentionally lives in
+ * SiteNavigationGlobal so owners can hide a menu item without unpublishing a
+ * working page. Keeping these concepts separate prevents a visible link from
+ * being mistaken for route availability.
+ */
+export type SitePublicModuleState = {
+  activated: boolean;
+  published: boolean;
+  includeInSearch: boolean;
+  includeInSitemap: boolean;
+};
+
 /**
  * Product strategy for travel verticals beyond tours and excursions.
  * These values describe supported public entry points and the next safe product stage.
@@ -228,6 +260,7 @@ export type SiteModulesGlobal = {
   showApartmentsInServices: boolean;
   showCarRentalInServices: boolean;
   showTransfersInServices: boolean;
+  publicModules: Record<SitePublicModuleId, SitePublicModuleState>;
 };
 
 /** Resolved public shapes — locales stripped after resolveSiteGlobalForLocale. */

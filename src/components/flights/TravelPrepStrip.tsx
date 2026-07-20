@@ -3,8 +3,9 @@ import { ArrowUpRight, Car, Plane, Smartphone } from "lucide-react";
 import { getHomeTravelPrepFlightTeaser } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { formatTeaserPrice } from "@/lib/flights/teaser-format";
+import { evaluatePublicModuleAccess } from "@/lib/public-module-policy-server";
 import { siteContainerClass } from "@/lib/site-container";
-import { fetchSiteModuleControlSnapshot } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import type { LocaleCode } from "@/types/locale";
 
 type TravelPrepStripProps = {
@@ -15,11 +16,14 @@ export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStrip
   const labels = getFlightTeaserLabels(locale);
   const [flightTeasers, moduleControl] = await Promise.all([
     getHomeTravelPrepFlightTeaser(locale),
-    fetchSiteModuleControlSnapshot(),
+    fetchSiteControlPlaneEdge(),
   ]);
   const mowBue = flightTeasers[0];
-  const transfersEnabled =
-    moduleControl.ok && moduleControl.modules.transfersMode !== "disabled";
+  const transfersEnabled = evaluatePublicModuleAccess(
+    moduleControl,
+    "transfers",
+    "public_read",
+  ).allowed;
 
   const prepLinks = [
     {

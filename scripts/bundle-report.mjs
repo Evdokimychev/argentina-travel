@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Summarize Next.js client chunk sizes after production build.
- * Writes docs/bundle-report.md
+ * Writes docs/bundle-report.md by default. CI can keep generated evidence in
+ * var/ops by setting BUNDLE_REPORT_FILE=var/ops/bundle-report.md.
  *
  * Usage: npm run build && npm run bundle:report
  */
@@ -12,7 +13,10 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const chunksDir = path.join(root, ".next/static/chunks");
-const reportPath = path.join(root, "docs/bundle-report.md");
+const reportPath = path.join(
+  root,
+  process.env.BUNDLE_REPORT_FILE?.trim() || "docs/bundle-report.md",
+);
 
 const MAPLIBRE_BUDGET_KB = 450;
 const PUBLIC_LAYOUT_BUDGET_KB = 10 * 1024;

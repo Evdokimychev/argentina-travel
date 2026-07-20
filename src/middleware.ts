@@ -261,7 +261,7 @@ export async function middleware(request: NextRequest) {
   if (
     needsPublicVisibility &&
     controlPlane &&
-    (!isPublicPathEnabled(routePathname, controlPlane.navigation) ||
+    (!isPublicPathEnabled(routePathname, controlPlane.navigation, controlPlane.modules) ||
       !isTravelModulePathEnabled(routePathname, controlPlane.modules))
   ) {
     const notFoundUrl = request.nextUrl.clone();

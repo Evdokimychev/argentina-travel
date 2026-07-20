@@ -197,6 +197,31 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/migration",
+        destination: "/immigration",
+        permanent: true,
+      },
+      {
+        source: "/migration/:path*",
+        destination: "/immigration/:path*",
+        permanent: true,
+      },
+      {
+        source: "/migratsiya",
+        destination: "/immigration",
+        permanent: true,
+      },
+      {
+        source: "/migraciya",
+        destination: "/immigration",
+        permanent: true,
+      },
+      {
+        source: "/pereezd",
+        destination: "/immigration",
+        permanent: true,
+      },
+      {
         source: "/blog/blue-dollar-argentina-2025",
         destination: "/blog/blue-dollar-argentina-2026",
         permanent: true,

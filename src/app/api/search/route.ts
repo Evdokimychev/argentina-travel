@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { executeSiteSearch } from "@/lib/search/search-query";
 import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
-import { fetchSiteNavigation } from "@/lib/site-settings-server";
-import { isPublicPathEnabled } from "@/lib/public-module-visibility";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
+import { isPublicPathIncludedInSearch } from "@/lib/public-module-visibility";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 import { filterSearchHitsByPublicCatalog } from "@/lib/search/public-catalog-results";
@@ -22,12 +22,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
   }
 
-  const [payload, navigation, tours, excursionsResult] = await Promise.all([
+  const [payload, controlPlane, tours, excursionsResult] = await Promise.all([
     executeSiteSearch(q, {
       kind,
       limit: Number.isFinite(limit) ? limit : undefined,
     }),
-    fetchSiteNavigation(),
+    fetchSiteControlPlaneEdge(),
     fetchMarketplaceTours(),
     fetchExcursionsServer({ pageSize: 500 }).catch(() => ({ items: [], cities: [] })),
   ]);
@@ -40,7 +40,11 @@ export async function GET(request: Request) {
   const visiblePayload = {
     ...payload,
     results: currentCatalogResults.filter((result) =>
-      isPublicPathEnabled(result.url, navigation),
+      isPublicPathIncludedInSearch(
+        result.url,
+        controlPlane.navigation,
+        controlPlane.modules,
+      ),
     ),
   };
 

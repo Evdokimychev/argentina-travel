@@ -3,7 +3,7 @@ import ServicesPageView from "@/components/services/ServicesPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { getServiceCategoriesForModules } from "@/data/services-hub";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { fetchSiteModules } from "@/lib/site-settings-server";
+import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 
 const PAGE_TITLE = "Сервисы для поездки";
 const PAGE_DESCRIPTION =
@@ -16,8 +16,8 @@ export const metadata = buildPublicPageMetadata({
 });
 
 export default async function ServicesPage() {
-  const modules = await fetchSiteModules();
-  const categories = getServiceCategoriesForModules(modules);
+  const controlPlane = await fetchSiteControlPlaneEdge();
+  const categories = getServiceCategoriesForModules(controlPlane.modules);
 
   return (
     <>

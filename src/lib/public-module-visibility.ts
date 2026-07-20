@@ -1,30 +1,40 @@
 import type { SiteNavSection } from "@/types/site-nav";
-import type { SiteModulesGlobal, SiteNavigationGlobal } from "@/types/site-globals";
+import type {
+  SiteModulesGlobal,
+  SiteNavigationGlobal,
+  SitePublicModuleId,
+} from "@/types/site-globals";
 
 type VisibilityRule = {
   prefixes: readonly string[];
-  enabled: (navigation: SiteNavigationGlobal) => boolean;
+  moduleId: SitePublicModuleId;
+  navigationEnabled: (navigation: SiteNavigationGlobal) => boolean;
+  parentModuleId?: SitePublicModuleId;
 };
 
 const PUBLIC_MODULE_RULES: readonly VisibilityRule[] = [
-  { prefixes: ["/blog"], enabled: (value) => value.showJournal },
-  { prefixes: ["/shop"], enabled: (value) => value.showShop },
-  { prefixes: ["/forum"], enabled: (value) => value.showForum },
-  { prefixes: ["/baza-znaniy"], enabled: (value) => value.showKnowledgeBase },
-  { prefixes: ["/tours", "/podbor"], enabled: (value) => value.showTours },
-  { prefixes: ["/excursions"], enabled: (value) => value.showExcursions },
-  { prefixes: ["/guide"], enabled: (value) => value.showGuide },
-  { prefixes: ["/gallery"], enabled: (value) => value.showGallery },
-  { prefixes: ["/immigration"], enabled: (value) => value.showImmigration },
-  { prefixes: ["/services"], enabled: (value) => value.showServices },
-  { prefixes: ["/about"], enabled: (value) => value.showAbout },
+  { prefixes: ["/blog"], moduleId: "journal", navigationEnabled: (value) => value.showJournal },
+  { prefixes: ["/shop"], moduleId: "shop", navigationEnabled: (value) => value.showShop },
+  { prefixes: ["/forum"], moduleId: "forum", navigationEnabled: (value) => value.showForum },
+  { prefixes: ["/baza-znaniy"], moduleId: "knowledgeBase", navigationEnabled: (value) => value.showKnowledgeBase },
+  { prefixes: ["/tours", "/podbor"], moduleId: "tours", navigationEnabled: (value) => value.showTours },
+  { prefixes: ["/excursions"], moduleId: "excursions", navigationEnabled: (value) => value.showExcursions },
+  { prefixes: ["/guide"], moduleId: "guide", navigationEnabled: (value) => value.showGuide },
+  { prefixes: ["/gallery"], moduleId: "gallery", navigationEnabled: (value) => value.showGallery },
+  { prefixes: ["/immigration"], moduleId: "immigration", navigationEnabled: (value) => value.showImmigration },
+  { prefixes: ["/services"], moduleId: "services", navigationEnabled: (value) => value.showServices },
+  { prefixes: ["/about"], moduleId: "about", navigationEnabled: (value) => value.showAbout },
   {
     prefixes: ["/destinations"],
-    enabled: (value) => value.showGeography && value.showDestinations,
+    moduleId: "destinations",
+    parentModuleId: "geography",
+    navigationEnabled: (value) => value.showGeography && value.showDestinations,
   },
   {
     prefixes: ["/places", "/collections", "/itineraries", "/mapa-argentina"],
-    enabled: (value) => value.showGeography && value.showPlaces,
+    moduleId: "places",
+    parentModuleId: "geography",
+    navigationEnabled: (value) => value.showGeography && value.showPlaces,
   },
 ] as const;
 
@@ -35,11 +45,59 @@ function matchesPrefix(pathname: string, prefix: string): boolean {
 export function isPublicPathEnabled(
   pathname: string,
   navigation: SiteNavigationGlobal,
+  modules?: SiteModulesGlobal,
 ): boolean {
   const rule = PUBLIC_MODULE_RULES.find((candidate) =>
     candidate.prefixes.some((prefix) => matchesPrefix(pathname, prefix)),
   );
-  return rule ? rule.enabled(navigation) : true;
+  if (!rule) return true;
+  if (!modules) return rule.navigationEnabled(navigation);
+
+  const state = modules.publicModules[rule.moduleId];
+  const parentState = rule.parentModuleId
+    ? modules.publicModules[rule.parentModuleId]
+    : null;
+  return Boolean(
+    state?.activated &&
+      state.published &&
+      (!parentState || (parentState.activated && parentState.published)),
+  );
+}
+
+function isPublicPathDiscoverable(
+  pathname: string,
+  navigation: SiteNavigationGlobal,
+  modules: SiteModulesGlobal,
+  field: "includeInSearch" | "includeInSitemap",
+): boolean {
+  const normalizedPathname = internalPathnameFromHref(pathname) ?? pathname;
+  if (!isTravelModulePathEnabled(normalizedPathname, modules)) return false;
+  const rule = PUBLIC_MODULE_RULES.find((candidate) =>
+    candidate.prefixes.some((prefix) => matchesPrefix(normalizedPathname, prefix)),
+  );
+  if (!rule) return true;
+  if (!isPublicPathEnabled(normalizedPathname, navigation, modules)) return false;
+  const state = modules.publicModules[rule.moduleId];
+  const parentState = rule.parentModuleId
+    ? modules.publicModules[rule.parentModuleId]
+    : null;
+  return Boolean(state?.[field] && (!parentState || parentState[field]));
+}
+
+export function isPublicPathIncludedInSearch(
+  pathname: string,
+  navigation: SiteNavigationGlobal,
+  modules: SiteModulesGlobal,
+): boolean {
+  return isPublicPathDiscoverable(pathname, navigation, modules, "includeInSearch");
+}
+
+export function isPublicPathIncludedInSitemap(
+  pathname: string,
+  navigation: SiteNavigationGlobal,
+  modules: SiteModulesGlobal,
+): boolean {
+  return isPublicPathDiscoverable(pathname, navigation, modules, "includeInSitemap");
 }
 
 export function filterPublicPaths(
@@ -86,7 +144,10 @@ export function isPublicLinkEnabled(
   if (!pathname) return true;
 
   return (
-    isPublicPathEnabled(pathname, navigation) &&
+    isPublicPathEnabled(pathname, navigation, modules) &&
+    (PUBLIC_MODULE_RULES.find((candidate) =>
+      candidate.prefixes.some((prefix) => matchesPrefix(pathname, prefix)),
+    )?.navigationEnabled(navigation) ?? true) &&
     (!modules || isTravelModulePathEnabled(pathname, modules))
   );
 }

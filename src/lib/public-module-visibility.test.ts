@@ -9,6 +9,8 @@ import {
   filterPublicPaths,
   filterSiteNavSections,
   isPublicLinkEnabled,
+  isPublicPathIncludedInSearch,
+  isPublicPathIncludedInSitemap,
   isPublicPathEnabled,
   isTravelModulePathEnabled,
 } from "@/lib/public-module-visibility";
@@ -76,6 +78,46 @@ describe("public module visibility", () => {
     expect(isTravelModulePathEnabled("/transfers/airport", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/apartments", modules)).toBe(false);
     expect(isTravelModulePathEnabled("/services", modules)).toBe(true);
+    expect(isPublicPathIncludedInSearch("/transfers?from=eze", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+    expect(isPublicPathIncludedInSitemap("/transfers", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+    expect(isPublicPathIncludedInSearch("/car-rental", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+  });
+
+  it("separates route publication, menu visibility, search and sitemap", () => {
+    const navigation = { ...DEFAULT_SITE_NAVIGATION, showImmigration: false };
+    const modules = {
+      ...DEFAULT_SITE_MODULES,
+      publicModules: {
+        ...DEFAULT_SITE_MODULES.publicModules,
+        immigration: {
+          activated: true,
+          published: true,
+          includeInSearch: false,
+          includeInSitemap: true,
+        },
+      },
+    };
+
+    expect(isPublicPathEnabled("/immigration", navigation, modules)).toBe(true);
+    expect(isPublicLinkEnabled("/immigration", navigation, modules)).toBe(false);
+    expect(isPublicPathIncludedInSearch("/immigration", navigation, modules)).toBe(false);
+    expect(isPublicPathIncludedInSitemap("/immigration", navigation, modules)).toBe(true);
+  });
+
+  it("closes a public URL and discovery when its module is deactivated", () => {
+    const modules = {
+      ...DEFAULT_SITE_MODULES,
+      publicModules: {
+        ...DEFAULT_SITE_MODULES.publicModules,
+        immigration: {
+          ...DEFAULT_SITE_MODULES.publicModules.immigration,
+          activated: false,
+        },
+      },
+    };
+
+    expect(isPublicPathEnabled("/immigration", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
+    expect(isPublicPathIncludedInSitemap("/immigration", DEFAULT_SITE_NAVIGATION, modules)).toBe(false);
   });
 
   it("indexes apartment routes only for the real native request mode", () => {

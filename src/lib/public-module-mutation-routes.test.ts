@@ -53,16 +53,19 @@ describe("disabled public module mutation routes", () => {
     it(`guards ${contract.file} before mutation work`, () => {
       const source = fs.readFileSync(path.join(process.cwd(), contract.file), "utf8");
       const mutationStart = source.indexOf(contract.mutationStart);
-      const navigationRead = source.indexOf("await fetchSiteNavigation()", mutationStart);
+      const settingsRead = source.indexOf(
+        "await Promise.all([fetchSiteNavigation(), fetchSiteModules()])",
+        mutationStart,
+      );
       const visibilityCheck = source.indexOf(
-        `isPublicPathEnabled("${contract.modulePath}", navigation)`,
+        `isPublicPathEnabled("${contract.modulePath}", navigation, modules)`,
         mutationStart,
       );
       const firstWork = source.indexOf(contract.firstWork, mutationStart);
 
       expect(mutationStart).toBeGreaterThanOrEqual(0);
-      expect(navigationRead).toBeGreaterThan(mutationStart);
-      expect(visibilityCheck).toBeGreaterThan(navigationRead);
+      expect(settingsRead).toBeGreaterThan(mutationStart);
+      expect(visibilityCheck).toBeGreaterThan(settingsRead);
       expect(firstWork).toBeGreaterThan(visibilityCheck);
       expect(source.slice(visibilityCheck, firstWork)).toContain("status: 404");
     });

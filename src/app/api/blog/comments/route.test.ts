@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   listComments: vi.fn(),
+  fetchSiteModules: vi.fn(),
   fetchSiteNavigation: vi.fn(),
   warn: vi.fn(),
 }));
@@ -22,6 +23,7 @@ vi.mock("@/lib/blog-comments-server", () => ({
 }));
 
 vi.mock("@/lib/site-settings-server", () => ({
+  fetchSiteModules: mocks.fetchSiteModules,
   fetchSiteNavigation: mocks.fetchSiteNavigation,
 }));
 
@@ -30,6 +32,17 @@ import { GET, POST } from "./route";
 describe("blog comments API", () => {
   beforeEach(() => {
     mocks.listComments.mockReset();
+    mocks.fetchSiteModules.mockReset();
+    mocks.fetchSiteModules.mockResolvedValue({
+      publicModules: {
+        journal: {
+          activated: true,
+          published: true,
+          includeInSearch: true,
+          includeInSitemap: true,
+        },
+      },
+    });
     mocks.fetchSiteNavigation.mockReset();
     mocks.fetchSiteNavigation.mockResolvedValue({ showJournal: true });
     mocks.warn.mockReset();
@@ -54,7 +67,16 @@ describe("blog comments API", () => {
   });
 
   it("rejects a new comment before auth or storage when the blog is disabled", async () => {
-    mocks.fetchSiteNavigation.mockResolvedValue({ showJournal: false });
+    mocks.fetchSiteModules.mockResolvedValue({
+      publicModules: {
+        journal: {
+          activated: false,
+          published: true,
+          includeInSearch: true,
+          includeInSitemap: true,
+        },
+      },
+    });
 
     const response = await POST(
       new Request("https://www.goargentina.ru/api/blog/comments", {

@@ -1,6 +1,6 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import type { Json } from "@/types/database";
-import type { SiteGlobalKey } from "@/types/site-globals";
+import { SITE_PUBLIC_MODULE_IDS, type SiteGlobalKey } from "@/types/site-globals";
 
 export type SiteSettingsCasUpdate = {
   key: SiteGlobalKey;
@@ -111,6 +111,27 @@ export function detectDangerousSettingsChanges(
       ] as const) {
         if (previous[field] !== "disabled" && next[field] === "disabled") {
           risks.push({ id: `${update.key}:${field}:disabled`, key: update.key, label });
+        }
+      }
+
+      const previousPublicModules = asRecord(previous.publicModules);
+      const nextPublicModules = asRecord(next.publicModules);
+      for (const moduleId of SITE_PUBLIC_MODULE_IDS) {
+        const previousState = asRecord(previousPublicModules[moduleId]);
+        const nextState = asRecord(nextPublicModules[moduleId]);
+        if (previousState.activated === true && nextState.activated === false) {
+          risks.push({
+            id: `${update.key}:publicModules:${moduleId}:off`,
+            key: update.key,
+            label: `Отключить публичный модуль «${moduleId}» и закрыть его URL`,
+          });
+        }
+        if (previousState.published === true && nextState.published === false) {
+          risks.push({
+            id: `${update.key}:publicModules:${moduleId}:unpublish`,
+            key: update.key,
+            label: `Снять с публикации страницы модуля «${moduleId}»`,
+          });
         }
       }
     }

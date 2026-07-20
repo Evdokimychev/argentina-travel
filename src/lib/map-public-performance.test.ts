@@ -3,6 +3,19 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("public Argentina map performance contract", () => {
+  it("loads the heavy interactive renderer only after visitor activation", () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), "src/components/map/ArgentinaMapLibreCanvas.tsx"),
+      "utf8",
+    );
+
+    expect(source).toContain("const [interactive, setInteractive] = useState(false)");
+    expect(source).toContain("onClick={() => setInteractive(true)}");
+    expect(source.indexOf("if (!interactive)")).toBeLessThan(
+      source.indexOf("<ArgentinaMapLibreCanvasInner"),
+    );
+  });
+
   it("does not fetch the 14 MB province geometry during the default map load", () => {
     const source = fs.readFileSync(
       path.join(process.cwd(), "src/components/map/ArgentinaMapLibreCanvasInner.tsx"),
