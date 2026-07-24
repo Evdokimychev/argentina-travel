@@ -29,7 +29,8 @@ describe("settings control-plane integration", () => {
     expect(edge).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
     expect(edge).toContain('source: "last_known_good"');
     expect(edge).toContain('source: "safe_fallback"');
-    expect(edge).toContain("navigation: { ...DEFAULT_SITE_NAVIGATION }");
+    expect(edge).toContain("applyPublicLaunchGuards");
+    expect(edge).toContain("{ ...DEFAULT_SITE_NAVIGATION }");
     expect(edge).toContain('apartmentsMode: "disabled"');
     expect(middleware).toContain("fetchSiteControlPlaneEdge");
     expect(middleware).toContain("controlPlane.navigation");
