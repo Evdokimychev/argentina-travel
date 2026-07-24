@@ -198,14 +198,18 @@ export const DEFAULT_SITE_MODULES: SiteModulesGlobal = {
   showTransfersInServices: false,
   publicModules: Object.fromEntries(
     SITE_PUBLIC_MODULE_IDS.map((id) => {
-      const hiddenByDefault = id === "shop" || id === "forum" || id === "immigration";
+      // Shop/Forum stay fully off until inventory/community are ready.
+      // Immigration stays reachable by direct URL for editorial review, but is
+      // hidden from navigation / search via showImmigration + includeInSearch.
+      const fullyHidden = id === "shop" || id === "forum";
+      const navHiddenOnly = id === "immigration";
       return [
         id,
         {
-          activated: !hiddenByDefault,
-          published: !hiddenByDefault,
-          includeInSearch: !hiddenByDefault,
-          includeInSitemap: !hiddenByDefault,
+          activated: fullyHidden ? false : true,
+          published: fullyHidden ? false : true,
+          includeInSearch: fullyHidden || navHiddenOnly ? false : true,
+          includeInSitemap: fullyHidden ? false : true,
         },
       ];
     }),
