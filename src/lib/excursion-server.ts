@@ -211,38 +211,59 @@ export async function fetchExcursionsServer(
 }
 
 async function fetchTripsterDetail(slug: string): Promise<ExcursionDetail | null> {
-  const supabase = getClient();
-  let detail: ExcursionDetail | null = null;
+  // Prefer Postgres under REST egress pressure: listing already falls back to PG,
+  // but a throwing/hanging Supabase detail read must not skip the durable path.
+  let detail = await pgFetchTripsterExcursionDetailServer(slug);
 
-  if (supabase) {
-    detail = await fetchTripsterExcursionBySlug(supabase, slug);
-  }
   if (!detail) {
-    detail = await pgFetchTripsterExcursionDetailServer(slug);
+    const supabase = getClient();
+    if (supabase) {
+      try {
+        detail = await fetchTripsterExcursionBySlug(supabase, slug);
+      } catch {
+        detail = null;
+      }
+    }
   }
+
   if (!detail) return null;
 
-  const enriched = await enrichTripsterGuideProfile(detail);
-  return {
-    ...enriched,
-    tripsterPartnerApiConfigured: isTripsterConfigured(),
-  };
+  try {
+    const enriched = await enrichTripsterGuideProfile(detail);
+    return {
+      ...enriched,
+      tripsterPartnerApiConfigured: isTripsterConfigured(),
+    };
+  } catch {
+    return {
+      ...detail,
+      tripsterPartnerApiConfigured: isTripsterConfigured(),
+    };
+  }
 }
 
 async function fetchSputnik8Detail(slug: string): Promise<ExcursionDetail | null> {
+  const detail = await pgFetchSputnik8ExcursionDetailServer(slug);
+  if (detail) return detail;
+
   const supabase = getClient();
-  if (supabase) {
-    const detail = await fetchSputnik8ExcursionBySlug(supabase, slug);
-    if (detail) return detail;
+  if (!supabase) return null;
+  try {
+    return await fetchSputnik8ExcursionBySlug(supabase, slug);
+  } catch {
+    return null;
   }
-  return pgFetchSputnik8ExcursionDetailServer(slug);
 }
 
 async function fetchNativeDetail(slug: string): Promise<ExcursionDetail | null> {
   const supabase = getClient();
   if (!supabase) return null;
-  const source = await fetchPublishedExcursionBySlug(supabase, slug);
-  return source ? nativeTourDetailToExcursion(source.canonical, source.detail) : null;
+  try {
+    const source = await fetchPublishedExcursionBySlug(supabase, slug);
+    return source ? nativeTourDetailToExcursion(source.canonical, source.detail) : null;
+  } catch {
+    return null;
+  }
 }
 
 async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<ExcursionDetail> {
@@ -285,7 +306,7 @@ async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail 
 function getCachedExcursionDetail(slug: string): Promise<ExcursionDetail | null> {
   return unstable_cache(
     () => loadExcursionDetailServer(slug),
-    ["excursion-detail-v2", slug],
+    ["excursion-detail-v3", slug],
     { revalidate: 600, tags: ["excursions"] },
   )();
 }

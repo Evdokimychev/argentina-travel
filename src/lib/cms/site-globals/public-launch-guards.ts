@@ -56,8 +56,10 @@ export function applyPublicLaunchGuards(
         },
         immigration: {
           ...immigration,
+          activated: true,
+          published: true,
           includeInSearch: false,
-          // Keep CMS published flag so /immigration stays open for content review.
+          // Keep /immigration open for content review; hide only from nav/search.
         },
       },
     },

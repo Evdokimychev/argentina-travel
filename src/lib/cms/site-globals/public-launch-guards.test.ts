@@ -50,6 +50,7 @@ describe("applyPublicLaunchGuards", () => {
     expect(modules.publicModules.shop.published).toBe(false);
     expect(modules.publicModules.forum.published).toBe(false);
     expect(modules.publicModules.immigration.published).toBe(true);
+    expect(modules.publicModules.immigration.activated).toBe(true);
     expect(modules.publicModules.immigration.includeInSearch).toBe(false);
   });
 });

@@ -122,7 +122,7 @@ export async function pgFetchExcursionsServer(
 }
 
 export async function pgFetchExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
-  const result = await withPgClient(async (client) => {
+  return withPgClient(async (client) => {
     const experience = await client.query(
       `select * from public.tripster_experiences where slug = $1 and ${TRIPSTER_EXCURSION_WHERE_SQL} limit 1`,
       [slug]
@@ -136,22 +136,19 @@ export async function pgFetchExcursionDetailServer(slug: string): Promise<Excurs
       [row.city_id]
     );
 
-    return rowToExcursionDetail(row, city.rows[0] ?? null);
-  });
-
-  if (!result) return null;
-
-  const reviewsResult = await withPgClient(async (client) => {
-    const { rows } = await client.query(
+    const detail = rowToExcursionDetail(row, city.rows[0] ?? null);
+    const reviews = await client.query(
       `select id, rating, author_name, review_text, created_at, payload
        from public.tripster_reviews where experience_id = $1
        order by created_at desc nulls last limit 20`,
-      [result.id]
+      [detail.id]
     );
-    return rows.map((row) => mapTripsterReviewRow(row));
-  });
 
-  return { ...result, reviews: reviewsResult ?? [] };
+    return {
+      ...detail,
+      reviews: reviews.rows.map((reviewRow) => mapTripsterReviewRow(reviewRow)),
+    };
+  });
 }
 
 export async function pgFetchExcursionSlugsServer(): Promise<string[]> {
