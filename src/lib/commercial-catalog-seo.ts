@@ -29,8 +29,8 @@ export const TOURS_CATALOG_SEO: CommercialSeoCopy = {
     },
     {
       title: "Водопады Игуасу",
-      description: "Что посмотреть в регионе и как собрать маршрут на несколько дней.",
-      href: "/destinations/iguazu",
+      description: "Туры и программы с аргентинской стороной парка, даты и условия.",
+      href: "/tours/region/iguazu",
     },
     {
       title: "Интерактивная карта",
@@ -65,6 +65,35 @@ export const PATAGONIA_TOURS_SEO: CommercialSeoCopy = {
       title: "Патагония на карте",
       description: "Оцените расстояния между Барилоче, Эль-Калафате и Ушуайей.",
       href: "/mapa-argentina",
+    },
+  ],
+};
+
+export const IGUAZU_TOURS_SEO: CommercialSeoCopy = {
+  eyebrow: "Игуасу",
+  title: "Как выбрать программу к водопадам",
+  description:
+    "Для Игуасу важны сторона парка, число дней и логистика из Буэнос-Айреса или Пуэрто-Игуасу. В каталоге остаются предложения с реальной аргентинской частью маршрута; чисто бразильские и карнавальные программы сюда не попадают.",
+  links: [
+    {
+      title: "Путеводитель по парку",
+      description: "Маршруты, стороны границы, сколько дней заложить и как добраться.",
+      href: "/blog/natsionalnyy-park-iguasu",
+    },
+    {
+      title: "Регион Игуасу",
+      description: "Направление, сезонность и связанные места вокруг водопадов.",
+      href: "/destinations/iguazu",
+    },
+    {
+      title: "Водопады на карте мест",
+      description: "Точка на карте и соседние локации для короткой поездки.",
+      href: "/places/iguazu-falls",
+    },
+    {
+      title: "Экскурсии в Пуэрто-Игуасу",
+      description: "Локальные выезды к парку и городским маршрутам.",
+      href: "/excursions/city/Puerto_Iguazu",
     },
   ],
 };

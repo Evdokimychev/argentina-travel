@@ -199,3 +199,16 @@ Middleware preflight вернётся только при откате; negative
 2. Vercel promote of this branch + crawl with deployment ID/SHA
 3. Production env for GTM/GSC/Metrika/Clarity + GTM container regex publish
 4. Admin site-globals verification after promote
+
+## Release 3 continue (2026-07-24 evening)
+
+| Item | Change |
+|------|--------|
+| CI fixes | Tests aligned with recovery defaults (shop/forum/car-rental/immigration off; no middleware self-HEAD; blog tour stream + filter) |
+| Commercial landing | `/tours/region/iguazu` + sitemap `STABLE_TOUR_LANDING_PATHS` + SEO cluster retarget |
+| Controlled analytics ingest | Allowlist `tour_card_click` / `booking_start` / `partner_checkout_click`; dual-write from GTM helpers |
+| Promotion gate | `npm run promotion:gate` fail-closed (public release + commercial funnel + analytics-readiness + GTM audit + health not down) |
+
+PR: https://github.com/Evdokimychev/argentina-travel/pull/15  
+Paid traffic remains **NO-GO** until human-gates (egress, env, promote evidence).
+

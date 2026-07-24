@@ -5,12 +5,12 @@ describe("resolveBlogSectionBlocks", () => {
   it("merges parsed body with slug-level typed blocks", () => {
     const blocks = resolveBlogSectionBlocks(
       {
-        title: "Когда дешевле всего путешествовать",
+        title: "Краткий ответ по целям поездки",
         body: "Наиболее бюджетными считаются май и сентябрь.",
       },
       "best-time-to-visit-argentina",
     );
-    expect(blocks.some((b) => b.type === "budget")).toBe(true);
+    expect(blocks.some((b) => b.type === "season-matrix")).toBe(true);
     expect(blocks.some((b) => b.type === "paragraph")).toBe(true);
   });
 

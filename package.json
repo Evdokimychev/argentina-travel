@@ -109,6 +109,7 @@
     "quality:production": "node scripts/release-gate.mjs --group production",
     "release:gate": "node scripts/release-gate.mjs",
     "release:public-production": "node scripts/release-public-production.mjs",
+    "promotion:gate": "node scripts/promotion-gate.mjs",
     "crawl:public-tour-details": "node scripts/public-card-detail-crawl.mjs",
     "crawl:sitemap-canonical": "node scripts/sitemap-canonical-crawl.mjs",
     "media:integrity": "node scripts/media-manifest-integrity.mjs",

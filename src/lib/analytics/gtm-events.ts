@@ -55,6 +55,38 @@ export function pushDataLayer(payload: Record<string, unknown>): void {
   window.dataLayer.push(payload);
 }
 
+const EVENT_ID_PATTERN = /^e-[a-z0-9-]{8,96}$/i;
+
+function postControlledAnalyticsEvent(input: {
+  eventType:
+    | "tour_view"
+    | "tour_card_click"
+    | "booking_start"
+    | "partner_checkout_click"
+    | "booking_started";
+  eventId?: string;
+  sessionId?: string;
+  slug?: string;
+  metadata?: Record<string, unknown>;
+}): void {
+  if (typeof fetch !== "function") return;
+  const eventId = input.eventId?.trim();
+  if (!eventId || !EVENT_ID_PATTERN.test(eventId)) return;
+  void fetch("/api/analytics/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+    body: JSON.stringify({
+      eventType: input.eventType,
+      eventId,
+      sessionId: input.sessionId,
+      tourSlug: input.slug,
+      tourId: input.slug,
+      metadata: input.metadata ?? {},
+    }),
+  }).catch(() => undefined);
+}
+
 export function trackGtmEvent(
   event: GtmEventName,
   params?: Record<string, unknown>
@@ -159,7 +191,7 @@ export function trackTourBookingClick(input: {
       : input.action === "waitlist"
         ? "information_only"
         : "native_request";
-  trackGtmEvent(GTM_EVENTS.tourBookingClick, {
+  const params = {
     product_type: "tour",
     product_id: input.slug,
     item_id: input.slug,
@@ -169,6 +201,16 @@ export function trackTourBookingClick(input: {
     source: input.placement,
     booking_mode: bookingMode,
     outcome: "started",
+  };
+  trackGtmEvent(GTM_EVENTS.tourBookingClick, params);
+  const startPayload = createAnalyticsEventPayload({
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    booking_action: input.action ?? "checkout",
+    placement: input.placement,
+    booking_mode: bookingMode,
   });
   trackGtmEvent(GTM_EVENTS.bookingStart, {
     product_type: "tour",
@@ -179,7 +221,29 @@ export function trackTourBookingClick(input: {
     placement: input.placement,
     booking_mode: bookingMode,
   });
+  postControlledAnalyticsEvent({
+    eventType: "booking_start",
+    eventId: typeof startPayload.event_id === "string" ? startPayload.event_id : undefined,
+    sessionId: typeof startPayload.session_id === "string" ? startPayload.session_id : undefined,
+    slug: input.slug,
+    metadata: {
+      product_type: "tour",
+      source: input.placement ?? "tour_booking",
+      booking_mode: bookingMode,
+      handoff: bookingMode === "partner_external",
+    },
+  });
   if (bookingMode === "partner_external") {
+    const partnerPayload = createAnalyticsEventPayload({
+      product_type: "tour",
+      product_id: input.slug,
+      item_id: input.slug,
+      item_name: input.title,
+      booking_action: input.action ?? "checkout",
+      placement: input.placement,
+      booking_mode: bookingMode,
+      outcome: "started",
+    });
     trackGtmEvent(GTM_EVENTS.partnerCheckoutClick, {
       product_type: "tour",
       product_id: input.slug,
@@ -189,6 +253,19 @@ export function trackTourBookingClick(input: {
       placement: input.placement,
       booking_mode: bookingMode,
       outcome: "started",
+    });
+    postControlledAnalyticsEvent({
+      eventType: "partner_checkout_click",
+      eventId: typeof partnerPayload.event_id === "string" ? partnerPayload.event_id : undefined,
+      sessionId:
+        typeof partnerPayload.session_id === "string" ? partnerPayload.session_id : undefined,
+      slug: input.slug,
+      metadata: {
+        product_type: "tour",
+        source: input.placement ?? "partner_checkout",
+        booking_mode: bookingMode,
+        handoff: true,
+      },
     });
   }
 }
@@ -233,24 +310,17 @@ export function trackTourView(input: {
   });
   pushDataLayer({ ...payload, event: GTM_EVENTS.tourView });
   pushDataLayer({ ...payload, event: GTM_EVENTS.tourDetailView });
-  if (typeof fetch !== "function") return;
-  void fetch("/api/analytics/events", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    keepalive: true,
-    body: JSON.stringify({
-      eventType: "tour_view",
-      eventId: payload.event_id,
-      sessionId: payload.session_id,
-      tourSlug: input.slug,
-      tourId: input.slug,
-      metadata: {
-        product_type: "tour",
-        source: "tour_detail",
-        event_version: payload.event_version,
-      },
-    }),
-  }).catch(() => undefined);
+  postControlledAnalyticsEvent({
+    eventType: "tour_view",
+    eventId: typeof payload.event_id === "string" ? payload.event_id : undefined,
+    sessionId: typeof payload.session_id === "string" ? payload.session_id : undefined,
+    slug: input.slug,
+    metadata: {
+      product_type: "tour",
+      source: "tour_detail",
+      event_version: payload.event_version,
+    },
+  });
 }
 
 export function trackExcursionView(input: {
@@ -434,12 +504,29 @@ export function trackTourCardClick(input: {
   title?: string;
   placement?: string;
 }): void {
+  const payload = createAnalyticsEventPayload({
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    placement: input.placement ?? "catalog_card",
+  });
   trackGtmEvent(GTM_EVENTS.tourCardClick, {
     product_type: "tour",
     product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
     placement: input.placement ?? "catalog_card",
+  });
+  postControlledAnalyticsEvent({
+    eventType: "tour_card_click",
+    eventId: typeof payload.event_id === "string" ? payload.event_id : undefined,
+    sessionId: typeof payload.session_id === "string" ? payload.session_id : undefined,
+    slug: input.slug,
+    metadata: {
+      product_type: "tour",
+      source: input.placement ?? "catalog_card",
+    },
   });
 }
 

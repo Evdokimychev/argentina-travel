@@ -95,7 +95,10 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   }
 }
 
-export const STABLE_TOUR_LANDING_PATHS = ["/tours/region/patagonia"] as const;
+export const STABLE_TOUR_LANDING_PATHS = [
+  "/tours/region/patagonia",
+  "/tours/region/iguazu",
+] as const;
 
 export async function collectTourSitemapPaths(): Promise<string[]> {
   try {
