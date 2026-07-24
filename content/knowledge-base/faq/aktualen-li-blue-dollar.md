@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [деньги, валюта, обмен, blue dollar]
 related: [kak-menyat-valyutu]
-last_verified: "2026-07-20"
+last_verified: "2026-07-24"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,7 +22,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-07-24"
     expires_at: "2026-08-20"
     note: "Подтверждает снятие ограничений на покупку валюты физическими лицами с апреля 2025 года."
   - id: bcra-authorized-currency-entities
@@ -32,7 +32,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-07-24"
     expires_at: "2026-08-20"
     note: "BCRA указывает, что операции проводят банки и уполномоченные обменные дома и что их нельзя передавать посредникам."
   - id: bna-current-exchange-reference
@@ -42,21 +42,21 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-07-21"
+    checked_at: "2026-07-24"
+    expires_at: "2026-07-31"
     note: "Официальная ежедневная точка сравнения; конкретная котировка намеренно не зашита в текст."
 claims:
   - id: currency-restrictions-for-individuals-relaxed
     text: "В апреле 2025 года BCRA снял ограничения на покупку иностранной валюты физическими лицами."
     sensitive: true
     source_ids: [bcra-phase-3-currency-liberalization]
-    verified_at: "2026-07-20"
+    verified_at: "2026-07-24"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: legal-currency-exchange-uses-authorized-entities
     text: "BCRA направляет операции покупки и продажи валюты через банки и уполномоченные обменные дома и запрещает передавать их посредникам."
     sensitive: true
     source_ids: [bcra-authorized-currency-entities]
-    verified_at: "2026-07-20"
+    verified_at: "2026-07-24"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

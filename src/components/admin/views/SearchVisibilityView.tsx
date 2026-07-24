@@ -10,6 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { SEO_QUERY_CLUSTERS } from "@/data/seo-query-clusters";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
+import {
+  evaluateSeoClusterCoverage,
+  summarizeSeoClusterCoverage,
+} from "@/lib/seo/cluster-coverage";
 import type {
   SearchProviderConnection,
   SearchVisibilityProvider,
@@ -169,6 +173,11 @@ export default function SearchVisibilityView() {
     () => new Map((visibility?.connections ?? []).map((connection) => [connection.provider, connection])),
     [visibility?.connections],
   );
+  const clusterCoverage = useMemo(() => evaluateSeoClusterCoverage(SEO_QUERY_CLUSTERS), []);
+  const clusterSummary = useMemo(
+    () => summarizeSeoClusterCoverage(clusterCoverage),
+    [clusterCoverage],
+  );
 
   async function runAction(input: {
     action: "save" | "sync" | "delete";
@@ -243,12 +252,13 @@ export default function SearchVisibilityView() {
           <div>
             <h2 className="font-heading text-lg font-bold text-foreground">Карта спроса по Аргентине</h2>
             <p className="mt-1 text-sm leading-6 text-slate">
-              Стартовые кластеры собраны по намерениям поиска без выдуманных объёмов. После синхронизации
-              их приоритет подтверждается фактическими показами из ваших кабинетов.
+              Стартовые кластеры собраны по намерениям поиска без выдуманных объёмов. Локальный coverage:
+              {" "}
+              {clusterSummary.ok} ок · {clusterSummary.warn} внимание · {clusterSummary.missing} без индексации.
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {SEO_QUERY_CLUSTERS.map((cluster) => (
+            {clusterCoverage.map((cluster) => (
               <article key={cluster.id} className="rounded-2xl border border-border-subtle bg-surface-muted/40 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-sm font-bold text-foreground">{cluster.label}</h3>
@@ -256,12 +266,36 @@ export default function SearchVisibilityView() {
                     P{cluster.priority}
                   </span>
                 </div>
-                <p className="mt-2 text-xs leading-5 text-slate">{cluster.promise}</p>
+                <p className="mt-2 text-xs leading-5 text-slate">
+                  {SEO_QUERY_CLUSTERS.find((row) => row.id === cluster.id)?.promise}
+                </p>
                 <p className="mt-3 break-all text-xs font-medium text-foreground">Цель: {cluster.targetPath}</p>
+                <p
+                  className={`mt-2 text-[11px] font-semibold ${
+                    cluster.status === "ok"
+                      ? "text-emerald-700"
+                      : cluster.status === "warn"
+                        ? "text-amber-700"
+                        : "text-red-700"
+                  }`}
+                >
+                  {cluster.status === "ok"
+                    ? cluster.commercialLanding
+                      ? "Coverage: commercial landing"
+                      : "Coverage: indexable target"
+                    : cluster.status === "warn"
+                      ? "Coverage: нужно усилить коммерческую цель"
+                      : "Coverage: цель вне sitemap-контракта"}
+                </p>
                 <details className="mt-3 text-xs text-slate">
-                  <summary className="cursor-pointer font-medium text-sky-ink">Показать запросы ({cluster.queries.length})</summary>
+                  <summary className="cursor-pointer font-medium text-sky-ink">
+                    Показать запросы (
+                    {SEO_QUERY_CLUSTERS.find((row) => row.id === cluster.id)?.queries.length ?? 0})
+                  </summary>
                   <ul className="mt-2 space-y-1">
-                    {cluster.queries.map((query) => <li key={query}>• {query}</li>)}
+                    {(SEO_QUERY_CLUSTERS.find((row) => row.id === cluster.id)?.queries ?? []).map((query) => (
+                      <li key={query}>• {query}</li>
+                    ))}
                   </ul>
                 </details>
               </article>

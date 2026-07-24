@@ -180,6 +180,39 @@ export default function FunnelsView() {
           </div>
 
           <div className={`${cabinetCardClass} p-5`}>
+            <h2 className="font-heading text-lg font-bold text-charcoal">Партнёрский handoff</h2>
+            <p className="mt-1 text-sm text-slate">
+              Карточка → detail → старт бронирования → переход к партнёру. Не считается оплатой.
+            </p>
+            {loading ? (
+              <div className="mt-6">
+                <FunnelSkeleton />
+              </div>
+            ) : funnels?.partnerHandoff ? (
+              <div className="mt-6 space-y-3">
+                <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+                  {funnels.partnerHandoff.reason}
+                </p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {funnels.partnerHandoff.steps.map((step) => (
+                    <div key={step.id} className="rounded-xl border border-gray-100 bg-white p-3">
+                      <p className="text-xs font-medium text-charcoal">{step.label}</p>
+                      <p className="mt-1 font-heading text-xl font-bold text-charcoal">
+                        {step.count == null ? "—" : step.count}
+                      </p>
+                      <p className={`mt-1 text-xs ${
+                        step.status === "available" ? "text-emerald-700" : "text-amber-700"
+                      }`}>
+                        {step.status === "available" ? "Проверенный ingest" : "Недоступно"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className={`${cabinetCardClass} p-5`}>
             <h2 className="font-heading text-lg font-bold text-charcoal">Когорты по месяцам</h2>
             <p className="mt-1 text-sm text-slate">Новые бронирования по месяцам регистрации заявки</p>
 

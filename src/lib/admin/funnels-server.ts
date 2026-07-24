@@ -11,6 +11,7 @@ import type {
   AnalyticsFunnelStepId,
   AnalyticsMetric,
   AnalyticsMetricSource,
+  AnalyticsPartnerHandoffStepId,
   AnalyticsPeriod,
 } from "@/types/admin-analytics";
 import { ANALYTICS_FUNNEL_STEP_LABELS } from "@/types/admin-analytics";
@@ -25,6 +26,13 @@ const METRIC_SOURCES: Record<AnalyticsFunnelStepId, AnalyticsMetricSource> = {
   confirmed: "bookings",
   paid: "payment_ledger",
   review: "published_reviews",
+};
+
+const PARTNER_HANDOFF_LABELS: Record<AnalyticsPartnerHandoffStepId, string> = {
+  tour_card_click: "Клик по карточке",
+  tour_view: "Просмотр detail",
+  booking_start: "Старт бронирования",
+  partner_checkout_click: "Переход к партнёру",
 };
 
 function available(value: number, source: AnalyticsMetricSource): CountMetric {
@@ -144,15 +152,81 @@ async function fetchBookingCohorts(
   };
 }
 
+async function fetchPartnerHandoff(
+  supabase: DbClient,
+  since: string | null,
+): Promise<AdminAnalyticsFunnelsPayload["partnerHandoff"]> {
+  const order: AnalyticsPartnerHandoffStepId[] = [
+    "tour_card_click",
+    "tour_view",
+    "booking_start",
+    "partner_checkout_click",
+  ];
+  const reason =
+    "Партнёрский handoff — информационный слой. Не считается подтверждённой выручкой и не входит в KPI native funnel.";
+
+  try {
+    let query = supabase
+      .from("analytics_events")
+      .select("event_type")
+      .in("event_type", order)
+      .eq("ingestion_source", "controlled_server");
+    if (since) query = query.gte("created_at", since);
+    const { data, error } = await query.limit(20_000);
+    if (error || !data) {
+      return {
+        steps: order.map((id) => ({
+          id,
+          label: PARTNER_HANDOFF_LABELS[id],
+          count: null,
+          status: "unavailable" as const,
+        })),
+        trustedForKpi: false,
+        reason,
+      };
+    }
+    const counts = Object.fromEntries(order.map((id) => [id, 0])) as Record<
+      AnalyticsPartnerHandoffStepId,
+      number
+    >;
+    for (const row of data) {
+      const type = row.event_type as AnalyticsPartnerHandoffStepId;
+      if (type in counts) counts[type] += 1;
+    }
+    return {
+      steps: order.map((id) => ({
+        id,
+        label: PARTNER_HANDOFF_LABELS[id],
+        count: counts[id],
+        status: "available" as const,
+      })),
+      trustedForKpi: false,
+      reason,
+    };
+  } catch {
+    return {
+      steps: order.map((id) => ({
+        id,
+        label: PARTNER_HANDOFF_LABELS[id],
+        count: null,
+        status: "unavailable" as const,
+      })),
+      trustedForKpi: false,
+      reason,
+    };
+  }
+}
+
 export async function fetchAdminFunnels(
   supabase: DbClient,
   period: AnalyticsPeriod = "30d",
 ): Promise<AdminAnalyticsFunnelsPayload> {
   const since = periodStartIso(period);
   const monthKeys = periodMonthKeys(period);
-  const [metrics, cohortData] = await Promise.all([
+  const [metrics, cohortData, partnerHandoff] = await Promise.all([
     fetchFunnelMetrics(supabase, since),
     fetchBookingCohorts(supabase, since, monthKeys),
+    fetchPartnerHandoff(supabase, since),
   ]);
   const metricsAvailable = Object.values(metrics).every(
     (metric) => metric.status === "available" && metric.value !== null,
@@ -174,6 +248,7 @@ export async function fetchAdminFunnels(
     cohorts: cohortData.cohorts,
     metrics,
     cohortsMetric: cohortData.cohortsMetric,
+    partnerHandoff,
     meta: trust,
   };
 }
