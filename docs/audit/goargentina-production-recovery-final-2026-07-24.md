@@ -212,3 +212,9 @@ Middleware preflight вернётся только при откате; negative
 PR: https://github.com/Evdokimychev/argentina-travel/pull/15  
 Paid traffic remains **NO-GO** until human-gates (egress, env, promote evidence).
 
+### Follow-up (same evening)
+
+- Unblocked CI `knowledge-provenance`: refreshed expired BNA FX `expires_at` on 3 sensitive FAQs (`aktualen-li-blue-dollar`, `skolko-deneg-brat-na-poezdku`, `skolko-stoit-zhizn-v-buenos-ajrese`).
+- Admin: partner handoff funnel (informational, not revenue) + SEO cluster coverage badges.
+- Commit `c1de58e0` on PR #15.
+
