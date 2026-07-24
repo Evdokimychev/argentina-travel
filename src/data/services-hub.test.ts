@@ -6,11 +6,12 @@ import {
 import { DEFAULT_SITE_MODULES } from "@/lib/cms/site-globals/normalize";
 
 describe("services hub travel modules", () => {
-  it("shows apartments and transfers by default, with car-rental off until enabled", () => {
+  it("keeps apartments via contact request by default, with transfers and car-rental off until enabled", () => {
     const categories = getServiceCategoriesForModules(DEFAULT_SITE_MODULES);
     expect(categories.map((category) => category.id)).toEqual(
-      expect.arrayContaining(["apartments", "transfers"]),
+      expect.arrayContaining(["apartments"]),
     );
+    expect(categories.map((category) => category.id)).not.toContain("transfers");
     expect(categories.map((category) => category.id)).not.toContain("car-rental");
     expect(getServiceBySlug("apartment-rental")?.href).toBe(
       "/contacts?service=apartment-rental",
@@ -42,6 +43,7 @@ describe("services hub travel modules", () => {
     const categories = getServiceCategoriesForModules({
       ...DEFAULT_SITE_MODULES,
       transfersMode: "request",
+      showTransfersInServices: true,
     });
     const transfers = categories.find((category) => category.id === "transfers");
 

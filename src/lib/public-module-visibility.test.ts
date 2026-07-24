@@ -182,7 +182,11 @@ describe("public module visibility", () => {
   });
 
   it("can remove disabled travel paths from public path candidates", () => {
-    const modules = { ...DEFAULT_SITE_MODULES, carRentalMode: "disabled" as const };
+    const modules = {
+      ...DEFAULT_SITE_MODULES,
+      carRentalMode: "disabled" as const,
+      transfersMode: "partner" as const,
+    };
 
     expect(
       filterPublicPaths(

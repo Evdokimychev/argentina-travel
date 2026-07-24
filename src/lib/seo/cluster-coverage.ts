@@ -2,7 +2,7 @@ import { SEO_QUERY_CLUSTERS, type SeoQueryCluster } from "@/data/seo-query-clust
 import {
   isIndexableInternalPath,
   STABLE_TOUR_LANDING_PATHS,
-} from "@/lib/sitemap-urls";
+} from "@/lib/seo/sitemap-indexability";
 
 export type SeoClusterCoverageStatus = "ok" | "warn" | "missing";
 

@@ -140,8 +140,8 @@ export default function BlogCommentsSection({ slug, title, className }: BlogComm
       </div>
       <p className="mt-1 text-xs text-slate">
         Обсуждение по теме статьи. Для общих вопросов —{" "}
-        <Link href="/forum" className="font-medium text-sky hover:underline">
-          форум
+        <Link href="/contacts" className="font-medium text-sky hover:underline">
+          напишите нам
         </Link>
         .
       </p>

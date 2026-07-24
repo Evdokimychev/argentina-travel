@@ -6,6 +6,7 @@ import {
   normalizeSiteModules,
   normalizeSiteNavigation,
 } from "@/lib/cms/site-globals/normalize";
+import { applyPublicLaunchGuards } from "@/lib/cms/site-globals/public-launch-guards";
 import type {
   SiteFeaturesGlobal,
   SiteModulesGlobal,
@@ -45,6 +46,22 @@ let cached: DurableSnapshot | null = null;
 let inFlight: Promise<SiteControlPlaneEdgeSnapshot> | null = null;
 let retryAfter = 0;
 
+const SAFE_FALLBACK_BASE_MODULES: SiteModulesGlobal = {
+  ...DEFAULT_SITE_MODULES,
+  apartmentsMode: "disabled",
+  carRentalMode: "disabled",
+  transfersMode: "disabled",
+  hotelsMode: "disabled",
+  showApartmentsInServices: false,
+  showCarRentalInServices: false,
+  showTransfersInServices: false,
+};
+
+const SAFE_FALLBACK_GUARDS = applyPublicLaunchGuards(
+  { ...DEFAULT_SITE_NAVIGATION },
+  SAFE_FALLBACK_BASE_MODULES,
+);
+
 const SAFE_FALLBACK: SiteControlPlaneEdgeSnapshot = {
   ok: false,
   source: "safe_fallback",
@@ -57,17 +74,8 @@ const SAFE_FALLBACK: SiteControlPlaneEdgeSnapshot = {
   // Keep the established read-only site available during a cold settings
   // outage. New transactional modules remain disabled below, and every public
   // write independently requires an `ok: true` control-plane snapshot.
-  navigation: { ...DEFAULT_SITE_NAVIGATION },
-  modules: {
-    ...DEFAULT_SITE_MODULES,
-    apartmentsMode: "disabled",
-    carRentalMode: "disabled",
-    transfersMode: "disabled",
-    hotelsMode: "disabled",
-    showApartmentsInServices: false,
-    showCarRentalInServices: false,
-    showTransfersInServices: false,
-  },
+  navigation: SAFE_FALLBACK_GUARDS.navigation,
+  modules: SAFE_FALLBACK_GUARDS.modules,
 };
 
 function lastKnownGood(): SiteControlPlaneEdgeSnapshot {
@@ -109,11 +117,16 @@ async function fetchDurableControlPlane(): Promise<DurableSnapshot> {
     throw new Error("Control plane snapshot is missing");
   }
 
+  const guarded = applyPublicLaunchGuards(
+    normalizeSiteNavigation(row.navigation),
+    normalizeSiteModules(row.modules),
+  );
+
   return {
     revision: row.revision,
     features: normalizeSiteFeatures(row.features),
-    navigation: normalizeSiteNavigation(row.navigation),
-    modules: normalizeSiteModules(row.modules),
+    navigation: guarded.navigation,
+    modules: guarded.modules,
     fetchedAt: Date.now(),
   };
 }

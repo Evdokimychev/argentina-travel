@@ -190,11 +190,12 @@ export const DEFAULT_SITE_COMMERCE: SiteCommerceGlobal = {
 export const DEFAULT_SITE_MODULES: SiteModulesGlobal = {
   apartmentsMode: "request",
   carRentalMode: "disabled",
-  transfersMode: "partner",
+  // Partner transfer inventory is not live yet — keep discovery off to avoid 404 hubs.
+  transfersMode: "disabled",
   hotelsMode: "planned",
   showApartmentsInServices: true,
-  showCarRentalInServices: true,
-  showTransfersInServices: true,
+  showCarRentalInServices: false,
+  showTransfersInServices: false,
   publicModules: Object.fromEntries(
     SITE_PUBLIC_MODULE_IDS.map((id) => {
       const hiddenByDefault = id === "shop" || id === "forum" || id === "immigration";
