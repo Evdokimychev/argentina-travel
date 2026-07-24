@@ -1,22 +1,8 @@
 {
-  "generatedAt": "2026-07-20T19:59:20.464Z",
-  "status": "failed",
+  "generatedAt": "2026-07-24T20:37:30.159Z",
+  "status": "passed",
   "publicKnowledgeBaseEntries": 243,
   "publicBlogPosts": 75,
-  "navigationLinks": 138,
-  "errors": [
-    "Navigation immigration: юридический раздел не прошёл ревью",
-    "Navigation immigration-all: юридический раздел не прошёл ревью",
-    "Navigation immigration-life: юридический раздел не прошёл ревью",
-    "Navigation immigration-process: юридический раздел не прошёл ревью",
-    "Navigation immigration-birth: юридический раздел не прошёл ревью",
-    "Navigation immigration-citizenship: юридический раздел не прошёл ревью",
-    "Navigation immigration-residency: юридический раздел не прошёл ревью",
-    "Navigation immigration-opportunities: юридический раздел не прошёл ревью",
-    "Navigation immigration-links: юридический раздел не прошёл ревью",
-    "Navigation immigration-visas: юридический раздел не прошёл ревью",
-    "Navigation immigration-residency-overview: юридический раздел не прошёл ревью",
-    "Navigation immigration-documents: юридический раздел не прошёл ревью",
-    "Navigation immigration-extension: юридический раздел не прошёл ревью"
-  ]
+  "navigationLinks": 121,
+  "errors": []
 }

@@ -1,0 +1,109 @@
+{
+  "baseUrl": "https://www.goargentina.ru",
+  "generatedAt": "2026-07-24T20:37:38.710Z",
+  "cardCount": 11,
+  "false404Count": 0,
+  "unavailableCount": 0,
+  "okCount": 11,
+  "results": [
+    {
+      "pathname": "/tours/bolshoy-tur-v-argentinu-chili-i-braziliyu-trekkingi-v-patagonii-vodopady-iguasu--t92532",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/braziliya-ot-i-do-5-shtatov-i-vip-mesta-na-karnavale-v-rio-de-zhaneyro-t71960",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/chudesa-brazilii-rio-i-dzhungli-amazonii-dzhiping-v-natsparke-halapao-i-vodopady-t70643",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 0,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/granitsa-treh-stran-braziliya-argentina-paragvay-t80046",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/karnaval-amazoniya-i-vodopady-iguasu-tropicheskoe-priklyuchenie-v-brazilii-i-arg-t70760",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/ot-buenos-ayresa-do-kraya-sveta-bolshoy-fototur-po-znakovym-lokatsiyam-argentiny-t109207",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/paragvay-s-zapada-na-vostok-i-vodopady-iguasu-so-storony-2-stran-individualnyy-t-t104730",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/v-ritme-samby-v-braziliyu-na-karnaval-t79362",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/vlyubitsya-v-prirodu-yuzhnoy-ameriki-bolshoe-aktivnoe-puteshestvie-v-patagoniyu--t92278",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 0,
+      "ok": true,
+      "false404": false
+    },
+    {
+      "pathname": "/tours/voploschenie-brazilskoy-dushi-vodopady-iguasu-dzhungli-amazonii-i-karnaval-v-rio-t81861",
+      "status": 200,
+      "location": null,
+      "unavailable": false,
+      "h1Count": 1,
+      "ok": true,
+      "false404": false
+    }
+  ]
+}

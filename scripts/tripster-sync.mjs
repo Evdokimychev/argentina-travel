@@ -742,13 +742,21 @@ async function main() {
       pushLog(`Reviews synced: ${reviewsSynced}`);
     }
 
+    const finishStatus = experiencesSynced === 0 ? "failed" : "success";
+    if (finishStatus === "failed") {
+      pushLog("Sync marked failed: 0 experiences synced (auth/quota/empty must not look successful)");
+    }
+
     const finishPayload = {
-      status: "success",
+      status: finishStatus,
       finished_at: new Date().toISOString(),
       cities_synced: citiesSynced,
       experiences_synced: experiencesSynced,
       experiences_created: experiencesCreated,
       experiences_updated: experiencesUpdated,
+      ...(finishStatus === "failed"
+        ? { error_message: "zero_experiences_synced" }
+        : {}),
       log,
     };
 

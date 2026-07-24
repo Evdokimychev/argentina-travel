@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Flame, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { TourListing, TourBadge } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
+import PartnerTourListedPrice from "@/components/tour-detail/PartnerTourListedPrice";
 import TourCardGallery from "./TourCardGallery";
 import { formatDurationShort } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
@@ -32,11 +33,16 @@ import { formatShortDisplayName } from "@/lib/full-name";
 import { plainTextFromRichContent } from "@/lib/rich-text";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
 import { formatTourGroupSizeLabel } from "@/lib/tour-group-size-display";
+import { resolvePartnerListedPriceParts } from "@/lib/tripster/partner-tour-price";
 import { formatYouTravelListedPrice } from "@/lib/youtravel/offers-mapper";
 import {
   TourListingOverlayBadges,
   TourListingThematicTags,
 } from "./TourListingCatalogBadges";
+import {
+  trackTourCardClick,
+  trackTourCardImpression,
+} from "@/lib/analytics/gtm-events";
 import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
 import { resolveTourOfferCapabilities } from "@/lib/product-capabilities";
 
@@ -59,6 +65,8 @@ interface MarketplaceTourCardProps {
 export default function MarketplaceTourCard({ tour, imagePriority = false }: MarketplaceTourCardProps) {
   const router = useRouter();
   const [datesModalOpen, setDatesModalOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const impressionSentRef = useRef(false);
   const schedule = resolveTourCardScheduleDisplay(tour);
   const ratingDisplay = resolveTourRatingLabel(tour);
   const groupDiscountHint = tour.groupDiscountHint;
@@ -73,8 +81,29 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
   const partnerBadge = resolvePartnerTourBadge(tour);
   const offerCapabilities = resolveTourOfferCapabilities(tour);
 
+  useEffect(() => {
+    const node = cardRef.current;
+    if (!node || impressionSentRef.current) return;
+    if (typeof IntersectionObserver === "undefined") {
+      impressionSentRef.current = true;
+      trackTourCardImpression({ slug: tour.slug, title: tour.title });
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting) || impressionSentRef.current) return;
+        impressionSentRef.current = true;
+        trackTourCardImpression({ slug: tour.slug, title: tour.title });
+        observer.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [tour.slug, tour.title]);
+
   return (
-    <ContentCard>
+    <ContentCard ref={cardRef}>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
         <ContentCardMedia
           aspect="auto"
@@ -184,35 +213,33 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
 
           <div className="mt-3 flex flex-col gap-0.5">
             <div className="flex items-baseline justify-between gap-2">
-              <TourPublicPriceDisplay
-                priceUsd={tour.priceUsd}
-                originalPriceUsd={tour.originalPriceUsd}
-                priceOnRequest={tour.priceOnRequest}
-                priceFromPrefix={tour.priceFromPrefix}
-                size="sm"
-                density="compact"
-              />
+              {resolvePartnerListedPriceParts(tour) ? (
+                <PartnerTourListedPrice tour={tour} showFrom={tour.priceFromPrefix} size="sm" />
+              ) : (
+                <TourPublicPriceDisplay
+                  priceUsd={tour.priceUsd}
+                  originalPriceUsd={tour.originalPriceUsd}
+                  priceOnRequest={tour.priceOnRequest}
+                  priceFromPrefix={tour.priceFromPrefix}
+                  size="sm"
+                  density="compact"
+                />
+              )}
               <p className="shrink-0 self-baseline text-xs text-slate">
                 {formatDurationShort(tour.durationDays, tour.durationNights)}
               </p>
             </div>
-            {tour.partnerPriceDisplay ? (
+            {tour.partnerOriginalPriceValue != null &&
+            tour.partnerPriceValue != null &&
+            tour.partnerOriginalPriceValue > tour.partnerPriceValue ? (
               <p className="text-[11px] text-slate">
-                {tour.partnerOriginalPriceValue != null &&
-                tour.partnerPriceValue != null &&
-                tour.partnerOriginalPriceValue > tour.partnerPriceValue ? (
-                  <>
-                    <span className="mr-1.5 line-through decoration-brand/50">
-                      {formatYouTravelListedPrice(
-                        tour.partnerOriginalPriceValue,
-                        tour.partnerPriceCurrency,
-                      )}
-                    </span>
-                    <span className="font-medium text-charcoal">{tour.partnerPriceDisplay}</span>
-                  </>
-                ) : (
-                  tour.partnerPriceDisplay
-                )}
+                <span className="mr-1.5 line-through decoration-brand/50">
+                  {formatYouTravelListedPrice(
+                    tour.partnerOriginalPriceValue,
+                    tour.partnerPriceCurrency,
+                  )}
+                </span>
+                <span className="font-medium text-charcoal">цена со скидкой</span>
               </p>
             ) : null}
           </div>
@@ -269,6 +296,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
       <ContentCardOverlayLink
         href={`/tours/${tour.slug}`}
         ariaLabel={`Открыть тур: ${tour.title}`}
+        onClick={() => trackTourCardClick({ slug: tour.slug, title: tour.title })}
       />
 
       {datesModalOpen && schedule?.type === "dates" && schedule.moreDates > 0 ? (

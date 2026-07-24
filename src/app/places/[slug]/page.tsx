@@ -17,6 +17,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
 import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -51,8 +52,9 @@ export default async function PlaceDetailPage({ params }: PageProps) {
   const cmsMetadata = getCmsResolverMetadata(place);
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
-  const initialTours = await fetchMarketplaceTours();
-  const relatedTours = resolveRelatedToursForPlace(place, initialTours);
+  const marketplaceTours = await fetchMarketplaceTours();
+  const resolvedTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
+  const relatedTours = resolveRelatedToursForPlace(place, resolvedTours);
 
   return (
     <>

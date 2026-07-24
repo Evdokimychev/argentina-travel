@@ -6,6 +6,11 @@ import { BLOG_START_HERE_SLUGS } from "@/data/blog-canonical-map";
 import { getBlogTourEmbeds } from "@/data/blog-tour-embeds";
 import { getPublishedPlanPosts } from "@/lib/blog-from-plan";
 import { manualPostsFromMd, REPLACED_MANUAL_SLUGS } from "@/data/blog-manual-from-md";
+import {
+  BEST_TIME_TO_VISIT_ARGENTINA_EXCERPT,
+  BEST_TIME_TO_VISIT_ARGENTINA_SECTIONS,
+  BEST_TIME_TO_VISIT_ARGENTINA_SOURCES,
+} from "@/data/blog-best-time-to-visit-argentina";
 
 const rt = (minutes: number) => formatBlogReadTime(minutes);
 
@@ -2976,8 +2981,7 @@ const quarantinedLegacyManualSlugs = new Set<string>([
 ]);
 
 const legacyManualOfficialSources: Record<string, string> = {
-  "best-time-to-visit-argentina":
-    "Проверено 17.07.2026. Единого лучшего сезона для всей страны нет: перед поездкой сверяйте правила конкретной территории, погоду и состояние маршрутов.\n\n* [Национальный парк Лос-Гласьярес — рекомендации посетителям](https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/recomendaciones-para-visitar-el-parque-nacional-los-glaciares)\n* [Национальный парк Тьерра-дель-Фуэго — обзор территории и сезона](https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-tierra-del-fuego/panoramica)\n* [Официальный туристический портал Аргентины — сезон китов на полуострове Вальдес](https://www.argentina.gob.ar/jefatura/turismo/viaja-por-argentina/avistar-ballenas-en-peninsula-valdes)\n* [Официальный туристический портал Чубута — сезон пингвинов в Пунта-Томбо](https://chubutpatagonia.gob.ar/experiencia/punta-tombo/)",
+  "best-time-to-visit-argentina": BEST_TIME_TO_VISIT_ARGENTINA_SOURCES,
   "argentinian-steak-guide":
     "Проверено 17.07.2026.\n\n* [Официальный туристический портал Буэнос-Айреса — beef and tango](https://turismo.buenosaires.gob.ar/en/atractivo/9pm-beef-and-tango)",
   "tango-beginners-guide":
@@ -3017,6 +3021,7 @@ const legacyManualOfficialSources: Record<string, string> = {
 };
 
 const legacyManualExcerptOverrides: Record<string, string> = {
+  "best-time-to-visit-argentina": BEST_TIME_TO_VISIT_ARGENTINA_EXCERPT,
   "patagonia-авиабилеты":
     "Как выбрать аэропорт и внутренний перелёт по Патагонии, не полагаясь на устаревшее расписание.",
   "iguazu-за-3-дня":
@@ -3041,6 +3046,7 @@ const legacyManualReplacementSections: Record<
   string,
   Array<{ title: string; body: string }>
 > = {
+  "best-time-to-visit-argentina": BEST_TIME_TO_VISIT_ARGENTINA_SECTIONS,
   "patagonia-авиабилеты": [
     {
       title: "Сначала выберите точку входа",
@@ -3249,22 +3255,6 @@ const legacyManualReplacementSections: Record<
 };
 
 const legacyManualSectionOverrides: Record<string, Record<string, string>> = {
-  "best-time-to-visit-argentina": {
-    Введение:
-      "Аргентина вытянута на тысячи километров с севера на юг, поэтому сезон нужно выбирать не для страны в целом, а для конкретного маршрута. В одной поездке могут сочетаться влажный субтропический север, высокогорье и ветреная Патагония. Ниже — безопасная отправная точка без обещаний одинаковой погоды во всех регионах.",
-    "Краткий ответ":
-      "Универсального лучшего месяца нет. Сначала определите главные точки маршрута, затем проверьте официальные условия каждой территории: открытие троп, режим посещения, погоду и сезон природных наблюдений. Для сложного маршрута оставляйте запасной день на ветер, осадки или временное закрытие участка.",
-    "Особенность сезонов в Аргентине":
-      "Аргентина находится в Южном полушарии: календарное лето длится с декабря по февраль, осень — с марта по май, зима — с июня по август, весна — с сентября по ноябрь. Но календарь сам по себе не гарантирует подходящие условия: высота, широта и местный микроклимат важнее общей подписи сезона.",
-    Патагония:
-      "В Патагонии условия заметно различаются даже между соседними районами. Национальный парк Тьерра-дель-Фуэго называет период с конца октября по апрель основным сезоном посещения, а Лос-Гласьярес отдельно предупреждает о резкой смене погоды и сильном ветре. Для каждой тропы проверяйте актуальный статус у администрации парка непосредственно перед выходом.",
-    "Когда можно увидеть китов":
-      "Официальный календарь полуострова Вальдес указывает сезон южного гладкого кита с июня до начала декабря. Это природное наблюдение: конкретную встречу с животными, погоду и выход судна гарантировать нельзя.",
-    "Когда ехать за пингвинами":
-      "Официальный туристический портал Чубута указывает сезон магеллановых пингвинов в Пунта-Томбо с сентября по апрель. Точные даты, часы доступа и правила территории проверяйте перед поездкой; календарь животных зависит от природных условий.",
-    Итог:
-      "Выбирайте даты от главной цели поездки, а не от усреднённого календаря страны. Перед бронированием проверьте официальный режим парков и природных территорий, затем сопоставьте его с погодой и транспортом на свои даты. Такой порядок надёжнее любого списка «идеальных месяцев».",
-  },
   "argentinian-steak-guide": {
     "Сколько стоит хороший стейк":
       "Стоимость зависит от города, заведения, выбранного отруба и даты. Перед визитом откройте актуальное меню ресторана и уточните, включена ли плата за обслуживание. Фиксированные суммы в долларах быстро устаревают и поэтому здесь не приводятся.",
@@ -3310,20 +3300,6 @@ const legacyManualSectionOverrides: Record<string, Record<string, string>> = {
 };
 
 const legacyManualRemovedSections: Record<string, string[]> = {
-  "best-time-to-visit-argentina": [
-    "Лето (декабрь – февраль)",
-    "Осень (март – май)",
-    "Зима (июнь – август)",
-    "Весна (сентябрь – ноябрь)",
-    "Буэнос-Айрес",
-    "Водопады Игуасу",
-    "Барилоче",
-    "Мендоса",
-    "Ушуая",
-    "Когда дешевле всего путешествовать",
-    "Лучшие месяцы для первой поездки",
-    "FAQ",
-  ],
   "patagonia-penguins": [
     "Сентябрь",
     "Октябрь – ноябрь",
@@ -3372,7 +3348,11 @@ function applyLegacyManualEditorialAudit(post: BlogPost): BlogPost {
     ...post,
     excerpt: legacyManualExcerptOverrides[post.slug] ?? post.excerpt,
     sections: [...sections, { title: "Источники и дата проверки", body: sourceBody }],
-    dateModified: "2026-07-17",
+    dateModified: post.slug === "best-time-to-visit-argentina" ? "2026-07-24" : "2026-07-17",
+    readTimeMinutes:
+      post.slug === "best-time-to-visit-argentina" ? 16 : post.readTimeMinutes,
+    readTime:
+      post.slug === "best-time-to-visit-argentina" ? rt(16) : post.readTime,
   };
 }
 

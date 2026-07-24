@@ -167,6 +167,16 @@ const nextConfig: NextConfig = {
     return [
       ...knowledgeArchiveRedirects,
       {
+        source: "/st_tour/:path*",
+        destination: "/tours",
+        permanent: true,
+      },
+      {
+        source: "/st_activity/:path*",
+        destination: "/excursions",
+        permanent: true,
+      },
+      {
         source: "/map",
         destination: "/mapa-argentina",
         permanent: true,

@@ -59,15 +59,18 @@ export function ContentCardOverlayLink({
   ariaLabel,
   radius = "card",
   className,
+  onClick,
 }: {
   href: string;
   ariaLabel: string;
   radius?: ContentCardRadius;
   className?: string;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         "absolute inset-0 z-0",
         radiusClass[radius],

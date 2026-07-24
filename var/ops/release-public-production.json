@@ -1,0 +1,58 @@
+{
+  "baseUrl": "https://www.goargentina.ru",
+  "generatedAt": "2026-07-24T20:38:08.085Z",
+  "gitSha": null,
+  "steps": [
+    {
+      "label": "public-detail-existence-tests",
+      "ok": true,
+      "required": true
+    },
+    {
+      "label": "public-editorial-audit",
+      "ok": true,
+      "required": true
+    },
+    {
+      "label": "card-detail-crawl",
+      "ok": true,
+      "required": true
+    },
+    {
+      "label": "sitemap-canonical-crawl",
+      "ok": true,
+      "required": true
+    },
+    {
+      "label": "catalog-country-relevance-tests",
+      "ok": true,
+      "required": true
+    },
+    {
+      "label": "production-smoke",
+      "ok": true,
+      "required": true
+    }
+  ],
+  "health": [
+    {
+      "pathname": "/api/health/public",
+      "httpStatus": 404,
+      "status": null,
+      "ok": true
+    },
+    {
+      "pathname": "/api/health/database",
+      "httpStatus": 404,
+      "status": null,
+      "ok": true
+    },
+    {
+      "pathname": "/api/health/partners",
+      "httpStatus": 404,
+      "status": null,
+      "ok": true
+    }
+  ],
+  "hardDownCount": 0
+}

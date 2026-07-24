@@ -92,3 +92,26 @@ Postmortem для SEV-1/SEV-2 создаётся не позднее 2 рабо�
 - `EXTERNAL_BLOCKER`: внешний status/uptime сервис не настроен.
 - `EXTERNAL_BLOCKER`: операции restore, payment и массового retry требуют отдельного staging и явного разрешения владельца.
 
+
+
+## GoArgentina P0 health probes (2026-07-24)
+
+Проверять при SEV-1/2 по каталогу, 404 турам или Supabase:
+
+```bash
+curl -sS https://www.goargentina.ru/api/health/public
+curl -sS https://www.goargentina.ru/api/health/database
+curl -sS https://www.goargentina.ru/api/health/partners
+SMOKE_BASE_URL=https://www.goargentina.ru npm run crawl:public-tour-details
+SMOKE_BASE_URL=https://www.goargentina.ru npm run release:public-production
+```
+
+| Сигнал | Действие |
+|--------|----------|
+| `status=degraded` + `postgresDirect.ok` + REST 402 egress | Human-gate billing/spend cap Supabase; код уже отдаёт unavailable/503, не 404 |
+| `status=down` на database/partners | SEV-1; остановить sync cron retries; проверить PG/pooler |
+| Всплеск `/tours/*` 404 при живом каталоге | Проверить, что self-HEAD middleware не вернулся; сверить existence three-state |
+| Sync run success с 0 upsert | Считать failed; не публиковать пустой snapshot |
+| Analytics readiness fail только по env | Не блокирует R1; блокирует платный трафик (R3) |
+
+Alerting/pager routing: EXTERNAL_BLOCKER до назначения owners выше.

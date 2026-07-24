@@ -321,7 +321,9 @@ function MarketplaceHomeBody({
         </SectionShell>
       ) : null}
 
-      {navigation.showTours ? <PlatformStatsBlock initialStats={platformStats} /> : null}
+      {navigation.showTours && !hasActiveSearch ? (
+        <PlatformStatsBlock initialStats={platformStats} />
+      ) : null}
 
       {/* Regions & places */}
       {navigation.showGeography && (navigation.showDestinations || navigation.showPlaces) ? (
@@ -387,18 +389,20 @@ function MarketplaceHomeBody({
       </SectionShell>
       ) : null}
 
-      {/* One ranked offer shelf keeps the primary choice focused. */}
-      {navigation.showTours ? <section className="border-y border-gray-100 bg-white py-12 md:py-14">
-        <div className={siteContainerClass}>
-          <TourGrid
-            id="recommended"
-            title={personalizedActive ? "Подобрано для вас" : "Актуальные предложения"}
-            subtitle="Опубликованные туры с доступными датами и понятными условиями"
-            tours={featuredTours}
-            variant="strip"
-          />
-        </div>
-      </section> : null}
+      {/* Offer shelf only when search is idle — never next to an empty-state. */}
+      {navigation.showTours && !hasActiveSearch ? (
+        <section className="border-y border-gray-100 bg-white py-12 md:py-14">
+          <div className={siteContainerClass}>
+            <TourGrid
+              id="recommended"
+              title={personalizedActive ? "Подобрано для вас" : "Актуальные предложения"}
+              subtitle="Опубликованные туры с доступными датами и понятными условиями"
+              tours={featuredTours}
+              variant="strip"
+            />
+          </div>
+        </section>
+      ) : null}
 
       {navigation.showTours && !hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
 

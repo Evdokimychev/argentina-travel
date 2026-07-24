@@ -8,13 +8,21 @@ import {
 /** Custom dataLayer event names — map to GA4 in GTM; Metrika goals in Yandex UI. */
 export const GTM_EVENTS = {
   bookingSubmit: "booking_submit",
+  bookingStart: "booking_start",
+  bookingError: "booking_error",
   contactFormSubmit: "contact_form_submit",
   newsletterSubscribe: "newsletter_subscribe",
   whatsappClick: "whatsapp_click",
   telegramClick: "telegram_click",
   tourBookingClick: "tour_booking_click",
   excursionBookingClick: "excursion_booking_click",
+  partnerCheckoutClick: "partner_checkout_click",
+  tourCardImpression: "tour_card_impression",
+  tourCardClick: "tour_card_click",
   tourView: "tour_view",
+  tourDetailView: "tour_detail_view",
+  tourDateSelect: "tour_date_select",
+  tourPeopleChange: "tour_people_change",
   excursionView: "excursion_view",
   blogArticleSave: "blog_article_save",
   blogAffiliateClick: "blog_affiliate_click",
@@ -24,8 +32,13 @@ export const GTM_EVENTS = {
   blogCommentPost: "blog_comment_post",
   blogAffiliateEmbedView: "blog_affiliate_embed_view",
   localeSwitch: "locale_switch",
+  localeChange: "locale_change",
+  currencyChange: "currency_change",
   searchSubmit: "search_submit",
   searchResultClick: "search_result_click",
+  searchZeroResults: "search_zero_results",
+  public404: "public_404",
+  public503: "public_503",
 } as const;
 
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
@@ -157,6 +170,27 @@ export function trackTourBookingClick(input: {
     booking_mode: bookingMode,
     outcome: "started",
   });
+  trackGtmEvent(GTM_EVENTS.bookingStart, {
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    booking_action: input.action ?? "checkout",
+    placement: input.placement,
+    booking_mode: bookingMode,
+  });
+  if (bookingMode === "partner_external") {
+    trackGtmEvent(GTM_EVENTS.partnerCheckoutClick, {
+      product_type: "tour",
+      product_id: input.slug,
+      item_id: input.slug,
+      item_name: input.title,
+      booking_action: input.action ?? "checkout",
+      placement: input.placement,
+      booking_mode: bookingMode,
+      outcome: "started",
+    });
+  }
 }
 
 export function trackExcursionBookingClick(input: {
@@ -198,6 +232,7 @@ export function trackTourView(input: {
     organizer_id: input.organizerId,
   });
   pushDataLayer({ ...payload, event: GTM_EVENTS.tourView });
+  pushDataLayer({ ...payload, event: GTM_EVENTS.tourDetailView });
   if (typeof fetch !== "function") return;
   void fetch("/api/analytics/events", {
     method: "POST",
@@ -321,9 +356,23 @@ export function trackLocaleSwitch(input: {
   to: string;
   path: string;
 }): void {
-  trackGtmEvent(GTM_EVENTS.localeSwitch, {
+  const params = {
     locale_from: input.from,
     locale_to: input.to,
+    page_path: input.path,
+  };
+  trackGtmEvent(GTM_EVENTS.localeSwitch, params);
+  trackGtmEvent(GTM_EVENTS.localeChange, params);
+}
+
+export function trackCurrencyChange(input: {
+  from: string;
+  to: string;
+  path: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.currencyChange, {
+    currency_from: input.from,
+    currency_to: input.to,
     page_path: input.path,
   });
 }
@@ -340,6 +389,14 @@ export function trackSearchSubmit(input: {
     search_source: input.source,
     search_kind: input.kind ?? "all",
   });
+  if (input.resultsCount === 0) {
+    trackGtmEvent(GTM_EVENTS.searchZeroResults, {
+      search_query_length: input.query.trim().length,
+      results_count: 0,
+      search_source: input.source,
+      search_kind: input.kind ?? "all",
+    });
+  }
 }
 
 export function trackSearchResultClick(input: {
@@ -355,5 +412,91 @@ export function trackSearchResultClick(input: {
     item_kind: input.itemKind,
     position: input.position,
     search_source: input.source,
+  });
+}
+
+export function trackTourCardImpression(input: {
+  slug: string;
+  title?: string;
+  placement?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.tourCardImpression, {
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    placement: input.placement ?? "catalog_card",
+  });
+}
+
+export function trackTourCardClick(input: {
+  slug: string;
+  title?: string;
+  placement?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.tourCardClick, {
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    placement: input.placement ?? "catalog_card",
+  });
+}
+
+export function trackTourDateSelect(input: {
+  slug: string;
+  dateId: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.tourDateSelect, {
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    date_id: input.dateId,
+  });
+}
+
+export function trackTourPeopleChange(input: {
+  slug: string;
+  guests: number;
+}): void {
+  trackGtmEvent(GTM_EVENTS.tourPeopleChange, {
+    product_type: "tour",
+    product_id: input.slug,
+    item_id: input.slug,
+    guests: input.guests,
+  });
+}
+
+export function trackBookingError(input: {
+  productType: "tour" | "excursion";
+  slug: string;
+  source?: string;
+  message?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.bookingError, {
+    product_type: input.productType,
+    product_id: input.slug,
+    item_id: input.slug,
+    source: input.source,
+    error_message: input.message?.slice(0, 120),
+    outcome: "error",
+  });
+}
+
+export function trackPublic404(input: { path?: string } = {}): void {
+  trackGtmEvent(GTM_EVENTS.public404, {
+    page_path: input.path ?? (typeof window !== "undefined" ? window.location.pathname : undefined),
+  });
+}
+
+export function trackPublic503(input: {
+  path?: string;
+  slug?: string;
+  errorClass?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.public503, {
+    page_path: input.path ?? (typeof window !== "undefined" ? window.location.pathname : undefined),
+    product_id: input.slug,
+    error_class: input.errorClass,
   });
 }

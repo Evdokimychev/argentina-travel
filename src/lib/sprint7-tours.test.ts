@@ -58,6 +58,12 @@ describe("Sprint 7 — tours catalog & detail", () => {
     expect(source).toContain('className="aspect-[16/10] sm:aspect-[4/3]"');
     expect(source).toContain("resolvePartnerTourBadge");
     expect(source).toContain("ContentCard");
+    expect(source).toContain("PartnerTourListedPrice");
+    expect(source).toContain("resolvePartnerListedPriceParts");
+    // Do not stack site FormattedPrice with raw partnerPriceDisplay ($$ bug).
+    expect(source).not.toMatch(
+      /TourPublicPriceDisplay[\s\S]*partnerPriceDisplay[\s\S]*<\/p>/,
+    );
   });
 
   it("TourDetailGallery has mobile carousel and desktop mosaic", () => {

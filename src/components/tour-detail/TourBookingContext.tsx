@@ -26,6 +26,7 @@ import {
   tourUsesExternalBooking,
   appendExternalBookingContextToHref,
 } from "@/lib/tour-custom-booking-link";
+import { trackTourDateSelect, trackTourPeopleChange } from "@/lib/analytics/gtm-events";
 import {
   canOpenWaitlist,
   resolveWaitlistScenario,
@@ -140,7 +141,7 @@ export function TourBookingProvider({
     tour.groupMax,
     tour.groupMin
   );
-  const [guests, setGuests] = useState(() => initialGuests);
+  const [guests, setGuestsState] = useState(() => initialGuests);
   const [selectedDateId, setSelectedDateIdState] = useState(() =>
     requiresManualDate
       ? ""
@@ -150,9 +151,19 @@ export function TourBookingProvider({
     (id: string) => {
       if (!id || effectiveDates.some((date) => date.id === id)) {
         setSelectedDateIdState(id);
+        if (id) {
+          trackTourDateSelect({ slug: tour.slug, dateId: id });
+        }
       }
     },
-    [effectiveDates]
+    [effectiveDates, tour.slug],
+  );
+  const setGuests = useCallback(
+    (count: number) => {
+      setGuestsState(count);
+      trackTourPeopleChange({ slug: tour.slug, guests: count });
+    },
+    [tour.slug],
   );
   const [dateMode, setDateMode] = useState<BookingDateMode>(() =>
     resolveInitialDateMode(effectiveBookingMode, effectiveDates.length)
@@ -232,7 +243,7 @@ export function TourBookingProvider({
     if (!selected) return;
 
     const limits = getGuestLimits(tour, selected, dateMode);
-    setGuests((current) => {
+    setGuestsState((current) => {
       if (current > limits.max) return Math.max(limits.min, limits.max);
       if (current < limits.min) return limits.min;
       return current;

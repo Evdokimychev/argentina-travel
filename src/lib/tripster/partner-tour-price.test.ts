@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatPartnerListedPrice,
+  resolvePartnerListedPriceParts,
   resolvePartnerListingPriceUsd,
+  resolvePartnerTourPriceFields,
   resolvePartnerTourPriceUsd,
 } from "@/lib/tripster/partner-tour-price";
 import type { PartnerTourExperienceRow } from "@/lib/tripster/partner-tour-mapper";
@@ -18,6 +21,42 @@ function stubRow(
     ...overrides,
   };
 }
+
+describe("partner listed price display", () => {
+  it("prefers Intl formatting over raw Tripster value_string", () => {
+    const row = stubRow({
+      id: 1,
+      slug: "priced",
+      price_value: 4905,
+      price_currency: "USD",
+      price_display: "$4905 за одного",
+      payload: {
+        id: 1,
+        type: "tour",
+        price: {
+          value: 4905,
+          currency: "USD",
+          value_string: "$4905 за одного",
+          unit_string: "за одного",
+        },
+      },
+    });
+
+    const fields = resolvePartnerTourPriceFields(row);
+    expect(fields.display).toBe(formatPartnerListedPrice(4905, "USD", "за одного"));
+    expect(fields.display).not.toContain("$$");
+  });
+
+  it("parses leading currency symbols without duplicating unit", () => {
+    const parts = resolvePartnerListedPriceParts({
+      partnerPriceDisplay: "$4905 за одного",
+    });
+    expect(parts).not.toBeNull();
+    expect(parts!.amount).toContain("4");
+    expect(parts!.unit).toBe("за одного");
+    expect(`${parts!.amount} ${parts!.unit}`).not.toMatch(/за одного за одного/);
+  });
+});
 
 describe("resolvePartnerListingPriceUsd", () => {
   it("converts RUB listing price to USD", () => {

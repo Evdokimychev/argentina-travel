@@ -28,55 +28,14 @@ import {
   hasPersonalizationConsentFromCookieValue,
 } from "@/lib/cookie-consent";
 import { isCanonicalIndexingRequest } from "@/lib/robots-txt";
-import { matchPublicDetailPath } from "@/lib/public-detail-route";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 const TOUR_PRIVATE_ACCESS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
-async function rejectMissingPublicDetail(
-  request: NextRequest,
-  routePathname: string,
-): Promise<NextResponse | null> {
-  if (request.method !== "GET" && request.method !== "HEAD") return null;
-
-  const detail = matchPublicDetailPath(routePathname);
-  if (!detail) return null;
-
-  if (
-    (detail.kind === "tours" || detail.kind === "excursions") &&
-    (request.nextUrl.searchParams.has("access") ||
-      request.cookies.has(tourPrivateAccessCookieName(detail.slug)))
-  ) {
-    return null;
-  }
-
-  try {
-    const checkUrl = new URL(
-      `/api/public-detail-exists/${detail.kind}/${encodeURIComponent(detail.slug)}`,
-      request.url,
-    );
-    const response = await fetch(checkUrl, {
-      method: "HEAD",
-      signal: AbortSignal.timeout(1_500),
-    });
-    if (response.status !== 404) return null;
-
-    const notFoundUrl = request.nextUrl.clone();
-    notFoundUrl.pathname = "/_not-found";
-    notFoundUrl.search = "";
-
-    return NextResponse.rewrite(notFoundUrl, {
-      status: 404,
-      headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=600",
-        "X-Robots-Tag": "noindex, nofollow",
-      },
-    });
-  } catch {
-    return null;
-  }
-}
+// Public detail existence is resolved at page level (three-state).
+// Middleware must not self-HEAD /api/public-detail-exists — that collapsed
+// partner/DB outages into CDN-cached 404s.
 
 function applyFirstTouchAttributionCookie(
   request: NextRequest,
@@ -235,7 +194,6 @@ export async function middleware(request: NextRequest) {
     request.method === "GET" || request.method === "HEAD"
       ? matchUrlRedirectEdge(routePathname).catch(() => null)
       : Promise.resolve(null);
-  const missingPublicDetailLookup = rejectMissingPublicDetail(request, routePathname);
   const needsPublicVisibility =
     (request.method === "GET" || request.method === "HEAD") &&
     !routePathname.startsWith("/api") &&
@@ -253,9 +211,6 @@ export async function middleware(request: NextRequest) {
     target.search = request.nextUrl.search;
     return NextResponse.redirect(target, redirect.statusCode);
   }
-
-  const missingPublicDetail = await missingPublicDetailLookup;
-  if (missingPublicDetail) return missingPublicDetail;
 
   const controlPlane = await controlPlaneLookup;
   if (
