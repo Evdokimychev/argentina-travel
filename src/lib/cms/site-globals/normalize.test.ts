@@ -173,6 +173,14 @@ describe("normalizeSiteNavigation", () => {
     expect(normalizeSiteNavigation({ showShop: false }).showShop).toBe(false);
   });
 
+  it("keeps unfinished modules off when CMS row omits flags", () => {
+    const navigation = normalizeSiteNavigation({});
+    expect(navigation.showShop).toBe(false);
+    expect(navigation.showForum).toBe(false);
+    expect(navigation.showImmigration).toBe(false);
+    expect(navigation.showTours).toBe(true);
+  });
+
   it("rejects unsafe utility links", () => {
     expect(normalizeSiteNavigation({ utilityContactUrl: "javascript:alert(1)" }).utilityContactUrl)
       .toBe(DEFAULT_SITE_NAVIGATION.utilityContactUrl);

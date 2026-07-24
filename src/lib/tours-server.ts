@@ -1,90 +1,28 @@
-import type { TourDetail, TourListing, TourReview } from "@/types";
+import type { TourDetail, TourListing } from "@/types";
 import { getSimilarTourDetails, rankSimilarListings } from "@/lib/tour-recommendations";
 import { getSimilarTours } from "@/lib/tours";
-import { fetchTourPublicReviews } from "@/lib/reviews-server";
-import {
-  deriveTourReviewStats,
-  stripStaticSeedReviews,
-} from "@/lib/tour-review-stats";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
-import {
-  fetchPartnerTourDetailServer,
-} from "@/lib/tripster/partner-tour-server";
-import { fetchYouTravelTourDetailServer } from "@/lib/youtravel/partner-tour-server";
-import { isYouTravelTourSlug } from "@/lib/youtravel/partner-tour-mapper";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { fetchCutoverTourDetailBySlug } from "@/lib/tours-server-cutover";
-
-function resolveReviewSortTimestamp(review: TourReview): number {
-  const value = review.date || review.tripDate;
-  if (!value) return 0;
-  const timestamp = Date.parse(value);
-  return Number.isNaN(timestamp) ? 0 : timestamp;
-}
-
-function mergeTourReviews(base: TourReview[], fromDatabase: TourReview[]): TourReview[] {
-  if (!fromDatabase.length) return base;
-  const deduped = new Map<string, TourReview>();
-
-  for (const review of [...fromDatabase, ...base]) {
-    const rawId = review.id.trim();
-    const fallbackId = `${review.author}|${review.text}|${review.date}|${review.tripDate}`;
-    const key = rawId || fallbackId;
-    if (!deduped.has(key)) {
-      deduped.set(key, review);
-    }
-  }
-
-  return [...deduped.values()].sort(
-    (a, b) => resolveReviewSortTimestamp(b) - resolveReviewSortTimestamp(a)
-  );
-}
-
-function applyPublicReviewsToDetail(tour: TourDetail, publicReviews: TourReview[]): TourDetail {
-  const baseReviews = stripStaticSeedReviews(tour.reviews);
-  const mergedReviews = publicReviews.length
-    ? mergeTourReviews(baseReviews, publicReviews)
-    : baseReviews;
-  const stats = deriveTourReviewStats(mergedReviews);
-
-  return {
-    ...tour,
-    reviews: mergedReviews,
-    reviewCount: stats.reviewCount,
-    rating: stats.rating,
-  };
-}
-
-async function enrichTourWithPublicReviews(tour: TourDetail | null): Promise<TourDetail | null> {
-  if (!tour) return null;
-
-  try {
-    const publicReviews = await fetchTourPublicReviews(tour.slug);
-    return applyPublicReviewsToDetail(tour, publicReviews);
-  } catch {
-    return tour;
-  }
-}
-
-async function fetchNativeTourDetail(
-  slug: string,
-  opts?: { accessToken?: string | null }
-): Promise<TourDetail | null> {
-  return fetchCutoverTourDetailBySlug(slug, opts);
-}
+import { resolvePublicTourBySlug } from "@/lib/public-tour-resolver";
 
 export async function fetchTourDetail(
   slug: string,
   opts?: { accessToken?: string | null }
 ): Promise<TourDetail | null> {
-  const native = await fetchNativeTourDetail(slug, opts);
-  if (native) return enrichTourWithPublicReviews(native);
-  if (isYouTravelTourSlug(slug)) {
-    const youtravel = await fetchYouTravelTourDetailServer(slug);
-    if (youtravel) return enrichTourWithPublicReviews(youtravel);
+  const resolution = await resolvePublicTourBySlug(slug, opts);
+  switch (resolution.status) {
+    case "resolved":
+      return resolution.tour;
+    case "missing":
+    case "retired":
+      return null;
+    case "unavailable":
+      throw new Error(`tour_unavailable:${resolution.errorClass}:${resolution.source ?? "unknown"}`);
+    default: {
+      const _exhaustive: never = resolution;
+      return _exhaustive;
+    }
   }
-  const partner = await fetchPartnerTourDetailServer(slug);
-  return enrichTourWithPublicReviews(partner);
 }
 
 /**

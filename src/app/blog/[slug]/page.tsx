@@ -4,6 +4,7 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BlogFaqJsonLd from "@/components/seo/BlogFaqJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
 import { blogPosts } from "@/data/blog";
 import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveBlogCatalog, resolveBlogPost } from "@/lib/cms/blog-resolver";
@@ -67,7 +68,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const locale = await getServerI18nLocale();
-  const initialTours = fetchMarketplaceTours();
   const [catalog, post, blogSettings, forms, contentExcursions] = await Promise.all([
     resolveBlogCatalog(locale),
     resolveBlogPost(slug, locale),
@@ -85,6 +85,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const cmsMetadata = getCmsResolverMetadata(post);
+  // Stream marketplace tours off the critical CMS path; resolve detail integrity in parallel.
+  const initialTours = fetchMarketplaceTours().then(filterToursWithResolvedPublicDetail);
 
   const excursionMatches = resolveExcursionsForBlogPost(post, contentExcursions);
   return (

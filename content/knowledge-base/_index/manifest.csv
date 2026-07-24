@@ -2,7 +2,7 @@ id,type,subtype,title,status,region_id,confidence,last_verified,sensitive,review
 aconcagua-provincial-park,national_park,,Провинциальный парк Аконкагуа,published,cuyo,high,2026-07-07,False,2027-01-03,False,521,,,natsionalnye-parki/aconcagua-provincial-park.md
 aep-eze-stykovka,author_tip,mistake,"AEP и EZE — два разных аэропорта Буэнос-Айреса, и тугая стыковка между ними рушит планы",archived,,medium,2026-06-30,False,2026-09-28,False,210,,,lichnyy-opyt/aep-eze-stykovka.md
 aeroporty,transport,,Аэропорты Аргентины и трансферы в город,published,,high,2026-07-20,False,2027-01-16,False,682,,,transport/aeroporty.md
-aktualen-li-blue-dollar,faq,,,published,,high,2026-07-20,True,2026-09-03,False,336,True,0,faq/aktualen-li-blue-dollar.md
+aktualen-li-blue-dollar,faq,,,published,,high,2026-07-24,True,2026-09-07,False,336,True,0,faq/aktualen-li-blue-dollar.md
 alero-charcamata,attraction,,Alero Charcamata,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,64,,,dostoprimechatelnosti/alero-charcamata.md
 alersesy-skrytye-ozyora,author_tip,hidden_gem,"Лос-Алерсес: рыбалка и каяк на тихих озёрах, которые пропускают ради одного дерева",archived,,medium,2026-07-20,False,2026-10-18,False,147,,,lichnyy-opyt/alersesy-skrytye-ozyora.md
 almacenes-de-ramos-generales-en-la-pampa,attraction,,Старинные универсальные магазины Ла-Пампы,archived,pampa,medium,2026-07-07,False,2026-10-05,False,240,,,dostoprimechatelnosti/almacenes-de-ramos-generales-en-la-pampa.md
@@ -574,13 +574,13 @@ sierras-de-la-provincia-de-buenos-aires,attraction,,Сьерры провинц�
 sierras-de-sumampa,attraction,,Сьерры Сумампа,archived,noa,medium,2026-07-07,False,2026-10-05,False,76,,,dostoprimechatelnosti/sierras-de-sumampa.md
 sistema-zdravoohraneniya,guide,health,"Система здравоохранения Аргентины: público, obra social и prepaga",published,,high,2026-07-20,True,2026-09-03,False,826,True,0,medicina/sistema-zdravoohraneniya.md
 skam-s-falshivoj-policiej,faq,,,published,,medium,2026-07-20,True,2026-09-03,False,288,True,0,faq/skam-s-falshivoj-policiej.md
-skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-07-20,True,2026-09-03,False,293,True,0,faq/skolko-deneg-brat-na-poezdku.md
+skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-07-24,True,2026-09-07,False,293,True,0,faq/skolko-deneg-brat-na-poezdku.md
 skolko-dnej-na-marshrut-2-nedeli,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,90,,,faq/skolko-dnej-na-marshrut-2-nedeli.md
 skolko-dnej-nuzhno-na-iguasu,faq,,,archived,,high,2026-07-20,False,2027-01-16,False,74,,,faq/skolko-dnej-nuzhno-na-iguasu.md
 skolko-letet-iz-rossii,faq,,,published,,high,2026-07-20,True,2026-09-03,False,236,True,0,faq/skolko-letet-iz-rossii.md
 skolko-nalichnyh-mozhno-vvezti,faq,,,published,,high,2026-07-17,True,2026-08-31,False,128,True,0,faq/skolko-nalichnyh-mozhno-vvezti.md
 skolko-stoit-oformit-vnzh,faq,,,published,,high,2026-07-20,True,2026-09-03,False,251,True,0,faq/skolko-stoit-oformit-vnzh.md
-skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-07-20,True,2026-09-03,False,282,True,0,faq/skolko-stoit-zhizn-v-buenos-ajrese.md
+skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-07-24,True,2026-09-07,False,282,True,0,faq/skolko-stoit-zhizn-v-buenos-ajrese.md
 sladkoe-dulce-de-leche,guide,culture,"Сладкое: дульсе-де-лече, альфахорес и фактурас",published,,high,2026-07-20,False,2027-01-16,False,731,,,kultura/sladkoe-dulce-de-leche.md
 soobshestvo-i-adaptaciya,guide,immigration,Где найти своих и как устроить адаптацию в Аргентине,archived,,medium,2026-07-17,True,2026-08-31,False,304,True,0,pereezd/soobshestvo-i-adaptaciya.md
 status-expediente-migraciones,guide,immigration,Как проверить статус дела в Migraciones,published,,high,2026-07-20,True,2026-09-03,False,681,True,0,pereezd/status-expediente-migraciones.md

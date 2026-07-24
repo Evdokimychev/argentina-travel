@@ -12,10 +12,11 @@ import {
   POPULAR_CURRENCIES,
 } from "@/data/locale-config";
 import { addLocalePrefix } from "@/lib/i18n/locale-path";
+import { PUBLISHED_PUBLIC_LOCALES } from "@/lib/i18n/published-locales";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
-import { trackLocaleSwitch } from "@/lib/analytics/gtm-events";
+import { trackCurrencyChange, trackLocaleSwitch } from "@/lib/analytics/gtm-events";
 import { CurrencyCode, LocaleCode } from "@/types/locale";
 
 type Tab = "language" | "currency";
@@ -28,9 +29,12 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
   const [search, setSearch] = useState("");
 
   const filteredLanguages = useMemo(() => {
-    if (!search.trim()) return LANGUAGES;
+    const published = LANGUAGES.filter((language) =>
+      PUBLISHED_PUBLIC_LOCALES.includes(language.code),
+    );
+    if (!search.trim()) return published;
     const q = search.toLowerCase();
-    return LANGUAGES.filter(
+    return published.filter(
       (l) =>
         l.label.toLowerCase().includes(q) ||
         l.code.toLowerCase().includes(q) ||
@@ -66,6 +70,9 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
   }
 
   function selectCurrency(code: CurrencyCode) {
+    if (code !== currency) {
+      trackCurrencyChange({ from: currency, to: code, path: pathname });
+    }
     setCurrency(code);
     onClose?.();
   }
@@ -336,11 +343,15 @@ export default function LocaleCurrencySwitcher({
               type="button"
               className={triggerClassName}
               aria-label={triggerAriaLabel}
+              aria-expanded={desktopOpen}
+              aria-haspopup="dialog"
+              aria-controls="locale-currency-desktop-panel"
             >
               {triggerLabel}
             </button>
           </PopoverTrigger>
           <PopoverContent
+            id="locale-currency-desktop-panel"
             className="w-[380px] overflow-hidden p-0"
             align="end"
             sideOffset={8}
@@ -357,6 +368,9 @@ export default function LocaleCurrencySwitcher({
           onClick={() => setMobileOpen(true)}
           className="flex h-11 items-center gap-2 rounded-full bg-charcoal/[0.04] px-3 text-charcoal ring-1 ring-charcoal/10"
           aria-label={triggerAriaLabel}
+          aria-expanded={mobileOpen}
+          aria-haspopup="dialog"
+          aria-controls="locale-currency-mobile-sheet"
         >
           {triggerLabel}
         </button>
@@ -373,6 +387,7 @@ export default function LocaleCurrencySwitcher({
             />
             <div
               ref={mobileSheetRef}
+              id="locale-currency-mobile-sheet"
               role="dialog"
               aria-modal="true"
               aria-label={t("locale.title")}

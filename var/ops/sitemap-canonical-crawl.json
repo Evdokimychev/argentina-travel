@@ -1,0 +1,97 @@
+{
+  "baseUrl": "https://www.goargentina.ru",
+  "generatedAt": "2026-07-24T20:37:49.601Z",
+  "sitemapUrlCount": 585,
+  "sampled": 15,
+  "failedCount": 0,
+  "false404Count": 0,
+  "legacy": [
+    {
+      "url": "https://www.goargentina.ru/st_tour/example-legacy",
+      "status": 404,
+      "finalStatus": 404,
+      "location": null,
+      "ok": false
+    },
+    {
+      "url": "https://www.goargentina.ru/st_activity/example-legacy",
+      "status": 404,
+      "finalStatus": 404,
+      "location": null,
+      "ok": false
+    }
+  ],
+  "legacyOk": true,
+  "results": [
+    {
+      "url": "https://www.goargentina.ru/",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/destinations",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/tours",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/excursions",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/guide",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/blog",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/faq",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/about",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/contacts",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    },
+    {
+      "url": "https://www.goargentina.ru/flights",
+      "status": 200,
+      "finalStatus": 200,
+      "location": null,
+      "ok": true
+    }
+  ]
+}

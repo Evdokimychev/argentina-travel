@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 tags: [бюджетно, аренда, стоимость жизни]
 related: [stoimost-zhizni-ba, bankovskij-schet]
-last_verified: "2026-07-20"
+last_verified: "2026-07-24"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,7 +22,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-07-24"
     expires_at: "2026-08-20"
   - id: indec-consumer-price-index
     title: "INDEC — индекс потребительских цен"
@@ -31,7 +31,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-07-24"
     expires_at: "2026-08-20"
   - id: bna-exchange-reference-living
     title: "Banco Nación — текущие валютные котировки"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-07-21"
+    checked_at: "2026-07-24"
+    expires_at: "2026-07-31"
 claims:
   - id: caba-publishes-monthly-baskets
     text: "Статистическая служба CABA публикует ежемесячную стоимость потребительских корзин для нескольких типов домохозяйств."
     sensitive: true
     source_ids: [caba-consumption-baskets]
-    verified_at: "2026-07-20"
+    verified_at: "2026-07-24"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: prices-change-by-category
     text: "INDEC публикует изменение потребительских цен по категориям, поэтому статичный долларовый бюджет быстро теряет точность."
     sensitive: true
     source_ids: [indec-consumer-price-index]
-    verified_at: "2026-07-20"
+    verified_at: "2026-07-24"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: currency-conversion-needs-dated-rate
     text: "Перевод сметы из песо в иностранную валюту должен использовать текущую датированную котировку."
     sensitive: true
     source_ids: [bna-exchange-reference-living]
-    verified_at: "2026-07-20"
+    verified_at: "2026-07-24"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

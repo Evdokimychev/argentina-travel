@@ -261,6 +261,19 @@ async function main() {
     });
     console.log("Matched tours:", discovered.size, countryMatchers);
 
+    if (discovered.size === 0) {
+      await pgFinishSyncRun(pg, runId, {
+        status: "error",
+        toursFetched: 0,
+        toursUpserted: 0,
+        offersUpserted: 0,
+        errorMessage: "zero_tours_discovered",
+      });
+      throw new Error(
+        "YouTravel sync discovered 0 tours — treating as failed (auth/quota/empty SERP)",
+      );
+    }
+
     const rows = [];
     let offersUpserted = 0;
 

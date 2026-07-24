@@ -47,7 +47,7 @@ const CROSS_BORDER_ARGENTINA_MARKERS = [
   "mendoza",
   "мендоса",
   "buenos aires",
-  "бuenос",
+  "буэнос",
   "jujuy",
   "жужуй",
   "cafayate",
@@ -128,15 +128,31 @@ export function isDefaultCatalogTour(tour: TourListing): boolean {
     return hasArgentinaCatalogRelevance(tour);
   }
 
-  if (!primary) return true;
+  // Partner rows without country must still prove Argentina relevance —
+  // otherwise empty metadata floods the default catalog.
+  if (!primary) return hasArgentinaCatalogRelevance(tour);
   if (isArgentinaCountryLabel(primary)) return true;
   if (hasArgentinaCatalogRelevance(tour)) return true;
 
   return false;
 }
 
+/** Выше — туры с Аргентиной как основной страной; ниже — соседние трансграничные. */
+export function catalogArgentinaPriority(tour: TourListing): number {
+  const primary = getTourPrimaryCountry(tour);
+  if (primary && isArgentinaCountryLabel(primary)) return 3;
+  const countryHaystack = [tour.country].filter(Boolean).join(" ").toLowerCase();
+  if (includesAny(countryHaystack, ARGENTINA_MARKERS)) return 2;
+  if (hasArgentinaCatalogRelevance(tour)) return 1;
+  return 0;
+}
+
+export function compareCatalogArgentinaFirst(a: TourListing, b: TourListing): number {
+  return catalogArgentinaPriority(b) - catalogArgentinaPriority(a);
+}
+
 export function filterDefaultCatalogTours(tours: TourListing[]): TourListing[] {
-  return tours.filter(isDefaultCatalogTour);
+  return tours.filter(isDefaultCatalogTour).sort(compareCatalogArgentinaFirst);
 }
 
 export function filterNeighboringCountryTours(tours: TourListing[]): TourListing[] {

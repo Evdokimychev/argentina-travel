@@ -11,17 +11,17 @@ import { isPartnerTourExperiencePublishable } from "@/lib/tripster/partner-tour-
 import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
 import type { TourDetail, TourListing } from "@/types";
 
-async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
+async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T> {
   const connectionString = resolveDatabaseUrl();
-  if (!connectionString) return null;
+  if (!connectionString) {
+    throw new Error("Direct Postgres is not configured for Tripster fallback");
+  }
 
   const client = new pg.Client(createPgClientConfig(connectionString));
 
   try {
     await client.connect();
     return await fn(client);
-  } catch {
-    return null;
   } finally {
     await client.end().catch(() => undefined);
   }
@@ -46,7 +46,7 @@ async function loadCities(client: pg.Client): Promise<Map<number, CityRow>> {
 }
 
 export async function pgFetchPartnerTourListings(): Promise<TourListing[]> {
-  const result = await withPgClient(async (client) => {
+  return withPgClient(async (client) => {
     const cityMap = await loadCities(client);
     const { rows } = await client.query(
       `select id, slug, country_id, city_id, title, tagline, annotation, description,
@@ -65,12 +65,10 @@ export async function pgFetchPartnerTourListings(): Promise<TourListing[]> {
       return partnerTourRowToListing(row as PartnerTourExperienceRow, city);
     });
   });
-
-  return result ?? [];
 }
 
 export async function pgFetchPartnerTourDetail(slug: string): Promise<TourDetail | null> {
-  const result = await withPgClient(async (client) => {
+  return withPgClient(async (client) => {
     const experience = await client.query(
       `select * from public.tripster_experiences where slug = $1 and ${TRIPSTER_TOUR_WHERE_SQL} limit 1`,
       [slug]
@@ -94,12 +92,10 @@ export async function pgFetchPartnerTourDetail(slug: string): Promise<TourDetail
 
     return partnerTourRowToDetail(row, city, { reviews: reviewsResult.rows });
   });
-
-  return result;
 }
 
 export async function pgFetchPartnerTourSlugs(): Promise<string[]> {
-  const result = await withPgClient(async (client) => {
+  return withPgClient(async (client) => {
     const { rows } = await client.query(
       `select slug, status, payload from public.tripster_experiences where ${TRIPSTER_TOUR_WHERE_SQL} order by slug`
     );
@@ -107,5 +103,4 @@ export async function pgFetchPartnerTourSlugs(): Promise<string[]> {
       .filter((row) => isPartnerTourExperiencePublishable(row as PartnerTourExperienceRow))
       .map((row) => row.slug as string);
   });
-  return result ?? [];
 }

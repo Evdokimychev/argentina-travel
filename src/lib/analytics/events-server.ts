@@ -13,6 +13,9 @@ import {
 
 export type AnalyticsEventType =
   | "tour_view"
+  | "tour_card_click"
+  | "booking_start"
+  | "partner_checkout_click"
   | "booking_started"
   | "assistant_ask"
   | OperationalAnalyticsEventType;

@@ -24,6 +24,7 @@ import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -91,13 +92,15 @@ export default async function GuideSlugPage({ params }: PageProps) {
     if (!topic) notFound();
     if (slug === "kak-dobratsya") {
       if (topic.cmsPage && topic.pillarPage) {
-        const initialTours = await fetchMarketplaceTours();
+        const marketplaceTours = await fetchMarketplaceTours();
+        const initialTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
         return <GuidePillarView topic={topic} initialTours={initialTours} />;
       }
       return <KakDobratsyaHubView topic={topic} />;
     }
     if (topic.pillarPage) {
-      const initialTours = await fetchMarketplaceTours();
+      const marketplaceTours = await fetchMarketplaceTours();
+      const initialTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
       return <GuidePillarView topic={topic} initialTours={initialTours} />;
     }
     return <GuideTopicView topic={topic} />;

@@ -45,18 +45,31 @@ describe("admin settings control plane", () => {
   });
 
   it("requires confirmation before a public module is disabled", () => {
-    const nextModules = {
+    const previousModules = {
       ...DEFAULT_SITE_MODULES,
       publicModules: {
         ...DEFAULT_SITE_MODULES.publicModules,
         immigration: {
           ...DEFAULT_SITE_MODULES.publicModules.immigration,
+          activated: true,
+          published: true,
+          includeInSearch: true,
+          includeInSitemap: true,
+        },
+      },
+    };
+    const nextModules = {
+      ...previousModules,
+      publicModules: {
+        ...previousModules.publicModules,
+        immigration: {
+          ...previousModules.publicModules.immigration,
           activated: false,
         },
       },
     };
     const risks = detectDangerousSettingsChanges(
-      { "site.modules": DEFAULT_SITE_MODULES },
+      { "site.modules": previousModules },
       [{ key: "site.modules", value: nextModules, expectedVersion: 1 }],
     );
 

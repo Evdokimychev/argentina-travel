@@ -7,6 +7,11 @@ import { filterIndexableBlogPosts } from "../src/lib/blog-utils";
 import { getAllEntries } from "../src/lib/knowledge-base/content";
 import { getPublicationIssues } from "../src/lib/knowledge-base/publication-quality";
 import { flattenSiteNavSections } from "../src/lib/site-nav";
+import {
+  DEFAULT_SITE_MODULES,
+  DEFAULT_SITE_NAVIGATION,
+} from "../src/lib/cms/site-globals/normalize";
+import { isPublicLinkEnabled } from "../src/lib/public-module-visibility";
 
 const PUBLIC_ARTIFACT_RE =
   /(?:черновик из контент-плана|контент-план|требует редакторской вычитки|автоперевод|заглушка api|в разработке|когда подключим|chatgpt|openai|написано (?:ии|искусственным интеллектом)|ai-генерац)/i;
@@ -39,7 +44,9 @@ for (const post of publicBlog) {
   if (PUBLIC_ARTIFACT_RE.test(text)) errors.push(`Blog ${post.slug}: служебная лексика`);
 }
 
-const publicNavLinks = flattenSiteNavSections(SITE_NAV_SECTIONS);
+const publicNavLinks = flattenSiteNavSections(SITE_NAV_SECTIONS).filter((link) =>
+  isPublicLinkEnabled(link.href, DEFAULT_SITE_NAVIGATION, DEFAULT_SITE_MODULES),
+);
 for (const link of publicNavLinks) {
   if (link.href.startsWith("/immigration")) {
     errors.push(`Navigation ${link.id}: юридический раздел не прошёл ревью`);

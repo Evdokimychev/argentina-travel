@@ -40,32 +40,15 @@ import { buildKbAuthorProfiles } from "@/lib/knowledge-base/authors";
 import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
 import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
+import { filterRuSitemapPaths, findRuUrlDecision } from "@/lib/seo/publication-registry";
 import {
-  filterRuSitemapPaths,
-  findRuUrlDecision,
-} from "@/lib/seo/publication-registry";
+  isIndexableInternalPath,
+  STABLE_TOUR_LANDING_PATHS,
+} from "@/lib/seo/sitemap-indexability";
 import type { BlogPost } from "@/types";
 import type { SiteModulesGlobal, SiteNavigationGlobal } from "@/types/site-globals";
 
-/**
- * Conservative compatibility guard for public paths whose stable,
- * self-canonical response cannot be guaranteed for every sitemap request.
- */
-export function isIndexableInternalPath(href: string): boolean {
-  if (!href.startsWith("/") || href.startsWith("//")) return false;
-  if (href.includes("?") || href.includes("#") || href.includes("\\")) return false;
-  if (href.startsWith("/organizer") || href.startsWith("/profile")) return false;
-  if (href === "/booking/find") return false;
-  if (href.startsWith("/booking/pay") || href.startsWith("/booking/travelers")) return false;
-  if (href === "/baza-znaniy/poisk") return false;
-
-  // Partner city availability changes independently from our publication
-  // catalog. City hubs stay discoverable through /excursions without being
-  // asserted as permanently indexable here.
-  if (href.startsWith("/excursions/city/")) return false;
-
-  return findRuUrlDecision(href) === null;
-}
+export { isIndexableInternalPath, STABLE_TOUR_LANDING_PATHS };
 
 function uniquePaths(paths: string[]): string[] {
   return [...new Set(paths)];
@@ -94,8 +77,6 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
     return cutover.blog ? [] : blogPosts;
   }
 }
-
-export const STABLE_TOUR_LANDING_PATHS = ["/tours/region/patagonia"] as const;
 
 export async function collectTourSitemapPaths(): Promise<string[]> {
   try {

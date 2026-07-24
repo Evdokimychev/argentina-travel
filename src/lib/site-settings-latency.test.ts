@@ -146,21 +146,17 @@ describe("public site settings latency guard", () => {
   it("starts redirect and control-plane lookups together while preserving decision order", () => {
     const source = fs.readFileSync(path.join(process.cwd(), "src/middleware.ts"), "utf8");
     const redirectStart = source.indexOf("const redirectLookup =");
-    const missingStart = source.indexOf("const missingPublicDetailLookup =");
     const controlPlaneStart = source.indexOf("const controlPlaneLookup =");
     const redirectAwait = source.indexOf("const redirect = await redirectLookup;");
-    const missingAwait = source.indexOf(
-      "const missingPublicDetail = await missingPublicDetailLookup;",
-    );
     const controlPlaneAwait = source.indexOf("const controlPlane = await controlPlaneLookup;");
 
     expect(redirectStart).toBeGreaterThan(-1);
-    expect(missingStart).toBeGreaterThan(redirectStart);
-    expect(controlPlaneStart).toBeGreaterThan(missingStart);
-    expect(missingStart).toBeLessThan(redirectAwait);
+    expect(controlPlaneStart).toBeGreaterThan(redirectStart);
     expect(controlPlaneStart).toBeLessThan(redirectAwait);
-    expect(redirectAwait).toBeLessThan(missingAwait);
     expect(redirectAwait).toBeLessThan(controlPlaneAwait);
+    // False-404 recovery: no middleware self-HEAD existence probe.
+    expect(source).not.toContain("missingPublicDetailLookup");
+    expect(source).not.toContain("rejectMissingPublicDetail");
   });
 
   it("bounds public CMS reads and streams optional blog tours independently", () => {
@@ -180,7 +176,7 @@ describe("public site settings latency guard", () => {
     expect(resolver).toContain("CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500");
     expect(resolver.match(/\.retry\(false\)/g)?.length).toBeGreaterThanOrEqual(4);
     expect(resolver).toContain("const localizedDocuments = await Promise.all(");
-    expect(blogPage).toContain("const initialTours = fetchMarketplaceTours();");
+    expect(blogPage).toContain("const initialTours = fetchMarketplaceTours().then(filterToursWithResolvedPublicDetail);");
     expect(blogPage).not.toContain("await fetchMarketplaceTours()");
     expect(blogView).toContain("<Suspense fallback={null}>");
     expect(blogView).toContain("async function BlogPostTourEmbeds");
@@ -200,7 +196,8 @@ describe("public site settings latency guard", () => {
       "utf8",
     );
 
-    expect(destinationPage).toContain("const [tours, flightTeasers] = await Promise.all([");
+    expect(destinationPage).toContain("const [marketplaceTours, flightTeasers] = await Promise.all([");
+    expect(destinationPage).toContain("filterToursWithResolvedPublicDetail(marketplaceTours)");
     expect(flightTeasers).toContain("PUBLIC_TEASER_WAIT_MS = 3_000");
     expect(flightTeasers).toContain("return await Promise.race([request, deadline]);");
     expect(socialFeed).toContain("<Suspense fallback={null}>");
@@ -296,7 +293,7 @@ describe("edge public shell fallbacks", () => {
       source: "safe_fallback",
       revision: null,
       features: { maintenanceMode: false, allowOrganizerSignup: false },
-      navigation: { showTours: true, showJournal: true, showForum: true, showShop: true },
+      navigation: { showTours: true, showJournal: true, showForum: false, showShop: false },
       modules: {
         apartmentsMode: "disabled",
         carRentalMode: "disabled",

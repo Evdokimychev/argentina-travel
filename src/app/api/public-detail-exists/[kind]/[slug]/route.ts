@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  publicDetailExists,
+  resolvePublicDetailExistence,
   type PublicDetailKind,
 } from "@/lib/public-detail-existence";
 
@@ -10,8 +10,19 @@ type RouteContext = {
   params: Promise<{ kind: string; slug: string }>;
 };
 
-const RESPONSE_HEADERS = {
-  "Cache-Control": "public, max-age=60, s-maxage=600, stale-while-revalidate=3600",
+const EXISTS_HEADERS = {
+  "Cache-Control": "public, max-age=30, s-maxage=120, stale-while-revalidate=600",
+  "X-Robots-Tag": "noindex, nofollow",
+};
+
+const MISSING_HEADERS = {
+  "Cache-Control": "public, max-age=15, s-maxage=60",
+  "X-Robots-Tag": "noindex, nofollow",
+};
+
+const UNAVAILABLE_HEADERS = {
+  "Cache-Control": "no-store",
+  "Retry-After": "60",
   "X-Robots-Tag": "noindex, nofollow",
 };
 
@@ -26,16 +37,46 @@ const PUBLIC_DETAIL_KINDS: PublicDetailKind[] = [
 export async function HEAD(_request: Request, context: RouteContext) {
   const { kind, slug } = await context.params;
   if (!PUBLIC_DETAIL_KINDS.includes(kind as PublicDetailKind) || !slug.trim()) {
-    return new NextResponse(null, { status: 400, headers: RESPONSE_HEADERS });
+    return new NextResponse(null, { status: 400, headers: MISSING_HEADERS });
   }
 
   try {
-    const exists = await publicDetailExists(kind as PublicDetailKind, slug.trim());
-    return new NextResponse(null, {
-      status: exists ? 204 : 404,
-      headers: RESPONSE_HEADERS,
-    });
+    const result = await resolvePublicDetailExistence(
+      kind as PublicDetailKind,
+      slug.trim(),
+    );
+
+    switch (result.status) {
+      case "exists":
+        return new NextResponse(null, {
+          status: 204,
+          headers: {
+            ...EXISTS_HEADERS,
+            "X-Existence-Snapshot": result.snapshotId,
+          },
+        });
+      case "missing":
+        return new NextResponse(null, {
+          status: 404,
+          headers: {
+            ...MISSING_HEADERS,
+            "X-Existence-Reason": result.reason,
+          },
+        });
+      case "unavailable":
+        return new NextResponse(null, {
+          status: 503,
+          headers: {
+            ...UNAVAILABLE_HEADERS,
+            "X-Existence-Reason": result.reason,
+          },
+        });
+      default: {
+        const _exhaustive: never = result;
+        return _exhaustive;
+      }
+    }
   } catch {
-    return new NextResponse(null, { status: 503, headers: RESPONSE_HEADERS });
+    return new NextResponse(null, { status: 503, headers: UNAVAILABLE_HEADERS });
   }
 }

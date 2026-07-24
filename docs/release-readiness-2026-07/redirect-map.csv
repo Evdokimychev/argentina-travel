@@ -44,3 +44,5 @@ R042,/demo-route,,removed-demo-route,410,404 noindex,none,n/a,n/a,GAP,"Known dem
 R043,/wp-admin,,blocked-wordpress-probe,403,403,edge/firewall,n/a,n/a,PASS,"Security probe route; 403 is acceptable and must not redirect"
 R044,/wp-login.php,,blocked-wordpress-probe,403,403,edge/firewall,n/a,n/a,PASS,"Security probe route; 403 is acceptable and must not redirect"
 R045,/wp-content/uploads/example.jpg,,blocked-wordpress-probe,403,403,edge/firewall,n/a,n/a,REVIEW,"Generic probe is blocked; real migrated media URLs require an evidence-based asset map rather than a blanket redirect"
+R040,/st_tour/:path*,/tours,legacy-wordpress-tour,301,pending,next.config,200 catalog,preserved,PASS,"Catch-all to tours catalog; exact entity matches can replace later"
+R041,/st_activity/:path*,/excursions,legacy-wordpress-activity,301,pending,next.config,200 catalog,preserved,PASS,"Catch-all to excursions catalog"

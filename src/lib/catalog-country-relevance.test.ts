@@ -130,6 +130,54 @@ describe("catalog-country-relevance", () => {
     expect(filterNeighboringCountryTours(tours).map((t) => t.slug)).toEqual(["br", "py"]);
   });
 
+  it("excludes partner tours without country when Argentina is not in the route", () => {
+    const emptyCountryBrazil = listing({
+      id: "br-empty",
+      slug: "rio-only",
+      country: undefined,
+      title: "Карнавал в Рио-де-Жанейро",
+      destination: "Rio de Janeiro",
+      region: "Rio de Janeiro",
+      partnerSource: "tripster",
+    });
+    const emptyCountryPatagonia = listing({
+      id: "ar-empty",
+      slug: "calafate",
+      country: undefined,
+      title: "Перито-Морено и Эль-Калафате",
+      destination: "El Calafate",
+      region: "Patagonia",
+      partnerSource: "tripster",
+    });
+
+    expect(isDefaultCatalogTour(emptyCountryBrazil)).toBe(false);
+    expect(isDefaultCatalogTour(emptyCountryPatagonia)).toBe(true);
+  });
+
+  it("ranks Argentina-primary ahead of Brazil-primary cross-border", () => {
+    const tours = [
+      listing({
+        id: "br-iguazu",
+        slug: "iguazu-br",
+        country: "Brazil",
+        title: "Iguazu falls",
+        destination: "Foz do Iguaçu",
+        partnerSource: "tripster",
+      }),
+      listing({
+        id: "ar-1",
+        slug: "patagonia-ar",
+        country: "Argentina",
+        title: "Patagonia trek",
+        partnerSource: "tripster",
+      }),
+    ];
+    expect(filterDefaultCatalogTours(tours).map((tour) => tour.slug)).toEqual([
+      "patagonia-ar",
+      "iguazu-br",
+    ]);
+  });
+
   it("matchesCatalogCountryScope respects neighboring opt-in", () => {
     const rio = listing({
       id: "br-rio",

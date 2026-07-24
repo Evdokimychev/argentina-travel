@@ -73,7 +73,7 @@ import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
 import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
-import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
+import { trackBookingError, trackBookingSubmit } from "@/lib/analytics/gtm-events";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BookingCheckoutStepper from "@/components/booking/BookingCheckoutStepper";
@@ -665,6 +665,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
         });
         setError(normalized);
         feedback.showError(normalized);
+        trackBookingError({
+          productType: "tour",
+          slug: tour.slug,
+          source: "checkout_modal",
+          message: normalized.description ?? normalized.title,
+        });
         return;
       }
 

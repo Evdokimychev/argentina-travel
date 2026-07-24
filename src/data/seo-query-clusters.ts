@@ -152,17 +152,18 @@ export const SEO_QUERY_CLUSTERS: SeoQueryCluster[] = [
   {
     id: "iguazu",
     label: "Водопады Игуасу",
-    intent: "experience",
+    intent: "commercial",
     priority: 1,
-    targetPath: "/blog/natsionalnyy-park-iguasu",
+    targetPath: "/tours/region/iguazu",
     queries: [
       "водопады Игуасу",
+      "туры на Игуасу",
       "Игуасу как добраться из Буэнос-Айреса",
       "Игуасу аргентинская или бразильская сторона",
       "Игуасу сколько дней",
       "когда ехать на Игуасу",
     ],
-    promise: "Маршруты внутри парка, стороны границы, доступность проходов и разумное число дней.",
+    promise: "Программы с аргентинской стороной парка, маршруты, даты и понятный способ бронирования.",
   },
   {
     id: "ruta-40",

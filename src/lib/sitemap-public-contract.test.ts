@@ -23,8 +23,10 @@ describe("public sitemap contract", () => {
     expect(isIndexableInternalPath("/tours/region/patagonia")).toBe(true);
   });
 
-  it("publishes the dedicated Patagonia tours landing", () => {
+  it("publishes dedicated regional tour landings", () => {
     expect(STABLE_TOUR_LANDING_PATHS).toContain("/tours/region/patagonia");
+    expect(STABLE_TOUR_LANDING_PATHS).toContain("/tours/region/iguazu");
+    expect(isIndexableInternalPath("/tours/region/iguazu")).toBe(true);
   });
 
   it("keeps disabled travel modules and noindex routes out of sitemap", () => {

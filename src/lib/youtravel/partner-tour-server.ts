@@ -9,6 +9,12 @@ import {
   fetchYouTravelTourListings,
   fetchYouTravelTourSlugs,
 } from "@/lib/youtravel/partner-tour-repository";
+import {
+  logPartnerSourceUnavailable,
+  partnerOk,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 import type { TourDetail, TourListing } from "@/types";
 
 function getClient() {
@@ -19,20 +25,50 @@ function getClient() {
   }
 }
 
-export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]> {
+export async function fetchYouTravelTourListingsResultServer(): Promise<
+  PartnerSourceResult<TourListing[]>
+> {
   const supabase = getClient();
-  if (!supabase) return [];
+  let supabaseError: unknown = null;
+
+  if (supabase) {
+    try {
+      const listings = await fetchYouTravelTourListings(supabase);
+      if (listings.length > 0) return partnerOk(listings);
+    } catch (error) {
+      supabaseError = error;
+      logPartnerSourceUnavailable(
+        "youtravel_listings_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
+    }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
+  }
 
   try {
-    return await fetchYouTravelTourListings(supabase);
-  } catch {
-    return [];
+    const { pgFetchYouTravelTourListings } = await import(
+      "@/lib/youtravel/partner-tour-pg-repository"
+    );
+    return partnerOk(await pgFetchYouTravelTourListings());
+  } catch (error) {
+    return partnerUnavailableFromError(supabaseError ?? error);
   }
+}
+
+export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]> {
+  const result = await fetchYouTravelTourListingsResultServer();
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("youtravel_listings", result);
+  throw new Error(`youtravel_listings_unavailable:${result.errorClass}`);
 }
 
 const cachedYouTravelTourListings = unstable_cache(
   fetchYouTravelTourListingsServer,
-  ["youtravel-tour-listings-v1"],
+  ["youtravel-tour-listings-v2"],
   { revalidate: 600, tags: ["partner-tours", "youtravel-tours"] },
 );
 
@@ -42,28 +78,99 @@ export async function fetchYouTravelTourListingsCached(): Promise<TourListing[]>
 
 export const fetchYouTravelTourListingsCachedReact = cache(fetchYouTravelTourListingsCached);
 
-export async function fetchYouTravelTourSlugsServer(): Promise<string[]> {
+export async function fetchYouTravelTourSlugsResultServer(): Promise<
+  PartnerSourceResult<string[]>
+> {
   const supabase = getClient();
-  if (!supabase) return [];
+  let supabaseError: unknown = null;
+
+  if (supabase) {
+    try {
+      const slugs = await fetchYouTravelTourSlugs(supabase);
+      if (slugs.length > 0) return partnerOk(slugs);
+    } catch (error) {
+      supabaseError = error;
+      logPartnerSourceUnavailable(
+        "youtravel_slugs_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
+    }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
+  }
 
   try {
-    return await fetchYouTravelTourSlugs(supabase);
-  } catch {
-    return [];
+    const { pgFetchYouTravelTourSlugs } = await import(
+      "@/lib/youtravel/partner-tour-pg-repository"
+    );
+    return partnerOk(await pgFetchYouTravelTourSlugs());
+  } catch (error) {
+    return partnerUnavailableFromError(supabaseError ?? error);
   }
 }
 
-export async function fetchYouTravelTourDetailServer(slug: string): Promise<TourDetail | null> {
+export async function fetchYouTravelTourSlugsServer(): Promise<string[]> {
+  const result = await fetchYouTravelTourSlugsResultServer();
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("youtravel_slugs", result);
+  throw new Error(`youtravel_slugs_unavailable:${result.errorClass}`);
+}
+
+async function loadYouTravelTourDetailResult(
+  slug: string,
+): Promise<PartnerSourceResult<TourDetail | null>> {
   const supabase = getClient();
-  if (!supabase) return null;
+  let supabaseError: unknown = null;
+
+  if (supabase) {
+    try {
+      const detail = await fetchYouTravelTourDetail(supabase, slug);
+      if (detail) {
+        return partnerOk(await enrichYouTravelTourDetailOffers(detail));
+      }
+    } catch (error) {
+      supabaseError = error;
+      logPartnerSourceUnavailable(
+        "youtravel_detail_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
+    }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
+  }
 
   try {
-    const detail = await fetchYouTravelTourDetail(supabase, slug);
-    if (!detail) return null;
-    return enrichYouTravelTourDetailOffers(detail);
-  } catch {
-    return null;
+    const { pgFetchYouTravelTourDetail } = await import(
+      "@/lib/youtravel/partner-tour-pg-repository"
+    );
+    const detail = await pgFetchYouTravelTourDetail(slug);
+    if (!detail) {
+      if (supabaseError) return partnerUnavailableFromError(supabaseError);
+      return partnerOk(null);
+    }
+    return partnerOk(await enrichYouTravelTourDetailOffers(detail));
+  } catch (error) {
+    return partnerUnavailableFromError(supabaseError ?? error);
   }
+}
+
+export async function fetchYouTravelTourDetailResultServer(
+  slug: string,
+): Promise<PartnerSourceResult<TourDetail | null>> {
+  return loadYouTravelTourDetailResult(slug);
+}
+
+export async function fetchYouTravelTourDetailServer(slug: string): Promise<TourDetail | null> {
+  const result = await loadYouTravelTourDetailResult(slug);
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("youtravel_detail", result);
+  throw new Error(`youtravel_detail_unavailable:${result.errorClass}`);
 }
 
 export const fetchYouTravelTourDetailCached = cache(fetchYouTravelTourDetailServer);

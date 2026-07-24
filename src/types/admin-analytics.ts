@@ -105,6 +105,12 @@ export type AnalyticsCohortMonth = {
   retentionStub: number | null;
 };
 
+export type AnalyticsPartnerHandoffStepId =
+  | "tour_card_click"
+  | "tour_view"
+  | "booking_start"
+  | "partner_checkout_click";
+
 export type AdminAnalyticsFunnelsPayload = {
   period: AnalyticsPeriod;
   periodStart: string | null;
@@ -113,6 +119,17 @@ export type AdminAnalyticsFunnelsPayload = {
   cohorts: AnalyticsCohortMonth[];
   metrics: Record<AnalyticsFunnelStepId, AnalyticsMetric<number>>;
   cohortsMetric: AnalyticsMetric<number>;
+  /** Partner handoff is informational only — never treated as confirmed revenue. */
+  partnerHandoff: {
+    steps: Array<{
+      id: AnalyticsPartnerHandoffStepId;
+      label: string;
+      count: number | null;
+      status: AnalyticsMetricStatus;
+    }>;
+    trustedForKpi: false;
+    reason: string;
+  };
   meta: {
     dataStatus: "trusted" | "untrusted_direct_insert" | "unavailable";
     trustedForKpi: boolean;

@@ -50,7 +50,10 @@ async function fetchPartnerTourListingsSafe(): Promise<TourListing[]> {
     return await fetchPartnerTourListingsServer();
   } catch (error) {
     reportMarketplaceSourceError("tripster", error);
-    return [];
+    if (lastSuccessfulMarketplaceTours) {
+      return lastSuccessfulMarketplaceTours.filter((tour) => tour.partnerSource === "tripster");
+    }
+    throw error;
   }
 }
 
@@ -62,19 +65,44 @@ async function fetchYouTravelTourListingsSafe(): Promise<TourListing[]> {
     return await fetchYouTravelTourListingsCached();
   } catch (error) {
     reportMarketplaceSourceError("youtravel", error);
-    return [];
+    if (lastSuccessfulMarketplaceTours) {
+      return lastSuccessfulMarketplaceTours.filter((tour) => tour.partnerSource === "youtravel");
+    }
+    throw error;
   }
 }
 
 /** Без cookies/headers — безопасно для `unstable_cache`. */
 async function loadMarketplaceToursUncached(): Promise<TourListing[]> {
-  const [platform, tripster, youtravel] = await Promise.all([
+  const results = await Promise.allSettled([
     loadPlatformTourListingsForCatalog(),
     fetchPartnerTourListingsSafe(),
     fetchYouTravelTourListingsSafe(),
   ]);
 
-  return mergeMarketplaceTourListings(platform, tripster, youtravel);
+  const platform = results[0].status === "fulfilled" ? results[0].value : [];
+  const tripster = results[1].status === "fulfilled" ? results[1].value : [];
+  const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
+
+  const sourceFailures = results.filter((result) => result.status === "rejected");
+  for (const failure of sourceFailures) {
+    if (failure.status === "rejected") {
+      reportMarketplaceSourceError("catalog_source", failure.reason);
+    }
+  }
+
+  const merged = mergeMarketplaceTourListings(platform, tripster, youtravel);
+
+  // If every live source failed and we have nothing, prefer last-known-good over empty.
+  if (
+    merged.length === 0 &&
+    sourceFailures.length === results.length &&
+    lastSuccessfulMarketplaceTours?.length
+  ) {
+    return lastSuccessfulMarketplaceTours;
+  }
+
+  return merged;
 }
 
 const cachedMarketplaceTours = unstable_cache(

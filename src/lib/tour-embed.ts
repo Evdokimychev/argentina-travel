@@ -181,26 +181,27 @@ export function resolveTourEmbedListings(
   tours: TourListing[],
   source: TourEmbedSource
 ): TourListing[] {
+  const scoped = tours.filter(isDefaultCatalogTour);
   switch (source.kind) {
     case "slugs":
       return source.slugs
-        .map((slug) => tours.find((tour) => tour.slug === slug))
+        .map((slug) => scoped.find((tour) => tour.slug === slug))
         .filter((tour): tour is TourListing => Boolean(tour));
     case "destination": {
       const destination = getDestinationBySlug(source.destinationSlug);
       if (!destination) return [];
-      return matchToursForDestination(tours, destination);
+      return matchToursForDestination(scoped, destination);
     }
     case "region":
-      return tours.filter(
+      return scoped.filter(
         (tour) => tour.region.toLowerCase() === source.region.toLowerCase()
       );
     case "query":
-      return tours.filter((tour) => matchesTourEmbedQuery(tour, source.query));
+      return scoped.filter((tour) => matchesTourEmbedQuery(tour, source.query));
     case "preset":
-      return resolvePresetListings(tours, source.preset);
+      return resolvePresetListings(scoped, source.preset);
     case "organizer":
-      return tours.filter(
+      return scoped.filter(
         (tour) =>
           resolveListingOwnerUserId(tour) === source.organizerSlug ||
           tour.organizer.slug === source.organizerSlug

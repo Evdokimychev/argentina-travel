@@ -15,7 +15,9 @@ describe("admin operations P0 contracts", () => {
       "utf8",
     );
     expect(migration).toContain("revoke insert on public.analytics_events from anon, authenticated");
-    expect(route).toContain('body.eventType !== "tour_view"');
+    expect(route).toContain("ALLOWED_EVENT_TYPES");
+    expect(route).toContain('"tour_view"');
+    expect(route).toContain('"partner_checkout_click"');
     expect(route).toContain("checkRateLimit");
     expect(route).not.toContain("userId:");
   });

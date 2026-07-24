@@ -19,6 +19,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
 import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
@@ -58,10 +59,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const locale = await getServerI18nLocale();
   const cookieStore = await cookies();
   const history = parseBlogReadingHistoryCookie(cookieStore.get(BLOG_READING_HISTORY_COOKIE)?.value);
-  const [posts, tours] = await Promise.all([
+  const [posts, marketplaceTours] = await Promise.all([
     resolveBlogCatalog(locale),
     fetchMarketplaceTours(),
   ]);
+  const tours = await filterToursWithResolvedPublicDetail(marketplaceTours);
   const indexable = filterIndexableBlogPosts(posts);
   const indexCatalog = toBlogIndexCatalog(indexable);
   const featuredTours = pickBlogIndexFeaturedTours(tours, 4);

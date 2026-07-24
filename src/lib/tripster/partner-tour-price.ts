@@ -48,11 +48,11 @@ export function resolvePartnerTourPriceFields(row: PartnerTourExperienceRow): Pa
         : null;
   const currency = (row.price_currency ?? price?.currency ?? "").trim().toUpperCase() || null;
   const display =
-    row.price_display?.trim() ||
-    price?.value_string?.trim() ||
-    (value != null && currency
+    value != null && currency
       ? formatPartnerListedPrice(value, currency, price?.unit_string)
-      : undefined);
+      : row.price_display?.trim() ||
+        price?.value_string?.trim() ||
+        undefined;
 
   return {
     value,
@@ -102,13 +102,16 @@ function parsePartnerPriceDisplayString(display: string): PartnerListedPricePart
   const withoutUnit = unit
     ? trimmed.slice(0, trimmed.length - unit.length).trim()
     : trimmed;
-  const match = withoutUnit.match(/^([\d\s.,]+)\s*(.*)$/);
-  if (!match) return { amount: trimmed, unit };
+  const normalized = withoutUnit.replace(/^[€$₽]\s*/u, "").trim();
+  const match = normalized.match(/^([\d\s.,]+)\s*(.*)$/);
+  if (!match) return { amount: withoutUnit, unit };
 
   const value = Number.parseFloat(match[1].replace(/\s/g, "").replace(",", "."));
-  if (!Number.isFinite(value)) return { amount: trimmed, unit };
+  if (!Number.isFinite(value)) return { amount: withoutUnit, unit };
 
-  const currency = resolveCurrencyFromDisplayHint(match[2]?.trim());
+  const currencyHint = match[2]?.trim() || withoutUnit;
+  const currency = resolveCurrencyFromDisplayHint(currencyHint) ??
+    resolveCurrencyFromDisplayHint(withoutUnit);
   const amount = currency
     ? formatPartnerListedPrice(value, currency)
     : `${Math.round(value).toLocaleString("ru-RU")}${match[2] ? ` ${match[2].trim()}` : ""}`;

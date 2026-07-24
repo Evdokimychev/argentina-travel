@@ -132,10 +132,10 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationGlobal = {
   showExcursions: true,
   showGuide: true,
   showGallery: true,
-  showImmigration: true,
+  showImmigration: false,
   showKnowledgeBase: true,
-  showForum: true,
-  showShop: true,
+  showForum: false,
+  showShop: false,
   showServices: true,
   showJournal: true,
   showAbout: true,
@@ -189,22 +189,26 @@ export const DEFAULT_SITE_COMMERCE: SiteCommerceGlobal = {
 
 export const DEFAULT_SITE_MODULES: SiteModulesGlobal = {
   apartmentsMode: "request",
-  carRentalMode: "partner",
-  transfersMode: "partner",
+  carRentalMode: "disabled",
+  // Partner transfer inventory is not live yet — keep discovery off to avoid 404 hubs.
+  transfersMode: "disabled",
   hotelsMode: "planned",
   showApartmentsInServices: true,
-  showCarRentalInServices: true,
-  showTransfersInServices: true,
+  showCarRentalInServices: false,
+  showTransfersInServices: false,
   publicModules: Object.fromEntries(
-    SITE_PUBLIC_MODULE_IDS.map((id) => [
-      id,
-      {
-        activated: true,
-        published: true,
-        includeInSearch: true,
-        includeInSitemap: true,
-      },
-    ]),
+    SITE_PUBLIC_MODULE_IDS.map((id) => {
+      const hiddenByDefault = id === "shop" || id === "forum" || id === "immigration";
+      return [
+        id,
+        {
+          activated: !hiddenByDefault,
+          published: !hiddenByDefault,
+          includeInSearch: !hiddenByDefault,
+          includeInSitemap: !hiddenByDefault,
+        },
+      ];
+    }),
   ) as SiteModulesGlobal["publicModules"],
 };
 
@@ -336,20 +340,21 @@ export function normalizeSiteNavigation(value: unknown): SiteNavigationGlobal {
   }
   const row = value as Record<string, unknown>;
   return {
-    showGeography: row.showGeography !== false,
-    showDestinations: row.showDestinations !== false,
-    showPlaces: row.showPlaces !== false,
-    showTours: row.showTours !== false,
-    showExcursions: row.showExcursions !== false,
-    showGuide: row.showGuide !== false,
-    showGallery: row.showGallery !== false,
-    showImmigration: row.showImmigration !== false,
-    showKnowledgeBase: row.showKnowledgeBase !== false,
-    showForum: row.showForum !== false,
-    showShop: row.showShop !== false,
-    showServices: row.showServices !== false,
-    showJournal: row.showJournal !== false,
-    showAbout: row.showAbout !== false,
+    showGeography: asBool(row.showGeography, DEFAULT_SITE_NAVIGATION.showGeography),
+    showDestinations: asBool(row.showDestinations, DEFAULT_SITE_NAVIGATION.showDestinations),
+    showPlaces: asBool(row.showPlaces, DEFAULT_SITE_NAVIGATION.showPlaces),
+    showTours: asBool(row.showTours, DEFAULT_SITE_NAVIGATION.showTours),
+    showExcursions: asBool(row.showExcursions, DEFAULT_SITE_NAVIGATION.showExcursions),
+    showGuide: asBool(row.showGuide, DEFAULT_SITE_NAVIGATION.showGuide),
+    showGallery: asBool(row.showGallery, DEFAULT_SITE_NAVIGATION.showGallery),
+    // Empty/partial CMS rows must not re-enable unfinished modules (opt-in via true).
+    showImmigration: asBool(row.showImmigration, DEFAULT_SITE_NAVIGATION.showImmigration),
+    showKnowledgeBase: asBool(row.showKnowledgeBase, DEFAULT_SITE_NAVIGATION.showKnowledgeBase),
+    showForum: asBool(row.showForum, DEFAULT_SITE_NAVIGATION.showForum),
+    showShop: asBool(row.showShop, DEFAULT_SITE_NAVIGATION.showShop),
+    showServices: asBool(row.showServices, DEFAULT_SITE_NAVIGATION.showServices),
+    showJournal: asBool(row.showJournal, DEFAULT_SITE_NAVIGATION.showJournal),
+    showAbout: asBool(row.showAbout, DEFAULT_SITE_NAVIGATION.showAbout),
     utilityToursLabel: asString(row.utilityToursLabel, DEFAULT_SITE_NAVIGATION.utilityToursLabel),
     utilityToursUrl: normalizeNavigationHref(row.utilityToursUrl, DEFAULT_SITE_NAVIGATION.utilityToursUrl),
     utilityOrganizerLabel: asString(row.utilityOrganizerLabel, DEFAULT_SITE_NAVIGATION.utilityOrganizerLabel),

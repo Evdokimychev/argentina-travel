@@ -31,6 +31,12 @@ import { enrichTripsterListingsWithSchedule } from "@/lib/tripster/partner-tour-
 import { rankSimilarListings } from "@/lib/tour-recommendations";
 import type { TourDetail, TourListing } from "@/types";
 import type { TripsterExperience } from "@/lib/tripster/types";
+import {
+  logPartnerSourceUnavailable,
+  partnerOk,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 
 function getClient() {
   try {
@@ -220,26 +226,47 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
   return enriched;
 }
 
-async function loadPartnerTourListings(): Promise<TourListing[]> {
+async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<TourListing[]>> {
   const supabase = getClient();
-  let fromSupabase: TourListing[] = [];
+  let supabaseFailed = false;
 
   if (supabase) {
     try {
-      fromSupabase = await fetchPartnerTourListings(supabase);
-    } catch {
-      fromSupabase = [];
+      const fromSupabase = await fetchPartnerTourListings(supabase);
+      if (fromSupabase.length > 0) return partnerOk(fromSupabase);
+    } catch (error) {
+      supabaseFailed = true;
+      logPartnerSourceUnavailable(
+        "tripster_listings_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
     }
+  } else {
+    supabaseFailed = true;
   }
-
-  if (fromSupabase.length > 0) return fromSupabase;
 
   try {
-    const { pgFetchPartnerTourListings } = await import("@/lib/tripster/partner-tour-pg-repository");
-    return await pgFetchPartnerTourListings();
-  } catch {
-    return [];
+    const { pgFetchPartnerTourListings } = await import(
+      "@/lib/tripster/partner-tour-pg-repository"
+    );
+    const fromPg = await pgFetchPartnerTourListings();
+    return partnerOk(fromPg);
+  } catch (error) {
+    if (supabaseFailed) {
+      return partnerUnavailableFromError(error);
+    }
+    return partnerUnavailableFromError(error);
   }
+}
+
+async function loadPartnerTourListings(): Promise<TourListing[]> {
+  const result = await loadPartnerTourListingsResult();
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("tripster_listings", result);
+  throw new Error(`tripster_listings_unavailable:${result.errorClass}`);
 }
 
 const cachedPartnerTourListings = unstable_cache(
@@ -252,26 +279,58 @@ export async function fetchPartnerTourListingsServer(): Promise<TourListing[]> {
   return cachedPartnerTourListings();
 }
 
-async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
+async function loadPartnerTourDetailResult(
+  slug: string,
+): Promise<PartnerSourceResult<TourDetail | null>> {
   const supabase = getClient();
-  let tour: TourDetail | null = null;
+  let supabaseError: unknown = null;
 
   if (supabase) {
-    tour = await fetchPartnerTourDetail(supabase, slug);
+    try {
+      const tour = await fetchPartnerTourDetail(supabase, slug);
+      if (tour) {
+        if (process.env.ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT === "true") {
+          return partnerOk(await enrichPartnerTourDetail(tour));
+        }
+        return partnerOk(tour);
+      }
+    } catch (error) {
+      supabaseError = error;
+      logPartnerSourceUnavailable(
+        "tripster_detail_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
+    }
   }
 
-  if (!tour) {
+  try {
     const { pgFetchPartnerTourDetail } = await import(
       "@/lib/tripster/partner-tour-pg-repository"
     );
-    tour = await pgFetchPartnerTourDetail(slug);
+    const tour = await pgFetchPartnerTourDetail(slug);
+    if (!tour) {
+      // Confirmed miss only when PG path succeeded with null and Supabase did not fail hard.
+      if (supabaseError) return partnerUnavailableFromError(supabaseError);
+      return partnerOk(null);
+    }
+    if (process.env.ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT === "true") {
+      return partnerOk(await enrichPartnerTourDetail(tour));
+    }
+    return partnerOk(tour);
+  } catch (error) {
+    if (supabaseError) return partnerUnavailableFromError(supabaseError);
+    return partnerUnavailableFromError(error);
   }
+}
 
-  if (!tour) return null;
-  if (process.env.ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT === "true") {
-    return enrichPartnerTourDetail(tour);
-  }
-  return tour;
+async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
+  const result = await loadPartnerTourDetailResult(slug);
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("tripster_detail", result);
+  throw new Error(`tripster_detail_unavailable:${result.errorClass}`);
 }
 
 /**
@@ -294,15 +353,55 @@ export const fetchPartnerTourDetailServer = cache(
   (slug: string): Promise<TourDetail | null> => cachedPartnerTourDetail(slug)
 );
 
-export async function fetchPartnerTourSlugsServer(): Promise<string[]> {
+export async function fetchPartnerTourDetailResultServer(
+  slug: string,
+): Promise<PartnerSourceResult<TourDetail | null>> {
+  try {
+    const data = await fetchPartnerTourDetailServer(slug);
+    return partnerOk(data);
+  } catch (error) {
+    return partnerUnavailableFromError(error);
+  }
+}
+
+export async function fetchPartnerTourSlugsResultServer(): Promise<
+  PartnerSourceResult<string[]>
+> {
   const supabase = getClient();
+  let supabaseError: unknown = null;
+
   if (supabase) {
-    const slugs = await fetchPartnerTourSlugs(supabase);
-    if (slugs.length > 0) return slugs;
+    try {
+      const slugs = await fetchPartnerTourSlugs(supabase);
+      if (slugs.length > 0) return partnerOk(slugs);
+    } catch (error) {
+      supabaseError = error;
+      logPartnerSourceUnavailable(
+        "tripster_slugs_supabase",
+        partnerUnavailableFromError(error) as Extract<
+          PartnerSourceResult<never>,
+          { status: "unavailable" }
+        >,
+      );
+    }
   }
 
-  const { pgFetchPartnerTourSlugs } = await import("@/lib/tripster/partner-tour-pg-repository");
-  return pgFetchPartnerTourSlugs();
+  try {
+    const { pgFetchPartnerTourSlugs } = await import(
+      "@/lib/tripster/partner-tour-pg-repository"
+    );
+    return partnerOk(await pgFetchPartnerTourSlugs());
+  } catch (error) {
+    if (supabaseError) return partnerUnavailableFromError(supabaseError);
+    return partnerUnavailableFromError(error);
+  }
+}
+
+export async function fetchPartnerTourSlugsServer(): Promise<string[]> {
+  const result = await fetchPartnerTourSlugsResultServer();
+  if (result.status === "ok") return result.data;
+  logPartnerSourceUnavailable("tripster_slugs", result);
+  throw new Error(`tripster_slugs_unavailable:${result.errorClass}`);
 }
 
 export async function fetchSimilarPartnerToursServer(
