@@ -502,6 +502,7 @@ export function TourBookingProvider({
     selectedDateId,
     setSelectedDateId,
     guests,
+    setGuests,
     dateMode,
     customDate,
     checkoutOpen,
