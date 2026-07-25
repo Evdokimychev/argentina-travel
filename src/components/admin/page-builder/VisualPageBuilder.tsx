@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, Layers, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import DesignLibraryPatternCard from "@/components/admin/page-builder/DesignLibraryPatternCard";
 import PageBuilderBlockPicker from "@/components/admin/page-builder/PageBuilderBlockPicker";
 import SortableBlockList from "@/components/admin/page-builder/SortableBlockList";
 import CmsMediaPickerDialog from "@/components/admin/CmsMediaPickerDialog";
@@ -138,27 +139,30 @@ export default function VisualPageBuilder({
       <p className="text-xs text-slate">{helpText}</p>
 
       {sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-4 py-6 text-center">
-          <p className="text-sm text-slate">
-            Добавьте раздел вручную или начните с готового шаблона страницы.
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <div className="rounded-2xl border border-dashed border-gray-200 bg-gradient-to-b from-sky/[0.06] to-white px-4 py-6">
+          <div className="text-center">
+            <p className="font-heading text-base font-bold text-charcoal">Библиотека шаблонов</p>
+            <p className="mt-1 text-sm text-slate">
+              Выберите готовый состав секции — дальше можно править каждый блок.
+            </p>
+          </div>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {starterPatterns.map((slug) => {
               const pattern = PAGE_BUILDER_PATTERNS.find((item) => item.slug === slug);
               if (!pattern) return null;
               return (
-                <Button
-                  key={slug}
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => startFromPattern(slug)}
-                >
-                  {pattern.label}
-                </Button>
+                <li key={slug}>
+                  <DesignLibraryPatternCard
+                    pattern={pattern}
+                    size="large"
+                    onSelect={() => startFromPattern(slug)}
+                  />
+                </li>
               );
             })}
-            <Button type="button" size="sm" onClick={() => onChange([newSection("Основной раздел")])}>
+          </ul>
+          <div className="mt-4 flex justify-center">
+            <Button type="button" size="sm" variant="outline" onClick={() => onChange([newSection("Основной раздел")])}>
               Пустой раздел
             </Button>
           </div>

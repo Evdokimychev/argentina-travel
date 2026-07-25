@@ -57,15 +57,31 @@ Travel widgets в picker: `season-matrix`, `tourism-infographic`, `tourism-timel
 - открывать **медиатеку** для photo / hero / gallery / image-text / author-card / media;
 - видеть **ошибки и замечания** аудита прямо в карточке (alt, пустая галерея и т.п.) — без блокировки сохранения.
 
+## Итерация A+B (сделано) — Tour layout bank + Design Library
+
+См. исследование: [`competitive-builders-research.md`](./competitive-builders-research.md).
+
+### Tour layout bank
+
+- Контракт слотов: `src/lib/tour-detail/native-tour-layout-registry.ts`
+- Compose поверх существующих секций: `compose-native-tour-main-column.tsx`
+- `TourDetailView` (native) рендерит через compose; ветка Tripster/YouTravel без изменений
+- `resolveNativeTourLayoutOrder(override?)` готов к будущему CMS override порядка
+
+### Design Library
+
+- Категории паттернов (`story` / `practical` / `tour` / `page` / `social`)
+- Превью-чипы состава блока в picker и на пустом документе
+- Новый паттерн `reviews-social-proof`
+- UI: `DesignLibraryPatternCard`, вкладки категорий в `PageBuilderBlockPicker`
+
 ## Следующие итерации (Phase 3C+)
 
-См. также исследование референсов: [`competitive-builders-research.md`](./competitive-builders-research.md) (WP Travel Engine, Pattern Engine, Puck, BlockNote).
-
-1. **Tour layout bank** (урок WTE): data-bound слоты поверх `tour-detail/*`, не новый Gutenberg
-2. Design Library с превью паттернов / page templates
-3. Композиция homepage / marketplace через CMS modules
-4. Immigration pillars cutover
-5. Slash-menu / Tiptap только для inline paragraph (не замена блоков)
-6. Spike Puck 48h для landing visual lane (go/no-go)
-7. Полный Zod на editorial schemas
-8. CMS-данные внутри season-matrix / tourism-timeline (не только display-props)
+1. CMS override порядка секций тура (JSON layout на native tour)
+2. Композиция homepage / marketplace через CMS modules
+3. Immigration pillars cutover
+4. Slash-menu / Tiptap только для inline paragraph (не замена блоков)
+5. Spike Puck 48h для landing visual lane (go/no-go)
+6. Полный Zod на editorial schemas
+7. CMS-данные внутри season-matrix / tourism-timeline (не только display-props)
+8. Page templates pack (целая landing page одним импортом)

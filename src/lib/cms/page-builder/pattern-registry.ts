@@ -9,11 +9,13 @@ import {
   MapPinned,
   MountainSnow,
   Pin,
+  Star,
   UserRound,
   Waves,
   Wine,
 } from "lucide-react";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+import { PAGE_BUILDER_BLOCK_BY_SLUG } from "@/lib/cms/page-builder/block-registry";
 
 export type PageBuilderPatternSlug =
   | "destination-story"
@@ -28,13 +30,48 @@ export type PageBuilderPatternSlug =
   | "destination-page-body"
   | "place-practical"
   | "immigration-practical"
-  | "hub-intro";
+  | "hub-intro"
+  | "reviews-social-proof";
+
+export type PageBuilderPatternCategory =
+  | "story"
+  | "practical"
+  | "tour"
+  | "page"
+  | "social";
+
+export const PAGE_BUILDER_PATTERN_CATEGORIES: Record<
+  PageBuilderPatternCategory,
+  { label: string; description: string }
+> = {
+  story: {
+    label: "Истории",
+    description: "Атмосферные материалы и направления",
+  },
+  practical: {
+    label: "Практика",
+    description: "Советы, чек-листы, иммиграция",
+  },
+  tour: {
+    label: "Туры",
+    description: "Введение к маршруту и программа",
+  },
+  page: {
+    label: "Страницы",
+    description: "Шаблоны направлений, хабов и лендингов",
+  },
+  social: {
+    label: "Доверие",
+    description: "Отзывы и социальное доказательство",
+  },
+};
 
 export type PageBuilderPatternDefinition = {
   slug: PageBuilderPatternSlug;
   label: string;
   description: string;
   tags: string[];
+  category: PageBuilderPatternCategory;
   icon: LucideIcon;
   create: () => BlogBodyBlock[];
 };
@@ -49,6 +86,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "История направления",
     description: "Крупное фото, краткие факты и атмосферная цитата",
     tags: ["направление", "фото", "факты", "регион"],
+    category: "story",
     icon: MapPinned,
     create: () => [
       {
@@ -77,6 +115,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Практический путеводитель",
     description: "Совет редакции, контрольный список и частые вопросы",
     tags: ["путеводитель", "советы", "чек-лист", "faq"],
+    category: "practical",
     icon: BookOpenText,
     create: () => [
       { type: "callout", variant: "tip", title: "Совет редакции", body: "Добавьте главный практический совет." },
@@ -89,6 +128,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Материал с автором",
     description: "Карточка эксперта, личная цитата и фотогалерея",
     tags: ["автор", "эксперт", "цитата", "галерея"],
+    category: "story",
     icon: UserRound,
     create: () => [
       { type: "author-card", name: "Имя автора", role: "Автор материала", bio: "Расскажите об опыте автора и его связи с Аргентиной." },
@@ -101,6 +141,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Введение к туру",
     description: "Фотоистория, параметры путешествия и переход к бронированию",
     tags: ["тур", "маршрут", "бронирование", "программа"],
+    category: "tour",
     icon: Compass,
     create: () => [
       { type: "image-text", src: "", alt: "", title: "О путешествии", body: "Опишите характер маршрута и главное впечатление.", imagePosition: "right" },
@@ -122,6 +163,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Водопады Игуасу",
     description: "Эмоциональное вступление, план посещения, советы и фотогалерея",
     tags: ["игуасу", "водопад", "водопады", "миссионес", "природа", "тропы", "национальный парк"],
+    category: "story",
     icon: Waves,
     create: () => [
       {
@@ -164,6 +206,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Ледники Патагонии",
     description: "Фотоистория, сезонность, подготовка и галерея ледников",
     tags: ["ледник", "ледники", "патагония", "перито-морено", "эль-калафате", "природа", "сезоны"],
+    category: "story",
     icon: MountainSnow,
     create: () => [
       {
@@ -213,6 +256,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Городской путеводитель",
     description: "Районы, прогулка по шагам, точка на карте и местный совет",
     tags: ["буэнос-айрес", "город", "городской путеводитель", "районы", "прогулка", "достопримечательности"],
+    category: "practical",
     icon: Building2,
     create: () => [
       {
@@ -255,6 +299,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Вино и гастрономия",
     description: "Введение, форматы дегустации, гастрономический список и фотографии",
     tags: ["вино", "винный", "гастрономия", "еда", "рестораны", "мендоса", "дегустация"],
+    category: "story",
     icon: Wine,
     create: () => [
       {
@@ -298,6 +343,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Маршрут по дням",
     description: "Параметры поездки, программа по дням, карта и запасной план",
     tags: ["маршрут", "по дням", "программа", "день", "план поездки", "карта", "итинерарий"],
+    category: "tour",
     icon: CalendarDays,
     create: () => [
       {
@@ -338,6 +384,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Тело страницы направления",
     description: "Hero, факты, советы, карта и CTA для destination",
     tags: ["направление", "destination", "hero", "страница", "регион"],
+    category: "page",
     icon: LayoutTemplate,
     create: () => [
       {
@@ -375,6 +422,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Практическая карточка места",
     description: "Как добраться, чек-лист, FAQ и источники",
     tags: ["место", "place", "практика", "как добраться", "faq"],
+    category: "practical",
     icon: Pin,
     create: () => [
       {
@@ -419,6 +467,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Иммиграционный практический блок",
     description: "Предупреждение, шаги, документы, источники",
     tags: ["иммиграция", "документы", "dni", "внж", "residencia", "правовой"],
+    category: "practical",
     icon: FileBadge2,
     create: () => [
       {
@@ -469,6 +518,7 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
     label: "Введение хаба",
     description: "Hero, факты и ряд CTA для хабов и лендингов",
     tags: ["хаб", "landing", "hero", "cta", "навигация"],
+    category: "page",
     icon: LayoutTemplate,
     create: () => [
       {
@@ -507,6 +557,39 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
       },
     ],
   },
+  {
+    slug: "reviews-social-proof",
+    label: "Отзывы и доверие",
+    description: "Сводка оценок, цитаты путешественников и призыв оставить отзыв",
+    tags: ["отзывы", "рейтинг", "social proof", "доверие", "оценки", "цитаты"],
+    category: "social",
+    icon: Star,
+    create: () => [
+      {
+        type: "facts-grid",
+        title: "Оценки путешественников",
+        columns: 3,
+        items: [
+          { label: "Средняя оценка", value: "4.9" },
+          { label: "Отзывов", value: "128" },
+          { label: "Рекомендуют", value: "96%" },
+        ],
+      },
+      {
+        type: "quote",
+        text: "Добавьте короткий отзыв о маршруте, гиде или главном впечатлении.",
+      },
+      {
+        type: "quote",
+        text: "Второй отзыв — о логистике, комфорте или том, что запомнилось сильнее всего.",
+      },
+      {
+        type: "cta",
+        label: "Оставить отзыв",
+        href: "#reviews",
+      },
+    ],
+  },
 ];
 
 function normalizePatternSearchValue(value: string): string {
@@ -517,8 +600,27 @@ export function matchesPageBuilderPattern(pattern: PageBuilderPatternDefinition,
   const normalizedQuery = normalizePatternSearchValue(query);
   if (!normalizedQuery) return true;
 
-  return normalizePatternSearchValue([pattern.label, pattern.description, ...pattern.tags].join(" "))
-    .includes(normalizedQuery);
+  const categoryLabel = PAGE_BUILDER_PATTERN_CATEGORIES[pattern.category].label;
+  return normalizePatternSearchValue(
+    [pattern.label, pattern.description, categoryLabel, ...pattern.tags].join(" "),
+  ).includes(normalizedQuery);
+}
+
+/** Unique block labels for Design Library preview chips (order preserved). */
+export function getPageBuilderPatternPreviewChips(
+  pattern: PageBuilderPatternDefinition,
+  limit = 4,
+): string[] {
+  const labels: string[] = [];
+  const seen = new Set<string>();
+  for (const block of pattern.create()) {
+    const label = PAGE_BUILDER_BLOCK_BY_SLUG[block.type]?.label ?? block.type;
+    if (seen.has(label)) continue;
+    seen.add(label);
+    labels.push(label);
+    if (labels.length >= limit) break;
+  }
+  return labels;
 }
 
 export function createPageBuilderPattern(slug: PageBuilderPatternSlug): BlogBodyBlock[] {

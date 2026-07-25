@@ -6,24 +6,14 @@ import type { SimilarTourCard } from "@/lib/tours-server";
 import { cn } from "@/lib/cn";
 import { siteContainerClass, siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
 import { tourDetailSectionStackClass, tourDetailStickyPanelClass } from "@/lib/tour-detail-ui";
-import TourStatsSection from "./TourStatsSection";
-import DescriptionSection from "./DescriptionSection";
 import ItinerarySection from "./ItinerarySection";
 import OrganizerSection from "./OrganizerSection";
 import PartnerTourOrganizerSection from "./PartnerTourOrganizerSection";
 import ReviewsSection from "./ReviewsSection";
-import AccommodationsSection from "./AccommodationsSection";
-import IncludedExcludedSection from "./IncludedExcludedSection";
 import { ImportantSection } from "./ArrivalSection";
-import FAQSection from "./FAQSection";
-import DatesSection from "./DatesSection";
-import GroupTripsSection from "@/components/group-trips/GroupTripsSection";
 import SimilarToursSection from "./SimilarToursSection";
 import TourSidebar from "./TourSidebar";
 import RouteMapSection from "./RouteMapSection";
-import LogisticsDetailSection from "./LogisticsDetailSection";
-import TourPoliciesSection from "./TourPoliciesSection";
-import PackingListSection from "./PackingListSection";
 import { TourBookingProvider } from "./TourBookingContext";
 import MobileBookingBar from "./MobileBookingBar";
 import OnDemandTourBookingDialogs from "./OnDemandTourBookingDialogs";
@@ -43,25 +33,22 @@ import PartnerTourArrivalInfoSection from "./PartnerTourArrivalInfoSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
 import OnDemandReviewPromptBanner from "./OnDemandReviewPromptBanner";
-import OnDemandTourReviewPanel from "./OnDemandTourReviewPanel";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { PartnerInfoAutoplayGallery } from "@/components/shared/PartnerInfoAutoplayGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
-import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
-import PlacesSection from "./PlacesSection";
-import TourRelatedPlacesSection from "./TourRelatedPlacesSection";
 import type { Tour } from "@/types/tour";
 import type { PlaceListing } from "@/types/place";
 import { Suspense, useEffect, useMemo, type ReactNode } from "react";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 import { resolveRelatedPlacesForTour } from "@/lib/cms-content-cross-links";
+import { composeNativeTourMainColumn } from "@/lib/tour-detail/compose-native-tour-main-column";
 
 interface TourDetailViewProps {
   slug: string;
@@ -318,104 +305,15 @@ export default function TourDetailView({
                 </>
               ) : (
                 <>
-              <TourStatsSection
-                tour={tour}
-                maximumAge={canonicalTour?.participants.maximumAge}
-                maxWeightEnabled={canonicalTour?.participants.maxWeightEnabled}
-                maxWeightKg={canonicalTour?.participants.maxWeightKg}
-                languages={canonicalTour?.participants.languages}
-              />
-              <DescriptionSection
-                blocks={tour.descriptionBlocks}
-                extra={tour.descriptionExtra!}
-                organizerComment={getTourSectionOrganizerComment(tour, "description")}
-              />
-              <PlacesSection
-                places={tour.places}
-                organizerComment={getTourSectionOrganizerComment(tour, "places")}
-              />
-              <TourRelatedPlacesSection places={relatedCatalogPlaces} />
-              {tour.itinerary?.length ? (
-                <ItinerarySection
-                  days={tour.itinerary}
-                  tour={tour}
-                  showPdfDownload={!previewMode && !isPartnerTour}
-                />
-              ) : null}
-              {!isPartnerTour ? (
-                <DatesSection
-                  tour={tour}
-                  canonicalTour={canonicalTour}
-                  organizerComment={getTourSectionOrganizerComment(tour, "dates")}
-                />
-              ) : null}
-              {!isPartnerTour && !previewMode && tour.dates.length > 0 ? (
-                <GroupTripsSection tour={tour} />
-              ) : null}
-              <IncludedExcludedSection
-                included={tour.included}
-                excluded={tour.excluded}
-                organizerComment={getTourSectionOrganizerComment(tour, "included")}
-              />
-              {tourHasAccommodation(tour) ? (
-                <AccommodationsSection
-                  accommodations={tour.accommodations}
-                  durationNights={tour.durationNights}
-                  comfortLevel={tour.comfort}
-                  comfortLevels={tour.comfortLevels}
-                  comfortDescriptionHtml={tour.descriptionExtra?.comfort}
-                  organizerComment={getTourSectionOrganizerComment(tour, "accommodations")}
-                />
-              ) : null}
-              {!isPartnerTour && canonicalTour ? (
-                <PackingListSection
-                  tour={canonicalTour}
-                  organizerComment={getTourSectionOrganizerComment(tour, "packing")}
-                />
-              ) : null}
-              {!isPartnerTour && canonicalTour ? (
-                <TourPoliciesSection
-                  tour={canonicalTour}
-                  organizerComment={getTourSectionOrganizerComment(tour, "policies")}
-                />
-              ) : null}
-              <ImportantSection
-                items={tour.importantInfo}
-                organizerComment={getTourSectionOrganizerComment(tour, "important")}
-              />
-              {flightLogisticsSection}
-              {!isPartnerTour && canonicalTour ? (
-                <LogisticsDetailSection
-                  tour={canonicalTour}
-                  organizerComment={getTourSectionOrganizerComment(tour, "logistics")}
-                />
-              ) : null}
-              {!isPartnerTour ? (
-                <RouteMapSection
-                  points={tour.routePoints}
-                  arrival={tour.arrival}
-                  logistics={canonicalTour?.logistics}
-                  routeMapImage={canonicalTour?.program.routeMapImage}
-                  organizerComment={getTourSectionOrganizerComment(tour, "routeMap")}
-                  tourSlug={tour.slug}
-                  tourId={tour.id}
-                />
-              ) : null}
-              <FAQSection
-                faq={tour.faq}
-                organizerComment={getTourSectionOrganizerComment(tour, "faq")}
-              />
-              <OrganizerSection
-                organizer={tour.organizer}
-                comment={tour.organizerComment}
-                tourSlug={tour.slug}
-                guides={canonicalTour?.team.guides}
-              />
-              {!previewMode ? (
-                <OnDemandTourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
-              ) : null}
-              <ReviewsSection reviews={tour.reviews} />
-              {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
+                  {composeNativeTourMainColumn({
+                    tour,
+                    canonicalTour,
+                    relatedCatalogPlaces,
+                    similarTours,
+                    previewMode,
+                    isPartnerTour,
+                    flightLogisticsSection,
+                  })}
                 </>
               )}
             </div>

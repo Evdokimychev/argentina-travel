@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import { normalizeBlogBodyBlock } from "@/lib/cms/page-builder/block-normalize";
 import {
   createPageBuilderPattern,
+  getPageBuilderPatternPreviewChips,
   matchesPageBuilderPattern,
+  PAGE_BUILDER_PATTERN_CATEGORIES,
   PAGE_BUILDER_PATTERNS,
 } from "@/lib/cms/page-builder/pattern-registry";
 
@@ -53,5 +55,14 @@ describe("page builder pattern registry", () => {
     expect(byQuery("рестораны")).toContain("wine-and-food");
     expect(byQuery("итинерарий")).toContain("day-by-day-route");
     expect(byQuery("путеводитель")).toContain("practical-guide");
+    expect(byQuery("отзывы")).toContain("reviews-social-proof");
+    expect(byQuery("Доверие")).toContain("reviews-social-proof");
+  });
+
+  it("assigns every pattern a known category and preview chips", () => {
+    for (const pattern of PAGE_BUILDER_PATTERNS) {
+      expect(PAGE_BUILDER_PATTERN_CATEGORIES[pattern.category]).toBeDefined();
+      expect(getPageBuilderPatternPreviewChips(pattern).length).toBeGreaterThan(0);
+    }
   });
 });
