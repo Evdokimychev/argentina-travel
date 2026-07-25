@@ -94,7 +94,11 @@ export default function BlogAccordionBlock({
           <details
             key={id}
             id={id}
-            className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm open:shadow-md"
+            // Border only, no shadow (including on the open state) — the
+            // sources accordion already sits inside a flattened section, and
+            // a shadow here would stack another floating card layer inside
+            // the article.
+            className="group overflow-hidden rounded-2xl border border-gray-100 bg-white"
             open={defaultOpenFirst && index === 0 ? true : undefined}
           >
             <summary

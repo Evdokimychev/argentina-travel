@@ -12,6 +12,15 @@ describe("media-cdn", () => {
     vi.unstubAllEnvs();
   });
 
+  it("always serves local media in `next dev`, even when a CDN origin is configured", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("NEXT_PUBLIC_MEDIA_CDN_URL", "https://media.goargentina.ru");
+    expect(getMediaCdnOrigin()).toBeNull();
+    expect(mediaUrl("media/blog/argentinian-steak-guide/cow-diagram.png")).toBe(
+      "/media/blog/argentinian-steak-guide/cow-diagram.png",
+    );
+  });
+
   it("returns site-relative URLs when CDN is not configured", () => {
     vi.stubEnv("NEXT_PUBLIC_MEDIA_CDN_URL", "");
     expect(mediaUrl("media/places/buenos-aires/hero.jpg")).toBe("/media/places/buenos-aires/hero.jpg");
