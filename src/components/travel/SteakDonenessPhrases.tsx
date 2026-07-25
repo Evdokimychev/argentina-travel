@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { SafeImage } from "@/components/ui/safe-image";
 import {
   STEAK_DONENESS_ITEMS,
   STEAK_DONENESS_UI,
 } from "@/data/steak-doneness-phrases";
+import { STEAK_GUIDE_MEDIA } from "@/data/media/argentinian-steak-guide-media";
 import { cn } from "@/lib/cn";
+import { mediaUrl } from "@/lib/media/media-cdn";
+
+const slicedSteakPhoto = STEAK_GUIDE_MEDIA.slicedSteak;
 
 type Props = {
   className?: string;
@@ -41,11 +46,42 @@ export default function SteakDonenessPhrases({
         <p className="mt-1 text-sm text-slate">{labels.hint}</p>
       </div>
 
+      <figure className="overflow-hidden rounded-2xl">
+        <div className="relative aspect-[16/9] w-full">
+          <SafeImage
+            src={mediaUrl(slicedSteakPhoto.src)}
+            alt={slicedSteakPhoto.alt}
+            fill
+            sizes="(min-width: 768px) 640px, 100vw"
+            className="object-cover"
+            placeholderVariant="generic"
+          />
+        </div>
+        <figcaption className="bg-surface-muted/50 px-3 py-1.5 text-xs text-slate">
+          Фото иллюстрирует текстуру среза — не эталон конкретной степени прожарки.
+        </figcaption>
+      </figure>
+
+      <div>
+        <div
+          className="h-3 w-full rounded-full bg-gradient-to-r from-[#b3352c] via-[#c98a4c] to-[#8a6a4f]"
+          aria-hidden
+        />
+        <ol className="mt-2 grid grid-cols-5 gap-1 text-center">
+          {STEAK_DONENESS_ITEMS.map((item) => (
+            <li key={item.id} className="text-[11px] leading-tight text-slate">
+              {item.term}
+            </li>
+          ))}
+        </ol>
+      </div>
+
       <ul className="grid gap-2.5 sm:grid-cols-2">
         {STEAK_DONENESS_ITEMS.map((item) => (
           <li
             key={item.id}
-            className="flex flex-col rounded-2xl border border-gray-100 bg-white p-3.5 shadow-sm"
+            // Hairline border only — no shadow layered on top of the item.
+            className="flex flex-col rounded-2xl border border-gray-100 bg-surface-muted/20 p-3.5"
           >
             <p className="font-heading text-sm font-bold text-charcoal" lang="es">
               {item.term}

@@ -74,7 +74,10 @@ export default function BlogCallout({ variant, title, body, className }: BlogCal
   return (
     <aside
       className={cn(
-        "rounded-2xl border p-4 shadow-sm sm:p-5",
+        // Border + tinted background is enough to read as a distinct block;
+        // adding a shadow on top turns it into a floating "card" nested
+        // inside the article card. Keep chrome to a single layer.
+        "rounded-2xl border p-4 sm:p-5",
         config.border,
         config.bg,
         className,

@@ -1,19 +1,44 @@
 import { SafeImage } from "@/components/ui/safe-image";
 import { contentFigureShellClass, contentFigureDimensions, CONTENT_FIGURE_SIZES } from "@/lib/content-figure";
 import { mediaUrl } from "@/lib/media-resolver";
+import { cn } from "@/lib/cn";
 
 type Props = {
   src: string;
   alt: string;
   caption?: string;
+  /** "small" floats a compact card beside surrounding paragraphs on wide screens. */
+  size?: "small" | "full";
 };
 
-export default function BlogMediaBlock({ src, alt, caption }: Props) {
+export default function BlogMediaBlock({ src, alt, caption, size = "full" }: Props) {
   if (!src.trim()) return null;
   const dims = contentFigureDimensions();
 
+  if (size === "small") {
+    return (
+      <figure className="mx-auto w-full max-w-[15rem] overflow-hidden rounded-2xl border border-gray-100 sm:float-right sm:ml-5 sm:mb-3">
+        <SafeImage
+          src={mediaUrl(src)}
+          alt={alt || caption || "Иллюстрация"}
+          width={480}
+          height={360}
+          className="block h-auto w-full object-cover"
+          sizes="(min-width: 640px) 240px, 100vw"
+          placeholderVariant="generic"
+          blurPlaceholder={false}
+        />
+        {caption ? (
+          <figcaption className="border-t border-gray-100 px-2.5 py-1.5 text-[0.7rem] leading-snug text-slate">
+            {caption}
+          </figcaption>
+        ) : null}
+      </figure>
+    );
+  }
+
   return (
-    <figure className={contentFigureShellClass}>
+    <figure className={cn(contentFigureShellClass)}>
       <SafeImage
         src={mediaUrl(src)}
         alt={alt || caption || "Иллюстрация"}

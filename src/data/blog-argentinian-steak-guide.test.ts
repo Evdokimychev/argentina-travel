@@ -8,9 +8,13 @@ import { buildBlogArticleJsonLd } from "@/lib/content-json-ld";
 import { extractFaqFromBlogPost } from "@/lib/blog-faq";
 import { getBlogTourEmbeds } from "@/data/blog-tour-embeds";
 import { resolveBlogCanonicalTarget } from "@/data/blog-canonical-map";
+import { stripHeadingDecorations } from "@/lib/content-heading-id";
 import { STEAK_CUT_OPTIONS } from "@/data/steak-cut-selector";
 import { STEAK_DONENESS_ITEMS } from "@/data/steak-doneness-phrases";
+import { STEAK_GUIDE_PHOTO_ASSETS } from "@/data/media/argentinian-steak-guide-media";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+
+const EMOJI_PATTERN = /[\p{Extended_Pictographic}]/u;
 
 const SLUG = "argentinian-steak-guide";
 
@@ -75,6 +79,7 @@ describe("argentinian-steak-guide rebuild", () => {
       autoLinkDestinations: false,
       showAutoSectionImages: false,
       showSidebarFresh: false,
+      sectionPanels: true,
     });
   });
 
@@ -97,17 +102,39 @@ describe("argentinian-steak-guide rebuild", () => {
     for (const cut of cutNames) {
       expect(post!.sections!.some((section) => section.title.trim() === cut)).toBe(false);
     }
-    const cutsSection = post!.sections!.find((s) => s.title === "Основные аргентинские отрубы");
+    const cutsSection = post!.sections!.find((s) =>
+      s.title.endsWith("Основные аргентинские отрубы"),
+    );
     expect(cutsSection).toBeTruthy();
     for (const cut of cutNames) {
       expect(cutsSection!.body).toContain(`### ${cut}`);
     }
   });
 
-  it("has no emoji in H2 section titles", () => {
+  it("H2 titles may carry at most one leading decorative emoji, and the TOC label is always emoji-free", () => {
     const emoji = /[\p{Extended_Pictographic}]/u;
     for (const section of post!.sections ?? []) {
-      expect(emoji.test(section.title)).toBe(false);
+      // TOC always strips a leading emoji via stripHeadingDecorations — the visible
+      // heading text may keep one for visual rhythm, but never mid-sentence spam.
+      const stripped = stripHeadingDecorations(section.title);
+      expect(emoji.test(stripped)).toBe(false);
+      // Anchor ids are computed from the raw title but emoji/punctuation are
+      // stripped by headingToAnchorId — adding a leading emoji must not change it.
+      const rawAnchorBase = section.title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\p{L}\p{N}\s-]/gu, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      const strippedAnchorBase = stripped
+        .toLowerCase()
+        .trim()
+        .replace(/[^\p{L}\p{N}\s-]/gu, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      expect(rawAnchorBase).toBe(strippedAnchorBase);
     }
   });
 
@@ -211,5 +238,128 @@ describe("argentinian-steak-guide rebuild", () => {
 
     const overridesBlock = raw.slice(raw.indexOf("const legacyManualSectionOverrides"));
     expect(overridesBlock.slice(0, overridesBlock.indexOf("\n};"))).not.toContain(SLUG);
+  });
+
+  it("embeds a photo-rich story deck right after the intro, with no emoji anywhere in it", () => {
+    const blocks = allBlocks(post!.sections ?? []);
+    const deck = blocks.find(
+      (block): block is Extract<BlogBodyBlock, { type: "story-deck" }> =>
+        block.type === "story-deck",
+    );
+    expect(deck).toBeTruthy();
+    expect(deck!.slides.length).toBeGreaterThanOrEqual(8);
+    expect(post!.sections![0].blocks?.[0]).toBe(deck);
+
+    for (const slide of deck!.slides) {
+      expect(slide.title.trim().length).toBeGreaterThan(0);
+      expect(slide.body.trim().length).toBeGreaterThan(0);
+      expect(EMOJI_PATTERN.test(slide.title)).toBe(false);
+      expect(EMOJI_PATTERN.test(slide.body)).toBe(false);
+      for (const bullet of slide.bullets ?? []) {
+        expect(EMOJI_PATTERN.test(bullet)).toBe(false);
+      }
+      for (const cta of slide.ctas ?? []) {
+        expect(EMOJI_PATTERN.test(cta.label)).toBe(false);
+        expect(cta.href.trim().length).toBeGreaterThan(0);
+      }
+      if (slide.image) {
+        expect(slide.image.src.trim().length).toBeGreaterThan(0);
+        expect(slide.image.alt.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("story deck is heavily photographic: most slides carry a real photo or the cut-diagram widget", () => {
+    const blocks = allBlocks(post!.sections ?? []);
+    const deck = blocks.find(
+      (block): block is Extract<BlogBodyBlock, { type: "story-deck" }> =>
+        block.type === "story-deck",
+    )!;
+    const visualSlides = deck.slides.filter((slide) => slide.image || slide.widgetKey);
+    expect(visualSlides.length).toBeGreaterThanOrEqual(Math.ceil(deck.slides.length * 0.6));
+
+    // No two slides reuse the exact same photo (dedupe requirement).
+    const imageSrcs = deck.slides.map((slide) => slide.image?.src).filter(Boolean);
+    expect(new Set(imageSrcs).size).toBe(imageSrcs.length);
+
+    // The hero photo itself is never reused inside the deck.
+    const heroAsset = STEAK_GUIDE_PHOTO_ASSETS.find((asset) => asset.key === "hero")!;
+    expect(imageSrcs).not.toContain(heroAsset.src);
+  });
+
+  it("story-deck CTAs only point to real in-page anchors or existing routes", () => {
+    const usedIds = new Set<string>();
+    const anchorIds = new Set(
+      (post!.sections ?? []).map((section) => {
+        // Mirror BlogPostView's id assignment without importing the client component.
+        const base = section.title
+          .toLowerCase()
+          .trim()
+          .replace(/[^\p{L}\p{N}\s-]/gu, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+        let id = base || "section";
+        let suffix = 2;
+        while (usedIds.has(id)) id = `${base}-${suffix++}`;
+        usedIds.add(id);
+        return id;
+      }),
+    );
+
+    const blocks = allBlocks(post!.sections ?? []);
+    const deck = blocks.find(
+      (block): block is Extract<BlogBodyBlock, { type: "story-deck" }> =>
+        block.type === "story-deck",
+    )!;
+    for (const slide of deck.slides) {
+      for (const cta of slide.ctas ?? []) {
+        if (cta.href.startsWith("#")) {
+          expect(anchorIds.has(cta.href.slice(1))).toBe(true);
+        } else {
+          expect(cta.href.startsWith("/")).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("registers the new native widgets used by this post (cut diagram, order scenarios, bill explainer)", () => {
+    const blocks = allBlocks(post!.sections ?? []);
+    const widgetKeys = blocks
+      .filter((block): block is Extract<BlogBodyBlock, { type: "widget" }> => block.type === "widget")
+      .map((block) => block.widgetKey);
+    expect(widgetKeys).toContain("steak-cut-diagram");
+    expect(widgetKeys).toContain("steak-order-scenarios");
+    expect(widgetKeys).toContain("steak-bill-explainer");
+  });
+
+  it("has no fixed currency figures in the bill explainer (relative shares only)", () => {
+    const raw = readFileSync(
+      join(process.cwd(), "src/data/steak-bill-explainer.ts"),
+      "utf8",
+    );
+    expect(raw).not.toMatch(/\$\s?\d|\d\s?(usd|ars|руб|песо)/i);
+  });
+
+  it("uses only media assets with recorded license metadata, and never repeats the hero photo in the body", () => {
+    const heroAsset = STEAK_GUIDE_PHOTO_ASSETS.find((asset) => asset.key === "hero")!;
+    const bodyMediaBlocks = allBlocks(post!.sections ?? []).filter(
+      (block): block is Extract<BlogBodyBlock, { type: "media" }> => block.type === "media",
+    );
+    expect(bodyMediaBlocks.length).toBeGreaterThan(0);
+
+    for (const block of bodyMediaBlocks) {
+      expect(block.src).not.toBe(heroAsset.src);
+      const asset = STEAK_GUIDE_PHOTO_ASSETS.find((item) => item.src === block.src);
+      expect(asset).toBeTruthy();
+      expect(asset!.author.trim().length).toBeGreaterThan(0);
+      expect(asset!.sourceUrl).toMatch(/^https:\/\//);
+      expect(asset!.license).toMatch(/License$/);
+      expect(block.alt?.trim().length).toBeGreaterThan(0);
+    }
+
+    // Deduplicate by content hash — no two distinct manifest entries may share pixels.
+    const hashes = STEAK_GUIDE_PHOTO_ASSETS.map((asset) => asset.contentHash);
+    expect(new Set(hashes).size).toBe(hashes.length);
   });
 });

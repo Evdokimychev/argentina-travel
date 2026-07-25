@@ -43,13 +43,11 @@ export default function SteakCutSelector({
   const visible = selected.length === 0 ? STEAK_CUT_OPTIONS : ranked.slice(0, 3);
 
   return (
-    <section
-      className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5",
-        className,
-      )}
-      aria-label={labels.ariaLabel}
-    >
+    // No boxed "card" chrome here — the widget already lives inside a
+    // section that reads as part of the article. The cut list below is the
+    // one visible surface (hairline border, no shadow), not nested inside
+    // another bordered/shadowed wrapper.
+    <section className={className} aria-label={labels.ariaLabel}>
       <h3 className="font-heading text-base font-semibold text-charcoal">{labels.title}</h3>
       <p className="mt-1 text-sm text-slate">{labels.hint}</p>
 

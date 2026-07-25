@@ -29,6 +29,31 @@ export type BlogGalleryItem = {
   caption?: string;
 };
 
+export type StoryDeckCta = {
+  label: string;
+  href: string;
+};
+
+export type StoryDeckSlideImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+export type StoryDeckSlide = {
+  id: string;
+  title: string;
+  body: string;
+  /** Real photo shown in the visual panel; falls back to `icon` when omitted. */
+  image?: StoryDeckSlideImage;
+  /** Renders a full-width interactive widget (e.g. the cut diagram) below the text instead of an image/icon panel. */
+  widgetKey?: string;
+  bullets?: string[];
+  ctas?: StoryDeckCta[];
+  /** lucide-react icon name rendered aria-hidden in the visual panel. */
+  icon: string;
+};
+
 export type BlogVideoProvider = "youtube" | "vimeo";
 
 export type BlogContentEmbedKind = "tour" | "excursion" | "article" | "guide";
@@ -174,7 +199,14 @@ export type BlogBodyBlock =
   | { type: "tourism-infographic"; compact?: boolean }
   | { type: "tourism-timeline" }
   | { type: "budget"; items: BlogBudgetItem[]; note?: string }
-  | { type: "media"; src: string; alt: string; caption?: string }
+  | {
+      type: "media";
+      src: string;
+      alt: string;
+      caption?: string;
+      /** "small" floats a compact image beside body text on wide screens to break up long sections. Defaults to full-width. */
+      size?: "small" | "full";
+    }
   | {
       type: "image-text";
       src: string;
@@ -318,6 +350,12 @@ export type BlogBodyBlock =
       title?: string;
       items: Array<{ label: string; href: string; description?: string }>;
       density?: BlogEditorialDensity;
+    }
+  | {
+      type: "story-deck";
+      title: string;
+      ariaLabel: string;
+      slides: StoryDeckSlide[];
     };
 
 /** Alias for cross-content-type page builder (blog, guide, author_article, landing). */
