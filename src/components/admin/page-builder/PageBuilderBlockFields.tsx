@@ -715,6 +715,20 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             }
             placeholder="Индекс рекомендуемой колонки"
           />
+          <NativeSelect
+            value={block.mobileLayout ?? "cards"}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                mobileLayout: e.target.value as NonNullable<typeof block.mobileLayout>,
+              })
+            }
+          >
+            <option value="cards">mobile: cards</option>
+            <option value="stacked">mobile: stacked</option>
+            <option value="tabs">mobile: tabs</option>
+            <option value="scroll">mobile: scroll</option>
+          </NativeSelect>
         </div>
       );
 
@@ -921,6 +935,258 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Заголовок"
+          />
+        </div>
+      );
+
+    case "lead":
+      return (
+        <div className="space-y-2">
+          <NativeSelect
+            value={block.variant ?? "default"}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                variant: e.target.value as NonNullable<typeof block.variant>,
+              })
+            }
+          >
+            <option value="default">default</option>
+            <option value="wide">wide</option>
+            <option value="compact">compact</option>
+            <option value="with-icon">with-icon</option>
+            <option value="with-author-note">with-author-note</option>
+          </NativeSelect>
+          <textarea
+            className="min-h-[80px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.text}
+            onChange={(e) => onChange({ ...block, text: e.target.value })}
+            placeholder="Вводный абзац…"
+          />
+        </div>
+      );
+
+    case "photo":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.src}
+            onChange={(e) => onChange({ ...block, src: e.target.value })}
+            placeholder="/media/…"
+          />
+          <Input
+            value={block.alt}
+            onChange={(e) => onChange({ ...block, alt: e.target.value })}
+            placeholder="Alt (обязательно)"
+          />
+          <Input
+            value={block.caption ?? ""}
+            onChange={(e) => onChange({ ...block, caption: e.target.value || undefined })}
+            placeholder="Подпись (не повторяйте alt)"
+          />
+          {onPickMedia ? (
+            <Button type="button" variant="secondary" size="sm" onClick={onPickMedia}>
+              Выбрать из медиатеки
+            </Button>
+          ) : null}
+        </div>
+      );
+
+    case "article-summary":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок блока"
+          />
+          <textarea
+            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.items.map((item) => `${item.title}|${item.body}`).join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                items: e.target.value
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+                  .map((line) => {
+                    const [title, ...rest] = line.split("|");
+                    return { title: title ?? "", body: rest.join("|") };
+                  }),
+              })
+            }
+            placeholder={"Заголовок|Текст\nЕщё пункт|Описание"}
+          />
+          <p className="text-[11px] text-slate">Формат: заголовок|текст, по одному пункту на строку.</p>
+        </div>
+      );
+
+    case "sources":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Источники и дата проверки"
+          />
+          <textarea
+            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.items.map((item) => `${item.title}|${item.url}`).join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                items: e.target.value
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+                  .map((line) => {
+                    const [title, url] = line.split("|");
+                    return { title: title ?? "", url: url ?? "", type: "official" as const };
+                  }),
+              })
+            }
+            placeholder={"Название|https://example.com"}
+          />
+        </div>
+      );
+
+    case "country-tip":
+      return (
+        <div className="space-y-2">
+          <NativeSelect
+            value={block.variant ?? "ru-traveler"}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                variant: e.target.value as NonNullable<typeof block.variant>,
+              })
+            }
+          >
+            <option value="ru-traveler">Русскоязычному путешественнику</option>
+            <option value="different-practice">Отличается от привычной практики</option>
+            <option value="living-in-argentina">Если живёте в Аргентине</option>
+            <option value="scouting-trip">Поездка-разведка</option>
+          </NativeSelect>
+          <textarea
+            className="min-h-[90px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.body}
+            onChange={(e) => onChange({ ...block, body: e.target.value })}
+            placeholder="Текст совета…"
+          />
+        </div>
+      );
+
+    case "phrasebook":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Полезные фразы"
+          />
+          <textarea
+            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.items
+              .map((item) => `${item.original}|${item.translation}|${item.pronunciation ?? ""}`)
+              .join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                items: e.target.value
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+                  .map((line) => {
+                    const [original, translation, pronunciation] = line.split("|");
+                    return {
+                      original: original ?? "",
+                      translation: translation ?? "",
+                      pronunciation: pronunciation || undefined,
+                    };
+                  }),
+              })
+            }
+            placeholder={"Buenas tardes|Добрый день|буэнас тардес"}
+          />
+        </div>
+      );
+
+    case "option-selector":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок селектора"
+          />
+          <textarea
+            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.options
+              .map((item) => `${item.id}|${item.title}|${item.summary}`)
+              .join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                options: e.target.value
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+                  .map((line) => {
+                    const [id, title, ...rest] = line.split("|");
+                    return {
+                      id: id ?? "",
+                      title: title ?? "",
+                      summary: rest.join("|"),
+                    };
+                  }),
+              })
+            }
+            placeholder={"bife|Bife de Chorizo|Крупный стейк для первого знакомства"}
+          />
+        </div>
+      );
+
+    case "pros-cons":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Плюсы и минусы"
+          />
+          <label className="block space-y-1 text-xs text-slate">
+            Плюсы (по строке)
+            <textarea
+              className="min-h-[72px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+              value={listToLines(block.pros.items)}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  pros: { ...block.pros, items: linesToList(e.target.value) },
+                })
+              }
+            />
+          </label>
+          <label className="block space-y-1 text-xs text-slate">
+            Минусы (по строке)
+            <textarea
+              className="min-h-[72px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+              value={listToLines(block.cons.items)}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  cons: { ...block.cons, items: linesToList(e.target.value) },
+                })
+              }
+            />
+          </label>
+          <Input
+            value={block.recommendation ?? ""}
+            onChange={(e) =>
+              onChange({ ...block, recommendation: e.target.value || undefined })
+            }
+            placeholder="Рекомендация (необязательно)"
           />
         </div>
       );

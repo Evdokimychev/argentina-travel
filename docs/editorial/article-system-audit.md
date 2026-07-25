@@ -534,3 +534,58 @@ Admin
 3. Add **Storybook or `/admin/.../block-gallery`** demo route (currently missing).
 4. Migrate 1 section post (steak) and 1 widget post (best-time) to **explicit `blocks[]`** while keeping parser fallback.
 5. Document the **override precedence matrix** for editors (legacy → editorial → typed-blocks → CMS → cutover).
+
+---
+
+## 19. Decision matrix (компонент → решение)
+
+| Компонент | Текущее состояние | Решение | Совместимость |
+|-----------|-------------------|---------|---------------|
+| Gallery (`BlogGalleryBlock`) | Работает хорошо (grid) | Сохранить и расширить variants | Полная |
+| Rich gallery carousel | Отдельная client-реализация | Объединить через gallery variants + adapter | Через adapter |
+| Comparison table | Плохо на mobile (только scroll) | Responsive variants (`cards`/`stacked`/`tabs`/`scroll`) | Через optional `mobileLayout` |
+| Accordion | Content в details; FAQ отдельно | Сохранить; FAQ — preferred для Q&A | Сохранить schema |
+| Photo / media | Несколько реализаций (`media`, `image-text`, `section-image`, hero) | Унифицировать через `photo` + adapter от `media` | Через migration/alias |
+| Map | Точечно (`map`, `route-map`, mini-map) | Вынести в editorial registry | Полная |
+| Callout / Infobox | Дублирование вариантов | Системный Callout; infobox → deprecated alias | Через adapter |
+| FAQ | details/summary, JSON-LD | Сохранить и доработать deep links | Полная |
+| Checklist / Steps | Работают | Сохранить; density + interactive opt-in | Полная |
+| Facts grid | Работает | Системный FactGrid | Полная |
+| Author card | Inline + footer | Системный AuthorCard | Полная |
+| CTA / ticket / tour-booking | Три отдельных типа | ArticleCTA registry + keep aliases | Полная |
+| Budget / seasons | Travel widgets | Сохранить; CostBreakdown как расширение budget | Полная |
+| Season matrix / tourism widgets | First-class + widget key | Registry widgets only | Полная |
+| Sources | Legacy section title prose | Новый `sources` block | Adapter from section |
+| Article summary / story deck | Нет | Новый `article-summary` | Новое |
+| Phrasebook | Нет | Новый `phrasebook` | Новое |
+| Option selector | Нет (steak cuts prose) | Новый `option-selector` | Новое |
+| Country tip | Нет | Новый `country-tip` | Новое |
+| Pros/cons | Частично seasons | Новый `pros-cons` | Новое |
+| Lead / Heading | paragraph + subheading | Lead/Heading wrappers; keep aliases | Через adapter |
+| Video | YouTube/Vimeo | Сохранить + consent/lazy | Полная |
+| Quote | Есть | Сохранить | Полная |
+| TOC | Chip wall на mobile | Доработать collapsible groups | Layout change |
+| Rich-only (`spots`, `stats`, `ratings`) | Только parks | Bridge → body primitives / keep rich adapter | Через adapter |
+| Legacy slug overrides | Много слоёв | Документировать precedence; не удалять | Полная |
+
+### Источники истины
+
+1. **Публичный рендер секций:** `BlogBodyBlock` + `renderBlogBodyBlock`
+2. **CMS normalize:** `normalizeBlogBodyBlock` + `PAGE_BUILDER_BLOCKS`
+3. **Rich parks:** `BlogRichBlock` (отдельный pipeline до полной миграции)
+4. **Editorial registry (новое):** `src/editorial/registry` — meta-слой, aliases, migration, preview
+
+### Precedence overrides
+
+`section.body` parser → `section.blocks` → `getTypedBlocksForSection(slug, title)` → CMS merge (`resolveBlogPost`) → legacy section body overrides / replacement sections
+
+### Риски миграции
+
+- Dual schema drift (rich vs section)
+- Silent null on unknown blocks in renderer
+- Price prose / outdated numbers in steak guide
+- Travel widgets missing from page-builder picker
+- Horizontal table overflow as only mobile strategy
+- Chip TOC density on mobile
+- No visual gallery for QA of dark mode / density
+

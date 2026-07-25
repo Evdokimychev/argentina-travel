@@ -27,6 +27,7 @@ import BlogRouteMapBlock from "@/components/page-builder/blocks/BlogRouteMapBloc
 import BlogTourBookingBlock from "@/components/page-builder/blocks/BlogTourBookingBlock";
 import BlogVideoBlock from "@/components/page-builder/blocks/BlogVideoBlock";
 import BlogWidgetBlock from "@/components/page-builder/blocks/BlogWidgetBlock";
+import { renderEditorialBlock } from "@/editorial/renderers/EditorialBlockRenderer";
 import { sanitizeHtml } from "@/lib/rich-text";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
 import type { BlogPostSection } from "@/types";
@@ -39,7 +40,7 @@ type BlogSectionBodyProps = {
   linkifyText?: boolean;
 };
 
-function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
+function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
   switch (block.type) {
     case "paragraph":
       if (block.html?.trim()) {
@@ -186,6 +187,7 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           rows={block.rows}
           highlightColumn={block.highlightColumn}
           caption={block.caption}
+          mobileLayout={block.mobileLayout}
         />
       );
     case "cta":
@@ -237,9 +239,31 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           config={block.config}
         />
       );
-    default:
+    case "lead":
+    case "photo":
+    case "article-summary":
+    case "sources":
+    case "country-tip":
+    case "phrasebook":
+    case "option-selector":
+    case "pros-cons":
+      // Handled by editorial renderer; keep cases for exhaustive switch.
       return null;
+    default: {
+      const _exhaustive: never = block;
+      void _exhaustive;
+      return null;
+    }
   }
+}
+
+function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
+  return renderEditorialBlock({
+    block,
+    index,
+    linkifyText,
+    renderLegacy: renderLegacyBlock,
+  });
 }
 
 export default function BlogSectionBody({ section, postSlug, className, linkifyText }: BlogSectionBodyProps) {

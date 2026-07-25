@@ -1,8 +1,24 @@
 import type {
   BlogBodyBlock,
   BlogCalloutVariant,
+  BlogPhotoVariant,
   BlogSectionKind,
 } from "@/types/blog-content-blocks";
+
+const PHOTO_VARIANTS: BlogPhotoVariant[] = [
+  "full-width",
+  "content-width",
+  "wide",
+  "portrait",
+  "landscape",
+  "float-left",
+  "float-right",
+  "framed",
+  "edge-to-edge",
+  "editorial-split",
+  "with-quote",
+  "with-facts",
+];
 import { PAGE_BUILDER_BLOCK_BY_SLUG } from "@/lib/cms/page-builder/block-registry";
 
 const SECTION_KINDS: BlogSectionKind[] = ["default", "faq", "mistakes", "checklist"];
@@ -234,6 +250,13 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
         highlightColumn:
           typeof record.highlightColumn === "number" ? record.highlightColumn : undefined,
         caption: asString(record.caption) || undefined,
+        mobileLayout:
+          record.mobileLayout === "cards" ||
+          record.mobileLayout === "stacked" ||
+          record.mobileLayout === "tabs" ||
+          record.mobileLayout === "scroll"
+            ? record.mobileLayout
+            : undefined,
       };
     case "cta":
       return {
@@ -280,6 +303,15 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
           : [{ src: "", alt: "" }],
         columns:
           record.columns === 2 || record.columns === 4 ? record.columns : 3,
+        variant:
+          record.variant === "carousel" ||
+          record.variant === "filmstrip" ||
+          record.variant === "comparison" ||
+          record.variant === "location"
+            ? record.variant
+            : record.variant === "grid"
+              ? "grid"
+              : undefined,
       };
     case "video":
       return {
@@ -315,6 +347,147 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 ])
               )
             : undefined,
+      };
+    case "lead":
+      return {
+        type: "lead",
+        text: asString(record.text),
+        variant:
+          record.variant === "wide" ||
+          record.variant === "compact" ||
+          record.variant === "with-icon" ||
+          record.variant === "with-author-note"
+            ? record.variant
+            : "default",
+      };
+    case "photo":
+      return {
+        type: "photo",
+        src: asString(record.src),
+        alt: asString(record.alt),
+        caption: asString(record.caption) || undefined,
+        author: asString(record.author) || undefined,
+        sourceUrl: asString(record.sourceUrl) || undefined,
+        license: asString(record.license) || undefined,
+        width: typeof record.width === "number" ? record.width : undefined,
+        height: typeof record.height === "number" ? record.height : undefined,
+        priority: record.priority === true,
+        variant:
+          typeof record.variant === "string" &&
+          PHOTO_VARIANTS.includes(record.variant as BlogPhotoVariant)
+            ? (record.variant as BlogPhotoVariant)
+            : "content-width",
+      };
+    case "article-summary":
+      return {
+        type: "article-summary",
+        title: asString(record.title) || undefined,
+        variant:
+          record.variant === "horizontal-deck" ||
+          record.variant === "checklist" ||
+          record.variant === "key-facts" ||
+          record.variant === "quick-answer" ||
+          record.variant === "step-by-step" ||
+          record.variant === "timeline-summary"
+            ? record.variant
+            : "cards",
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                title: asString(item.title),
+                body: asString(item.body),
+                href: asString(item.href) || undefined,
+              }))
+          : [],
+      };
+    case "sources":
+      return {
+        type: "sources",
+        title: asString(record.title) || undefined,
+        variant:
+          record.variant === "compact" || record.variant === "expandable"
+            ? record.variant
+            : "grouped",
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                title: asString(item.title),
+                url: asString(item.url),
+                publisher: asString(item.publisher) || undefined,
+                accessedAt: asString(item.accessedAt) || undefined,
+                language: asString(item.language) || undefined,
+                type:
+                  item.type === "legal" ||
+                  item.type === "primary-data" ||
+                  item.type === "ru-context" ||
+                  item.type === "personal" ||
+                  item.type === "updates"
+                    ? item.type
+                    : "official",
+                notes: asString(item.notes) || undefined,
+              }))
+          : [],
+      };
+    case "country-tip":
+      return {
+        type: "country-tip",
+        variant:
+          record.variant === "different-practice" ||
+          record.variant === "living-in-argentina" ||
+          record.variant === "scouting-trip"
+            ? record.variant
+            : "ru-traveler",
+        title: asString(record.title) || undefined,
+        body: asString(record.body),
+      };
+    case "phrasebook":
+      return {
+        type: "phrasebook",
+        title: asString(record.title) || undefined,
+        category: asString(record.category) || undefined,
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                original: asString(item.original),
+                translation: asString(item.translation),
+                pronunciation: asString(item.pronunciation) || undefined,
+                context: asString(item.context) || undefined,
+              }))
+          : [],
+      };
+    case "option-selector":
+      return {
+        type: "option-selector",
+        title: asString(record.title) || undefined,
+        description: asString(record.description) || undefined,
+        options: Array.isArray(record.options)
+          ? record.options
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                id: asString(item.id) || asString(item.title).toLowerCase().replace(/\s+/g, "-"),
+                title: asString(item.title),
+                summary: asString(item.summary),
+                details: asString(item.details) || undefined,
+                meta: asString(item.meta) || undefined,
+              }))
+          : [],
+      };
+    case "pros-cons":
+      return {
+        type: "pros-cons",
+        title: asString(record.title) || undefined,
+        pros: {
+          title: asString((record.pros as Record<string, unknown> | undefined)?.title) || undefined,
+          items: asStringArray((record.pros as Record<string, unknown> | undefined)?.items),
+        },
+        cons: {
+          title: asString((record.cons as Record<string, unknown> | undefined)?.title) || undefined,
+          items: asStringArray((record.cons as Record<string, unknown> | undefined)?.items),
+        },
+        recommendation: asString(record.recommendation) || undefined,
       };
     default:
       return null;
@@ -409,6 +582,41 @@ export function blocksToPlainText(blocks: BlogBodyBlock[]): string {
           return [block.text, block.author, block.context].filter(Boolean).join("\n");
         case "faq":
           return block.items.map((i) => `${i.question}\n${i.answer}`).join("\n\n");
+        case "lead":
+          return block.text;
+        case "photo":
+          return [block.alt, block.caption].filter(Boolean).join("\n");
+        case "article-summary":
+          return [
+            block.title,
+            ...block.items.map((item) => `${item.title}\n${item.body}`),
+          ]
+            .filter(Boolean)
+            .join("\n");
+        case "sources":
+          return block.items.map((item) => `${item.title} ${item.url}`).join("\n");
+        case "country-tip":
+          return [block.title, block.body].filter(Boolean).join("\n");
+        case "phrasebook":
+          return block.items
+            .map((item) => `${item.original} — ${item.translation}`)
+            .join("\n");
+        case "option-selector":
+          return [
+            block.title,
+            ...block.options.map((item) => `${item.title}\n${item.summary}`),
+          ]
+            .filter(Boolean)
+            .join("\n");
+        case "pros-cons":
+          return [
+            block.title,
+            ...block.pros.items,
+            ...block.cons.items,
+            block.recommendation,
+          ]
+            .filter(Boolean)
+            .join("\n");
         default:
           return "";
       }

@@ -1,0 +1,1297 @@
+{
+  "generatedAt": "2026-07-25T21:09:19.237Z",
+  "postsScanned": 290,
+  "registrySize": 39,
+  "typedBlockSlugs": [
+    "el-chalten-i-fitts-roy",
+    "best-time-to-visit-argentina",
+    "argentinian-steak-guide",
+    "dni-cuil-argentina"
+  ],
+  "errorCount": 0,
+  "warningCount": 2,
+  "findings": [
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "blue-dollar-argentina-2026"
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "argentina-2-nedeli-marshrut",
+      "sectionTitle": "Маршрут на 14 дней по дням",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "vnzh-argentina-rezidenciya",
+      "sectionTitle": "Категории резиденции: какие бывают пути",
+      "index": 0
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-аренда-авто"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-за-7-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-рассвет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-закат"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-с-чем-совмещать"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-автобусы"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-хостелы"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-airbnb"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-asado"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-empanadas"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "buenos-aires-mate"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-за-7-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-за-10-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-жара"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-аренда-авто"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-с-чем-совмещать"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-за-3-дня"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-за-7-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-camping"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-circuito-chico"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "national-park-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-ветер"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-холод"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-camping"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-laguna-de-los-tres"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "trekking-mini-trekking"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-за-3-дня"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-malbec"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-bodega-tour"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-аренда-авто"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wine-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-whale-watching"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-penguins"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-condors"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-guanaco"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-за-3-дня"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "wildlife-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-asado"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-empanadas"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-mate"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-malbec"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "food-bodega-tour"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-авиабилеты"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-автобусы"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-аренда-авто"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-поезда"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-страховка"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-open-jaw"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "transport-стоповер"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-наличные"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-карты"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-90-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-страховка"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "money-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "safety-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "internet-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "internet-sim-карта"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "internet-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "internet-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "internet-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-palermo"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-recoleta"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-san-telmo"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-microcentro"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-puerto-madero"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-хостелы"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-airbnb"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-рассвет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-закат"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "ba-district-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-visa-free"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-90-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-продление"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-медстраховка"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-наличные"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-карты"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-sim-карта"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-airbnb"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "relocation-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-с-ребёнком"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-зимой"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-весной"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-летом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-осенью"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-с-гидом"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-ошибки"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-фото"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-сезон-дождей"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-жара"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-авиабилеты"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-отели"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "iguazu-с-чем-совмещать"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-за-3-дня"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-за-7-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-open-jaw"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-стоповер"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-с-чем-совмещать"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-авиабилеты"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-автобусы"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-советы-новичкам"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "itinerary-с-ребёнком"
+    }
+  ]
+}

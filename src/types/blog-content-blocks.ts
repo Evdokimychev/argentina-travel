@@ -51,6 +51,91 @@ export type BlogFactItem = {
   description?: string;
 };
 
+/** Visual density for editorial blocks (comfortable is default). */
+export type BlogEditorialDensity = "compact" | "comfortable" | "spacious";
+
+export type BlogComparisonMobileLayout = "cards" | "stacked" | "tabs" | "scroll";
+
+export type BlogPhotoVariant =
+  | "full-width"
+  | "content-width"
+  | "wide"
+  | "portrait"
+  | "landscape"
+  | "float-left"
+  | "float-right"
+  | "framed"
+  | "edge-to-edge"
+  | "editorial-split"
+  | "with-quote"
+  | "with-facts";
+
+export type BlogGalleryVariant =
+  | "grid"
+  | "carousel"
+  | "filmstrip"
+  | "comparison"
+  | "location";
+
+export type BlogArticleSummaryVariant =
+  | "cards"
+  | "horizontal-deck"
+  | "checklist"
+  | "key-facts"
+  | "quick-answer"
+  | "step-by-step"
+  | "timeline-summary";
+
+export type BlogCountryTipVariant =
+  | "ru-traveler"
+  | "different-practice"
+  | "living-in-argentina"
+  | "scouting-trip";
+
+export type BlogSourceGroup =
+  | "official"
+  | "legal"
+  | "primary-data"
+  | "ru-context"
+  | "personal"
+  | "updates";
+
+export type BlogSourceItem = {
+  title: string;
+  url: string;
+  publisher?: string;
+  accessedAt?: string;
+  language?: string;
+  type?: BlogSourceGroup;
+  notes?: string;
+};
+
+export type BlogPhraseItem = {
+  original: string;
+  translation: string;
+  pronunciation?: string;
+  context?: string;
+};
+
+export type BlogOptionSelectorItem = {
+  id: string;
+  title: string;
+  summary: string;
+  details?: string;
+  meta?: string;
+};
+
+export type BlogProsConsSide = {
+  title?: string;
+  items: string[];
+};
+
+export type BlogArticleSummaryItem = {
+  title: string;
+  body: string;
+  href?: string;
+};
+
 /** Payload Blocks–compatible union — stored in content_documents JSONB. */
 export type BlogBodyBlock =
   | { type: "paragraph"; text: string; html?: string }
@@ -65,6 +150,7 @@ export type BlogBodyBlock =
       rows: string[][];
       highlightColumn?: number;
       caption?: string;
+      mobileLayout?: BlogComparisonMobileLayout;
     }
   | { type: "callout"; variant: BlogCalloutVariant; title: string; body: string }
   | { type: "infobox"; variant: BlogInfoboxVariant; title: string; body: string }
@@ -119,7 +205,12 @@ export type BlogBodyBlock =
       author?: string;
       context?: string;
     }
-  | { type: "gallery"; items: BlogGalleryItem[]; columns?: 2 | 3 | 4 }
+  | {
+      type: "gallery";
+      items: BlogGalleryItem[];
+      columns?: 2 | 3 | 4;
+      variant?: BlogGalleryVariant;
+    }
   | {
       type: "video";
       provider: BlogVideoProvider;
@@ -132,6 +223,69 @@ export type BlogBodyBlock =
       widgetKey: string;
       title?: string;
       config?: Record<string, string>;
+    }
+  | {
+      type: "lead";
+      text: string;
+      variant?: "default" | "wide" | "compact" | "with-icon" | "with-author-note";
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "photo";
+      src: string;
+      alt: string;
+      caption?: string;
+      author?: string;
+      sourceUrl?: string;
+      license?: string;
+      width?: number;
+      height?: number;
+      priority?: boolean;
+      variant?: BlogPhotoVariant;
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "article-summary";
+      title?: string;
+      variant?: BlogArticleSummaryVariant;
+      items: BlogArticleSummaryItem[];
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "sources";
+      title?: string;
+      variant?: "compact" | "grouped" | "expandable";
+      items: BlogSourceItem[];
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "country-tip";
+      variant?: BlogCountryTipVariant;
+      title?: string;
+      body: string;
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "phrasebook";
+      title?: string;
+      category?: string;
+      items: BlogPhraseItem[];
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "option-selector";
+      title?: string;
+      description?: string;
+      options: BlogOptionSelectorItem[];
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "pros-cons";
+      title?: string;
+      pros: BlogProsConsSide;
+      cons: BlogProsConsSide;
+      recommendation?: string;
+      density?: BlogEditorialDensity;
     };
 
 /** Alias for cross-content-type page builder (blog, guide, author_article, landing). */
