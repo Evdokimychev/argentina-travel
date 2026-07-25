@@ -14,9 +14,16 @@ type BlogArticleFeedbackProps = {
   slug: string;
   title: string;
   className?: string;
+  /** Без собственной карточки — внутри общего блока вовлечения */
+  embedded?: boolean;
 };
 
-export default function BlogArticleFeedback({ slug, title, className }: BlogArticleFeedbackProps) {
+export default function BlogArticleFeedback({
+  slug,
+  title,
+  className,
+  embedded = false,
+}: BlogArticleFeedbackProps) {
   const [value, setValue] = useState<BlogArticleFeedbackValue | null>(null);
 
   useEffect(() => {
@@ -29,17 +36,17 @@ export default function BlogArticleFeedback({ slug, title, className }: BlogArti
     trackBlogArticleFeedback({ slug, title, value: next });
   }
 
-  return (
-    <aside
-      className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5",
-        className,
-      )}
-      aria-label="Оценка материала"
-    >
-      <p className="text-sm font-medium text-charcoal">Было полезно?</p>
-      <p className="mt-1 text-xs text-slate">Ваш отклик помогает улучшать журнал</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+  const body = (
+    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-charcoal">Было полезно?</p>
+        <p className="mt-0.5 text-xs text-slate">
+          {value
+            ? "Спасибо за отклик — учтём при обновлении материала."
+            : "Ваш отклик помогает улучшать журнал"}
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-2 sm:shrink-0">
         <button
           type="button"
           aria-pressed={value === "helpful"}
@@ -69,9 +76,26 @@ export default function BlogArticleFeedback({ slug, title, className }: BlogArti
           Мало пользы
         </button>
       </div>
-      {value ? (
-        <p className="mt-3 text-xs text-slate">Спасибо за отклик — учтём при обновлении материала.</p>
-      ) : null}
+    </div>
+  );
+
+  if (embedded) {
+    return (
+      <div className={className} aria-label="Оценка материала">
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <aside
+      className={cn(
+        "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5",
+        className,
+      )}
+      aria-label="Оценка материала"
+    >
+      {body}
     </aside>
   );
 }

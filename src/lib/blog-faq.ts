@@ -29,11 +29,53 @@ function isFaqSection(section: BlogPostSection): boolean {
   );
 }
 
-/** Parses FAQ pairs from section body text («Вопрос? Ответ.») */
-export function extractFaqFromBody(body: string): BlogFaqItem[] {
-  if (!body.trim()) return [];
+/** Strip list markers / leftover bold wrappers from a FAQ question. */
+function normalizeFaqQuestion(raw: string): string {
+  return raw
+    .replace(/^\*+\s*/, "")
+    .replace(/\*+\s*$/, "")
+    .replace(/^(?:\d+\.\s*)+/, "")
+    .replace(/^(?:\([^)]{2,80}\)\s*)+/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-  const text = cleanLegacyBlogSourceMarkers(body).replace(/\s+/g, " ");
+/** Normalize answer text; drop leaked next-item numbers (`…пейзажами. 2.`). */
+function normalizeFaqAnswer(raw: string): string {
+  return raw
+    .replace(/^\*+\s*/, "")
+    .replace(/\s+\d+\.\s*$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Manual-from-md FAQ format:
+ * `**1. Question?**\nAnswer.\n\n**2. Next?**\nAnswer.`
+ */
+function extractNumberedBoldFaq(body: string): BlogFaqItem[] {
+  const headerRe = /^\*\*\s*(?:\d+\.\s*)?(.+?\?)\s*\*\*\s*$/gm;
+  const headers = Array.from(body.matchAll(headerRe));
+  if (headers.length === 0) return [];
+
+  return headers.flatMap((match, index) => {
+    const question = normalizeFaqQuestion(match[1] ?? "");
+    const answerStart = (match.index ?? 0) + match[0].length;
+    const answerEnd =
+      index + 1 < headers.length ? (headers[index + 1].index ?? body.length) : body.length;
+    const answer = normalizeFaqAnswer(body.slice(answerStart, answerEnd));
+    return question && answer ? [{ question, answer }] : [];
+  });
+}
+
+/**
+ * Compact plain-text FAQ («Вопрос? Ответ. Следующий? …»).
+ * Sentence boundaries must ignore numbered markers (`2. Next…`).
+ */
+function extractCompactFaq(body: string): BlogFaqItem[] {
+  const text = body.replace(/\s+/g, " ").trim();
+  if (!text) return [];
+
   const questionEnds = Array.from(text.matchAll(/\?/g), (match) => match.index);
   if (questionEnds.length === 0) return [];
 
@@ -42,7 +84,8 @@ export function extractFaqFromBody(body: string): BlogFaqItem[] {
 
     const previousQuestionEnd = questionEnds[index - 1];
     const between = text.slice(previousQuestionEnd + 1, questionEnd);
-    const sentenceBoundaries = Array.from(between.matchAll(/[.!]\s+/g));
+    // Do not treat `2.` / `10.` list markers as sentence ends.
+    const sentenceBoundaries = Array.from(between.matchAll(/(?<!\d)[.!](?!\d)\s+/g));
     const lastBoundary = sentenceBoundaries.at(-1);
 
     return lastBoundary?.index == null
@@ -53,14 +96,22 @@ export function extractFaqFromBody(body: string): BlogFaqItem[] {
   return questionEnds.flatMap((questionEnd, index) => {
     const questionStart = questionStarts[index];
     const answerEnd = questionStarts[index + 1] ?? text.length;
-    const question = text
-      .slice(questionStart, questionEnd + 1)
-      .replace(/^(?:\([^)]{2,80}\)\s*)+/, "")
-      .trim();
-    const answer = text.slice(questionEnd + 1, answerEnd).trim();
+    const question = normalizeFaqQuestion(text.slice(questionStart, questionEnd + 1));
+    const answer = normalizeFaqAnswer(text.slice(questionEnd + 1, answerEnd));
 
     return question && answer ? [{ question, answer }] : [];
   });
+}
+
+/** Parses FAQ pairs from section body text («Вопрос? Ответ.» or `**1. Q?**`). */
+export function extractFaqFromBody(body: string): BlogFaqItem[] {
+  if (!body.trim()) return [];
+
+  const cleaned = cleanLegacyBlogSourceMarkers(body);
+  const numbered = extractNumberedBoldFaq(cleaned);
+  if (numbered.length > 0) return numbered;
+
+  return extractCompactFaq(cleaned);
 }
 
 /** Извлекает пары вопрос–ответ из секции FAQ (формат «Вопрос? Ответ.») */
