@@ -47,6 +47,12 @@ function emptyBodyFromSource(body: CmsDocumentBody): CmsDocumentBody {
         description: "",
         sections: [{ paragraphs: [""] }],
       };
+    case "landing":
+      return {
+        kind: "landing",
+        description: "",
+        sections: [{ paragraphs: [""] }],
+      };
     case "destination":
       return {
         kind: "destination",

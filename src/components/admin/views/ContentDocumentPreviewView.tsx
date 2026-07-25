@@ -7,6 +7,10 @@ import { AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import CmsDocumentPreviewContent from "@/components/admin/cms/CmsDocumentPreviewContent";
 import CmsPreviewBanner from "@/components/admin/cms/CmsPreviewBanner";
+import PreviewDeviceFrame, {
+  type PreviewTheme,
+  type PreviewViewport,
+} from "@/components/admin/cms/PreviewDeviceFrame";
 import {
   mergeCmsDocumentWithPreviewDraft,
   readStagedCmsDocumentPreviewDraft,
@@ -26,6 +30,8 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [doc, setDoc] = useState<CmsDocument | null>(null);
+  const [viewport, setViewport] = useState<PreviewViewport>("desktop");
+  const [theme, setTheme] = useState<PreviewTheme>("light");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -73,10 +79,18 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
         {error ? <p className="px-4 text-sm text-red-600 md:px-6">{error}</p> : null}
 
         {previewDoc ? (
-          <>
+          <div className="px-4 pb-8 md:px-6">
             <CmsPreviewBanner doc={previewDoc} liveDraft={liveDraft} />
-            <CmsDocumentPreviewContent doc={previewDoc} />
-          </>
+            <PreviewDeviceFrame
+              className="mt-4"
+              viewport={viewport}
+              theme={theme}
+              onViewportChange={setViewport}
+              onThemeChange={setTheme}
+            >
+              <CmsDocumentPreviewContent doc={previewDoc} />
+            </PreviewDeviceFrame>
+          </div>
         ) : null}
       </AdminPageShell>
     </CapabilityGate>

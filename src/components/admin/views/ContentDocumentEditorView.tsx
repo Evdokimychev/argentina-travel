@@ -25,6 +25,7 @@ import type {
   CmsDocumentBody,
   CmsDocumentSeo,
   CmsGuideBody,
+  CmsLandingBody,
   CmsLegalBody,
   CmsPlaceBody,
   CmsRevision,
@@ -42,6 +43,7 @@ import {
   scheduledPublishAtToDatetimeLocalValue,
 } from "@/lib/cms/cms-scheduled-publish";
 import { normalizeGuideSectionForCms } from "@/lib/content-section-body";
+import { usePageBuilderAutosave } from "@/hooks/usePageBuilderAutosave";
 import { useUnsavedChangesGuard } from "@/hooks/useUnsavedChangesGuard";
 import {
   buildSessionDraftKey,
@@ -177,7 +179,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     if (draft.body.kind === "legal") {
       setDescription(draft.body.description);
       setSections(draft.body.sections);
-    } else if (draft.body.kind === "guide") {
+    } else if (draft.body.kind === "guide" || draft.body.kind === "landing") {
       setDescription(draft.body.description);
       setGuideCategory(draft.body.category ?? "");
       setSections(draft.body.sections);
@@ -351,6 +353,16 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         relatedLinks: doc.body.relatedLinks,
         relatedTourQuery: doc.body.relatedTourQuery,
       } satisfies CmsGuideBody;
+    }
+    if (doc?.body.kind === "landing") {
+      return {
+        kind: "landing",
+        description: description.trim(),
+        category: guideCategory.trim() || undefined,
+        sections: sections.map((section) => normalizeGuideSectionForCms(section)),
+        relatedLinks: doc.body.relatedLinks,
+        relatedTourQuery: doc.body.relatedTourQuery,
+      } satisfies CmsLandingBody;
     }
     if (doc?.body.kind === "destination") {
       return {
@@ -564,6 +576,84 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     }
   }
 
+  /** Status-preserving PATCH — used by publish prep and autosave (never forces draft). */
+  const persistContent = useCallback(async (): Promise<CmsDocument | null> => {
+    if (!doc) return null;
+    const nextBody = buildBody();
+    const nextSeo = buildSeo();
+    const nextTitle = title.trim();
+    const res = await fetch(`/api/admin/content/documents/${encodedId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: nextTitle,
+        body: nextBody,
+        seo: nextSeo,
+        expectedVersion: doc.rowVersion,
+      }),
+    });
+    const json = (await res.json()) as DocumentResponse;
+    if (!res.ok || !json.document) {
+      throw new Error(json.error ?? "Ошибка сохранения");
+    }
+    setDoc(json.document);
+    setStatus(json.document.status);
+    setBaselineFingerprint(
+      JSON.stringify({
+        title: nextTitle,
+        status: json.document.status,
+        seo: nextSeo,
+        scheduleAtLocal,
+        body: nextBody,
+      } satisfies CmsEditorDraft),
+    );
+    return json.document;
+  }, [
+    doc,
+    encodedId,
+    title,
+    description,
+    guideCategory,
+    sections,
+    excerpt,
+    blogSections,
+    blogFeatured,
+    blogRelatedDestinations,
+    knowledgeAuthorName,
+    knowledgeAuthorSlug,
+    knowledgeAuthorBio,
+    knowledgeAuthorAvatar,
+    knowledgePersonalExperience,
+    knowledgeVerifiedByAuthor,
+    destinationIntro,
+    destinationRegionGroup,
+    destinationBestSeason,
+    destinationIdealDuration,
+    destinationHowToGetThere,
+    destinationHighlights,
+    destinationTravelTips,
+    placeShortDescription,
+    placeFullDescription,
+    placeHowToGetThere,
+    placeInterestingFacts,
+    placeRelatedTourSlugs,
+    seo,
+    scheduleAtLocal,
+  ]);
+
+  const autosavePayload = useMemo(
+    () => ({ fingerprint: draftFingerprint }),
+    [draftFingerprint],
+  );
+
+  const runAutosave = useCallback(async () => {
+    await persistContent();
+  }, [persistContent]);
+
+  usePageBuilderAutosave(autosavePayload, runAutosave, {
+    enabled: Boolean(doc) && !loading && isDirty && !saving,
+  });
+
   async function saveDraft() {
     if (!doc) return;
     if (
@@ -602,24 +692,12 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     if (!window.confirm("Опубликовать текущую редакцию на сайте?")) return;
     setSaving(true);
     try {
-      const saveResponse = await fetch(`/api/admin/content/documents/${encodedId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title.trim(),
-          body: buildBody(),
-          seo: buildSeo(),
-          expectedVersion: doc.rowVersion,
-        }),
-      });
-      const saved = (await saveResponse.json()) as DocumentResponse;
-      if (!saveResponse.ok) {
-        throw new Error(saved.error ?? "Не удалось сохранить изменения перед публикацией");
-      }
+      const saved = await persistContent();
+      if (!saved) throw new Error("Не удалось сохранить изменения перед публикацией");
       const res = await fetch(`/api/admin/content/documents/${encodedId}/publish`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ expectedVersion: saved.document?.rowVersion }),
+        body: JSON.stringify({ expectedVersion: saved.rowVersion }),
       });
       const json = (await res.json()) as DocumentResponse;
       if (!res.ok) throw new Error(json.error ?? "Ошибка публикации");
@@ -752,6 +830,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
   const isLegal = doc.body.kind === "legal";
   const isGuide = doc.body.kind === "guide";
+  const isLanding = doc.body.kind === "landing";
   const isKnowledge = doc.docType === "knowledge";
   const isBlog = doc.body.kind === "blog" && !isKnowledge;
   const isAuthorArticle = doc.body.kind === "author_article";
@@ -762,15 +841,17 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     ? `/legal/${doc.slug}`
     : isGuide
       ? `/guide/${doc.slug}`
-      : isKnowledge
-        ? `/baza-znaniy/${doc.slug}`
-        : isBlog
-          ? `/blog/${doc.slug}`
-        : isAuthorArticle
-          ? `/blog/author/${doc.slug}`
-          : isDestination
-            ? `/destinations/${doc.slug}`
-            : `/places/${doc.slug}`;
+      : isLanding
+        ? `/landing/${doc.slug}`
+        : isKnowledge
+          ? `/baza-znaniy/${doc.slug}`
+          : isBlog
+            ? `/blog/${doc.slug}`
+            : isAuthorArticle
+              ? `/blog/author/${doc.slug}`
+              : isDestination
+                ? `/destinations/${doc.slug}`
+                : `/places/${doc.slug}`;
   const publicHref = addLocalePrefix(publicPathWithoutLocale, currentLocale);
 
   const isScheduled = status === "scheduled";
@@ -786,7 +867,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           title={title || doc.title}
           subtitle={`CMS · ${doc.docType} · ${doc.slug} · ${currentLocale} · ${status}${
             scheduledLabel ? ` · ${scheduledLabel}` : ""
-          }`}
+          }${isDirty ? " · есть несохранённые правки (автосохранение ~3 с)" : ""}`}
           actions={
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" disabled={saving} onClick={() => void saveDraft()}>
@@ -875,7 +956,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </label>
 
-            {isLegal || isGuide || isDestination ? (
+            {isLegal || isGuide || isLanding || isDestination ? (
               <label className="block space-y-1 text-sm">
                 <span className="text-slate">
                   {isDestination ? "Краткое описание (в шапке страницы)" : "Описание страницы"}
@@ -884,7 +965,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </label>
             ) : null}
 
-            {isGuide ? (
+            {isGuide || isLanding ? (
               <label className="block space-y-1 text-sm">
                 <span className="text-slate">Категория</span>
                 <Input value={guideCategory} onChange={(e) => setGuideCategory(e.target.value)} />
@@ -1134,6 +1215,16 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 onChange={setSections}
                 title="Конструктор путеводителя"
                 starterPatterns={["practical-guide", "destination-page-body", "day-by-day-route"]}
+              />
+            ) : null}
+
+            {isLanding ? (
+              <GuideSectionPageBuilder
+                sections={sections}
+                onChange={setSections}
+                title="Конструктор лендинга"
+                starterPatterns={["hub-intro", "destination-page-body", "practical-guide"]}
+                helpText="Маркетинговая страница: баннеры, блоки с призывом к действию, связанные ссылки и практические секции."
               />
             ) : null}
 

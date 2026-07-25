@@ -59,7 +59,8 @@
 | `knowledge` | ✓ | VisualPageBuilder + blocks в markdown body |
 | `destination` | ✓ | Форма шапки + VisualPageBuilder (`sections`) |
 | `place` | ✓ | Форма шапки + VisualPageBuilder (`sections`) |
-| `landing` / homepage hubs | Phase 3 | Тот же builder + layout shell |
+| `landing` | ✓ Phase 3A | VisualPageBuilder → `/landing/[slug]` |
+| homepage / marketplace hubs | Phase 3B | CMS modules strip (не article sections) |
 | `legal` | rich-text sections | CmsSectionEditor |
 
 ---

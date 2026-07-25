@@ -56,6 +56,7 @@ const DOC_TYPE_LABELS: Record<ContentFreshnessDocType, string> = {
   destination: "Направления",
   place: "Места",
   author_article: "Статьи экспертов",
+  landing: "Лендинги",
 };
 
 function formatRuDate(value: string): string {

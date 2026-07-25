@@ -37,6 +37,7 @@ type ContentResponse = ContentInventorySummary & {
   guideEditable?: LegalEditableRow[];
   destinationEditable?: LegalEditableRow[];
   placeEditable?: LegalEditableRow[];
+  landingEditable?: LegalEditableRow[];
   cmsCount?: number;
   translationCoverage?: CmsTranslationCoverageByType[];
 };
@@ -177,6 +178,36 @@ export default function ContentDocumentsView() {
       });
       const json = (await res.json()) as { document?: { id: string }; error?: string };
       if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createLandingDocument() {
+    const slug = window.prompt("Slug лендинга (латиница, дефисы):")?.trim();
+    if (!slug) return;
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      alert("Slug должен быть в формате latin-kebab-case");
+      return;
+    }
+    const title =
+      window.prompt("Заголовок лендинга:", slug.replace(/-/g, " "))?.trim() || slug;
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "landing", slug, title }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать лендинг");
       if (json.document?.id) {
         router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
       } else {
@@ -363,6 +394,30 @@ export default function ContentDocumentsView() {
             </ul>
           </section>
         ) : null}
+
+        <section className={`${cabinetCardClass} overflow-hidden`}>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-4">
+            <h2 className="font-heading text-lg font-bold text-charcoal">Лендинги (CMS)</h2>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={creatingSlug !== null}
+              onClick={() => void createLandingDocument()}
+            >
+              Создать лендинг
+            </Button>
+          </div>
+          {data?.landingEditable?.length ? (
+            <ul className="divide-y divide-gray-100">
+              {data.landingEditable.map((row) => renderCmsRow(row, () => undefined))}
+            </ul>
+          ) : (
+            <p className="px-5 py-4 text-sm text-slate">
+              Пока нет лендингов. Создайте маркетинговую страницу с конструктором блоков — она
+              появится по адресу `/landing/…`.
+            </p>
+          )}
+        </section>
 
         <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Файловый каталог</h2>

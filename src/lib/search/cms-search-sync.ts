@@ -41,6 +41,8 @@ export function cmsDocumentSearchId(doc: Pick<CmsDocument, "docType" | "slug">):
       return `knowledge-${doc.slug}`;
     case "guide":
       return `guide-${doc.slug}`;
+    case "landing":
+      return `landing-${doc.slug}`;
     case "legal":
       return `legal-${doc.slug}`;
     case "destination":
@@ -86,6 +88,15 @@ export function cmsDocumentToSearchIndexItem(doc: CmsDocument): SearchIndexItem 
         description: doc.body.description,
         href: `/guide/${doc.slug}`,
         keywords: [doc.body.category ?? "путеводитель", ...keywords],
+      };
+    case "landing":
+      return {
+        id: `landing-${doc.slug}`,
+        type: "page",
+        title: doc.title,
+        description: doc.body.description,
+        href: `/landing/${doc.slug}`,
+        keywords: [doc.body.category ?? "лендинг", ...keywords],
       };
     case "legal":
       return {

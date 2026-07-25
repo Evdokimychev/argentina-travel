@@ -14,6 +14,7 @@
 | destination | сезон, логистика, tips | ✓ `sections` | `CmsContentSections` |
 | place | описание, facts, FAQ | ✓ `sections` | `CmsContentSections` |
 | legal | — | CmsSectionEditor | legal view |
+| landing | description / category | ✓ | `ContentPageView` · `/landing/[slug]` |
 
 ## Новые layout-блоки
 
@@ -37,11 +38,17 @@ Travel widgets в picker: `season-matrix`, `tourism-infographic`, `tourism-timel
 - Стабильные client id разделов (без remount при каждом keystroke)
 - Safe fallback для неизвестного типа блока в карточке
 
-## Следующие итерации (Phase 3+)
+## Phase 3A (сделано)
 
-1. `landing` docType + публичный shell для маркетинговых страниц
-2. Композиция homepage / marketplace через CMS modules (не через article sections)
-3. Immigration pillars cutover
-4. Autosave в admin editor
-5. Slash-menu / Tiptap для inline paragraph
-6. Device frames в preview
+1. `landing` docType + публичный shell `/landing/[slug]`
+2. Autosave в admin editor (status-preserving PATCH, без принудительного `draft`)
+3. Device frames в CMS preview и каталоге редакционных блоков
+4. Immigration bridge: короткие `content_pages` на `/immigration/[slug]` рядом с pillar topics
+5. Исправление `content-mapper`: `sections` для destination/place
+
+## Следующие итерации (Phase 3B+)
+
+1. Композиция homepage / marketplace через CMS modules (не через article sections)
+2. Immigration pillars cutover (полноценный CMS override pillar shell)
+3. Slash-menu / Tiptap для inline paragraph
+4. Полный Zod на editorial schemas (сейчас lightweight validators)

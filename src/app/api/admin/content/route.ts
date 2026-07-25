@@ -5,6 +5,7 @@ import { buildCmsLocaleCoverage, computeTranslationCoverageByType } from "@/lib/
 import { fetchCmsOverrideMap } from "@/lib/cms/content-resolver";
 import { blogOverrideId } from "@/lib/cms/blog-resolver";
 import { guideOverrideId } from "@/lib/cms/guide-resolver";
+import { landingOverrideId } from "@/lib/cms/landing-resolver";
 import {
   destinationOverrideId,
   resolveDestinationCatalog,
@@ -129,12 +130,31 @@ export async function GET(request: Request) {
     };
   });
 
+  const landingEditable = Array.from(cmsMap.values())
+    .filter((doc) => doc.docType === "landing" && doc.locale === "ru")
+    .map((doc) => {
+      const cmsId = landingOverrideId(doc.slug);
+      const localeCoverage = buildCmsLocaleCoverage("landing", doc.slug, cmsMap);
+      return {
+        slug: doc.slug,
+        title: doc.title,
+        href: `/landing/${doc.slug}`,
+        cmsId,
+        cmsStatus: doc.status,
+        hasOverride: true,
+        publicSource: "cms" as const,
+        localeCoverage,
+      };
+    })
+    .sort((a, b) => a.title.localeCompare(b.title, "ru"));
+
   const translationCoverage = computeTranslationCoverageByType([
     { docType: "legal", rows: legalEditable },
     { docType: "blog", rows: blogEditable },
     { docType: "guide", rows: guideEditable },
     { docType: "destination", rows: destinationEditable },
     { docType: "place", rows: placeEditable },
+    { docType: "landing", rows: landingEditable },
   ]);
 
   const cmsDocuments = Array.from(cmsMap.values()).map((doc) => ({
@@ -155,6 +175,7 @@ export async function GET(request: Request) {
     guideEditable,
     destinationEditable,
     placeEditable,
+    landingEditable,
     cmsCount: cmsDocuments.length,
     translationCoverage,
   });

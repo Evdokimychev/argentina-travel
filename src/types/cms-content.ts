@@ -19,7 +19,8 @@ export type CmsDocType =
   | "guide"
   | "destination"
   | "place"
-  | "author_article";
+  | "author_article"
+  | "landing";
 
 export type CmsDocumentStatus = "draft" | "scheduled" | "published" | "archived";
 export type CmsWorkflowStage =
@@ -96,6 +97,16 @@ export type CmsGuideBody = {
   relatedTourQuery?: string;
 };
 
+/** Marketing / campaign pages assembled with the sitewide page builder. */
+export type CmsLandingBody = {
+  kind: "landing";
+  description: string;
+  category?: string;
+  sections: ContentSection[];
+  relatedLinks?: ContentRelatedLink[];
+  relatedTourQuery?: string;
+};
+
 export type CmsDestinationBody = {
   kind: "destination";
   description: string;
@@ -153,6 +164,7 @@ export type CmsDocumentBody =
   | CmsLegalBody
   | CmsBlogBody
   | CmsGuideBody
+  | CmsLandingBody
   | CmsDestinationBody
   | CmsPlaceBody
   | CmsAuthorArticleBody;
@@ -255,6 +267,23 @@ export function guideBodyFromTs(source: ContentPage): CmsGuideBody {
     description: source.description,
     category: source.category,
     sections: source.sections,
+    relatedLinks: source.relatedLinks,
+    relatedTourQuery: source.relatedTourQuery,
+  };
+}
+
+export function landingBodyFromContent(source: {
+  description: string;
+  category?: string;
+  sections?: ContentSection[];
+  relatedLinks?: ContentRelatedLink[];
+  relatedTourQuery?: string;
+}): CmsLandingBody {
+  return {
+    kind: "landing",
+    description: source.description,
+    category: source.category,
+    sections: source.sections ?? [],
     relatedLinks: source.relatedLinks,
     relatedTourQuery: source.relatedTourQuery,
   };
@@ -383,6 +412,22 @@ export function guidePageFromCms(doc: CmsDocument, fallback?: ContentPage): Cont
     title: doc.title,
     description: doc.body.description || fallback?.description || "",
     category: doc.body.category || fallback?.category || "Путеводитель",
+    updatedAt: doc.publishedAt?.slice(0, 10) ?? doc.updatedAt.slice(0, 10),
+    sections: doc.body.sections.length ? doc.body.sections : (fallback?.sections ?? []),
+    relatedLinks: doc.body.relatedLinks ?? fallback?.relatedLinks,
+    relatedTourQuery: doc.body.relatedTourQuery ?? fallback?.relatedTourQuery,
+  };
+}
+
+export function landingPageFromCms(doc: CmsDocument, fallback?: ContentPage): ContentPage | null {
+  if (doc.body.kind !== "landing") return null;
+
+  return {
+    slug: doc.slug,
+    section: "landing",
+    title: doc.title,
+    description: doc.body.description || fallback?.description || "",
+    category: doc.body.category || fallback?.category || "Лендинг",
     updatedAt: doc.publishedAt?.slice(0, 10) ?? doc.updatedAt.slice(0, 10),
     sections: doc.body.sections.length ? doc.body.sections : (fallback?.sections ?? []),
     relatedLinks: doc.body.relatedLinks ?? fallback?.relatedLinks,

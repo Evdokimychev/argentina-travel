@@ -17,6 +17,7 @@ import {
   getPagesBySection,
 } from "@/lib/content-pages";
 import { listPublishedGuideSlugs } from "@/lib/cms/guide-resolver";
+import { listPublishedLandingSlugs } from "@/lib/cms/landing-resolver";
 import { listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
 import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
@@ -225,6 +226,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     placesPaths,
     apartmentPaths,
     guideSlugs,
+    landingSlugs,
     destinationSlugs,
     legalSlugs,
     kbPaths,
@@ -234,6 +236,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     collectPlacesSitemapPaths(),
     collectApartmentSitemapPaths(),
     listPublishedGuideSlugs(),
+    listPublishedLandingSlugs(),
     listPublishedDestinationSlugs(),
     listPublishedLegalSlugs(),
     collectKnowledgeBaseSitemapPaths(),
@@ -248,6 +251,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   ];
   const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
   const guidePaths = guideSlugs.map((slug) => `/guide/${slug}`);
+  const landingPaths = landingSlugs.map((slug) => `/landing/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
   const destinationPaths = destinationSlugs.map((slug) => `/destinations/${slug}`);
   const legalPaths = legalSlugs.map((slug) => `/legal/${slug}`);
@@ -267,6 +271,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...blogPaths,
     ...immigrationPaths,
     ...guidePaths,
+    ...landingPaths,
     ...guideTopicPaths,
     GUIDE_ABOUT_ARGENTINA_PATH,
     ...destinationPaths,

@@ -47,4 +47,60 @@ describe("content mapper", () => {
       verifiedByAuthor: false,
     });
   });
+
+  it("parses destination and place page-builder sections from JSONB", () => {
+    const destinationRow: ContentDocumentRow = {
+      ...row,
+      id: "destination:patagonia:ru",
+      doc_type: "destination",
+      slug: "patagonia",
+      body: {
+        kind: "destination",
+        description: "Патагония",
+        sections: [
+          {
+            heading: "Практика",
+            blocks: [{ type: "callout", variant: "info", title: "Совет", body: "Берите слойность." }],
+          },
+        ],
+      },
+    };
+    const placeRow: ContentDocumentRow = {
+      ...row,
+      id: "place:perito:ru",
+      doc_type: "place",
+      slug: "perito-moreno-glacier",
+      body: {
+        kind: "place",
+        shortDescription: "Ледник",
+        fullDescription: "Полное описание",
+        sections: [{ heading: "Как добраться", paragraphs: ["Из Эль-Калафате."] }],
+      },
+    };
+    const landingRow: ContentDocumentRow = {
+      ...row,
+      id: "landing:spring:ru",
+      doc_type: "landing",
+      slug: "spring-campaign",
+      body: {
+        kind: "landing",
+        description: "Весенняя кампания",
+        sections: [{ heading: "Оффер", paragraphs: ["Скидка на туры."] }],
+      },
+    };
+
+    expect(rowToCmsDocument(destinationRow).body).toMatchObject({
+      kind: "destination",
+      sections: [{ heading: "Практика" }],
+    });
+    expect(rowToCmsDocument(placeRow).body).toMatchObject({
+      kind: "place",
+      sections: [{ heading: "Как добраться", paragraphs: ["Из Эль-Калафате."] }],
+    });
+    expect(rowToCmsDocument(landingRow).body).toMatchObject({
+      kind: "landing",
+      description: "Весенняя кампания",
+      sections: [{ heading: "Оффер" }],
+    });
+  });
 });
