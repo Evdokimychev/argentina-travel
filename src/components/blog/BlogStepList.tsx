@@ -1,3 +1,4 @@
+import { BlogInlineText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 
 type BlogStepListProps = {
@@ -30,7 +31,9 @@ export default function BlogStepList({ items, title, className }: BlogStepListPr
           >
             {index + 1}
           </span>
-          <span className="pt-0.5">{item}</span>
+          <span className="pt-0.5">
+            <BlogInlineText text={item} linkify />
+          </span>
         </li>
       ))}
     </ol>

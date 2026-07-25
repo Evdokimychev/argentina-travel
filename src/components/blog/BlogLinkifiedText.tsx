@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { linkifyBlogText } from "@/lib/blog-internal-links";
 
@@ -8,6 +9,46 @@ type LinkifiedTextProps = {
   className?: string;
   as?: "p" | "span";
 };
+
+/** Render a plain segment with **bold**, *italic*, and `code`. */
+function renderInlineMarkdownSegment(text: string, keyPrefix: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  const pattern = /(\*\*[^*]+\*\*|\*[^*\n]+\*|`[^`]+`)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let part = 0;
+
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push(
+        <span key={`${keyPrefix}-t-${part++}`}>{text.slice(lastIndex, match.index)}</span>,
+      );
+    }
+    const token = match[0];
+    if (token.startsWith("**") && token.endsWith("**")) {
+      nodes.push(
+        <strong key={`${keyPrefix}-b-${part++}`}>{token.slice(2, -2)}</strong>,
+      );
+    } else if (token.startsWith("`") && token.endsWith("`")) {
+      nodes.push(
+        <code key={`${keyPrefix}-c-${part++}`} className="rounded bg-surface-muted px-1 text-[0.9em]">
+          {token.slice(1, -1)}
+        </code>,
+      );
+    } else if (token.startsWith("*") && token.endsWith("*")) {
+      nodes.push(<em key={`${keyPrefix}-i-${part++}`}>{token.slice(1, -1)}</em>);
+    } else {
+      nodes.push(<span key={`${keyPrefix}-r-${part++}`}>{token}</span>);
+    }
+    lastIndex = match.index + token.length;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(<span key={`${keyPrefix}-t-${part++}`}>{text.slice(lastIndex)}</span>);
+  }
+
+  return nodes.length > 0 ? nodes : [<span key={`${keyPrefix}-empty`}>{text}</span>];
+}
 
 export function LinkifiedText({ text, className, as = "p" }: LinkifiedTextProps) {
   const segments = linkifyBlogText(text);
@@ -25,9 +66,27 @@ export function LinkifiedText({ text, className, as = "p" }: LinkifiedTextProps)
             {segment.label}
           </Link>
         ) : (
-          <span key={`text-${index}`}>{segment.value}</span>
+          <span key={`text-${index}`}>
+            {renderInlineMarkdownSegment(segment.value, `seg-${index}`)}
+          </span>
         ),
       )}
     </Tag>
   );
+}
+
+/** Inline Markdown + optional internal linkify for table cells and callouts. */
+export function BlogInlineText({
+  text,
+  className,
+  linkify = false,
+}: {
+  text: string;
+  className?: string;
+  linkify?: boolean;
+}) {
+  if (linkify) {
+    return <LinkifiedText text={text} className={className} as="span" />;
+  }
+  return <span className={className}>{renderInlineMarkdownSegment(text, "inline")}</span>;
 }

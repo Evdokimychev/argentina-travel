@@ -5,7 +5,7 @@ import BlogChecklist from "@/components/blog/BlogChecklist";
 import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import BlogMapBlock from "@/components/blog/BlogMapBlock";
-import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
+import { BlogInlineText, LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
@@ -42,6 +42,11 @@ type BlogSectionBodyProps = {
 function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
   switch (block.type) {
     case "paragraph":
+      if (linkifyText) {
+        return (
+          <LinkifiedText key={index} text={block.text} className="leading-relaxed text-slate" />
+        );
+      }
       if (block.html?.trim()) {
         return (
           <div
@@ -51,9 +56,7 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           />
         );
       }
-      return linkifyText ? (
-        <LinkifiedText key={index} text={block.text} className="leading-relaxed text-slate" />
-      ) : (
+      return (
         <p key={index} className="leading-relaxed text-slate">
           {block.text}
         </p>
@@ -64,7 +67,7 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           key={index}
           className="mt-5 font-heading text-base font-semibold text-charcoal first:mt-0 sm:text-lg"
         >
-          {block.text}
+          <BlogInlineText text={block.text} />
         </h3>
       );
     case "bullets":
@@ -73,7 +76,9 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           {block.items.map((item) => (
             <li key={item.slice(0, 48)} className="flex gap-2.5 text-sm leading-relaxed text-slate">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
-              <span>{item}</span>
+              <span>
+                <BlogInlineText text={item} linkify={linkifyText} />
+              </span>
             </li>
           ))}
         </ul>

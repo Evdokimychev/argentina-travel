@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import { BlogInlineText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 import type { BlogChecklistItem } from "@/types/blog-content-blocks";
 
@@ -45,7 +46,9 @@ export default function BlogChecklist({ items, title, className }: BlogChecklist
                 <Check className="h-3.5 w-3.5" />
               )}
             </span>
-            <span className={cn(item.negative && "text-charcoal/90")}>{item.text}</span>
+            <span className={cn(item.negative && "text-charcoal/90")}>
+              <BlogInlineText text={item.text} linkify />
+            </span>
           </li>
         ))}
       </ul>

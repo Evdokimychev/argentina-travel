@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { BlogInlineText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 
 type BlogContentTableProps = {
@@ -71,7 +72,7 @@ export default function BlogContentTable({
                     scope="col"
                     className="px-4 py-3 font-heading text-sm font-bold text-charcoal"
                   >
-                    {header}
+                    <BlogInlineText text={header} linkify />
                   </th>
                 ))}
               </tr>
@@ -88,7 +89,7 @@ export default function BlogContentTable({
                       cellIndex === 0 && "font-medium text-charcoal",
                     )}
                   >
-                    {cell}
+                    <BlogInlineText text={cell} linkify />
                   </td>
                 ))}
               </tr>
