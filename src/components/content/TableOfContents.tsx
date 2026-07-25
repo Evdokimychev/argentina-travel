@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, type MouseEvent } from "react";
+import { useMemo, useRef, type MouseEvent } from "react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { hubTocStickyMaxHeightClass, hubTocStickyTopClass } from "@/lib/site-container";
@@ -27,11 +28,18 @@ function TocList({
   items,
   activeId,
   mobile = false,
+  onItemNavigate,
 }: {
   items: ContentTocItem[];
   activeId?: string | null;
   mobile?: boolean;
+  onItemNavigate?: () => void;
 }) {
+  const onClick = (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    handleAnchorClick(id)(event);
+    onItemNavigate?.();
+  };
+
   if (mobile) {
     return (
       <ol className="mt-3 flex flex-wrap gap-2">
@@ -41,7 +49,7 @@ function TocList({
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
-                onClick={handleAnchorClick(item.id)}
+                onClick={onClick(item.id)}
                 aria-current={active ? "location" : undefined}
                 className={cn(
                   "blog-touch-target inline-flex items-center rounded-full border px-3 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
@@ -68,7 +76,7 @@ function TocList({
           <li key={item.id}>
             <a
               href={`#${item.id}`}
-              onClick={handleAnchorClick(item.id)}
+              onClick={onClick(item.id)}
               aria-current={active ? "location" : undefined}
               className={cn(
                 "blog-touch-target block rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
@@ -123,11 +131,16 @@ function TocSidebar({
 }
 
 function TocMobile({ items, className }: { items: ContentTocItem[]; className?: string }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
   const activeId = useContentTocScrollSpy(items);
   const activeLabel = useMemo(
     () => items.find((item) => item.id === activeId)?.label ?? items[0]?.label,
     [activeId, items]
   );
+
+  const collapse = () => {
+    if (detailsRef.current) detailsRef.current.open = false;
+  };
 
   return (
     <nav
@@ -138,7 +151,7 @@ function TocMobile({ items, className }: { items: ContentTocItem[]; className?: 
       )}
       aria-label="Содержание"
     >
-      <details className="group">
+      <details ref={detailsRef} className="group">
         <summary className="blog-touch-target cursor-pointer list-none rounded-lg font-heading text-sm font-bold text-charcoal marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
           <span className="flex min-w-0 items-center justify-between gap-3">
             <span className="shrink-0">Содержание</span>
@@ -150,10 +163,17 @@ function TocMobile({ items, className }: { items: ContentTocItem[]; className?: 
                 {activeLabel}
               </span>
             ) : null}
-            <span className="shrink-0 text-xs font-normal text-slate group-open:hidden">развернуть</span>
+            <span className="inline-flex shrink-0 items-center gap-1 text-xs font-normal text-slate">
+              <span className="group-open:hidden">развернуть</span>
+              <span className="hidden group-open:inline">свернуть</span>
+              <ChevronDown
+                className="h-4 w-4 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+                aria-hidden
+              />
+            </span>
           </span>
         </summary>
-        <TocList items={items} activeId={activeId} mobile />
+        <TocList items={items} activeId={activeId} mobile onItemNavigate={collapse} />
       </details>
     </nav>
   );
