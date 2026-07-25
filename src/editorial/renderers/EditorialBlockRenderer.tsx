@@ -9,6 +9,9 @@ import OptionSelector from "@/editorial/blocks/OptionSelector";
 import ProsCons from "@/editorial/blocks/ProsCons";
 import PhotoBlock from "@/editorial/media/PhotoBlock";
 import FallbackBlock from "@/editorial/renderers/FallbackBlock";
+import HeroBannerBlock from "@/components/page-builder/blocks/HeroBannerBlock";
+import RelatedLinksBlock from "@/components/page-builder/blocks/RelatedLinksBlock";
+import HubCtaRowBlock from "@/components/page-builder/blocks/HubCtaRowBlock";
 import { getEditorialRegistryEntry } from "@/editorial/registry/definitions";
 
 type LegacyRenderer = (block: BlogBodyBlock, index: number, linkifyText?: boolean) => ReactNode;
@@ -119,6 +122,38 @@ export function renderEditorialBlock({
             pros={block.pros}
             cons={block.cons}
             recommendation={block.recommendation}
+            density={block.density}
+          />
+        );
+      case "hero-banner":
+        return (
+          <HeroBannerBlock
+            key={index}
+            eyebrow={block.eyebrow}
+            title={block.title}
+            lede={block.lede}
+            imageSrc={block.imageSrc}
+            imageAlt={block.imageAlt}
+            primaryCta={block.primaryCta}
+            secondaryCta={block.secondaryCta}
+            density={block.density}
+          />
+        );
+      case "related-links":
+        return (
+          <RelatedLinksBlock
+            key={index}
+            title={block.title}
+            items={block.items}
+            density={block.density}
+          />
+        );
+      case "hub-cta-row":
+        return (
+          <HubCtaRowBlock
+            key={index}
+            title={block.title}
+            items={block.items}
             density={block.density}
           />
         );

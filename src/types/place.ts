@@ -1,3 +1,5 @@
+import type { ContentSection } from "@/types/content-page";
+
 export const PLACE_CATEGORIES = [
   "national_park",
   "waterfall",
@@ -91,6 +93,8 @@ export interface PlaceDetail extends PlaceListing {
   faq?: PlaceFaqItem[];
   /** Явные связи CMS place → tours (slug каталога). */
   relatedTourSlugs?: string[];
+  /** CMS page-builder sections (optional overlay below chrome). */
+  sections?: ContentSection[];
 }
 
 export interface PlaceCollectionRef {

@@ -286,6 +286,29 @@ export type BlogBodyBlock =
       cons: BlogProsConsSide;
       recommendation?: string;
       density?: BlogEditorialDensity;
+    }
+  | {
+      type: "hero-banner";
+      eyebrow?: string;
+      title: string;
+      lede?: string;
+      imageSrc?: string;
+      imageAlt?: string;
+      primaryCta?: { label: string; href: string };
+      secondaryCta?: { label: string; href: string };
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "related-links";
+      title?: string;
+      items: Array<{ label: string; href: string; description?: string }>;
+      density?: BlogEditorialDensity;
+    }
+  | {
+      type: "hub-cta-row";
+      title?: string;
+      items: Array<{ label: string; href: string; description?: string }>;
+      density?: BlogEditorialDensity;
     };
 
 /** Alias for cross-content-type page builder (blog, guide, author_article, landing). */

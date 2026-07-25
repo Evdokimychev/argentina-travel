@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import PlaceDetailView from "@/components/places/PlaceDetailView";
+import CmsContentSections from "@/components/content/CmsContentSections";
 import SocialFeed from "@/components/social-feed/SocialFeed";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
@@ -77,6 +78,7 @@ export default async function PlaceDetailPage({ params }: PageProps) {
         initialTours={relatedTours}
         coverImageAlt={getPlaceCoverAlt(place.slug)}
         galleryAlts={getPlaceGalleryAlts(place.slug)}
+        cmsSections={<CmsContentSections sections={place.sections} />}
       />
       <SocialFeed placement={`place:${slug}`} compact />
     </>

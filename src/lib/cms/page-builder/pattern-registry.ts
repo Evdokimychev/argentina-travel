@@ -4,8 +4,11 @@ import {
   Building2,
   CalendarDays,
   Compass,
+  FileBadge2,
+  LayoutTemplate,
   MapPinned,
   MountainSnow,
+  Pin,
   UserRound,
   Waves,
   Wine,
@@ -21,7 +24,11 @@ export type PageBuilderPatternSlug =
   | "patagonia-glaciers"
   | "buenos-aires-city-guide"
   | "wine-and-food"
-  | "day-by-day-route";
+  | "day-by-day-route"
+  | "destination-page-body"
+  | "place-practical"
+  | "immigration-practical"
+  | "hub-intro";
 
 export type PageBuilderPatternDefinition = {
   slug: PageBuilderPatternSlug;
@@ -323,6 +330,180 @@ export const PAGE_BUILDER_PATTERNS: PageBuilderPatternDefinition[] = [
         variant: "tip",
         title: "Запасной план",
         body: "Добавьте альтернативу на случай погоды, задержки транспорта или закрытия объекта.",
+      },
+    ],
+  },
+  {
+    slug: "destination-page-body",
+    label: "Тело страницы направления",
+    description: "Hero, факты, советы, карта и CTA для destination",
+    tags: ["направление", "destination", "hero", "страница", "регион"],
+    icon: LayoutTemplate,
+    create: () => [
+      {
+        type: "hero-banner",
+        eyebrow: "Направление",
+        title: "Название региона",
+        lede: "Коротко объясните, чем направление интересно и для кого подходит.",
+        primaryCta: { label: "Смотреть туры", href: "/tours" },
+        secondaryCta: { label: "Открыть карту", href: "/mapa-argentina" },
+      },
+      {
+        type: "facts-grid",
+        title: "Коротко о направлении",
+        columns: 3,
+        items: [
+          { label: "Когда ехать", value: "Укажите сезон" },
+          { label: "Сколько дней", value: "Укажите срок" },
+          { label: "База", value: "Укажите город" },
+        ],
+      },
+      { type: "callout", variant: "tip", title: "Совет", body: "Добавьте практический совет по логистике или сезону." },
+      { type: "map", lat: -34.6037, lng: -58.3816, label: "Точка направления" },
+      {
+        type: "hub-cta-row",
+        title: "Что дальше",
+        items: [
+          { label: "Места региона", href: "/places", description: "Справочник объектов" },
+          { label: "Путеводители", href: "/guide", description: "Практические гиды" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "place-practical",
+    label: "Практическая карточка места",
+    description: "Как добраться, чек-лист, FAQ и источники",
+    tags: ["место", "place", "практика", "как добраться", "faq"],
+    icon: Pin,
+    create: () => [
+      {
+        type: "image-text",
+        src: "",
+        alt: "",
+        title: "Зачем сюда ехать",
+        body: "Опишите характер места и главное впечатление посетителя.",
+        imagePosition: "left",
+      },
+      {
+        type: "steps",
+        items: [
+          "Как добраться из ближайшего хаба",
+          "Сколько закладывать времени на визит",
+          "Что проверить перед выездом",
+        ],
+      },
+      {
+        type: "checklist",
+        items: [
+          { text: "Проверить часы работы и тариф" },
+          { text: "Уточнить погоду и доступность маршрута" },
+          { text: "Сохранить офлайн-карту" },
+        ],
+      },
+      {
+        type: "faq",
+        items: [
+          { question: "Нужен ли билет заранее?", answer: "Уточните актуальные правила на официальной странице." },
+        ],
+      },
+      {
+        type: "sources",
+        title: "Источники",
+        items: [{ title: "Официальный источник", url: "https://www.argentina.gob.ar/", type: "official" }],
+      },
+    ],
+  },
+  {
+    slug: "immigration-practical",
+    label: "Иммиграционный практический блок",
+    description: "Предупреждение, шаги, документы, источники",
+    tags: ["иммиграция", "документы", "dni", "внж", "residencia", "правовой"],
+    icon: FileBadge2,
+    create: () => [
+      {
+        type: "callout",
+        variant: "warning",
+        title: "Важно",
+        body: "Правила меняются. Перед подачей сверяйтесь с официальными страницами Migraciones.",
+      },
+      {
+        type: "option-selector",
+        title: "Какой сценарий у вас",
+        options: [
+          { id: "tourist", title: "Турист", summary: "Краткий въезд без оформления residencia." },
+          { id: "temporary", title: "Временная residencia", summary: "Оформление статуса и дальнейших trámites." },
+          { id: "permanent", title: "Постоянная", summary: "Долгий статус — проверьте категорию и пакет документов." },
+        ],
+      },
+      {
+        type: "steps",
+        items: [
+          "Проверить актуальный статус пребывания",
+          "Собрать пакет документов по своей категории",
+          "Подать заявление и отслеживать сроки",
+        ],
+      },
+      {
+        type: "checklist",
+        items: [
+          { text: "Паспорт и копии" },
+          { text: "Подтверждение адреса / certificado" },
+          { text: "Актуальные требования Migraciones" },
+        ],
+      },
+      {
+        type: "sources",
+        items: [
+          {
+            title: "Migraciones",
+            url: "https://www.argentina.gob.ar/interior/migraciones",
+            type: "official",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "hub-intro",
+    label: "Введение хаба",
+    description: "Hero, факты и ряд CTA для хабов и лендингов",
+    tags: ["хаб", "landing", "hero", "cta", "навигация"],
+    icon: LayoutTemplate,
+    create: () => [
+      {
+        type: "hero-banner",
+        eyebrow: "Раздел",
+        title: "Заголовок хаба",
+        lede: "Объясните, какие материалы и сервисы найдёт читатель в этом разделе.",
+        primaryCta: { label: "Начать", href: "/" },
+      },
+      {
+        type: "facts-grid",
+        title: "Что внутри",
+        columns: 3,
+        items: [
+          { label: "Статьи", value: "Практические гиды" },
+          { label: "Карта", value: "Регионы и места" },
+          { label: "Сервисы", value: "Туры и экскурсии" },
+        ],
+      },
+      {
+        type: "hub-cta-row",
+        title: "Быстрые переходы",
+        items: [
+          { label: "Путеводители", href: "/guide", description: "Структурированные гиды" },
+          { label: "Блог", href: "/blog", description: "Редакционные материалы" },
+          { label: "Карта", href: "/mapa-argentina", description: "Интерактивная карта" },
+        ],
+      },
+      {
+        type: "related-links",
+        title: "Популярные материалы",
+        items: [
+          { label: "Когда лучше ехать", href: "/blog/best-time-to-visit-argentina" },
+          { label: "DNI и CUIL", href: "/blog/dni-cuil-argentina" },
+        ],
       },
     ],
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -44,6 +45,8 @@ interface DestinationDetailViewProps {
   initialTours: TourListing[];
   knowledgeLinks?: KnowledgeLinksBundle;
   flightSidebar?: React.ReactNode;
+  /** Server-rendered CMS page-builder sections. */
+  cmsSections?: ReactNode;
 }
 
 function buildDestinationQuickFacts(destination: DestinationPage) {
@@ -95,6 +98,7 @@ export default function DestinationDetailView({
   initialTours,
   knowledgeLinks,
   flightSidebar,
+  cmsSections,
 }: DestinationDetailViewProps) {
   const tours = useRepositoryTourListings(initialTours);
   const matchedTours = matchToursForDestination(tours, destination);
@@ -381,6 +385,8 @@ export default function DestinationDetailView({
                 </ul>
               </div>
             ) : null}
+
+            {cmsSections}
           </div>
         </ContentReadingLayout>
       </section>

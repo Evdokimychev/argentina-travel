@@ -55,10 +55,12 @@
 |----------|--------|--------------|
 | `blog` | ✓ | VisualPageBuilder |
 | `guide` | ✓ | VisualPageBuilder |
-| `author_article` | **NEW** | VisualPageBuilder (organizer/expert) |
-| `landing` | Phase 2 | Тот же builder, другой layout shell |
+| `author_article` | ✓ | VisualPageBuilder (organizer/expert) |
+| `knowledge` | ✓ | VisualPageBuilder + blocks в markdown body |
+| `destination` | ✓ | Форма шапки + VisualPageBuilder (`sections`) |
+| `place` | ✓ | Форма шапки + VisualPageBuilder (`sections`) |
+| `landing` / homepage hubs | Phase 3 | Тот же builder + layout shell |
 | `legal` | rich-text sections | CmsSectionEditor |
-| `destination` / `place` | form fields | — |
 
 ---
 

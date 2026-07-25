@@ -247,6 +247,9 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
     case "phrasebook":
     case "option-selector":
     case "pros-cons":
+    case "hero-banner":
+    case "related-links":
+    case "hub-cta-row":
       // Handled by editorial renderer; keep cases for exhaustive switch.
       return null;
     default: {

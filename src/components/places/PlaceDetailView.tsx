@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -37,12 +38,15 @@ export default function PlaceDetailView({
   initialTours = [],
   coverImageAlt,
   galleryAlts = [],
+  cmsSections,
 }: {
   place: PlaceDetail;
   knowledgeLinks?: KnowledgeLinksBundle;
   initialTours?: TourListing[];
   coverImageAlt?: string;
   galleryAlts?: string[];
+  /** Server-rendered CMS page-builder sections (keeps media resolver off the client graph). */
+  cmsSections?: ReactNode;
 }) {
   const matchedTours = initialTours;
   const destinationId = PLACE_TO_DESTINATION[place.slug];
@@ -109,6 +113,7 @@ export default function PlaceDetailView({
           ) : null}
 
           <PlaceDetailContentSections place={place} />
+          {cmsSections}
 
           {place.gallery.length > 1 ? (
             <section>

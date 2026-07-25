@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
+import CmsContentSections from "@/components/content/CmsContentSections";
 import SocialFeed from "@/components/social-feed/SocialFeed";
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
@@ -93,6 +94,7 @@ export default async function DestinationDetailPage({ params }: PageProps) {
             locale={locale}
           />
         }
+        cmsSections={<CmsContentSections sections={destination.sections} />}
       />
       <SocialFeed placement={`destination:${destination.id}`} compact />
     </>
