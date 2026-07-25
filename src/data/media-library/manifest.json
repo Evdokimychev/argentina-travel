@@ -49817,6 +49817,152 @@
       "attributionHtml": "Фото: <a href=\"https://unsplash.com/@mike\">Mike Kotsch</a> / <a href=\"https://unsplash.com/photos/red-bell-pepper-on-grill-vn4obEjdFPs\">Unsplash</a>",
       "attributionRequired": true,
       "imageTitle": "Мясо на решётке parrilla с открытым огнём"
+    },
+    {
+      "id": "blog-patagonia-packing-list-layers",
+      "title": "Система слоёв для треккинга — базовый, утепляющий и защитный слой",
+      "alt": "Система слоёв для треккинга — базовый, утепляющий и защитный слой",
+      "category": "trekking",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1551698618-1dfe5d97d256",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/layers.jpg",
+      "role": "section",
+      "contentHash": "601603cb591be2d9df94063f1c4d9dfb",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1551698618-1dfe5d97d256\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Система слоёв для треккинга — базовый, утепляющий и защитный слой"
+    },
+    {
+      "id": "blog-patagonia-packing-list-shell-jacket",
+      "title": "Непродуваемая куртка-оболочка в ветреных горах Патагонии",
+      "alt": "Непродуваемая куртка-оболочка в ветреных горах Патагонии",
+      "category": "trekking",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1551524164-687a55dd1126",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/shell-jacket.jpg",
+      "role": "section",
+      "contentHash": "6d4f09d82ea96a8dd5c7b6b1ff0a55d5",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1551524164-687a55dd1126\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Непродуваемая куртка-оболочка в ветреных горах Патагонии"
+    },
+    {
+      "id": "blog-patagonia-packing-list-hiking-boots",
+      "title": "Треккинговые ботинки на грунтовой тропе в горах",
+      "alt": "Треккинговые ботинки на грунтовой тропе в горах",
+      "category": "trekking",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1441974231531-c6227db76b6e",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/hiking-boots.jpg",
+      "role": "section",
+      "contentHash": "37377d3dc229c672c4627615a0880fb0",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1441974231531-c6227db76b6e\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Треккинговые ботинки на грунтовой тропе в горах"
+    },
+    {
+      "id": "blog-patagonia-packing-list-daypack",
+      "title": "Рюкзак на однодневный поход — вода, перекус и слои одежды",
+      "alt": "Рюкзак на однодневный поход — вода, перекус и слои одежды",
+      "category": "trekking",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1553062407-98eeb64c6a62",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/daypack.jpg",
+      "role": "section",
+      "contentHash": "89c7922e45bb45f329df646df7a775da",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1553062407-98eeb64c6a62\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Рюкзак на однодневный поход — вода, перекус и слои одежды"
+    },
+    {
+      "id": "blog-patagonia-packing-list-glacier",
+      "title": "Прогулка у ледника Перито-Морено — лед и ветер в Патагонии",
+      "alt": "Прогулка у ледника Перито-Морено — лед и ветер в Патагонии",
+      "category": "glacier",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:ISS-30_Perito_Moreno_Glacier_near_Lake_Argentino,_Argentina.jpg",
+      "license": "Public domain",
+      "author": "NASA",
+      "localPath": "media/blog/patagonia-packing-list/glacier.jpg",
+      "role": "section",
+      "contentHash": "686bdbd56eba6561bc11ada66c49a78a",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: NASA / <a href=\"https://commons.wikimedia.org/wiki/File:ISS-30_Perito_Moreno_Glacier_near_Lake_Argentino,_Argentina.jpg\">Wikimedia Commons</a> (Public domain)",
+      "imageTitle": "ISS-30 Perito Moreno Glacier near Lake Argentino, Argentina"
+    },
+    {
+      "id": "blog-patagonia-packing-list-winter",
+      "title": "Зимняя Патагония — снег, ветер и горы Аргентины",
+      "alt": "Зимняя Патагония — снег, ветер и горы Аргентины",
+      "category": "mountain",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1470071459604-3b5ec3a7fe05",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/winter.jpg",
+      "role": "section",
+      "contentHash": "5441d53bc4a31371d7c3978408eadfdd",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1470071459604-3b5ec3a7fe05\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Зимняя Патагония — снег, ветер и горы Аргентины"
+    },
+    {
+      "id": "blog-patagonia-packing-list-road-trip",
+      "title": "Автопутешествие по пустынной дороге в Патагонии",
+      "alt": "Автопутешествие по пустынной дороге в Патагонии",
+      "category": "transport",
+      "tags": [
+        "stock",
+        "section"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/1501785888041-af3ef285b470",
+      "license": "Unsplash License",
+      "author": "Unsplash",
+      "localPath": "media/blog/patagonia-packing-list/road-trip.jpg",
+      "role": "section",
+      "contentHash": "c4823e775fb5d12f56d57f4e9291c594",
+      "blogPostSlug": "patagonia-packing-list",
+      "attributionHtml": "Фото: Unsplash / <a href=\"https://unsplash.com/photos/1501785888041-af3ef285b470\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Автопутешествие по пустынной дороге в Патагонии"
     }
   ]
 }
