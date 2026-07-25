@@ -4,8 +4,58 @@ import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import DensitySelect from "@/components/admin/page-builder/fields/DensitySelect";
+import LinkItemsEditor from "@/components/admin/page-builder/fields/LinkItemsEditor";
 import { CALLOUT_VARIANTS } from "@/lib/cms/page-builder/block-registry";
-import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+import type {
+  BlogArticleSummaryVariant,
+  BlogBodyBlock,
+  BlogGalleryVariant,
+  BlogPhotoVariant,
+  BlogSourceGroup,
+} from "@/types/blog-content-blocks";
+
+const PHOTO_VARIANT_OPTIONS: Array<{ value: BlogPhotoVariant; label: string }> = [
+  { value: "content-width", label: "По ширине текста" },
+  { value: "full-width", label: "На всю ширину" },
+  { value: "wide", label: "Широкая" },
+  { value: "portrait", label: "Портрет" },
+  { value: "landscape", label: "Альбом" },
+  { value: "float-left", label: "Обтекание слева" },
+  { value: "float-right", label: "Обтекание справа" },
+  { value: "framed", label: "В рамке" },
+  { value: "edge-to-edge", label: "Край в край" },
+  { value: "editorial-split", label: "Редакционный сплит" },
+  { value: "with-quote", label: "С цитатой" },
+  { value: "with-facts", label: "С фактами" },
+];
+
+const SUMMARY_VARIANT_OPTIONS: Array<{ value: BlogArticleSummaryVariant; label: string }> = [
+  { value: "cards", label: "Карточки" },
+  { value: "horizontal-deck", label: "Горизонтальная лента" },
+  { value: "checklist", label: "Чек-лист" },
+  { value: "key-facts", label: "Ключевые факты" },
+  { value: "quick-answer", label: "Быстрый ответ" },
+  { value: "step-by-step", label: "По шагам" },
+  { value: "timeline-summary", label: "Хронология" },
+];
+
+const GALLERY_VARIANT_OPTIONS: Array<{ value: BlogGalleryVariant; label: string }> = [
+  { value: "grid", label: "Сетка" },
+  { value: "filmstrip", label: "Лента" },
+  { value: "carousel", label: "Карусель (горизонтальный скролл)" },
+  { value: "comparison", label: "Сравнение" },
+  { value: "location", label: "Локация" },
+];
+
+const SOURCE_TYPE_OPTIONS: Array<{ value: BlogSourceGroup; label: string }> = [
+  { value: "official", label: "Официальный" },
+  { value: "legal", label: "Правовой" },
+  { value: "primary-data", label: "Первичные данные" },
+  { value: "ru-context", label: "RU-контекст" },
+  { value: "personal", label: "Личный опыт" },
+  { value: "updates", label: "Обновления" },
+];
 
 type Props = {
   block: BlogBodyBlock;
@@ -838,24 +888,102 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
 
     case "gallery":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид галереи
+              <NativeSelect
+                value={block.variant ?? "grid"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as BlogGalleryVariant,
+                  })
+                }
+              >
+                {GALLERY_VARIANT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </NativeSelect>
+            </label>
+            <label className="block space-y-1 text-xs text-slate">
+              Колонки (для сетки)
+              <NativeSelect
+                value={String(block.columns ?? 3)}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    columns: Number(e.target.value) as 2 | 3 | 4,
+                  })
+                }
+              >
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </NativeSelect>
+            </label>
+          </div>
           {block.items.map((item, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">
+                  Кадр {index + 1}
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-red-600"
+                  onClick={() =>
+                    onChange({
+                      ...block,
+                      items: block.items.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Удалить
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={item.src}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = { ...items[index], src: e.target.value };
+                    onChange({ ...block, items });
+                  }}
+                  placeholder="/media/…"
+                  className="font-mono text-xs"
+                />
+                {onPickMedia ? (
+                  <Button type="button" size="sm" variant="outline" onClick={onPickMedia}>
+                    Медиа
+                  </Button>
+                ) : null}
+              </div>
               <Input
-                value={item.src}
+                value={item.alt}
                 onChange={(e) => {
                   const items = [...block.items];
-                  items[index] = { ...items[index], src: e.target.value };
+                  items[index] = { ...items[index], alt: e.target.value };
                   onChange({ ...block, items });
                 }}
-                placeholder="URL"
-                className="font-mono text-xs"
+                placeholder="Alt (обязательно)"
               />
-              {onPickMedia ? (
-                <Button type="button" size="sm" variant="outline" onClick={onPickMedia}>
-                  +
-                </Button>
-              ) : null}
+              <Input
+                value={item.caption ?? ""}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = {
+                    ...items[index],
+                    caption: e.target.value.trim() ? e.target.value : undefined,
+                  };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Подпись (необязательно)"
+              />
             </div>
           ))}
           <Button
@@ -892,6 +1020,11 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Заголовок"
+          />
+          <Input
+            value={block.caption ?? ""}
+            onChange={(e) => onChange({ ...block, caption: e.target.value || undefined })}
+            placeholder="Подпись под видео"
           />
         </div>
       );
@@ -942,21 +1075,30 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
     case "lead":
       return (
         <div className="space-y-2">
-          <NativeSelect
-            value={block.variant ?? "default"}
-            onChange={(e) =>
-              onChange({
-                ...block,
-                variant: e.target.value as NonNullable<typeof block.variant>,
-              })
-            }
-          >
-            <option value="default">default</option>
-            <option value="wide">wide</option>
-            <option value="compact">compact</option>
-            <option value="with-icon">with-icon</option>
-            <option value="with-author-note">with-author-note</option>
-          </NativeSelect>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид лида
+              <NativeSelect
+                value={block.variant ?? "default"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as NonNullable<typeof block.variant>,
+                  })
+                }
+              >
+                <option value="default">Обычный</option>
+                <option value="wide">Широкий</option>
+                <option value="compact">Компактный</option>
+                <option value="with-icon">С иконкой</option>
+                <option value="with-author-note">С заметкой автора</option>
+              </NativeSelect>
+            </label>
+            <DensitySelect
+              value={block.density}
+              onChange={(density) => onChange({ ...block, density })}
+            />
+          </div>
           <textarea
             className="min-h-[80px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
             value={block.text}
@@ -969,6 +1111,30 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
     case "photo":
       return (
         <div className="space-y-2">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид фотографии
+              <NativeSelect
+                value={block.variant ?? "content-width"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as BlogPhotoVariant,
+                  })
+                }
+              >
+                {PHOTO_VARIANT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </NativeSelect>
+            </label>
+            <DensitySelect
+              value={block.density}
+              onChange={(density) => onChange({ ...block, density })}
+            />
+          </div>
           <Input
             value={block.src}
             onChange={(e) => onChange({ ...block, src: e.target.value })}
@@ -984,6 +1150,24 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             onChange={(e) => onChange({ ...block, caption: e.target.value || undefined })}
             placeholder="Подпись (не повторяйте alt)"
           />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.author ?? ""}
+              onChange={(e) => onChange({ ...block, author: e.target.value || undefined })}
+              placeholder="Автор / кредиты"
+            />
+            <Input
+              value={block.license ?? ""}
+              onChange={(e) => onChange({ ...block, license: e.target.value || undefined })}
+              placeholder="Лицензия"
+            />
+          </div>
+          <Input
+            value={block.sourceUrl ?? ""}
+            onChange={(e) => onChange({ ...block, sourceUrl: e.target.value || undefined })}
+            placeholder="URL источника"
+            className="font-mono text-xs"
+          />
           {onPickMedia ? (
             <Button type="button" variant="secondary" size="sm" onClick={onPickMedia}>
               Выбрать из медиатеки
@@ -994,80 +1178,257 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
 
     case "article-summary":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид сводки
+              <NativeSelect
+                value={block.variant ?? "cards"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as BlogArticleSummaryVariant,
+                  })
+                }
+              >
+                {SUMMARY_VARIANT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </NativeSelect>
+            </label>
+            <DensitySelect
+              value={block.density}
+              onChange={(density) => onChange({ ...block, density })}
+            />
+          </div>
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Заголовок блока"
           />
-          <textarea
-            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
-            value={block.items.map((item) => `${item.title}|${item.body}`).join("\n")}
-            onChange={(e) =>
+          {block.items.map((item, index) => (
+            <div key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">
+                  Пункт {index + 1}
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-red-600"
+                  onClick={() =>
+                    onChange({
+                      ...block,
+                      items: block.items.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Удалить
+                </Button>
+              </div>
+              <Input
+                value={item.title}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, title: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Заголовок пункта"
+              />
+              <Textarea
+                value={item.body}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, body: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Текст"
+                className="min-h-[64px]"
+              />
+              <Input
+                value={item.href ?? ""}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = {
+                    ...item,
+                    href: e.target.value.trim() ? e.target.value : undefined,
+                  };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Ссылка (необязательно)"
+                className="font-mono text-xs"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
               onChange({
                 ...block,
-                items: e.target.value
-                  .split("\n")
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [title, ...rest] = line.split("|");
-                    return { title: title ?? "", body: rest.join("|") };
-                  }),
+                items: [...block.items, { title: "", body: "" }],
               })
             }
-            placeholder={"Заголовок|Текст\nЕщё пункт|Описание"}
-          />
-          <p className="text-[11px] text-slate">Формат: заголовок|текст, по одному пункту на строку.</p>
+          >
+            + Пункт сводки
+          </Button>
         </div>
       );
 
     case "sources":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид списка
+              <NativeSelect
+                value={block.variant ?? "grouped"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as NonNullable<typeof block.variant>,
+                  })
+                }
+              >
+                <option value="grouped">Группами</option>
+                <option value="compact">Компактно</option>
+                <option value="expandable">Раскрываемый</option>
+              </NativeSelect>
+            </label>
+            <DensitySelect
+              value={block.density}
+              onChange={(density) => onChange({ ...block, density })}
+            />
+          </div>
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Источники и дата проверки"
           />
-          <textarea
-            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
-            value={block.items.map((item) => `${item.title}|${item.url}`).join("\n")}
-            onChange={(e) =>
+          {block.items.map((item, index) => (
+            <div key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">
+                  Источник {index + 1}
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-red-600"
+                  onClick={() =>
+                    onChange({
+                      ...block,
+                      items: block.items.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Удалить
+                </Button>
+              </div>
+              <Input
+                value={item.title}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, title: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Название"
+              />
+              <Input
+                value={item.url}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, url: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="https://…"
+                className="font-mono text-xs"
+              />
+              <div className="grid gap-2 sm:grid-cols-2">
+                <NativeSelect
+                  value={item.type ?? "official"}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = {
+                      ...item,
+                      type: e.target.value as BlogSourceGroup,
+                    };
+                    onChange({ ...block, items });
+                  }}
+                >
+                  {SOURCE_TYPE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </NativeSelect>
+                <Input
+                  value={item.publisher ?? ""}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = {
+                      ...item,
+                      publisher: e.target.value.trim() ? e.target.value : undefined,
+                    };
+                    onChange({ ...block, items });
+                  }}
+                  placeholder="Издатель"
+                />
+              </div>
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
               onChange({
                 ...block,
-                items: e.target.value
-                  .split("\n")
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [title, url] = line.split("|");
-                    return { title: title ?? "", url: url ?? "", type: "official" as const };
-                  }),
+                items: [...block.items, { title: "", url: "", type: "official" }],
               })
             }
-            placeholder={"Название|https://example.com"}
-          />
+          >
+            + Источник
+          </Button>
         </div>
       );
 
     case "country-tip":
       return (
         <div className="space-y-2">
-          <NativeSelect
-            value={block.variant ?? "ru-traveler"}
-            onChange={(e) =>
-              onChange({
-                ...block,
-                variant: e.target.value as NonNullable<typeof block.variant>,
-              })
-            }
-          >
-            <option value="ru-traveler">Русскоязычному путешественнику</option>
-            <option value="different-practice">Отличается от привычной практики</option>
-            <option value="living-in-argentina">Если живёте в Аргентине</option>
-            <option value="scouting-trip">Поездка-разведка</option>
-          </NativeSelect>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block space-y-1 text-xs text-slate">
+              Вид совета
+              <NativeSelect
+                value={block.variant ?? "ru-traveler"}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    variant: e.target.value as NonNullable<typeof block.variant>,
+                  })
+                }
+              >
+                <option value="ru-traveler">Русскоязычному путешественнику</option>
+                <option value="different-practice">Отличается от привычной практики</option>
+                <option value="living-in-argentina">Если живёте в Аргентине</option>
+                <option value="scouting-trip">Поездка-разведка</option>
+              </NativeSelect>
+            </label>
+            <DensitySelect
+              value={block.density}
+              onChange={(density) => onChange({ ...block, density })}
+            />
+          </div>
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок совета (необязательно)"
+          />
           <textarea
             className="min-h-[90px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
             value={block.body}
@@ -1079,77 +1440,218 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
 
     case "phrasebook":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <DensitySelect
+            value={block.density}
+            onChange={(density) => onChange({ ...block, density })}
+          />
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Полезные фразы"
           />
-          <textarea
-            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
-            value={block.items
-              .map((item) => `${item.original}|${item.translation}|${item.pronunciation ?? ""}`)
-              .join("\n")}
-            onChange={(e) =>
+          <Input
+            value={block.category ?? ""}
+            onChange={(e) => onChange({ ...block, category: e.target.value || undefined })}
+            placeholder="Категория (ресторан, транспорт…)"
+          />
+          {block.items.map((item, index) => (
+            <div key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">
+                  Фраза {index + 1}
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-red-600"
+                  onClick={() =>
+                    onChange({
+                      ...block,
+                      items: block.items.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Удалить
+                </Button>
+              </div>
+              <Input
+                value={item.original}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, original: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Оригинал (испанский)"
+              />
+              <Input
+                value={item.translation}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...item, translation: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Перевод"
+              />
+              <Input
+                value={item.pronunciation ?? ""}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = {
+                    ...item,
+                    pronunciation: e.target.value.trim() ? e.target.value : undefined,
+                  };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Произношение"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
               onChange({
                 ...block,
-                items: e.target.value
-                  .split("\n")
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [original, translation, pronunciation] = line.split("|");
-                    return {
-                      original: original ?? "",
-                      translation: translation ?? "",
-                      pronunciation: pronunciation || undefined,
-                    };
-                  }),
+                items: [...block.items, { original: "", translation: "" }],
               })
             }
-            placeholder={"Buenas tardes|Добрый день|буэнас тардес"}
-          />
+          >
+            + Фраза
+          </Button>
         </div>
       );
 
     case "option-selector":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <DensitySelect
+            value={block.density}
+            onChange={(density) => onChange({ ...block, density })}
+          />
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Заголовок селектора"
           />
-          <textarea
-            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
-            value={block.options
-              .map((item) => `${item.id}|${item.title}|${item.summary}`)
-              .join("\n")}
+          <Textarea
+            value={block.description ?? ""}
             onChange={(e) =>
               onChange({
                 ...block,
-                options: e.target.value
-                  .split("\n")
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [id, title, ...rest] = line.split("|");
-                    return {
-                      id: id ?? "",
-                      title: title ?? "",
-                      summary: rest.join("|"),
-                    };
-                  }),
+                description: e.target.value.trim() ? e.target.value : undefined,
               })
             }
-            placeholder={"bife|Bife de Chorizo|Крупный стейк для первого знакомства"}
+            placeholder="Краткое описание выбора"
+            className="min-h-[56px]"
           />
+          {block.options.map((item, index) => (
+            <div key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">
+                  Вариант {index + 1}
+                </p>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-red-600"
+                  onClick={() =>
+                    onChange({
+                      ...block,
+                      options: block.options.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Удалить
+                </Button>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Input
+                  value={item.id}
+                  onChange={(e) => {
+                    const options = [...block.options];
+                    options[index] = { ...item, id: e.target.value };
+                    onChange({ ...block, options });
+                  }}
+                  placeholder="id (латиница)"
+                  className="font-mono text-xs"
+                />
+                <Input
+                  value={item.meta ?? ""}
+                  onChange={(e) => {
+                    const options = [...block.options];
+                    options[index] = {
+                      ...item,
+                      meta: e.target.value.trim() ? e.target.value : undefined,
+                    };
+                    onChange({ ...block, options });
+                  }}
+                  placeholder="Мета (цена, длительность…)"
+                />
+              </div>
+              <Input
+                value={item.title}
+                onChange={(e) => {
+                  const options = [...block.options];
+                  options[index] = { ...item, title: e.target.value };
+                  onChange({ ...block, options });
+                }}
+                placeholder="Название варианта"
+              />
+              <Textarea
+                value={item.summary}
+                onChange={(e) => {
+                  const options = [...block.options];
+                  options[index] = { ...item, summary: e.target.value };
+                  onChange({ ...block, options });
+                }}
+                placeholder="Краткое описание"
+                className="min-h-[56px]"
+              />
+              <Textarea
+                value={item.details ?? ""}
+                onChange={(e) => {
+                  const options = [...block.options];
+                  options[index] = {
+                    ...item,
+                    details: e.target.value.trim() ? e.target.value : undefined,
+                  };
+                  onChange({ ...block, options });
+                }}
+                placeholder="Подробности (необязательно)"
+                className="min-h-[56px]"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onChange({
+                ...block,
+                options: [
+                  ...block.options,
+                  { id: `option-${block.options.length + 1}`, title: "", summary: "" },
+                ],
+              })
+            }
+          >
+            + Вариант
+          </Button>
         </div>
       );
 
     case "pros-cons":
       return (
         <div className="space-y-2">
+          <DensitySelect
+            value={block.density}
+            onChange={(density) => onChange({ ...block, density })}
+          />
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
@@ -1192,18 +1694,57 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
       );
 
     case "season-matrix":
+      return (
+        <div className="space-y-3">
+          <p className="text-xs text-slate">
+            Матрица сезонов Аргентины. Данные компонента общие для сайта; ниже — настройки
+            отображения.
+          </p>
+          <label className="flex items-center gap-2 text-sm text-charcoal">
+            <input
+              type="checkbox"
+              checked={block.highlightCurrentMonth !== false}
+              onChange={(e) =>
+                onChange({ ...block, highlightCurrentMonth: e.target.checked })
+              }
+            />
+            Подсвечивать текущий месяц
+          </label>
+        </div>
+      );
+
     case "tourism-infographic":
+      return (
+        <div className="space-y-3">
+          <p className="text-xs text-slate">
+            Инфографика туризма. Можно выбрать компактный вид для узких колонок и хабов.
+          </p>
+          <label className="flex items-center gap-2 text-sm text-charcoal">
+            <input
+              type="checkbox"
+              checked={block.compact === true}
+              onChange={(e) => onChange({ ...block, compact: e.target.checked })}
+            />
+            Компактный вид
+          </label>
+        </div>
+      );
+
     case "tourism-timeline":
       return (
         <p className="text-xs text-slate">
-          Встроенный travel-виджет без дополнительных полей. На сайте подтянется актуальная версия
-          компонента.
+          Хронология туризма — встроенный виджет с актуальной редакционной версией на сайте.
+          Текстовые поля этого блока пока не редактируются в CMS.
         </p>
       );
 
     case "hero-banner":
       return (
         <div className="space-y-2">
+          <DensitySelect
+            value={block.density}
+            onChange={(density) => onChange({ ...block, density })}
+          />
           <Input
             value={block.eyebrow ?? ""}
             onChange={(e) => onChange({ ...block, eyebrow: e.target.value || undefined })}
@@ -1230,36 +1771,74 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             onChange={(e) => onChange({ ...block, imageAlt: e.target.value || undefined })}
             placeholder="Alt фона"
           />
-          <Input
-            value={block.primaryCta ? `${block.primaryCta.label}|${block.primaryCta.href}` : ""}
-            onChange={(e) => {
-              const [label, href] = e.target.value.split("|");
-              onChange({
-                ...block,
-                primaryCta:
-                  label?.trim() && href?.trim()
-                    ? { label: label.trim(), href: href.trim() }
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.primaryCta?.label ?? ""}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  primaryCta: e.target.value.trim()
+                    ? {
+                        label: e.target.value,
+                        href: block.primaryCta?.href ?? "/",
+                      }
                     : undefined,
-              });
-            }}
-            placeholder="Основная CTA: Текст|/path"
-          />
-          <Input
-            value={
-              block.secondaryCta ? `${block.secondaryCta.label}|${block.secondaryCta.href}` : ""
-            }
-            onChange={(e) => {
-              const [label, href] = e.target.value.split("|");
-              onChange({
-                ...block,
-                secondaryCta:
-                  label?.trim() && href?.trim()
-                    ? { label: label.trim(), href: href.trim() }
+                })
+              }
+              placeholder="Текст основной кнопки"
+            />
+            <Input
+              value={block.primaryCta?.href ?? ""}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  primaryCta:
+                    block.primaryCta?.label || e.target.value.trim()
+                      ? {
+                          label: block.primaryCta?.label ?? "Подробнее",
+                          href: e.target.value || "/",
+                        }
+                      : undefined,
+                })
+              }
+              placeholder="Ссылка основной кнопки"
+              className="font-mono text-xs"
+            />
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.secondaryCta?.label ?? ""}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  secondaryCta: e.target.value.trim()
+                    ? {
+                        label: e.target.value,
+                        href: block.secondaryCta?.href ?? "/",
+                      }
                     : undefined,
-              });
-            }}
-            placeholder="Доп. CTA: Текст|/path"
-          />
+                })
+              }
+              placeholder="Текст доп. кнопки"
+            />
+            <Input
+              value={block.secondaryCta?.href ?? ""}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  secondaryCta:
+                    block.secondaryCta?.label || e.target.value.trim()
+                      ? {
+                          label: block.secondaryCta?.label ?? "Ещё",
+                          href: e.target.value || "/",
+                        }
+                      : undefined,
+                })
+              }
+              placeholder="Ссылка доп. кнопки"
+              className="font-mono text-xs"
+            />
+          </div>
           {onPickMedia ? (
             <Button type="button" variant="secondary" size="sm" onClick={onPickMedia}>
               Выбрать фон из медиатеки
@@ -1271,37 +1850,21 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
     case "related-links":
     case "hub-cta-row":
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <DensitySelect
+            value={block.density}
+            onChange={(density) => onChange({ ...block, density })}
+          />
           <Input
             value={block.title ?? ""}
             onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
             placeholder="Заголовок блока"
           />
-          <textarea
-            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
-            value={block.items
-              .map((item) => `${item.label}|${item.href}|${item.description ?? ""}`)
-              .join("\n")}
-            onChange={(e) =>
-              onChange({
-                ...block,
-                items: e.target.value
-                  .split("\n")
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [label, href, description] = line.split("|");
-                    return {
-                      label: label ?? "",
-                      href: href ?? "",
-                      description: description || undefined,
-                    };
-                  }),
-              })
-            }
-            placeholder={"Туры|/tours|Каталог маршрутов"}
+          <LinkItemsEditor
+            items={block.items}
+            onChange={(items) => onChange({ ...block, items })}
+            addLabel={block.type === "hub-cta-row" ? "+ Карточка действия" : "+ Ссылка"}
           />
-          <p className="text-[11px] text-slate">Формат: название|URL|описание</p>
         </div>
       );
 

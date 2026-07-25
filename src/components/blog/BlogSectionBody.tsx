@@ -114,9 +114,21 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
         <BlogSeasonWidget key={index} items={block.items} conclusion={block.conclusion} />
       );
     case "season-matrix":
-      return <ArgentinaSeasonMatrix key={index} className="my-6" />;
+      return (
+        <ArgentinaSeasonMatrix
+          key={index}
+          className="my-6"
+          highlightCurrentMonth={block.highlightCurrentMonth !== false}
+        />
+      );
     case "tourism-infographic":
-      return <ArgentinaTourismInfographic key={index} className="my-6" />;
+      return (
+        <ArgentinaTourismInfographic
+          key={index}
+          className="my-6"
+          compact={block.compact === true}
+        />
+      );
     case "tourism-timeline":
       return <ArgentinaTourismTimeline key={index} className="my-6" />;
     case "budget":
@@ -209,7 +221,12 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
       );
     case "gallery":
       return (
-        <BlogGalleryBlock key={index} items={block.items} columns={block.columns} />
+        <BlogGalleryBlock
+          key={index}
+          items={block.items}
+          columns={block.columns}
+          variant={block.variant}
+        />
       );
     case "video":
       return (

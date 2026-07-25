@@ -46,9 +46,21 @@ Travel widgets в picker: `season-matrix`, `tourism-infographic`, `tourism-timel
 4. Immigration bridge: короткие `content_pages` на `/immigration/[slug]` рядом с pillar topics
 5. Исправление `content-mapper`: `sections` для destination/place
 
-## Следующие итерации (Phase 3B+)
+## Phase 3B — редактор: текст, виджеты, дизайн, ошибки (сделано)
+
+Редактор карточки блока теперь позволяет:
+
+- менять **текст и структуры** (пункты сводки, источники, фразы, варианты селектора, ссылки CTA) без «pipe»-форматов;
+- выбирать **виды дизайна** (`variant`) и **плотность** (`density`) у lead / photo / summary / sources / tips / layout-блоков;
+- настраивать **галерею** (вид сетка/лента, колонки, alt/подпись у каждого кадра);
+- включать/выключать опции **travel-виджетов** (подсветка месяца, компактная инфографика);
+- открывать **медиатеку** для photo / hero / gallery / image-text / author-card / media;
+- видеть **ошибки и замечания** аудита прямо в карточке (alt, пустая галерея и т.п.) — без блокировки сохранения.
+
+## Следующие итерации (Phase 3C+)
 
 1. Композиция homepage / marketplace через CMS modules (не через article sections)
 2. Immigration pillars cutover (полноценный CMS override pillar shell)
 3. Slash-menu / Tiptap для inline paragraph
 4. Полный Zod на editorial schemas (сейчас lightweight validators)
+5. CMS-редактирование данных внутри season-matrix / tourism-timeline (не только display-props)
