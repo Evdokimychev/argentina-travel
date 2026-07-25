@@ -19,7 +19,10 @@ export default function BlogFaqSection({ items, className }: BlogFaqSectionProps
   return (
     <div
       className={cn(
-        "divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white shadow-sm",
+        // Border only — this already sits inside a flattened section, so a
+        // shadow on top would stack another card layer (see BlogCallout /
+        // BlogStepList for the same pattern).
+        "divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white",
         className,
       )}
       role="region"

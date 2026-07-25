@@ -5,6 +5,15 @@ const REVIEW_PHOTO_PUBLIC_PREFIX = /\/storage\/v1\/object\/public\/tourist-revie
 
 /** Canonical CDN origin, e.g. https://goargentina.ru/site-media */
 export function getMediaCdnOrigin(): string | null {
+  // `next dev` always serves straight from the committed public/media copy.
+  // New editorial photos/illustrations are typically previewed locally
+  // before they're synced to the Reg.ru CDN (see
+  // docs/ai-first/media-reg-ru-migration.md); rewriting to a CDN URL that
+  // doesn't have the file yet turns every new image into a 404 during
+  // local review. Preview/production builds (NODE_ENV=production) are
+  // unaffected and still exercise the real CDN.
+  if (process.env.NODE_ENV === "development") return null;
+
   const raw = process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim();
   if (!raw) return null;
 

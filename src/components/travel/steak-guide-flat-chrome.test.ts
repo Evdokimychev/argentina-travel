@@ -55,4 +55,27 @@ describe("steak guide widgets stay flat (no nested card shadows)", () => {
     const source = readFileSync(join(__dirname, "../blog/BlogCallout.tsx"), "utf8");
     expect(source).not.toMatch(/shadow-(sm|md|lg|xl|card)/);
   });
+
+  it("BlogSectionBody's bullets block does not add a shadow on top of its border", () => {
+    // The steak guide leans on plain `bullets` blocks throughout (phrasebook
+    // lines, portion questions, carnicería vocabulary); a shadow here would
+    // stack another card layer inside the already-flattened section.
+    const source = readFileSync(join(__dirname, "../blog/BlogSectionBody.tsx"), "utf8");
+    expect(source).not.toMatch(/case "bullets":[\s\S]{0,300}?shadow-(sm|md|lg|xl|card)/);
+  });
+
+  it("BlogFaqSection does not add a shadow on top of its border", () => {
+    // Used by the steak guide's FAQ section — same nested-card risk.
+    const source = readFileSync(join(__dirname, "../blog/BlogFaqSection.tsx"), "utf8");
+    expect(source).not.toMatch(/shadow-(sm|md|lg|xl|card)/);
+  });
+
+  it("BlogAccordionBlock does not add a shadow on top of its border", () => {
+    // Used by the steak guide's sources accordion — same nested-card risk.
+    const source = readFileSync(
+      join(__dirname, "../page-builder/blocks/BlogAccordionBlock.tsx"),
+      "utf8",
+    );
+    expect(source).not.toMatch(/shadow-(sm|md|lg|xl|card)/);
+  });
 });
