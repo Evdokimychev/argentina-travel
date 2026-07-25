@@ -52,7 +52,7 @@ function TocList({
                 onClick={onClick(item.id)}
                 aria-current={active ? "location" : undefined}
                 className={cn(
-                  "blog-touch-target inline-flex items-center rounded-full border px-3 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
+                  "blog-touch-target inline-flex items-center rounded-full border px-3 text-xs leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
                   item.level === 3 && "ml-2",
                   active
                     ? "border-sky/40 bg-sky/10 font-medium text-sky"
@@ -69,7 +69,7 @@ function TocList({
   }
 
   return (
-    <ol className="mt-3 space-y-1.5 text-sm">
+    <ol className="mt-2 space-y-0.5 text-sm">
       {items.map((item) => {
         const active = activeId === item.id;
         return (
@@ -79,8 +79,8 @@ function TocList({
               onClick={onClick(item.id)}
               aria-current={active ? "location" : undefined}
               className={cn(
-                "blog-touch-target block rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
-                item.level === 3 ? "pl-5 text-[13px]" : "font-medium",
+                "flex items-center rounded-lg px-2.5 py-1.5 leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
+                item.level === 3 ? "pl-4 text-[13px]" : "font-medium",
                 active ? "bg-sky/10 text-sky" : "text-slate hover:bg-gray-50 hover:text-charcoal"
               )}
             >
@@ -117,14 +117,14 @@ function TocSidebar({
   return (
     <nav
       className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-5 shadow-card",
+        "rounded-2xl border border-gray-100 bg-white p-4 shadow-card",
         !embedded && hubTocStickyTopClass,
         !embedded && hubTocStickyMaxHeightClass,
         className
       )}
       aria-label="Содержание"
     >
-      <p className="font-heading text-sm font-bold text-charcoal">Содержание</p>
+      <p className="font-heading text-sm font-bold leading-none text-charcoal">Содержание</p>
       <TocList items={items} activeId={activeId} />
     </nav>
   );

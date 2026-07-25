@@ -31,17 +31,17 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
     return (
       <aside className="hidden lg:block">
         <nav
-          className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-card"
+          className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-4 shadow-card"
           aria-label="Содержание"
         >
-          <p className="font-heading text-sm font-bold text-charcoal">Содержание</p>
-          <ol className="mt-3 space-y-2 text-sm">
+          <p className="font-heading text-sm font-bold leading-none text-charcoal">Содержание</p>
+          <ol className="mt-2 space-y-0.5 text-sm">
             {sections.map((section) => (
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
                   onClick={handleAnchorClick(section.id)}
-                  className="text-slate transition-colors hover:text-sky"
+                  className="flex items-center rounded-lg px-2.5 py-1.5 leading-snug text-slate transition-colors hover:bg-gray-50 hover:text-sky"
                 >
                   {section.title}
                 </a>
@@ -49,14 +49,22 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
             ))}
             {widgetLinks.map((slot) => (
               <li key={slot.id}>
-                <a href={`#${slot.id}`} onClick={handleAnchorClick(slot.id)} className="text-slate transition-colors hover:text-sky">
+                <a
+                  href={`#${slot.id}`}
+                  onClick={handleAnchorClick(slot.id)}
+                  className="flex items-center rounded-lg px-2.5 py-1.5 leading-snug text-slate transition-colors hover:bg-gray-50 hover:text-sky"
+                >
                   {slot.label}
                 </a>
               </li>
             ))}
             {EXTRA_LINKS.map((link) => (
               <li key={link.id}>
-                <a href={`#${link.id}`} onClick={handleAnchorClick(link.id)} className="text-slate transition-colors hover:text-sky">
+                <a
+                  href={`#${link.id}`}
+                  onClick={handleAnchorClick(link.id)}
+                  className="flex items-center rounded-lg px-2.5 py-1.5 leading-snug text-slate transition-colors hover:bg-gray-50 hover:text-sky"
+                >
                   {link.label}
                 </a>
               </li>

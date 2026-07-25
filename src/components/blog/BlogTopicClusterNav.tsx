@@ -41,12 +41,12 @@ export default function BlogTopicClusterNav({
           <ArrowRight className="h-3.5 w-3.5" aria-hidden />
         </Link>
       </div>
-      <ul className="mt-3 space-y-1.5">
+      <ul className="mt-2 space-y-0.5">
         {siblings.map((item) => (
           <li key={item.slug}>
             <Link
               href={item.href}
-              className="blog-touch-target block rounded-lg px-2 py-1.5 text-sm text-slate transition-colors hover:bg-sky/5 hover:text-sky"
+              className="flex items-center rounded-lg px-2.5 py-1.5 text-sm leading-snug text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             >
               {item.title}
             </Link>
