@@ -126,4 +126,59 @@ describe("block normalize", () => {
       normalizeBlogBodyBlock({ type: "facts-grid", columns: 12, items: "invalid" })
     ).toMatchObject({ columns: 3, items: [] });
   });
+
+  it("persists design density, gallery layout and travel widget props", () => {
+    expect(
+      normalizeBlogBodyBlock({
+        type: "photo",
+        src: "/media/a.jpg",
+        alt: "Патагония",
+        variant: "edge-to-edge",
+        density: "spacious",
+        author: "Редакция",
+      }),
+    ).toMatchObject({
+      type: "photo",
+      variant: "edge-to-edge",
+      density: "spacious",
+      author: "Редакция",
+    });
+
+    expect(
+      normalizeBlogBodyBlock({
+        type: "gallery",
+        columns: 2,
+        variant: "filmstrip",
+        items: [{ src: "/media/a.jpg", alt: "Кадр", caption: "Подпись" }],
+      }),
+    ).toMatchObject({
+      type: "gallery",
+      columns: 2,
+      variant: "filmstrip",
+      items: [{ caption: "Подпись" }],
+    });
+
+    expect(
+      normalizeBlogBodyBlock({
+        type: "season-matrix",
+        highlightCurrentMonth: false,
+      }),
+    ).toEqual({ type: "season-matrix", highlightCurrentMonth: false });
+
+    expect(
+      normalizeBlogBodyBlock({
+        type: "tourism-infographic",
+        compact: true,
+      }),
+    ).toEqual({ type: "tourism-infographic", compact: true });
+
+    expect(
+      normalizeBlogBodyBlock({
+        type: "related-links",
+        title: "Дальше",
+        density: "compact",
+        items: [{ label: "Туры", href: "/tours", description: "Каталог" }],
+      }),
+    ).toMatchObject({ density: "compact", items: [{ label: "Туры" }] });
+  });
 });

@@ -18,6 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import PageBuilderBlockCard from "@/components/admin/page-builder/PageBuilderBlockCard";
+import { supportsMediaPicker } from "@/lib/cms/page-builder/media-picker-blocks";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 
 type Props = {
@@ -108,9 +109,7 @@ export default function SortableBlockList({ blocks, onChange, onPickMedia }: Pro
               }}
               onRemove={() => onChange(blocks.filter((_, i) => i !== index))}
               onPickMedia={
-                block.type === "media" || block.type === "gallery"
-                  ? () => onPickMedia?.(index)
-                  : undefined
+                supportsMediaPicker(block.type) ? () => onPickMedia?.(index) : undefined
               }
             />
           ))}

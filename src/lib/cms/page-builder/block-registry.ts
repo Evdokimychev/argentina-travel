@@ -429,6 +429,7 @@ export const PAGE_BUILDER_BLOCKS: PageBuilderBlockDefinition[] = [
       src: "",
       alt: "",
       variant: "content-width",
+      density: "comfortable",
     }),
   },
   {
@@ -441,6 +442,7 @@ export const PAGE_BUILDER_BLOCKS: PageBuilderBlockDefinition[] = [
       type: "article-summary",
       title: "Коротко о главном",
       variant: "cards",
+      density: "comfortable",
       items: [
         { title: "Пункт 1", body: "" },
         { title: "Пункт 2", body: "" },
@@ -524,7 +526,7 @@ export const PAGE_BUILDER_BLOCKS: PageBuilderBlockDefinition[] = [
     description: "Виджет регионов × месяцев",
     group: "travel",
     icon: CalendarRange,
-    create: () => ({ type: "season-matrix" }),
+    create: () => ({ type: "season-matrix", highlightCurrentMonth: true }),
   },
   {
     slug: "tourism-infographic",
@@ -532,7 +534,7 @@ export const PAGE_BUILDER_BLOCKS: PageBuilderBlockDefinition[] = [
     description: "Обзорная инфографика по туризму",
     group: "travel",
     icon: PanelsTopLeft,
-    create: () => ({ type: "tourism-infographic" }),
+    create: () => ({ type: "tourism-infographic", compact: false }),
   },
   {
     slug: "tourism-timeline",

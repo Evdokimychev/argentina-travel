@@ -5,7 +5,10 @@ import { ChevronDown, ChevronUp, GripVertical, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { renderBlogBodyBlock } from "@/components/blog/BlogSectionBody";
 import PageBuilderBlockFields from "@/components/admin/page-builder/PageBuilderBlockFields";
+import PageBuilderBlockValidation from "@/components/admin/page-builder/PageBuilderBlockValidation";
 import { blockDefinitionFor } from "@/lib/cms/page-builder/block-registry";
+import { supportsMediaPicker } from "@/lib/cms/page-builder/media-picker-blocks";
+import { auditEditorialBlocks } from "@/editorial/utilities/audit";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 
 type Props = {
@@ -37,6 +40,9 @@ export default function PageBuilderBlockCard({
   const [preview, setPreview] = useState(false);
   const def = blockDefinitionFor(block);
   const Icon = def.icon;
+  const findings = auditEditorialBlocks([block]);
+  const errorCount = findings.filter((item) => item.level === "error").length;
+  const warningCount = findings.filter((item) => item.level === "warning").length;
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -57,6 +63,15 @@ export default function PageBuilderBlockCard({
         >
           {def.label}
           <span className="ml-2 font-mono text-[10px] text-slate">{block.type}</span>
+          {errorCount > 0 ? (
+            <span className="ml-2 rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700">
+              {errorCount} ош.
+            </span>
+          ) : warningCount > 0 ? (
+            <span className="ml-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
+              {warningCount}
+            </span>
+          ) : null}
         </button>
         <div className="flex shrink-0 items-center gap-0.5">
           {!hideMoveButtons ? (
@@ -92,7 +107,7 @@ export default function PageBuilderBlockCard({
             className="text-xs"
             onClick={() => setPreview((p) => !p)}
           >
-            {preview ? "Поля" : "Preview"}
+            {preview ? "Поля" : "Просмотр"}
           </Button>
           <Button
             type="button"
@@ -117,16 +132,10 @@ export default function PageBuilderBlockCard({
             <PageBuilderBlockFields
               block={block}
               onChange={onChange}
-              onPickMedia={
-                block.type === "media" ||
-                block.type === "gallery" ||
-                block.type === "image-text" ||
-                block.type === "author-card"
-                  ? onPickMedia
-                  : undefined
-              }
+              onPickMedia={supportsMediaPicker(block.type) ? onPickMedia : undefined}
             />
           )}
+          <PageBuilderBlockValidation block={block} />
         </div>
       ) : null}
     </div>

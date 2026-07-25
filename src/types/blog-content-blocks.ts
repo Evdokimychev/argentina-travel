@@ -169,8 +169,8 @@ export type BlogBodyBlock =
       title?: string;
     }
   | { type: "seasons"; items: BlogSeasonItem[]; conclusion?: string }
-  | { type: "season-matrix" }
-  | { type: "tourism-infographic" }
+  | { type: "season-matrix"; highlightCurrentMonth?: boolean }
+  | { type: "tourism-infographic"; compact?: boolean }
   | { type: "tourism-timeline" }
   | { type: "budget"; items: BlogBudgetItem[]; note?: string }
   | { type: "media"; src: string; alt: string; caption?: string }

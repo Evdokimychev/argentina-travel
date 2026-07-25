@@ -141,7 +141,8 @@ Picker использует общий доступный диалог, поис
 | Phase | Scope |
 |-------|-------|
 | **1 (текущий)** | DnD, +12 блоков, VisualPageBuilder, author_article, organizer editor |
-| **2** | Slash menu, Tiptap inline в paragraph, landing doc_type |
+| **2** | Editor UX: variants/density, structured rows, media picker, inline audit |
+| **2b** | Slash menu, Tiptap inline в paragraph |
 | **3** | Moderation workflow, expert cabinet, collaborative Yjs |
 | **4** | Unified CmsPageBuilder for destination/place hero sections |
 

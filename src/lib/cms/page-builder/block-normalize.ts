@@ -1,6 +1,7 @@
 import type {
   BlogBodyBlock,
   BlogCalloutVariant,
+  BlogEditorialDensity,
   BlogPhotoVariant,
   BlogSectionKind,
 } from "@/types/blog-content-blocks";
@@ -42,6 +43,13 @@ function asNumber(value: unknown, fallback: number): number {
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string");
+}
+
+function asDensity(value: unknown): BlogEditorialDensity | undefined {
+  if (value === "compact" || value === "comfortable" || value === "spacious") {
+    return value;
+  }
+  return undefined;
 }
 
 function normalizeCalloutVariant(value: unknown): BlogCalloutVariant {
@@ -359,6 +367,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
           record.variant === "with-author-note"
             ? record.variant
             : "default",
+        density: asDensity(record.density),
       };
     case "photo":
       return {
@@ -377,6 +386,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
           PHOTO_VARIANTS.includes(record.variant as BlogPhotoVariant)
             ? (record.variant as BlogPhotoVariant)
             : "content-width",
+        density: asDensity(record.density),
       };
     case "article-summary":
       return {
@@ -400,6 +410,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 href: asString(item.href) || undefined,
               }))
           : [],
+        density: asDensity(record.density),
       };
     case "sources":
       return {
@@ -429,6 +440,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 notes: asString(item.notes) || undefined,
               }))
           : [],
+        density: asDensity(record.density),
       };
     case "country-tip":
       return {
@@ -441,6 +453,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
             : "ru-traveler",
         title: asString(record.title) || undefined,
         body: asString(record.body),
+        density: asDensity(record.density),
       };
     case "phrasebook":
       return {
@@ -457,6 +470,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 context: asString(item.context) || undefined,
               }))
           : [],
+        density: asDensity(record.density),
       };
     case "option-selector":
       return {
@@ -474,6 +488,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 meta: asString(item.meta) || undefined,
               }))
           : [],
+        density: asDensity(record.density),
       };
     case "pros-cons":
       return {
@@ -488,11 +503,18 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
           items: asStringArray((record.cons as Record<string, unknown> | undefined)?.items),
         },
         recommendation: asString(record.recommendation) || undefined,
+        density: asDensity(record.density),
       };
     case "season-matrix":
-      return { type: "season-matrix" };
+      return {
+        type: "season-matrix",
+        highlightCurrentMonth: record.highlightCurrentMonth !== false,
+      };
     case "tourism-infographic":
-      return { type: "tourism-infographic" };
+      return {
+        type: "tourism-infographic",
+        compact: record.compact === true,
+      };
     case "tourism-timeline":
       return { type: "tourism-timeline" };
     case "hero-banner": {
@@ -523,6 +545,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
               href: asString(secondary.href, "/"),
             }
           : undefined,
+        density: asDensity(record.density),
       };
     }
     case "related-links":
@@ -539,6 +562,7 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
                 description: asString(item.description) || undefined,
               }))
           : [],
+        density: asDensity(record.density),
       };
     default:
       return null;
