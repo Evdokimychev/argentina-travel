@@ -19,6 +19,7 @@ import {
   type PublicationIssue,
 } from "@/lib/knowledge-base/publication-quality";
 import type { KbEntry, KbEntryType } from "@/lib/knowledge-base/types";
+import { blocksToPlainText } from "@/lib/cms/page-builder/block-normalize";
 import type { CmsDocument } from "@/types/cms-content";
 
 const KB_ENTRY_TYPES = new Set<KbEntryType>([
@@ -69,7 +70,12 @@ export function knowledgeEntryFromCms(doc: CmsDocument, fallback?: KbEntry): KbE
   if (doc.docType !== "knowledge" || doc.body.kind !== "blog") return null;
   const collector = doc.body.collector;
   const sectionBody = doc.body.sections
-    ?.map((section) => `## ${section.title}\n\n${section.body}`)
+    ?.map((section) => {
+      const prose = section.body?.trim() ?? "";
+      const fromBlocks = section.blocks?.length ? blocksToPlainText(section.blocks) : "";
+      const combined = [prose, fromBlocks].filter(Boolean).join("\n\n");
+      return combined ? `## ${section.title}\n\n${combined}` : `## ${section.title}`;
+    })
     .join("\n\n");
   const body = doc.body.content?.trim() || sectionBody?.trim() || fallback?.body || "";
   if (!body) return null;

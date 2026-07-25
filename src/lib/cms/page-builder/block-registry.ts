@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BookOpenText,
+  CalendarRange,
   CircleDollarSign,
   CircleHelp,
   Globe2,
@@ -8,6 +9,7 @@ import {
   ImageIcon,
   Images,
   LayoutGrid,
+  LayoutTemplate,
   Library,
   Link2,
   List,
@@ -17,6 +19,7 @@ import {
   Megaphone,
   Minus,
   PanelBottom,
+  PanelsTopLeft,
   Route,
   Scale,
   ShoppingBag,
@@ -515,6 +518,73 @@ export const PAGE_BUILDER_BLOCKS: PageBuilderBlockDefinition[] = [
       cons: { items: [""] },
     }),
   },
+  {
+    slug: "season-matrix",
+    label: "Матрица сезонов",
+    description: "Виджет регионов × месяцев",
+    group: "travel",
+    icon: CalendarRange,
+    create: () => ({ type: "season-matrix" }),
+  },
+  {
+    slug: "tourism-infographic",
+    label: "Туристическая инфографика",
+    description: "Обзорная инфографика по туризму",
+    group: "travel",
+    icon: PanelsTopLeft,
+    create: () => ({ type: "tourism-infographic" }),
+  },
+  {
+    slug: "tourism-timeline",
+    label: "Таймлайн туризма",
+    description: "Сезонный или исторический таймлайн",
+    group: "travel",
+    icon: CalendarRange,
+    create: () => ({ type: "tourism-timeline" }),
+  },
+  {
+    slug: "hero-banner",
+    label: "Hero-баннер",
+    description: "Крупный вводный блок с CTA для страниц и хабов",
+    group: "media",
+    icon: LayoutTemplate,
+    create: () => ({
+      type: "hero-banner",
+      eyebrow: "Раздел сайта",
+      title: "Заголовок страницы",
+      lede: "Короткое описание ценности раздела.",
+      primaryCta: { label: "Основное действие", href: "/" },
+    }),
+  },
+  {
+    slug: "related-links",
+    label: "Связанные материалы",
+    description: "Список внутренних ссылок",
+    group: "embeds",
+    icon: Link2,
+    create: () => ({
+      type: "related-links",
+      title: "Читайте также",
+      items: [
+        { label: "Связанная статья", href: "/blog", description: "Краткое пояснение" },
+      ],
+    }),
+  },
+  {
+    slug: "hub-cta-row",
+    label: "Ряд CTA хаба",
+    description: "Несколько карточек-действий для хабов и лендингов",
+    group: "commerce",
+    icon: LayoutGrid,
+    create: () => ({
+      type: "hub-cta-row",
+      title: "Что дальше",
+      items: [
+        { label: "Смотреть туры", href: "/tours", description: "Каталог маршрутов" },
+        { label: "Открыть карту", href: "/mapa-argentina", description: "Регионы и места" },
+      ],
+    }),
+  },
 ];
 
 export const PAGE_BUILDER_BLOCK_BY_SLUG = Object.fromEntries(
@@ -526,7 +596,16 @@ export function createPageBuilderBlock(slug: PageBuilderBlockSlug): BlogBodyBloc
 }
 
 export function blockDefinitionFor(block: BlogBodyBlock): PageBuilderBlockDefinition {
-  return PAGE_BUILDER_BLOCK_BY_SLUG[block.type];
+  return (
+    PAGE_BUILDER_BLOCK_BY_SLUG[block.type] ?? {
+      slug: block.type,
+      label: block.type,
+      description: "Неизвестный или устаревший блок — проверьте registry",
+      group: "content",
+      icon: Type,
+      create: () => ({ type: "paragraph", text: "" }),
+    }
+  );
 }
 
 export { CALLOUT_VARIANTS };

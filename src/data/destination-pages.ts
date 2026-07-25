@@ -1,5 +1,6 @@
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import type { Destination } from "@/types";
+import type { ContentSection } from "@/types/content-page";
 
 export type DestinationPage = Destination & {
   intro: string;
@@ -9,6 +10,8 @@ export type DestinationPage = Destination & {
   howToGetThere: string;
   travelTips: string[];
   regionGroup: string;
+  /** CMS page-builder sections (optional overlay). */
+  sections?: ContentSection[];
 };
 
 const DESTINATION_CONTENT: Record<

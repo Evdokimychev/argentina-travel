@@ -155,4 +155,21 @@ export const EDITORIAL_PREVIEW_SAMPLES: BlogBodyBlock[] = [
     href: "/ekskursii?q=asado",
     variant: "primary",
   },
+  {
+    type: "hero-banner",
+    eyebrow: "Хабы и лендинги",
+    title: "Конструктор страниц сайта",
+    lede: "Те же блоки работают для направлений, мест, путеводителей и базы знаний.",
+    primaryCta: { label: "Открыть путеводители", href: "/guide" },
+    secondaryCta: { label: "Карта", href: "/mapa-argentina" },
+  },
+  {
+    type: "hub-cta-row",
+    title: "Быстрые переходы",
+    items: [
+      { label: "Направления", href: "/destinations", description: "Регионы страны" },
+      { label: "Места", href: "/places", description: "Справочник объектов" },
+      { label: "База знаний", href: "/baza-znaniy", description: "Практические статьи" },
+    ],
+  },
 ];

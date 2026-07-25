@@ -210,12 +210,14 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       setDestinationHowToGetThere(draft.body.howToGetThere ?? "");
       setDestinationHighlights(draft.body.highlights ?? []);
       setDestinationTravelTips(draft.body.travelTips ?? []);
+      setSections(draft.body.sections ?? []);
     } else if (draft.body.kind === "place") {
       setPlaceShortDescription(draft.body.shortDescription ?? "");
       setPlaceFullDescription(draft.body.fullDescription ?? "");
       setPlaceHowToGetThere(draft.body.howToGetThere ?? "");
       setPlaceInterestingFacts(draft.body.interestingFacts ?? []);
       setPlaceRelatedTourSlugs((draft.body.relatedTourSlugs ?? []).join(", "));
+      setSections(draft.body.sections ?? []);
     }
   }, []);
 
@@ -361,6 +363,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         howToGetThere: destinationHowToGetThere.trim() || undefined,
         highlights: destinationHighlights,
         travelTips: destinationTravelTips,
+        sections: sections.map((section) => normalizeGuideSectionForCms(section)),
       } satisfies CmsDestinationBody;
     }
     if (doc?.body.kind === "place") {
@@ -372,6 +375,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         interestingFacts: placeInterestingFacts,
         faq: doc.body.faq,
         relatedTourSlugs: parseContentSlugList(placeRelatedTourSlugs),
+        sections: sections.map((section) => normalizeGuideSectionForCms(section)),
       } satisfies CmsPlaceBody;
     }
     return {
@@ -1125,11 +1129,45 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
             ) : null}
 
             {isGuide ? (
-              <GuideSectionPageBuilder sections={sections} onChange={setSections} />
+              <GuideSectionPageBuilder
+                sections={sections}
+                onChange={setSections}
+                title="Конструктор путеводителя"
+                starterPatterns={["practical-guide", "destination-page-body", "day-by-day-route"]}
+              />
+            ) : null}
+
+            {isDestination ? (
+              <GuideSectionPageBuilder
+                sections={sections}
+                onChange={setSections}
+                title="Конструктор страницы направления"
+                starterPatterns={["destination-page-body", "hub-intro", "destination-story"]}
+                helpText="Шапка направления (сезон, как добраться, советы) редактируется выше. Здесь — дополнительные редакционные блоки страницы."
+              />
+            ) : null}
+
+            {isPlace ? (
+              <GuideSectionPageBuilder
+                sections={sections}
+                onChange={setSections}
+                title="Конструктор страницы места"
+                starterPatterns={["place-practical", "practical-guide", "destination-story"]}
+                helpText="Базовое описание места редактируется выше. Здесь — дополнительные блоки: шаги, FAQ, источники, галереи."
+              />
             ) : null}
 
             {isBlogLike ? (
-              <BlogSectionPageBuilder sections={blogSections} onChange={setBlogSections} />
+              <BlogSectionPageBuilder
+                sections={blogSections}
+                onChange={setBlogSections}
+                title={isKnowledge ? "Конструктор статьи базы знаний" : "Визуальный конструктор статьи"}
+                starterPatterns={
+                  isKnowledge
+                    ? ["immigration-practical", "practical-guide", "expert-story"]
+                    : ["practical-guide", "expert-story", "destination-story"]
+                }
+              />
             ) : null}
           </section>
 

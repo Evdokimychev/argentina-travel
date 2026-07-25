@@ -106,6 +106,8 @@ export type CmsDestinationBody = {
   howToGetThere?: string;
   highlights?: string[];
   travelTips?: string[];
+  /** Optional page-builder sections rendered below the destination chrome. */
+  sections?: ContentSection[];
 };
 
 export type CmsPlaceBody = {
@@ -116,6 +118,8 @@ export type CmsPlaceBody = {
   interestingFacts?: string[];
   faq?: PlaceFaqItem[];
   relatedTourSlugs?: string[];
+  /** Optional page-builder sections rendered below the place chrome. */
+  sections?: ContentSection[];
 };
 
 export type CmsAuthorArticleBody = {
@@ -425,6 +429,7 @@ export function destinationPageFromCms(
       "Уточняйте логистику и трансферы перед поездкой.",
     travelTips: doc.body.travelTips ?? fallback?.travelTips ?? [],
     regionGroup,
+    sections: doc.body.sections?.length ? doc.body.sections : fallback?.sections,
   };
 }
 
@@ -467,6 +472,7 @@ export function placeDetailFromCms(doc: CmsDocument, fallback?: PlaceDetail): Pl
     howToGetThere: doc.body.howToGetThere ?? fallback?.howToGetThere,
     nearbyHighlights: fallback?.nearbyHighlights,
     faq: doc.body.faq ?? fallback?.faq,
+    sections: doc.body.sections?.length ? doc.body.sections : fallback?.sections,
     relatedTourSlugs: doc.body.relatedTourSlugs ?? fallback?.relatedTourSlugs,
   };
 }

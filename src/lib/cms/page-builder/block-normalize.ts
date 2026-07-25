@@ -489,6 +489,57 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
         },
         recommendation: asString(record.recommendation) || undefined,
       };
+    case "season-matrix":
+      return { type: "season-matrix" };
+    case "tourism-infographic":
+      return { type: "tourism-infographic" };
+    case "tourism-timeline":
+      return { type: "tourism-timeline" };
+    case "hero-banner": {
+      const primary =
+        record.primaryCta && typeof record.primaryCta === "object"
+          ? (record.primaryCta as Record<string, unknown>)
+          : null;
+      const secondary =
+        record.secondaryCta && typeof record.secondaryCta === "object"
+          ? (record.secondaryCta as Record<string, unknown>)
+          : null;
+      return {
+        type: "hero-banner",
+        eyebrow: asString(record.eyebrow) || undefined,
+        title: asString(record.title, "Заголовок"),
+        lede: asString(record.lede) || undefined,
+        imageSrc: asString(record.imageSrc) || undefined,
+        imageAlt: asString(record.imageAlt) || undefined,
+        primaryCta: primary
+          ? {
+              label: asString(primary.label, "Подробнее"),
+              href: asString(primary.href, "/"),
+            }
+          : undefined,
+        secondaryCta: secondary
+          ? {
+              label: asString(secondary.label, "Ещё"),
+              href: asString(secondary.href, "/"),
+            }
+          : undefined,
+      };
+    }
+    case "related-links":
+    case "hub-cta-row":
+      return {
+        type,
+        title: asString(record.title) || undefined,
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                label: asString(item.label),
+                href: asString(item.href),
+                description: asString(item.description) || undefined,
+              }))
+          : [],
+      };
     default:
       return null;
   }
@@ -614,6 +665,18 @@ export function blocksToPlainText(blocks: BlogBodyBlock[]): string {
             ...block.pros.items,
             ...block.cons.items,
             block.recommendation,
+          ]
+            .filter(Boolean)
+            .join("\n");
+        case "hero-banner":
+          return [block.eyebrow, block.title, block.lede].filter(Boolean).join("\n");
+        case "related-links":
+        case "hub-cta-row":
+          return [
+            block.title,
+            ...block.items.map((item) =>
+              [item.label, item.description].filter(Boolean).join(": "),
+            ),
           ]
             .filter(Boolean)
             .join("\n");

@@ -1191,6 +1191,120 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
         </div>
       );
 
+    case "season-matrix":
+    case "tourism-infographic":
+    case "tourism-timeline":
+      return (
+        <p className="text-xs text-slate">
+          Встроенный travel-виджет без дополнительных полей. На сайте подтянется актуальная версия
+          компонента.
+        </p>
+      );
+
+    case "hero-banner":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.eyebrow ?? ""}
+            onChange={(e) => onChange({ ...block, eyebrow: e.target.value || undefined })}
+            placeholder="Надзаголовок"
+          />
+          <Input
+            value={block.title}
+            onChange={(e) => onChange({ ...block, title: e.target.value })}
+            placeholder="Заголовок"
+          />
+          <textarea
+            className="min-h-[72px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.lede ?? ""}
+            onChange={(e) => onChange({ ...block, lede: e.target.value || undefined })}
+            placeholder="Короткий лид"
+          />
+          <Input
+            value={block.imageSrc ?? ""}
+            onChange={(e) => onChange({ ...block, imageSrc: e.target.value || undefined })}
+            placeholder="Фон: /media/…"
+          />
+          <Input
+            value={block.imageAlt ?? ""}
+            onChange={(e) => onChange({ ...block, imageAlt: e.target.value || undefined })}
+            placeholder="Alt фона"
+          />
+          <Input
+            value={block.primaryCta ? `${block.primaryCta.label}|${block.primaryCta.href}` : ""}
+            onChange={(e) => {
+              const [label, href] = e.target.value.split("|");
+              onChange({
+                ...block,
+                primaryCta:
+                  label?.trim() && href?.trim()
+                    ? { label: label.trim(), href: href.trim() }
+                    : undefined,
+              });
+            }}
+            placeholder="Основная CTA: Текст|/path"
+          />
+          <Input
+            value={
+              block.secondaryCta ? `${block.secondaryCta.label}|${block.secondaryCta.href}` : ""
+            }
+            onChange={(e) => {
+              const [label, href] = e.target.value.split("|");
+              onChange({
+                ...block,
+                secondaryCta:
+                  label?.trim() && href?.trim()
+                    ? { label: label.trim(), href: href.trim() }
+                    : undefined,
+              });
+            }}
+            placeholder="Доп. CTA: Текст|/path"
+          />
+          {onPickMedia ? (
+            <Button type="button" variant="secondary" size="sm" onClick={onPickMedia}>
+              Выбрать фон из медиатеки
+            </Button>
+          ) : null}
+        </div>
+      );
+
+    case "related-links":
+    case "hub-cta-row":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок блока"
+          />
+          <textarea
+            className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.items
+              .map((item) => `${item.label}|${item.href}|${item.description ?? ""}`)
+              .join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                items: e.target.value
+                  .split("\n")
+                  .map((line) => line.trim())
+                  .filter(Boolean)
+                  .map((line) => {
+                    const [label, href, description] = line.split("|");
+                    return {
+                      label: label ?? "",
+                      href: href ?? "",
+                      description: description || undefined,
+                    };
+                  }),
+              })
+            }
+            placeholder={"Туры|/tours|Каталог маршрутов"}
+          />
+          <p className="text-[11px] text-slate">Формат: название|URL|описание</p>
+        </div>
+      );
+
     default:
       return null;
   }
