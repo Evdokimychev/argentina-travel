@@ -4086,6 +4086,50 @@
       "imageTitle": "Аргентинский стейк — asado и parrilla"
     },
     {
+      "id": "blog-argentinian-steak-guide-cuts-gallery",
+      "title": "Сырые отрубы говядины на прилавке — bife de chorizo, ojo de bife, vacío",
+      "alt": "Сырые отрубы говядины на прилавке — bife de chorizo, ojo de bife, vacío",
+      "category": "blog-article",
+      "tags": [
+        "stock",
+        "gallery"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/person-holding-sliced-pizza-on-brown-wooden-table-during-daytime-6_1Pt6p64MA",
+      "license": "Unsplash License",
+      "author": "Benjamin R.",
+      "localPath": "media/blog/argentinian-steak-guide/cuts-gallery.jpg",
+      "role": "gallery",
+      "contentHash": "59344ceb91baf02028c10f829333fe16",
+      "blogPostSlug": "argentinian-steak-guide",
+      "authorProfileUrl": "https://unsplash.com/@dapperprofessional",
+      "attributionHtml": "Фото: <a href=\"https://unsplash.com/@dapperprofessional\">Benjamin R.</a> / <a href=\"https://unsplash.com/photos/person-holding-sliced-pizza-on-brown-wooden-table-during-daytime-6_1Pt6p64MA\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Сырые отрубы говядины на прилавке — bife de chorizo, ojo de bife, vacío"
+    },
+    {
+      "id": "blog-argentinian-steak-guide-sauces",
+      "title": "Chimichurri и salsa criolla — соусы для аргентинской parrilla",
+      "alt": "Chimichurri и salsa criolla — соусы для аргентинской parrilla",
+      "category": "blog-article",
+      "tags": [
+        "stock",
+        "gallery"
+      ],
+      "source": "pexels",
+      "sourceUrl": "https://www.pexels.com/photo/traditional-argentine-chimichurri-sauce-on-table-37049896/",
+      "license": "Pexels License",
+      "author": "Gera Cejas",
+      "localPath": "media/blog/argentinian-steak-guide/sauces.jpg",
+      "role": "gallery",
+      "contentHash": "fafe46b38d73e536fd96d8cb59b5c271",
+      "blogPostSlug": "argentinian-steak-guide",
+      "authorProfileUrl": "https://www.pexels.com/@gera-cejas-3616330",
+      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@gera-cejas-3616330\">Gera Cejas</a> / <a href=\"https://www.pexels.com/photo/traditional-argentine-chimichurri-sauce-on-table-37049896/\">Pexels</a>",
+      "attributionRequired": true,
+      "imageTitle": "Chimichurri и salsa criolla — соусы для аргентинской parrilla"
+    },
+    {
       "id": "blog-blue-dollar-argentina-2026",
       "title": "Синий доллар в Аргентине — обмен валюты",
       "alt": "Синий доллар в Аргентине — обмен валюты",
@@ -49707,6 +49751,72 @@
       "localPath": "media/places/cementerio-de-la-chacarita/hero.jpg",
       "placeId": "cementerio-de-la-chacarita",
       "role": "hero"
+    },
+    {
+      "id": "blog-argentinian-steak-guide-meat-platter",
+      "title": "Мясное ассорти на деревянной доске",
+      "alt": "Мясное ассорти на деревянной доске",
+      "category": "blog-article",
+      "tags": [
+        "stock",
+        "gallery"
+      ],
+      "source": "pexels",
+      "sourceUrl": "https://www.pexels.com/photo/meal-on-tray-16014227/",
+      "license": "Pexels License",
+      "author": "Boris Hamer",
+      "localPath": "media/blog/argentinian-steak-guide/meat-platter.jpg",
+      "role": "gallery",
+      "contentHash": "83fb23b9bdcb7211f6b2f9916f3773d4",
+      "blogPostSlug": "argentinian-steak-guide",
+      "authorProfileUrl": "https://www.pexels.com/@borishamer",
+      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@borishamer\">Boris Hamer</a> / <a href=\"https://www.pexels.com/photo/meal-on-tray-16014227/\">Pexels</a>",
+      "attributionRequired": true,
+      "imageTitle": "Мясное ассорти на деревянной доске"
+    },
+    {
+      "id": "blog-argentinian-steak-guide-sliced-steak",
+      "title": "Прожаренный стейк в разрезе",
+      "alt": "Прожаренный стейк в разрезе",
+      "category": "blog-article",
+      "tags": [
+        "stock",
+        "gallery"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/a-close-up-of-a-plate-of-food-with-meat-wxt4m8ECpgM",
+      "license": "Unsplash License",
+      "author": "Sebastian Doll",
+      "localPath": "media/blog/argentinian-steak-guide/sliced-steak.jpg",
+      "role": "gallery",
+      "contentHash": "251e03c2b9ecb59d6382c4f2e03e982a",
+      "blogPostSlug": "argentinian-steak-guide",
+      "authorProfileUrl": "https://unsplash.com/@sebonbali",
+      "attributionHtml": "Фото: <a href=\"https://unsplash.com/@sebonbali\">Sebastian Doll</a> / <a href=\"https://unsplash.com/photos/a-close-up-of-a-plate-of-food-with-meat-wxt4m8ECpgM\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Прожаренный стейк в разрезе"
+    },
+    {
+      "id": "blog-argentinian-steak-guide-grill-flames",
+      "title": "Мясо на решётке parrilla с открытым огнём",
+      "alt": "Мясо на решётке parrilla с открытым огнём",
+      "category": "blog-article",
+      "tags": [
+        "stock",
+        "gallery"
+      ],
+      "source": "unsplash",
+      "sourceUrl": "https://unsplash.com/photos/red-bell-pepper-on-grill-vn4obEjdFPs",
+      "license": "Unsplash License",
+      "author": "Mike Kotsch",
+      "localPath": "media/blog/argentinian-steak-guide/grill-flames.jpg",
+      "role": "gallery",
+      "contentHash": "21cffcd490f5ce652cc9275e95a3cf24",
+      "blogPostSlug": "argentinian-steak-guide",
+      "authorProfileUrl": "https://unsplash.com/@mike",
+      "attributionHtml": "Фото: <a href=\"https://unsplash.com/@mike\">Mike Kotsch</a> / <a href=\"https://unsplash.com/photos/red-bell-pepper-on-grill-vn4obEjdFPs\">Unsplash</a>",
+      "attributionRequired": true,
+      "imageTitle": "Мясо на решётке parrilla с открытым огнём"
     }
   ]
 }

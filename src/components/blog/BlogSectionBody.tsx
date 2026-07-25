@@ -10,6 +10,7 @@ import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
+import ArticleStoryDeck from "@/components/blog/ArticleStoryDeck";
 import BlogSectionDivider from "@/components/blog/BlogSectionDivider";
 import BlogStepList from "@/components/blog/BlogStepList";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
@@ -146,7 +147,13 @@ function renderBlock(
       return <BlogBudgetWidget key={index} items={block.items} note={block.note} />;
     case "media":
       return (
-        <BlogMediaBlock key={index} src={block.src} alt={block.alt} caption={block.caption} />
+        <BlogMediaBlock
+          key={index}
+          src={block.src}
+          alt={block.alt}
+          caption={block.caption}
+          size={block.size}
+        />
       );
     case "image-text":
       return (
@@ -270,6 +277,16 @@ function renderBlock(
           widgetKey={block.widgetKey}
           title={block.title}
           config={block.config}
+        />
+      );
+    case "story-deck":
+      return (
+        <ArticleStoryDeck
+          key={index}
+          title={block.title}
+          ariaLabel={block.ariaLabel}
+          slides={block.slides}
+          className="my-6"
         />
       );
     default:

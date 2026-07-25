@@ -114,7 +114,10 @@ export default function BlogContentTable({
           return (
             <li
               key={`${goal}-${rowIndex}`}
-              className="rounded-2xl border border-gray-100 bg-white p-3.5 shadow-sm"
+              // Hairline border only — this list is already the mobile
+              // stand-in for the table, so it shouldn't also carry a shadow
+              // that reads as a card floating inside the section.
+              className="rounded-2xl border border-gray-100 bg-surface-muted/20 p-3.5"
             >
               <p className="text-sm font-semibold leading-snug text-charcoal">
                 <BlogInlineText text={goal} linkify />

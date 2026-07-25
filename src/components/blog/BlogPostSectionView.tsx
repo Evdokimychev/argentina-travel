@@ -77,6 +77,7 @@ export default function BlogPostSectionView({
   sectionMapPoints = [],
 }: BlogPostSectionViewProps) {
   const kind = getBlogSectionKind(section.title, section.blockType);
+  const panelled = post.displayOptions?.sectionPanels === true;
   const accent = sectionAccentClass(section);
   const imageSlot = sectionImageSlot(index, totalSections);
   const sectionImage =
@@ -92,6 +93,13 @@ export default function BlogPostSectionView({
   const expandable = EXPANDABLE_KINDS.has(kind);
   const linkifyRules = post.displayOptions?.autoLinkDestinations
     ? getBlogFullAutoLinkRules()
+    : undefined;
+  // Sections read as blocks of a shared page, not as boxed cards stacked
+  // inside the article card — a hairline divider plus extra air is enough
+  // separation without adding another nested "panel" surface. Keep the
+  // article's own card as the only bordered/shadowed chrome at this level.
+  const panelClass = panelled
+    ? "border-t border-gray-100 pt-8 first:border-t-0 first:pt-0"
     : undefined;
 
   const body = (
@@ -115,7 +123,7 @@ export default function BlogPostSectionView({
           {body}
         </BlogExpandableSection>
       ) : (
-        <section className={cn("space-y-5", accent)}>
+        <section className={cn("space-y-5", accent, panelClass)}>
           <h2
             id={headingId}
             className={cn(

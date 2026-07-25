@@ -13,7 +13,7 @@ export default function BlogStepList({ items, title, className }: BlogStepListPr
   return (
     <ol
       className={cn(
-        "space-y-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5",
+        "space-y-3 rounded-2xl border border-gray-100 bg-surface-muted/20 p-4 sm:p-5",
         className,
       )}
       aria-label={title ?? "Пошаговая инструкция"}

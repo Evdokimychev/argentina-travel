@@ -1,5 +1,6 @@
 import type { BlogPost, BlogPostSection } from "@/types";
 import { cleanLegacyBlogSourceMarkers } from "@/lib/blog-editorial-cleanup";
+import { stripHeadingDecorations } from "@/lib/content-heading-id";
 
 export type BlogFaqItem = {
   question: string;
@@ -21,7 +22,9 @@ function faqBlocksFromSections(sections: BlogPostSection[]): BlogFaqItem[] {
 
 function isFaqSection(section: BlogPostSection): boolean {
   if (section.blockType === "faq") return true;
-  const title = section.title.trim().toLowerCase();
+  // Strip a leading decorative emoji (e.g. "❓ Часто задаваемые вопросы") the
+  // same way the TOC/anchor logic does, so a heading accent never breaks FAQ detection.
+  const title = stripHeadingDecorations(section.title).trim().toLowerCase();
   return (
     title === "faq" ||
     title === "часто задаваемые вопросы" ||
