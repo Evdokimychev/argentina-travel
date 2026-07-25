@@ -4196,28 +4196,6 @@
       "imageTitle": "Что взять в поездку в Патагонию"
     },
     {
-      "id": "blog-tango-beginners-guide",
-      "title": "Танго для начинающих в Буэнос-Айресе",
-      "alt": "Танго для начинающих в Буэнос-Айресе",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-      "license": "Pexels License",
-      "author": "Leonardo Delsabio",
-      "localPath": "media/blog/tango-beginners-guide/hero.jpg",
-      "role": "hero",
-      "contentHash": "ccc7e642420e696e650e4865241e530c",
-      "blogPostSlug": "tango-beginners-guide",
-      "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Танго для начинающих в Буэнос-Айресе"
-    },
-    {
       "id": "blog-rich-iguazu-national-park-gallery-4",
       "title": "Национальный парк — флора и фауна",
       "alt": "Национальный парк — флора и фауна",
@@ -6096,28 +6074,6 @@
       "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@kelsey-wilkerson-443975242\">Kelsey Wilkerson</a> / <a href=\"https://www.pexels.com/photo/hiker-looking-at-winding-river-in-valley-26856185/\">Pexels</a>",
       "attributionRequired": true,
       "imageTitle": "Треккинг в ветреной Патагонии — что взять в поход"
-    },
-    {
-      "id": "blog-tango-beginners-guide-section-1",
-      "title": "Пара танцует танго на милонге в Буэнос-Айресе",
-      "alt": "Пара танцует танго на милонге в Буэнос-Айресе",
-      "category": "travel-guide",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-      "license": "Pexels License",
-      "author": "Leonardo Delsabio",
-      "localPath": "media/blog/tango-beginners-guide/section-1.jpg",
-      "role": "section",
-      "contentHash": "ccc7e642420e696e650e4865241e530c",
-      "blogPostSlug": "tango-beginners-guide",
-      "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Пара танцует танго на милонге в Буэнос-Айресе"
     },
     {
       "id": "home-showcase-patagonia",
@@ -9567,50 +9523,6 @@
       "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@kelsey-wilkerson-443975242\">Kelsey Wilkerson</a> / <a href=\"https://www.pexels.com/photo/hiker-looking-at-winding-river-in-valley-26856185/\">Pexels</a>",
       "attributionRequired": true,
       "imageTitle": "Треккинг в ветреной Патагонии — что взять в поход — практические детали"
-    },
-    {
-      "id": "blog-tango-beginners-guide-section-2",
-      "title": "Танго для начинающих в Буэнос-Айресе — обзор маршрута",
-      "alt": "Танго для начинающих в Буэнос-Айресе — обзор маршрута",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-      "license": "Pexels License",
-      "author": "Leonardo Delsabio",
-      "localPath": "media/blog/tango-beginners-guide/section-2.jpg",
-      "role": "section",
-      "contentHash": "ccc7e642420e696e650e4865241e530c",
-      "blogPostSlug": "tango-beginners-guide",
-      "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Танго для начинающих в Буэнос-Айресе — обзор маршрута"
-    },
-    {
-      "id": "blog-tango-beginners-guide-section-3",
-      "title": "Пара танцует танго на милонге в Буэнос-Айресе — практические детали",
-      "alt": "Пара танцует танго на милонге в Буэнос-Айресе — практические детали",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-      "license": "Pexels License",
-      "author": "Leonardo Delsabio",
-      "localPath": "media/blog/tango-beginners-guide/section-3.jpg",
-      "role": "section",
-      "contentHash": "ccc7e642420e696e650e4865241e530c",
-      "blogPostSlug": "tango-beginners-guide",
-      "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Пара танцует танго на милонге в Буэнос-Айресе — практические детали"
     },
     {
       "id": "blog-salta-i-severo-zapad-marshrut-section-2",
