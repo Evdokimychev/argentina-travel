@@ -2,6 +2,19 @@ import type { TourEmbedConfig } from "@/types/tour-embed";
 
 /** Дополнительные tour embeds для indexable-статей без inline-блока в blog.ts */
 export const BLOG_TOUR_EMBEDS: Record<string, TourEmbedConfig[]> = {
+  "patagonia-packing-list": [
+    {
+      id: "patagonia-tours-strip",
+      variant: "strip",
+      title: "Туры по Патагонии",
+      subtitle: "Ледники, треккинг и логистика с гидом",
+      limit: 6,
+      source: { kind: "query", query: "patagonia trekking glacier" },
+      catalogHref: "/tours?query=patagonia",
+      catalogLabel: "Все туры в Патагонию",
+      tone: "inline",
+    },
+  ],
   "argentinian-steak-guide": [
     {
       id: "ba-food-compact",
