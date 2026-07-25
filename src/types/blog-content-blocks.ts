@@ -65,11 +65,13 @@ export type BlogBodyBlock =
       rows: string[][];
       highlightColumn?: number;
       caption?: string;
+      /** Mobile: cards = stacked row cards without horizontal scroll */
+      mobileLayout?: "scroll" | "cards";
     }
   | { type: "callout"; variant: BlogCalloutVariant; title: string; body: string }
   | { type: "infobox"; variant: BlogInfoboxVariant; title: string; body: string }
   | { type: "faq"; items: Array<{ question: string; answer: string }> }
-  | { type: "accordion"; items: Array<{ title: string; body: string }> }
+  | { type: "accordion"; items: Array<{ title: string; body: string; id?: string }> }
   | { type: "divider" }
   | { type: "map"; lat: number; lng: number; label: string }
   | { type: "route-map"; points: BlogRouteMapPoint[]; caption?: string }

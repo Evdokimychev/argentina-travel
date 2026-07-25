@@ -547,6 +547,10 @@ export interface BlogPost {
   author: string;
   authorBio?: string;
   authorAvatar?: string;
+  /** Role shown under the author name (personal authors). */
+  authorRole?: string;
+  /** Public author profile path, e.g. /about or /authors/ivan */
+  authorUrl?: string;
   date: string;
   /** Дата последней фактической правки (JSON-LD, карточки) */
   dateModified?: string;
@@ -583,6 +587,13 @@ export interface BlogPost {
      * Включайте только для коротких карточек, где нужна агрессивная перелинковка.
      */
     autoLinkDestinations?: boolean;
+    /**
+     * Автоподстановка section-1/2/3 в тело статьи.
+     * По умолчанию true. Выключайте, если в статье уже есть кураторская галерея.
+     */
+    showAutoSectionImages?: boolean;
+    /** Sidebar «Свежее» на странице статьи. По умолчанию true. */
+    showSidebarFresh?: boolean;
   };
 }
 

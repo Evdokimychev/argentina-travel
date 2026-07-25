@@ -79,7 +79,12 @@ export default function BlogPostSectionView({
   const kind = getBlogSectionKind(section.title, section.blockType);
   const accent = sectionAccentClass(section);
   const imageSlot = sectionImageSlot(index, totalSections);
-  const sectionImage = imageSlot ? getDistinctBlogSectionImage(post, imageSlot) : undefined;
+  const sectionImage =
+    post.displayOptions?.showAutoSectionImages === false
+      ? undefined
+      : imageSlot
+        ? getDistinctBlogSectionImage(post, imageSlot)
+        : undefined;
   const isShortPost = totalSections < 6;
   const imagePriority = imageSlot === "section-1" && isShortPost;
   const imageLoading: "lazy" | undefined =

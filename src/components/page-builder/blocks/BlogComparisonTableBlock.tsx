@@ -6,6 +6,7 @@ type Props = {
   rows: string[][];
   highlightColumn?: number;
   caption?: string;
+  mobileLayout?: "scroll" | "cards";
 };
 
 export default function BlogComparisonTableBlock({
@@ -13,10 +14,16 @@ export default function BlogComparisonTableBlock({
   rows,
   highlightColumn,
   caption,
+  mobileLayout,
 }: Props) {
   return (
     <div className="space-y-2">
-      <BlogContentTable headers={headers} rows={rows} caption={caption} />
+      <BlogContentTable
+        headers={headers}
+        rows={rows}
+        caption={caption}
+        mobileLayout={mobileLayout}
+      />
       {highlightColumn != null && highlightColumn >= 0 ? (
         <p className="text-xs text-slate">
           Рекомендуемая колонка:{" "}

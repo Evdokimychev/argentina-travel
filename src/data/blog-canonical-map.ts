@@ -11,7 +11,7 @@ export type BlogCanonicalTarget = {
 export const BLOG_CANONICAL_BY_SLUG: Record<string, BlogCanonicalTarget> = {
   "food-asado": {
     canonicalSlug: "argentinian-steak-guide",
-    canonicalTitle: "Аргентинский стейк: asado и parrilla",
+    canonicalTitle: "Аргентинские стейки: отрубы, прожарка и как заказать в parrilla",
   },
   "wine-malbec": {
     canonicalSlug: "food-malbec",

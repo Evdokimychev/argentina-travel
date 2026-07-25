@@ -18,6 +18,8 @@ type BlogSidebarProps = {
   defaultHubScope?: boolean;
   readingHistoryExcludeSlug?: string;
   className?: string;
+  /** Панель «Свежее». По умолчанию показана; см. `BlogPost.displayOptions.showSidebarFresh`. */
+  showFresh?: boolean;
 };
 
 const hubLinkIcon = (type: string) => {
@@ -41,6 +43,7 @@ export default function BlogSidebar({
   defaultHubScope = false,
   readingHistoryExcludeSlug,
   className,
+  showFresh = true,
 }: BlogSidebarProps) {
   const hasHubScope = Boolean(hubFreshPosts?.length && hubLabel);
   const [hubScope, setHubScope] = useState(defaultHubScope && hasHubScope);
@@ -60,35 +63,37 @@ export default function BlogSidebar({
   return (
     <div className={cn("space-y-4", className)}>
       <BlogReadingHistoryPanel excludeSlug={readingHistoryExcludeSlug} />
-      <CollapsibleAsidePanel
-        title="Свежее"
-        storageKey="blog-sidebar-fresh-collapsed"
-        collapsedHint={freshHint}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {hasHubScope ? (
-            <label className="blog-touch-target inline-flex cursor-pointer items-center gap-1.5 text-[11px] text-charcoal">
-              <input
-                type="checkbox"
-                checked={hubScope}
-                onChange={(event) => setHubScope(event.target.checked)}
-                className="h-3.5 w-3.5 rounded border-gray-300 text-sky focus:ring-sky/30"
-              />
-              Из «{hubLabel}»
-            </label>
+      {showFresh ? (
+        <CollapsibleAsidePanel
+          title="Свежее"
+          storageKey="blog-sidebar-fresh-collapsed"
+          collapsedHint={freshHint}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {hasHubScope ? (
+              <label className="blog-touch-target inline-flex cursor-pointer items-center gap-1.5 text-[11px] text-charcoal">
+                <input
+                  type="checkbox"
+                  checked={hubScope}
+                  onChange={(event) => setHubScope(event.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-gray-300 text-sky focus:ring-sky/30"
+                />
+                Из «{hubLabel}»
+              </label>
+            ) : null}
+          </div>
+          {hubScope && hubHref ? (
+            <Link href={hubHref} className="mt-1 inline-block text-[11px] font-medium text-sky hover:underline">
+              Все материалы раздела →
+            </Link>
           ) : null}
-        </div>
-        {hubScope && hubHref ? (
-          <Link href={hubHref} className="mt-1 inline-block text-[11px] font-medium text-sky hover:underline">
-            Все материалы раздела →
-          </Link>
-        ) : null}
-        <div className="mt-3 space-y-1">
-          {displayedFreshPosts.map((post) => (
-            <BlogCard key={post.id} post={post} variant="compact" />
-          ))}
-        </div>
-      </CollapsibleAsidePanel>
+          <div className="mt-3 space-y-1">
+            {displayedFreshPosts.map((post) => (
+              <BlogCard key={post.id} post={post} variant="compact" />
+            ))}
+          </div>
+        </CollapsibleAsidePanel>
+      ) : null}
 
       <CollapsibleAsidePanel
         title="Разделы сайта"
