@@ -172,18 +172,17 @@
 
 ## 6. Практический план переноса опыта (без «с нуля»)
 
-### Итерация A — Tour layout как банк компонентов (самый ценный урок WTE)
+### Итерация A — Tour layout как банк компонентов ✅ shipped
 
-1. Зафиксировать контракт `TourLayoutBlock` / slots на `TourDetailView`:  
-   `booking-panel`, `itinerary`, `includes-excludes`, `facts`, `gallery`, `faq`, `dates-list`, `enquiry`.  
-2. Реализации = **существующие** компоненты из `src/components/tour-detail/*`.  
-3. Опционально: CMS override порядка секций для native tours (JSON layout), default = текущий порядок.
+1. Контракт слотов + default order: `native-tour-layout-registry.ts`.  
+2. Compose = существующие секции `tour-detail/*` → `composeNativeTourMainColumn`.  
+3. CMS override порядка — API `resolveNativeTourLayoutOrder` готов; persistence ещё нет.
 
-### Итерация B — Design Library
+### Итерация B — Design Library ✅ shipped (MVP)
 
-1. UI каталога паттернов с превью (даже статичные скриншоты/схемы).  
-2. Разделение: **Sections** (как сейчас) / **Page templates** (landing packs).  
-3. Импорт копирует блоки (как WTE Import) — уже так устроены patterns.
+1. UI каталога с превью-чипами состава + категории.  
+2. Разделение Sections / Page templates — частично (категория `page`); полные landing packs — дальше.  
+3. Импорт копирует блоки — как раньше + `reviews-social-proof`.
 
 ### Итерация C — Editor UX (не новый движок)
 
