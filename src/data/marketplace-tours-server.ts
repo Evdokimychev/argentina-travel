@@ -107,7 +107,7 @@ async function loadMarketplaceToursUncached(): Promise<TourListing[]> {
 
 const cachedMarketplaceTours = unstable_cache(
   loadMarketplaceToursUncached,
-  ["marketplace-tours-catalog-v2"],
+  ["marketplace-tours-catalog-v3"],
   {
     revalidate: MARKETPLACE_CATALOG_REVALIDATE_SEC,
     tags: ["marketplace-catalog"],

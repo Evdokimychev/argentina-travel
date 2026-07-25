@@ -68,7 +68,7 @@ export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]>
 
 const cachedYouTravelTourListings = unstable_cache(
   fetchYouTravelTourListingsServer,
-  ["youtravel-tour-listings-v2"],
+  ["youtravel-tour-listings-v3"],
   { revalidate: 600, tags: ["partner-tours", "youtravel-tours"] },
 );
 

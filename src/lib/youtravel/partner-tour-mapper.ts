@@ -23,6 +23,7 @@ import {
   resolveYouTravelRoutePoints,
 } from "@/lib/youtravel/partner-tour-route";
 import { formatYouTravelListedPrice, mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
+import type { YouTravelOfferListingRow } from "@/lib/youtravel/offers-mapper";
 import { youtravelTourListingId } from "@/lib/youtravel/partner-tour-utils";
 import type { YouTravelOffer, YouTravelProgramDay, YouTravelTour } from "@/lib/youtravel/types";
 import type {
@@ -33,7 +34,10 @@ import type {
   TourReview,
 } from "@/types";
 import type { YouTravelTourRow } from "@/lib/youtravel/partner-tour-repository";
-import { rowToListing } from "@/lib/youtravel/partner-tour-repository";
+import {
+  applyYouTravelOfferPricesToListing,
+  rowToListing,
+} from "@/lib/youtravel/partner-tour-repository";
 
 function mapProgramDays(payload: YouTravelTour): TourItineraryDay[] {
   const program = resolveYouTravelProgram(payload) as YouTravelProgramDay[];
@@ -85,7 +89,7 @@ export function youtravelRowToDetail(
 ): TourDetail {
   const payload = (row.payload ?? {}) as YouTravelTour;
   const gallery = resolveYouTravelGallery(payload, row.photos);
-  const listing = rowToListing({
+  const listingBase = rowToListing({
     ...row,
     cover_image: row.cover_image ?? gallery[0] ?? null,
     photos: gallery,
@@ -94,6 +98,12 @@ export function youtravelRowToDetail(
       formatYouTravelListedPrice(row.price_value, row.price_currency) ??
       null,
   });
+  const offerPriceRows = (options?.offers ?? []).map((offer) => ({
+    price_value: offer.price ?? offer.priceValue ?? offer.priceFrom ?? null,
+    price_currency: offer.currency ?? null,
+    payload: offer as YouTravelOfferListingRow["payload"],
+  }));
+  const listing = applyYouTravelOfferPricesToListing(listingBase, offerPriceRows);
 
   const partnerContent = {
     ...buildYouTravelPartnerContent(payload, row),
