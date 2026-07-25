@@ -99,6 +99,8 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     dateModified: getBlogUpdatedDate(post),
     authorName: post.author,
     ...(post.authorAvatar ? { authorAvatar: post.authorAvatar } : {}),
+    ...(post.authorUrl ? { authorUrl: post.authorUrl } : {}),
+    ...(post.authorRole ? { authorJobTitle: post.authorRole } : {}),
     authorType: isEditorial ? "Organization" : "Person",
     about: [post.category, ...post.tags].filter(Boolean),
     speakable: true,

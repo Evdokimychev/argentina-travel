@@ -1,5 +1,15 @@
 import type { ContentHeadingSource, ContentTocItem } from "@/types/content-reading";
 
+/** Remove leading emoji/decoration from TOC labels; ids still strip via headingToAnchorId. */
+export function stripHeadingDecorations(text: string): string {
+  return (
+    text
+      .replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u, "")
+      .replace(/\s+/g, " ")
+      .trim() || text.trim()
+  );
+}
+
 /** Stable slug for in-page anchors from a heading label. */
 export function headingToAnchorId(text: string, used: Set<string>): string {
   const base =

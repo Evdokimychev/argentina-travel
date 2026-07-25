@@ -170,6 +170,7 @@ export function buildArticleSchema(input: {
   authorName: string;
   authorAvatar?: string;
   authorUrl?: string;
+  authorJobTitle?: string;
   authorType?: "Person" | "Organization";
   publisherName?: string;
   schemaType?: ArticleSchemaType;
@@ -226,6 +227,7 @@ export function buildArticleSchema(input: {
           name: input.authorName,
           ...(authorAvatarUrl ? { image: authorAvatarUrl } : {}),
           ...(authorUrl ? { url: authorUrl } : {}),
+          ...(input.authorJobTitle ? { jobTitle: input.authorJobTitle } : {}),
         }
       : {
           "@type": "Organization",

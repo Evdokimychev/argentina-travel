@@ -47,7 +47,11 @@ import { buildPublishedBlogSlugSet } from "@/lib/blog-slug-resolve";
 import { extractArticleMapPoints, extractSectionMapPoints } from "@/lib/article-map-points";
 import { cn } from "@/lib/cn";
 import { getBlogSectionKind } from "@/lib/blog-section-body";
-import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
+import {
+  buildTocItemsFromHeadings,
+  headingToAnchorId,
+  stripHeadingDecorations,
+} from "@/lib/content-heading-id";
 import { mapBlogRelatedResources } from "@/lib/content-related-links";
 import { getBlogKbLinks } from "@/data/blog-kb-links";
 import {
@@ -134,18 +138,35 @@ export default function BlogPostView({
   const footerLinks = getBlogPostFooterLinks(post, publishedBlogSlugs);
 
   const usedIds = new Set<string>();
-  const sectionsWithIds = (post.sections ?? []).map((section) => ({
-    section,
-    headingId: headingToAnchorId(section.title, usedIds),
-  }));
+  const sectionsWithIds = (post.sections ?? []).map((section) => {
+    const headingId = headingToAnchorId(section.title, usedIds);
+    const subheadings =
+      section.blocks
+        ?.filter(
+          (block): block is Extract<(typeof section.blocks)[number], { type: "subheading" }> =>
+            block.type === "subheading",
+        )
+        .map((block) => block.text) ??
+      [];
+    // Register H3 ids in the same order BlogSectionBody will emit when parsing ### from body
+    // and explicit subheading blocks. Body ### headings are resolved later via parse — register
+    // only explicit blocks here; body-parsed H3s still get stable ids in SectionBody.
+    for (const text of subheadings) {
+      headingToAnchorId(text, usedIds);
+    }
+    return { section, headingId, subheadings };
+  });
   const tocItems = richArticle
     ? getBlogRichArticleToc(richArticle.id).map((item) => ({
         id: item.id,
-        label: item.label,
+        label: stripHeadingDecorations(item.label),
         level: 2 as const,
       }))
     : buildTocItemsFromHeadings(
-        sectionsWithIds.map(({ section }) => ({ heading: section.title }))
+        sectionsWithIds.map(({ section, subheadings }) => ({
+          heading: stripHeadingDecorations(section.title),
+          subheadings,
+        })),
       );
   const sectionCount = richArticle?.sections.length ?? post.sections?.length ?? 0;
   const showToc = sectionCount >= TOC_MIN_SECTIONS;
@@ -224,6 +245,7 @@ export default function BlogPostView({
                   hubHref={primaryHub ? blogHubPath(primaryHub.id) : undefined}
                   defaultHubScope={Boolean(hubFreshPosts?.length)}
                   readingHistoryExcludeSlug={post.slug}
+                  showFresh={post.displayOptions?.showSidebarFresh !== false}
                 />
               </div>
             }

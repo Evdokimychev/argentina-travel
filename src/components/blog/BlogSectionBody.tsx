@@ -32,6 +32,7 @@ import BlogWidgetBlock from "@/components/page-builder/blocks/BlogWidgetBlock";
 import { renderEditorialBlock } from "@/editorial/renderers/EditorialBlockRenderer";
 import { sanitizeHtml } from "@/lib/rich-text";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
+import { headingToAnchorId } from "@/lib/content-heading-id";
 import type { BlogInternalLinkRule } from "@/lib/blog-internal-links";
 import type { BlogPostSection } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
@@ -49,6 +50,7 @@ function renderLegacyBlock(
   index: number,
   linkifyText?: boolean,
   linkifyRules?: BlogInternalLinkRule[],
+  subheadingIds: Set<string> = new Set(),
 ) {
   switch (block.type) {
     case "paragraph":
@@ -76,15 +78,18 @@ function renderLegacyBlock(
           {block.text}
         </p>
       );
-    case "subheading":
+    case "subheading": {
+      const subId = headingToAnchorId(block.text, subheadingIds);
       return (
         <h3
           key={index}
-          className="mt-5 font-heading text-base font-semibold text-charcoal first:mt-0 sm:text-lg"
+          id={subId}
+          className="mt-5 scroll-mt-28 font-heading text-base font-semibold text-charcoal first:mt-0 sm:text-lg"
         >
           <BlogInlineText text={block.text} />
         </h3>
       );
+    }
     case "bullets":
       return (
         <ul key={index} className="m-0 list-none space-y-2 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-sm sm:px-5 sm:py-4">
@@ -307,6 +312,7 @@ function renderBlock(
   index: number,
   linkifyText?: boolean,
   linkifyRules?: BlogInternalLinkRule[],
+  subheadingIds: Set<string> = new Set(),
 ) {
   return renderEditorialBlock({
     block,
@@ -318,6 +324,7 @@ function renderBlock(
         legacyIndex,
         legacyLinkifyText,
         linkifyRules,
+        subheadingIds,
       ),
   });
 }
@@ -330,10 +337,13 @@ export default function BlogSectionBody({
   linkifyRules,
 }: BlogSectionBodyProps) {
   const blocks = resolveBlogSectionBlocks(section, postSlug);
+  const subheadingIds = new Set<string>();
 
   return (
     <div className={className ?? "blog-section-body space-y-5"}>
-      {blocks.map((block, index) => renderBlock(block, index, linkifyText, linkifyRules))}
+      {blocks.map((block, index) =>
+        renderBlock(block, index, linkifyText, linkifyRules, subheadingIds),
+      )}
     </div>
   );
 }

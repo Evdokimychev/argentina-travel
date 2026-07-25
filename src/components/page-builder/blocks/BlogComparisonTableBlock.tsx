@@ -98,7 +98,6 @@ export default function BlogComparisonTableBlock({
           <BlogContentTable headers={headers} rows={rows} caption={caption} />
         ) : null}
       </div>
-
       {highlightColumn != null && highlightColumn >= 0 ? (
         <p className="text-xs text-slate">
           Рекомендуемая колонка:{" "}
