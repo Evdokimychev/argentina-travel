@@ -534,6 +534,9 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
     isPreliminaryProgram: draft.isPreliminaryProgram,
     display: {
       ...base.display,
+      detailLayoutOrder: draft.detailLayoutOrder?.length
+        ? [...draft.detailLayoutOrder]
+        : undefined,
     },
     title: draft.title,
     shortDescription: draft.shortDescription,

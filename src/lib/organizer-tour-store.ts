@@ -477,6 +477,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     accommodationOrganizerCommentText: "",
     sectionOrganizerComments: {},
     travelRisks: [],
+    detailLayoutOrder: undefined,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -672,6 +673,11 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     travelRisks: normalizeTravelRisks(
       draft.travelRisks?.length ? draft.travelRisks : seed.travelRisks
     ),
+    detailLayoutOrder: Array.isArray(draft.detailLayoutOrder)
+      ? draft.detailLayoutOrder.filter((item): item is string => typeof item === "string")
+      : Array.isArray(seed.detailLayoutOrder)
+        ? seed.detailLayoutOrder.filter((item): item is string => typeof item === "string")
+        : undefined,
     maxWeightEnabled:
       draft.maxWeightEnabled ??
       ((draft.maxWeightKg ?? 0) > 0 ? true : seed.maxWeightEnabled),

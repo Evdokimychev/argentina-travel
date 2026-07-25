@@ -188,6 +188,11 @@ export interface TourDisplayFlags {
   isHot?: boolean;
   isNew?: boolean;
   isBestOfMonth?: boolean;
+  /**
+   * Optional native tour page section order (slot ids).
+   * Undefined / empty = current public vertical (default registry order).
+   */
+  detailLayoutOrder?: string[];
 }
 
 /** Canonical marketplace tour — single source of truth (Phase A). */

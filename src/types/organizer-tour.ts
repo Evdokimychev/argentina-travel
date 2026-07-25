@@ -159,6 +159,11 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   travelRisks: TourTravelRisk[];
   /** Slug мест из справочника для блока «Места рядом». */
   relatedPlaceSlugs?: string[];
+  /**
+   * Порядок секций на публичной карточке тура (native).
+   * Пусто = текущая вёрстка сайта без изменений.
+   */
+  detailLayoutOrder?: string[];
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;
