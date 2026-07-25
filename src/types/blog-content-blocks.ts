@@ -46,7 +46,7 @@ export type StoryDeckSlide = {
   body: string;
   /** Real photo shown in the visual panel; falls back to `icon` when omitted. */
   image?: StoryDeckSlideImage;
-  /** Renders a full-width interactive widget (e.g. the cut diagram) below the text instead of an image/icon panel. */
+  /** Renders a full-width interactive widget below the text instead of an image/icon panel. */
   widgetKey?: string;
   bullets?: string[];
   ctas?: StoryDeckCta[];

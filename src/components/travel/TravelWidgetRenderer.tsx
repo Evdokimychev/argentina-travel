@@ -1,11 +1,18 @@
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
+import CarryOnPacking from "@/components/travel/CarryOnPacking";
+import DestinationPackingCards from "@/components/travel/DestinationPackingCards";
+import LayerSystem from "@/components/travel/LayerSystem";
+import PackingList from "@/components/travel/PackingList";
 import SteakCutSelector from "@/components/travel/SteakCutSelector";
 import SteakDonenessPhrases from "@/components/travel/SteakDonenessPhrases";
 import SteakCutDiagram from "@/components/travel/SteakCutDiagram";
 import SteakOrderScenarios from "@/components/travel/SteakOrderScenarios";
 import SteakBillExplainer from "@/components/travel/SteakBillExplainer";
+import SummerWinterComparison from "@/components/travel/SummerWinterComparison";
+import TripTypeSelector from "@/components/travel/TripTypeSelector";
+import WhatNotToPack from "@/components/travel/WhatNotToPack";
 
 export type TravelWidgetKey =
   | "season-matrix"
@@ -15,7 +22,14 @@ export type TravelWidgetKey =
   | "steak-doneness-phrases"
   | "steak-cut-diagram"
   | "steak-order-scenarios"
-  | "steak-bill-explainer";
+  | "steak-bill-explainer"
+  | "packing-list"
+  | "layer-system"
+  | "trip-type-selector"
+  | "destination-packing-cards"
+  | "summer-winter-comparison"
+  | "what-not-to-pack"
+  | "carry-on-packing";
 
 type Props = {
   widgetKey: string;
@@ -57,6 +71,34 @@ export default function TravelWidgetRenderer({ widgetKey, className }: Props) {
 
   if (key === "steak-bill-explainer") {
     return <SteakBillExplainer className={className} />;
+  }
+
+  if (key === "packing-list") {
+    return <PackingList className={className} />;
+  }
+
+  if (key === "layer-system") {
+    return <LayerSystem className={className} />;
+  }
+
+  if (key === "trip-type-selector") {
+    return <TripTypeSelector className={className} />;
+  }
+
+  if (key === "destination-packing-cards") {
+    return <DestinationPackingCards className={className} />;
+  }
+
+  if (key === "summer-winter-comparison") {
+    return <SummerWinterComparison className={className} />;
+  }
+
+  if (key === "what-not-to-pack") {
+    return <WhatNotToPack className={className} />;
+  }
+
+  if (key === "carry-on-packing") {
+    return <CarryOnPacking className={className} />;
   }
 
   return null;

@@ -3,15 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
+  AlertTriangle,
+  Backpack,
   BookOpen,
+  CheckSquare,
   ChevronLeft,
   ChevronRight,
   ClipboardList,
   Flame,
+  Layers,
+  Map,
   Receipt,
   Scale,
+  Shirt,
   UtensilsCrossed,
   Users,
+  Wind,
   type LucideIcon,
 } from "lucide-react";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -28,6 +35,13 @@ const DECK_ICONS: Record<string, LucideIcon> = {
   Users,
   Receipt,
   ClipboardList,
+  Layers,
+  Wind,
+  Backpack,
+  AlertTriangle,
+  CheckSquare,
+  Map,
+  Shirt,
 };
 
 const SWIPE_THRESHOLD_PX = 40;
@@ -171,7 +185,7 @@ export default function ArticleStoryDeck({
                     <div className="mt-4 flex flex-wrap gap-2">
                       {slide.ctas.map((cta) => (
                         <Link
-                          key={cta.href}
+                          key={`${cta.href}-${cta.label}`}
                           href={cta.href}
                           className="inline-flex min-h-11 items-center rounded-full border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-charcoal transition hover:border-sky/40 hover:text-sky"
                         >
