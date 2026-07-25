@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 
 type Props = {
@@ -18,7 +19,10 @@ export default function BlogAccordionBlock({ items }: Props) {
       {filtered.map((item, index) => {
         const open = openIndex === index;
         return (
-          <div key={index} className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          <div
+            key={index}
+            className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+          >
             <button
               type="button"
               className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-medium text-charcoal"
@@ -26,11 +30,13 @@ export default function BlogAccordionBlock({ items }: Props) {
               aria-expanded={open}
             >
               {item.title || `Пункт ${index + 1}`}
-              <ChevronDown className={cn("h-4 w-4 shrink-0 text-slate transition", open && "rotate-180")} />
+              <ChevronDown
+                className={cn("h-4 w-4 shrink-0 text-slate transition", open && "rotate-180")}
+              />
             </button>
             {open ? (
               <div className="border-t border-gray-100 px-4 py-3 text-sm leading-relaxed text-slate">
-                {item.body}
+                <LinkifiedText text={item.body} as="span" />
               </div>
             ) : null}
           </div>
