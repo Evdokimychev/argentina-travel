@@ -539,12 +539,18 @@ export interface BlogPost {
   slug: string;
   title: string;
   seoTitle?: string;
+  /** Meta description for <meta name="description"> / Open Graph */
+  seoDescription?: string;
   excerpt: string;
   content: string;
   sections?: BlogPostSection[];
   author: string;
   authorBio?: string;
   authorAvatar?: string;
+  /** Role shown under the author name (personal authors). */
+  authorRole?: string;
+  /** Public author profile path, e.g. /about or /authors/ivan */
+  authorUrl?: string;
   date: string;
   /** Дата последней фактической правки (JSON-LD, карточки) */
   dateModified?: string;
@@ -569,6 +575,26 @@ export interface BlogPost {
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
   /** Идентификатор богатой редакторской вёрстки (см. data/blog-articles) */
   richArticleId?: string;
+  /** Per-article UI toggles (safe defaults apply when omitted) */
+  displayOptions?: {
+    showQuickFacts?: boolean;
+    showTopicCluster?: boolean;
+    showAffiliate?: boolean;
+    showDestinationGallery?: boolean;
+    /**
+     * Автоперелинковка городов в тексте.
+     * По умолчанию выключена: только явные Markdown-ссылки редактора.
+     * Включайте только для коротких карточек, где нужна агрессивная перелинковка.
+     */
+    autoLinkDestinations?: boolean;
+    /**
+     * Автоподстановка section-1/2/3 в тело статьи.
+     * По умолчанию true. Выключайте, если в статье уже есть кураторская галерея.
+     */
+    showAutoSectionImages?: boolean;
+    /** Sidebar «Свежее» на странице статьи. По умолчанию true. */
+    showSidebarFresh?: boolean;
+  };
 }
 
 export interface Testimonial {

@@ -5,11 +5,12 @@ import BlogChecklist from "@/components/blog/BlogChecklist";
 import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import BlogMapBlock from "@/components/blog/BlogMapBlock";
-import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
+import { BlogInlineText, LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
+import ArticleStoryDeck from "@/components/blog/ArticleStoryDeck";
 import BlogSectionDivider from "@/components/blog/BlogSectionDivider";
 import BlogStepList from "@/components/blog/BlogStepList";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
@@ -18,7 +19,9 @@ import BlogAuthorCardBlock from "@/components/page-builder/blocks/BlogAuthorCard
 import BlogComparisonTableBlock from "@/components/page-builder/blocks/BlogComparisonTableBlock";
 import BlogContentEmbedBlock from "@/components/page-builder/blocks/BlogContentEmbedBlock";
 import BlogCtaBlock from "@/components/page-builder/blocks/BlogCtaBlock";
-import BlogGalleryBlock from "@/components/page-builder/blocks/BlogGalleryBlock";
+import BlogGalleryBlock, {
+  BlogLinkChipsBlock,
+} from "@/components/page-builder/blocks/BlogGalleryBlock";
 import BlogFactsGridBlock from "@/components/page-builder/blocks/BlogFactsGridBlock";
 import BlogImageTextBlock from "@/components/page-builder/blocks/BlogImageTextBlock";
 import BlogInfoboxBlock from "@/components/page-builder/blocks/BlogInfoboxBlock";
@@ -29,6 +32,8 @@ import BlogVideoBlock from "@/components/page-builder/blocks/BlogVideoBlock";
 import BlogWidgetBlock from "@/components/page-builder/blocks/BlogWidgetBlock";
 import { sanitizeHtml } from "@/lib/rich-text";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
+import { headingToAnchorId } from "@/lib/content-heading-id";
+import type { BlogInternalLinkRule } from "@/lib/blog-internal-links";
 import type { BlogPostSection } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 
@@ -37,11 +42,28 @@ type BlogSectionBodyProps = {
   postSlug?: string;
   className?: string;
   linkifyText?: boolean;
+  linkifyRules?: BlogInternalLinkRule[];
 };
 
-function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
+function renderBlock(
+  block: BlogBodyBlock,
+  index: number,
+  linkifyText?: boolean,
+  linkifyRules?: BlogInternalLinkRule[],
+  subheadingIds: Set<string> = new Set(),
+) {
   switch (block.type) {
     case "paragraph":
+      if (linkifyText) {
+        return (
+          <LinkifiedText
+            key={index}
+            text={block.text}
+            className="leading-relaxed text-slate"
+            rules={linkifyRules}
+          />
+        );
+      }
       if (block.html?.trim()) {
         return (
           <div
@@ -51,29 +73,32 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           />
         );
       }
-      return linkifyText ? (
-        <LinkifiedText key={index} text={block.text} className="leading-relaxed text-slate" />
-      ) : (
+      return (
         <p key={index} className="leading-relaxed text-slate">
           {block.text}
         </p>
       );
-    case "subheading":
+    case "subheading": {
+      const subId = headingToAnchorId(block.text, subheadingIds);
       return (
         <h3
           key={index}
-          className="mt-5 font-heading text-base font-semibold text-charcoal first:mt-0 sm:text-lg"
+          id={subId}
+          className="mt-5 scroll-mt-28 font-heading text-base font-semibold text-charcoal first:mt-0 sm:text-lg"
         >
-          {block.text}
+          <BlogInlineText text={block.text} />
         </h3>
       );
+    }
     case "bullets":
       return (
         <ul key={index} className="m-0 list-none space-y-2 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-sm sm:px-5 sm:py-4">
           {block.items.map((item) => (
             <li key={item.slice(0, 48)} className="flex gap-2.5 text-sm leading-relaxed text-slate">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
-              <span>{item}</span>
+              <span>
+                <BlogInlineText text={item} linkify={linkifyText} rules={linkifyRules} />
+              </span>
             </li>
           ))}
         </ul>
@@ -186,6 +211,7 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           rows={block.rows}
           highlightColumn={block.highlightColumn}
           caption={block.caption}
+          mobileLayout={block.mobileLayout}
         />
       );
     case "cta":
@@ -207,7 +233,17 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
       );
     case "gallery":
       return (
-        <BlogGalleryBlock key={index} items={block.items} columns={block.columns} />
+        <BlogGalleryBlock
+          key={index}
+          items={block.items}
+          columns={block.columns}
+          layout={block.layout}
+          ariaLabel={block.ariaLabel}
+        />
+      );
+    case "link-chips":
+      return (
+        <BlogLinkChipsBlock key={index} title={block.title} items={block.items} />
       );
     case "video":
       return (
@@ -237,17 +273,39 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
           config={block.config}
         />
       );
-    default:
+    case "story-deck":
+      return (
+        <ArticleStoryDeck
+          key={index}
+          title={block.title}
+          ariaLabel={block.ariaLabel}
+          slides={block.slides}
+          className="my-6"
+        />
+      );
+    default: {
+      const _exhaustive: never = block;
+      void _exhaustive;
       return null;
+    }
   }
 }
 
-export default function BlogSectionBody({ section, postSlug, className, linkifyText }: BlogSectionBodyProps) {
+export default function BlogSectionBody({
+  section,
+  postSlug,
+  className,
+  linkifyText,
+  linkifyRules,
+}: BlogSectionBodyProps) {
   const blocks = resolveBlogSectionBlocks(section, postSlug);
+  const subheadingIds = new Set<string>();
 
   return (
     <div className={className ?? "blog-section-body space-y-5"}>
-      {blocks.map((block, index) => renderBlock(block, index, linkifyText))}
+      {blocks.map((block, index) =>
+        renderBlock(block, index, linkifyText, linkifyRules, subheadingIds),
+      )}
     </div>
   );
 }

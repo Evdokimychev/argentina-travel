@@ -36,9 +36,6 @@ const TYPED_BLOCKS_BY_SLUG: Record<string, Record<string, BlogBodyBlock[]>> = {
       },
     ],
   },
-  "best-time-to-visit-argentina": {
-    "Краткий ответ по целям поездки": [{ type: "season-matrix" }],
-  },
 };
 
 export function getTypedBlocksForSection(

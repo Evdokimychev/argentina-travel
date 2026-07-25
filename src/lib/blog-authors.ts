@@ -36,7 +36,7 @@ export function buildBlogAuthorProfiles(posts: BlogPost[]): BlogAuthorProfile[] 
       slug: isEditorial ? "redaktsiya" : authorSlug(name),
       name,
       bio: isEditorial ? BLOG_EDITORIAL.bio : sample.authorBio,
-      avatar: isEditorial ? BLOG_EDITORIAL.avatar : sample.authorAvatar,
+      avatar: isEditorial ? BLOG_EDITORIAL.avatar : sample.authorAvatar || undefined,
       postCount: authorPosts.length,
     });
   }

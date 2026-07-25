@@ -6,6 +6,7 @@ import {
   XCircle,
   type LucideIcon,
 } from "lucide-react";
+import { BlogInlineText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 import { CALLOUT_LABELS } from "@/lib/blog-section-body";
 import type { BlogCalloutVariant } from "@/types/blog-content-blocks";
@@ -84,9 +85,11 @@ export default function BlogCallout({ variant, title, body, className }: BlogCal
       <div className="flex items-start gap-3">
         <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", config.iconClass)} aria-hidden />
         <div className="min-w-0">
-          <p className={cn("font-heading text-sm font-bold", config.labelClass)}>{label}</p>
+          <p className={cn("font-heading text-sm font-bold", config.labelClass)}>
+            <BlogInlineText text={label} />
+          </p>
           <p className="mt-1.5 text-sm leading-relaxed text-charcoal/85 sm:text-[0.9375rem]">
-            {body}
+            <BlogInlineText text={body} linkify />
           </p>
         </div>
       </div>

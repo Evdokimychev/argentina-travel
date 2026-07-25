@@ -1,5 +1,10 @@
 import { extractFaqFromBody } from "@/lib/blog-faq";
 import { cleanLegacyBlogSourceMarkers } from "@/lib/blog-editorial-cleanup";
+import {
+  blogInlineMarkdownToHtml,
+  hasBlogInlineMarkdown,
+  stripBlogInlineMarkdown,
+} from "@/lib/blog-inline-markdown";
 import type {
   BlogBodyBlock,
   BlogCalloutVariant,
@@ -74,18 +79,89 @@ function splitRawBlocks(body: string): string[] {
     .filter(Boolean);
 }
 
-function isTableBlock(block: string): boolean {
+const GFM_TABLE_SEPARATOR = /^\|?[\s:|-]+\|[\s:|-]*\|?$/;
+
+function splitTableCells(line: string): string[] {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function isGfmTableSeparator(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed.includes("-")) return false;
+  return GFM_TABLE_SEPARATOR.test(trimmed);
+}
+
+function isGfmTableBlock(block: string): boolean {
+  const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+  if (lines.length < 2) return false;
+  if (!lines[0].includes("|")) return false;
+  return isGfmTableSeparator(lines[1]);
+}
+
+function isTabTableBlock(block: string): boolean {
   const lines = block.split("\n").filter(Boolean);
   if (lines.length < 2) return false;
   const tabbed = lines.filter((line) => line.includes("\t"));
   return tabbed.length >= 2 && tabbed.length === lines.length;
 }
 
+function isTableBlock(block: string): boolean {
+  return isTabTableBlock(block) || isGfmTableBlock(block);
+}
+
 function parseTableBlock(block: string): BlogBodyBlock {
+  if (isGfmTableBlock(block)) {
+    const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+    const headers = splitTableCells(lines[0]);
+    const rows = lines.slice(2).map(splitTableCells);
+    return { type: "table", headers, rows };
+  }
+
   const lines = block.split("\n").filter(Boolean);
   const rows = lines.map((line) => line.split("\t").map((cell) => cell.trim()));
   const [headers, ...dataRows] = rows;
   return { type: "table", headers: headers ?? [], rows: dataRows };
+}
+
+function parseBlockquoteAsCallout(block: string): BlogBodyBlock | null {
+  const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+  if (lines.length === 0 || !lines.every((line) => line.startsWith(">"))) return null;
+  if (lines[0].match(CALLOUT_MARKDOWN)) return null;
+
+  const body = lines.map((line) => line.replace(/^>\s?/, "")).join(" ").trim();
+  if (!body) return null;
+  return {
+    type: "callout",
+    variant: "know",
+    title: "Актуально",
+    body,
+  };
+}
+
+function paragraphBlock(text: string): BlogBodyBlock {
+  const collapsed = text.replace(/\n/g, " ").trim();
+  if (!collapsed) return { type: "paragraph", text: "" };
+  if (!hasBlogInlineMarkdown(collapsed)) {
+    return { type: "paragraph", text: collapsed };
+  }
+  // Keep Markdown markers in `text` for LinkifiedText; `html` is the non-linkify fallback.
+  return {
+    type: "paragraph",
+    text: collapsed,
+    html: blogInlineMarkdownToHtml(collapsed),
+  };
+}
+
+function parseMarkdownHeading(block: string): BlogBodyBlock | null {
+  if (block.includes("\n")) return null;
+  const match = /^(#{2,3})\s+(.+)$/.exec(block.trim());
+  if (!match) return null;
+  return { type: "subheading", text: stripBlogInlineMarkdown(match[2]) };
 }
 
 function parseCalloutBlock(block: string): BlogBodyBlock | null {
@@ -243,9 +319,15 @@ function parseMistakesBlocks(rawBlocks: string[]): BlogBodyBlock[] {
 
 function parseSingleBlock(block: string): BlogBodyBlock {
   const callout = parseCalloutBlock(block);
-  if (callout) return callout;
+  if (callout && callout.type === "callout") return callout;
+
+  const quoteCallout = parseBlockquoteAsCallout(block);
+  if (quoteCallout) return quoteCallout;
 
   if (isTableBlock(block)) return parseTableBlock(block);
+
+  const heading = parseMarkdownHeading(block);
+  if (heading) return heading;
 
   const list = parseListLines(block);
   if (list) return list;
@@ -256,10 +338,10 @@ function parseSingleBlock(block: string): BlogBodyBlock {
   }
 
   if (isSubheadingBlock(block)) {
-    return { type: "subheading", text: block };
+    return { type: "subheading", text: stripBlogInlineMarkdown(block) };
   }
 
-  return { type: "paragraph", text: block.replace(/\n/g, " ") };
+  return paragraphBlock(block);
 }
 
 function mergeAdjacentBlocks(blocks: BlogBodyBlock[]): BlogBodyBlock[] {

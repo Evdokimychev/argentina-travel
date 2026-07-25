@@ -12,9 +12,14 @@ type BlogCardAuthorOverlayProps = {
 };
 
 export function BlogCardAuthorOverlay({ post, featured = false }: BlogCardAuthorOverlayProps) {
-  const avatar = post.authorAvatar ?? BLOG_EDITORIAL.avatar;
-  const bio = post.authorBio ?? BLOG_EDITORIAL.bio;
-  const initial = post.author.trim().charAt(0).toUpperCase() || "Р";
+  const isEditorial = post.author === BLOG_EDITORIAL.name || post.author.includes("Редакция");
+  const avatar = isEditorial ? (post.authorAvatar ?? BLOG_EDITORIAL.avatar) : post.authorAvatar;
+  const bio = post.authorBio ?? (isEditorial ? BLOG_EDITORIAL.bio : undefined);
+  const parts = post.author.trim().split(/\s+/).filter(Boolean);
+  const initial =
+    parts.length >= 2
+      ? `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase()
+      : parts[0]?.charAt(0).toUpperCase() || "А";
 
   return (
     <div
@@ -67,14 +72,16 @@ export function BlogCardAuthorOverlay({ post, featured = false }: BlogCardAuthor
             <p className={cn("font-semibold leading-tight", featured ? "text-base sm:text-lg" : "text-sm")}>
               {post.author}
             </p>
-            <p
-              className={cn(
-                "mt-1 line-clamp-2 leading-snug text-white/88",
-                featured ? "text-sm" : "text-xs",
-              )}
-            >
-              {bio}
-            </p>
+            {bio ? (
+              <p
+                className={cn(
+                  "mt-1 line-clamp-2 leading-snug text-white/88",
+                  featured ? "text-sm" : "text-xs",
+                )}
+              >
+                {bio}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

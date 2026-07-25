@@ -29,6 +29,31 @@ export type BlogGalleryItem = {
   caption?: string;
 };
 
+export type StoryDeckCta = {
+  label: string;
+  href: string;
+};
+
+export type StoryDeckSlideImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+export type StoryDeckSlide = {
+  id: string;
+  title: string;
+  body: string;
+  /** Real photo shown in the visual panel; falls back to `icon` when omitted. */
+  image?: StoryDeckSlideImage;
+  /** Renders a full-width interactive widget below the text instead of an image/icon panel. */
+  widgetKey?: string;
+  bullets?: string[];
+  ctas?: StoryDeckCta[];
+  /** lucide-react icon name rendered aria-hidden in the visual panel. */
+  icon: string;
+};
+
 export type BlogVideoProvider = "youtube" | "vimeo";
 
 export type BlogContentEmbedKind = "tour" | "excursion" | "article" | "guide";
@@ -65,11 +90,13 @@ export type BlogBodyBlock =
       rows: string[][];
       highlightColumn?: number;
       caption?: string;
+      /** Mobile: cards = stacked row cards without horizontal scroll */
+      mobileLayout?: "scroll" | "cards";
     }
   | { type: "callout"; variant: BlogCalloutVariant; title: string; body: string }
   | { type: "infobox"; variant: BlogInfoboxVariant; title: string; body: string }
   | { type: "faq"; items: Array<{ question: string; answer: string }> }
-  | { type: "accordion"; items: Array<{ title: string; body: string }> }
+  | { type: "accordion"; items: Array<{ title: string; body: string; id?: string }> }
   | { type: "divider" }
   | { type: "map"; lat: number; lng: number; label: string }
   | { type: "route-map"; points: BlogRouteMapPoint[]; caption?: string }
@@ -119,7 +146,19 @@ export type BlogBodyBlock =
       author?: string;
       context?: string;
     }
-  | { type: "gallery"; items: BlogGalleryItem[]; columns?: 2 | 3 | 4 }
+  | {
+      type: "gallery";
+      items: BlogGalleryItem[];
+      columns?: 2 | 3 | 4;
+      /** carousel = листание (по умолчанию при 2+ фото); grid = плитка */
+      layout?: "carousel" | "grid" | "auto";
+      ariaLabel?: string;
+    }
+  | {
+      type: "link-chips";
+      title?: string;
+      items: Array<{ label: string; href: string; emoji?: string }>;
+    }
   | {
       type: "video";
       provider: BlogVideoProvider;
@@ -132,6 +171,12 @@ export type BlogBodyBlock =
       widgetKey: string;
       title?: string;
       config?: Record<string, string>;
+    }
+  | {
+      type: "story-deck";
+      title: string;
+      ariaLabel: string;
+      slides: StoryDeckSlide[];
     };
 
 /** Alias for cross-content-type page builder (blog, guide, author_article, landing). */

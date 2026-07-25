@@ -2,16 +2,16 @@ import type { TourEmbedConfig } from "@/types/tour-embed";
 
 /** Дополнительные tour embeds для indexable-статей без inline-блока в blog.ts */
 export const BLOG_TOUR_EMBEDS: Record<string, TourEmbedConfig[]> = {
-  "best-time-to-visit-argentina": [
+  "patagonia-packing-list": [
     {
-      id: "season-tours-strip",
+      id: "patagonia-tours-strip",
       variant: "strip",
-      title: "Готовые маршруты по сезону",
-      subtitle: "Туры с учётом климата и логистики региона",
+      title: "Туры по Патагонии",
+      subtitle: "Ледники, треккинг и логистика с гидом",
       limit: 6,
-      source: { kind: "query", query: "Patagonia" },
-      catalogHref: "/podbor",
-      catalogLabel: "Подбор маршрута",
+      source: { kind: "query", query: "patagonia trekking glacier" },
+      catalogHref: "/tours?query=patagonia",
+      catalogLabel: "Все туры в Патагонию",
       tone: "inline",
     },
   ],
@@ -22,8 +22,8 @@ export const BLOG_TOUR_EMBEDS: Record<string, TourEmbedConfig[]> = {
       title: "Гастрономические экскурсии в Буэнос-Айресе",
       subtitle: "Asado, parrilla и дегустации с гидом",
       limit: 3,
-      source: { kind: "query", query: "buenos" },
-      catalogHref: "/tours?query=buenos",
+      source: { kind: "query", query: "asado parrilla gastronomy food" },
+      catalogHref: "/tours?query=asado",
       tone: "inline",
     },
   ],

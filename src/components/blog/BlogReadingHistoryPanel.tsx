@@ -44,12 +44,12 @@ export default function BlogReadingHistoryPanel({
       storageKey="blog-sidebar-reading-history-collapsed"
       collapsedHint={entries[0]?.title ?? "История чтения"}
     >
-      <ul className="space-y-1.5">
+      <ul className="space-y-0.5">
         {entries.map((entry) => (
           <li key={entry.slug}>
             <Link
               href={blogPostPath(entry.slug)}
-              className="blog-touch-target block rounded-lg px-2 py-1.5 text-sm leading-snug text-slate transition-colors hover:bg-sky/5 hover:text-sky"
+              className="block rounded-lg px-2.5 py-1.5 text-sm leading-snug text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             >
               <span className="line-clamp-2">{entry.title}</span>
               {entry.category ? (

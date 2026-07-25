@@ -7,9 +7,8 @@ import BlogPostHeader from "@/components/blog/BlogPostHeader";
 import BlogPostNav from "@/components/blog/BlogPostNav";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import BlogQuickFacts from "@/components/blog/BlogQuickFacts";
-import BlogShareBar from "@/components/blog/BlogShareBar";
+import BlogArticleEngagePanel from "@/components/blog/BlogArticleEngagePanel";
 import BlogNewsletterBlock from "@/components/blog/BlogNewsletterBlock";
-import BlogArticleFeedback from "@/components/blog/BlogArticleFeedback";
 import BlogCommentsSection from "@/components/blog/BlogCommentsSection";
 import BlogEngagementCta from "@/components/blog/BlogEngagementCta";
 import BlogAffiliateZone from "@/components/blog/BlogAffiliateZone";
@@ -48,7 +47,11 @@ import { buildPublishedBlogSlugSet } from "@/lib/blog-slug-resolve";
 import { extractArticleMapPoints, extractSectionMapPoints } from "@/lib/article-map-points";
 import { cn } from "@/lib/cn";
 import { getBlogSectionKind } from "@/lib/blog-section-body";
-import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
+import {
+  buildTocItemsFromHeadings,
+  headingToAnchorId,
+  stripHeadingDecorations,
+} from "@/lib/content-heading-id";
 import { mapBlogRelatedResources } from "@/lib/content-related-links";
 import { getBlogKbLinks } from "@/data/blog-kb-links";
 import {
@@ -134,18 +137,35 @@ export default function BlogPostView({
   const footerLinks = getBlogPostFooterLinks(post, publishedBlogSlugs);
 
   const usedIds = new Set<string>();
-  const sectionsWithIds = (post.sections ?? []).map((section) => ({
-    section,
-    headingId: headingToAnchorId(section.title, usedIds),
-  }));
+  const sectionsWithIds = (post.sections ?? []).map((section) => {
+    const headingId = headingToAnchorId(section.title, usedIds);
+    const subheadings =
+      section.blocks
+        ?.filter(
+          (block): block is Extract<(typeof section.blocks)[number], { type: "subheading" }> =>
+            block.type === "subheading",
+        )
+        .map((block) => block.text) ??
+      [];
+    // Register H3 ids in the same order BlogSectionBody will emit when parsing ### from body
+    // and explicit subheading blocks. Body ### headings are resolved later via parse — register
+    // only explicit blocks here; body-parsed H3s still get stable ids in SectionBody.
+    for (const text of subheadings) {
+      headingToAnchorId(text, usedIds);
+    }
+    return { section, headingId, subheadings };
+  });
   const tocItems = richArticle
     ? getBlogRichArticleToc(richArticle.id).map((item) => ({
         id: item.id,
-        label: item.label,
+        label: stripHeadingDecorations(item.label),
         level: 2 as const,
       }))
     : buildTocItemsFromHeadings(
-        sectionsWithIds.map(({ section }) => ({ heading: section.title }))
+        sectionsWithIds.map(({ section, subheadings }) => ({
+          heading: stripHeadingDecorations(section.title),
+          subheadings,
+        })),
       );
   const sectionCount = richArticle?.sections.length ?? post.sections?.length ?? 0;
   const showToc = sectionCount >= TOC_MIN_SECTIONS;
@@ -188,7 +208,9 @@ export default function BlogPostView({
   return (
     <>
       {!post.noIndex ? <BlogReadingHistoryRecorder post={post} /> : null}
-      {!post.noIndex ? <BlogTopicClusterJsonLd post={post} catalog={catalog} /> : null}
+      {!post.noIndex && post.displayOptions?.showTopicCluster !== false ? (
+        <BlogTopicClusterJsonLd post={post} catalog={catalog} />
+      ) : null}
       {!post.noIndex ? <ArticleReadingProgress /> : null}
 
       {!post.noIndex ? (
@@ -222,6 +244,7 @@ export default function BlogPostView({
                   hubHref={primaryHub ? blogHubPath(primaryHub.id) : undefined}
                   defaultHubScope={Boolean(hubFreshPosts?.length)}
                   readingHistoryExcludeSlug={post.slug}
+                  showFresh={post.displayOptions?.showSidebarFresh !== false}
                 />
               </div>
             }
@@ -234,10 +257,11 @@ export default function BlogPostView({
             articleClassName="content-reading-prose--wide"
             footer={
               <footer className="space-y-8">
-                {settings.showShare ? <BlogShareBar post={post} /> : null}
-                {!post.noIndex ? (
-                  <BlogArticleFeedback slug={post.slug} title={post.title} />
-                ) : null}
+                <BlogArticleEngagePanel
+                  post={post}
+                  showShare={settings.showShare}
+                  showFeedback={!post.noIndex}
+                />
                 {!post.noIndex && settings.showComments ? (
                   <BlogCommentsSection slug={post.slug} title={post.title} />
                 ) : null}
@@ -249,11 +273,15 @@ export default function BlogPostView({
               </footer>
             }
           >
-            {!post.noIndex ? <BlogQuickFacts post={post} className="mb-8" /> : null}
-            {!post.noIndex && postDestinations.length > 0 ? (
+            {!post.noIndex && post.displayOptions?.showQuickFacts !== false ? (
+              <BlogQuickFacts post={post} className="mb-8" />
+            ) : null}
+            {!post.noIndex &&
+            post.displayOptions?.showDestinationGallery !== false &&
+            postDestinations.length > 0 ? (
               <BlogDestinationGallery destinations={postDestinations} className="mb-8" />
             ) : null}
-            {!post.noIndex ? (
+            {!post.noIndex && post.displayOptions?.showTopicCluster !== false ? (
               <BlogTopicClusterNav post={post} catalog={catalog} className="mb-8" />
             ) : null}
             <div className="space-y-4">
@@ -297,15 +325,19 @@ export default function BlogPostView({
               ) : null}
             </div>
 
-            {!post.noIndex ? <BlogAffiliateZone post={post} className="mt-10" /> : null}
+            {!post.noIndex && post.displayOptions?.showAffiliate !== false ? (
+              <BlogAffiliateZone post={post} className="mt-10" />
+            ) : null}
 
-            {post.tourEmbeds?.length ? (
+            {post.displayOptions?.showAffiliate !== false && post.tourEmbeds?.length ? (
               <Suspense fallback={null}>
                 <BlogPostTourEmbeds embeds={post.tourEmbeds} initialTours={initialTours} />
               </Suspense>
             ) : null}
 
-            {!post.noIndex && excursionMatches.length > 0 ? (
+            {!post.noIndex &&
+            post.displayOptions?.showAffiliate !== false &&
+            excursionMatches.length > 0 ? (
               <div className="mt-10 border-t border-gray-100 pt-8">
                 <ContentExcursionSection
                   matches={excursionMatches}

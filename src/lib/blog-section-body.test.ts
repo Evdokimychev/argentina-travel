@@ -148,6 +148,59 @@ describe("parseBlogSectionBody — tables", () => {
       rows: [["Ячейка 1", "Ячейка 2"]],
     });
   });
+
+  it("parses GFM pipe tables used by manual-from-md articles", () => {
+    const blocks = parseBlogSectionBody(
+      "| Параметр | Значение |\n|---|---|\n| **Где** | Провинция Мендоса |\n| **Сорт** | Мальбек |",
+    );
+    expect(blocks[0]).toEqual({
+      type: "table",
+      headers: ["Параметр", "Значение"],
+      rows: [
+        ["**Где**", "Провинция Мендоса"],
+        ["**Сорт**", "Мальбек"],
+      ],
+    });
+  });
+
+  it("does not collapse GFM tables into a single paragraph", () => {
+    const blocks = parseBlogSectionBody(
+      "| A | B |\n|---|---|\n| 1 | 2 |",
+    );
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0].type).toBe("table");
+    expect(JSON.stringify(blocks[0])).not.toContain("|---|");
+  });
+});
+
+describe("parseBlogSectionBody — markdown polish", () => {
+  it("turns plain blockquotes into актуальность callouts", () => {
+    const blocks = parseBlogSectionBody(
+      "> Актуально на июнь 2026 года. Цены меняются.",
+    );
+    expect(blocks[0]).toMatchObject({
+      type: "callout",
+      variant: "know",
+      title: "Актуально",
+      body: "Актуально на июнь 2026 года. Цены меняются.",
+    });
+  });
+
+  it("keeps inline bold markers for the rich text renderer", () => {
+    const blocks = parseBlogSectionBody("Регион **Мендоса** стоит посетить осенью.");
+    expect(blocks[0]).toMatchObject({
+      type: "paragraph",
+      text: "Регион **Мендоса** стоит посетить осенью.",
+    });
+    if (blocks[0].type === "paragraph") {
+      expect(blocks[0].html).toContain("<strong>Мендоса</strong>");
+    }
+  });
+
+  it("parses markdown headings as subheadings", () => {
+    const blocks = parseBlogSectionBody("### Винные зоны");
+    expect(blocks[0]).toEqual({ type: "subheading", text: "Винные зоны" });
+  });
 });
 
 describe("parseBlogSectionBody — subheadings", () => {

@@ -5,7 +5,7 @@ import { blogPosts } from "@/data/blog";
 import { planInlineRelatedSections } from "@/lib/blog-inline-related";
 import { resolveBlogAffiliateCards } from "@/lib/blog-affiliate-zones";
 import { resolveBlogPostDestinations } from "@/lib/blog-destinations";
-import { linkifyBlogText, getBlogInternalLinkRules } from "@/lib/blog-internal-links";
+import { linkifyBlogText, getBlogInternalLinkRules, getBlogFullAutoLinkRules } from "@/lib/blog-internal-links";
 import { getRelatedBlogPosts, getRelatedBlogPostsForSection } from "@/lib/blog-related-posts";
 import { getBlogTopicClusterSiblings, buildBlogTopicClusterItemListJsonLd } from "@/lib/blog-topic-cluster";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
@@ -125,13 +125,21 @@ describe("section-aware related posts", () => {
 });
 
 describe("blog internal links", () => {
-  it("links first destination mention", () => {
-    const segments = linkifyBlogText("Перед поездкой в Патагонию изучите маршрут.");
+  it("links first destination mention when full auto-link rules are enabled", () => {
+    const segments = linkifyBlogText(
+      "Перед поездкой в Патагонию изучите маршрут.",
+      getBlogFullAutoLinkRules(),
+    );
     expect(segments.some((s) => s.type === "link" && s.href.includes("/destinations/"))).toBe(true);
   });
 
-  it("exposes rules for destinations and guides", () => {
-    const rules = getBlogInternalLinkRules();
+  it("does not auto-link destinations by default (markdown-only policy)", () => {
+    const segments = linkifyBlogText("Перед поездкой в Патагонию изучите маршрут.");
+    expect(segments.some((s) => s.type === "link" && s.href.includes("/destinations/"))).toBe(false);
+  });
+
+  it("exposes optional full rules for destinations and guides", () => {
+    const rules = getBlogFullAutoLinkRules();
     expect(rules.some((r) => r.href.startsWith("/destinations/"))).toBe(true);
     expect(rules.some((r) => r.href.startsWith("/guide/"))).toBe(true);
   });
@@ -139,6 +147,7 @@ describe("blog internal links", () => {
   it("does not turn generic wine mentions into a Mendoza link", () => {
     const segments = linkifyBlogText(
       "В отличие от зоопарка, здесь птицы свободно подходят к тропе. Вино к маршруту отношения не имеет.",
+      getBlogFullAutoLinkRules(),
     );
 
     expect(
@@ -149,11 +158,61 @@ describe("blog internal links", () => {
   it("limits auto-links and does not repeat the same destination", () => {
     const segments = linkifyBlogText(
       "Буэнос-Айрес и Buenos Aires, затем Эль-Калафате, Барилоче, Мендоса и Игуасу.",
+      getBlogFullAutoLinkRules(),
     );
     const links = segments.filter((segment) => segment.type === "link");
 
     expect(links.length).toBeLessThanOrEqual(3);
     expect(new Set(links.map((link) => link.href)).size).toBe(links.length);
+  });
+
+  it("preserves editor markdown links and does not split them by destination auto-link", () => {
+    const segments = linkifyBlogText(
+      "Практический маршрут — в [винном гиде по Мендосе](/blog/mendoza-vinnyj-gid) и на странице направления [Мендоса](/destinations/mendoza).",
+    );
+    const links = segments.filter((segment) => segment.type === "link");
+    const raw = segments
+      .filter((segment) => segment.type === "text")
+      .map((segment) => segment.value)
+      .join("");
+
+    expect(links.map((link) => link.href)).toEqual([
+      "/blog/mendoza-vinnyj-gid",
+      "/destinations/mendoza",
+    ]);
+    expect(links[0]?.label).toBe("винном гиде по Мендосе");
+    expect(raw).not.toContain("](/");
+    expect(raw).not.toContain("[Мендоса]");
+  });
+
+  it("does not auto-link destination names inside bold headings", () => {
+    const segments = linkifyBlogText("**Эль-Калафате и Эль-Чальтен**\n\nДля маршрута с ледниками.");
+    const raw = segments
+      .filter((segment) => segment.type === "text")
+      .map((segment) => segment.value)
+      .join("");
+
+    expect(raw).toContain("**Эль-Калафате и Эль-Чальтен**");
+    expect(
+      segments.some(
+        (segment) => segment.type === "link" && segment.href === "/destinations/calafate",
+      ),
+    ).toBe(false);
+  });
+
+  it("keeps official source markdown URLs intact", () => {
+    const segments = linkifyBlogText(
+      "* [Туристический портал Буэнос-Айреса — климат](https://turismo.buenosaires.gob.ar/en/article/climate)",
+    );
+    const links = segments.filter((segment) => segment.type === "link");
+    const raw = segments
+      .filter((segment) => segment.type === "text")
+      .map((segment) => segment.value)
+      .join("");
+
+    expect(links).toHaveLength(1);
+    expect(links[0]?.href).toBe("https://turismo.buenosaires.gob.ar/en/article/climate");
+    expect(raw).not.toContain("](https://");
   });
 });
 
@@ -287,6 +346,16 @@ describe("blog Phase 2/3 wiring", () => {
     expect(source).toContain("BlogSaveArticleButton");
   });
 
+  it("BlogArticleEngagePanel combines share and feedback", () => {
+    const source = readFileSync(
+      join(root, "components/blog/BlogArticleEngagePanel.tsx"),
+      "utf8",
+    );
+    expect(source).toContain("BlogShareBar");
+    expect(source).toContain("BlogArticleFeedback");
+    expect(source).toContain("embedded");
+  });
+
   it("BlogCard standard uses 3/2 aspect", () => {
     const source = readFileSync(join(root, "components/blog/BlogCard.tsx"), "utf8");
     expect(source).toContain('aspect="3/2"');
@@ -384,7 +453,7 @@ describe("blog post view Phase 1 wiring", () => {
     const source = readFileSync(join(root, "components/blog/BlogPostView.tsx"), "utf8");
     expect(source).toContain("ArticleReadingProgress");
     expect(source).toContain("BlogQuickFacts");
-    expect(source).toContain("BlogShareBar");
+    expect(source).toContain("BlogArticleEngagePanel");
     expect(source).toContain("BlogEngagementCta");
   });
 });
@@ -489,7 +558,8 @@ describe("blog Phase 5", () => {
   });
 
   it("detects linkifyable text", () => {
-    expect(willLinkifyBlogText("Патагония — must see")).toBe(true);
+    expect(willLinkifyBlogText("См. [Патагонию](/destinations/patagonia)")).toBe(true);
+    expect(willLinkifyBlogText("Патагония — must see")).toBe(false);
   });
 
   it("BlogPostView includes comments section", () => {

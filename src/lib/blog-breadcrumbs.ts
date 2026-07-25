@@ -23,7 +23,7 @@ export function buildBlogPostBreadcrumbJsonLd(post: BlogPost): BreadcrumbJsonLdI
   });
 
   const hub = getPrimaryBlogHubForPost(post);
-  if (hub) {
+  if (hub && hub.shortTitle !== post.category) {
     items.push({ name: hub.shortTitle, path: blogHubPath(hub.id) });
   }
 
@@ -43,7 +43,7 @@ export function buildBlogPostUiBreadcrumbs(post: BlogPost): BlogUiBreadcrumbItem
   });
 
   const hub = getPrimaryBlogHubForPost(post);
-  if (hub) {
+  if (hub && hub.shortTitle !== post.category) {
     items.push({ label: hub.shortTitle, href: blogHubPath(hub.id) });
   }
 

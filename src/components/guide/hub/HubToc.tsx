@@ -240,14 +240,18 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
                     scrollToSiteAnchor(item.id);
                   }}
                   className={cn(
-                    "flex items-center rounded-xl text-sm font-medium transition-colors",
-                    isCompact ? "justify-center px-2 py-2.5" : "gap-2.5 px-2.5 py-2",
+                    "flex items-start rounded-xl text-sm font-medium transition-colors",
+                    isCompact ? "items-center justify-center px-2 py-2" : "gap-2 px-2.5 py-1.5",
                     active
                       ? "bg-sky/10 text-sky"
                       : "text-slate hover:bg-gray-50 hover:text-charcoal"
                   )}
                 >
-                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.75} aria-hidden />
+                  <Icon
+                    className={cn("h-4 w-4 shrink-0", !isCompact && "mt-0.5")}
+                    strokeWidth={1.75}
+                    aria-hidden
+                  />
                   {!isCompact ? (
                     <span className="min-w-0 flex-1 text-[13px] leading-snug">{item.label}</span>
                   ) : null}

@@ -1394,9 +1394,15 @@ body {
   }
 }
 
-/* Blog — WCAG 2.1 touch targets (S14) */
+/* Blog — WCAG 2.1 touch targets (S14). Prefer flex + items-center on row links
+   so min-height does not pin text to the top of the hit area. */
 .blog-touch-target {
   min-height: 44px;
+}
+
+.blog-touch-target.inline-flex,
+.blog-touch-target.flex {
+  align-items: center;
 }
 
 .blog-interactive-target {

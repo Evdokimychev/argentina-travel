@@ -83,6 +83,23 @@ const QUERY_CONCEPTS: QueryConcept[] = [
     signals: ["penguin", "пингвин", "punta tombo", "пунта-томбо", "martillo", "мартильо"],
     reason: "Маршрут связан с колониями пингвинов",
   },
+  {
+    kind: "topic",
+    keys: ["asado", "parrilla", "gastronom", "гастроном", "асадо", "паррил"],
+    signals: [
+      "asado",
+      "parrilla",
+      "gastronom",
+      "гастроном",
+      "асадо",
+      "паррил",
+      "chorizo",
+      "чоризо",
+      "steak",
+      "стейк",
+    ],
+    reason: "Маршрут связан с гастрономией, asado и parrilla",
+  },
 ];
 
 function normalizeSearchText(value: string): string {
