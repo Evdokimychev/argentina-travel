@@ -10,6 +10,7 @@ import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
+import ArticleStoryDeck from "@/components/blog/ArticleStoryDeck";
 import BlogSectionDivider from "@/components/blog/BlogSectionDivider";
 import BlogStepList from "@/components/blog/BlogStepList";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
@@ -272,8 +273,21 @@ function renderBlock(
           config={block.config}
         />
       );
-    default:
+    case "story-deck":
+      return (
+        <ArticleStoryDeck
+          key={index}
+          title={block.title}
+          ariaLabel={block.ariaLabel}
+          slides={block.slides}
+          className="my-6"
+        />
+      );
+    default: {
+      const _exhaustive: never = block;
+      void _exhaustive;
       return null;
+    }
   }
 }
 
