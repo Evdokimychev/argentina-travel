@@ -1,5 +1,6 @@
 "use client";
 
+import { BlogInlineText } from "@/components/blog/BlogLinkifiedText";
 import { cn } from "@/lib/cn";
 
 type BlogFaqItem = {
@@ -25,12 +26,14 @@ export default function BlogFaqSection({ items, className }: BlogFaqSectionProps
       aria-label="Часто задаваемые вопросы"
     >
       {items.map((item) => (
-        <details key={item.question} className="group px-4 py-1 sm:px-5 sm:py-2">
+        <details key={item.question} className="group px-4 py-3 sm:px-5 sm:py-4">
           <summary
-            className="blog-touch-target -mx-1 cursor-pointer list-none rounded-lg px-1 font-medium text-charcoal marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden"
+            className="blog-touch-target flex cursor-pointer list-none items-center rounded-lg font-medium text-charcoal marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden"
           >
-            <span className="flex items-start justify-between gap-3">
-              <span className="text-sm sm:text-[0.9375rem]">{item.question}</span>
+            <span className="flex w-full items-start justify-between gap-3">
+              <span className="pt-0.5 text-sm leading-snug sm:text-[0.9375rem]">
+                <BlogInlineText text={item.question} />
+              </span>
               <span
                 className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sm font-bold text-sky transition group-open:rotate-45 motion-reduce:transition-none motion-reduce:group-open:rotate-0"
                 aria-hidden
@@ -39,8 +42,8 @@ export default function BlogFaqSection({ items, className }: BlogFaqSectionProps
               </span>
             </span>
           </summary>
-          <p className="mt-3 text-sm leading-relaxed text-slate sm:text-[0.9375rem]">
-            {item.answer}
+          <p className="mt-3 pb-0.5 text-sm leading-relaxed text-slate sm:text-[0.9375rem]">
+            <BlogInlineText text={item.answer} linkify />
           </p>
         </details>
       ))}
