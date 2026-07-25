@@ -13,6 +13,9 @@ import SteakBillExplainer from "@/components/travel/SteakBillExplainer";
 import SummerWinterComparison from "@/components/travel/SummerWinterComparison";
 import TripTypeSelector from "@/components/travel/TripTypeSelector";
 import WhatNotToPack from "@/components/travel/WhatNotToPack";
+import TangoGlossary from "@/components/travel/TangoGlossary";
+import TangoPhrasebook from "@/components/travel/TangoPhrasebook";
+import TangoRondaDiagram from "@/components/travel/TangoRondaDiagram";
 
 export type TravelWidgetKey =
   | "season-matrix"
@@ -29,7 +32,10 @@ export type TravelWidgetKey =
   | "destination-packing-cards"
   | "summer-winter-comparison"
   | "what-not-to-pack"
-  | "carry-on-packing";
+  | "carry-on-packing"
+  | "tango-glossary"
+  | "tango-phrasebook"
+  | "tango-ronda-diagram";
 
 type Props = {
   widgetKey: string;
@@ -99,6 +105,18 @@ export default function TravelWidgetRenderer({ widgetKey, className }: Props) {
 
   if (key === "carry-on-packing") {
     return <CarryOnPacking className={className} />;
+  }
+
+  if (key === "tango-glossary") {
+    return <TangoGlossary className={className} />;
+  }
+
+  if (key === "tango-phrasebook") {
+    return <TangoPhrasebook className={className} />;
+  }
+
+  if (key === "tango-ronda-diagram") {
+    return <TangoRondaDiagram className={className} />;
   }
 
   return null;
