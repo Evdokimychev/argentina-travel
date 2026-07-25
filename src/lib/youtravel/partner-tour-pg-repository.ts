@@ -2,11 +2,13 @@ import "server-only";
 
 import pg from "pg";
 import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import type { YouTravelOfferListingRow } from "@/lib/youtravel/offers-mapper";
 import {
+  applyYouTravelOfferPricesToListing,
   rowToListing,
   type YouTravelTourRow,
 } from "@/lib/youtravel/partner-tour-repository";
-import type { TourDetail, TourListing } from "@/types";
+import type { TourDate, TourDetail, TourListing } from "@/types";
 
 async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T> {
   const connectionString = resolveDatabaseUrl();
@@ -38,7 +40,51 @@ export async function pgFetchYouTravelTourListings(): Promise<TourListing[]> {
        where status is distinct from 'draft'
        order by review_count desc nulls last`,
     );
-    return (rows as YouTravelTourRow[]).map((row) => rowToListing(row));
+    const tours = rows as YouTravelTourRow[];
+    if (!tours.length) return [];
+
+    const tourIds = tours.map((tour) => tour.id);
+    const offersResult = await client.query(
+      `select tour_id, start_date, end_date, seats_available, price_value, price_currency, payload
+       from public.youtravel_offers
+       where tour_id = any($1::bigint[])
+       order by start_date asc nulls last`,
+      [tourIds],
+    );
+
+    const offersByTour = new Map<number, TourDate[]>();
+    const offerPriceRowsByTour = new Map<number, YouTravelOfferListingRow[]>();
+    for (const offer of offersResult.rows) {
+      const tourId = Number(offer.tour_id);
+      if (!Number.isFinite(tourId)) continue;
+
+      if (offer.start_date) {
+        const list = offersByTour.get(tourId) ?? [];
+        list.push({
+          start: String(offer.start_date).slice(0, 10),
+          end: String(offer.end_date ?? offer.start_date).slice(0, 10),
+          spotsLeft: Math.max(Number(offer.seats_available ?? 0), 0),
+        });
+        offersByTour.set(tourId, list);
+      }
+
+      const priceRows = offerPriceRowsByTour.get(tourId) ?? [];
+      priceRows.push({
+        price_value: offer.price_value != null ? Number(offer.price_value) : null,
+        price_currency: offer.price_currency ?? null,
+        payload: offer.payload as YouTravelOfferListingRow["payload"],
+      });
+      offerPriceRowsByTour.set(tourId, priceRows);
+    }
+
+    return tours.map((row) => {
+      const listing = rowToListing(row);
+      listing.availableDates = offersByTour.get(row.id) ?? [];
+      return applyYouTravelOfferPricesToListing(
+        listing,
+        offerPriceRowsByTour.get(row.id) ?? [],
+      );
+    });
   });
 }
 

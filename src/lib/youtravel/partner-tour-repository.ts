@@ -6,8 +6,8 @@ import type { TourDetail, TourListing } from "@/types";
 import {
   formatYouTravelListedPrice,
   normalizeYouTravelPartnerPrice,
-  resolveYouTravelListingPriceFromOffers,
   type YouTravelOfferListingRow,
+  resolveYouTravelListingPriceFromOffers,
 } from "@/lib/youtravel/offers-mapper";
 import {
   youtravelTourListingId,
@@ -135,18 +135,28 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     PARTNER_TOUR_FALLBACK_IMAGE;
   const destination = row.city?.trim() || row.region?.trim() || row.country?.trim() || "Аргентина";
   const listingId = youtravelTourListingId(row.id);
-  const normalizedPrice = normalizeYouTravelPartnerPrice(row.price_value, row.price_currency);
+  const rawPriceValue =
+    row.price_value ??
+    payload.priceFrom ??
+    payload.minPrice ??
+    payload.price ??
+    null;
+  const rawPriceCurrency = row.price_currency ?? payload.currency ?? null;
+  const normalizedPrice = normalizeYouTravelPartnerPrice(
+    rawPriceValue != null ? Number(rawPriceValue) : null,
+    rawPriceCurrency,
+  );
   const priceUsd =
     resolvePartnerTourFilterPriceUsd({
       partnerSource: "youtravel",
       id: listingId,
       priceUsd: 0,
-      partnerPriceValue: normalizedPrice.value ?? row.price_value ?? undefined,
-      partnerPriceCurrency: normalizedPrice.currency ?? row.price_currency ?? undefined,
+      partnerPriceValue: normalizedPrice.value ?? undefined,
+      partnerPriceCurrency: normalizedPrice.currency ?? undefined,
     }) ?? 0;
   const priceDisplay =
     row.price_display ??
-    formatYouTravelListedPrice(normalizedPrice.value ?? row.price_value, normalizedPrice.currency ?? row.price_currency) ??
+    formatYouTravelListedPrice(normalizedPrice.value, normalizedPrice.currency) ??
     undefined;
   const { min: groupMin, max: groupMax } = resolveYouTravelGroupSize(payload);
   const expert =
@@ -213,12 +223,40 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     badges: [],
     partnerSource: "youtravel",
     partnerPriceDisplay: priceDisplay,
-    partnerPriceValue: normalizedPrice.value ?? row.price_value ?? undefined,
-    partnerPriceCurrency: normalizedPrice.currency ?? row.price_currency ?? undefined,
+    partnerPriceValue: normalizedPrice.value ?? undefined,
+    partnerPriceCurrency: normalizedPrice.currency ?? undefined,
     partnerPriceUnit: "per_person",
     partnerInstantBooking: resolveYouTravelInstantBooking(payload),
     partnerTourGuaranteed: resolveYouTravelTourGuaranteed(payload),
     partnerThematicTags: resolveYouTravelThematicTags(payload),
+  };
+}
+
+/** Apply offer-level sale prices onto a catalog listing (shared by REST and PG paths). */
+export function applyYouTravelOfferPricesToListing(
+  listing: TourListing,
+  offerRows: YouTravelOfferListingRow[],
+): TourListing {
+  const offerPrices = resolveYouTravelListingPriceFromOffers(offerRows, {
+    priceValue: listing.partnerPriceValue,
+    priceCurrency: listing.partnerPriceCurrency,
+    priceUsd: listing.priceUsd,
+  });
+
+  if (offerPrices.partnerPriceValue == null) return listing;
+
+  return {
+    ...listing,
+    partnerPriceValue: offerPrices.partnerPriceValue,
+    partnerPriceCurrency: offerPrices.partnerPriceCurrency,
+    partnerOriginalPriceValue: offerPrices.partnerOriginalPriceValue,
+    partnerPriceDisplay:
+      formatYouTravelListedPrice(
+        offerPrices.partnerPriceValue,
+        offerPrices.partnerPriceCurrency,
+      ) ?? listing.partnerPriceDisplay,
+    priceUsd: offerPrices.priceUsd ?? listing.priceUsd,
+    originalPriceUsd: offerPrices.originalPriceUsd ?? listing.originalPriceUsd,
   };
 }
 
@@ -262,33 +300,10 @@ export async function fetchYouTravelTourListings(supabase: DbClient): Promise<To
   return data.map((row) => {
     const listing = rowToListing(row as YouTravelTourRow);
     listing.availableDates = offersByTour.get(row.id) ?? [];
-
-    const offerPrices = resolveYouTravelListingPriceFromOffers(
+    return applyYouTravelOfferPricesToListing(
+      listing,
       offerPriceRowsByTour.get(row.id) ?? [],
-      {
-        priceValue: listing.partnerPriceValue,
-        priceCurrency: listing.partnerPriceCurrency,
-        priceUsd: listing.priceUsd,
-      },
     );
-
-    if (offerPrices.partnerPriceValue != null) {
-      listing.partnerPriceValue = offerPrices.partnerPriceValue;
-      listing.partnerPriceCurrency = offerPrices.partnerPriceCurrency;
-      listing.partnerOriginalPriceValue = offerPrices.partnerOriginalPriceValue;
-      listing.partnerPriceDisplay = formatYouTravelListedPrice(
-        offerPrices.partnerPriceValue,
-        offerPrices.partnerPriceCurrency,
-      );
-      if (offerPrices.priceUsd != null) {
-        listing.priceUsd = offerPrices.priceUsd;
-      }
-      if (offerPrices.originalPriceUsd != null) {
-        listing.originalPriceUsd = offerPrices.originalPriceUsd;
-      }
-    }
-
-    return listing;
   });
 }
 
