@@ -577,6 +577,12 @@ export interface BlogPost {
     showTopicCluster?: boolean;
     showAffiliate?: boolean;
     showDestinationGallery?: boolean;
+    /**
+     * Автоперелинковка городов в тексте.
+     * По умолчанию выключена: только явные Markdown-ссылки редактора.
+     * Включайте только для коротких карточек, где нужна агрессивная перелинковка.
+     */
+    autoLinkDestinations?: boolean;
   };
 }
 

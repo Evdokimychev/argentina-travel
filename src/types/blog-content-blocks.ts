@@ -119,7 +119,19 @@ export type BlogBodyBlock =
       author?: string;
       context?: string;
     }
-  | { type: "gallery"; items: BlogGalleryItem[]; columns?: 2 | 3 | 4 }
+  | {
+      type: "gallery";
+      items: BlogGalleryItem[];
+      columns?: 2 | 3 | 4;
+      /** carousel = листание (по умолчанию при 2+ фото); grid = плитка */
+      layout?: "carousel" | "grid" | "auto";
+      ariaLabel?: string;
+    }
+  | {
+      type: "link-chips";
+      title?: string;
+      items: Array<{ label: string; href: string; emoji?: string }>;
+    }
   | {
       type: "video";
       provider: BlogVideoProvider;

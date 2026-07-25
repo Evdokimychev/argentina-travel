@@ -5,7 +5,7 @@ import { blogPosts } from "@/data/blog";
 import { planInlineRelatedSections } from "@/lib/blog-inline-related";
 import { resolveBlogAffiliateCards } from "@/lib/blog-affiliate-zones";
 import { resolveBlogPostDestinations } from "@/lib/blog-destinations";
-import { linkifyBlogText, getBlogInternalLinkRules } from "@/lib/blog-internal-links";
+import { linkifyBlogText, getBlogInternalLinkRules, getBlogFullAutoLinkRules } from "@/lib/blog-internal-links";
 import { getRelatedBlogPosts, getRelatedBlogPostsForSection } from "@/lib/blog-related-posts";
 import { getBlogTopicClusterSiblings, buildBlogTopicClusterItemListJsonLd } from "@/lib/blog-topic-cluster";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
@@ -125,13 +125,21 @@ describe("section-aware related posts", () => {
 });
 
 describe("blog internal links", () => {
-  it("links first destination mention", () => {
-    const segments = linkifyBlogText("Перед поездкой в Патагонию изучите маршрут.");
+  it("links first destination mention when full auto-link rules are enabled", () => {
+    const segments = linkifyBlogText(
+      "Перед поездкой в Патагонию изучите маршрут.",
+      getBlogFullAutoLinkRules(),
+    );
     expect(segments.some((s) => s.type === "link" && s.href.includes("/destinations/"))).toBe(true);
   });
 
-  it("exposes rules for destinations and guides", () => {
-    const rules = getBlogInternalLinkRules();
+  it("does not auto-link destinations by default (markdown-only policy)", () => {
+    const segments = linkifyBlogText("Перед поездкой в Патагонию изучите маршрут.");
+    expect(segments.some((s) => s.type === "link" && s.href.includes("/destinations/"))).toBe(false);
+  });
+
+  it("exposes optional full rules for destinations and guides", () => {
+    const rules = getBlogFullAutoLinkRules();
     expect(rules.some((r) => r.href.startsWith("/destinations/"))).toBe(true);
     expect(rules.some((r) => r.href.startsWith("/guide/"))).toBe(true);
   });
@@ -139,6 +147,7 @@ describe("blog internal links", () => {
   it("does not turn generic wine mentions into a Mendoza link", () => {
     const segments = linkifyBlogText(
       "В отличие от зоопарка, здесь птицы свободно подходят к тропе. Вино к маршруту отношения не имеет.",
+      getBlogFullAutoLinkRules(),
     );
 
     expect(
@@ -149,6 +158,7 @@ describe("blog internal links", () => {
   it("limits auto-links and does not repeat the same destination", () => {
     const segments = linkifyBlogText(
       "Буэнос-Айрес и Buenos Aires, затем Эль-Калафате, Барилоче, Мендоса и Игуасу.",
+      getBlogFullAutoLinkRules(),
     );
     const links = segments.filter((segment) => segment.type === "link");
 
@@ -548,7 +558,8 @@ describe("blog Phase 5", () => {
   });
 
   it("detects linkifyable text", () => {
-    expect(willLinkifyBlogText("Патагония — must see")).toBe(true);
+    expect(willLinkifyBlogText("См. [Патагонию](/destinations/patagonia)")).toBe(true);
+    expect(willLinkifyBlogText("Патагония — must see")).toBe(false);
   });
 
   it("BlogPostView includes comments section", () => {
