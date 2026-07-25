@@ -2,6 +2,7 @@ import { Clock, UserRound } from "lucide-react";
 import BlogPostBreadcrumbs from "@/components/blog/BlogPostBreadcrumbs";
 import BlogPostHeroImage from "@/components/blog/BlogPostHeroImage";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
+import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { formatBlogDate, formatBlogUpdatedLabel } from "@/lib/blog-utils";
 import { cn } from "@/lib/cn";
 import { resolveBlogEditorialTheme } from "@/lib/editorial-theme";
@@ -17,6 +18,8 @@ type BlogPostHeaderProps = {
 
 export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPostHeaderProps) {
   const editorialTheme = resolveBlogEditorialTheme(post);
+  const isPersonalAuthor =
+    post.author !== BLOG_EDITORIAL.name && !post.author.includes("Редакция");
 
   return (
     <section
@@ -38,6 +41,11 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
                   <span className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
                     {post.category}
                   </span>
+                  {isPersonalAuthor ? (
+                    <span className="inline-flex rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-semibold tracking-[0.04em] text-slate">
+                      Авторский материал
+                    </span>
+                  ) : null}
                   {post.richArticleId ? (
                     <span className="inline-flex rounded-full bg-[var(--editorial-accent-strong)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white">
                       Полный гид

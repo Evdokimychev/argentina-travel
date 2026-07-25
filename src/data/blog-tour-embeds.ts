@@ -2,19 +2,6 @@ import type { TourEmbedConfig } from "@/types/tour-embed";
 
 /** Дополнительные tour embeds для indexable-статей без inline-блока в blog.ts */
 export const BLOG_TOUR_EMBEDS: Record<string, TourEmbedConfig[]> = {
-  "best-time-to-visit-argentina": [
-    {
-      id: "season-tours-strip",
-      variant: "strip",
-      title: "Готовые маршруты по сезону",
-      subtitle: "Туры с учётом климата и логистики региона",
-      limit: 6,
-      source: { kind: "query", query: "Patagonia" },
-      catalogHref: "/podbor",
-      catalogLabel: "Подбор маршрута",
-      tone: "inline",
-    },
-  ],
   "argentinian-steak-guide": [
     {
       id: "ba-food-compact",

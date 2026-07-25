@@ -11,9 +11,11 @@ import type { BlogPost } from "@/types";
 type BlogShareBarProps = {
   post: Pick<BlogPost, "slug" | "title" | "category" | "image">;
   className?: string;
+  /** Без собственной рамки — внутри общего блока вовлечения */
+  embedded?: boolean;
 };
 
-export default function BlogShareBar({ post, className }: BlogShareBarProps) {
+export default function BlogShareBar({ post, className, embedded = false }: BlogShareBarProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopyLink() {
@@ -42,12 +44,15 @@ export default function BlogShareBar({ post, className }: BlogShareBarProps) {
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-2xl border border-gray-100 bg-surface-muted/50 p-3",
+        "flex flex-wrap items-center gap-2",
+        !embedded && "rounded-2xl border border-gray-100 bg-surface-muted/50 p-3",
         className,
       )}
       aria-label="Поделиться статьёй"
     >
-      <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-slate">Поделиться</span>
+      <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-slate">
+        Поделиться
+      </span>
       <button
         type="button"
         onClick={handleCopyLink}

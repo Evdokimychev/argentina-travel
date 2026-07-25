@@ -539,6 +539,8 @@ export interface BlogPost {
   slug: string;
   title: string;
   seoTitle?: string;
+  /** Meta description for <meta name="description"> / Open Graph */
+  seoDescription?: string;
   excerpt: string;
   content: string;
   sections?: BlogPostSection[];
@@ -569,6 +571,13 @@ export interface BlogPost {
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
   /** Идентификатор богатой редакторской вёрстки (см. data/blog-articles) */
   richArticleId?: string;
+  /** Per-article UI toggles (safe defaults apply when omitted) */
+  displayOptions?: {
+    showQuickFacts?: boolean;
+    showTopicCluster?: boolean;
+    showAffiliate?: boolean;
+    showDestinationGallery?: boolean;
+  };
 }
 
 export interface Testimonial {

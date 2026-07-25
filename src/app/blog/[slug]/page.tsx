@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const pageMetadata = buildCmsPageMetadata({
     content: post,
     title: post.seoTitle ?? post.title,
-    description: post.excerpt,
+    description: post.seoDescription?.trim() || post.excerpt,
     path: `/blog/${slug}`,
     image: post.image,
     canonical: canonicalPath,

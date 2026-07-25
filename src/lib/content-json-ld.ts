@@ -86,9 +86,11 @@ export function buildDestinationTouristJsonLd(destination: DestinationPage) {
 }
 
 export function buildBlogArticleJsonLd(post: BlogPost) {
+  const isEditorial =
+    post.author === BLOG_EDITORIAL.name || post.author.includes("Редакция");
   return buildArticleSchema({
     title: post.title,
-    description: post.excerpt,
+    description: post.seoDescription?.trim() || post.excerpt,
     path: `/blog/${post.slug}`,
     text: blogPostPlainText(post),
     schemaType: "BlogPosting",
@@ -96,7 +98,8 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     datePublished: post.date,
     dateModified: getBlogUpdatedDate(post),
     authorName: post.author,
-    authorAvatar: post.authorAvatar ?? BLOG_EDITORIAL.avatar,
+    ...(post.authorAvatar ? { authorAvatar: post.authorAvatar } : {}),
+    authorType: isEditorial ? "Organization" : "Person",
     about: [post.category, ...post.tags].filter(Boolean),
     speakable: true,
   });

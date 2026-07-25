@@ -9,11 +9,18 @@ type BlogAuthorCardProps = {
   className?: string;
 };
 
+function authorInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "А";
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
+}
+
 export default function BlogAuthorCard({ post, className }: BlogAuthorCardProps) {
-  const avatar = post.authorAvatar ?? BLOG_EDITORIAL.avatar;
-  const bio = post.authorBio ?? BLOG_EDITORIAL.bio;
-  const initial = post.author.trim().charAt(0).toUpperCase() || "Р";
   const isEditorial = post.author === BLOG_EDITORIAL.name || post.author.includes("Редакция");
+  const avatar = isEditorial ? (post.authorAvatar ?? BLOG_EDITORIAL.avatar) : post.authorAvatar;
+  const bio = post.authorBio ?? (isEditorial ? BLOG_EDITORIAL.bio : undefined);
+  const initials = authorInitials(post.author);
 
   return (
     <aside
@@ -37,14 +44,14 @@ export default function BlogAuthorCard({ post, className }: BlogAuthorCardProps)
           />
         ) : (
           <span className="flex h-full w-full items-center justify-center bg-sky/10 text-lg font-bold text-sky">
-            {initial}
+            {initials}
           </span>
         )}
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate">Автор</p>
         <p className="mt-1 font-heading text-base font-bold text-charcoal sm:text-lg">{post.author}</p>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate">{bio}</p>
+        {bio ? <p className="mt-1.5 text-sm leading-relaxed text-slate">{bio}</p> : null}
         {isEditorial ? (
           <p className="mt-2 text-xs text-slate">
             Вопросы по материалу —{" "}
