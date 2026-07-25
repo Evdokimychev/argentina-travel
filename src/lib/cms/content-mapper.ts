@@ -100,6 +100,20 @@ function parseBody(value: Json): CmsDocumentBody {
       relatedTourQuery: typeof record.relatedTourQuery === "string" ? record.relatedTourQuery : undefined,
     };
   }
+  if (record.kind === "landing") {
+    return {
+      kind: "landing",
+      description: typeof record.description === "string" ? record.description : "",
+      category: typeof record.category === "string" ? record.category : undefined,
+      sections: Array.isArray(record.sections)
+        ? record.sections.map((section) => parseCmsGuideSection(section))
+        : [],
+      relatedLinks: Array.isArray(record.relatedLinks)
+        ? (record.relatedLinks as { label: string; href: string; description?: string }[])
+        : undefined,
+      relatedTourQuery: typeof record.relatedTourQuery === "string" ? record.relatedTourQuery : undefined,
+    };
+  }
   if (record.kind === "destination") {
     return {
       kind: "destination",
@@ -111,6 +125,9 @@ function parseBody(value: Json): CmsDocumentBody {
       howToGetThere: typeof record.howToGetThere === "string" ? record.howToGetThere : undefined,
       highlights: stringArray(record.highlights),
       travelTips: stringArray(record.travelTips),
+      sections: Array.isArray(record.sections)
+        ? record.sections.map((section) => parseCmsGuideSection(section))
+        : undefined,
     };
   }
   if (record.kind === "place") {
@@ -124,6 +141,9 @@ function parseBody(value: Json): CmsDocumentBody {
         ? (record.faq as { question: string; answer: string }[])
         : undefined,
       relatedTourSlugs: stringArray(record.relatedTourSlugs),
+      sections: Array.isArray(record.sections)
+        ? record.sections.map((section) => parseCmsGuideSection(section))
+        : undefined,
     };
   }
   return {

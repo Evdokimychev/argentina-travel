@@ -30,6 +30,7 @@ const DOC_TYPE_LABELS: Record<CmsDocType, string> = {
   destination: "Направление",
   place: "Место",
   author_article: "Статья эксперта",
+  landing: "Лендинг",
 };
 
 const DOC_TYPE_SEGMENTS: Record<CmsDocType, string> = {
@@ -40,6 +41,7 @@ const DOC_TYPE_SEGMENTS: Record<CmsDocType, string> = {
   destination: "destinations",
   place: "places",
   author_article: "blog/author",
+  landing: "landing",
 };
 
 function toPublicHref(docType: CmsDocType, slug: string): string {

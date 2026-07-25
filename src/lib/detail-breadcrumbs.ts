@@ -96,6 +96,10 @@ export function buildContentPageBreadcrumbItems(
   locale: I18nLocale | undefined,
   page: ContentPage,
 ): BreadcrumbJsonLdItem[] {
+  if (page.section === "landing") {
+    const home = resolveLocaleBreadcrumbItems(locale, [BREADCRUMB_HOME]);
+    return [...home, { name: page.title, path: contentPageHref(page) }];
+  }
   const sectionKey = page.section === "guide" ? "guide" : "immigration";
   return buildDetailBreadcrumbItems(locale, sectionKey, {
     name: page.title,

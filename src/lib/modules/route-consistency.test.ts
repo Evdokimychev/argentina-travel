@@ -72,7 +72,7 @@ describe("module and navigation route consistency", () => {
     expect(broken).toEqual([]);
   });
 
-  it("keeps the immigration regression fixed and statically generated", () => {
+  it("keeps the immigration hub reachable and bridges short articles", () => {
     const hub = readFileSync(path.join(APP_ROOT, "immigration/page.tsx"), "utf8");
     const detail = readFileSync(path.join(APP_ROOT, "immigration/[slug]/page.tsx"), "utf8");
     const nextConfig = readFileSync(path.join(process.cwd(), "next.config.ts"), "utf8");
@@ -80,6 +80,9 @@ describe("module and navigation route consistency", () => {
     expect(hub).not.toContain("notFound();");
     expect(detail).toContain("getAllImmigrationTopics()");
     expect(detail).toContain("<ImmigrationPillarView topic={topic} />");
+    expect(detail).toContain('getContentPage("immigration"');
+    expect(detail).toContain("<ContentPageView page={page} />");
+    expect(detail).toContain("dynamicParams = true");
     expect(nextConfig).toContain('source: "/migration"');
     expect(nextConfig).toContain('destination: "/immigration"');
   });

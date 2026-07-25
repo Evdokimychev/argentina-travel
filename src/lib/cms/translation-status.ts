@@ -69,6 +69,8 @@ function isBodyComplete(body: CmsDocumentBody): boolean {
       );
     case "guide":
       return hasText(body.description) && hasRichSections(body.sections);
+    case "landing":
+      return hasText(body.description) && hasRichSections(body.sections);
     case "destination":
       return (
         hasText(body.description) &&
@@ -81,8 +83,11 @@ function isBodyComplete(body: CmsDocumentBody): boolean {
       );
     case "place":
       return hasText(body.shortDescription) && hasText(body.fullDescription);
-    default:
+    default: {
+      const _exhaustive: never = body;
+      void _exhaustive;
       return false;
+    }
   }
 }
 

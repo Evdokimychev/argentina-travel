@@ -11,6 +11,7 @@ import {
   authorArticleFromCms,
   destinationPageFromCms,
   guidePageFromCms,
+  landingPageFromCms,
   legalDocumentFromCms,
   placeDetailFromCms,
   type CmsDocument,
@@ -82,6 +83,11 @@ export default function CmsDocumentPreviewContent({ doc }: Props) {
 
   if (doc.body.kind === "guide") {
     const page = guidePageFromCms(doc);
+    return page ? <ContentPageView page={page} /> : null;
+  }
+
+  if (doc.body.kind === "landing") {
+    const page = landingPageFromCms(doc);
     return page ? <ContentPageView page={page} /> : null;
   }
 

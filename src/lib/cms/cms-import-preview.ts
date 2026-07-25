@@ -13,6 +13,7 @@ export const CMS_IMPORT_TYPE_LABELS: Record<CmsDocType, string> = {
   destination: "Направления",
   place: "Места",
   author_article: "Статьи экспертов",
+  landing: "Лендинги",
 };
 
 export type CmsImportTypeStats = {

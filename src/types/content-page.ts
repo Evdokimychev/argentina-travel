@@ -18,8 +18,8 @@ export type ContentRelatedLink = {
   description?: string;
 };
 
-/** Top-level site section for editorial content (guide, immigration). */
-export type ContentPageSection = "guide" | "immigration";
+/** Top-level site section for editorial content (guide, immigration, landing). */
+export type ContentPageSection = "guide" | "immigration" | "landing";
 
 export type ContentPage = {
   slug: string;

@@ -18,6 +18,7 @@ import {
   legalBodyFromTs,
   blogBodyFromTs,
   guideBodyFromTs,
+  landingBodyFromContent,
   destinationBodyFromTs,
   placeBodyFromTs,
   cmsDocumentId,
@@ -107,6 +108,15 @@ export async function POST(request: Request) {
     }
     title = title || source.title;
     cmsBody = guideBodyFromTs(source);
+  }
+
+  if (docType === "landing" && !cmsBody) {
+    title = title || slug;
+    cmsBody = landingBodyFromContent({
+      description: "",
+      category: "Лендинг",
+      sections: [{ heading: "Введение", paragraphs: [""] }],
+    });
   }
 
   if (body.importFromSource && docType === "destination") {

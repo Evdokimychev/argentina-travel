@@ -6,6 +6,8 @@ import type { ContentPage, ContentPageSection } from "@/types/content-page";
 const SECTION_PAGES: Record<ContentPageSection, Record<string, ContentPage>> = {
   guide: GUIDE_PAGES,
   immigration: IMMIGRATION_PAGES,
+  /** Landing pages are CMS-only; no static catalog. */
+  landing: {},
 };
 
 export function getContentPage(
@@ -34,10 +36,14 @@ export function getContentHubMeta(section: ContentPageSection): {
   if (section === "guide") {
     return { href: "/guide", label: "Путеводитель" };
   }
+  if (section === "landing") {
+    return { href: "/", label: "Главная" };
+  }
   return { href: "/immigration", label: "Иммиграция" };
 }
 
 function contentSearchType(section: ContentPageSection): SearchIndexItem["type"] {
+  if (section === "landing") return "page";
   return section;
 }
 
@@ -104,7 +110,11 @@ export function buildContentSearchItems(): SearchIndexItem[] {
     href: contentPageHref(page),
     keywords: [
       page.category,
-      page.section === "guide" ? "путеводитель" : "иммиграция",
+      page.section === "guide"
+        ? "путеводитель"
+        : page.section === "landing"
+          ? "лендинг"
+          : "иммиграция",
       ...page.sections.flatMap((section) => [
         section.heading,
         ...(section.paragraphs ?? []),
