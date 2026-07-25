@@ -134,6 +134,8 @@
     "kb:migrate-collector": "tsx scripts/migrate-argentina-knowledge.ts --apply",
     "blog:editorial-readiness": "tsx scripts/blog-editorial-readiness.ts",
     "blog:editorial-readiness:check": "tsx scripts/blog-editorial-readiness.ts --strict",
+    "editorial:audit": "tsx scripts/editorial-audit.ts",
+    "editorial:audit:strict": "tsx scripts/editorial-audit.ts --strict",
     "guide:editorial-readiness": "tsx scripts/guide-editorial-readiness.ts",
     "guide:editorial-readiness:check": "tsx scripts/guide-editorial-readiness.ts --strict",
     "content:crawl": "node scripts/content-audit.mjs",

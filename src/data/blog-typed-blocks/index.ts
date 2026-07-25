@@ -1,6 +1,9 @@
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+import { ARGENTINIAN_STEAK_GUIDE_TYPED_BLOCKS } from "@/data/editorial/argentinian-steak-guide-blocks";
+import { BEST_TIME_TYPED_BLOCKS } from "@/data/editorial/best-time-typed-blocks";
+import { DNI_CUIL_TYPED_BLOCKS } from "@/data/editorial/dni-cuil-typed-blocks";
 
-/** Pilot S11: data-only typed blocks keyed by post slug → section title */
+/** Data-only typed blocks keyed by post slug → section title */
 const TYPED_BLOCKS_BY_SLUG: Record<string, Record<string, BlogBodyBlock[]>> = {
   "el-chalten-i-fitts-roy": {
     "Как выбрать маршрут": [
@@ -36,9 +39,9 @@ const TYPED_BLOCKS_BY_SLUG: Record<string, Record<string, BlogBodyBlock[]>> = {
       },
     ],
   },
-  "best-time-to-visit-argentina": {
-    "Краткий ответ по целям поездки": [{ type: "season-matrix" }],
-  },
+  "best-time-to-visit-argentina": BEST_TIME_TYPED_BLOCKS,
+  "argentinian-steak-guide": ARGENTINIAN_STEAK_GUIDE_TYPED_BLOCKS,
+  "dni-cuil-argentina": DNI_CUIL_TYPED_BLOCKS,
 };
 
 export function getTypedBlocksForSection(
@@ -48,4 +51,8 @@ export function getTypedBlocksForSection(
   const byTitle = TYPED_BLOCKS_BY_SLUG[postSlug];
   if (!byTitle) return undefined;
   return byTitle[sectionTitle];
+}
+
+export function listTypedBlockSlugs(): string[] {
+  return Object.keys(TYPED_BLOCKS_BY_SLUG);
 }
