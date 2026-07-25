@@ -59,8 +59,13 @@ Travel widgets в picker: `season-matrix`, `tourism-infographic`, `tourism-timel
 
 ## Следующие итерации (Phase 3C+)
 
-1. Композиция homepage / marketplace через CMS modules (не через article sections)
-2. Immigration pillars cutover (полноценный CMS override pillar shell)
-3. Slash-menu / Tiptap для inline paragraph
-4. Полный Zod на editorial schemas (сейчас lightweight validators)
-5. CMS-редактирование данных внутри season-matrix / tourism-timeline (не только display-props)
+См. также исследование референсов: [`competitive-builders-research.md`](./competitive-builders-research.md) (WP Travel Engine, Pattern Engine, Puck, BlockNote).
+
+1. **Tour layout bank** (урок WTE): data-bound слоты поверх `tour-detail/*`, не новый Gutenberg
+2. Design Library с превью паттернов / page templates
+3. Композиция homepage / marketplace через CMS modules
+4. Immigration pillars cutover
+5. Slash-menu / Tiptap только для inline paragraph (не замена блоков)
+6. Spike Puck 48h для landing visual lane (go/no-go)
+7. Полный Zod на editorial schemas
+8. CMS-данные внутри season-matrix / tourism-timeline (не только display-props)
