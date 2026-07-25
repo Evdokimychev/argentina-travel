@@ -19,4 +19,13 @@ describe("blog-inline-markdown", () => {
     expect(html).toContain(">гид</a>");
     expect(html).not.toContain("<script");
   });
+
+  it("formats relative editor links without forcing target=_blank", () => {
+    const html = blogInlineMarkdownToHtml(
+      "См. [винный гид](/blog/mendoza-vinnyj-gid) и [Мендоса](/destinations/mendoza).",
+    );
+    expect(html).toContain('href="/blog/mendoza-vinnyj-gid"');
+    expect(html).toContain('href="/destinations/mendoza"');
+    expect(html).not.toContain('target="_blank"');
+  });
 });

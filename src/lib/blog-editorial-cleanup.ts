@@ -71,14 +71,28 @@ function isBareSourceMarker(value: string): boolean {
 
 /**
  * Removes legacy source labels that have no URL or bibliographic data.
- * Verifiable structured links are intentionally left untouched.
+ * Verifiable structured Markdown links `[label](url)` are intentionally left untouched.
  */
 export function cleanLegacyBlogSourceMarkers(text: string): string {
-  return text
+  const markdownLinks: string[] = [];
+  const withProtectedLinks = text.replace(
+    /\[([^\]]+)\]\((\/[^)\s]+|https?:\/\/[^)\s]+)\)/g,
+    (match) => {
+      const index = markdownLinks.length;
+      markdownLinks.push(match);
+      return `%%BLOG_SRC_MD_LINK_${index}%%`;
+    },
+  );
+
+  const cleaned = withProtectedLinks
     .replace(PARENTHETICAL, (match, value: string) =>
       isBareSourceMarker(value) ? "" : match,
     )
     .replace(/\s+([.,;:!?])/g, "$1")
     .replace(/[ \t]{2,}/g, " ")
     .trim();
+
+  return cleaned.replace(/%%BLOG_SRC_MD_LINK_(\d+)%%/g, (_, rawIndex: string) => {
+    return markdownLinks[Number(rawIndex)] ?? "";
+  });
 }

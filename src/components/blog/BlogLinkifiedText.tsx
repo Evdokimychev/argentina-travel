@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { linkifyBlogText } from "@/lib/blog-internal-links";
+import { isExternalBlogHref, linkifyBlogText } from "@/lib/blog-internal-links";
 
 type LinkifiedTextProps = {
   text: string;
@@ -50,6 +50,25 @@ function renderInlineMarkdownSegment(text: string, keyPrefix: string): ReactNode
   return nodes.length > 0 ? nodes : [<span key={`${keyPrefix}-empty`}>{text}</span>];
 }
 
+const linkClassName =
+  "font-medium text-sky underline decoration-sky/30 underline-offset-2 hover:decoration-sky";
+
+function BlogSegmentLink({ href, label }: { href: string; label: string }) {
+  if (isExternalBlogHref(href)) {
+    return (
+      <a href={href} className={linkClassName} rel="noopener noreferrer" target="_blank">
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={linkClassName}>
+      {label}
+    </Link>
+  );
+}
+
 export function LinkifiedText({ text, className, as = "p" }: LinkifiedTextProps) {
   const segments = linkifyBlogText(text);
   const Tag = as;
@@ -58,13 +77,7 @@ export function LinkifiedText({ text, className, as = "p" }: LinkifiedTextProps)
     <Tag className={className}>
       {segments.map((segment, index) =>
         segment.type === "link" ? (
-          <Link
-            key={`${segment.href}-${index}`}
-            href={segment.href}
-            className="font-medium text-sky underline decoration-sky/30 underline-offset-2 hover:decoration-sky"
-          >
-            {segment.label}
-          </Link>
+          <BlogSegmentLink key={`${segment.href}-${index}`} href={segment.href} label={segment.label} />
         ) : (
           <span key={`text-${index}`}>
             {renderInlineMarkdownSegment(segment.value, `seg-${index}`)}

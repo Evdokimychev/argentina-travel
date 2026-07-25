@@ -25,11 +25,12 @@ export function stripBlogInlineMarkdown(text: string): string {
 /**
  * Safe HTML for paragraph/callout bodies with Markdown emphasis and links.
  * Order: protect markdown links → format bold/italic → restore anchors.
+ * Supports both absolute https? and site-relative `/path` links from the editor.
  */
 export function blogInlineMarkdownToHtml(text: string): string {
   const links: Array<{ href: string; label: string }> = [];
   const withPlaceholders = text.replace(
-    /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+    /\[([^\]]+)\]\((\/[^)\s]+|https?:\/\/[^)\s]+)\)/g,
     (_, label: string, href: string) => {
       const index = links.length;
       links.push({ href, label });
@@ -41,7 +42,11 @@ export function blogInlineMarkdownToHtml(text: string): string {
   html = html.replace(/%%BLOG_MD_LINK_(\d+)%%/g, (_, rawIndex: string) => {
     const link = links[Number(rawIndex)];
     if (!link) return "";
-    return `<a href="${escapeHtml(link.href)}" rel="noopener noreferrer" target="_blank">${escapeHtml(link.label)}</a>`;
+    const external = /^https?:\/\//i.test(link.href);
+    const attrs = external
+      ? ` href="${escapeHtml(link.href)}" rel="noopener noreferrer" target="_blank"`
+      : ` href="${escapeHtml(link.href)}"`;
+    return `<a${attrs}>${escapeHtml(link.label)}</a>`;
   });
   return html;
 }
