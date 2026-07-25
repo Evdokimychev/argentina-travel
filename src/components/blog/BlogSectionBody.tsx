@@ -18,7 +18,9 @@ import BlogAuthorCardBlock from "@/components/page-builder/blocks/BlogAuthorCard
 import BlogComparisonTableBlock from "@/components/page-builder/blocks/BlogComparisonTableBlock";
 import BlogContentEmbedBlock from "@/components/page-builder/blocks/BlogContentEmbedBlock";
 import BlogCtaBlock from "@/components/page-builder/blocks/BlogCtaBlock";
-import BlogGalleryBlock from "@/components/page-builder/blocks/BlogGalleryBlock";
+import BlogGalleryBlock, {
+  BlogLinkChipsBlock,
+} from "@/components/page-builder/blocks/BlogGalleryBlock";
 import BlogFactsGridBlock from "@/components/page-builder/blocks/BlogFactsGridBlock";
 import BlogImageTextBlock from "@/components/page-builder/blocks/BlogImageTextBlock";
 import BlogInfoboxBlock from "@/components/page-builder/blocks/BlogInfoboxBlock";
@@ -30,6 +32,7 @@ import BlogWidgetBlock from "@/components/page-builder/blocks/BlogWidgetBlock";
 import { renderEditorialBlock } from "@/editorial/renderers/EditorialBlockRenderer";
 import { sanitizeHtml } from "@/lib/rich-text";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
+import type { BlogInternalLinkRule } from "@/lib/blog-internal-links";
 import type { BlogPostSection } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 
@@ -38,14 +41,25 @@ type BlogSectionBodyProps = {
   postSlug?: string;
   className?: string;
   linkifyText?: boolean;
+  linkifyRules?: BlogInternalLinkRule[];
 };
 
-function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
+function renderLegacyBlock(
+  block: BlogBodyBlock,
+  index: number,
+  linkifyText?: boolean,
+  linkifyRules?: BlogInternalLinkRule[],
+) {
   switch (block.type) {
     case "paragraph":
       if (linkifyText) {
         return (
-          <LinkifiedText key={index} text={block.text} className="leading-relaxed text-slate" />
+          <LinkifiedText
+            key={index}
+            text={block.text}
+            className="leading-relaxed text-slate"
+            rules={linkifyRules}
+          />
         );
       }
       if (block.html?.trim()) {
@@ -78,7 +92,7 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
             <li key={item.slice(0, 48)} className="flex gap-2.5 text-sm leading-relaxed text-slate">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
               <span>
-                <BlogInlineText text={item} linkify={linkifyText} />
+                <BlogInlineText text={item} linkify={linkifyText} rules={linkifyRules} />
               </span>
             </li>
           ))}
@@ -231,7 +245,13 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
           items={block.items}
           columns={block.columns}
           variant={block.variant}
+          layout={block.layout}
+          ariaLabel={block.ariaLabel}
         />
+      );
+    case "link-chips":
+      return (
+        <BlogLinkChipsBlock key={index} title={block.title} items={block.items} />
       );
     case "video":
       return (
@@ -282,21 +302,38 @@ function renderLegacyBlock(block: BlogBodyBlock, index: number, linkifyText?: bo
   }
 }
 
-function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
+function renderBlock(
+  block: BlogBodyBlock,
+  index: number,
+  linkifyText?: boolean,
+  linkifyRules?: BlogInternalLinkRule[],
+) {
   return renderEditorialBlock({
     block,
     index,
     linkifyText,
-    renderLegacy: renderLegacyBlock,
+    renderLegacy: (legacyBlock, legacyIndex, legacyLinkifyText) =>
+      renderLegacyBlock(
+        legacyBlock,
+        legacyIndex,
+        legacyLinkifyText,
+        linkifyRules,
+      ),
   });
 }
 
-export default function BlogSectionBody({ section, postSlug, className, linkifyText }: BlogSectionBodyProps) {
+export default function BlogSectionBody({
+  section,
+  postSlug,
+  className,
+  linkifyText,
+  linkifyRules,
+}: BlogSectionBodyProps) {
   const blocks = resolveBlogSectionBlocks(section, postSlug);
 
   return (
     <div className={className ?? "blog-section-body space-y-5"}>
-      {blocks.map((block, index) => renderBlock(block, index, linkifyText))}
+      {blocks.map((block, index) => renderBlock(block, index, linkifyText, linkifyRules))}
     </div>
   );
 }

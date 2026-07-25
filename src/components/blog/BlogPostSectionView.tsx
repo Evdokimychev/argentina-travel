@@ -4,6 +4,7 @@ import BlogInlineRelatedPosts from "@/components/blog/BlogInlineRelatedPosts";
 import BlogInlineMapBlock from "@/components/blog/BlogInlineMapBlock";
 import BlogExpandableSection from "@/components/blog/BlogExpandableSection";
 import { getBlogSectionKind } from "@/lib/blog-section-body";
+import { getBlogFullAutoLinkRules } from "@/lib/blog-internal-links";
 import { getDistinctBlogSectionImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
@@ -84,8 +85,18 @@ export default function BlogPostSectionView({
   const imageLoading: "lazy" | undefined =
     imageSlot === "section-1" && isShortPost ? undefined : "lazy";
   const expandable = EXPANDABLE_KINDS.has(kind);
+  const linkifyRules = post.displayOptions?.autoLinkDestinations
+    ? getBlogFullAutoLinkRules()
+    : undefined;
 
-  const body = <BlogSectionBody section={section} postSlug={post.slug} linkifyText />;
+  const body = (
+    <BlogSectionBody
+      section={section}
+      postSlug={post.slug}
+      linkifyText
+      linkifyRules={linkifyRules}
+    />
+  );
 
   return (
     <div className="space-y-6">

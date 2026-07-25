@@ -68,11 +68,29 @@ function guideRules(): BlogInternalLinkRule[] {
   }));
 }
 
-/** Правила автоперелинковки — первое вхождение термина в тексте секции. */
-export function getBlogInternalLinkRules(): BlogInternalLinkRule[] {
-  return [...blogSlugRules(), ...destinationRules(), ...guideRules()].sort(
+/** Правила автоперелинковки.
+ * По умолчанию — без городов/гайдов: только явные Markdown-ссылки редактора
+ * и узкие служебные темы (виза, чек-лист). Случайное подсвечивание «Мендоса да / Игуасу нет»
+ * в длинных статьях отключено намеренно.
+ */
+export function getBlogInternalLinkRules(
+  options: {
+    includeDestinations?: boolean;
+    includeGuides?: boolean;
+  } = {},
+): BlogInternalLinkRule[] {
+  const { includeDestinations = false, includeGuides = false } = options;
+  const rules: BlogInternalLinkRule[] = [...blogSlugRules()];
+  if (includeDestinations) rules.push(...destinationRules());
+  if (includeGuides) rules.push(...guideRules());
+  return rules.sort(
     (a, b) => Math.max(...b.terms.map((t) => t.length)) - Math.max(...a.terms.map((t) => t.length)),
   );
+}
+
+/** Полный набор автоссылок (города + гайды) — только если явно нужен. */
+export function getBlogFullAutoLinkRules(): BlogInternalLinkRule[] {
+  return getBlogInternalLinkRules({ includeDestinations: true, includeGuides: true });
 }
 
 export type BlogInternalLinkSegment =

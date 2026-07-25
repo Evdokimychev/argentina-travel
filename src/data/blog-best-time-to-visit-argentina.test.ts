@@ -34,10 +34,11 @@ describe("best-time-to-visit-argentina rebuild", () => {
       showTopicCluster: false,
       showAffiliate: false,
       showDestinationGallery: false,
+      autoLinkDestinations: false,
     });
-    expect(post!.sections?.some((s) => s.title === "Источники и дата проверки")).toBe(true);
+    expect(post!.sections?.some((s) => s.title.includes("Источники и дата проверки"))).toBe(true);
     expect(
-      post!.sections?.filter((s) => s.title === "Источники и дата проверки"),
+      post!.sections?.filter((s) => s.title.includes("Источники и дата проверки")),
     ).toHaveLength(1);
     expect(post!.content).toContain("Проверено 25.07.2026");
   });

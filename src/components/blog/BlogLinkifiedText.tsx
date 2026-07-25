@@ -2,12 +2,14 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { isExternalBlogHref, linkifyBlogText } from "@/lib/blog-internal-links";
+import { isExternalBlogHref, linkifyBlogText, type BlogInternalLinkRule } from "@/lib/blog-internal-links";
 
 type LinkifiedTextProps = {
   text: string;
   className?: string;
   as?: "p" | "span";
+  /** Optional auto-link rules; default = markdown-only (no city spam). */
+  rules?: BlogInternalLinkRule[];
 };
 
 /** Render a plain segment with **bold**, *italic*, and `code`. */
@@ -69,8 +71,8 @@ function BlogSegmentLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function LinkifiedText({ text, className, as = "p" }: LinkifiedTextProps) {
-  const segments = linkifyBlogText(text);
+export function LinkifiedText({ text, className, as = "p", rules }: LinkifiedTextProps) {
+  const segments = linkifyBlogText(text, rules);
   const Tag = as;
 
   return (
@@ -93,13 +95,15 @@ export function BlogInlineText({
   text,
   className,
   linkify = false,
+  rules,
 }: {
   text: string;
   className?: string;
   linkify?: boolean;
+  rules?: BlogInternalLinkRule[];
 }) {
   if (linkify) {
-    return <LinkifiedText text={text} className={className} as="span" />;
+    return <LinkifiedText text={text} className={className} as="span" rules={rules} />;
   }
   return <span className={className}>{renderInlineMarkdownSegment(text, "inline")}</span>;
 }
