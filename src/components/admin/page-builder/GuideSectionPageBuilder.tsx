@@ -6,12 +6,14 @@ import VisualPageBuilder, {
 } from "@/components/admin/page-builder/VisualPageBuilder";
 import type { ContentSection } from "@/types/content-page";
 import type { PageBuilderPatternSlug } from "@/lib/cms/page-builder/pattern-registry";
+import type { PageBuilderPageTemplateSlug } from "@/lib/cms/page-builder/page-template-registry";
 
 type Props = {
   sections: ContentSection[];
   onChange: (sections: ContentSection[]) => void;
   title?: string;
   starterPatterns?: PageBuilderPatternSlug[];
+  starterPageTemplates?: PageBuilderPageTemplateSlug[];
   helpText?: string;
 };
 
@@ -55,6 +57,7 @@ export default function GuideSectionPageBuilder({
   onChange,
   title = "Визуальный конструктор",
   starterPatterns = ["practical-guide", "destination-page-body", "hub-intro"],
+  starterPageTemplates = [],
   helpText,
 }: Props) {
   const idMapRef = useRef(new Map<string, string>());
@@ -72,6 +75,7 @@ export default function GuideSectionPageBuilder({
       showLegacyBody
       legacyBodyLabel="Legacy: HTML / абзацы раздела"
       starterPatterns={starterPatterns}
+      starterPageTemplates={starterPageTemplates}
       helpText={helpText}
     />
   );

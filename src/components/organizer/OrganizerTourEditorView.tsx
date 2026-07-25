@@ -9,6 +9,7 @@ import TourEditorLivePreview from "@/components/organizer/TourEditorLivePreview"
 import TourEditorMobileBar, {
   type TourEditorMobilePanelId,
 } from "@/components/organizer/TourEditorMobileBar";
+import TourDetailLayoutOrderPanel from "@/components/organizer/TourDetailLayoutOrderPanel";
 import TourProfileProgress from "@/components/organizer/TourProfileProgress";
 import { evaluatePublishReadiness } from "@/lib/publish-readiness";
 import { tourProfileCompletionPercent } from "@/lib/tour-profile-completion";
@@ -2105,6 +2106,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
                 <TourProfileProgress draft={draft} />
                 <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+
+                <TourDetailLayoutOrderPanel
+                  value={draft.detailLayoutOrder}
+                  onChange={(detailLayoutOrder) => updateDraft({ detailLayoutOrder })}
+                />
 
                 <button
                   type="button"

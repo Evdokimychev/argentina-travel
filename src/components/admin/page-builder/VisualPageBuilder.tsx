@@ -19,6 +19,11 @@ import {
   PAGE_BUILDER_PATTERNS,
   type PageBuilderPatternSlug,
 } from "@/lib/cms/page-builder/pattern-registry";
+import {
+  createPageBuilderPageTemplate,
+  PAGE_BUILDER_PAGE_TEMPLATES,
+  type PageBuilderPageTemplateSlug,
+} from "@/lib/cms/page-builder/page-template-registry";
 import type { BlogBodyBlock, BlogSectionKind } from "@/types/blog-content-blocks";
 
 export type VisualPageBuilderSection = {
@@ -35,8 +40,10 @@ type Props = {
   title?: string;
   showLegacyBody?: boolean;
   legacyBodyLabel?: string;
-  /** Quick-start templates shown when the document has no sections yet. */
+  /** Quick-start section patterns shown when the document has no sections yet. */
   starterPatterns?: PageBuilderPatternSlug[];
+  /** Full-page packs (multi-section) for empty documents. */
+  starterPageTemplates?: PageBuilderPageTemplateSlug[];
   helpText?: string;
 };
 
@@ -57,6 +64,7 @@ export default function VisualPageBuilder({
   showLegacyBody = false,
   legacyBodyLabel = "Legacy: текстовое тело",
   starterPatterns = ["practical-guide", "destination-story", "hub-intro"],
+  starterPageTemplates = [],
   helpText = "Перетаскивайте блоки за ручку слева. Через «+» можно добавить отдельный блок или готовую секцию из библиотеки — без кода. Разделы перемещайте стрелками.",
 }: Props) {
   const [pickerSectionIndex, setPickerSectionIndex] = useState<number | null>(null);
@@ -114,6 +122,15 @@ export default function VisualPageBuilder({
     ]);
   }
 
+  function startFromPageTemplate(slug: PageBuilderPageTemplateSlug) {
+    const sectionsFromTemplate = createPageBuilderPageTemplate(slug).map((section) => ({
+      ...newSection(section.title),
+      blockType: section.blockType,
+      blocks: section.blocks,
+    }));
+    onChange(sectionsFromTemplate.length ? sectionsFromTemplate : [newSection("Основной раздел")]);
+  }
+
   function mediaKindForBlock(block: BlogBodyBlock | undefined): MediaKind {
     if (block?.type === "gallery") return "gallery";
     if (block?.type === "image-text") return "image-text";
@@ -143,24 +160,74 @@ export default function VisualPageBuilder({
           <div className="text-center">
             <p className="font-heading text-base font-bold text-charcoal">Библиотека шаблонов</p>
             <p className="mt-1 text-sm text-slate">
-              Выберите готовый состав секции — дальше можно править каждый блок.
+              Начните со страницы целиком или с одной готовой секции — дальше правите блоки как
+              обычно.
             </p>
           </div>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {starterPatterns.map((slug) => {
-              const pattern = PAGE_BUILDER_PATTERNS.find((item) => item.slug === slug);
-              if (!pattern) return null;
-              return (
-                <li key={slug}>
-                  <DesignLibraryPatternCard
-                    pattern={pattern}
-                    size="large"
-                    onSelect={() => startFromPattern(slug)}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+          {starterPageTemplates.length ? (
+            <div className="mt-5">
+              <p className="text-center text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+                Шаблоны страниц
+              </p>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+                {starterPageTemplates.map((slug) => {
+                  const template = PAGE_BUILDER_PAGE_TEMPLATES.find((item) => item.slug === slug);
+                  if (!template) return null;
+                  const Icon = template.icon;
+                  const sectionCount = template.create().length;
+                  return (
+                    <li key={slug}>
+                      <button
+                        type="button"
+                        onClick={() => startFromPageTemplate(slug)}
+                        className="group flex h-full w-full flex-col rounded-2xl border border-sky/25 bg-white px-4 py-4 text-left shadow-sm transition hover:border-sky/45 hover:bg-sky/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/35"
+                      >
+                        <span className="flex items-start gap-3">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-ink text-white">
+                            <Icon className="h-4 w-4" aria-hidden />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="mb-1 inline-block text-[10px] font-bold uppercase tracking-[0.12em] text-sky-ink/80">
+                              Разделов: {sectionCount}
+                            </span>
+                            <span className="block text-sm font-semibold text-foreground">
+                              {template.label}
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-relaxed text-muted">
+                              {template.description}
+                            </span>
+                          </span>
+                        </span>
+                        <span className="mt-3 text-xs font-semibold text-sky-ink">
+                          Импортировать страницу
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
+          <div className="mt-5">
+            <p className="text-center text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+              Готовые секции
+            </p>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+              {starterPatterns.map((slug) => {
+                const pattern = PAGE_BUILDER_PATTERNS.find((item) => item.slug === slug);
+                if (!pattern) return null;
+                return (
+                  <li key={slug}>
+                    <DesignLibraryPatternCard
+                      pattern={pattern}
+                      size="large"
+                      onSelect={() => startFromPattern(slug)}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <div className="mt-4 flex justify-center">
             <Button type="button" size="sm" variant="outline" onClick={() => onChange([newSection("Основной раздел")])}>
               Пустой раздел

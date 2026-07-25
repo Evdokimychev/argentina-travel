@@ -75,13 +75,19 @@ Travel widgets в picker: `season-matrix`, `tourism-infographic`, `tourism-timel
 - Новый паттерн `reviews-social-proof`
 - UI: `DesignLibraryPatternCard`, вкладки категорий в `PageBuilderBlockPicker`
 
+## Итерация C (сделано) — адаптация без ломки вертикали
+
+Принцип: конструктор и layout-bank **обертывают** существующие страницы/секции, а не заменяют их вёрстку.
+
+1. **Page template packs** — многосекционный импорт (`page-template-registry.ts`) из уже существующих patterns; пустой документ предлагает «шаблоны страниц» + «готовые секции».
+2. **Tour layout order** — опциональный `detailLayoutOrder` на native tour; по умолчанию публичная колонка и nav идентичны прежнему порядку; UI в «Публикация» организатора.
+3. **Homepage module strip** — `homepage-module-registry.ts` + `MarketplaceHome` рендерит те же секции через registry (default order = текущая вертикаль; hero вне strip). Persistence `site.homepage` — следующий шаг.
+
 ## Следующие итерации (Phase 3C+)
 
-1. CMS override порядка секций тура (JSON layout на native tour)
-2. Композиция homepage / marketplace через CMS modules
-3. Immigration pillars cutover
-4. Slash-menu / Tiptap только для inline paragraph (не замена блоков)
-5. Spike Puck 48h для landing visual lane (go/no-go)
-6. Полный Zod на editorial schemas
-7. CMS-данные внутри season-matrix / tourism-timeline (не только display-props)
-8. Page templates pack (целая landing page одним импортом)
+1. Persistence порядка модулей главной (`site.homepage`) без смены разметки секций
+2. Immigration pillars cutover
+3. Slash-menu / Tiptap только для inline paragraph (не замена блоков)
+4. Spike Puck 48h для landing visual lane (go/no-go)
+5. Полный Zod на editorial schemas
+6. CMS-данные внутри season-matrix / tourism-timeline (не только display-props)

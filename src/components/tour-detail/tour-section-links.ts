@@ -14,6 +14,7 @@ import {
   hasTermsListContent,
   hasTourDatesSection,
 } from "@/lib/tour-public-display";
+import { resolveNativeTourLayoutOrder } from "@/lib/tour-detail/native-tour-layout-registry";
 
 export interface TourSectionLink {
   id: string;
@@ -24,6 +25,35 @@ export interface TourSectionNavContext {
   hasSimilarTours: boolean;
   canonicalTour?: Tour | null;
   flightLogisticsLabel?: string;
+  /** When set, nav link order follows native layout slots (presence still gates items). */
+  detailLayoutOrder?: readonly string[] | null;
+}
+
+/** Keep nav presence rules; only reorder when a custom layout is provided. */
+export function orderTourSectionLinksByLayout(
+  links: TourSectionLink[],
+  layoutOrder?: readonly string[] | null,
+): TourSectionLink[] {
+  if (!layoutOrder?.length) return links;
+
+  const resolved = resolveNativeTourLayoutOrder(layoutOrder);
+  const byId = new Map(links.map((link) => [link.id, link]));
+  const ordered: TourSectionLink[] = [];
+  const seen = new Set<string>();
+
+  for (const slotId of resolved) {
+    const link = byId.get(slotId);
+    if (!link || seen.has(link.id)) continue;
+    seen.add(link.id);
+    ordered.push(link);
+  }
+
+  for (const link of links) {
+    if (seen.has(link.id)) continue;
+    ordered.push(link);
+  }
+
+  return ordered;
 }
 
 export function buildTourSectionLinks(
@@ -34,6 +64,8 @@ export function buildTourSectionLinks(
   const canonicalTour = typeof context === "boolean" ? null : context.canonicalTour;
   const flightLogisticsLabel =
     typeof context === "boolean" ? undefined : context.flightLogisticsLabel;
+  const detailLayoutOrder =
+    typeof context === "boolean" ? undefined : context.detailLayoutOrder;
 
   const links: TourSectionLink[] = [];
   const isPartnerTour = isPartnerTourDetail(tour);
@@ -87,6 +119,7 @@ export function buildTourSectionLinks(
     if (hasSimilarTours) {
       links.push({ id: "similar", label: "Похожие" });
     }
+    // Partner nav stays presence-based; layout override is native-only.
     return links;
   }
 
@@ -164,5 +197,8 @@ export function buildTourSectionLinks(
     links.push({ id: "similar", label: "Похожие" });
   }
 
-  return links;
+  return orderTourSectionLinksByLayout(
+    links,
+    detailLayoutOrder ?? canonicalTour?.display.detailLayoutOrder,
+  );
 }

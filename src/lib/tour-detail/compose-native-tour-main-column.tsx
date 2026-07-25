@@ -57,7 +57,7 @@ export type NativeTourMainColumnContext = {
  */
 export function composeNativeTourMainColumn(
   ctx: NativeTourMainColumnContext,
-  overrideOrder?: readonly NativeTourLayoutSlotId[] | null,
+  overrideOrder?: readonly string[] | null,
 ): ReactNode[] {
   const order = resolveNativeTourLayoutOrder(overrideOrder);
   const nodes: ReactNode[] = [];

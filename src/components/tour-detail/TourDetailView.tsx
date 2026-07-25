@@ -125,10 +125,12 @@ export default function TourDetailView({
     );
   }
 
+  const detailLayoutOrder = canonicalTour?.display.detailLayoutOrder;
   const sectionLinks = buildTourSectionLinks(tour, {
     hasSimilarTours: similarTours.length > 0,
     canonicalTour,
     flightLogisticsLabel: flightLogisticsNavLabel,
+    detailLayoutOrder,
   });
   const isPartnerTour = isPartnerTourDetail(tour);
   const partnerContent = tour.partnerContent;
@@ -305,15 +307,18 @@ export default function TourDetailView({
                 </>
               ) : (
                 <>
-                  {composeNativeTourMainColumn({
-                    tour,
-                    canonicalTour,
-                    relatedCatalogPlaces,
-                    similarTours,
-                    previewMode,
-                    isPartnerTour,
-                    flightLogisticsSection,
-                  })}
+                  {composeNativeTourMainColumn(
+                    {
+                      tour,
+                      canonicalTour,
+                      relatedCatalogPlaces,
+                      similarTours,
+                      previewMode,
+                      isPartnerTour,
+                      flightLogisticsSection,
+                    },
+                    detailLayoutOrder,
+                  )}
                 </>
               )}
             </div>

@@ -1215,6 +1215,11 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 onChange={setSections}
                 title="Конструктор путеводителя"
                 starterPatterns={["practical-guide", "destination-page-body", "day-by-day-route"]}
+                starterPageTemplates={[
+                  "practical-guide-page",
+                  "immigration-page",
+                  "tour-story-page",
+                ]}
               />
             ) : null}
 
@@ -1224,7 +1229,13 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 onChange={setSections}
                 title="Конструктор лендинга"
                 starterPatterns={["hub-intro", "destination-page-body", "practical-guide"]}
-                helpText="Маркетинговая страница: баннеры, блоки с призывом к действию, связанные ссылки и практические секции."
+                starterPageTemplates={[
+                  "landing-hub-page",
+                  "destination-page",
+                  "tour-story-page",
+                  "immigration-page",
+                ]}
+                helpText="Маркетинговая страница: баннеры, блоки с призывом к действию, связанные ссылки и практические секции. Шаблоны страниц собирают несколько разделов сразу."
               />
             ) : null}
 
@@ -1234,6 +1245,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 onChange={setSections}
                 title="Конструктор страницы направления"
                 starterPatterns={["destination-page-body", "hub-intro", "destination-story"]}
+                starterPageTemplates={["destination-page", "landing-hub-page"]}
                 helpText="Шапка направления (сезон, как добраться, советы) редактируется выше. Здесь — дополнительные редакционные блоки страницы."
               />
             ) : null}
@@ -1244,6 +1256,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 onChange={setSections}
                 title="Конструктор страницы места"
                 starterPatterns={["place-practical", "practical-guide", "destination-story"]}
+                starterPageTemplates={["practical-guide-page"]}
                 helpText="Базовое описание места редактируется выше. Здесь — дополнительные блоки: шаги, FAQ, источники, галереи."
               />
             ) : null}

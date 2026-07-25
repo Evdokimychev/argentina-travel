@@ -176,13 +176,18 @@
 
 1. Контракт слотов + default order: `native-tour-layout-registry.ts`.  
 2. Compose = существующие секции `tour-detail/*` → `composeNativeTourMainColumn`.  
-3. CMS override порядка — API `resolveNativeTourLayoutOrder` готов; persistence ещё нет.
+3. Persistence порядка: `display.detailLayoutOrder` + UI организатора; default = прежняя вертикаль.
 
 ### Итерация B — Design Library ✅ shipped (MVP)
 
 1. UI каталога с превью-чипами состава + категории.  
-2. Разделение Sections / Page templates — частично (категория `page`); полные landing packs — дальше.  
+2. Page template packs (`page-template-registry`) — многосекционный импорт.  
 3. Импорт копирует блоки — как раньше + `reviews-social-proof`.
+
+### Итерация C — адаптация без ломки вертикали ✅ shipped
+
+1. Homepage body modules registry поверх существующих секций `MarketplaceHome` (default order = текущий UI).  
+2. Конструктор предлагает page packs, а не параллельную вёрстку.
 
 ### Итерация C — Editor UX (не новый движок)
 
