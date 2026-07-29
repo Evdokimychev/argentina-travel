@@ -22,9 +22,12 @@ flowchart TD
   Next --> PaymentClaim["Booking version CAS / provider claim"]
   PaymentClaim --> PayProviders["Stripe / Mercado Pago checkout"]
   PayProviders --> PayWebhook["Signed webhook reconciliation"]
-  PayWebhook --> PaymentClaim
-  PayWebhook --> ChargeLedger["payment_transactions / receipt / commission snapshot"]
+  PayWebhook --> EventIdentity["Notification/event identity / booking replay guard"]
+  EventIdentity --> PaymentClaim
+  EventIdentity --> ChargeLedger["payment_transactions durable charge"]
+  ChargeLedger --> Commission["Commission snapshot / notification (best-effort)"]
   ChargeLedger --> Supabase
+  Commission --> Supabase
   Privacy --> Processor["Cron deletion processor / auth + profile + related data"]
   Processor --> Auth
   Next --> CMS["CMS / knowledge / ingestion"]
@@ -59,7 +62,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: latest WP-011 exact SHA `84988cf` is immutable deployment `8aKBjCN2veH3BPrjgcpooPVnn7k8` with exact local build, route, candidate-integrity journey and local/remote desktop/mobile browser evidence. WP-010 remains immutable deployment `4aRm8X7QNDMLPXcoTgZseo64KrSK`. Neither packet proves live booking/payment persistence: migration parity and runtime-log scope are unavailable, while preview and production data-plane health are down.
+Current breaks: WP-012 exact SHA `77cf5674` is immutable deployment `13SV9JYanV2pCP2ZZwJM9fhrh55f` with exact local build, signed route, candidate-integrity journey and local/remote recovery-browser evidence. It recovered only after an initial Vercel account block. The packet still does not prove live payment persistence: migration parity and runtime-log scope are unavailable, while preview/production data-plane health is down.
 
 ## Data ownership boundaries
 
@@ -71,4 +74,6 @@ Current breaks: latest WP-011 exact SHA `84988cf` is immutable deployment `8aKBj
 - Critical action topology is recorded in `docs/audit/critical-interaction-evidence.csv`; `contract_tested` means only the listed unit contract, while route/browser/preview/live gaps remain explicit.
 - Privacy approval owns only the CAS queue transition; the cron processor owns irreversible deletion/anonymization. WP-008 preserves retry identity; WP-009 makes terminal writes monotonic and isolates notification failure. Candidate evidence still does not prove live cron completion, unique active requests, leases/checkpoints or transactional audit.
 - A payment-link token owns only the bounded checkout/status view. The first online provider is claimed on the booking row before external checkout creation; signed provider webhooks remain the only authority for captured payment state.
+- A webhook notification/event ID owns booking-state idempotency; the provider payment resource ID owns charge-ledger uniqueness. Exact event replay may repair a missing charge row, but may not repeat a booking transition or duplicate notification for an existing row.
+- A successful webhook response proves only durable charge persistence. Commission snapshot and customer notification remain separate best-effort effects until an idempotent outbox/reconciliation path is live-proven.
 - A native booking request owns only canonical server-derived commercial fields. Quote intent never owns inventory; a scheduled booking must confirm its canonical availability slot before the atomic persistence command. Notification enqueue follows only a newly created booking, not an idempotent replay.

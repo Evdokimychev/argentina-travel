@@ -169,4 +169,25 @@
 - Date: 2026-07-29
 - Decision: a verified payment webhook is not successfully processed merely because the booking state CAS applied. The route may acknowledge 2xx only after the corresponding charge ledger write is durable or an exact replay has idempotently repaired it; notification is emitted only for the first applied event after that boundary.
 - Evidence: both provider routes patch booking first, while the ledger helper catches all failures. The route then returns 200 and the processed event ID prevents the provider retry from attempting ledger persistence again.
-- Consequence: WP-012 is the next P0 packet. It must expose ledger failure as retryable, support exact replay repair and use the existing `(provider, external_id)` uniqueness atomically before any live webhook proof.
+- Consequence: implemented in WP-012 `77cf5674`; live provider, Data API/RLS, commission and outbox proof remains gated by P0 infrastructure recovery.
+
+## D-027 — Exact webhook replay is a repair capability
+
+- Date: 2026-07-29
+- Decision: retain the processed event ID as the booking-state idempotency boundary, but classify an exact replay separately from a state duplicate. Both a first application and exact replay must attempt the same durable charge persistence; only an inserted first charge may trigger recovery notification.
+- Evidence: the previous boolean helper returned false for both rejection and replay, so a provider retry after ledger failure could not distinguish safe rejection from repair. Signed route tests prove `500 → exact replay → inserted ledger → 200` and one notification; concurrent replay with an existing row does not duplicate notification.
+- Consequence: booking state remains monotonic while the financial ledger becomes self-repairing under provider retry. Notification delivery itself is still best-effort and requires later outbox evidence.
+
+## D-028 — Provider notification identity and payment identity are separate
+
+- Date: 2026-07-29
+- Decision: Mercado Pago booking idempotency uses the durable webhook notification ID; charge uniqueness uses payment resource ID. If notification ID is absent, reject before provider fetch or database access instead of deriving an event ID from the payment ID.
+- Evidence: pending and paid notifications for one payment share `data.id` but have distinct notification `id`. The former fallback `mp-payment-${payment.id}` collapsed lifecycle updates into one replay identity. Signed tests assert distinct source event IDs and zero provider/DB calls when notification identity is absent.
+- Consequence: payment lifecycle events can progress independently without weakening charge-row uniqueness.
+
+## D-029 — Use the existing partial uniqueness boundary before unverified DDL
+
+- Date: 2026-07-29
+- Decision: charge persistence inserts first, treats SQLSTATE `23505` as the concurrency signal, then reads the exact `(provider, external_id)` row and updates only if booking ownership and monotonic state permit. Do not add a new migration while the 107-file live journal is unavailable.
+- Evidence: the repository already contains a partial unique index for non-null provider/external ID. Fake-store concurrency produces one row; cross-booking reuse is rejected; delayed paid cannot regress a refunded row.
+- Consequence: candidate removes the application read→insert race without claiming live PostgREST/RLS/index parity. That behavior must be re-run against the canonical data plane after recovery.

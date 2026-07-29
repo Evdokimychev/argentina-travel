@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 06:54 ART / 2026-07-29 09:54 UTC**
+Последняя проверка: **2026-07-29 07:32 ART / 2026-07-29 10:32 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product candidate SHA до этой записи: `84988cf17c313bd5b92451ebda64d2614abff9ec`; `origin/main` является ancestor.
+- Product candidate SHA до этой записи: `77cf56746e7f3818b51d713d85e710293fedf415`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `84988cf17c313bd5b92451ebda64d2614abff9ec` (`fix: protect native booking inventory`), parent WP-010 SHA `179d3e51c0edbb3eaffd6fb3aba4b49f539262e1`.
+- Последний runtime-product SHA: `77cf56746e7f3818b51d713d85e710293fedf415` (`fix: make payment webhook ledger durable`), parent WP-011 governance SHA `000b26c046c48caf7878c285db64824f20223fdf`.
 
 ## Production и deployments
 
@@ -36,7 +36,8 @@ Master Goal V6 принят как главный норматив проект�
 - Exact WP-009 SHA `34c05f55` успешно развернут как deployment `CKfpUHhxpSzqgQUuhXQuidrC7HGh` в 08:14 UTC.
 - Exact WP-010 SHA `179d3e51` успешно развернут как deployment `4aRm8X7QNDMLPXcoTgZseo64KrSK` в 09:04:49 UTC. Immutable branch preview health связывает полный SHA; promotion не выполняется, потому что data plane unhealthy.
 - Exact WP-011 SHA `84988cf` первоначально получил `failure: Account is blocked` в 09:44 UTC, затем success в 09:52:58 UTC и развернулся как deployment `8aKBjCN2veH3BPrjgcpooPVnn7k8`. Immutable branch preview health связывает полный SHA; remote desktop/mobile recovery QA pass, smoke корректно блокируется на unhealthy health.
-- Production recheck 09:00 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` и `/api/excursions` всё ещё возвращают ложный 200 empty. Production promotion не выполнялся.
+- Exact WP-012 SHA `77cf5674` сначала получил `failure: Account is blocked` в 10:21 UTC, затем success в 10:30:08 UTC и развернулся как deployment `13SV9JYanV2pCP2ZZwJM9fhrh55f`. Immutable branch preview health связывает полный SHA; remote booking-find/payment-recovery browser QA pass, smoke корректно блокируется на unhealthy health.
+- Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -123,9 +124,24 @@ Master Goal V6 принят как главный норматив проект�
 - App Router route integration доказывает canonical price/organizer/status, idempotent replay, fingerprint conflict, slot conflict, quote-without-reservation и отсутствие side effects на invalid captcha/feature boundary.
 - Неизвестные storage/RPC детали записываются во внутреннюю telemetry boundary, а клиент получает generic 503 без SQL/config leakage. Live Supabase RPC, RLS, notification delivery и browser completion не заявляются.
 
+### WP-012 — payment webhook ledger integrity
+
+- Stripe и Mercado Pago webhook routes теперь различают `applied`, exact replay, безопасно ignored и retryable storage failure. Ошибка чтения/записи booking возвращает 500, а не маскируется под успешный или отклонённый event.
+- HTTP 2xx выдаётся только после durable charge row. Exact replay повторно пытается создать отсутствующий ledger и может восстановить его без повторного booking transition; notification создаётся только после durable ledger и не дублируется при replay существующей операции.
+- Charge persistence использует insert-first и существующую partial unique boundary `(provider, external_id)`: duplicate key переводится в точный lookup/update, привязка к другому booking отклоняется, refunded/новое состояние не регрессирует от запоздалого paid event.
+- Mercado Pago больше не подменяет notification identity payment resource ID: отсутствие durable notification ID отклоняется до provider fetch и DB. Это соответствует разделению notification `id` и payment `data.id` у провайдера.
+- Новая migration не создана: live journal/checksum/RLS/grants всё ещё недоказаны. Commission snapshot остаётся best-effort после durable charge; live provider delivery, Data API/RLS и outbox/commission effects не заявляются.
+
 ## Проверки candidate
 
-- Текущий `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **430 files / 2 040 tests** + **8 release-evidence tests** — pass.
+- Текущий `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **432 files / 2 053 tests** + **8 release-evidence tests** — pass.
+- WP-012 focused signed-route/state/ledger suite: **4 files / 33 tests** — pass; настоящий HMAC raw-body Stripe request и signed Mercado manifest проходят App Router handlers с fake provider/store.
+- Security audit: production dependencies **0 vulnerabilities**; static RLS audit **153 tables / 0 critical**; secret-pattern scan pass.
+- Current critical evidence snapshot: **12×20**, source-only **0**, webhook route integration добавлен к Stripe/Mercado; digest `9b16357674713a74`. Все live production effects остаются `unknown_db_down`.
+- Protected production build exact `77cf5674`: exit 0, **929/929** static pages, runtime-text audit pass, demo auth markers absent. Local health связывает полный SHA; REST health 503/degraded, direct PG healthy (`tripsterCount=68`).
+- Candidate-integrity journey gate exact `77cf5674`: integrity pass/dirty paths 0; Playwright **16 passed, 1 skipped**. Строгий production smoke exit 1 на mandatory health; recovery-smoke pass только с явным `ALLOW_DEGRADED_HEALTH=1` и зафиксировал `/tours`/`/excursions` error-boundary redirects.
+- Browser QA exact `.next-production`: `/booking/find` доступен; invalid payment token завершает загрузку public-safe error/support path. Главная после client load переходит в `Не удалось загрузить страницу` из-за недоступного data plane; это P0 evidence, не acceptance.
+- Immutable WP-012 preview `77cf5674` / `13SV9JYanV2pCP2ZZwJM9fhrh55f`: health 503/down связывает полный SHA, REST и direct PG недоступны; `/booking/find` и invalid-token payment recovery — 200 и browser-pass. Строгий smoke exit 1 на mandatory health. POST webhook/payment не выполнялись.
 - WP-011 focused route/integrity suite: **3 files / 14 tests** — pass; настоящий App Router POST handler с fake atomic store доказывает ровно одну persistence/reservation/notification при idempotent replay и ноль reservations для `price_quote`.
 - Current critical evidence snapshot: **12×20**, source-only **0**, route-integration present in **7** journeys, unit-contract present in **7**; digest `96ed41192b3e202f`. Все live production effects остаются `unknown_db_down`.
 - Protected production build exact `84988cf`: exit 0, **929/929** static pages, runtime-text audit pass, demo auth markers absent. Local health связывает полный SHA, Data API 503/degraded, direct PG healthy (`tripsterCount=68`); штатный smoke exit 1 на mandatory health gate.
