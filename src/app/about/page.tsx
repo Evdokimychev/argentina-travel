@@ -14,7 +14,7 @@ import { resolveStaticPageCopy } from "@/lib/static-page-copy";
 
 const PAGE_TITLE_FALLBACK = "О проекте";
 const PAGE_DESCRIPTION_FALLBACK =
-  "«Пора в Аргентину» — маркетплейс авторских туров по Аргентине. Миссия, ценности и как устроена платформа.";
+  "«Пора в Аргентину» — путеводитель и каталог предложений для путешествий по Аргентине.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerI18nLocale();

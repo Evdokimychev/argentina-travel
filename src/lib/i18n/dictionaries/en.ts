@@ -20,20 +20,20 @@ export const enDictionary: Record<DictionaryKey, string> = {
   "nav.chooseTour": "Choose tour",
   "nav.profile": "Profile",
   "nav.favorites": "Favorites",
-  "nav.utility.tours": "Book the best tours",
+  "nav.utility.tours": "Browse tours",
   "nav.utility.join": "For organizers",
   "nav.utility.contacts": "Contact us",
 
-  "home.hero.eyebrow": "Curated journeys across Argentina",
+  "home.hero.eyebrow": "Travel across Argentina",
   "home.hero.title": "Argentina — from Patagonian glaciers",
   "home.hero.titleAccent": "to Buenos Aires tango",
   "home.hero.subtitle":
-    "Verified routes with Russian-speaking guides, an honest country guide, and relocation help — all in one place.",
+    "A catalog of tours and excursions, a practical country guide, and relocation resources — all in one place.",
   "home.hero.ctaRoute": "Find a route",
   "home.hero.ctaHint": "Answer 4 questions — we'll suggest matching tours",
 
   "footer.description":
-    "Curated tour marketplace in Argentina: Patagonia, Buenos Aires, wine and tango. Book directly with verified organizers.",
+    "A catalog of tours and excursions in Argentina: compare offers, then continue with the partner or send a request, depending on the specific offer.",
   "footer.navigation": "Navigation",
   "footer.documents": "Legal",
   "footer.contacts": "Contacts",
@@ -44,7 +44,7 @@ export const enDictionary: Record<DictionaryKey, string> = {
   "footer.routeCta": "Plan your trip",
   "footer.copyright": "Time to Visit Argentina. All rights reserved.",
   "footer.support": "Support:",
-  "footer.marketplaceTag": "Curated tour marketplace",
+  "footer.marketplaceTag": "Argentina travel catalog",
   "footer.contact.write": "Contact us",
   "footer.contact.organizer": "Become an organizer",
   "footer.contact.findBooking": "Find booking",
