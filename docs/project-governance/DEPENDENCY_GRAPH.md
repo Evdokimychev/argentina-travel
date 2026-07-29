@@ -46,8 +46,15 @@ flowchart TD
   Processor --> Auth
   Next --> CMS["CMS / knowledge / ingestion"]
   Resolver --> Rest["Supabase Data API snapshots"]
-  Resolver --> PG["Direct Postgres recovery path"]
-  PG --> PGFingerprint["Safe env source / mode / port / project-ref fingerprint"]
+  Resolver --> PGResolve["Postgres candidate resolver"]
+  TrustedRef["Trusted NEXT_PUBLIC_SUPABASE_URL ref"] --> PGAttest["Canonical project-ref attestation"]
+  PGResolve --> PGAttest
+  AuthSession["Auth session revocation"] --> PGAttest
+  RLSAudit["RLS audit"] --> PGAttest
+  PrismaGate["Prisma DB feature gate"] --> PGAttest
+  PGAttest -->|verified only| PG["Direct Postgres recovery path"]
+  PGAttest -->|unverified / mismatch| FailClosed["No connection / readiness fail"]
+  PG --> PGFingerprint["Safe env source / mode / port / project-ref / target status"]
   PGFingerprint --> Ops
   Resolver --> Partners["Tripster / YouTravel / Sputnik8"]
   Partners --> Affiliate["External checkout / affiliate attribution"]
@@ -78,12 +85,13 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-015A exact `d576bae2` recovered as immutable deployment `4wqcePJy…`; its health binds the SHA but REST/direct PG are down. That preview exposed WP-017, now root-caused to the rejected optional blog catalog boundary and fixed in local exact `a8efc1e6` with 17/17 browser evidence. Vercel has not created deployments for WP-016 `2fccb050` or WP-017 `a8efc1e6`, and CLI scope is `Not authorized`, so deployed connection identity, immutable blog acceptance, migration parity and runtime logs remain unavailable. WP-017 remains ahead of WP-015B until exact remote proof.
+Current breaks: WP-017 exact `a8efc1e6` recovered as immutable deployment `9K5mTZ…` and closes the optional-blog browser defect on preview. Its health exposed a generic unverified Postgres winner. WP-018 exact `8f0dbad2` / `E288Fh…` now proves canonical target attestation and selects verified `POSTGRES_URL_NON_POOLING`, but both REST and that verified direct target remain down. Production still runs old `993e82fb`; migration parity, runtime logs, backup posture and same-artifact production proof remain unavailable. WP-015B mutation recovery stays behind those gates.
 
 ## Data ownership boundaries
 
 - GoArgentina production database is canonical ref `uooxrypocahomoqzdvzy`; other accessible Supabase projects are not evidence.
-- Public health may expose only a bounded Postgres connection fingerprint (supported env source name, connection mode, effective port and Supabase project ref). It must never expose URL, hostname, username, password or query parameters.
+- Public health may expose only a bounded Postgres connection fingerprint (supported env source name, connection mode, effective port, Supabase project ref and attestation status). It must never expose URL, hostname, username, password or query parameters.
+- Direct Postgres application access is owned by canonical project attestation: only official Supabase direct/pooler formats whose ref equals the trusted public project ref may connect. Higher-precedence unknown/mismatch values are skipped; absence of any verified target fails closed. Session revocation, RLS audit and Prisma gating share this rule. Legacy schema-backup tooling remains a separate residual audit item.
 - Partner APIs own partner booking/payment; GoArgentina owns disclosure, attribution and safe redirect.
 - Internal requests require persisted state, notifications, SLA and admin ownership before public promise.
 - No B2B product may share production DB/secrets/releases without ADR.

@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 10:10 ART**. WP-017 root cause доказан и fail-soft fix `a8efc1e6` полностью прошёл local release evidence. Пакет остаётся выше schema-зависимого WP-015B до exact remote acceptance; Vercel не создал deployment из-за `Account is blocked`.
+Обновлён: **2026-07-29 11:45 ART**. WP-017 закрыт на exact immutable preview. WP-018 доказал более критичный root cause: direct-Postgres resolver не удостоверял canonical project identity; fail-closed attestation `8f0dbad2` полностью доказана локально и на exact preview. Production data plane и schema parity остаются главными блокерами.
 
 ## Правило выбора пакета
 
@@ -10,10 +10,11 @@
 
 | Order | Work packet | Severity | Exit evidence | State |
 |---:|---|---|---|---|
-| 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota. WP-016 safe source/ref/mode/port fingerprint built locally; exact deploy blocked |
+| 0 | Restore canonical Supabase REST and verified direct PG | P0 | all required health checks 200; canonical target attested; incident timeline; no secret exposure | REST root cause confirmed: egress quota. WP-018 preview proves canonical target selection but both REST/direct PG are down |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-015A `d576bae2` recovered as `4wqcePJy…`; WP-016 `2fccb050` and WP-017 `a8efc1e6` blocked; CLI `Not authorized`; logs absent |
-| 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | root cause proven at rejected optional catalog boundary; `a8efc1e6` local build/17-browser/smoke pass; exact remote deployment pending |
+| 2 | Restore stable Vercel project/runtime-log evidence | P1 | repeatable exact-SHA deployment + immutable URL + runtime logs | WP-017 `9K5mTZ…` and WP-018 `E288Fh…` recovered exact deployments; CLI `Not authorized`, runtime logs and account stability still absent |
+| 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | done `a8efc1e6` / `9K5mTZ…`; targeted 1/1 and public/tour 16 pass/1 data-dependent skip; production old |
+| 2B | Direct-PG canonical target attestation (WP-018) | P0 | every app PG path accepts only canonical ref; health/readiness/bypass tests; exact preview fingerprint | done `8f0dbad2` / `E288Fh…`; verified canonical non-pooling target selected, connection still down; production old |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -32,7 +33,7 @@
 | 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | done `32038cc9` + exact `84f6244b` / `CJ3fcfursTMefpDtXoJRX7h1TpmN`; 21 focused + 2 070 full + local/remote browser/smoke |
 | 19A | Refund read-only reconciliation (WP-015A) | P0/P1 | provider GET lookup; exact/candidate/ambiguous classification; operator UI; no mutation authority | done `0d5f4472` + exact `d576bae2` / `4wqcePJy…`; focused/full/build/local pass; remote health exact but browser acceptance failed on separate WP-017 |
 | 19B | Refund mutation recovery (WP-015B) | P0 | atomic recovery lease; token-bound finalize/audit; controlled provider sandbox effect; no blind retry | blocked by canonical journal/RLS/provider sandbox evidence; R-024 remains active |
-| 19C | Direct-PG runtime fingerprint (WP-016) | P0 | health exposes only selected env source/mode/port/project ref; no connection secret; exact build/test | done `2fccb050`; 10 focused + 2 081 full + exact local build/health; Vercel deployment blocked |
+| 19C | Direct-PG runtime fingerprint (WP-016) | P0 | health exposes only selected env source/mode/port/project ref; no connection secret; exact build/test | superseded/hardened by WP-018; exact preview now proves canonical target identity |
 | 20 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
 | 21 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
@@ -56,7 +57,11 @@ The real weather `tour-embed` now receives a catalog promise inside a local Susp
 
 ### WP-017 — fail-soft optional blog tour catalog
 
-Exact preview stream evidence tied rejected boundary `B:1` to `BlogPostTourEmbeds`: a total marketplace outage rejected the promise inside ordinary `Suspense` and escalated into the segment error boundary over a valid SSR article. The optional commercial boundary now catches only its own catalog rejection, emits a generic non-secret event and omits the embed; successful catalogs and the editorial parent remain unchanged. Exact local build, 2 084 unit tests, 17 browser tests and recovery smoke pass; immutable preview acceptance is still blocked externally.
+Exact preview stream evidence tied rejected boundary `B:1` to `BlogPostTourEmbeds`: a total marketplace outage rejected the promise inside ordinary `Suspense` and escalated into the segment error boundary over a valid SSR article. The optional commercial boundary now catches only its own catalog rejection, emits a generic non-secret event and omits the embed; successful catalogs and the editorial parent remain unchanged. Exact `a8efc1e6` deployment `9K5mTZ…` passes targeted article 1/1 and public/tour 16 pass/1 data-dependent skip. Production remains old and unhealthy.
+
+### WP-018 — canonical direct-Postgres target attestation
+
+WP-017 preview exposed `POSTGRES_URL` as the selected `mode=other`, `projectRef=null` target. The shared resolver previously used first-nonempty precedence without project identity, so an unrelated responsive database with the expected table could satisfy health/catalog reads or receive a direct session-revocation mutation. The new resolver accepts only direct/pooler Supabase candidates whose parsed ref equals trusted `NEXT_PUBLIC_SUPABASE_URL`; unknown/mismatch candidates are never connected, and a lower verified candidate may safely win. Session revocation, RLS audit and Prisma DB gating share the same rule. Exact `8f0dbad2` preview selects verified canonical `POSTGRES_URL_NON_POOLING`; the target remains unavailable, so promotion stays blocked.
 
 ### WP-005 — reproducible product surface inventory
 
@@ -144,6 +149,8 @@ Public health now reports only which supported env source won resolution, the ef
 - WP-015 source reproduction split the packet: provider GET lookup and operator diagnosis require no schema and are safely deliverable as WP-015A, while any retry/finalize remains unsafe without an atomic recovery owner. This moves 015A to done and leaves 015B behind canonical journal/RLS/provider sandbox evidence.
 - Stripe pagination evidence changed the classifier once more: `has_more=true` is `unavailable`, never `not_found`, because an incomplete list cannot prove absence. Mercado Pago amount-only matches remain candidates because no internal refund metadata is available.
 - Vercel CLI diagnosis then proved the local link IDs are correct but the current account is unauthorized. WP-016 therefore moved ahead of mutation work: a safe in-band runtime fingerprint supplies the missing source/ref/mode evidence without exposing or changing secrets; exact remote proof still depends on Vercel account recovery.
-- Delayed Vercel recovery produced exact WP-015A deployment `4wqcePJy…`, where remote browser exposed an error boundary over valid SSR content. Streamed HTML then proved rejected boundary `B:1` is the optional `BlogPostTourEmbeds` catalog promise, not CMS content or a Leaflet/client loader. WP-017 `a8efc1e6` makes that boundary fail-soft and passes exact local 17/17 browser evidence; it remains ahead of WP-015B until Vercel creates the exact immutable preview and remote acceptance passes.
+- Delayed Vercel recovery produced exact WP-015A deployment `4wqcePJy…`, where remote browser exposed an error boundary over valid SSR content. Streamed HTML then proved rejected boundary `B:1` is the optional `BlogPostTourEmbeds` catalog promise. WP-017 `a8efc1e6` makes that boundary fail-soft and exact deployment `9K5mTZ…` closes remote article acceptance.
+- The same WP-017 health payload exposed a higher-severity identity defect: the winning direct PG candidate was generic `POSTGRES_URL` with no Supabase ref. Because this affects health, catalog fallbacks and an auth-session mutation, WP-018 moved ahead of WP-015B and all growth work. Exact preview `E288Fh…` now proves canonical attestation; it also proves the verified target itself remains down.
+- WP-018 changes the next order again: application target-selection safety is closed in candidate, so the highest remaining work is external restoration of canonical REST/direct PG, followed by read-only 107-migration/RLS/backup reconciliation. Independent engineering then returns to WP-015B design/evidence without applying unverified DDL.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

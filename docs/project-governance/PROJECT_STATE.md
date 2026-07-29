@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 10:10 ART / 2026-07-29 13:10 UTC**
+Последняя проверка: **2026-07-29 11:45 ART / 2026-07-29 14:45 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `a8efc1e6c602c3c8913aa60241d6fc0d076237f4`; exact evidence/deploy candidate: `a8efc1e6c602c3c8913aa60241d6fc0d076237f4`; `origin/main` является ancestor.
+- Product implementation SHA: `8f0dbad2b1c304091a35fbaccf338cb080c3a5d6`; exact evidence/deploy candidate: `8f0dbad2b1c304091a35fbaccf338cb080c3a5d6`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `a8efc1e6c602c3c8913aa60241d6fc0d076237f4` (`fix: preserve blog article when tour catalog fails`); WP-016 fingerprint — `2fccb050`, WP-015A implementation — `0d5f4472` + fail-closed `d576bae2`.
+- Последний runtime-product SHA: `8f0dbad2b1c304091a35fbaccf338cb080c3a5d6` (`fix: attest direct Postgres target before use`); WP-017 — `a8efc1e6`, WP-016 fingerprint — `2fccb050`, WP-015A implementation — `0d5f4472` + fail-closed `d576bae2`.
 
 ## Production и deployments
 
@@ -42,12 +42,14 @@ Master Goal V6 принят как главный норматив проект�
 - Exact WP-014 candidate `84f6244b` отправлен в 11:46 UTC, немедленно получил `failure: Account is blocked`, затем success в 11:54:17 UTC и развернулся как Vercel deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN` (GitHub deployment `5656855482`). Immutable URL: `https://argentina-travel-l8ivc8xon-go-argentina.vercel.app`.
 - WP-015A exact fail-closed SHA `d576bae2` после initial `Account is blocked` восстановился в 12:34:14 UTC: Vercel deployment `4wqcePJySZY9xf48tRV7eoZfUCrz`, GitHub deployment `5657415437`, immutable URL `https://argentina-travel-fzr22xk1e-go-argentina.vercel.app`.
 - WP-016 exact `2fccb050` отправлен в 12:36 UTC и также немедленно получил `failure: Account is blocked`; deployment ID отсутствует. Vercel CLI на правильно linked project IDs отвечает `Not authorized`, поэтому env-name/runtime-log scope независимо подтверждён как недоступный.
-- WP-017 exact `a8efc1e6` отправлен в 12:55 UTC и получил `failure: Account is blocked`; на 13:10 UTC deployment ID и immutable URL отсутствуют. Точный локальный bundle и browser/smoke доказаны, но preview/production proof не заявляется до создания exact deployment.
+- WP-017 exact `a8efc1e6` после initial `Account is blocked` восстановился в 14:03:46 UTC: Vercel deployment `9K5mTZEXjGeWifXFYGMM4FVPLLJk`, GitHub deployment `5657988678`, immutable URL `https://argentina-travel-14eapwolb-go-argentina.vercel.app`. Targeted article browser **1/1**, public/tour suite **16 passed, 1 skipped**; strict и recovery smoke остаются красными из-за недоступного direct PG. Preview закрывает client-transition дефект, но не production promotion.
+- WP-018 exact `8f0dbad2` успешно развернут в 13:32:16 UTC: Vercel deployment `E288FhjDXKUA78YQ3ibN54krLY3z`, GitHub deployment `5658339232`, immutable URL `https://argentina-travel-6i6fqeyg8-go-argentina.vercel.app`. Health связывает полный SHA и выбирает только verified `POSTGRES_URL_NON_POOLING`, `supabase_direct`, port 5432, ref `uooxrypocahomoqzdvzy`; generic `POSTGRES_URL` больше не используется. Подтверждённый target недоступен, поэтому tours/excursions корректно 503.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
 - Production recheck 12:31 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-015A не продвигался.
 - Production recheck 13:11 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-017 не продвигался, потому что exact preview не существует и production gate закрыт.
+- Production recheck 14:42 UTC: `/api/health/public` и `/database` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. Ни WP-017, ни WP-018 не продвигались: preview data plane unhealthy, production same-artifact gate закрыт.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -55,7 +57,9 @@ Master Goal V6 принят как главный норматив проект�
 - REST root cause подтверждён точным ответом `exceed_egress_quota`.
 - Локальный production runtime при тех же project settings видит direct Postgres (`tripsterCount=68`), тогда как deployed production direct PG недоступен: это отдельная Vercel runtime/env/connectivity ветка P0.
 - Local tree: 107 SQL migrations; live journal/checksum/RLS/grants не подтверждены. Новые DDL не создавались и не применялись.
-- WP-016 local runtime теперь безопасно доказывает выбранный connection fingerprint: `DATABASE_URL`, `supabase_direct`, port 5432, canonical ref `uooxrypocahomoqzdvzy`; URL/host/user/password наружу не выдаются. Старый production artifact ещё не содержит fingerprint, поэтому deployed source/mode остаётся неизвестным до exact preview.
+- WP-016 local runtime безопасно доказал connection fingerprint через `DATABASE_URL`, direct/5432/canonical ref. WP-018 exact preview теперь независимо доказывает verified canonical `POSTGRES_URL_NON_POOLING`; старый production artifact всё ещё не содержит attestation/fingerprint.
+- WP-018 доказал, что прежний resolver выбирал первый непустой URL по precedence без проверки project identity. На WP-017 preview победил generic `POSTGRES_URL` с `mode=other`, `port=null`, `projectRef=null`; responsive чужая база с таблицей `tripster_experiences` могла ложно считаться healthy и принимать прямые application mutations.
+- Новый resolver сверяет project ref кандидата с trusted `NEXT_PUBLIC_SUPABASE_URL`, принимает только канонический direct/pooler Supabase format, пропускает неподтверждённые/несовпадающие кандидаты и fail-closed возвращает `null`, если verified target отсутствует. Та же attestation используется session revocation, RLS audit и Prisma DB gate. Preview подтвердил выбор нижнего canonical `POSTGRES_URL_NON_POOLING`; соединение не удалось уже после безопасной идентификации target.
 - Managed backup/PITR и disposable restore rehearsal не подтверждены.
 - CMS source-of-truth и operational writes нельзя считать доказанными до восстановления canonical DB и reconciliation.
 
@@ -178,11 +182,22 @@ Master Goal V6 принят как главный норматив проект�
 - Необязательный коммерческий boundary теперь преобразует только свой catalog rejection в `[]`, логирует generic event без raw provider error и omits embed. Успешный catalog/рендер embed не меняется; CMS body, comments/history и route-wide error semantics не ослаблены.
 - Новых API, DDL, migrations или partner writes нет. Production promotion остаётся запрещённым: пакет исправляет публичную устойчивость, но не лечит Supabase quota/direct-PG/Vercel access.
 
+### WP-018 — canonical direct-Postgres target attestation
+
+- Root cause: общий resolver считал «configured» первый непустой Postgres URL и не связывал его с каноническим Supabase ref. Health, catalog fallbacks и прямые mutation/audit paths могли обращаться к unknown/mismatched target.
+- Shared parser извлекает ref только из официальных direct/pooler Supabase форматов. Resolver сравнивает его с trusted public project URL; unverified/mismatch никогда не подключается, а диагностический payload показывает только source/mode/port/ref/`targetStatus`.
+- `auth-sessions`, RLS audit и Prisma DB gate переведены на ту же attestation. Readiness теперь отдельно блокирует production-like runtime при `target_unverified`/`target_mismatch`; contract tests защищают bypass paths. DDL, secret/env changes и внешние writes не выполнялись.
+
 ## Проверки candidate
 
 - WP-017 focused fault/UX suite: **3 files / 56 tests** — pass. `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **439 files / 2 084 tests** + **8 release-evidence tests** — pass.
 - Protected production build exact `a8efc1e6`: exit 0, **806/806**, runtime-text audit pass, demo auth markers absent. Build/runtime logs независимо воспроизводят canonical Supabase `exceed_egress_quota`; article HTTP 200 сохраняет правильный H1.
-- Local exact browser QA: targeted Iguazú article **1/1**, полный public desktop/mobile suite **17/17**; visual capture содержит длинную статью без route error overlay. Strict smoke exit 1 на mandatory `ok=false`; explicit recovery smoke exit 0 и включает обе blog routes. Exact Vercel preview пока отсутствует (`Account is blocked`), поэтому remote acceptance остаётся pending.
+- Local exact browser QA: targeted Iguazú article **1/1**, полный public desktop/mobile suite **17/17**; visual capture содержит длинную статью без route error overlay. Strict smoke exit 1 на mandatory `ok=false`; explicit recovery smoke exit 0 и включает обе blog routes.
+- Immutable WP-017 preview `a8efc1e6` / `9K5mTZEXjGeWifXFYGMM4FVPLLJk`: targeted article **1/1**, public/tour suite **16 passed, 1 skipped**, admin auth guard 307; strict и recovery smoke exit 1 из-за down direct PG. Статья доказана на exact remote artifact; production остаётся старым и unhealthy.
+- WP-018 focused target/health/readiness/bypass suite: **6 files / 41 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **440 files / 2 095 tests** + **8 release-evidence tests** — pass.
+- Protected build exact `8f0dbad2`: **806/806**, runtime-text pass, demo auth absent. Первая попытка остановилась только на `ENOSPC`; удалены только воспроизводимые `.next`/`.next-production` caches candidate, затем build пересоздан успешно.
+- Local exact runtime: direct PG verified через `DATABASE_URL`, port 5432, canonical ref, `tripsterCount=68`; Data API down по quota. Public browser **17/17**, article H1/28 601 chars/без overlay/console errors; strict smoke exit 1, explicit recovery smoke exit 0.
+- Immutable WP-018 preview `8f0dbad2` / `E288FhjDXKUA78YQ3ibN54krLY3z`: full SHA, verified canonical `POSTGRES_URL_NON_POOLING`, но direct PG и REST down; tours/excursions 503, blog 200, admin guard 307. Browser: smoke tests **13 passed**; tour UX **1 failed, 2 not run** на явном unavailable state. Strict и recovery smoke exit 1. Это безопасный fail-closed release candidate, не production-ready backend proof.
 
 - WP-015A focused route/classifier/provider suite: **3 files / 13 tests** — pass, включая fail-closed `has_more`, Stripe metadata exact-match и Mercado Pago amount-only ambiguity.
 - `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **438 files / 2 080 tests** + **8 release-evidence tests** — pass; существующие lint warnings не стали errors.
@@ -273,9 +288,9 @@ Master Goal V6 принят как главный норматив проект�
 
 ## Открытые P0/P1
 
-1. **P0-GA-001:** восстановить canonical Supabase REST; WP-016 добавил безопасный deployed direct-PG fingerprint, но exact Vercel artifact заблокирован и runtime source пока не прочитан.
+1. **P0-GA-001:** восстановить canonical Supabase REST и verified direct PG. WP-018 exact preview доказывает правильный canonical target, но оба канала остаются down.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
-3. **P1-GA-005:** latest `84f6244b` восстановился после initial `Account is blocked` примерно за семь минут как `CJ3fcfurs…`; recurring volatility и read-only Vercel project/runtime-log scope остаются открыты.
+3. **P1-GA-005:** WP-017/WP-018 exact previews созданы, но recurring account volatility и read-only Vercel project/runtime-log scope остаются открыты.
 4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
 5. **P1-GA-012:** route evidence и CAS исправлены; DB-level unique active request, durable audit и live deletion processor effect не доказаны.
 6. **P1-GA-013:** identity retry и terminal-state monotonicity исправлены; DB uniqueness, lease/recovery, durable audit и live multi-system effect остаются недоказанными.
@@ -284,10 +299,11 @@ Master Goal V6 принят как главный норматив проект�
 9. **P0-GA-016:** code-level webhook ledger/replay repair реализован и fake-tested; live provider/Data API/RLS/commission/outbox effect не доказан.
 10. **P0-GA-017:** refund currency/ownership/replay boundary исправлена; WP-015A добавил fail-closed provider diagnosis/UI. Live RPC/RLS/provider effect и WP-015B atomic lease/token-bound finalize всё ещё не доказаны.
 11. **P1-GA-014:** booking replay response/actor boundary исправлена и route/service-tested; live RPC/attach/RLS effect и DB-layer owner predicate не доказаны.
-12. **P1-GA-015:** root cause и fail-soft boundary исправлены в `a8efc1e6`; exact local build/browser/smoke доказаны, но immutable preview acceptance и production same-artifact behavior не доказаны из-за Vercel `Account is blocked`.
+12. **P1-GA-015:** root cause и fail-soft boundary исправлены и доказаны на exact immutable preview `9K5mTZ…`; production same-artifact behavior не доказано из-за P0 data plane.
+13. **P0-GA-018:** application direct-PG target attestation исправлена и доказана на exact preview `E288Fh…`; verified target connectivity, production same-artifact proof и legacy schema-backup bypass остаются открыты.
 
 ## Следующие три задачи
 
-1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
-2. Owner/ops: вернуть read-only Vercel project/runtime-log scope и deployment access; engineering: по WP-016 health fingerprint сопоставить source/ref/mode/port, затем runtime connectivity без вывода или ротации секретов.
-3. Engineering/release: дождаться/восстановить exact WP-017 deployment, связать SHA+deployment ID+immutable URL и повторить targeted/full remote browser + strict/recovery smoke; после этого WP-015B остаётся следующим financial packet только после live parity.
+1. Owner/ops: снять Supabase `exceed_egress_quota` и восстановить canonical verified direct-PG connectivity; engineering сразу повторяет strict health/catalog/detail smoke на exact preview.
+2. Engineering/ops: после read-only восстановления сверить 107 migrations/journal/checksums, RLS/grants и backup/PITR posture; до этого DDL и live mutation rehearsal запрещены.
+3. Engineering/security: распространить canonical target attestation на residual operational backup path и подготовить WP-015B atomic recovery lease/token-bound finalize design без применения миграции до parity/provider sandbox.
