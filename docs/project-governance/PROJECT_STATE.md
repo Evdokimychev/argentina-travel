@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 16:26 ART / 2026-07-29 19:26 UTC**
+Последняя проверка: **2026-07-29 17:32 ART / 2026-07-29 20:32 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8`; exact evidence/deploy candidate: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8`; `origin/main` является ancestor.
+- Product implementation SHA: `5c79c4cb19b95c6083230a958f741fda82a71a53`; exact evidence/deploy candidate: `5c79c4cb19b95c6083230a958f741fda82a71a53`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8` (`fix(cms): preserve public read failure semantics`); WP-023 — `e22b5885`, WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`.
+- Последний runtime-product SHA: `5c79c4cb19b95c6083230a958f741fda82a71a53` (`chore(security): bound dev dependency audit risk`); runtime behavior остаётся WP-024 `d4fbbbc1`, WP-023 — `e22b5885`, WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`.
 
 ## Production и deployments
 
@@ -51,6 +51,7 @@ Master Goal V6 принят как главный норматив проект�
 - WP-023 exact `e22b5885` отправлен в 18:39 UTC. На 18:41 UTC GitHub/Vercel status остаётся `pending: Vercel is deploying your app`, target build/deployment `5HameBiSUPAUurXE8GVT2rouQAtx`; immutable deployment URL и successful build evidence ещё отсутствуют. Vercel CLI не может прочитать канонический project settings, поэтому pending status не считается готовым preview.
 - Повторная read-only сверка 19:26 UTC: WP-021 `d6808a5c` восстановился до success/deployment `BMXQzSXBg6o2r22LawaFRUQvLsVp`, WP-022 `4aa7f52c` — `GWXM4ciE3sQW4jcYfiPeq4gnDcU3`, WP-023 `e22b5885` — `5HameBiSUPAUurXE8GVT2rouQAtx`. Это закрывает отсутствие immutable build IDs, но не заменяет healthy distributed/production proof.
 - WP-024 exact `d4fbbbc1` успешно развернут в 19:23:54 UTC: Vercel deployment `9nLoBaDbY1Aq6nnKkgPdPEXypT2e`, GitHub deployment `5663714750`, immutable URL `https://argentina-travel-cu53i1tbf-go-argentina.vercel.app`. Health связывает полный SHA и остаётся `503/down`; article 200, comments 503 с `Retry-After: 60`/`private, no-store`, CMS-only existence 503 вместо ложного 404. Remote browser показывает полный article/outage-state без framework overlay; strict/recovery smoke exit 1 из-за down direct PG. Promotion не выполнялся.
+- WP-025 exact `5c79c4cb` pushed в 20:29 UTC. GitHub/Vercel немедленно вернул `failure: Account is blocked` в 20:30:07 UTC; deployment ID и immutable preview отсутствуют. Vercel CLI `Not authorized`, connector `403` для scope `go-argentina`; локальный exact artifact доказан, но не подменяет remote deployment evidence.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -252,7 +253,20 @@ Master Goal V6 принят как главный норматив проект�
 - Exact preview `9nLoBa…`: article 200, comments/CMS-only 503, full SHA bound; remote browser pass. Direct PG down, поэтому strict и recovery smoke закономерно exit 1. Production остаётся старым и продолжает false-empty comments/catalog behavior.
 - Новые schema/migration/DDL, DB/provider writes, env/secret mutation и production promotion не выполнялись. Build-log отдельно выявил следующий P1: старый Tripster fallback пишет raw provider message; WP-024 CMS logger сам bounded и секретов не выводит.
 
+### WP-025 — bounded dev dependency audit exception
+
+- Root cause сведён к advisory `1124334`: `brace-expansion` через `minimatch@3` в dev-only ESLint graph. Production audit содержит **0** vulnerabilities; полный audit — ровно **9 high** и только в заранее перечисленных пакетах.
+- Глобальный override отклонён доказательно: patched `brace-expansion@5.0.8` меняет CommonJS export на `{ expand }`, тогда как `minimatch@3` вызывает модуль как функцию. Next 16/ESLint 10 также не удаляет ветки `eslint-plugin-react/import/jsx-a11y → minimatch@3`, но добавляет breaking runtime/build migrations.
+- Вместо blind force upgrade добавлен machine-enforced policy `P1-GA-019` до **2026-08-12**. Gate fail-closed при любой production vulnerability, новом package/source/severity, переносе direct root в production, чистом upstream graph с оставшимся исключением или истечении срока.
+- Policy встроен в `audit:security` и blocking static release gate; причина, срок и removal trigger хранятся в repository. Lockfile/runtime dependency graph не менялись.
+
 ## Проверки candidate
+
+- WP-025 policy contracts: **5/5** pass; реальный `npm run audit:deps:policy` pass: production=0, 9 exact dev packages, advisory `1124334`, expiry 2026-08-12. Blocking static release gate на чистом exact SHA: **50/50 evidence contracts**, environment/secrets/types/lint/inventory — pass.
+- `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **449 files / 2 133 tests** + **31/31 release-evidence contracts** — pass. Protected production build exact `5c79c4cb`: **929/929**, build ID `06AUryFQbpEYhI-LpxJ8f`, runtime/demo guards pass.
+- Exact local runtime только на `127.0.0.1:3112`: health 503/degraded, direct Postgres healthy и full SHA bound; `/api/tours` 503, `/api/excursions` 200/24, comments 503. Strict smoke корректно exit 1; explicit recovery smoke проходит все public routes, genuine tour/excursion detail, redirects, assets и hero images.
+- In-app browser QA: главная и переход `/tours` содержательны, framework overlay отсутствует, console errors 0, на главной 127 interactive elements. GoArgentina освободил `3112`; процессы отдельного проекта на `3001` не трогались.
+- Exact `5c79c4cb` pushed; preview отсутствует из-за `Account is blocked`, поэтому remote/browser production proof не заявляется. DDL, DB/provider writes, env/secret mutation и production promotion не выполнялись.
 
 - WP-024 focused/fault/caller suite: **13 files / 72 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **449 files / 2 133 tests** + **31/31 release-evidence contracts** — pass.
 - Protected production build exact `d4fbbbc1`: exit 0, **929/929** static pages, runtime-text and demo-bundle guards pass. Existing Edge/Sentry/lint warnings remain non-blocking; raw Tripster provider-message log registered separately as P1-GA-022 rather than hidden.
@@ -397,7 +411,7 @@ Master Goal V6 принят как главный норматив проект�
 14. **P1-GA-016:** commercial smoke false positive исправлен и доказан на exact preview `ed29b335` / `3hwMwixf…`; production остаётся на старом parser/artifact, same-artifact production proof заблокирован P0-GA-001.
 15. **P1-GA-017:** bounded fan-out, in-flight dedupe, shared pool/deadlines и error-vs-empty semantics реализованы в `d6808a5c`; local cold five-worker evidence закрывает воспроизведённое slot exhaustion, deployment `BMXQzS…` success. Healthy distributed multi-instance capacity и production same-artifact proof остаются открыты.
 16. **P1-GA-018:** public catalog REST quota circuit, bounded logging и no-cache degraded snapshot реализованы в `4aa7f52c`; local serial/parallel и cold backend effect доказаны, deployment `GWXM4c…` success. Multi-instance recovery и production same-artifact behavior остаются открыты.
-17. **P1-GA-019:** production dependency audit чист, но полный dev-toolchain audit содержит 9 high в транзитивной ESLint-цепочке; безопасная non-breaking remediation ещё не доказана.
+17. **P1-GA-019:** WP-025 ограничил exact dev-only graph fail-closed policy до 2026-08-12 и доказал production audit=0. Advisory-цепочка остаётся физически присутствующей и требует upstream remediation до deadline; исключение не является закрытием finding.
 18. **P1-GA-020:** 25–28-секундная public-route задержка оказалась full-catalog optional detail fan-out, а не CMS query latency. WP-023 `e22b5885` сначала выбирает 4–6/widget/geography candidates и только затем валидирует detail; article cold сокращён с 23.601 s до 616 ms, recovery smoke и deployment `5HameB…` проходят. Healthy distributed behavior и production same-artifact proof остаются открыты.
 19. **P1-GA-021:** WP-024 `d4fbbbc1` устраняет CMS error→missing/empty collapse, не кеширует degraded fallback и доказан exact local/preview. Production всё ещё на старом artifact и возвращает false-empty comments; healthy read/recovery и same-artifact production proof остаются открыты.
 20. **P1-GA-022:** Tripster public fallback включает raw provider `message` в build/runtime log. Секрет в текущем evidence не обнаружен, но внешняя строка не является bounded observability contract; нужна structured class-only sanitization и regression test.
@@ -405,5 +419,5 @@ Master Goal V6 принят как главный норматив проект�
 ## Следующие три задачи
 
 1. Owner/ops + engineering: снять Supabase `exceed_egress_quota`, восстановить canonical verified runtime connectivity и сразу выполнить read-only 107 migrations/journal/checksums, RLS/grants и backup/PITR reconciliation; до parity не применять DDL.
-2. Engineering/tooling WP-025: подготовить совместимый пакет Next/eslint-config-next/ESLint для устранения `brace-expansion/minimatch` dev-only цепочки; не применять `npm audit fix --force` без полного compatibility proof.
-3. Engineering WP-026: заменить raw Tripster provider-message logging на bounded `source/errorClass/retryable`, добавить secret-marker/structured-log contracts и повторить outage build/runtime evidence.
+2. Engineering WP-026: заменить raw Tripster provider-message logging на bounded `source/errorClass/retryable`, добавить secret-marker/structured-log contracts и повторить outage build/runtime evidence.
+3. Engineering/tooling: мониторить upstream ESLint plugin graph и удалить policy P1-GA-019 при совместимой remediation, обязательно до 2026-08-12; не продлевать без нового registry/audit/compatibility evidence.

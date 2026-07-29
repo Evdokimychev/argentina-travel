@@ -78,6 +78,8 @@ flowchart TD
   Next --> Ops["Health / cron / jobs / logs / Sentry"]
   Next --> Analytics["Consent → GTM / GA4 / Metrica"]
   GitHub["GitHub Actions release gates"] --> Vercel
+  Source --> DepPolicy["WP-025 dependency audit policy: production=0 / exact dev graph / expiry"]
+  DepPolicy --> GitHub
   Source["src/app + local import graph"] --> Inventory["Generated route / data / interaction inventory"]
   Inventory --> Critical["Reviewed critical journey manifest"]
   Critical --> Contracts["Unit / route / browser / preview evidence layers"]
@@ -101,7 +103,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` / `BMXQzS…` bounds per-instance catalog/direct-PG pressure. WP-022 `4aa7f52c` / `GWXM4c…` bounds public catalog REST quota amplification. WP-023 `e22b5885` / `5HameB…` selects renderable candidates before strict detail validation. WP-024 exact `d4fbbbc1` / `9nLoBa…` preserves CMS/comments truth and prevents degraded-cache/false-404 behavior. REST and preview direct PG are still unavailable, production runs old `993e82fb`, and raw Tripster provider logging is registered as WP-026; migration parity, backup effect, distributed recovery and same-artifact production proof remain unavailable.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` / `BMXQzS…` bounds per-instance catalog/direct-PG pressure. WP-022 `4aa7f52c` / `GWXM4c…` bounds public catalog REST quota amplification. WP-023 `e22b5885` / `5HameB…` selects renderable candidates before strict detail validation. WP-024 exact `d4fbbbc1` / `9nLoBa…` preserves CMS/comments truth and prevents degraded-cache/false-404 behavior. WP-025 `5c79c4cb` keeps the production graph clean and fail-closed bounds the exact dev advisory graph until 2026-08-12, but Vercel rejected its preview as `Account is blocked`. REST remains quota-restricted, production runs old `993e82fb`, and raw Tripster provider logging is registered as WP-026; migration parity, backup effect, distributed recovery and same-artifact production proof remain unavailable.
 
 ## Data ownership boundaries
 
@@ -113,6 +115,7 @@ Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target 
 - No B2B product may share production DB/secrets/releases without ADR.
 - Current source topology is recorded in `docs/audit/architecture-current.md`; its data/access candidates remain static evidence until live Supabase and effect tests confirm them.
 - A public CMS `null`/`[]` owns absence only after a successful read. Quota, timeout, auth/RLS, database and network errors own typed unavailability. Reviewed source fallback may preserve a known page but stays outside the successful CMS cache; CMS-only routes and comments return retryable unavailable rather than false 404/empty.
+- The dependency release gate owns supply-chain drift: production audit must remain zero; until 2026-08-12 only the exact reviewed advisory/package/severity graph may pass. A clean upstream graph invalidates the exception rather than silently retaining it.
 - Critical action topology is recorded in `docs/audit/critical-interaction-evidence.csv`; `contract_tested` means only the listed unit contract, while route/browser/preview/live gaps remain explicit.
 - Privacy approval owns only the CAS queue transition; the cron processor owns irreversible deletion/anonymization. WP-008 preserves retry identity; WP-009 makes terminal writes monotonic and isolates notification failure. Candidate evidence still does not prove live cron completion, unique active requests, leases/checkpoints or transactional audit.
 - A payment-link token owns only the bounded checkout/status view. The first online provider is claimed on the booking row before external checkout creation; signed provider webhooks remain the only authority for captured payment state.
