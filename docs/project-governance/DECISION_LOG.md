@@ -121,3 +121,24 @@
 - Decision: guard both completion and failure writes with current `processing` status, and run completion notification outside the destructive failure boundary. Do not automatically requeue `failed` requests.
 - Evidence: previously an email-provider exception after `completed` entered the catch and wrote `failed` by ID. New contracts prove destructive failure invokes failure marking once, lost processing CAS is surfaced without overwrite, and notification failure returns successful completion without calling failure marking.
 - Consequence: a non-critical notification cannot regress an irreversible completed deletion, and concurrent status changes remain monotonic. Manual admin re-approval remains the controlled retry path; automatic retry requires later lease/backoff/dead-letter and DB evidence.
+
+## D-020 — A payment link claims one online provider before checkout creation
+
+- Date: 2026-07-29
+- Decision: use the existing booking `updated_at` compare-and-set to claim Stripe or Mercado Pago before any external call; never release the provider automatically after an ambiguous network failure. Persist the provider result through a second CAS and keep same-provider idempotent retry.
+- Evidence: the former routes could concurrently create different provider checkouts and blind-write stale booking snapshots. Route integration with a shared fake atomic store proves two parallel App Router handlers produce statuses 200/409 and exactly one provider call; webhook interleaving remains paid and returns 409.
+- Consequence: a single capability token cannot expose two checkout URLs or overwrite newer payment state. Switching provider requires a separately controlled recovery/new-link decision; live effect proof remains blocked by the unhealthy data plane.
+
+## D-021 — Payment capability responses are explicit projections
+
+- Date: 2026-07-29
+- Decision: the payment-link status route returns only fields rendered by checkout/result pages and public-safe errors. It may not serialize a canonical CRM booking.
+- Evidence: local production smoke reproduced raw `supabaseKey is required`; source review showed the response also included travelers/passports, phone, CRM comments, owner IDs and private metadata. Route tests assert the bounded projection and absence of these fields.
+- Consequence: possession of a payment token grants the payment UI capability, not general CRM data access. Receipt/live DB behavior is still unproven while Supabase is unavailable.
+
+## D-022 — Exact-SHA evidence includes the build output directory
+
+- Date: 2026-07-29
+- Decision: bind local production evidence to source SHA, runtime behavior and the explicit build/start distDir. Reject a health SHA supplied only by runtime env when behavior belongs to an older bundle.
+- Evidence: importing Vercel env made Next build use `.next`, while local start used an old `.next-production`; smoke still observed the pre-fix raw error. Rebuilding `179d3e51` with `NEXT_DIST_DIR=.next-production` changed the endpoint to the expected public-safe 503.
+- Consequence: the rejected run is not counted. Future packets must record distDir or use one command that builds and starts the same artifact.

@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 05:17 ART**. WP-009 закрыл terminal-state regression из-за post-completion notification и добавил CAS для `processing → completed/failed`; DB-level uniqueness, durable audit и live processor effect остаются выше UX/growth.
+Обновлён: **2026-07-29 06:06 ART**. WP-010 закрыл cross-provider checkout race, stale booking overwrite, hostile callback origin и избыточную capability-проекцию; live provider/webhook/DB effect остаётся заблокирован unhealthy data plane.
 
 ## Правило выбора пакета
 
@@ -12,7 +12,7 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | current `34c05f55` → `CKfpUHhx…`; repeated delayed recovery remains volatile and logs still blocked |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | current `179d3e51` → `4aRm8X7Q…` success after ~9 min pending; delayed builds remain volatile and logs still blocked |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -24,9 +24,10 @@
 | 11 | Privacy transition atomicity and route contracts (WP-007) | P1 | compare-and-set transition; scoped export/delete/admin tests; no real deletion | done `cad6aa35` / `ApSwUC4…`; 8 route tests + full audit/build/local+remote browser pass; smoke correctly blocked by data plane |
 | 12 | Privacy deletion recovery/idempotency contracts (WP-008) | P1 | retry identity survives partial anonymization; no production mutation | done `e4c1dad5` / `B3yBJST…`; focused 11 + full 2 016 tests/build/local+remote browser pass; smoke blocked by data plane |
 | 13 | Privacy processor partial-failure contract (WP-009) | P1 | terminal-state CAS; post-completion notification cannot regress deletion; no live mutation | done `34c05f55` / `CKfpUHhx…`; 14 focused + full 2 019 tests/build/local+remote browser pass; smoke blocked by data plane |
-| 14 | Booking/payment route integration packet (WP-010) | P0 | fake-provider route tests for token/state/replay/provider failure; no real payment | next safe packet while DB/live privacy work is infrastructure-blocked |
-| 15 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
-| 16 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
+| 14 | Booking/payment route integration packet (WP-010) | P0 | fake-provider route tests for token/state/race/provider failure/status projection; no real payment | done `beb236fb` + `179d3e51` / `4aRm8X7Q…`; 21 focused + 2 031 full tests, exact build/local+remote browser; smoke correctly blocked by health |
+| 15 | Booking creation route integration (WP-011) | P0 | App Router + fake atomic command: canonical pricing, idempotency, slot conflict, safe failure; no live booking | next independent packet after WP-010 remote evidence |
+| 16 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
+| 17 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
 ## Выполненные безопасные пакеты
 
@@ -66,6 +67,10 @@ The deletion processor now resolves the original email/name from request metadat
 
 `processing → completed` and `processing → failed` now use status compare-and-set. Completion notification runs only after the destructive operation and terminal completion succeed; provider failure is logged as best-effort and cannot regress a completed request to failed. Automatic retry of `failed` remains intentionally disabled: admin re-approval is the bounded manual recovery path until leases/backoff/dead-letter and DB parity exist.
 
+### WP-010 — payment checkout route integrity
+
+Stripe and Mercado Pago checkout initiation now claims the payment link's first online provider through the existing booking version CAS before any external call, then CAS-persists the provider result. Cross-provider races create only one external checkout in the fake-provider route integration; stale webhook/admin state wins over checkout persistence. Provider callbacks use canonical site URL behavior, public errors contain no provider/storage details, and the payment-link status endpoint exposes only the checkout fields required by the two payment pages. No schema, live payment, webhook or production data mutation was performed.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
@@ -87,4 +92,7 @@ The deletion processor now resolves the original email/name from request metadat
 - `cad6aa35` recovered 12 minutes after its first Vercel failure and is remotely proven as deployment `ApSwUC4F1qfgwMAjkKqRELUSojuY`; the same preview remains correctly blocked at the unhealthy data-plane gate. Exact `e4c1dad5` is locally proven but Vercel returned `Account is blocked` and created no deployment, so WP-009 proceeds without treating WP-007 preview as WP-008 evidence.
 - `e4c1dad5` later recovered as deployment `B3yBJSTtcerPqeYJwKpWwR3vxj3T`; exact remote health/browser bind that SHA and smoke still blocks promotion. WP-009 source review then exposed a separate regression path: completion email lived inside the destructive catch boundary and failure marking matched only request ID.
 - After WP-009, remaining privacy guarantees require canonical DB parity or a controlled disposable database. The next independent high-risk packet moves to P0 booking/payment route integration rather than inventing unsafe auto-retry or applying unverified DDL.
+- WP-010 reproduction changed the payment plan: a blind post-provider CAS alone would still allow Stripe and Mercado Pago to create one checkout each. The existing payment-link gateway field is therefore claimed with CAS before the provider boundary; a different provider is rejected, while same-provider recovery keeps its durable idempotency key.
+- Local production smoke exposed a second P0 in the same journey: the public status route leaked `supabaseKey is required` and the full booking payload, including CRM/traveler fields. WP-010 remained open until safe errors and a bounded checkout projection were route-tested.
+- An initial exact-SHA preview accidentally served stale `.next-production` because Vercel env made the build use `.next`. That result was rejected; final evidence explicitly binds `NEXT_DIST_DIR=.next-production` and `179d3e51`.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
