@@ -25,11 +25,17 @@ type CityRow = {
 const LISTING_COLUMNS =
   "id, slug, country_id, city_id, title, tagline, annotation, description, status, experience_type, format, duration_minutes, rating, review_count, price_value, price_currency, price_display, tripster_url, partner_url, cover_image, photos, payload";
 
+function queryFailure(operation: string, error: { message: string }): Error {
+  return new Error(`Tripster REST ${operation} failed: ${error.message}`);
+}
+
 async function loadCityMap(supabase: DbClient): Promise<Map<number, CityRow>> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tripster_cities")
     .select("id, slug, name_ru, name_en, experience_count, cover_image")
     .order("experience_count", { ascending: false });
+
+  if (error) throw queryFailure("city lookup", error);
 
   const map = new Map<number, CityRow>();
   for (const row of data ?? []) {
@@ -51,7 +57,8 @@ export async function fetchPartnerTourListings(supabase: DbClient): Promise<Tour
       .select(LISTING_COLUMNS)
       .order("review_count", { ascending: false });
 
-    if (fallback.error || !fallback.data) return [];
+    if (fallback.error) throw queryFailure("listing fallback", fallback.error);
+    if (!fallback.data) return [];
 
     const cityMap = await loadCityMap(supabase);
     return fallback.data
@@ -83,21 +90,26 @@ export async function fetchPartnerTourDetail(
     .eq("slug", slug)
     .maybeSingle();
 
-  if (error || !data || !isTripsterTourExperience(data)) return null;
+  if (error) throw queryFailure("detail lookup", error);
+  if (!data || !isTripsterTourExperience(data)) return null;
   if (!isPartnerTourExperiencePublishable(data as PartnerTourExperienceRow)) return null;
 
-  const { data: city } = await supabase
+  const { data: city, error: cityError } = await supabase
     .from("tripster_cities")
     .select("id, slug, name_ru, name_en, experience_count, cover_image")
     .eq("id", data.city_id)
     .maybeSingle();
 
-  const { data: reviews } = await supabase
+  if (cityError) throw queryFailure("detail city lookup", cityError);
+
+  const { data: reviews, error: reviewsError } = await supabase
     .from("tripster_reviews")
     .select("id, rating, author_name, review_text, created_at, payload")
     .eq("experience_id", data.id)
     .order("created_at", { ascending: false })
     .limit(50);
+
+  if (reviewsError) throw queryFailure("detail review lookup", reviewsError);
 
   return partnerTourRowToDetail(data as PartnerTourExperienceRow, city, {
     reviews: reviews ?? [],
@@ -112,7 +124,8 @@ export async function fetchPartnerTourSlugs(supabase: DbClient): Promise<string[
 
   if (error || !data?.length) {
     const fallback = await supabase.from("tripster_experiences").select("slug, experience_type, payload");
-    if (fallback.error || !fallback.data) return [];
+    if (fallback.error) throw queryFailure("slug fallback", fallback.error);
+    if (!fallback.data) return [];
     return fallback.data
       .filter((row) => isTripsterTourExperience(row))
       .filter((row) => isPartnerTourExperiencePublishable(row as PartnerTourExperienceRow))

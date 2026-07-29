@@ -19,6 +19,8 @@ import type {
 const MAX_TAKE = 200;
 const RATE_LIMIT_WINDOW_MS = 10_000;
 const RATE_LIMIT_MAX_CALLS = 100;
+const PARTNER_READ_TIMEOUT_MS = 8_000;
+const MAX_RATE_LIMIT_RETRY_DELAY_MS = 1_000;
 
 let windowStartedAt = Date.now();
 let callsInWindow = 0;
@@ -86,10 +88,11 @@ async function youtravelFetch<T>(path: string, retryOn429 = true): Promise<T> {
       Accept: "application/json",
     },
     cache: "no-store",
+    signal: AbortSignal.timeout(PARTNER_READ_TIMEOUT_MS),
   });
 
   if (response.status === 429 && retryOn429) {
-    await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_WINDOW_MS + 100));
+    await new Promise((resolve) => setTimeout(resolve, MAX_RATE_LIMIT_RETRY_DELAY_MS));
     return youtravelFetch<T>(path, false);
   }
 
@@ -187,6 +190,7 @@ export async function fetchYouTravelTourReviews(
         "User-Agent": "goargentina-youtravel-sync/1.0",
       },
       cache: "no-store",
+      signal: AbortSignal.timeout(PARTNER_READ_TIMEOUT_MS),
     });
     if (response.ok) {
       const body = (await response.json().catch(() => null)) as unknown;

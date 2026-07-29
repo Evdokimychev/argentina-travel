@@ -7,6 +7,7 @@ type TokenCache = {
 };
 
 const TOKEN_TTL_MS = 23 * 60 * 60 * 1000;
+const PARTNER_AUTH_TIMEOUT_MS = 8_000;
 
 declare global {
   // eslint-disable-next-line no-var
@@ -44,6 +45,7 @@ export async function getTripsterAccessToken(forceRefresh = false): Promise<stri
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
     body: JSON.stringify({ partner, secret }),
+    signal: AbortSignal.timeout(PARTNER_AUTH_TIMEOUT_MS),
   });
 
   const body = (await response.json().catch(() => null)) as TripsterObtainTokenResponse | null;

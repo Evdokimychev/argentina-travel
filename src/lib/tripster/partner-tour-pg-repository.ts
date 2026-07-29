@@ -1,6 +1,6 @@
 import "server-only";
 
-import pg from "pg";
+import type { PoolClient } from "pg";
 import {
   partnerTourRowToDetail,
   partnerTourRowToListing,
@@ -8,24 +8,8 @@ import {
 } from "@/lib/tripster/partner-tour-mapper";
 import { TRIPSTER_TOUR_WHERE_SQL } from "@/lib/tripster/partner-tour-utils";
 import { isPartnerTourExperiencePublishable } from "@/lib/tripster/partner-tour-visibility";
-import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import { withPartnerPgClient } from "@/lib/partner-pg-pool";
 import type { TourDetail, TourListing } from "@/types";
-
-async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T> {
-  const connectionString = resolveDatabaseUrl();
-  if (!connectionString) {
-    throw new Error("Direct Postgres is not configured for Tripster fallback");
-  }
-
-  const client = new pg.Client(createPgClientConfig(connectionString));
-
-  try {
-    await client.connect();
-    return await fn(client);
-  } finally {
-    await client.end().catch(() => undefined);
-  }
-}
 
 type CityRow = {
   id: number;
@@ -36,7 +20,7 @@ type CityRow = {
   cover_image: string | null;
 };
 
-async function loadCities(client: pg.Client): Promise<Map<number, CityRow>> {
+async function loadCities(client: PoolClient): Promise<Map<number, CityRow>> {
   const { rows } = await client.query(
     `select id, slug, name_ru, name_en, experience_count, cover_image
      from public.tripster_cities
@@ -46,7 +30,7 @@ async function loadCities(client: pg.Client): Promise<Map<number, CityRow>> {
 }
 
 export async function pgFetchPartnerTourListings(): Promise<TourListing[]> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const cityMap = await loadCities(client);
     const { rows } = await client.query(
       `select id, slug, country_id, city_id, title, tagline, annotation, description,
@@ -68,7 +52,7 @@ export async function pgFetchPartnerTourListings(): Promise<TourListing[]> {
 }
 
 export async function pgFetchPartnerTourDetail(slug: string): Promise<TourDetail | null> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const experience = await client.query(
       `select * from public.tripster_experiences where slug = $1 and ${TRIPSTER_TOUR_WHERE_SQL} limit 1`,
       [slug]
@@ -95,7 +79,7 @@ export async function pgFetchPartnerTourDetail(slug: string): Promise<TourDetail
 }
 
 export async function pgFetchPartnerTourSlugs(): Promise<string[]> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const { rows } = await client.query(
       `select slug, status, payload from public.tripster_experiences where ${TRIPSTER_TOUR_WHERE_SQL} order by slug`
     );

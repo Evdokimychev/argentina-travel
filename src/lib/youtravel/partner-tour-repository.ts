@@ -68,6 +68,10 @@ export type YouTravelTourRow = {
 const LISTING_COLUMNS =
   "id, slug, title, country, region, city, status, duration_days, duration_nights, rating, review_count, price_value, price_currency, price_display, youtravel_url, partner_url, cover_image, photos, payload";
 
+function queryFailure(operation: string, error: { message: string }): Error {
+  return new Error(`YouTravel REST ${operation} failed: ${error.message}`);
+}
+
 function durationBucket(days: number): DurationBucket {
   if (days <= 2) return "1–2 дня";
   if (days <= 3) return "2–3 дня";
@@ -267,14 +271,17 @@ export async function fetchYouTravelTourListings(supabase: DbClient): Promise<To
     .neq("status", "draft")
     .order("review_count", { ascending: false });
 
-  if (error || !data?.length) return [];
+  if (error) throw queryFailure("listing lookup", error);
+  if (!data?.length) return [];
 
   const tourIds = data.map((row) => row.id);
-  const { data: offerRows } = await supabase
+  const { data: offerRows, error: offerError } = await supabase
     .from("youtravel_offers")
     .select("tour_id, start_date, end_date, seats_available, price_value, price_currency, payload")
     .in("tour_id", tourIds)
     .order("start_date", { ascending: true });
+
+  if (offerError) throw queryFailure("listing offer lookup", offerError);
 
   const offersByTour = new Map<number, TourDate[]>();
   const offerPriceRowsByTour = new Map<number, YouTravelOfferListingRow[]>();
@@ -418,7 +425,8 @@ export async function fetchYouTravelTourSlugs(supabase: DbClient): Promise<strin
     .select("slug, status")
     .neq("status", "draft");
 
-  if (error || !data) return [];
+  if (error) throw queryFailure("slug lookup", error);
+  if (!data) return [];
   return data.map((row: { slug: string }) => row.slug);
 }
 
@@ -432,14 +440,17 @@ export async function fetchYouTravelTourDetail(
     .eq("slug", slug)
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) throw queryFailure("detail lookup", error);
+  if (!data) return null;
   if (data.status === "draft") return null;
 
-  const { data: offers } = await supabase
+  const { data: offers, error: offerError } = await supabase
     .from("youtravel_offers")
     .select("id, tour_id, start_date, end_date, price_value, price_currency, seats_available, payload")
     .eq("tour_id", data.id)
     .order("start_date", { ascending: true });
+
+  if (offerError) throw queryFailure("detail offer lookup", offerError);
 
   const { youtravelRowToDetail } = await import("@/lib/youtravel/partner-tour-mapper");
   const enrichedPayload = await enrichYouTravelPayload(data as YouTravelTourRow);

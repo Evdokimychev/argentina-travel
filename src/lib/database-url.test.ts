@@ -45,18 +45,16 @@ describe("resolveDatabaseUrl", () => {
     });
   });
 
-  it("normalizes and accepts a matching Supavisor session target", () => {
+  it("preserves and accepts a matching Supavisor transaction target", () => {
     clearDatabaseEnvironment();
     process.env.POSTGRES_URL =
       `postgresql://postgres.${EXPECTED_REF}:pass@aws-0-region.pooler.supabase.com:6543/postgres`;
 
-    expect(resolveDatabaseUrl()).toBe(
-      `postgresql://postgres.${EXPECTED_REF}:pass@aws-0-region.pooler.supabase.com:5432/postgres`,
-    );
+    expect(resolveDatabaseUrl()).toBe(process.env.POSTGRES_URL);
     expect(resolveDatabaseConnectionDiagnostics()).toEqual({
       source: "POSTGRES_URL",
-      mode: "supabase_session_pooler",
-      port: 5432,
+      mode: "supabase_transaction_pooler",
+      port: 6543,
       projectRef: EXPECTED_REF,
       targetStatus: "verified",
     });

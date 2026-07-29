@@ -310,6 +310,8 @@ export function buildYouTravelPublicReviewsUrl(
   return `https://youtravel.me/api/v2/tours/public/${encodeURIComponent(String(tourId))}/reviews?${params.toString()}`;
 }
 
+const PUBLIC_PAGE_READ_TIMEOUT_MS = 8_000;
+
 function mapPublicReviewEntries(list: unknown[]): YouTravelReview[] {
   return list
     .map((entry, index) => normalizeYouTravelReviewEntry(entry, index + 1))
@@ -329,6 +331,7 @@ async function fetchYouTravelPublicReviewsJson(
           "User-Agent": "goargentina-youtravel-sync/1.0",
         },
         next: { revalidate: 60 * 60 * 6 },
+        signal: AbortSignal.timeout(PUBLIC_PAGE_READ_TIMEOUT_MS),
       });
       if (!response.ok) continue;
       const body = (await response.json().catch(() => null)) as unknown;
@@ -391,6 +394,7 @@ export async function fetchYouTravelPublicTourHtml(
     const response = await fetch(url, {
       headers,
       next: { revalidate: 60 * 60 * 24 },
+      signal: AbortSignal.timeout(PUBLIC_PAGE_READ_TIMEOUT_MS),
     });
     if (response.ok) {
       const html = await response.text();
@@ -415,7 +419,7 @@ async function fetchYouTravelPublicTourHtmlViaCurl(url: string): Promise<string 
       [
         "-sL",
         "--max-time",
-        "45",
+        "8",
         "-A",
         "Mozilla/5.0 (compatible; goargentina-youtravel-sync/1.0)",
         "-H",

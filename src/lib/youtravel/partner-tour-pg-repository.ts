@@ -1,7 +1,6 @@
 import "server-only";
 
-import pg from "pg";
-import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import { withPartnerPgClient } from "@/lib/partner-pg-pool";
 import type { YouTravelOfferListingRow } from "@/lib/youtravel/offers-mapper";
 import {
   applyYouTravelOfferPricesToListing,
@@ -10,22 +9,6 @@ import {
 } from "@/lib/youtravel/partner-tour-repository";
 import type { TourDate, TourDetail, TourListing } from "@/types";
 
-async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T> {
-  const connectionString = resolveDatabaseUrl();
-  if (!connectionString) {
-    throw new Error("Direct Postgres is not configured for YouTravel fallback");
-  }
-
-  const client = new pg.Client(createPgClientConfig(connectionString));
-
-  try {
-    await client.connect();
-    return await fn(client);
-  } finally {
-    await client.end().catch(() => undefined);
-  }
-}
-
 const LISTING_COLUMNS = `
   id, slug, title, country, region, city, status, duration_days, duration_nights,
   rating, review_count, price_value, price_currency, price_display, youtravel_url,
@@ -33,7 +16,7 @@ const LISTING_COLUMNS = `
 `;
 
 export async function pgFetchYouTravelTourListings(): Promise<TourListing[]> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const { rows } = await client.query(
       `select ${LISTING_COLUMNS}
        from public.youtravel_tours
@@ -89,7 +72,7 @@ export async function pgFetchYouTravelTourListings(): Promise<TourListing[]> {
 }
 
 export async function pgFetchYouTravelTourSlugs(): Promise<string[]> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const { rows } = await client.query<{ slug: string }>(
       `select slug
        from public.youtravel_tours
@@ -103,7 +86,7 @@ export async function pgFetchYouTravelTourSlugs(): Promise<string[]> {
 export async function pgFetchYouTravelTourDetail(
   slug: string,
 ): Promise<TourDetail | null> {
-  return withPgClient(async (client) => {
+  return withPartnerPgClient(async (client) => {
     const tourResult = await client.query(
       `select * from public.youtravel_tours where slug = $1 limit 1`,
       [slug],

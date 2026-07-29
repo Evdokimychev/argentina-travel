@@ -11,8 +11,9 @@ import {
  * is unavailable (egress quota, outage). Vercel Supabase integration exposes
  * POSTGRES_* vars; local dev typically uses DATABASE_URL.
  *
- * node-postgres must use Supavisor **session** mode (port 5432). Transaction pooler
- * (6543) often fails for ad-hoc queries in serverless.
+ * Supabase recommends transaction mode (port 6543) for temporary serverless
+ * clients. Preserve the configured, attested connection mode instead of
+ * silently converting it to a session connection that reserves a backend slot.
  */
 function buildDatabaseUrlFromParts(): string | null {
   const host = process.env.POSTGRES_HOST?.trim();
@@ -23,9 +24,7 @@ function buildDatabaseUrlFromParts(): string | null {
   if (!host || !user || !password) return null;
 
   const port = host.includes("pooler.supabase.com") ? "5432" : "5432";
-  return preferPgSessionPoolerUrl(
-    `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}`,
-  );
+  return `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}`;
 }
 
 function isUsableDatabaseUrl(value: string | undefined): value is string {
@@ -35,7 +34,11 @@ function isUsableDatabaseUrl(value: string | undefined): value is string {
 
 export type DatabaseConnectionDiagnostics = {
   source: "POSTGRES_URL" | "POSTGRES_PRISMA_URL" | "DATABASE_URL" | "POSTGRES_URL_NON_POOLING" | "POSTGRES_PARTS";
-  mode: "supabase_direct" | "supabase_session_pooler" | "other";
+  mode:
+    | "supabase_direct"
+    | "supabase_session_pooler"
+    | "supabase_transaction_pooler"
+    | "other";
   port: number | null;
   projectRef: string | null;
   targetStatus: "verified" | "unverified" | "mismatch";
@@ -58,7 +61,9 @@ function diagnosticsFor(
     return {
       source,
       mode: pooler
-        ? "supabase_session_pooler"
+        ? parsed.port === "6543"
+          ? "supabase_transaction_pooler"
+          : "supabase_session_pooler"
         : parsed.hostname.toLowerCase().startsWith("db.") && projectRef
           ? "supabase_direct"
           : "other",
@@ -104,7 +109,7 @@ function resolveDatabaseConnectionState(): DatabaseConnectionResolution {
   for (const [source, value] of candidates) {
     if (!isUsableDatabaseUrl(value)) continue;
 
-    const connectionString = preferPgSessionPoolerUrl(value);
+    const connectionString = value;
     const diagnostics = diagnosticsFor(source, connectionString, expectedProjectRef);
     if (diagnostics.targetStatus === "verified") {
       return { connectionString, diagnostics };
@@ -139,22 +144,6 @@ export function resolveDatabaseConnectionDiagnostics(): DatabaseConnectionDiagno
 export function isDatabaseUrlAttested(value: string | undefined): boolean {
   if (!isUsableDatabaseUrl(value)) return false;
   return diagnosticsFor("DATABASE_URL", value, expectedSupabaseProjectRef()).targetStatus === "verified";
-}
-
-function preferPgSessionPoolerUrl(url: string): string {
-  try {
-    const parsed = new URL(url);
-    if (
-      parsed.port === "6543" &&
-      parsed.hostname.includes("pooler.supabase.com")
-    ) {
-      parsed.port = "5432";
-      return parsed.toString();
-    }
-  } catch {
-    // keep original string
-  }
-  return url;
 }
 
 /** Shared pg client options — Supabase pooler uses a chain Vercel Node rejects by default. */

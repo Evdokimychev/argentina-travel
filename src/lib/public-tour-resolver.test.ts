@@ -146,6 +146,128 @@ describe("filterToursWithResolvedPublicDetail", () => {
       "public_tour_details_unavailable",
     );
   });
+
+  it("bounds cold catalog detail resolution to three concurrent operations", async () => {
+    const { filterToursWithResolvedPublicDetail } = await import(
+      "@/lib/public-tour-resolver"
+    );
+    let active = 0;
+    let peak = 0;
+
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockImplementation(async (slug: string) => {
+      active += 1;
+      peak = Math.max(peak, active);
+      await new Promise((resolve) => setTimeout(resolve, 5));
+      active -= 1;
+      return {
+        status: "ok",
+        data: {
+          slug,
+          title: slug,
+          reviews: [],
+          reviewCount: 0,
+          rating: 0,
+        } as never,
+      };
+    });
+
+    const tours = Array.from({ length: 12 }, (_, index) => ({
+      id: String(index),
+      slug: `argentina-tour-${index}`,
+      title: `Tour ${index}`,
+      country: "Argentina",
+      destination: "Patagonia",
+      region: "Patagonia",
+      partnerSource: "tripster",
+    })) as never;
+
+    const filtered = await filterToursWithResolvedPublicDetail(tours);
+
+    expect(filtered).toHaveLength(12);
+    expect(peak).toBe(3);
+  });
+
+  it("deduplicates the same in-flight catalog detail across concurrent renders", async () => {
+    const { filterToursWithResolvedPublicDetail } = await import(
+      "@/lib/public-tour-resolver"
+    );
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockImplementation(async (slug: string) => {
+      await gate;
+      return {
+        status: "ok",
+        data: {
+          slug,
+          title: slug,
+          reviews: [],
+          reviewCount: 0,
+          rating: 0,
+        } as never,
+      };
+    });
+
+    const tours = [{
+      id: "shared",
+      slug: "argentina-shared-tour",
+      title: "Shared tour",
+      country: "Argentina",
+      destination: "Patagonia",
+      region: "Patagonia",
+      partnerSource: "tripster",
+    }] as never;
+    const callCountBefore = vi.mocked(fetchCutoverTourDetailResultBySlug).mock.calls.length;
+
+    const first = filterToursWithResolvedPublicDetail(tours);
+    const second = filterToursWithResolvedPublicDetail(tours);
+
+    await vi.waitFor(() => {
+      expect(fetchCutoverTourDetailResultBySlug).toHaveBeenCalledTimes(callCountBefore + 1);
+    });
+    release();
+
+    await expect(Promise.all([first, second])).resolves.toEqual([tours, tours]);
+  });
+
+  it("clears unavailable in-flight results so a later render retries the source", async () => {
+    const { filterToursWithResolvedPublicDetail } = await import(
+      "@/lib/public-tour-resolver"
+    );
+    vi.mocked(fetchCutoverTourDetailResultBySlug)
+      .mockResolvedValueOnce({
+        status: "unavailable",
+        retryable: true,
+        errorClass: "db_unavailable",
+        message: "temporary source error",
+      })
+      .mockResolvedValueOnce({
+        status: "ok",
+        data: {
+          slug: "argentina-retry-tour",
+          title: "Recovered tour",
+          reviews: [],
+          reviewCount: 0,
+          rating: 0,
+        } as never,
+      });
+    const tours = [{
+      id: "retry",
+      slug: "argentina-retry-tour",
+      title: "Retry tour",
+      country: "Argentina",
+      destination: "Patagonia",
+      region: "Patagonia",
+      partnerSource: "tripster",
+    }] as never;
+    const callCountBefore = vi.mocked(fetchCutoverTourDetailResultBySlug).mock.calls.length;
+
+    await expect(filterToursWithResolvedPublicDetail(tours)).resolves.toEqual([]);
+    await expect(filterToursWithResolvedPublicDetail(tours)).resolves.toEqual(tours);
+    expect(fetchCutoverTourDetailResultBySlug).toHaveBeenCalledTimes(callCountBefore + 2);
+  });
 });
 
 describe("platform source fault injection", () => {

@@ -23,4 +23,21 @@ describe("direct Postgres target attestation", () => {
     expect(contents).toContain("isDatabaseUrlAttested(process.env.DATABASE_URL)");
     expect(contents).not.toContain("Boolean(process.env.DATABASE_URL)");
   });
+
+  it("shares one attested bounded pool across partner fallback repositories", () => {
+    const pool = source("src/lib/partner-pg-pool.ts");
+    expect(pool).toContain("resolveDatabaseConnection()");
+    expect(pool).toContain("new pg.Pool");
+    expect(pool).toContain("PARTNER_PG_POOL_MAX = 2");
+    expect(pool).toContain("statement_timeout: PARTNER_PG_QUERY_TIMEOUT_MS");
+
+    for (const relativePath of [
+      "src/lib/tripster/partner-tour-pg-repository.ts",
+      "src/lib/youtravel/partner-tour-pg-repository.ts",
+    ]) {
+      const contents = source(relativePath);
+      expect(contents).toContain("withPartnerPgClient");
+      expect(contents).not.toContain("new pg.Client");
+    }
+  });
 });

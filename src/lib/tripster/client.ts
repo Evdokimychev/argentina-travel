@@ -18,6 +18,8 @@ import type {
   TripsterTourPlanDay,
 } from "@/lib/tripster/types";
 
+const PARTNER_READ_TIMEOUT_MS = 8_000;
+
 export class TripsterApiError extends Error {
   readonly status: number;
   readonly path: string;
@@ -54,6 +56,7 @@ async function tripsterFetch<T>(path: string, retryOnAuth = true): Promise<T> {
       "Content-Type": "application/json",
     },
     cache: "no-store",
+    signal: AbortSignal.timeout(PARTNER_READ_TIMEOUT_MS),
   });
 
   if (response.status === 401 && retryOnAuth) {
@@ -165,6 +168,7 @@ export async function fetchTripsterWebExperience(experienceId: number): Promise<
       Accept: "application/json",
     },
     cache: "no-store",
+    signal: AbortSignal.timeout(PARTNER_READ_TIMEOUT_MS),
   });
 
   if (!response.ok) {

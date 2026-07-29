@@ -251,9 +251,8 @@ async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<Tour
     const fromPg = await pgFetchPartnerTourListings();
     if (fromPg.length > 0) return partnerOk(fromPg);
   } catch {
-    // REST repositories can normalize transport failures to an empty list,
-    // so `supabaseFailed` alone is not a reliable outage signal here.
-    // Continue to the live partner API before returning unavailable.
+    // Direct Postgres is optional during a REST outage. Continue to the live
+    // partner API before returning unavailable.
   }
 
   try {
