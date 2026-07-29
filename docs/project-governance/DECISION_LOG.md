@@ -79,3 +79,10 @@
 - Decision: pass optional catalog work as a promise into a local Suspense boundary; expose a strict public-detail filter that throws only when zero cards resolve and at least one candidate is operationally unavailable.
 - Evidence: the first browser pass showed that the existing filter silently converted unavailable detail results into `[]`. Fault injection now proves confirmed missing → `ok + []` and outage → typed `unavailable`; exact `189684fa` browser QA shows the parent guide during the pending state and no uncaught RSC error under live quota/429 degradation.
 - Consequence: editorial content never inherits the optional widget's failure UI. A partially available catalog may omit an unmatched optional offer, but cannot claim that the whole catalog is empty.
+
+## D-014 — A recovered preview does not authorize promotion
+
+- Date: 2026-07-29
+- Decision: accept `189684fa` / `NnmUYR17cEok1QXihkGjpMEgCqQA` as immutable remote evidence for WP-001/WP-004, but keep release status NOT READY and forbid promotion.
+- Evidence: Vercel status is success and preview health binds the full SHA; desktop/mobile QA passes. The same artifact reports health/public/database/partners 503/down, REST and direct PG unavailable, and the official production smoke exits 1 at the health gate.
+- Consequence: P1-GA-005 becomes partially resolved (build and browser evidence restored), while P0-GA-001 and runtime-log scope remain release blockers.

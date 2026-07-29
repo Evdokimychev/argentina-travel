@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 03:10 ART / 2026-07-29 06:10 UTC**
+Последняя проверка: **2026-07-29 03:18 ART / 2026-07-29 06:18 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -25,8 +25,9 @@ Master Goal V6 принят как главный норматив проект�
 - `ef447d8e`: deployment **не создан**; GitHub/Vercel status `failure`, точная причина `Account is blocked` (2026-07-29 04:17 UTC).
 - Чистый candidate `a07327db`: deployment **не создан**; Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 04:30 UTC).
 - `b53daadd`: deployment **не создан**; Vercel снова вернул `failure: Account is blocked` (2026-07-29 04:51 UTC).
-- `0759b597` и финальный `189684fa`: deployments **не созданы**; GitHub/Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 05:06/05:17 UTC).
-- Immutable preview URL и runtime logs недоступны: Vercel MCP/API/CLI/Browser account scopes не дают доступ к проекту. Поэтому remote browser QA не считается выполненным.
+- `0759b597` был отклонён с `Account is blocked`; exact code SHA `189684fa` после восстановления build-доступа успешно развернут как deployment `NnmUYR17cEok1QXihkGjpMEgCqQA` (2026-07-29 05:28 UTC).
+- Immutable branch preview: `https://argentina-travel-git-codex-master-goal-rele-451556-go-argentina.vercel.app`; health связывает его с полным code SHA `189684fa70d0bf020dcb7e835c29a38b5eca19ed`.
+- Governance-only SHA `aa96fbda` получил отдельный deployment `4XRK64SwfN5fDuWWVCEmAszpcbAj`, status pending на 06:18 UTC. Vercel dashboard/CLI runtime-log scope всё ещё недоступен, поэтому логи deployment не считаются проверенными.
 - Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
 ## Supabase, migrations, CMS и recovery
@@ -84,16 +85,18 @@ Master Goal V6 принят как главный норматив проект�
 - Protected production build exact `189684fa`: exit 0, **929/929**, runtime-text audit pass, demo auth markers absent. Compile занял 44.0 min при параллельной Xcode/iOS-сборке; это зафиксированное ограничение локальной среды, не build failure.
 - Production-equivalent runtime exact `189684fa`: weather **TTFB 0.480 s / total 2.902 s**, safety **0.059/0.083 s**, language **0.042/0.083 s**; health сообщает exact SHA, direct PG healthy (`tripsterCount=68`), REST degraded по quota.
 - Browser QA exact `189684fa`: desktop weather на 1.153 s уже имеет H1/main + локальный `aria-busy` skeleton, без route error/overflow; после partial-source resolution parent остаётся полным. Mobile 390×844 и safety body (13 864 chars, FAQ heading) — без route error/overflow. Логи содержат quota/Tripster 429, но не uncaught RSC error.
+- Immutable preview deployment `NnmUYR17cEok1QXihkGjpMEgCqQA`: health/public/database/partners — 503/down с exact SHA; tours/excursions — 503 + `Retry-After: 60`; weather main/H1 доступен, затем локальный unavailable widget видим на desktop/mobile; safety guide имеет полный FAQ/body, route error и horizontal overflow отсутствуют.
+- Штатный `production-smoke` на preview завершился `exit 1` ровно на health gate (`ok` не true, direct PG down). Это корректный запрет promotion, а не функциональный smoke pass.
 
 ## Открытые P0/P1
 
 1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
-3. **P1-GA-005:** разблокировать Vercel account/project scope и получить remote immutable preview/log evidence.
+3. **P1-GA-005:** build/immutable preview восстановлены; вернуть read-only Vercel project/runtime-log scope и диагностировать preview/prod direct-PG failure.
 4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
-2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать exact clean candidate, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
+2. Owner/ops: вернуть read-only Vercel project/runtime-log scope; engineering: сопоставить env names/regions/connectivity для preview/prod direct PG без вывода или ротации секретов.
 3. Engineering: регенерировать route/interaction/data inventory на exact clean candidate; после восстановления preview выполнить полный card/detail/CTA crawl.
