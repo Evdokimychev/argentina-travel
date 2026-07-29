@@ -65,3 +65,10 @@
 - Decision: preserve the dirty user worktree and create `codex/master-goal-release-candidate` from `origin/main`, applying only the six proven governance/WP commits.
 - Evidence: all cherry-picks completed without conflicts; `origin/main` is ancestor of `a07327db`; worktree and diff checks are clean; 54 focused/evidence tests, TypeScript and lint pass.
 - Consequence: P1-GA-009 is resolved for the candidate branch, while production promotion remains gated by Supabase/Vercel P0/P1 evidence.
+
+## D-012 — Optional catalog data cannot block editorial content
+
+- Date: 2026-07-29
+- Decision: a guide pillar loads marketplace data only when its content schema contains a configured `tour-embed`; editorial links or partner cards do not create a catalog dependency.
+- Evidence: all pillar pages previously called catalog aggregation and N public-detail resolutions; safety had no widget but cold total was 3.797 s and generated deadline/429 logs. After `b53daadd`, it renders in 0.399 s without marketplace logs.
+- Consequence: editorial content remains available during catalog incidents, while the real tour widget retains strict detail validation and is handled as a separate optional streaming boundary.

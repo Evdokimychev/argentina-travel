@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 01:39 ART / 2026-07-29 04:39 UTC**
+Последняя проверка: **2026-07-29 01:58 ART / 2026-07-29 04:58 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -14,6 +14,7 @@ Master Goal V6 принят как главный норматив проект�
 - Product/governance candidate SHA до этой записи: `a07327dbc69493ccf666a9dd0f0df0567d324fcf`; worktree чистый, `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
+- Последний code SHA: `b53daadd4c6a3fe805d3f3ec9f1c3e70792c7975` (`perf: keep editorial guides off catalog path`).
 
 ## Production и deployments
 
@@ -23,6 +24,7 @@ Master Goal V6 принят как главный норматив проект�
 - `4c209069` собран Vercel успешно: deployment `D9WetK9zSgNuom1ytiAUYmmLfsne`.
 - `ef447d8e`: deployment **не создан**; GitHub/Vercel status `failure`, точная причина `Account is blocked` (2026-07-29 04:17 UTC).
 - Чистый candidate `a07327db`: deployment **не создан**; Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 04:30 UTC).
+- `b53daadd`: deployment **не создан**; Vercel снова вернул `failure: Account is blocked` (2026-07-29 04:51 UTC).
 - Immutable preview URL и runtime logs недоступны: Vercel MCP/API/CLI/Browser account scopes не дают доступ к проекту. Поэтому remote browser QA не считается выполненным.
 - Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
@@ -50,6 +52,12 @@ Master Goal V6 принят как главный норматив проект�
 - Copy различает внутреннюю заявку GoArgentina и партнёрский checkout/status/payment/cancellation.
 - Контрактный тест сканирует четыре локали и наиболее рискованные public-copy sources.
 
+### WP-003 — editorial guide critical path
+
+- Editorial-only pillar guides больше не загружают marketplace и не резолвят detail каждой карточки до SSR.
+- Content schema проверяется на реальный `tour-embed`; только такой виджет сохраняет прежний catalog + public-detail validation path.
+- Marketplace modules подключаются динамически только после положительного schema check; operational catalog failures не кешируются как empty.
+
 ## Проверки candidate
 
 - `npm run audit:quick`: TypeScript + ESLint + **428 files / 2 058 tests** + **8 release-evidence tests** — pass.
@@ -61,6 +69,10 @@ Master Goal V6 принят как главный норматив проект�
 - Финальная production перепроверка 2026-07-29 04:24 UTC: health/public/database/partners — 503; tours/excursions по-прежнему возвращают ложный 200 empty на старом SHA `993e82fb`.
 - Clean-candidate verification: lockfile install dry-run + install pass; 46 focused Vitest + 8 Node evidence tests pass; Prisma generate, TypeScript and lint pass (existing warnings only).
 - Clean-candidate protected build at `9a5c40be49146252c54015ecd2b4cdbfde544499`: exit 0, **929/929**, runtime-text audit pass, demo auth markers absent. Production-equivalent smoke with the existing local runtime environment: health 503 degraded with exact SHA and direct PG healthy (`tripsterCount=68`), tours 503 + `Retry-After: 60`, excursions 200 partial with 59 total and platform marked unavailable.
+- WP-003 `audit:quick`: TypeScript + ESLint + **423 files / 1 999 tests** + **8 release-evidence tests** — pass; focused guide/latency suite **20/20** — pass.
+- Protected production build exact `b53daadd`: exit 0, **929/929**, runtime-text audit pass, demo auth markers absent.
+- Cold production-equivalent benchmark: `/guide/bezopasnost` **3.797 s → 0.399 s** (−89%); `/guide/yazyk` **2.545 s → 0.057 s** (−98%). Marketplace error logs appear only for `/guide/pogoda-i-sezonnost`, whose schema contains the sole `tour-embed`.
+- Browser QA exact `b53daadd`, 1440×900 and 390×844: full safety content and FAQ contract rendered, no route error, loader absent, horizontal overflow 0.
 
 ## Открытые P0/P1
 
@@ -72,5 +84,5 @@ Master Goal V6 принят как главный норматив проект�
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
-2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать `ef447d8e`, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
-3. Engineering: после разблокировки preview выполнить полный card/detail/CTA crawl на чистом candidate и подготовить promotion/rollback evidence без production promotion до закрытия P0.
+2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать exact clean candidate, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
+3. Engineering: изолировать optional `tour-embed` от основного SSR погодного гайда, затем выполнить полный card/detail/CTA crawl после восстановления preview.

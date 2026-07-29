@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 01:31 ART**. WP-001/WP-002 перенесены на чистую ancestry от `origin/main`; Vercel отклонил exact clean SHA с `Account is blocked`. Supabase P0 и live migration evidence по-прежнему выше promotion.
+Обновлён: **2026-07-29 01:58 ART**. WP-003 удалил недостоверную catalog-зависимость из critical path editorial guides. Погодный guide с реальным optional `tour-embed` остаётся следующим независимым performance/reliability пакетом.
 
 ## Правило выбора пакета
 
@@ -20,7 +20,8 @@
 | 7 | Production promote and post-deploy proof | P0/P1 | same artifact ID/SHA, health, rollback, catalog/detail parity | forbidden until orders 0–2 close |
 | 8 | Analytics/consent/conversion proof | P1 | healthy SHA-bound report + clean-browser consent matrix | code binding improved; production proof pending healthy deployment |
 | 9 | Route/interaction/data inventory regeneration | P1/P2 | current owners, states, coverage and evidence links | pending |
-| 10 | Profile `/guide/bezopasnost` cold SSR | P2 | server timing decomposition and safe latency reduction | newly observed 7.9–8.6 s; functional render succeeds |
+| 10 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
+| 11 | Stream/fail-soft optional guide `tour-embed` | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | pending; weather guide still waits 2.5 s and logs RSC deadline during catalog outage |
 
 ## Выполненные безопасные пакеты
 
@@ -32,9 +33,13 @@ Typed result boundaries preserve `unavailable` instead of collapsing failures to
 
 Global and high-risk route copy now derives from proven current behavior: GoArgentina may accept an internal request or hand off to a partner, and the card/seller owns the applicable payment/cancellation rules. Unsupported blanket promises were removed across RU/EN/ES/PT and protected with source/locale tests.
 
+### WP-003 — editorial guide critical path
+
+Guide pillar SSR now loads marketplace data only when the content schema actually renders a configured `tour-embed`. Static editorial pages no longer trigger full catalog aggregation and N detail resolutions; the tour widget retains strict detail validation.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
 - Candidate promotion remains below Vercel account recovery: exact clean SHA `a07327db` was rejected and a locally proven SHA without a deploy ID is not a remote preview.
-- Safety guide latency is recorded as P2, not allowed to displace the production data-plane P0 without profiling evidence.
+- Safety guide latency is resolved in the clean candidate; the remaining optional weather tour widget is separated as its own bounded packet.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
