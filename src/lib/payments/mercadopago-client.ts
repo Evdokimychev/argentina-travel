@@ -409,6 +409,69 @@ export type MercadoPagoRefundResult = {
   status: string;
 };
 
+export type MercadoPagoRefundDetails = MercadoPagoRefundResult & {
+  paymentId: string;
+  amount: number;
+  dateCreated?: string;
+};
+
+function parseMercadoPagoRefund(value: unknown, fallbackPaymentId: string): MercadoPagoRefundDetails | null {
+  const payload = asRecord(value);
+  if (!payload) return null;
+  const refundId =
+    typeof payload.id === "number"
+      ? String(payload.id)
+      : typeof payload.id === "string"
+        ? payload.id.trim()
+        : "";
+  if (!refundId || typeof payload.amount !== "number" || !Number.isFinite(payload.amount)) return null;
+  const paymentId =
+    typeof payload.payment_id === "number"
+      ? String(payload.payment_id)
+      : typeof payload.payment_id === "string"
+        ? payload.payment_id.trim()
+        : fallbackPaymentId;
+  return {
+    refundId,
+    paymentId,
+    amount: payload.amount,
+    status: typeof payload.status === "string" ? payload.status.trim() : "pending",
+    dateCreated: typeof payload.date_created === "string" ? payload.date_created.trim() : undefined,
+  };
+}
+
+/** Read-only lookup used by finance reconciliation. Never creates or retries a refund. */
+export async function fetchMercadoPagoRefunds(input: {
+  paymentId: string;
+  accessToken: string;
+}): Promise<MercadoPagoRefundDetails[]> {
+  const paymentId = input.paymentId.trim();
+  const accessToken = input.accessToken.trim();
+  if (!paymentId) throw new Error("Missing Mercado Pago payment id.");
+  if (!accessToken) throw new Error("Mercado Pago access token is missing.");
+
+  const { controller, timeout } = createTimeoutController();
+  const response = await fetch(
+    `${MERCADOPAGO_API_BASE}/v1/payments/${encodeURIComponent(paymentId)}/refunds`,
+    {
+      method: "GET",
+      headers: buildAuthHeaders(accessToken),
+      signal: controller.signal,
+      cache: "no-store",
+    }
+  ).finally(() => clearTimeout(timeout));
+
+  const payload = (await response.json().catch(() => null)) as unknown;
+  if (!response.ok || payload === null) {
+    throw new Error("Failed to fetch Mercado Pago refunds.");
+  }
+  const rows = Array.isArray(payload) ? payload : [payload];
+  return rows.flatMap((row) => {
+    const parsed = parseMercadoPagoRefund(row, paymentId);
+    return parsed ? [parsed] : [];
+  });
+}
+
 /** Real MP refund — only when MERCADOPAGO_ACCESS_TOKEN and MERCADOPAGO_REFUNDS_ENABLED=true. */
 export async function createMercadoPagoRefund(input: {
   paymentId: string;

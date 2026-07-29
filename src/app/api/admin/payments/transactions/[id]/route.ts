@@ -15,6 +15,7 @@ import {
   fetchPaymentTransactionById,
   mapTransactionToReceiptView,
 } from "@/lib/payments/transaction-server";
+import { inspectRefundReconciliation } from "@/lib/payments/refund-reconciliation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function GET(
@@ -35,9 +36,18 @@ export async function GET(
 
   const receipt = mapTransactionToReceiptView(transaction);
   let livePayment: Record<string, unknown> | null = null;
+  let refundReconciliation = null;
+
+  if (includeLive && transaction.type === "refund") {
+    const sourceCharge = transaction.sourceTransactionId
+      ? await fetchPaymentTransactionById(supabase, transaction.sourceTransactionId)
+      : null;
+    refundReconciliation = await inspectRefundReconciliation(transaction, sourceCharge);
+  }
 
   if (
     includeLive &&
+    transaction.type === "charge" &&
     transaction.provider === "mercadopago" &&
     transaction.externalId &&
     isMercadoPagoConfigured()
@@ -71,6 +81,7 @@ export async function GET(
 
   if (
     includeLive &&
+    transaction.type === "charge" &&
     transaction.provider === "stripe" &&
     transaction.externalId &&
     isStripeConfigured()
@@ -132,5 +143,5 @@ export async function GET(
     }
   }
 
-  return NextResponse.json({ transaction, receipt, livePayment });
+  return NextResponse.json({ transaction, receipt, livePayment, refundReconciliation });
 }

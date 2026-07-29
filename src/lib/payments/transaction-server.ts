@@ -868,6 +868,7 @@ export async function executeRefundAttempt(
         amount: claimed.amount,
         reason: "requested_by_customer",
         idempotencyKey: refundIdempotencyKey,
+        metadata: { goargentinaRefundId: claimed.id },
       });
       const status = mapStripeRefundStatus(stripeRefund.status);
       const updated = await updateRefundAfterAttempt(supabase, claimed, {

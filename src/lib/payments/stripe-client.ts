@@ -75,9 +75,11 @@ export interface StripeRefundDetails {
   status: string;
   amount: number;
   currency: string;
+  metadata: JsonRecord;
   paymentIntentId?: string;
   chargeId?: string;
   reason?: string;
+  created?: number;
 }
 
 export function isStripeConfigured(): boolean {
@@ -488,6 +490,7 @@ export async function createStripeRefund(input: {
   amount?: number;
   reason?: "requested_by_customer" | "duplicate" | "fraudulent";
   idempotencyKey: string;
+  metadata?: Record<string, string>;
 }): Promise<StripeRefundDetails> {
   const secretKey = input.secretKey.trim();
   if (!secretKey) throw new Error("Stripe secret key is missing.");
@@ -508,6 +511,12 @@ export async function createStripeRefund(input: {
     appendFormField(params, "amount", majorToCents(input.amount));
   }
   if (input.reason) appendFormField(params, "reason", input.reason);
+  for (const [key, value] of Object.entries(input.metadata ?? {})) {
+    const normalizedKey = key.trim();
+    if (normalizedKey && value.trim()) {
+      appendFormField(params, `metadata[${normalizedKey}]`, value.trim());
+    }
+  }
 
   const { controller, timeout } = createTimeoutController();
   const response = await fetch(`${STRIPE_API_BASE}/refunds`, {
@@ -545,10 +554,64 @@ export async function createStripeRefund(input: {
     amount: typeof payload.amount === "number" ? centsToMajor(payload.amount) : 0,
     currency:
       typeof payload.currency === "string" ? payload.currency.trim().toUpperCase() : "USD",
+    metadata: asRecord(payload.metadata) ?? {},
     paymentIntentId: paymentIntentFromPayload || paymentIntentId,
     chargeId: chargeFromPayload || chargeId,
     reason: typeof payload.reason === "string" ? payload.reason.trim() : undefined,
+    created: typeof payload.created === "number" ? payload.created : undefined,
   };
+}
+
+/** Read-only lookup used by finance reconciliation. Never creates or retries a refund. */
+export async function listStripeRefundsForPayment(input: {
+  secretKey: string;
+  paymentIntentId?: string;
+  chargeId?: string;
+}): Promise<StripeRefundDetails[]> {
+  const secretKey = input.secretKey.trim();
+  if (!secretKey) throw new Error("Stripe secret key is missing.");
+
+  const paymentIntentId = input.paymentIntentId?.trim();
+  const chargeId = input.chargeId?.trim();
+  if (!paymentIntentId && !chargeId) {
+    throw new Error("Missing Stripe charge or payment intent id.");
+  }
+
+  const params = new URLSearchParams({ limit: "100" });
+  if (paymentIntentId) params.set("payment_intent", paymentIntentId);
+  if (chargeId) params.set("charge", chargeId);
+
+  const { controller, timeout } = createTimeoutController();
+  const response = await fetch(`${STRIPE_API_BASE}/refunds?${params.toString()}`, {
+    method: "GET",
+    headers: buildAuthHeaders(secretKey),
+    signal: controller.signal,
+    cache: "no-store",
+  }).finally(() => clearTimeout(timeout));
+
+  const payload = (await response.json().catch(() => null)) as JsonRecord | null;
+  if (!response.ok || !payload || !Array.isArray(payload.data)) {
+    throw new Error("Failed to fetch Stripe refunds.");
+  }
+
+  return payload.data.flatMap((raw): StripeRefundDetails[] => {
+    const row = asRecord(raw);
+    const id = typeof row?.id === "string" ? row.id.trim() : "";
+    const status = typeof row?.status === "string" ? row.status.trim() : "";
+    if (!row || !id || !status || typeof row.amount !== "number") return [];
+    return [{
+      id,
+      status,
+      amount: centsToMajor(row.amount),
+      currency: typeof row.currency === "string" ? row.currency.trim().toUpperCase() : "USD",
+      metadata: asRecord(row.metadata) ?? {},
+      paymentIntentId:
+        typeof row.payment_intent === "string" ? row.payment_intent.trim() : paymentIntentId,
+      chargeId: typeof row.charge === "string" ? row.charge.trim() : chargeId,
+      reason: typeof row.reason === "string" ? row.reason.trim() : undefined,
+      created: typeof row.created === "number" ? row.created : undefined,
+    }];
+  });
 }
 
 export async function fetchCheckoutSession(input: {

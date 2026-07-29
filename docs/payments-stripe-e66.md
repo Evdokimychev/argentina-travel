@@ -52,7 +52,9 @@
 ## UI
 
 - **BookingPaymentLinkView** — выбор Mercado Pago / Stripe, если оба провайдера доступны на клиенте (`NEXT_PUBLIC_*`).
-- **AdminPaymentLedgerView** — drawer с live-данными Stripe (PaymentIntent или Charge).
+- **AdminPaymentLedgerView** — drawer с live-данными Stripe. Для списания это
+  PaymentIntent/Charge; для зависшего возврата — read-only список Refund objects
+  исходного списания с явной exact/ambiguous классификацией.
 - **BookingPaymentResultView** — без изменений; polling статуса через существующий API.
 
 ## Журнал транзакций
@@ -88,6 +90,6 @@
 
 ## Будущие задачи
 
-- Возвраты через Stripe Refunds API (аналог `MERCADOPAGO_REFUNDS_ENABLED`)
+- Recovery зависшего `processing` после подтверждения migration parity и добавления атомарной lease/CAS
 - Manual capture + отложенное списание
 - Connect / split для выплат организаторам

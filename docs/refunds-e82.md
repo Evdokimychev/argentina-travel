@@ -44,6 +44,28 @@
 возврата. При неопределённом сетевом результате запись остаётся `processing` для
 сверки — система не повторяет списание вслепую.
 
+### Read-only сверка `processing`
+
+`GET /api/admin/payments/transactions/[id]?live=1` для refund-строки читает
+список возвратов именно исходного provider payment, а не использует refund ID
+как PaymentIntent/payment ID. Результат классифицируется как `exact_match`,
+`candidate`, `ambiguous`, `not_found` или `unavailable` и всегда возвращает
+`safeToMutate: false`.
+
+- Stripe lookup использует `GET /v1/refunds?payment_intent=…` или `charge=…`.
+  Новые refund POST записывают `metadata[goargentinaRefundId]`, поэтому после
+  потери ответа возможна точная read-only корреляция с локальной транзакцией.
+- Mercado Pago lookup использует `GET /v1/payments/{id}/refunds`. Endpoint
+  создания возврата не принимает отдельную metadata локальной операции, поэтому
+  совпадение только по сумме остаётся неподтверждённым кандидатом.
+- Известный `external_id` или Stripe metadata могут дать точное совпадение, но
+  даже оно не разрешает finalize без атомарного recovery lease/CAS.
+- Пустой provider list не доказывает, что предыдущий запрос не выполняется, и не
+  разрешает повторный POST.
+
+Автоматическое восстановление остаётся закрытым: до него нужно подтвердить live
+migration journal, добавить lease token/expiry и обязать finalize проверять токен.
+
 ## Настройка провайдеров
 
 - Stripe: `STRIPE_SECRET_KEY`.
@@ -62,3 +84,6 @@
 - поля атомарного захвата и отдельных исполнителей;
 - транзакционные RPC с доступом только для `service_role`;
 - записи `admin_audit_log` в той же транзакции, что и финансовое изменение.
+
+WP-015A не меняет схему и не вызывает provider mutation: это операторская
+диагностика и подготовка устойчивой корреляции для будущего recovery.

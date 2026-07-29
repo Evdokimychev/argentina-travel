@@ -80,6 +80,31 @@ export type PaymentTransactionRow = {
   contactEmail?: string;
 };
 
+export type RefundReconciliationCandidate = {
+  providerRefundId: string;
+  status: string;
+  amount: number;
+  currency: string | null;
+  createdAt: string | null;
+  correlation: "external_id" | "provider_metadata" | "amount_only";
+};
+
+export type RefundReconciliationView = {
+  classification:
+    | "exact_match"
+    | "candidate"
+    | "ambiguous"
+    | "not_found"
+    | "unavailable"
+    | "not_applicable";
+  provider: PaymentProviderId;
+  sourcePaymentId: string | null;
+  safeToMutate: false;
+  message: string;
+  requiredNextStep: string;
+  candidates: RefundReconciliationCandidate[];
+};
+
 export type PayoutRecordRow = {
   id: string;
   organizerUserId: string;

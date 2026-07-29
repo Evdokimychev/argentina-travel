@@ -30,6 +30,7 @@ import {
   type PaymentTransactionRow,
   type PaymentTransactionStatus,
   type PaymentTransactionType,
+  type RefundReconciliationView,
 } from "@/types/payment-platform";
 import type { PaymentProviderId } from "@/types/payment-webhook";
 import type { AdminPaymentPeriodFilter } from "@/types/admin-payments";
@@ -43,6 +44,7 @@ type TransactionDetailResponse = {
   transaction?: PaymentTransactionRow;
   receipt?: PaymentTransactionReceiptView;
   livePayment?: Record<string, unknown> | null;
+  refundReconciliation?: RefundReconciliationView | null;
   error?: string;
 };
 
@@ -64,6 +66,18 @@ const STATUS_FILTER_LABELS: Record<PaymentTransactionStatus | "all", string> = {
 const PROVIDER_FILTER_LABELS: Record<PaymentProviderId | "all", string> = {
   all: "Все провайдеры",
   ...PAYMENT_PROVIDER_LABELS,
+};
+
+const REFUND_RECONCILIATION_LABELS: Record<
+  RefundReconciliationView["classification"],
+  string
+> = {
+  exact_match: "Точное совпадение",
+  candidate: "Неподтверждённый кандидат",
+  ambiguous: "Несколько кандидатов",
+  not_found: "Не найдено",
+  unavailable: "Проверка недоступна",
+  not_applicable: "Не требуется",
 };
 
 function formatCapturePhaseLabel(value: unknown): string {
@@ -550,6 +564,48 @@ export function AdminPaymentLedgerPanel() {
                       </div>
                     </dl>
                   )}
+                </div>
+              ) : null}
+
+              {detail?.refundReconciliation ? (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <p className="text-xs font-medium uppercase tracking-wide text-amber-800">
+                    Сверка возврата без изменений
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-charcoal">
+                    {detail.refundReconciliation.message}
+                  </p>
+                  <p className="mt-1 text-sm text-slate">
+                    {detail.refundReconciliation.requiredNextStep}
+                  </p>
+                  <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-slate">Результат</dt>
+                      <dd className="font-medium text-charcoal">
+                        {REFUND_RECONCILIATION_LABELS[detail.refundReconciliation.classification]}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate">Найдено у провайдера</dt>
+                      <dd className="font-medium text-charcoal">
+                        {detail.refundReconciliation.candidates.length}
+                      </dd>
+                    </div>
+                  </dl>
+                  {detail.refundReconciliation.candidates.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-xs text-slate">
+                      {detail.refundReconciliation.candidates.map((candidate) => (
+                        <li key={candidate.providerRefundId} className="rounded-lg bg-white/70 p-2">
+                          <span className="font-mono text-charcoal">{candidate.providerRefundId}</span>
+                          {" · "}{candidate.status}{" · "}
+                          {formatTransactionAmount(
+                            candidate.amount,
+                            candidate.currency ?? selected.currency,
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               ) : null}
 
