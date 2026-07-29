@@ -50,6 +50,19 @@
       "gap": "Route/provider orchestration, safe failures and cross-provider concurrency are tested with fakes; no browser redirect, live webhook, or live persistence evidence while Supabase is down."
     },
     {
+      "id": "booking.payment.status", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],
+      "ui": {"source": "src/components/booking/BookingPaymentLinkView.tsx", "anchor": "apiFetchPaymentLinkStatus(token)"},
+      "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "GET", "endpoint": "/api/bookings/payment-link/[token]"},
+      "request": {"method": "GET", "endpoint": "/api/bookings/payment-link/[token]"},
+      "handler": {"source": "src/app/api/bookings/payment-link/[token]/route.ts", "export": "GET"},
+      "effects": ["bounded checkout projection", "latest charge receipt lookup for paid or partial bookings"],
+      "guards": ["remote booking capability", "payment-link capability token"],
+      "invariants": ["public response excludes travelers passports CRM notes phone owner identity and private metadata", "storage failures expose only public-safe errors", "unknown tokens never query payment receipts"],
+      "evidence": [{"type": "route_integration", "source": "src/app/api/bookings/payment-link/[token]/route.test.ts", "test": "returns only the bounded checkout projection for a valid capability token"}],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Capability projection and safe failure behavior are route-tested; live persistence and receipt lookup remain unavailable while Supabase is down."
+    },
+    {
       "id": "booking.refund.request", "risk": "P0", "actors": ["tourist", "organizer"], "modes": ["remote"],
       "ui": {"source": "src/components/booking/BookingRefundRequestSection.tsx", "anchor": "async function handleSubmit"},
       "interactionMatch": {"source": "src/components/booking/BookingRefundRequestSection.tsx", "method": "POST", "endpoint": "dynamic"},

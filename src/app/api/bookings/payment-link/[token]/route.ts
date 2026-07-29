@@ -5,26 +5,27 @@ import { isBookingPaymentLinkExpired } from "@/lib/booking-payment-link";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchLatestChargeReceiptForBooking } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { publicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(
   _request: Request,
   context: { params: Promise<{ token: string }> }
 ) {
   if (!isSupabaseBookingsEnabled()) {
-    return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
+    return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
   }
 
   const { token } = await context.params;
   const normalizedToken = token?.trim();
   if (!normalizedToken) {
-    return NextResponse.json({ error: "Invalid payment link token" }, { status: 400 });
+    return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
   }
 
   try {
     const supabase = createSupabaseAdminClient();
     const booking = await fetchBookingByPaymentLinkToken(supabase, normalizedToken);
     if (!booking?.paymentLink) {
-      return NextResponse.json({ error: "Payment link not found" }, { status: 404 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_UNAVAILABLE"), { status: 404 });
     }
 
     const link = booking.paymentLink;
@@ -45,17 +46,18 @@ export async function GET(
       expired,
       paidAt: link.paidAt ?? receipt?.paidAt ?? null,
       receipt,
-      booking,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unexpected error while loading payment link status",
+      booking: {
+        id: booking.id,
+        tourTitle: booking.tourTitle,
+        contactName: booking.contactName,
+        contactEmail: booking.contactEmail,
+        paymentLink: link,
+        metadata: booking.metadata?.checkoutCurrency
+          ? { checkoutCurrency: booking.metadata.checkoutCurrency }
+          : undefined,
       },
-      { status: 500 }
-    );
+    });
+  } catch {
+    return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
   }
 }

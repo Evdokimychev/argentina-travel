@@ -17,6 +17,7 @@ import {
   apiCreateBookingStripeSession,
   apiFetchPaymentLinkStatus,
   isRemoteBookingsMode,
+  type PaymentLinkBookingView,
 } from "@/lib/bookings-api";
 import {
   PAYMENT_GATEWAY_LABELS,
@@ -28,7 +29,6 @@ import {
   getBookingByPaymentLinkToken,
   markBookingPaymentLinkOpened,
 } from "@/lib/bookings-store";
-import type { Booking } from "@/types/tourist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { Button } from "@/components/ui/button";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
@@ -46,7 +46,7 @@ const PAYMENT_UNAVAILABLE_ERROR =
   "Сейчас не удалось открыть оплату. Попробуйте ещё раз или обратитесь в поддержку.";
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
-  const [booking, setBooking] = useState<Booking | null>(null);
+  const [booking, setBooking] = useState<PaymentLinkBookingView | null>(null);
   const [loadingBooking, setLoadingBooking] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [checkoutError, setCheckoutErrorState] = useState<SiteFeedbackMessage | null>(null);

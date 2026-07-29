@@ -151,6 +151,13 @@ export async function apiGenerateBookingPaymentLink(input: {
   );
 }
 
+export type PaymentLinkBookingView = Pick<
+  Booking,
+  "id" | "tourTitle" | "contactName" | "contactEmail" | "paymentLink"
+> & {
+  metadata?: Pick<NonNullable<Booking["metadata"]>, "checkoutCurrency">;
+};
+
 export type PaymentLinkStatusResponse = {
   bookingId: string;
   tourTitle: string;
@@ -161,13 +168,16 @@ export type PaymentLinkStatusResponse = {
   expired: boolean;
   paidAt: string | null;
   receipt: PaymentTransactionReceiptView | null;
-  /** Полная заявка для страницы оплаты по ссылке (remote mode). */
-  booking?: Booking;
+  /** Минимальная проекция заявки для публичной страницы оплаты по capability-token. */
+  booking?: PaymentLinkBookingView;
 };
 
 export async function apiFetchPaymentLinkStatus(token: string): Promise<PaymentLinkStatusResponse> {
   return parseJson<PaymentLinkStatusResponse>(
-    await fetch(`/api/bookings/payment-link/${encodeURIComponent(token)}`, { cache: "no-store" })
+    await fetch(`/api/bookings/payment-link/${encodeURIComponent(token)}`, {
+      method: "GET",
+      cache: "no-store",
+    })
   );
 }
 
