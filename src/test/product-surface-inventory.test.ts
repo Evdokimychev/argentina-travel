@@ -6,6 +6,7 @@ import {
   exportedHttpMethods,
   interactionsFromSource,
   routePatternFromAppFile,
+  staticExpressionPattern,
   toCsv,
 } from "../../scripts/generate-product-surface-inventory";
 
@@ -48,6 +49,16 @@ describe("product surface inventory", () => {
         test_evidence: "source_only",
       },
     ]);
+  });
+
+  it("normalizes template URL parameters without executing expressions", () => {
+    const fixture = source("fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment`)");
+    const statement = fixture.statements[0] as ts.ExpressionStatement;
+    const call = statement.expression as ts.CallExpression;
+
+    expect(staticExpressionPattern(call.arguments[0], fixture)).toBe(
+      "/api/bookings/[bookingId]/payment",
+    );
   });
 
   it("emits stable RFC4180-style quoted CSV", () => {

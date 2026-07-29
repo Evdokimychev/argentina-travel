@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "journeys": [
+    {
+      "id": "booking.create", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],
+      "ui": {"source": "src/components/tour-detail/checkout/TourCheckoutModal.tsx", "anchor": "createBookingFromCheckout({"},
+      "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "POST", "endpoint": "/api/bookings"},
+      "request": {"method": "POST", "endpoint": "/api/bookings"},
+      "handler": {"source": "src/app/api/bookings/route.ts", "export": "POST"},
+      "effects": ["canonical booking persistence", "availability slot reservation", "booking-created notification enqueue"],
+      "guards": ["remote booking capability", "guest form protection", "IP rate limit", "server-side product availability"],
+      "invariants": ["client-owned commercial fields are dropped", "price and organizer identity are canonical server values", "booking and slot reservation use the atomic server command"],
+      "evidence": [
+        {"type": "unit_contract", "source": "src/lib/booking-create-command-integrity.test.ts", "test": "drops client-owned price, organizer, commission and payment fields"},
+        {"type": "unit_contract", "source": "src/lib/booking-create-pricing.test.ts", "test": "uses canonical prices for the complete total"}
+      ],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No route integration or live persistence evidence while Supabase health is down."
+    },
+    {
+      "id": "booking.payment.mercadopago", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],
+      "ui": {"source": "src/components/booking/BookingPaymentLinkView.tsx", "anchor": "apiCreateBookingPaymentPreference({"},
+      "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "POST", "endpoint": "/api/bookings/[bookingId]/payment/preference"},
+      "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/preference"},
+      "handler": {"source": "src/app/api/bookings/[id]/payment/preference/route.ts", "export": "POST"},
+      "effects": ["Mercado Pago preference creation", "checkout URL persistence on booking payment link"],
+      "guards": ["remote booking capability", "provider configuration", "booking payment status", "payment-link token and expiry"],
+      "invariants": ["provider idempotency key uses durable payment identity", "an existing preference is reused", "cancelled completed or paid links cannot create checkout"],
+      "evidence": [{"type": "unit_contract", "source": "src/lib/payments/payment-integrity.test.ts", "test": "reuses one provider idempotency key for the same payment link"}],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No route/provider integration, browser redirect, webhook, or live persistence evidence."
+    },
+    {
+      "id": "booking.payment.stripe", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],
+      "ui": {"source": "src/components/booking/BookingPaymentLinkView.tsx", "anchor": "apiCreateBookingStripeSession({"},
+      "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "POST", "endpoint": "/api/bookings/[bookingId]/payment/stripe/session"},
+      "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/stripe/session"},
+      "handler": {"source": "src/app/api/bookings/[id]/payment/stripe/session/route.ts", "export": "POST"},
+      "effects": ["Stripe checkout session creation", "checkout URL persistence on booking payment link"],
+      "guards": ["remote booking capability", "provider configuration", "booking payment status", "payment-link token and expiry"],
+      "invariants": ["provider idempotency key uses durable payment identity", "an existing Stripe session is reused", "cancelled completed or paid links cannot create checkout"],
+      "evidence": [{"type": "unit_contract", "source": "src/lib/payments/payment-integrity.test.ts", "test": "reuses one provider idempotency key for the same payment link"}],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No route/provider integration, browser redirect, webhook, or live persistence evidence."
+    },
+    {
+      "id": "booking.refund.request", "risk": "P0", "actors": ["tourist", "organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/booking/BookingRefundRequestSection.tsx", "anchor": "async function handleSubmit"},
+      "interactionMatch": {"source": "src/components/booking/BookingRefundRequestSection.tsx", "method": "POST", "endpoint": "dynamic"},
+      "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/refund"},
+      "handler": {"source": "src/app/api/bookings/[id]/payment/refund/route.ts", "export": "POST"},
+      "effects": ["atomic refund reservation transaction", "refund lifecycle record creation"],
+      "guards": ["authenticated booking owner or organizer", "paid or partial payment state", "UUID operation identity", "full paid amount only"],
+      "invariants": ["cumulative refunds cannot exceed captured funds", "replayed operation identity does not create another reservation", "request does not call the payment provider"],
+      "evidence": [
+        {"type": "unit_contract", "source": "src/lib/payments/finance-atomic-controls.test.ts", "test": "serializes concurrent refund reservations and enforces cumulative caps"},
+        {"type": "unit_contract", "source": "src/lib/payments/payment-idempotency.test.ts", "test": "returns the same key for the same durable operation identity"}
+      ],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No authenticated route integration, concurrent database, or live RLS evidence."
+    },
+    {
+      "id": "admin.refund.prepare", "risk": "P0", "actors": ["admin"], "modes": ["remote"],
+      "ui": {"source": "src/components/admin/views/AdminPaymentLedgerView.tsx", "anchor": "fetch(\"/api/admin/payments/refund\""},
+      "interactionMatch": {"source": "src/components/admin/views/AdminPaymentLedgerView.tsx", "method": "POST", "endpoint": "/api/admin/payments/refund"},
+      "request": {"method": "POST", "endpoint": "/api/admin/payments/refund"},
+      "handler": {"source": "src/app/api/admin/payments/refund/route.ts", "export": "POST"},
+      "effects": ["atomic refund reservation transaction", "approval-required lifecycle record"],
+      "guards": ["finance.refunds.prepare capability", "personal admin session", "UUID operation identity", "paid or partial booking state"],
+      "invariants": ["preparation never calls a payment provider", "refund execution requires a separate approver", "cumulative refunds cannot exceed captured funds"],
+      "evidence": [
+        {"type": "unit_contract", "source": "src/lib/payments/finance-atomic-controls.test.ts", "test": "never calls a payment provider while preparing a refund"},
+        {"type": "unit_contract", "source": "src/lib/payments/finance-atomic-controls.test.ts", "test": "enforces four-eyes approval and keeps lifecycle actors separate"}
+      ],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No route authorization, database transaction, approval, or provider-execution integration evidence."
+    },
+    {
+      "id": "admin.payout.create", "risk": "P1", "actors": ["admin", "organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/admin/views/AdminPayoutsView.tsx", "anchor": "fetch(\"/api/admin/payments/payouts\""},
+      "interactionMatch": {"source": "src/components/admin/views/AdminPayoutsView.tsx", "method": "POST", "endpoint": "/api/admin/payments/payouts"},
+      "request": {"method": "POST", "endpoint": "/api/admin/payments/payouts"},
+      "handler": {"source": "src/app/api/admin/payments/payouts/route.ts", "export": "POST"},
+      "effects": ["atomic payout snapshot claim", "payout lifecycle record creation"],
+      "guards": ["action-specific finance capability", "personal admin session", "explicit organizer and currency"],
+      "invariants": ["one earning snapshot can be claimed once", "currencies are never mixed", "approval and completion remain separate actions"],
+      "evidence": [
+        {"type": "unit_contract", "source": "src/lib/payments/finance-atomic-controls.test.ts", "test": "claims payout snapshots once and never mixes currencies"},
+        {"type": "unit_contract", "source": "src/lib/payments/payout-server.test.ts", "test": "passes actor and one explicit currency to the transactional claim"}
+      ],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No admin route, live transaction, organizer balance, approval, or completion integration evidence."
+    },
+    {
+      "id": "shop.order.create", "risk": "P1", "actors": ["tourist", "guest"], "modes": ["remote"],
+      "ui": {"source": "src/components/shop/ShopCheckoutModal.tsx", "anchor": "apiCreateShopOrder({"},
+      "interactionMatch": {"source": "src/lib/shop-order-api.ts", "method": "POST", "endpoint": "/api/shop/orders"},
+      "request": {"method": "POST", "endpoint": "/api/shop/orders"},
+      "handler": {"source": "src/app/api/shop/orders/route.ts", "export": "POST"},
+      "effects": ["shop order persistence", "order-created notification enqueue"],
+      "guards": ["remote shop capability", "guest form protection", "IP rate limit", "stable Idempotency-Key"],
+      "invariants": ["client cannot insert shop orders directly through Data API", "browser retries reuse one operation key", "service role performs the write"],
+      "evidence": [
+        {"type": "unit_contract", "source": "src/lib/shop-order-security.test.ts", "test": "requires a stable idempotency key, rate limits creation and uses service role"},
+        {"type": "unit_contract", "source": "src/lib/shop-order-security.test.ts", "test": "revokes direct Data API inserts"},
+        {"type": "unit_contract", "source": "src/lib/shop-order-security.test.ts", "test": "reuses one browser operation key across retry attempts"}
+      ],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "No route, live persistence, RLS, retry, or notification delivery integration evidence."
+    },
+    {
+      "id": "profile.privacy.export", "risk": "P1", "actors": ["tourist", "organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/settings/PrivacySettingsSection.tsx", "anchor": "fetch(\"/api/privacy/export\""},
+      "interactionMatch": {"source": "src/components/settings/PrivacySettingsSection.tsx", "method": "POST", "endpoint": "/api/privacy/export"},
+      "request": {"method": "POST", "endpoint": "/api/privacy/export"},
+      "handler": {"source": "src/app/api/privacy/export/route.ts", "export": "POST"},
+      "effects": ["authenticated user data export assembly", "JSON attachment response"],
+      "guards": ["remote auth capability", "authenticated session user"],
+      "invariants": ["export is scoped to the current session user", "response is marked as an attachment"],
+      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
+      "gap": "No unit contract for PII scope and no authenticated route, download, or live data evidence."
+    },
+    {
+      "id": "profile.privacy.delete_request", "risk": "P1", "actors": ["tourist", "organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/settings/PrivacySettingsSection.tsx", "anchor": "fetch(\"/api/privacy/delete-request\""},
+      "interactionMatch": {"source": "src/components/settings/PrivacySettingsSection.tsx", "method": "POST", "endpoint": "/api/privacy/delete-request"},
+      "request": {"method": "POST", "endpoint": "/api/privacy/delete-request"},
+      "handler": {"source": "src/app/api/privacy/delete-request/route.ts", "export": "POST"},
+      "effects": ["privacy deletion request persistence", "pending deletion lifecycle creation"],
+      "guards": ["remote auth capability", "authenticated non-admin user", "no active duplicate request"],
+      "invariants": ["admin accounts cannot self-delete through this route", "one active deletion request is returned as a conflict", "reason length is bounded"],
+      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
+      "gap": "No route contract for authorization, duplicate prevention, state transitions, audit, or live RLS."
+    },
+    {
+      "id": "admin.privacy.transition", "risk": "P1", "actors": ["admin", "tourist", "organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/admin/views/PrivacyRequestsView.tsx", "anchor": "fetch(\"/api/admin/privacy-requests\""},
+      "interactionMatch": {"source": "src/components/admin/views/PrivacyRequestsView.tsx", "method": "PATCH", "endpoint": "/api/admin/privacy-requests"},
+      "request": {"method": "PATCH", "endpoint": "/api/admin/privacy-requests"},
+      "handler": {"source": "src/app/api/admin/privacy-requests/route.ts", "export": "PATCH"},
+      "effects": ["privacy request status transition", "profile soft-delete mark on approval", "admin audit log enqueue"],
+      "guards": ["operations.leads capability", "approve or reject action", "non-final request state"],
+      "invariants": ["completed or rejected requests cannot transition", "approval records actor metadata", "profile is only marked once"],
+      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
+      "gap": "No route contract for capability, transition concurrency, profile mutation, downstream deletion, or durable audit evidence."
+    },
+    {
+      "id": "organizer.application.submit", "risk": "P1", "actors": ["organizer"], "modes": ["remote"],
+      "ui": {"source": "src/components/join/JoinPageView.tsx", "anchor": "fetch(\"/api/organizer-applications\""},
+      "interactionMatch": {"source": "src/components/join/JoinPageView.tsx", "method": "POST", "endpoint": "/api/organizer-applications"},
+      "request": {"method": "POST", "endpoint": "/api/organizer-applications"},
+      "handler": {"source": "src/app/api/organizer-applications/route.ts", "export": "POST"},
+      "effects": ["organizer application persistence", "lead notification enqueue"],
+      "guards": ["organizer signup feature flag", "IP rate limit", "authenticated user", "no pending application or existing organizer role"],
+      "invariants": ["public content is escaped before email rendering", "only one pending application per user", "profile identity is loaded server-side"],
+      "evidence": [{"type": "unit_contract", "source": "src/lib/notifications/operational-email-security.test.ts", "test": "escapes public lead, shop and organizer content before rendering"}],
+      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
+      "gap": "Only notification escaping is linked; route persistence, auth, duplicate, feature, rate-limit, and delivery effects lack integration evidence."
+    }
+  ]
+}

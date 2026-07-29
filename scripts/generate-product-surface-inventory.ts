@@ -8,6 +8,7 @@ const ROOT = process.cwd();
 const APP_ROOT = path.join(ROOT, "src/app");
 const SRC_ROOT = path.join(ROOT, "src");
 const OUTPUT_ROOT = path.join(ROOT, "docs/audit");
+const CRITICAL_MANIFEST_PATH = path.join(OUTPUT_ROOT, "critical-interaction-evidence-manifest.json");
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx"];
 const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
@@ -69,6 +70,50 @@ export type InteractionRecord = {
   confidence: "high" | "medium";
 };
 
+type CriticalManifest = {
+  schemaVersion: 1;
+  journeys: Array<{
+    id: string;
+    risk: "P0" | "P1";
+    actors: string[];
+    modes: string[];
+    ui: { source: string; anchor: string };
+    interactionMatch: { source: string; method: string; endpoint: string };
+    request: { method: string; endpoint: string };
+    handler: { source: string; export: string };
+    effects: string[];
+    guards: string[];
+    invariants: string[];
+    evidence: Array<{ type: "unit_contract" | "route_integration" | "browser" | "remote_preview"; source: string; test: string }>;
+    coverageStatus: "source_only" | "contract_tested" | "integration_tested" | "browser_tested" | "remote_preview";
+    productionStatus: "unknown_db_down";
+    gap: string;
+  }>;
+};
+
+type CriticalEvidenceRecord = {
+  journey_id: string;
+  risk: string;
+  actors: string;
+  modes: string;
+  ui_source: string;
+  ui_anchor: string;
+  client_source: string;
+  http_method: string;
+  endpoint_pattern: string;
+  handler_source: string;
+  handler_export: string;
+  effects: string;
+  guards: string;
+  invariants: string;
+  evidence_layers: string;
+  test_evidence: string;
+  coverage_status: string;
+  production_status: string;
+  gap: string;
+  discovered_interaction_ids: string;
+};
+
 type GeneratedArtifact = { relativePath: string; content: string };
 
 function sha256(value: string): string {
@@ -101,6 +146,35 @@ function scriptKind(filePath: string): ts.ScriptKind {
 function literalText(node: ts.Node | undefined): string | null {
   if (!node) return null;
   if (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
+  return null;
+}
+
+function templatePlaceholder(node: ts.Expression, sourceFile: ts.SourceFile): string {
+  if (ts.isCallExpression(node) && node.arguments.length) {
+    return templatePlaceholder(node.arguments[0]!, sourceFile);
+  }
+  if (ts.isPropertyAccessExpression(node)) return node.name.text;
+  if (ts.isElementAccessExpression(node)) {
+    return literalText(node.argumentExpression) ?? "param";
+  }
+  if (ts.isIdentifier(node)) return node.text;
+  const compact = node.getText(sourceFile).replace(/[^a-zA-Z0-9_]/g, "");
+  return compact.slice(0, 40) || "param";
+}
+
+export function staticExpressionPattern(node: ts.Expression | undefined, sourceFile: ts.SourceFile): string | null {
+  const literal = literalText(node);
+  if (literal !== null) return literal;
+  if (node && ts.isTemplateExpression(node)) {
+    return `${node.head.text}${node.templateSpans
+      .map((span) => `[${templatePlaceholder(span.expression, sourceFile)}]${span.literal.text}`)
+      .join("")}`;
+  }
+  if (node && ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+    const left = staticExpressionPattern(node.left, sourceFile);
+    const right = staticExpressionPattern(node.right, sourceFile);
+    if (left !== null && right !== null) return `${left}${right}`;
+  }
   return null;
 }
 
@@ -478,7 +552,7 @@ export function interactionsFromSource(record: SourceRecord): Omit<InteractionRe
     }
     if (ts.isCallExpression(node)) {
       const expressionText = node.expression.getText(record.sourceFile);
-      const first = literalText(node.arguments[0]) ?? "dynamic";
+      const first = staticExpressionPattern(node.arguments[0], record.sourceFile) ?? "dynamic";
       if (ts.isIdentifier(node.expression) && node.expression.text === "fetch") {
         add(node, "http_request", methodFromFetch(node), first, undefined, first === "dynamic" ? "medium" : "high");
       } else if (/\.(?:push|replace)$/.test(expressionText) && /(?:router|navigation)/i.test(expressionText)) {
@@ -493,6 +567,98 @@ export function interactionsFromSource(record: SourceRecord): Omit<InteractionRe
   };
   visit(record.sourceFile);
   return interactions;
+}
+
+function criticalEvidenceRows(interactions: InteractionRecord[], sources: Map<string, SourceRecord>): CriticalEvidenceRecord[] {
+  if (!fs.existsSync(CRITICAL_MANIFEST_PATH)) {
+    throw new Error(`Missing critical interaction manifest: ${posix(path.relative(ROOT, CRITICAL_MANIFEST_PATH))}`);
+  }
+  const manifest = JSON.parse(fs.readFileSync(CRITICAL_MANIFEST_PATH, "utf8")) as CriticalManifest;
+  if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.journeys)) {
+    throw new Error("Critical interaction manifest must use schemaVersion 1 and a journeys array");
+  }
+  const journeyIds = new Set<string>();
+  return [...manifest.journeys]
+    .sort((left, right) => left.id.localeCompare(right.id))
+    .map((journey) => {
+      if (journeyIds.has(journey.id)) throw new Error(`Duplicate critical journey id: ${journey.id}`);
+      journeyIds.add(journey.id);
+      const uiSource = sources.get(journey.ui.source);
+      const clientSource = sources.get(journey.interactionMatch.source);
+      const handlerSource = sources.get(journey.handler.source);
+      if (!uiSource) throw new Error(`Critical journey ${journey.id} missing UI source ${journey.ui.source}`);
+      if (!clientSource) throw new Error(`Critical journey ${journey.id} missing client source ${journey.interactionMatch.source}`);
+      if (!handlerSource) throw new Error(`Critical journey ${journey.id} missing handler ${journey.handler.source}`);
+      if (!uiSource.text.includes(journey.ui.anchor)) {
+        throw new Error(`Critical journey ${journey.id} missing UI anchor ${journey.ui.anchor}`);
+      }
+      if (!fullDependencyClosure([uiSource.relativePath], sources).has(clientSource.relativePath)) {
+        throw new Error(
+          `Critical journey ${journey.id} UI does not depend on client source ${clientSource.relativePath}`,
+        );
+      }
+      const handlerMethods = exportedHttpMethods(handlerSource.sourceFile);
+      if (!handlerMethods.includes(journey.handler.export)) {
+        throw new Error(`Critical journey ${journey.id} handler does not export ${journey.handler.export}`);
+      }
+      if (
+        journey.request.method !== journey.handler.export ||
+        journey.request.method !== journey.interactionMatch.method
+      ) {
+        throw new Error(`Critical journey ${journey.id} request/handler method mismatch`);
+      }
+      const matches = interactions.filter((interaction) =>
+        interaction.component_file === journey.interactionMatch.source &&
+        interaction.http_method === journey.interactionMatch.method &&
+        interaction.endpoint_pattern === journey.interactionMatch.endpoint,
+      );
+      if (!matches.length) {
+        throw new Error(
+          `Critical journey ${journey.id} has no discovered interaction for ${journey.interactionMatch.method} ${journey.interactionMatch.endpoint}`,
+        );
+      }
+      if (!journey.effects.length || !journey.guards.length || !journey.invariants.length) {
+        throw new Error(`Critical journey ${journey.id} must declare effects, guards and invariants`);
+      }
+      if (journey.coverageStatus === "source_only" && journey.evidence.length) {
+        throw new Error(`Critical journey ${journey.id} cannot be source_only with test evidence`);
+      }
+      if (journey.coverageStatus !== "source_only" && !journey.evidence.length) {
+        throw new Error(`Critical journey ${journey.id} claims coverage without evidence`);
+      }
+      for (const evidence of journey.evidence) {
+        const evidencePath = path.join(ROOT, evidence.source);
+        if (!fs.existsSync(evidencePath)) {
+          throw new Error(`Critical journey ${journey.id} missing evidence file ${evidence.source}`);
+        }
+        const evidenceText = fs.readFileSync(evidencePath, "utf8");
+        if (!evidenceText.includes(evidence.test)) {
+          throw new Error(`Critical journey ${journey.id} missing test title ${evidence.test}`);
+        }
+      }
+      return {
+        journey_id: journey.id,
+        risk: journey.risk,
+        actors: journey.actors.join("|"),
+        modes: journey.modes.join("|"),
+        ui_source: journey.ui.source,
+        ui_anchor: journey.ui.anchor,
+        client_source: journey.interactionMatch.source,
+        http_method: journey.request.method,
+        endpoint_pattern: journey.request.endpoint,
+        handler_source: journey.handler.source,
+        handler_export: journey.handler.export,
+        effects: journey.effects.join("|"),
+        guards: journey.guards.join("|"),
+        invariants: journey.invariants.join("|"),
+        evidence_layers: [...new Set(journey.evidence.map((evidence) => evidence.type))].join("|") || "source_only",
+        test_evidence: journey.evidence.map((evidence) => `${evidence.source}#${evidence.test}`).join("|"),
+        coverage_status: journey.coverageStatus,
+        production_status: journey.productionStatus,
+        gap: journey.gap,
+        discovered_interaction_ids: matches.map((match) => match.id).sort().join("|"),
+      };
+    });
 }
 
 function interactionRows(routes: RouteRecord[], sources: Map<string, SourceRecord>): InteractionRecord[] {
@@ -532,7 +698,12 @@ export function toCsv<T extends Record<string, unknown>>(headers: Array<keyof T 
   return `${headers.map(csvCell).join(",")}\n${rows.map((row) => headers.map((header) => csvCell(row[header])).join(",")).join("\n")}\n`;
 }
 
-function architectureMarkdown(routes: RouteRecord[], matrix: MatrixRecord[], interactions: InteractionRecord[]): string {
+function architectureMarkdown(
+  routes: RouteRecord[],
+  matrix: MatrixRecord[],
+  interactions: InteractionRecord[],
+  criticalEvidence: CriticalEvidenceRecord[],
+): string {
   const routeCounts = Object.fromEntries(["page", "route_handler", "metadata", "middleware"].map((kind) => [kind, routes.filter((route) => route.kind === kind).length]));
   const methodCounts = Object.fromEntries(HTTP_METHODS.map((method) => [
     method,
@@ -541,7 +712,7 @@ function architectureMarkdown(routes: RouteRecord[], matrix: MatrixRecord[], int
   const dataCounts = [...new Set(matrix.flatMap((row) => row.data_source_classes.split("|")).filter((value) => value !== "none_detected"))]
     .sort()
     .map((dataClass) => [dataClass, matrix.filter((row) => row.data_source_classes.split("|").includes(dataClass)).length]);
-  const digest = sha256(JSON.stringify({ routes, matrix, interactions })).slice(0, 16);
+  const digest = sha256(JSON.stringify({ routes, matrix, interactions, criticalEvidence })).slice(0, 16);
   return [
     "# Текущая архитектура продуктовой поверхности",
     "",
@@ -557,6 +728,7 @@ function architectureMarkdown(routes: RouteRecord[], matrix: MatrixRecord[], int
     `- Middleware matchers: **${routeCounts.middleware}**.`,
     `- Статически обнаруженные взаимодействия в достижимом от страниц UI: **${interactions.length}**.`,
     `- Строк route → component/data: **${matrix.length}**.`,
+    `- Критические P0/P1 journey mappings: **${criticalEvidence.length}**; только source evidence: **${criticalEvidence.filter((row) => row.coverage_status === "source_only").length}**.`,
     "",
     "## HTTP-методы route handlers",
     "",
@@ -578,6 +750,7 @@ function architectureMarkdown(routes: RouteRecord[], matrix: MatrixRecord[], int
     "- Генератор не исполняет модули приложения, не обращается к БД, CMS, Vercel или партнёрским API и не читает секреты.",
     "- Матрица данных анализирует файл маршрута, прямые локальные импорты и ещё один локальный уровень (depth 2). Имена `.from()`, `.rpc()` и storage bucket — кандидаты, а не подтверждённая live-схема.",
     "- Interaction inventory строится по AST и графу импортов. Он показывает технические поверхности, но не обещанный бизнес-эффект и не тестовое покрытие.",
+    "- Critical interaction evidence основан на вручную проверенном manifest: каждый слой evidence указан отдельно, а незакрытые route/browser/production gaps не повышаются автоматически.",
     "- Redirects из динамических реестров и control plane не разворачиваются в отдельные route-строки: их runtime-состояние требует отдельного evidence.",
     "",
     "## Артефакты",
@@ -585,6 +758,7 @@ function architectureMarkdown(routes: RouteRecord[], matrix: MatrixRecord[], int
     "- `route-inventory.csv` — App Router и middleware.",
     "- `route-component-data-matrix.csv` — ограниченный статический граф данных.",
     "- `interaction-inventory.csv` — UI-взаимодействия с исходной строкой и confidence.",
+    "- `critical-interaction-evidence.csv` — P0/P1 UI → request → handler → effect → test-layer mappings.",
     "",
   ].join("\n");
 }
@@ -594,6 +768,7 @@ export function generateProductSurfaceArtifacts(): GeneratedArtifact[] {
   const routes = routeRows(sources);
   const matrix = matrixRows(routes, sources);
   const interactions = interactionRows(routes, sources);
+  const criticalEvidence = criticalEvidenceRows(interactions, sources);
   const artifacts: GeneratedArtifact[] = [
     {
       relativePath: "docs/audit/route-inventory.csv",
@@ -608,8 +783,15 @@ export function generateProductSurfaceArtifacts(): GeneratedArtifact[] {
       content: toCsv(Object.keys(interactions[0]!) as Array<keyof InteractionRecord & string>, interactions),
     },
     {
+      relativePath: "docs/audit/critical-interaction-evidence.csv",
+      content: toCsv(
+        Object.keys(criticalEvidence[0]!) as Array<keyof CriticalEvidenceRecord & string>,
+        criticalEvidence,
+      ),
+    },
+    {
       relativePath: "docs/audit/architecture-current.md",
-      content: architectureMarkdown(routes, matrix, interactions),
+      content: architectureMarkdown(routes, matrix, interactions, criticalEvidence),
     },
   ];
   return artifacts;

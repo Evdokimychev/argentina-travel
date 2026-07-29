@@ -3,11 +3,19 @@
 ## Текущий воспроизводимый снимок продукта
 
 Файлы `architecture-current.md`, `route-inventory.csv`,
-`route-component-data-matrix.csv` и `interaction-inventory.csv` генерируются из
-текущего исходного кода командой `npm run inventory:generate`. Проверка
+`route-component-data-matrix.csv`, `interaction-inventory.csv` и
+`critical-interaction-evidence.csv` генерируются из текущего исходного кода
+командой `npm run inventory:generate`. Проверка
 `npm run inventory:check` падает, если снимок устарел. Исторические реестры в
 `docs/release-2026-07/` остаются неизменяемым baseline и не считаются описанием
 текущего репозитория.
+
+Ручной manifest `critical-interaction-evidence-manifest.json` связывает
+критические P0/P1-сценарии с UI, клиентским запросом, route handler, ожидаемыми
+эффектами, защитами, инвариантами и точными тестовыми контрактами. Генератор
+проверяет все ссылки и сохраняет недоказанные integration/browser/production
+пробелы; наличие исходного кода или unit-теста само по себе не считается live
+backend effect.
 
 Статические признаки Supabase, CMS, партнёров, доступа и взаимодействий не
 подменяют live-проверку схемы, RLS, backend effect, браузера или production.

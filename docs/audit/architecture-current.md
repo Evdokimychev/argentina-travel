@@ -2,7 +2,7 @@
 
 > Этот файл сгенерирован из исходного кода. Ручные правки будут перезаписаны командой `npm run inventory:generate`.
 
-Детерминированный digest снимка: `80ac3a65d5030d32`.
+Детерминированный digest снимка: `61da167bb0241da1`.
 
 ## Покрытие
 
@@ -12,6 +12,7 @@
 - Middleware matchers: **1**.
 - Статически обнаруженные взаимодействия в достижимом от страниц UI: **2298**.
 - Строк route → component/data: **470**.
+- Критические P0/P1 journey mappings: **11**; только source evidence: **3**.
 
 ## HTTP-методы route handlers
 
@@ -49,6 +50,7 @@
 - Генератор не исполняет модули приложения, не обращается к БД, CMS, Vercel или партнёрским API и не читает секреты.
 - Матрица данных анализирует файл маршрута, прямые локальные импорты и ещё один локальный уровень (depth 2). Имена `.from()`, `.rpc()` и storage bucket — кандидаты, а не подтверждённая live-схема.
 - Interaction inventory строится по AST и графу импортов. Он показывает технические поверхности, но не обещанный бизнес-эффект и не тестовое покрытие.
+- Critical interaction evidence основан на вручную проверенном manifest: каждый слой evidence указан отдельно, а незакрытые route/browser/production gaps не повышаются автоматически.
 - Redirects из динамических реестров и control plane не разворачиваются в отдельные route-строки: их runtime-состояние требует отдельного evidence.
 
 ## Артефакты
@@ -56,3 +58,4 @@
 - `route-inventory.csv` — App Router и middleware.
 - `route-component-data-matrix.csv` — ограниченный статический граф данных.
 - `interaction-inventory.csv` — UI-взаимодействия с исходной строкой и confidence.
+- `critical-interaction-evidence.csv` — P0/P1 UI → request → handler → effect → test-layer mappings.
