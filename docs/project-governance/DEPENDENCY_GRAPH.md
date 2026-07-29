@@ -9,7 +9,7 @@ flowchart TD
   Next --> Control["CMS site_settings + feature/module control plane"]
   Next --> Resolver["Public catalog/detail resolvers"]
   Resolver --> DetailFanout["Catalog detail fan-out / href-bound offer evidence"]
-  DetailFanout --> DetailGuard["WP-021 bounded concurrency + in-flight dedupe"]
+  DetailFanout --> DetailGuard["WP-021 FIFO resolver limit=3 + in-flight slug dedupe"]
   Next --> Guide["Editorial guide stream"]
   Guide --> Optional["Optional tour embed / Suspense"]
   Optional --> Resolver
@@ -63,7 +63,8 @@ flowchart TD
   PGFingerprint --> Ops
   Resolver --> Partners["Tripster / YouTravel / Sputnik8"]
   DetailFanout --> Partners
-  DetailFanout --> PG
+  DetailGuard --> PGPool["Shared attested partner PG pool max=2 / 8s deadlines"]
+  PGPool --> PG
   Partners --> Affiliate["External checkout / affiliate attribution"]
   CMS --> Storage["Supabase Storage / Reg.ru media"]
   Next --> Ops["Health / cron / jobs / logs / Sentry"]
@@ -92,7 +93,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. Both REST and the verified canonical direct target remain down. Production still runs old `993e82fb`; migration parity, runtime logs, backup effect and same-artifact production proof remain unavailable. Exact parallel browser QA additionally proves unbounded detail fan-out can exhaust partner/direct-PG capacity; WP-021 precedes WP-015B while external gates remain closed.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 exact candidate `d6808a5c` bounds per-instance catalog and direct-PG pressure and passes cold five-worker local QA; its immutable Vercel preview is initially blocked by account state. REST remains quota-restricted and production still runs old `993e82fb`; migration parity, runtime logs, backup effect, distributed capacity and same-artifact production proof remain unavailable.
 
 ## Data ownership boundaries
 

@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 13:17 ART / 2026-07-29 16:17 UTC**
+Последняя проверка: **2026-07-29 14:09 ART / 2026-07-29 17:09 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `ed29b3359668217e45e70e8e907cd68fdeae1a85`; exact evidence/deploy candidate: `ed29b3359668217e45e70e8e907cd68fdeae1a85`; `origin/main` является ancestor.
+- Product implementation SHA: `d6808a5cd546785545149c4c0181345880966d84`; exact evidence/deploy candidate: `d6808a5cd546785545149c4c0181345880966d84`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `ed29b3359668217e45e70e8e907cd68fdeae1a85` (`fix: reject catalog smoke asset false positives`); WP-019 — `a3301ec9`, WP-018 — `8f0dbad2`, WP-017 — `a8efc1e6`.
+- Последний runtime-product SHA: `d6808a5cd546785545149c4c0181345880966d84` (`fix: bound partner catalog detail fan-out`); WP-020 — `ed29b335`, WP-019 — `a3301ec9`, WP-018 — `8f0dbad2`.
 
 ## Production и deployments
 
@@ -46,6 +46,7 @@ Master Goal V6 принят как главный норматив проект�
 - WP-018 exact `8f0dbad2` успешно развернут в 13:32:16 UTC: Vercel deployment `E288FhjDXKUA78YQ3ibN54krLY3z`, GitHub deployment `5658339232`, immutable URL `https://argentina-travel-6i6fqeyg8-go-argentina.vercel.app`. Health связывает полный SHA и выбирает только verified `POSTGRES_URL_NON_POOLING`, `supabase_direct`, port 5432, ref `uooxrypocahomoqzdvzy`; generic `POSTGRES_URL` больше не используется. Подтверждённый target недоступен, поэтому tours/excursions корректно 503.
 - WP-019 exact `a3301ec9` успешно развернут в 15:41:16 UTC: Vercel deployment `E17wLXYUjTNpHJSN6x1AUQs8rf1J`, GitHub deployment `5660442868`, immutable URL `https://argentina-travel-ia1lcek04-go-argentina.vercel.app`. Health связывает полный SHA, выбирает verified canonical `POSTGRES_URL_NON_POOLING` direct:5432/ref `uooxrypocahomoqzdvzy`, но соединение остаётся down; tours/excursions корректно 503. Remote browser: **16 passed, 1 data-dependent skip**; strict и recovery smoke exit 1 на mandatory health.
 - WP-020 exact `ed29b335` успешно развернут в 16:11:01 UTC: Vercel deployment `3hwMwixfCmgr5nx8gWkj26SskbJW`, GitHub deployment `5660918469`, immutable URL `https://argentina-travel-kjjwy06uv-go-argentina.vercel.app`. Health связывает полный SHA; required health и commercial APIs остаются 503/down. Новый parser на HTML `/tours` и `/excursions` возвращает `null`, а не Next asset route; remote browser **16 passed, 1 data-dependent skip**. Strict/recovery smoke exit 1 на mandatory health; promotion не выполнялся.
+- WP-021 exact `d6808a5c` отправлен в 17:03 UTC и немедленно получил GitHub/Vercel `failure: Account is blocked`; deployment ID пока отсутствует. Локальный exact artifact полностью доказан, но immutable remote preview и deployment ID не подменяются локальным результатом.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -54,6 +55,7 @@ Master Goal V6 принят как главный норматив проект�
 - Production recheck 14:42 UTC: `/api/health/public` и `/database` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. Ни WP-017, ни WP-018 не продвигались: preview data plane unhealthy, production same-artifact gate закрыт.
 - Production recheck 15:45 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-019 не продвигался: exact preview fail-closed, но backend health и same-artifact production gate закрыты.
 - Production recheck 16:17 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-020 не продвигался.
+- Production recheck 17:09 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` по-прежнему возвращают ложный 200 empty. WP-021 не продвигался, exact deployment отсутствует.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -206,7 +208,21 @@ Master Goal V6 принят как главный норматив проект�
 - Параллельный exact browser QA дополнительно воспроизвёл P1-GA-017: 5 workers дали partner 429/timeouts и direct-PG `too many clients`/reserved slots. Source trace: оба public-detail filter используют unbounded `Promise.all`, а Tripster/YouTravel PG fallback создаёт отдельный `pg.Client` на каждую detail resolution. Последовательный 1-worker прогон 17/17 подтверждает отсутствие WP-020 UI-регрессии, но не закрывает capacity root cause.
 - DDL, migration execution, secret/env mutation, backup/restore и partner write не выполнялись. Local exact health/browser выполняли только штатные application reads; DB/provider writes не выполнялись. Пакеты доказывают control/read paths, а не live mutation effect.
 
+### WP-021 — bounded catalog detail and partner Postgres pressure
+
+- Root cause подтверждён source trace и прежним exact load: два public-detail filter запускали весь Argentina catalog через неограниченный `Promise.all`; каждая карточка могла последовательно обратиться к platform/YouTravel/Tripster/reviews, а оба direct-PG репозитория создавали отдельный `pg.Client`. Текущие cache boundaries не дедуплицировали overlapping cold requests, partner reads не имели общего deadline, а REST query error местами превращался в `null`/`[]`.
+- Anonymous catalog resolver теперь использует FIFO concurrency=3 и in-flight dedupe по slug. Map очищается после любого settled результата: временная недоступность не становится negative cache; direct calls с access token не входят в shared anonymous path.
+- Tripster/YouTravel fallback используют общий attested `pg.Pool` max=2, idle=10s, connection/query/statement timeout=8s. Configured canonical Supabase transaction mode 6543 сохраняется; приложение не повышает quota и не превращает его скрыто в session mode 5432.
+- Primary REST query error теперь бросается и сохраняет `unavailable`; `missing`/empty допустимы только после успешного чтения. Catalog partner/token/public JSON/HTML/curl reads имеют 8-секундный предел, а YouTravel 429 retry ограничен 1 секундой.
+- Exact local SHA `d6808a5c`: direct PG healthy, REST quota degraded; serial browser **17/17**, cold parallel 5-worker browser **17/17**. В 107 044 байтах parallel server log: `too many clients`=0, reserved slots=0, partner 429=0, timeout=0, pool idle error=0. Strict smoke exit 1 на mandatory health; explicit recovery smoke exit 0 с настоящими `/tours/...yt52537` и `/excursions/...t50900`.
+- DDL/migration/provider/DB write, env/secret mutation и production promotion не выполнялись. Pool/process limiter действует на warm instance, не является distributed global capacity control; remote exact preview и healthy production load proof остаются обязательными.
+
 ## Проверки candidate
+
+- WP-021 focused concurrency/pool/truth/deadline suite: **6 files / 24 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **443 files / 2 105 tests** + **31/31 release-evidence contracts** — pass. `npm audit --omit=dev`: **0 vulnerabilities**.
+- Protected production build exact `d6808a5c`: exit 0, **929/929** static pages, runtime-text audit pass, production mode/demo seeds off. Build logs честно фиксируют Supabase REST `exceed_egress_quota`; generated timestamp возвращён к committed state, worktree clean.
+- Exact local runtime health связывает полный SHA: canonical direct PG `ok=true`, общий health 503/degraded из-за REST quota. Browser serial **17/17** и cold parallel five-worker **17/17**; parallel log не содержит slot/429/timeout exhaustion. Strict smoke exit 1; explicit recovery smoke exit 0 и проверяет реальные commercial details.
+- GitHub push exact `d6808a5c` выполнен. Initial Vercel status в 17:03 UTC — `failure: Account is blocked`; deployment ID/immutable preview/remote browser отсутствуют и не считаются пройденными.
 
 - WP-017 focused fault/UX suite: **3 files / 56 tests** — pass. `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **439 files / 2 084 tests** + **8 release-evidence tests** — pass.
 - Protected production build exact `a8efc1e6`: exit 0, **806/806**, runtime-text audit pass, demo auth markers absent. Build/runtime logs независимо воспроизводят canonical Supabase `exceed_egress_quota`; article HTTP 200 сохраняет правильный H1.
@@ -328,10 +344,10 @@ Master Goal V6 принят как главный норматив проект�
 12. **P1-GA-015:** root cause и fail-soft boundary исправлены и доказаны на exact immutable preview `9K5mTZ…`; production same-artifact behavior не доказано из-за P0 data plane.
 13. **P0-GA-018:** application и operational direct-PG target attestation исправлены и доказаны на exact previews `E288Fh…`/`E17wLXY…`; verified target connectivity и production same-artifact proof остаются открыты.
 14. **P1-GA-016:** commercial smoke false positive исправлен и доказан на exact preview `ed29b335` / `3hwMwixf…`; production остаётся на старом parser/artifact, same-artifact production proof заблокирован P0-GA-001.
-15. **P1-GA-017:** unbounded catalog detail fan-out + standalone `pg.Client` per Tripster/YouTravel detail исчерпывают connection slots при параллельном browser/load сценарии; bounded concurrency/dedup/pool contract ещё не реализован.
+15. **P1-GA-017:** bounded fan-out, in-flight dedupe, shared pool/deadlines и error-vs-empty semantics реализованы в `d6808a5c`; local cold five-worker evidence закрывает воспроизведённое slot exhaustion. Immutable preview, distributed multi-instance capacity и production same-artifact proof остаются открыты.
 
 ## Следующие три задачи
 
-1. Owner/ops: снять Supabase `exceed_egress_quota` и восстановить canonical verified direct-PG connectivity; engineering сразу повторяет strict health/catalog/detail smoke на exact preview.
-2. Engineering/ops: после read-only восстановления сверить 107 migrations/journal/checksums, RLS/grants и backup/PITR posture; до этого DDL и live mutation rehearsal запрещены.
-3. Engineering/reliability: WP-021 — ограничить и дедуплицировать catalog detail fan-out/direct-PG pressure, добавить deterministic concurrency/fault contract и повторить exact browser/load QA; затем вернуться к WP-015B design без DDL до parity/provider sandbox.
+1. Release/engineering: дождаться или восстановить Vercel build path для exact `d6808a5c`, получить deployment ID и повторить immutable health + 5-worker/browser + strict/recovery smoke; promotion не выполнять.
+2. Owner/ops: снять Supabase `exceed_egress_quota` и восстановить canonical verified runtime connectivity; engineering сразу повторяет strict catalog/detail/load smoke на том же artifact.
+3. Engineering/ops: после read-only восстановления сверить 107 migrations/journal/checksums, RLS/grants и backup/PITR posture; затем проектировать WP-015B lease без DDL до parity/provider sandbox.

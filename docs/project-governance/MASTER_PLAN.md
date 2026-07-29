@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 13:17 ART**. WP-020 закрыл ложноположительный commercial smoke на exact preview `ed29b335` / `3hwMwixf…`: только href-bound offer links считаются evidence. Параллельный browser QA выявил новый P1 — неограниченный detail fan-out создаёт отдельный `pg.Client` на карточку и исчерпывает direct-PG slots. Production data plane и schema parity остаются главными блокерами; WP-021 — следующий независимый packet.
+Обновлён: **2026-07-29 14:09 ART**. WP-021 exact candidate `d6808a5c` ограничивает catalog detail resolution тремя операциями, дедуплицирует одинаковый slug, делит между Tripster/YouTravel pool max=2 и вводит 8-секундные query/network deadlines. Холодный local browser с пятью workers теперь проходит 17/17 без slot/429/timeout evidence; immutable preview пока заблокирован внешним `Account is blocked`. Production data plane и schema parity остаются главными блокерами.
 
 ## Правило выбора пакета
 
@@ -17,7 +17,7 @@
 | 2B | Direct-PG canonical target attestation (WP-018) | P0 | every app PG path accepts only canonical ref; health/readiness/bypass tests; exact preview fingerprint | done `8f0dbad2` / `E288Fh…`; verified canonical non-pooling target selected, connection still down; production old |
 | 2C | Operational Postgres target attestation (WP-019) | P0 | backup/restore/migration/sync/maintenance paths attest exact refs before process/network; legacy raw runner disabled | done `a3301ec9` / `E17wLXY…`; 20 focused, 2 095 full, 28 evidence, local 17/17, remote 16/1; no DB action |
 | 2D | Commercial smoke evidence integrity (WP-020) | P1 | `error-*`/reserved routes cannot satisfy detail discovery; negative/positive contracts; exact smoke fails on no real offers | done `ed29b335` / `3hwMwixf…`; 6 focused, 2 095 full, 31 evidence, local recovery smoke pass with real links, remote 16/1 |
-| 2E | Bound catalog detail fan-out and direct-PG connection pressure (WP-021) | P1 | bounded concurrency/deduplicated detail resolution; no `too many clients`; fault/load contract + exact preview | active after 5-worker browser reproduction and source trace to unbounded `Promise.all` + per-detail `pg.Client` |
+| 2E | Bound catalog detail fan-out and direct-PG connection pressure (WP-021) | P1 | bounded concurrency/deduplicated detail resolution; no `too many clients`; fault/load contract + exact preview | implemented `d6808a5c`; focused 24 + full 2 105, exact build, serial 17/17 and cold 5-worker 17/17; preview initially blocked by Vercel account |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -73,6 +73,10 @@ Every operational `pg.Client`/`pg_dump`/`psql` path now uses a shared strict Sup
 ### WP-020 — commercial smoke evidence integrity
 
 Commercial detail discovery now reads only actual HTML `href` attributes or serialized RSC `href` fields. It rejects `city`, `guide`, `region`, `error-*`, `page-*` and path-shaped asset/text fragments. Focused contracts pass 6/6; `audit:quick` passes 2 095 unit tests and 31 release-evidence contracts; protected exact build generated 929/929 pages. Local exact recovery smoke passes with genuine tour/excursion links, while exact preview `ed29b335` / `3hwMwixfCmgr5nx8gWkj26SskbJW` correctly returns no commercial detail for the broken catalogs and remains blocked by health. Production was not promoted.
+
+### WP-021 — bounded catalog detail and partner Postgres pressure
+
+Both public catalog filters now route anonymous detail reads through a FIFO process-wide limit of three and an in-flight map keyed by slug; settled success, miss and failure are always cleared, so private/access-token reads are never shared and transient unavailability is retried. Tripster and YouTravel direct fallbacks share one attested pool capped at two clients with connection/query/statement deadlines; the configured canonical transaction pooler is preserved instead of silently converted to session mode. Partner REST errors throw and remain `unavailable`, while only successful empty reads become `missing`. Tripster/YouTravel catalog HTTP, token, public JSON/HTML and curl fallbacks are time-bounded. Exact `d6808a5c` passes 24 focused tests, `audit:quick` 2 105 tests + 31 evidence contracts, protected 929/929 build, serial 17/17 and cold five-worker 17/17; the parallel server log has zero slot, 429 or timeout markers. Strict smoke still blocks on REST quota; explicit recovery smoke passes with healthy canonical direct PG and genuine offers. No DDL, env/secret change, partner write or production promotion occurred.
 
 ### WP-005 — reproducible product surface inventory
 
