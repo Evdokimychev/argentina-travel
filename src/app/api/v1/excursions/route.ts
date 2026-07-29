@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchExcursionsServer } from "@/lib/excursion-server";
+import { fetchExcursionsResultServer } from "@/lib/excursion-server";
 import { handlePublicApiRequest, publicApiJson } from "@/lib/public-api/handlers";
 import {
   buildPublicApiPagination,
@@ -21,11 +21,21 @@ export async function GET(request: Request) {
       sort: (searchParams.get("sort") as ExcursionListFilters["sort"]) || "popular",
     };
 
-    const result = await fetchExcursionsServer(filters);
+    const result = await fetchExcursionsResultServer(filters);
+    if (result.status === "unavailable") {
+      return publicApiJson(
+        { error: "Excursions catalog unavailable", code: "catalog_unavailable" },
+        { status: 503, headers: { "Retry-After": "60" } },
+      );
+    }
 
     return publicApiJson({
-      data: result.items.map(serializePublicExcursionListing),
-      pagination: buildPublicApiPagination(result.total, result.page, result.pageSize),
+      data: result.data.items.map(serializePublicExcursionListing),
+      pagination: buildPublicApiPagination(
+        result.data.total,
+        result.data.page,
+        result.data.pageSize,
+      ),
     });
   });
 }

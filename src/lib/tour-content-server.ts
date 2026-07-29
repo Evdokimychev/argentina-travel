@@ -12,14 +12,23 @@ import {
   tourToContentRow,
 } from "@/lib/tour-content-mapper";
 import { PUBLIC_TOUR_MODERATION_STATUSES } from "@/lib/tour-content-visibility";
+import {
+  partnerOk,
+  partnerUnavailable,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 type DbClient = SupabaseClient<Database>;
+export type TourContentReadResult<T> = PartnerSourceResult<T>;
 const PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES = [
   ...PUBLIC_TOUR_MODERATION_STATUSES,
   "pending",
   "rejected",
 ] as const;
 
-export async function fetchPublishedListings(supabase: DbClient): Promise<TourListing[]> {
+export async function fetchPublishedListingsResult(
+  supabase: DbClient,
+): Promise<TourContentReadResult<TourListing[]>> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
@@ -28,12 +37,18 @@ export async function fetchPublishedListings(supabase: DbClient): Promise<TourLi
     .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .order("published_at", { ascending: false, nullsFirst: false });
 
-  if (error || !data) return [];
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerUnavailable("malformed_payload", "Supabase tours list returned no data");
 
-  return data
+  return partnerOk(data
     .filter((row) => !rowToPublicTour(row)?.isPrivate)
     .map((row) => rowToPublicTourListing(row))
-    .filter((listing): listing is TourListing => listing != null);
+    .filter((listing): listing is TourListing => listing != null));
+}
+
+export async function fetchPublishedListings(supabase: DbClient): Promise<TourListing[]> {
+  const result = await fetchPublishedListingsResult(supabase);
+  return result.status === "ok" ? result.data : [];
 }
 
 export async function fetchPublishedSlugs(supabase: DbClient): Promise<string[]> {
@@ -74,11 +89,11 @@ export async function fetchTourBySlug(
   return tour;
 }
 
-export async function fetchTourDetailBySlug(
+export async function fetchTourDetailBySlugResult(
   supabase: DbClient,
   slug: string,
   accessToken?: string | null
-) {
+): Promise<TourContentReadResult<TourDetail | null>> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
@@ -88,13 +103,28 @@ export async function fetchTourDetailBySlug(
     .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerOk(null);
   const canonical = rowToPublicTour(data);
-  if (!canonical) return null;
-  if (canonical.isPrivate && (!accessToken || accessToken !== canonical.privateAccessToken)) {
-    return null;
+  if (!canonical) {
+    return partnerUnavailable("malformed_payload", `Published tour ${slug} cannot be mapped`);
   }
-  return rowToPublicTourDetail(data);
+  if (canonical.isPrivate && (!accessToken || accessToken !== canonical.privateAccessToken)) {
+    return partnerOk(null);
+  }
+  const detail = rowToPublicTourDetail(data);
+  return detail
+    ? partnerOk(detail)
+    : partnerUnavailable("malformed_payload", `Published tour detail ${slug} cannot be mapped`);
+}
+
+export async function fetchTourDetailBySlug(
+  supabase: DbClient,
+  slug: string,
+  accessToken?: string | null
+): Promise<TourDetail | null> {
+  const result = await fetchTourDetailBySlugResult(supabase, slug, accessToken);
+  return result.status === "ok" ? result.data : null;
 }
 
 export async function fetchPublishedTourBookingSourceById(
@@ -222,9 +252,9 @@ export async function fetchAllToursAdmin(
   return { tours: data.map(rowToAdminSummary), total: count ?? data.length };
 }
 
-export async function fetchPublishedExcursionListings(
+export async function fetchPublishedExcursionListingsResult(
   supabase: DbClient
-): Promise<TourListing[]> {
+): Promise<TourContentReadResult<TourListing[]>> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
@@ -233,18 +263,28 @@ export async function fetchPublishedExcursionListings(
     .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .order("published_at", { ascending: false, nullsFirst: false });
 
-  if (error || !data) return [];
-  return data
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) {
+    return partnerUnavailable("malformed_payload", "Supabase excursion list returned no data");
+  }
+  return partnerOk(data
     .filter((row) => !rowToPublicTour(row)?.isPrivate)
     .map((row) => rowToPublicTourListing(row))
-    .filter((listing): listing is TourListing => listing != null);
+    .filter((listing): listing is TourListing => listing != null));
 }
 
-export async function fetchPublishedExcursionBySlug(
+export async function fetchPublishedExcursionListings(
+  supabase: DbClient
+): Promise<TourListing[]> {
+  const result = await fetchPublishedExcursionListingsResult(supabase);
+  return result.status === "ok" ? result.data : [];
+}
+
+export async function fetchPublishedExcursionBySlugResult(
   supabase: DbClient,
   slug: string,
   accessToken?: string | null
-): Promise<{ canonical: Tour; detail: TourDetail } | null> {
+): Promise<TourContentReadResult<{ canonical: Tour; detail: TourDetail } | null>> {
   const { data, error } = await supabase
     .from("tours")
     .select("*")
@@ -254,13 +294,25 @@ export async function fetchPublishedExcursionBySlug(
     .in("moderation_status", [...PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES])
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerOk(null);
   const canonical = rowToPublicTour(data);
   const detail = rowToPublicTourDetail(data);
   if (canonical?.isPrivate && (!accessToken || accessToken !== canonical.privateAccessToken)) {
-    return null;
+    return partnerOk(null);
   }
-  return canonical && detail ? { canonical, detail } : null;
+  return canonical && detail
+    ? partnerOk({ canonical, detail })
+    : partnerUnavailable("malformed_payload", `Published excursion ${slug} cannot be mapped`);
+}
+
+export async function fetchPublishedExcursionBySlug(
+  supabase: DbClient,
+  slug: string,
+  accessToken?: string | null
+): Promise<{ canonical: Tour; detail: TourDetail } | null> {
+  const result = await fetchPublishedExcursionBySlugResult(supabase, slug, accessToken);
+  return result.status === "ok" ? result.data : null;
 }
 
 export async function fetchPublishedExcursionListingsServer(): Promise<TourListing[]> {
@@ -279,11 +331,16 @@ export async function fetchPublishedExcursionBySlugServer(
 }
 
 async function getServerSupabase(): Promise<DbClient | null> {
+  const result = await getServerSupabaseResult();
+  return result.status === "ok" ? result.data : null;
+}
+
+async function getServerSupabaseResult(): Promise<TourContentReadResult<DbClient>> {
   try {
     const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
-    return createSupabaseAdminClient();
-  } catch {
-    return null;
+    return partnerOk(createSupabaseAdminClient());
+  } catch (error) {
+    return partnerUnavailableFromError(error);
   }
 }
 
@@ -291,6 +348,14 @@ export async function fetchPublishedListingsServer(): Promise<TourListing[]> {
   const supabase = await getServerSupabase();
   if (!supabase) return [];
   return fetchPublishedListings(supabase);
+}
+
+export async function fetchPublishedListingsResultServer(): Promise<
+  TourContentReadResult<TourListing[]>
+> {
+  const client = await getServerSupabaseResult();
+  if (client.status === "unavailable") return client;
+  return fetchPublishedListingsResult(client.data);
 }
 
 export async function fetchPublishedTourBookingSourceByIdServer(tourId: string) {
@@ -312,6 +377,15 @@ export async function fetchTourDetailBySlugServer(
   const supabase = await getServerSupabase();
   if (!supabase) return null;
   return fetchTourDetailBySlug(supabase, slug, opts?.accessToken);
+}
+
+export async function fetchTourDetailBySlugResultServer(
+  slug: string,
+  opts?: { accessToken?: string | null }
+): Promise<TourContentReadResult<TourDetail | null>> {
+  const client = await getServerSupabaseResult();
+  if (client.status === "unavailable") return client;
+  return fetchTourDetailBySlugResult(client.data, slug, opts?.accessToken);
 }
 
 export async function fetchCanonicalTourBySlugServer(

@@ -5,10 +5,10 @@ import { unstable_cache } from "next/cache";
 import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
-  fetchExcursionBySlug as fetchTripsterExcursionBySlug,
   fetchExcursionCityBySlug as fetchTripsterExcursionCityBySlug,
   fetchExcursionCities as fetchTripsterExcursionCities,
-  fetchExcursionListings as fetchTripsterExcursionListings,
+  fetchExcursionListingsResult as fetchTripsterExcursionListingsResult,
+  fetchExcursionBySlugResult as fetchTripsterExcursionBySlugResult,
   fetchExcursionSlugs as fetchTripsterExcursionSlugs,
   fetchSimilarExcursionListings as fetchSimilarTripsterExcursionListings,
 } from "@/lib/tripster/repository";
@@ -22,10 +22,10 @@ import {
 import { fetchGuideProfileServer } from "@/lib/tripster/guide-server";
 import { isTripsterConfigured } from "@/lib/tripster/env";
 import {
-  fetchSputnik8ExcursionBySlug,
+  fetchSputnik8ExcursionBySlugResult,
   fetchSputnik8ExcursionCityBySlug,
   fetchSputnik8ExcursionCities,
-  fetchSputnik8ExcursionListings,
+  fetchSputnik8ExcursionListingsResult,
   fetchSputnik8ExcursionSlugs,
   fetchSimilarSputnik8ExcursionListings,
 } from "@/lib/sputnik8/repository";
@@ -46,14 +46,32 @@ import type {
 } from "@/types/excursion";
 import { excursionCityMergeKey, normalizeExcursionCitySlug } from "@/data/excursion-city-links";
 import {
-  fetchPublishedExcursionBySlug,
-  fetchPublishedExcursionListings,
+  fetchPublishedExcursionBySlugResult,
+  fetchPublishedExcursionListingsResult,
 } from "@/lib/tour-content-server";
 import {
   nativeExcursionCities,
   nativeTourDetailToExcursion,
   nativeTourListingToExcursion,
 } from "@/lib/native-excursion-mapper";
+import {
+  partnerOk,
+  partnerUnavailable,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
+
+export type ExcursionCatalogSource = "platform" | "tripster" | "sputnik8";
+type ExcursionSourceResult<T> = PartnerSourceResult<T>;
+
+export class ExcursionCatalogUnavailableError extends Error {
+  readonly code = "catalog_unavailable";
+
+  constructor(readonly unavailableSources: ExcursionCatalogSource[]) {
+    super("Excursion catalog sources are unavailable");
+    this.name = "ExcursionCatalogUnavailableError";
+  }
+}
 
 function getClient() {
   try {
@@ -108,12 +126,21 @@ function mergeCities(...sources: ExcursionCity[][]): ExcursionCity[] {
 async function fetchNativeExcursionListings(
   supabase: ReturnType<typeof createSupabaseAdminClient> | null
 ): Promise<ExcursionListing[]> {
-  if (!supabase) return [];
+  const result = await fetchNativeExcursionListingsResult(supabase);
+  return result.status === "ok" ? result.data : [];
+}
+
+async function fetchNativeExcursionListingsResult(
+  supabase: ReturnType<typeof createSupabaseAdminClient> | null
+): Promise<ExcursionSourceResult<ExcursionListing[]>> {
+  if (!supabase) return partnerUnavailable("db_unavailable", "Supabase client is not configured");
   try {
-    const listings = await fetchPublishedExcursionListings(supabase);
-    return listings.map(nativeTourListingToExcursion);
-  } catch {
-    return [];
+    const result = await fetchPublishedExcursionListingsResult(supabase);
+    return result.status === "ok"
+      ? partnerOk(result.data.map(nativeTourListingToExcursion))
+      : result;
+  } catch (error) {
+    return partnerUnavailableFromError(error);
   }
 }
 
@@ -137,132 +164,201 @@ async function fetchTripsterListResult(
   supabase: ReturnType<typeof createSupabaseAdminClient> | null,
   filters: ExcursionListFilters,
   allItems = false
-): Promise<ExcursionListResult> {
+): Promise<ExcursionSourceResult<ExcursionListResult>> {
   const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
-  const empty: ExcursionListResult = {
-    items: [],
-    total: 0,
-    page: filters.page ?? 1,
-    pageSize: filters.pageSize ?? 24,
-    cities: [],
-  };
 
-  if (supabase) {
+  const restResult = supabase
+    ? await fetchTripsterExcursionListingsResult(supabase, pgFilters).catch(
+        partnerUnavailableFromError,
+      )
+    : partnerUnavailable("db_unavailable", "Supabase client is not configured");
+  if (restResult.status === "ok" && restResult.data.total > 0) return restResult;
+
+  const pgResult = await pgFetchTripsterExcursionsServer(pgFilters);
+  if (pgResult && pgResult.total > 0) return partnerOk(pgResult);
+
+  if (isTripsterConfigured()) {
     try {
-      const fromSupabase = await fetchTripsterExcursionListings(supabase, pgFilters);
-      if (fromSupabase.items.length > 0 || fromSupabase.total > 0) return fromSupabase;
-    } catch {
-      // Supabase REST blocked or unavailable — fall through to Postgres.
+      const { fetchLiveTripsterExcursionsFallback } = await import(
+        "@/lib/tripster/live-catalog-fallback"
+      );
+      return partnerOk(await fetchLiveTripsterExcursionsFallback(pgFilters));
+    } catch (error) {
+      if (restResult.status === "ok") return restResult;
+      if (pgResult) return partnerOk(pgResult);
+      return partnerUnavailableFromError(error);
     }
   }
 
-  const pgResult = await pgFetchTripsterExcursionsServer(pgFilters);
-  return pgResult ?? empty;
+  if (restResult.status === "ok") return restResult;
+  if (pgResult) return partnerOk(pgResult);
+  return partnerUnavailable("auth_restricted", "Tripster API and catalog stores are unavailable");
 }
 
 async function fetchSputnik8ListResult(
   supabase: ReturnType<typeof createSupabaseAdminClient> | null,
   filters: ExcursionListFilters,
   allItems = false
-): Promise<ExcursionListResult> {
+): Promise<ExcursionSourceResult<ExcursionListResult>> {
   const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
-  const empty: ExcursionListResult = {
-    items: [],
-    total: 0,
-    page: filters.page ?? 1,
-    pageSize: filters.pageSize ?? 24,
-    cities: [],
-  };
 
-  if (supabase) {
-    try {
-      const fromSupabase = await fetchSputnik8ExcursionListings(supabase, pgFilters);
-      if (fromSupabase.items.length > 0 || fromSupabase.total > 0) return fromSupabase;
-    } catch {
-      // Supabase REST blocked or unavailable — fall through to Postgres.
-    }
-  }
+  const restResult = supabase
+    ? await fetchSputnik8ExcursionListingsResult(supabase, pgFilters).catch(
+        partnerUnavailableFromError,
+      )
+    : partnerUnavailable("db_unavailable", "Supabase client is not configured");
+  if (restResult.status === "ok" && restResult.data.total > 0) return restResult;
 
   const pgResult = await pgFetchSputnik8ExcursionsServer(pgFilters);
-  return pgResult ?? empty;
+  if (pgResult) return partnerOk(pgResult);
+  if (restResult.status === "ok") return restResult;
+  return partnerUnavailable("db_unavailable", "Sputnik8 catalog stores are unavailable");
 }
 
-export async function fetchExcursionsServer(
-  filters: ExcursionListFilters = {}
-): Promise<ExcursionListResult> {
-  const supabase = getClient();
+export function resolveExcursionCatalogSources(
+  filters: ExcursionListFilters,
+  sources: Record<ExcursionCatalogSource, ExcursionSourceResult<ExcursionListResult | ExcursionListing[]>>,
+): ExcursionSourceResult<ExcursionListResult> {
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(500, Math.max(1, filters.pageSize ?? 24));
+  const unavailableSources = (Object.entries(sources) as Array<
+    [ExcursionCatalogSource, ExcursionSourceResult<ExcursionListResult | ExcursionListing[]>]
+  >)
+    .filter(([, result]) => result.status === "unavailable")
+    .map(([source]) => source);
 
-  const [tripster, sputnik8, nativeAll] = await Promise.all([
-    fetchTripsterListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
-    fetchSputnik8ListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
-    fetchNativeExcursionListings(supabase),
-  ]);
+  const tripster = sources.tripster.status === "ok"
+    ? sources.tripster.data as ExcursionListResult
+    : { items: [], cities: [] };
+  const sputnik8 = sources.sputnik8.status === "ok"
+    ? sources.sputnik8.data as ExcursionListResult
+    : { items: [], cities: [] };
+  const nativeAll = sources.platform.status === "ok"
+    ? sources.platform.data as ExcursionListing[]
+    : [];
 
   const nativeItems = filterNativeExcursions(nativeAll, filters);
   const cities = mergeCities(tripster.cities, sputnik8.cities, nativeExcursionCities(nativeAll));
   const mergedItems = sortListings([...nativeItems, ...tripster.items, ...sputnik8.items], filters.sort);
   const total = mergedItems.length;
-  const from = (page - 1) * pageSize;
-  const items = mergedItems.slice(from, from + pageSize);
+  if (total === 0 && unavailableSources.length > 0) {
+    const firstUnavailable = sources[unavailableSources[0]!];
+    return partnerUnavailable(
+      firstUnavailable.status === "unavailable"
+        ? firstUnavailable.errorClass
+        : "unknown",
+      `Excursion sources unavailable: ${unavailableSources.join(",")}`,
+    );
+  }
 
-  return { items, total, page, pageSize, cities };
+  const from = (page - 1) * pageSize;
+  return partnerOk({
+    items: mergedItems.slice(from, from + pageSize),
+    total,
+    page,
+    pageSize,
+    cities,
+    catalogState: total === 0 ? "empty" : unavailableSources.length > 0 ? "partial" : "ready",
+    unavailableSources,
+  });
 }
 
-async function fetchTripsterDetail(slug: string): Promise<ExcursionDetail | null> {
+export async function fetchExcursionsResultServer(
+  filters: ExcursionListFilters = {}
+): Promise<ExcursionSourceResult<ExcursionListResult>> {
+  const supabase = getClient();
+
+  const [tripster, sputnik8, platform] = await Promise.all([
+    fetchTripsterListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
+    fetchSputnik8ListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
+    fetchNativeExcursionListingsResult(supabase),
+  ]);
+
+  return resolveExcursionCatalogSources(filters, { tripster, sputnik8, platform });
+}
+
+export async function fetchExcursionsServer(
+  filters: ExcursionListFilters = {}
+): Promise<ExcursionListResult> {
+  const result = await fetchExcursionsResultServer(filters);
+  if (result.status === "unavailable") {
+    throw new ExcursionCatalogUnavailableError([]);
+  }
+  return result.data;
+}
+
+async function withTripsterGuide(
+  detail: ExcursionDetail,
+): Promise<ExcursionDetail> {
+  try {
+    const enriched = await enrichTripsterGuideProfile(detail);
+    return { ...enriched, tripsterPartnerApiConfigured: isTripsterConfigured() };
+  } catch {
+    return { ...detail, tripsterPartnerApiConfigured: isTripsterConfigured() };
+  }
+}
+
+async function fetchTripsterDetailResult(
+  slug: string,
+): Promise<ExcursionSourceResult<ExcursionDetail | null>> {
   // Prefer Postgres under REST egress pressure: listing already falls back to PG,
   // but a throwing/hanging Supabase detail read must not skip the durable path.
-  let detail = await pgFetchTripsterExcursionDetailServer(slug);
+  const pgDetail = await pgFetchTripsterExcursionDetailServer(slug);
+  if (pgDetail) return partnerOk(await withTripsterGuide(pgDetail));
 
-  if (!detail) {
-    const supabase = getClient();
-    if (supabase) {
-      try {
-        detail = await fetchTripsterExcursionBySlug(supabase, slug);
-      } catch {
-        detail = null;
+  const supabase = getClient();
+  const restResult = supabase
+    ? await fetchTripsterExcursionBySlugResult(supabase, slug).catch(partnerUnavailableFromError)
+    : partnerUnavailable("db_unavailable", "Supabase client is not configured");
+  if (restResult.status === "ok" && restResult.data) {
+    return partnerOk(await withTripsterGuide(restResult.data));
+  }
+
+  if (isTripsterConfigured()) {
+    try {
+      const { fetchLiveTripsterExcursionDetailFallback } = await import(
+        "@/lib/tripster/live-catalog-fallback"
+      );
+      const live = await fetchLiveTripsterExcursionDetailFallback(slug);
+      return partnerOk(live ? await withTripsterGuide(live) : null);
+    } catch (error) {
+      if (typeof error === "object" && error && "status" in error && error.status === 404) {
+        return partnerOk(null);
       }
+      return partnerUnavailableFromError(error);
     }
   }
 
-  if (!detail) return null;
-
-  try {
-    const enriched = await enrichTripsterGuideProfile(detail);
-    return {
-      ...enriched,
-      tripsterPartnerApiConfigured: isTripsterConfigured(),
-    };
-  } catch {
-    return {
-      ...detail,
-      tripsterPartnerApiConfigured: isTripsterConfigured(),
-    };
-  }
+  return restResult.status === "ok"
+    ? restResult
+    : partnerUnavailable("db_unavailable", "Tripster detail stores are unavailable");
 }
 
-async function fetchSputnik8Detail(slug: string): Promise<ExcursionDetail | null> {
+async function fetchSputnik8DetailResult(
+  slug: string,
+): Promise<ExcursionSourceResult<ExcursionDetail | null>> {
   const detail = await pgFetchSputnik8ExcursionDetailServer(slug);
-  if (detail) return detail;
+  if (detail) return partnerOk(detail);
 
   const supabase = getClient();
-  if (!supabase) return null;
-  try {
-    return await fetchSputnik8ExcursionBySlug(supabase, slug);
-  } catch {
-    return null;
-  }
+  if (!supabase) return partnerUnavailable("db_unavailable", "Sputnik8 detail stores are unavailable");
+  return fetchSputnik8ExcursionBySlugResult(supabase, slug).catch(partnerUnavailableFromError);
 }
 
-async function fetchNativeDetail(slug: string): Promise<ExcursionDetail | null> {
+async function fetchNativeDetailResult(
+  slug: string,
+): Promise<ExcursionSourceResult<ExcursionDetail | null>> {
   const supabase = getClient();
-  if (!supabase) return null;
+  if (!supabase) return partnerUnavailable("db_unavailable", "Supabase client is not configured");
   try {
-    const source = await fetchPublishedExcursionBySlug(supabase, slug);
-    return source ? nativeTourDetailToExcursion(source.canonical, source.detail) : null;
-  } catch {
-    return null;
+    const source = await fetchPublishedExcursionBySlugResult(supabase, slug);
+    return source.status === "ok"
+      ? partnerOk(
+          source.data ? nativeTourDetailToExcursion(source.data.canonical, source.data.detail) : null,
+        )
+      : source;
+  } catch (error) {
+    return partnerUnavailableFromError(error);
   }
 }
 
@@ -284,37 +380,77 @@ async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<Excu
   };
 }
 
-async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
-  const native = await fetchNativeDetail(slug);
-  if (native) return native;
+export function resolveExcursionDetailSources(
+  sources: Array<[ExcursionCatalogSource, ExcursionSourceResult<ExcursionDetail | null>]>,
+): ExcursionSourceResult<ExcursionDetail | null> {
+  for (const [, result] of sources) {
+    if (result.status === "ok" && result.data) return result;
+  }
+  const unavailable = sources.find(([, result]) => result.status === "unavailable");
+  return unavailable?.[1] ?? partnerOk(null);
+}
+
+async function loadExcursionDetailResultServer(
+  slug: string,
+): Promise<ExcursionSourceResult<ExcursionDetail | null>> {
+  const native = await fetchNativeDetailResult(slug);
+  if (native.status === "ok" && native.data) return native;
 
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8") {
-    return fetchSputnik8Detail(slug);
+    return resolveExcursionDetailSources([
+      ["platform", native],
+      ["sputnik8", await fetchSputnik8DetailResult(slug)],
+    ]);
   }
 
   if (parsed?.partner === "tripster") {
-    return fetchTripsterDetail(slug);
+    return resolveExcursionDetailSources([
+      ["platform", native],
+      ["tripster", await fetchTripsterDetailResult(slug)],
+    ]);
   }
 
-  const tripster = await fetchTripsterDetail(slug);
-  if (tripster) return tripster;
-  return fetchSputnik8Detail(slug);
+  const tripster = await fetchTripsterDetailResult(slug);
+  if (tripster.status === "ok" && tripster.data) return tripster;
+  return resolveExcursionDetailSources([
+    ["platform", native],
+    ["tripster", tripster],
+    ["sputnik8", await fetchSputnik8DetailResult(slug)],
+  ]);
 }
 
 function getCachedExcursionDetail(slug: string): Promise<ExcursionDetail | null> {
   return unstable_cache(
-    () => loadExcursionDetailServer(slug),
-    ["excursion-detail-v3", slug],
+    async () => {
+      const result = await loadExcursionDetailResultServer(slug);
+      if (result.status === "unavailable") {
+        throw new ExcursionCatalogUnavailableError([]);
+      }
+      return result.data;
+    },
+    ["excursion-detail-v4", slug],
     { revalidate: 600, tags: ["excursions"] },
   )();
 }
 
 /** Request-scoped memoization on top of the time-based cache for API routes and RSC. */
-export const fetchExcursionDetailServer = cache(
-  (slug: string): Promise<ExcursionDetail | null> => getCachedExcursionDetail(slug),
+export const fetchExcursionDetailResultServer = cache(
+  async (slug: string): Promise<ExcursionSourceResult<ExcursionDetail | null>> => {
+    try {
+      return partnerOk(await getCachedExcursionDetail(slug));
+    } catch (error) {
+      return partnerUnavailableFromError(error);
+    }
+  },
 );
+
+export async function fetchExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
+  const result = await fetchExcursionDetailResultServer(slug);
+  if (result.status === "unavailable") throw new ExcursionCatalogUnavailableError([]);
+  return result.data;
+}
 
 export async function fetchExcursionCityServer(citySlug: string): Promise<ExcursionCity | null> {
   const supabase = getClient();

@@ -28,12 +28,18 @@ async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
 
   try {
     const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
-    const { fetchPublishedListings } = await import("@/lib/tour-content-server");
+    const { fetchPublishedListingsResult } = await import("@/lib/tour-content-server");
     const supabase = createSupabaseAdminClient();
-    const fromDb = await fetchPublishedListings(supabase);
-    if (fromDb.length) return fromDb;
+    const result = await fetchPublishedListingsResult(supabase);
+    if (result.status === "unavailable") {
+      throw new Error(`platform_tours_${result.errorClass}: ${result.message}`);
+    }
+    if (result.data.length) return result.data;
   } catch (error) {
     reportMarketplaceSourceError("platform_tours", error);
+    if (getToursSourceMode() !== "hybrid" || isProductionRuntime()) {
+      throw error;
+    }
   }
 
   if (getToursSourceMode() === "hybrid" && !isProductionRuntime()) {
@@ -91,18 +97,29 @@ async function loadMarketplaceToursUncached(): Promise<TourListing[]> {
     }
   }
 
+  return resolveMarketplaceSourceResults(
+    platform,
+    tripster,
+    youtravel,
+    sourceFailures.length,
+    lastSuccessfulMarketplaceTours,
+  );
+}
+
+export function resolveMarketplaceSourceResults(
+  platform: TourListing[],
+  tripster: TourListing[],
+  youtravel: TourListing[],
+  failedSourceCount: number,
+  lastKnownGood: TourListing[] | null,
+): TourListing[] {
   const merged = mergeMarketplaceTourListings(platform, tripster, youtravel);
+  if (merged.length > 0 || failedSourceCount === 0) return merged;
 
-  // If every live source failed and we have nothing, prefer last-known-good over empty.
-  if (
-    merged.length === 0 &&
-    sourceFailures.length === results.length &&
-    lastSuccessfulMarketplaceTours?.length
-  ) {
-    return lastSuccessfulMarketplaceTours;
-  }
-
-  return merged;
+  // Не превращаем временный сбой хотя бы одного источника в «успешный» пустой
+  // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+  if (lastKnownGood?.length) return lastKnownGood;
+  throw new Error("marketplace_catalog_sources_unavailable");
 }
 
 const cachedMarketplaceTours = unstable_cache(
@@ -120,8 +137,14 @@ export async function resolveMarketplaceCatalogWithinDeadline(
   deadlineMs = MARKETPLACE_CATALOG_DEADLINE_MS,
 ): Promise<TourListing[]> {
   let timeout: ReturnType<typeof setTimeout> | undefined;
-  const deadline = new Promise<TourListing[]>((resolve) => {
-    timeout = setTimeout(() => resolve(fallback()), deadlineMs);
+  const deadline = new Promise<TourListing[]>((resolve, reject) => {
+    timeout = setTimeout(() => {
+      try {
+        resolve(fallback());
+      } catch (error) {
+        reject(error);
+      }
+    }, deadlineMs);
   });
 
   try {
@@ -136,12 +159,8 @@ function loadMarketplaceToursInBackground(): Promise<TourListing[]> {
 
   marketplaceToursInFlight = cachedMarketplaceTours()
     .then((tours) => {
-      lastSuccessfulMarketplaceTours = tours;
+      if (tours.length > 0) lastSuccessfulMarketplaceTours = tours;
       return tours;
-    })
-    .catch((error) => {
-      reportMarketplaceSourceError("catalog", error);
-      return lastSuccessfulMarketplaceTours ?? [];
     })
     .finally(() => {
       marketplaceToursInFlight = null;
@@ -152,8 +171,17 @@ function loadMarketplaceToursInBackground(): Promise<TourListing[]> {
 
 /** Cross-request catalog cache + dedupe внутри одного RSC-запроса. */
 export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
-  return resolveMarketplaceCatalogWithinDeadline(
-    loadMarketplaceToursInBackground(),
-    () => lastSuccessfulMarketplaceTours ?? [],
+  const catalogPromise = loadMarketplaceToursInBackground();
+  const tours = await resolveMarketplaceCatalogWithinDeadline(
+    catalogPromise,
+    () => {
+      if (lastSuccessfulMarketplaceTours) return lastSuccessfulMarketplaceTours;
+      throw new Error("marketplace_catalog_deadline_exceeded_without_lkg");
+    },
   );
+
+  // Observe a late rejection after the response deadline so it cannot become an
+  // unhandled promise rejection. The next request still retries the source.
+  void catalogPromise.catch((error) => reportMarketplaceSourceError("catalog", error));
+  return tours;
 });

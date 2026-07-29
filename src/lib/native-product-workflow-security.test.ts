@@ -96,7 +96,9 @@ describe("native tour and excursion workflow", () => {
 
     for (const file of apiFiles) {
       const source = fs.readFileSync(path.join(root, file), "utf8");
-      expect(source).toMatch(/fetchPublishedListingsServer|fetchTourDetailBySlugServer/);
+      expect(source).toMatch(
+        /fetchPublishedListingsResultServer|fetchTourDetailBySlugResultServer/,
+      );
       expect(source).not.toContain("createSupabaseServerClient");
     }
   });
@@ -133,8 +135,8 @@ describe("native tour and excursion workflow", () => {
       "utf8"
     );
 
-    expect(excursionServer).toContain("fetchNativeDetail(slug)");
-    expect(excursionServer.indexOf("fetchNativeDetail(slug)")).toBeLessThan(
+    expect(excursionServer).toContain("fetchNativeDetailResult(slug)");
+    expect(excursionServer.indexOf("fetchNativeDetailResult(slug)")).toBeLessThan(
       excursionServer.indexOf("parseExcursionSlug(slug)")
     );
     expect(scheduleRoute).toContain('excursion.partner === "platform"');

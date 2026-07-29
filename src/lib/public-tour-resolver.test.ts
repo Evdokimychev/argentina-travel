@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/tours-server-cutover", () => ({
-  fetchCutoverTourDetailBySlug: vi.fn(),
+  fetchCutoverTourDetailResultBySlug: vi.fn(),
 }));
 
 vi.mock("@/lib/youtravel/partner-tour-server", () => ({
@@ -20,14 +20,14 @@ vi.mock("@/lib/youtravel/partner-tour-mapper", () => ({
   isYouTravelTourSlug: (slug: string) => slug.includes("-yt"),
 }));
 
-import { fetchCutoverTourDetailBySlug } from "@/lib/tours-server-cutover";
+import { fetchCutoverTourDetailResultBySlug } from "@/lib/tours-server-cutover";
 import { fetchYouTravelTourDetailResultServer } from "@/lib/youtravel/partner-tour-server";
 import { fetchPartnerTourDetailResultServer } from "@/lib/tripster/partner-tour-server";
 import { resolvePublicTourBySlug } from "@/lib/public-tour-resolver";
 
 describe("resolvePublicTourBySlug fault injection", () => {
   it("returns unavailable instead of missing when partner sources fail", async () => {
-    vi.mocked(fetchCutoverTourDetailBySlug).mockResolvedValue(null);
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({ status: "ok", data: null });
     vi.mocked(fetchYouTravelTourDetailResultServer).mockResolvedValue({
       status: "unavailable",
       retryable: true,
@@ -49,7 +49,7 @@ describe("resolvePublicTourBySlug fault injection", () => {
   });
 
   it("returns missing only when sources succeed with null", async () => {
-    vi.mocked(fetchCutoverTourDetailBySlug).mockResolvedValue(null);
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({ status: "ok", data: null });
     vi.mocked(fetchYouTravelTourDetailResultServer).mockResolvedValue({
       status: "ok",
       data: null,
@@ -69,17 +69,17 @@ describe("filterToursWithResolvedPublicDetail", () => {
     const { filterToursWithResolvedPublicDetail } = await import(
       "@/lib/public-tour-resolver"
     );
-    vi.mocked(fetchCutoverTourDetailBySlug).mockImplementation(async (slug: string) => {
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockImplementation(async (slug: string) => {
       if (slug === "ar-ok") {
-        return {
+        return { status: "ok", data: {
           slug: "ar-ok",
           title: "Argentina tour",
           reviews: [],
           reviewCount: 0,
           rating: 0,
-        } as never;
+        } as never };
       }
-      return null;
+      return { status: "ok", data: null };
     });
     vi.mocked(fetchPartnerTourDetailResultServer).mockResolvedValue({
       status: "ok",
@@ -113,5 +113,24 @@ describe("filterToursWithResolvedPublicDetail", () => {
 
     const filtered = await filterToursWithResolvedPublicDetail(tours);
     expect(filtered.map((tour) => tour.slug)).toEqual(["ar-ok"]);
+  });
+});
+
+describe("platform source fault injection", () => {
+  it("propagates platform unavailability instead of returning a false missing", async () => {
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({
+      status: "unavailable",
+      retryable: true,
+      errorClass: "db_unavailable",
+      message: "database down",
+    });
+    vi.mocked(fetchPartnerTourDetailResultServer).mockResolvedValue({ status: "ok", data: null });
+    vi.mocked(fetchYouTravelTourDetailResultServer).mockResolvedValue({ status: "ok", data: null });
+
+    await expect(resolvePublicTourBySlug("platform-only-tour")).resolves.toMatchObject({
+      status: "unavailable",
+      source: "platform",
+      errorClass: "db_unavailable",
+    });
   });
 });
