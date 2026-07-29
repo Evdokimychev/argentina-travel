@@ -99,6 +99,7 @@
     "map:build-static": "node scripts/build-static-map-geodata.mjs",
     "map:build-thematic": "node scripts/build-static-map-geodata.mjs && node scripts/build-route-geodata.mjs",
     "audit:security": "node scripts/audit.mjs --security",
+    "audit:deps:policy": "node scripts/dependency-audit-policy.mjs",
     "audit:deps:production": "npm audit --omit=dev",
     "audit:perf": "node scripts/audit.mjs --perf",
     "quality:static": "node scripts/release-gate.mjs --group static",

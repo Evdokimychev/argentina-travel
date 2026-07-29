@@ -37,7 +37,7 @@ const quick = () => {
 };
 
 const security = () => {
-  run("Production dependency audit", "npm", ["audit", "--omit=dev"]);
+  run("Dependency audit policy", "npm", ["run", "audit:deps:policy"]);
   run("RLS audit", "node", ["scripts/rls-audit.mjs"]);
   run("Secret patterns scan", "node", ["scripts/audit-secrets.mjs"]);
 };
