@@ -1,5 +1,17 @@
 # Контент-аудит goargentina.ru — оглавление
 
+## Текущий воспроизводимый снимок продукта
+
+Файлы `architecture-current.md`, `route-inventory.csv`,
+`route-component-data-matrix.csv` и `interaction-inventory.csv` генерируются из
+текущего исходного кода командой `npm run inventory:generate`. Проверка
+`npm run inventory:check` падает, если снимок устарел. Исторические реестры в
+`docs/release-2026-07/` остаются неизменяемым baseline и не считаются описанием
+текущего репозитория.
+
+Статические признаки Supabase, CMS, партнёров, доступа и взаимодействий не
+подменяют live-проверку схемы, RLS, backend effect, браузера или production.
+
 Отчёты внешнего контент-аудита (июнь 2026). Используй вместе с `cursor-promty.md` — там готовые промпты для внедрения правок.
 
 ## Порядок чтения

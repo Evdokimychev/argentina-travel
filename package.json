@@ -147,6 +147,8 @@
     "content:fix": "node scripts/content-audit.mjs",
     "content:verify-production": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/production-smoke.mjs && node scripts/content-audit.mjs",
     "product:audit": "node scripts/product-audit.mjs",
+    "inventory:generate": "tsx scripts/generate-product-surface-inventory.ts",
+    "inventory:check": "tsx scripts/generate-product-surface-inventory.ts --check",
     "sync:instagram-feed": "node scripts/import-instagram-queue.mjs",
     "sync:instagram-feed:dry": "node scripts/import-instagram-queue.mjs --dry-run",
     "media:import-instagram": "node scripts/import-instagram-queue.mjs",

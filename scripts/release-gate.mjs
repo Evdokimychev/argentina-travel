@@ -46,6 +46,7 @@ const groups = {
     ],
     ["typescript", "npx", ["tsc", "--noEmit"], true],
     ["lint", "npm", ["run", "lint"], true],
+    ["product-surface-inventory", "npm", ["run", "inventory:check"], true],
   ],
   contracts: [
     ["unit-integration-contracts", "npm", ["test"], true],

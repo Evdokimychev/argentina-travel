@@ -23,6 +23,7 @@ const run = (label, cmd, args = [], opts = {}) => {
 const quick = () => {
   run("TypeScript", "npx", ["tsc", "--noEmit"]);
   run("ESLint", "npm", ["run", "lint"]);
+  run("Product surface inventory", "npm", ["run", "inventory:check"]);
   run("Unit tests", "npm", ["test"]);
   run("Release evidence contracts", "node", [
     "--test",
