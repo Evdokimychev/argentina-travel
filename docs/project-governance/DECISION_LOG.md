@@ -233,3 +233,10 @@
 - Decision: add a bounded connection fingerprint to public health: the winning supported env source name, effective direct/session-pooler mode, port and parsed Supabase project ref. Never emit the connection string, hostname, username, password or query parameters.
 - Evidence: the exact local production runtime connects successfully via `DATABASE_URL` direct port 5432 to canonical `uoox…`, while old Vercel production reports `dependency_unavailable`. The linked Vercel project/team IDs are correct, but CLI access is `Not authorized`, so env names and runtime logs cannot be inspected out of band.
 - Consequence: once an exact preview deploys, operators can distinguish wrong env precedence/ref/transport from a same-target network/runtime failure without reading or rotating secrets. Until then the production root cause remains only partially diagnosed and promotion stays blocked.
+
+## D-036 — A client error boundary over valid SSR content is a release failure
+
+- Date: 2026-07-29
+- Decision: register WP-017 and move it ahead of WP-015B. A page is not browser-ready merely because HTTP/SSR contains the article; a post-load error boundary that hides the valid content fails acceptance.
+- Evidence: immutable WP-015A preview binds exact `d576bae2`, then Playwright finds two H1s on the Iguazú article: visible «Не удалось загрузить блог» and the expected article headline hidden. The suite ends 9 pass, 1 skip, 1 fail, 6 not run; strict smoke separately fails mandatory health.
+- Consequence: no promotion or growth work. The next independent engineering packet must isolate the client dependency and preserve the editorial parent under failure, then rerun the complete immutable browser suite. Runtime-log absence is recorded, not replaced with an assumed root cause.

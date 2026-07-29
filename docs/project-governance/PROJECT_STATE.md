@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 09:40 ART / 2026-07-29 12:40 UTC**
+Последняя проверка: **2026-07-29 09:45 ART / 2026-07-29 12:45 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -40,7 +40,7 @@ Master Goal V6 принят как главный норматив проект�
 - Промежуточный WP-013 SHA `c53b9eb0` отправлен в Vercel в 10:58 UTC и немедленно получил `failure: Account is blocked`; после финальной ledger-provider сверки он заменён exact product SHA `26aeda4c` и не считается release evidence.
 - Exact WP-013 SHA `26aeda4c` сначала получил `failure: Account is blocked` в 11:11 UTC, затем success в 11:20:50 UTC и развернулся как Vercel deployment `7w7fLVQJZzod562BUBKVxN1XACUo` (GitHub deployment `5656415601`). Immutable URL: `https://argentina-travel-j1as4a3hd-go-argentina.vercel.app`.
 - Exact WP-014 candidate `84f6244b` отправлен в 11:46 UTC, немедленно получил `failure: Account is blocked`, затем success в 11:54:17 UTC и развернулся как Vercel deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN` (GitHub deployment `5656855482`). Immutable URL: `https://argentina-travel-l8ivc8xon-go-argentina.vercel.app`.
-- WP-015A commits `0d5f4472` и exact fail-closed SHA `d576bae2` отправлены в 12:17/12:22 UTC. Оба немедленно получили `failure: Account is blocked`; на 12:33 UTC deployment ID отсутствует. Exact local artifact доказан, но remote preview не заявляется до появления immutable deployment.
+- WP-015A exact fail-closed SHA `d576bae2` после initial `Account is blocked` восстановился в 12:34:14 UTC: Vercel deployment `4wqcePJySZY9xf48tRV7eoZfUCrz`, GitHub deployment `5657415437`, immutable URL `https://argentina-travel-fzr22xk1e-go-argentina.vercel.app`.
 - WP-016 exact `2fccb050` отправлен в 12:36 UTC и также немедленно получил `failure: Account is blocked`; deployment ID отсутствует. Vercel CLI на правильно linked project IDs отвечает `Not authorized`, поэтому env-name/runtime-log scope независимо подтверждён как недоступный.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
@@ -176,7 +176,7 @@ Master Goal V6 принят как главный норматив проект�
 - `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **438 files / 2 080 tests** + **8 release-evidence tests** — pass; существующие lint warnings не стали errors.
 - Protected production build exact `d576bae2`: exit 0, **806/806** static pages, runtime-text audit pass, demo auth markers absent.
 - Local exact `.next-production`: health связывает полный SHA; Data API 503/degraded из-за `exceed_egress_quota`, direct PG healthy (`tripsterCount=68`); admin payments без сессии → 307 sign-in. Browser QA **17/17 pass**. Строгий smoke exit 1 на mandatory health; explicit recovery-smoke exit 0. Refund/provider POST не выполнялись.
-- Vercel exact `d576bae2`: initial и повторный status `failure: Account is blocked`, deployment ID отсутствует на 12:33 UTC. Это внешний release blocker, не test pass.
+- Immutable WP-015A preview `d576bae2` / `4wqcePJySZY9xf48tRV7eoZfUCrz`: health 503/down связывает полный SHA; REST/direct PG недоступны; admin payments auth guard → 307. Строгий smoke exit 1. Remote browser: **9 passed, 1 skipped, 1 failed, 6 not run** — статья Игуасу после client load одновременно имела error-boundary и скрытый article H1. Preview exact, но browser acceptance не пройден.
 - WP-016 focused health/database suite: **3 files / 10 tests** — pass. `audit:quick`: TypeScript + ESLint + inventory + **438 files / 2 081 tests** + **8 evidence tests** — pass. Protected build exact `2fccb050`: **806/806**, runtime-text audit pass, demo auth markers absent. Local health exact SHA: direct PG healthy, canonical safe fingerprint present; remote deployment отсутствует.
 
 - WP-014 focused actor/response suite: **4 files / 21 tests** — pass; route matrix включает same account, same guest, confirmed guest→account attach, unrelated actor denial, fingerprint conflict и ID-only first/replay response.
@@ -272,9 +272,10 @@ Master Goal V6 принят как главный норматив проект�
 9. **P0-GA-016:** code-level webhook ledger/replay repair реализован и fake-tested; live provider/Data API/RLS/commission/outbox effect не доказан.
 10. **P0-GA-017:** refund currency/ownership/replay boundary исправлена; WP-015A добавил fail-closed provider diagnosis/UI. Live RPC/RLS/provider effect и WP-015B atomic lease/token-bound finalize всё ещё не доказаны.
 11. **P1-GA-014:** booking replay response/actor boundary исправлена и route/service-tested; live RPC/attach/RLS effect и DB-layer owner predicate не доказаны.
+12. **P1-GA-015:** exact WP-015A preview воспроизводит client-side blog error boundary поверх SSR статьи; точный failing dependency не установлен без runtime logs.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
 2. Owner/ops: вернуть read-only Vercel project/runtime-log scope и deployment access; engineering: по WP-016 health fingerprint сопоставить source/ref/mode/port, затем runtime connectivity без вывода или ротации секретов.
-3. Engineering/payments: WP-015B — после live journal/RLS/provider sandbox evidence реализовать atomic recovery lease + token-bound finalize/audit; до этого read-only diagnosis не превращать в blind retry.
+3. Engineering/public reliability: WP-017 — воспроизвести blog client transition с fault isolation, определить failing dependency и сделать статью fail-soft; затем повторить полный remote browser smoke. WP-015B остаётся следующим financial packet после live parity.

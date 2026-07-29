@@ -75,7 +75,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-016 exact candidate `2fccb050` safely exposes the selected Postgres source/mode/port/project ref and is locally build/runtime-proven, but Vercel returns `Account is blocked` and has created no deployment; CLI scope is `Not authorized`. Canonical production remains on unhealthy `993e82fb`, so deployed connection identity, migration parity and runtime logs remain unavailable. WP-015B also remains behind atomic recovery ownership evidence.
+Current breaks: WP-015A exact `d576bae2` recovered as immutable deployment `4wqcePJy…`; its health binds the SHA but REST/direct PG are down and remote browser exposes a blog client-transition error boundary (WP-017). WP-016 `2fccb050` remains blocked and CLI scope is `Not authorized`, so deployed connection identity, migration parity and runtime logs remain unavailable. WP-017 now precedes WP-015B.
 
 ## Data ownership boundaries
 
