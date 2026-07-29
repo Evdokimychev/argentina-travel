@@ -219,3 +219,10 @@
 - Decision: treat the booking idempotency key as an operation identifier, not a capability to read the canonical booking. An exact replay succeeds only when the stored and new canonical `userId` match. Authenticated retries run the existing confirmed-email guest attach before the atomic command. Both first creation and replay return only `{ booking: { id } }`.
 - Evidence: the RPC compared only the command fingerprint and returned the complete current row; the route serialized it unchanged. Route/service tests cover same account, same derived guest, confirmed same-email guest→account attach, unrelated account denial and absence of traveler/passport/payment/portal tokens from the public response.
 - Consequence: a leaked key and payload no longer disclose the evolving CRM record through the public route. The service-role RPC still returns its internal row to the single wrapper; adding the ownership predicate inside SQL is deferred until canonical migration parity is readable and must not be mistaken for live proof.
+
+## D-034 — Provider refund evidence is read-only, not mutation authority
+
+- Date: 2026-07-29
+- Decision: split refund recovery into WP-015A diagnosis and WP-015B mutation. WP-015A may list provider refunds and classify evidence, but always returns `safeToMutate=false`; only a future atomic recovery lease plus token-bound finalize may authorize retry or reconciliation writes.
+- Evidence: provider success followed by local finalize failure leaves `processing` without external ID. Current SQL accepts initial pending→processing only and finalize checks only `status=processing`; it has no recovery owner/version. Stripe supports metadata correlation but may paginate, while Mercado Pago lookup has no internal refund metadata and amount-only matches can collide.
+- Consequence: finance operators gain visibility without duplicate-refund risk. Empty/truncated/error results never imply retry, Stripe exact matches still require source/money agreement, and Mercado Pago amount-only matches remain candidates. No DDL or provider mutation is introduced until canonical journal/RLS and a controlled provider sandbox are available.

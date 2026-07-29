@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 08:57 ART**. WP-014 ограничил booking-create response идентификатором, связал replay с guest/session actor и получил exact immutable preview; live RPC/RLS/attach effect и SQL-layer hardening остаются заблокированы migration parity.
+Обновлён: **2026-07-29 09:33 ART**. WP-015 разделён по доказательствам: безопасный read-only provider lookup/операторская диагностика выполнены как WP-015A; mutation recovery WP-015B остаётся за atomic lease и live journal/RLS/provider sandbox evidence.
 
 ## Правило выбора пакета
 
@@ -12,7 +12,7 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | final `26aeda4c` recovered after ~9 min as `7w7fLVQJZzod562BUBKVxN1XACUo`; build remains volatile and logs/scope blocked |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-015A exact `d576bae2` rejected with `Account is blocked`; deployment ID/log scope absent |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -29,7 +29,8 @@
 | 16 | Payment webhook ledger recovery (WP-012) | P0 | signed App Router delivery; durable ledger before 2xx; retry/replay recovery; out-of-order state; safe failure with fake provider/store | done `77cf5674` / `13SV9J…`; 33 focused + 2 053 full + build/journey/local+remote browser; live DB/provider effects unknown |
 | 17 | Refund request/approval route integrity (WP-013) | P0 | authenticated App Router tests; actor/ownership; operation-id replay; cumulative cap/race; no provider execution | done `26aeda4c` / `7w7fLVQ…`; 21 focused + 2 063 full + exact build/local+remote browser/smoke; live DB/provider/recovery unknown |
 | 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | done `32038cc9` + exact `84f6244b` / `CJ3fcfursTMefpDtXoJRX7h1TpmN`; 21 focused + 2 070 full + local/remote browser/smoke |
-| 19 | Refund `processing` reconciliation (WP-015) | P0/P1 | provider lookup; same durable key; atomic recovery lease; finalize/audit; no blind retry | next financial packet after live journal/provider capability evidence; R-024 remains active |
+| 19A | Refund read-only reconciliation (WP-015A) | P0/P1 | provider GET lookup; exact/candidate/ambiguous classification; operator UI; no mutation authority | done `0d5f4472` + `d576bae2`; 13 focused + 2 080 full + exact local build/browser/smoke; Vercel deployment blocked |
+| 19B | Refund mutation recovery (WP-015B) | P0 | atomic recovery lease; token-bound finalize/audit; controlled provider sandbox effect; no blind retry | blocked by canonical journal/RLS/provider sandbox evidence; R-024 remains active |
 | 20 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
 | 21 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
@@ -91,6 +92,10 @@ Refund preparation now derives money from the completed source charge instead of
 
 The public booking-create handler no longer serializes the canonical CRM row: first creation and exact replay return the same ID-only receipt. The service wrapper rejects a stored booking whose owner differs from the new canonical actor even when the operation key and command fingerprint match. Anonymous replay remains bound to the deterministic guest identity; a signed-in user may transition guest→account only through the existing confirmed-email attach RPC before replay. Client types now reflect the minimal receipt. No migration was added while the 107-file live journal is unreadable; the service-role SQL function still returns its internal row to the single wrapper and remains an explicit DB-layer hardening/evidence gap.
 
+### WP-015A — read-only refund reconciliation
+
+Finance detail now queries refunds by the completed source charge/payment resource and shows exact, candidate, ambiguous, not-found or unavailable evidence without any mutation control. Stripe creates future refunds with `goargentinaRefundId` metadata; exact classification additionally requires source/money agreement. Mercado Pago amount-only correlation is deliberately only a candidate. Empty or truncated provider lists and provider errors fail closed. No retry, finalize, migration or live provider action was added; those belong to WP-015B only after an atomic recovery ownership primitive is proven.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
@@ -126,6 +131,7 @@ The public booking-create handler no longer serializes the canonical CRM row: fi
 - WP-014 moved active after source reproduction showed idempotent booking replay returns the full canonical booking object. It is independent of the broken data plane and can be fixed with a bounded response/actor matrix without adding schema.
 - WP-014 route/service evidence now proves the full guest/session matrix and ID-only receipt. Because the SQL RPC is service-role-only and has one wrapper call site, the safe application fix ships independently; duplicating the owner predicate in SQL is deferred until migration parity rather than editing an already-applied migration or inventing unverified DDL.
 - Exact `84f6244b` recovered from the recurring Vercel account block after about seven minutes as deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN`. Immutable health and 16/1 browser evidence bind the SHA, but REST/direct PG remain down and strict smoke blocks promotion.
-- The next financial packet is WP-015 refund `processing` reconciliation, but implementation of provider lookup and an atomic recovery lease remains behind canonical journal/provider evidence. Infrastructure recovery therefore retains orders 0–2 and no growth work moves upward.
+- WP-015 source reproduction split the packet: provider GET lookup and operator diagnosis require no schema and are safely deliverable as WP-015A, while any retry/finalize remains unsafe without an atomic recovery owner. This moves 015A to done and leaves 015B behind canonical journal/RLS/provider sandbox evidence.
+- Stripe pagination evidence changed the classifier once more: `has_more=true` is `unavailable`, never `not_found`, because an incomplete list cannot prove absence. Mercado Pago amount-only matches remain candidates because no internal refund metadata is available.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
