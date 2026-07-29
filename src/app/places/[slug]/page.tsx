@@ -53,8 +53,8 @@ export default async function PlaceDetailPage({ params }: PageProps) {
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
   const marketplaceTours = await fetchMarketplaceTours();
-  const resolvedTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
-  const relatedTours = resolveRelatedToursForPlace(place, resolvedTours);
+  const tourCandidates = resolveRelatedToursForPlace(place, marketplaceTours);
+  const relatedTours = await filterToursWithResolvedPublicDetail(tourCandidates);
 
   return (
     <>

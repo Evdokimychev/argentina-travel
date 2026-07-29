@@ -55,8 +55,10 @@ export default async function IguazuToursPage() {
   const locale = await getServerI18nLocale();
   const destination = getDestinationBySlug("iguazu");
   const marketplaceTours = await fetchMarketplaceTours();
-  const resolved = await filterToursWithResolvedPublicDetail(marketplaceTours);
-  const tours = destination ? matchToursForDestination(resolved, destination) : [];
+  const tourCandidates = destination
+    ? matchToursForDestination(marketplaceTours, destination)
+    : [];
+  const tours = await filterToursWithResolvedPublicDetail(tourCandidates);
   const platformStats = getPlatformStatsFromMarketplace(tours);
 
   return (

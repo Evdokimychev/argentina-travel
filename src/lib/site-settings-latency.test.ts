@@ -176,7 +176,8 @@ describe("public site settings latency guard", () => {
     expect(resolver).toContain("CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500");
     expect(resolver.match(/\.retry\(false\)/g)?.length).toBeGreaterThanOrEqual(4);
     expect(resolver).toContain("const localizedDocuments = await Promise.all(");
-    expect(blogPage).toContain("const initialTours = fetchMarketplaceTours().then(filterToursWithResolvedPublicDetail);");
+    expect(blogPage).toContain("pickBlogPostTourCandidates(tours, post.tourEmbeds ?? [])");
+    expect(blogPage).toContain(".then(filterToursWithResolvedPublicDetail)");
     expect(blogPage).not.toContain("await fetchMarketplaceTours()");
     expect(blogView).toContain("<Suspense fallback={null}>");
     expect(blogView).toContain("async function BlogPostTourEmbeds");
@@ -185,6 +186,14 @@ describe("public site settings latency guard", () => {
   it("keeps optional social, tour, and flight data off the destination critical path", () => {
     const destinationPage = fs.readFileSync(
       path.join(process.cwd(), "src/app/destinations/[slug]/page.tsx"),
+      "utf8",
+    );
+    const placePage = fs.readFileSync(
+      path.join(process.cwd(), "src/app/places/[slug]/page.tsx"),
+      "utf8",
+    );
+    const iguazuPage = fs.readFileSync(
+      path.join(process.cwd(), "src/app/tours/region/iguazu/page.tsx"),
       "utf8",
     );
     const flightTeasers = fs.readFileSync(
@@ -197,7 +206,21 @@ describe("public site settings latency guard", () => {
     );
 
     expect(destinationPage).toContain("const [marketplaceTours, flightTeasers] = await Promise.all([");
-    expect(destinationPage).toContain("filterToursWithResolvedPublicDetail(marketplaceTours)");
+    expect(destinationPage).toContain("matchToursForDestination(marketplaceTours, destination).slice(0, 6)");
+    expect(destinationPage).toContain("filterToursWithResolvedPublicDetail(tourCandidates)");
+    expect(placePage).toContain("resolveRelatedToursForPlace(place, marketplaceTours)");
+    expect(placePage).toContain("filterToursWithResolvedPublicDetail(tourCandidates)");
+    expect(iguazuPage).toContain("matchToursForDestination(marketplaceTours, destination)");
+    expect(iguazuPage).toContain("filterToursWithResolvedPublicDetail(tourCandidates)");
+    expect(destinationPage.indexOf("matchToursForDestination(marketplaceTours, destination)")).toBeLessThan(
+      destinationPage.indexOf("filterToursWithResolvedPublicDetail(tourCandidates)"),
+    );
+    expect(placePage.indexOf("resolveRelatedToursForPlace(place, marketplaceTours)")).toBeLessThan(
+      placePage.indexOf("filterToursWithResolvedPublicDetail(tourCandidates)"),
+    );
+    expect(iguazuPage.indexOf("matchToursForDestination(marketplaceTours, destination)")).toBeLessThan(
+      iguazuPage.indexOf("filterToursWithResolvedPublicDetail(tourCandidates)"),
+    );
     expect(flightTeasers).toContain("PUBLIC_TEASER_WAIT_MS = 3_000");
     expect(flightTeasers).toContain("return await Promise.race([request, deadline]);");
     expect(socialFeed).toContain("<Suspense fallback={null}>");

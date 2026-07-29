@@ -21,6 +21,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
 import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
 import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
+import { resolveOptionalBlogTourCatalog } from "@/lib/blog-optional-tour-catalog";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
 const PAGE_DESCRIPTION =
@@ -61,12 +62,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const history = parseBlogReadingHistoryCookie(cookieStore.get(BLOG_READING_HISTORY_COOKIE)?.value);
   const [posts, marketplaceTours] = await Promise.all([
     resolveBlogCatalog(locale),
-    fetchMarketplaceTours(),
+    resolveOptionalBlogTourCatalog(fetchMarketplaceTours()),
   ]);
-  const tours = await filterToursWithResolvedPublicDetail(marketplaceTours);
   const indexable = filterIndexableBlogPosts(posts);
   const indexCatalog = toBlogIndexCatalog(indexable);
-  const featuredTours = pickBlogIndexFeaturedTours(tours, 4);
+  const featuredCandidates = pickBlogIndexFeaturedTours(marketplaceTours, 4);
+  const featuredTours = await filterToursWithResolvedPublicDetail(featuredCandidates);
 
   const heroVariantCookie = cookieStore.get(BLOG_HERO_VARIANT_COOKIE)?.value;
   const heroVariant = resolveBlogHeroVariantFromCookie(

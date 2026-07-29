@@ -116,7 +116,9 @@ describe("blog index client payload", () => {
     expect(indexView).not.toContain("blogPosts");
     expect(indexView).toContain("initialPersonalizedSlugs");
     expect(page).toContain("toBlogIndexCatalog(indexable)");
-    expect(page).toContain("pickBlogIndexFeaturedTours(tours, 4)");
+    expect(page).toContain("pickBlogIndexFeaturedTours(marketplaceTours, 4)");
+    expect(page).toContain("filterToursWithResolvedPublicDetail(featuredCandidates)");
+    expect(page).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
     expect(page).not.toContain("initialTours={");
     expect(tours).not.toContain("pickBlogIndexFeaturedTours");
     expect(tours).toContain("featuredTours.slice(0, 4)");

@@ -7,6 +7,8 @@ import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
+import { resolveOptionalBlogTourCatalog } from "@/lib/blog-optional-tour-catalog";
 
 interface BlogHubPageProps {
   params: Promise<{ hubId: string }>;
@@ -40,14 +42,16 @@ export default async function BlogHubPage({ params }: BlogHubPageProps) {
   const locale = await getServerI18nLocale();
   const [posts, tours] = await Promise.all([
     resolveBlogCatalog(locale),
-    fetchMarketplaceTours(),
+    resolveOptionalBlogTourCatalog(fetchMarketplaceTours()),
   ]);
+  const featuredCandidates = pickBlogIndexFeaturedTours(tours, 4);
+  const featuredTours = await filterToursWithResolvedPublicDetail(featuredCandidates);
 
   return (
     <BlogHubView
       hub={hub}
       posts={posts}
-      featuredTours={pickBlogIndexFeaturedTours(tours, 4)}
+      featuredTours={featuredTours}
     />
   );
 }

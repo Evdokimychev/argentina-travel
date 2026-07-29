@@ -1,4 +1,26 @@
 import type { TourListing } from "@/types";
+import { resolveTourEmbedWidgetMatches } from "@/lib/tour-embed";
+import type { TourEmbedConfig } from "@/types/tour-embed";
+
+/**
+ * Detail verification is expensive and may cross several degraded providers.
+ * Only verify listings that an article embed can actually render; never walk
+ * the full marketplace catalog for an optional editorial widget.
+ */
+export function pickBlogPostTourCandidates(
+  tours: TourListing[],
+  embeds: TourEmbedConfig[],
+): TourListing[] {
+  const candidates = new Map<string, TourListing>();
+
+  for (const embed of embeds) {
+    for (const match of resolveTourEmbedWidgetMatches(tours, embed)) {
+      candidates.set(match.tour.slug, match.tour);
+    }
+  }
+
+  return [...candidates.values()];
+}
 
 /**
  * A commercial embed is optional editorial enrichment. Its catalog outage must

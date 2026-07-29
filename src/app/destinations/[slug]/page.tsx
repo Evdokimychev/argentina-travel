@@ -20,6 +20,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
+import { matchToursForDestination } from "@/lib/destinations";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -62,7 +63,8 @@ export default async function DestinationDetailPage({ params }: PageProps) {
     fetchMarketplaceTours(),
     getDestinationFlightTeasers(destination.id, locale),
   ]);
-  const tours = await filterToursWithResolvedPublicDetail(marketplaceTours);
+  const tourCandidates = matchToursForDestination(marketplaceTours, destination).slice(0, 6);
+  const tours = await filterToursWithResolvedPublicDetail(tourCandidates);
   const knowledgeLinks = resolveKnowledgeLinksForDestination(destination.id);
 
   return (

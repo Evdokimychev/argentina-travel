@@ -10,6 +10,8 @@ import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
+import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
+import { pickBlogPostTourCandidates } from "@/lib/blog-optional-tour-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -53,11 +55,10 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
   }
 
   const cmsMetadata = getCmsResolverMetadata(post);
-  const [initialTours, blogSettings, forms] = await Promise.all([
-    fetchMarketplaceTours(),
-    fetchSiteBlog(),
-    fetchSiteForms(),
-  ]);
+  const initialTours = fetchMarketplaceTours()
+    .then((tours) => pickBlogPostTourCandidates(tours, post.tourEmbeds ?? []))
+    .then(filterToursWithResolvedPublicDetail);
+  const [blogSettings, forms] = await Promise.all([fetchSiteBlog(), fetchSiteForms()]);
   return (
     <>
       {cmsMetadata?.showTranslationBanner ? (
