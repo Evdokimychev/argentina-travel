@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 01:58 ART**. WP-003 удалил недостоверную catalog-зависимость из critical path editorial guides. Погодный guide с реальным optional `tour-embed` остаётся следующим независимым performance/reliability пакетом.
+Обновлён: **2026-07-29 03:10 ART**. WP-004 локализовал optional `tour-embed` внутри typed Suspense boundary. Следующий независимый пакет — регенерация route/interaction/data inventory; infrastructure recovery сохраняет абсолютный приоритет.
 
 ## Правило выбора пакета
 
@@ -19,9 +19,9 @@
 | 6 | Remote preview full-flow verification | P1 | catalog/detail/card/CTA crawl, no-JS/slow path, smoke bound to deployment | blocked by Vercel account/scope |
 | 7 | Production promote and post-deploy proof | P0/P1 | same artifact ID/SHA, health, rollback, catalog/detail parity | forbidden until orders 0–2 close |
 | 8 | Analytics/consent/conversion proof | P1 | healthy SHA-bound report + clean-browser consent matrix | code binding improved; production proof pending healthy deployment |
-| 9 | Route/interaction/data inventory regeneration | P1/P2 | current owners, states, coverage and evidence links | pending |
+| 9 | Route/interaction/data inventory regeneration | P1/P2 | current owners, states, coverage and evidence links | next independent packet |
 | 10 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
-| 11 | Stream/fail-soft optional guide `tour-embed` | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | pending; weather guide still waits 2.5 s and logs RSC deadline during catalog outage |
+| 11 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `0759b597` + `189684fa`; exact build/browser/fault tests pass, remote preview blocked |
 
 ## Выполненные безопасные пакеты
 
@@ -37,9 +37,15 @@ Global and high-risk route copy now derives from proven current behavior: GoArge
 
 Guide pillar SSR now loads marketplace data only when the content schema actually renders a configured `tour-embed`. Static editorial pages no longer trigger full catalog aggregation and N detail resolutions; the tour widget retains strict detail validation.
 
+### WP-004 — optional guide widget boundary
+
+The real weather `tour-embed` now receives a catalog promise inside a local Suspense boundary. The guide streams independently; confirmed empty remains empty, while a total operational detail failure becomes a visible local unavailable state. Current partial-source production-equivalent behavior omits an unmatched optional offer without damaging the editorial parent.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
 - Candidate promotion remains below Vercel account recovery: exact clean SHA `a07327db` was rejected and a locally proven SHA without a deploy ID is not a remote preview.
 - Safety guide latency is resolved in the clean candidate; the remaining optional weather tour widget is separated as its own bounded packet.
+- Browser evidence exposed a second root cause after the first implementation: public-detail filtering discarded `unavailable` rows into `[]`. The plan kept WP-004 open until a strict optional-widget resolver and fault test proved `unavailable ≠ empty`.
+- With WP-004 closed locally, route/interaction/data inventory moves ahead of new UX/growth work because current historical inventories do not describe the 2026-07 candidate surface.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 01:58 ART / 2026-07-29 04:58 UTC**
+Последняя проверка: **2026-07-29 03:10 ART / 2026-07-29 06:10 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product/governance candidate SHA до этой записи: `a07327dbc69493ccf666a9dd0f0df0567d324fcf`; worktree чистый, `origin/main` является ancestor.
+- Product/governance candidate SHA до этой записи: `189684fa70d0bf020dcb7e835c29a38b5eca19ed`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний code SHA: `b53daadd4c6a3fe805d3f3ec9f1c3e70792c7975` (`perf: keep editorial guides off catalog path`).
+- Последний code SHA: `189684fa70d0bf020dcb7e835c29a38b5eca19ed` (`fix: expose unavailable guide tour details`); streaming boundary введён в `0759b597fcad2661d5a5aa4968f121021265d436`.
 
 ## Production и deployments
 
@@ -25,6 +25,7 @@ Master Goal V6 принят как главный норматив проект�
 - `ef447d8e`: deployment **не создан**; GitHub/Vercel status `failure`, точная причина `Account is blocked` (2026-07-29 04:17 UTC).
 - Чистый candidate `a07327db`: deployment **не создан**; Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 04:30 UTC).
 - `b53daadd`: deployment **не создан**; Vercel снова вернул `failure: Account is blocked` (2026-07-29 04:51 UTC).
+- `0759b597` и финальный `189684fa`: deployments **не созданы**; GitHub/Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 05:06/05:17 UTC).
 - Immutable preview URL и runtime logs недоступны: Vercel MCP/API/CLI/Browser account scopes не дают доступ к проекту. Поэтому remote browser QA не считается выполненным.
 - Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
@@ -58,6 +59,12 @@ Master Goal V6 принят как главный норматив проект�
 - Content schema проверяется на реальный `tour-embed`; только такой виджет сохраняет прежний catalog + public-detail validation path.
 - Marketplace modules подключаются динамически только после положительного schema check; operational catalog failures не кешируются как empty.
 
+### WP-004 — optional guide widget boundary
+
+- Погодный guide больше не ждёт каталог на уровне route: promise передаётся в локальный `Suspense`, поэтому editorial stream и H1 доступны во время загрузки виджета.
+- Полный operational failure detail-resolver больше не схлопывается в подтверждённый empty: optional embed получает typed `unavailable`; подтверждённое отсутствие остаётся `ok + []`.
+- При частично доступном каталоге без подходящих карточек виджет безопасно не показывается; основной материал остаётся полным, без глобального error UI и horizontal overflow.
+
 ## Проверки candidate
 
 - `npm run audit:quick`: TypeScript + ESLint + **428 files / 2 058 tests** + **8 release-evidence tests** — pass.
@@ -73,6 +80,10 @@ Master Goal V6 принят как главный норматив проект�
 - Protected production build exact `b53daadd`: exit 0, **929/929**, runtime-text audit pass, demo auth markers absent.
 - Cold production-equivalent benchmark: `/guide/bezopasnost` **3.797 s → 0.399 s** (−89%); `/guide/yazyk` **2.545 s → 0.057 s** (−98%). Marketplace error logs appear only for `/guide/pogoda-i-sezonnost`, whose schema contains the sole `tour-embed`.
 - Browser QA exact `b53daadd`, 1440×900 and 390×844: full safety content and FAQ contract rendered, no route error, loader absent, horizontal overflow 0.
+- WP-004 `audit:quick`: TypeScript + ESLint + **423 files / 2 001 tests** + **8 release-evidence tests** — pass; focused fault/guide suite **10/10** — pass.
+- Protected production build exact `189684fa`: exit 0, **929/929**, runtime-text audit pass, demo auth markers absent. Compile занял 44.0 min при параллельной Xcode/iOS-сборке; это зафиксированное ограничение локальной среды, не build failure.
+- Production-equivalent runtime exact `189684fa`: weather **TTFB 0.480 s / total 2.902 s**, safety **0.059/0.083 s**, language **0.042/0.083 s**; health сообщает exact SHA, direct PG healthy (`tripsterCount=68`), REST degraded по quota.
+- Browser QA exact `189684fa`: desktop weather на 1.153 s уже имеет H1/main + локальный `aria-busy` skeleton, без route error/overflow; после partial-source resolution parent остаётся полным. Mobile 390×844 и safety body (13 864 chars, FAQ heading) — без route error/overflow. Логи содержат quota/Tripster 429, но не uncaught RSC error.
 
 ## Открытые P0/P1
 
@@ -85,4 +96,4 @@ Master Goal V6 принят как главный норматив проект�
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
 2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать exact clean candidate, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
-3. Engineering: изолировать optional `tour-embed` от основного SSR погодного гайда, затем выполнить полный card/detail/CTA crawl после восстановления preview.
+3. Engineering: регенерировать route/interaction/data inventory на exact clean candidate; после восстановления preview выполнить полный card/detail/CTA crawl.

@@ -8,6 +8,9 @@ flowchart TD
   Vercel --> Next["Next.js 15 App Router / middleware / route handlers"]
   Next --> Control["CMS site_settings + feature/module control plane"]
   Next --> Resolver["Public catalog/detail resolvers"]
+  Next --> Guide["Editorial guide stream"]
+  Guide --> Optional["Optional tour embed / Suspense"]
+  Optional --> Resolver
   Next --> Auth["Supabase Auth + RLS"]
   Next --> CMS["CMS / knowledge / ingestion"]
   Resolver --> Rest["Supabase Data API snapshots"]
@@ -36,7 +39,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: clean release ancestry is frozen at `a07327db`, but migration parity is unavailable; Vercel rejected that exact clean candidate because the account is blocked; immutable preview/runtime scope is unavailable; production health is down. Successful earlier deployments `2P6Pnq…` and `D9WetK…` do not prove the clean candidate.
+Current breaks: clean release ancestry is frozen at exact code SHA `189684fa`, but migration parity is unavailable; Vercel rejected that exact candidate because the account is blocked; immutable preview/runtime scope is unavailable; production health is down. Successful earlier deployments `2P6Pnq…` and `D9WetK…` do not prove the current candidate.
 
 ## Data ownership boundaries
 
