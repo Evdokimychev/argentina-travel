@@ -100,3 +100,24 @@
 - Decision: maintain a reviewed critical-journey manifest and generate the evidence ledger only after validating UI dependency reachability, request method/endpoint, route export and exact test title. Keep `unit_contract`, `route_integration`, `browser` and `remote_preview` as separate layers; never infer a higher layer.
 - Evidence: WP-006 maps 11 P0/P1 journeys; 8 have source-bound unit contracts and 3 privacy journeys remain `source_only`. Every production status remains `unknown_db_down`.
 - Consequence: existing contract tests become discoverable without being overstated. WP-007 addresses privacy transition atomicity and route contracts; real payment, refund, payout or deletion operations remain prohibited during evidence collection.
+
+## D-017 — Approval changes queue state; the processor owns deletion
+
+- Date: 2026-07-29
+- Decision: admin privacy approval/rejection may mutate only an eligible request row using compare-and-set. Approval persists actor metadata but does not mutate the profile; the deletion processor exclusively owns the later auth ban, profile anonymization and related-data operations after claiming `approved → processing`.
+- Evidence: the previous route allowed reject from `processing`, matched update only by ID and set `profiles.deleted_at` before the processor. Route tests now prove forbidden active-state transitions, CAS conflict 409 and absence of profile mutation.
+- Consequence: concurrent admin/cron actions cannot silently overwrite request state at the route boundary. DB-level unique active requests, atomic audit and multi-step processor recovery remain open until canonical migration parity permits a safe database design.
+
+## D-018 — Retry identity comes from the request after profile anonymization
+
+- Date: 2026-07-29
+- Decision: resolve deletion identity from the current profile while it is intact; if a partial prior run already removed the profile email, fall back to the privacy-request metadata retained until terminal completion.
+- Evidence: the processor anonymizes the profile before deleting all email-linked rows and clearing outbox entries. A later failure therefore made a retry reread `null` email even though the approved request still retained the original email/fullName. Unit tests cover the partial and normal branches and confirm completed metadata contains no PII.
+- Consequence: retries can continue deterministic email-linked cleanup after partial profile anonymization. This does not make auth/database mutations atomic, guarantee one active request, or prove live deletion; WP-009 and later DB parity work retain those gates.
+
+## D-019 — Terminal deletion state is monotonic; notification is best-effort
+
+- Date: 2026-07-29
+- Decision: guard both completion and failure writes with current `processing` status, and run completion notification outside the destructive failure boundary. Do not automatically requeue `failed` requests.
+- Evidence: previously an email-provider exception after `completed` entered the catch and wrote `failed` by ID. New contracts prove destructive failure invokes failure marking once, lost processing CAS is surfaced without overwrite, and notification failure returns successful completion without calling failure marking.
+- Consequence: a non-critical notification cannot regress an irreversible completed deletion, and concurrent status changes remain monotonic. Manual admin re-approval remains the controlled retry path; automatic retry requires later lease/backoff/dead-letter and DB evidence.

@@ -12,6 +12,9 @@ flowchart TD
   Guide --> Optional["Optional tour embed / Suspense"]
   Optional --> Resolver
   Next --> Auth["Supabase Auth + RLS"]
+  Next --> Privacy["Privacy request route / CAS queue state"]
+  Privacy --> Processor["Cron deletion processor / auth + profile + related data"]
+  Processor --> Auth
   Next --> CMS["CMS / knowledge / ingestion"]
   Resolver --> Rest["Supabase Data API snapshots"]
   Resolver --> PG["Direct Postgres recovery path"]
@@ -44,7 +47,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: exact SHA `d07f48c8` is built as deployment `8QR63FhdmjYAfbgQiKPx8vQ9DgnM` and immutable browser evidence exists, but migration parity and Vercel runtime-log scope are unavailable; preview and production data-plane health are down. The deployment proves the generated critical-evidence packet and fail-closed behavior, not live backend effects or production readiness.
+Current breaks: latest WP-009 exact SHA `34c05f55` is immutable deployment `CKfpUHhxpSzqgQUuhXQuidrC7HGh` with local/remote health, smoke and browser evidence. It proves code/artifact/auth boundaries but not deletion effect: migration parity and runtime-log scope are unavailable, while preview and production data-plane health are down.
 
 ## Data ownership boundaries
 
@@ -54,3 +57,4 @@ Current breaks: exact SHA `d07f48c8` is built as deployment `8QR63FhdmjYAfbgQiKP
 - No B2B product may share production DB/secrets/releases without ADR.
 - Current source topology is recorded in `docs/audit/architecture-current.md`; its data/access candidates remain static evidence until live Supabase and effect tests confirm them.
 - Critical action topology is recorded in `docs/audit/critical-interaction-evidence.csv`; `contract_tested` means only the listed unit contract, while route/browser/preview/live gaps remain explicit.
+- Privacy approval owns only the CAS queue transition; the cron processor owns irreversible deletion/anonymization. WP-008 preserves retry identity; WP-009 makes terminal writes monotonic and isolates notification failure. Candidate evidence still does not prove live cron completion, unique active requests, leases/checkpoints or transactional audit.
