@@ -593,6 +593,9 @@ export async function listStripeRefundsForPayment(input: {
   if (!response.ok || !payload || !Array.isArray(payload.data)) {
     throw new Error("Failed to fetch Stripe refunds.");
   }
+  if (payload.has_more === true) {
+    throw new Error("Stripe refund list is incomplete.");
+  }
 
   return payload.data.flatMap((raw): StripeRefundDetails[] => {
     const row = asRecord(raw);

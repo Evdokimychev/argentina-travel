@@ -102,6 +102,20 @@ describe("refund provider idempotency", () => {
     })]);
   });
 
+  it("fails closed when Stripe indicates that the refund list is truncated", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      data: [],
+      has_more: true,
+    }), { status: 200, headers: { "Content-Type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(listStripeRefundsForPayment({
+      secretKey: "sk_test",
+      paymentIntentId: "pi_1",
+    })).rejects.toThrow("incomplete");
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
   it("lists Mercado Pago refunds read-only and normalizes numeric identifiers", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify([{
       id: 77,
