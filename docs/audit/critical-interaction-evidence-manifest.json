@@ -132,10 +132,11 @@
       "invariants": ["admin accounts cannot self-delete through this route", "one active deletion request is returned as a conflict", "reason length is bounded"],
       "evidence": [
         {"type": "route_integration", "source": "src/app/api/privacy/delete-request/route.test.ts", "test": "persists one bounded deletion request for the authenticated non-admin user"},
-        {"type": "unit_contract", "source": "src/lib/privacy/delete-automation.test.ts", "test": "recovers the original identity from request metadata after partial anonymization"}
+        {"type": "unit_contract", "source": "src/lib/privacy/delete-automation.test.ts", "test": "recovers the original identity from request metadata after partial anonymization"},
+        {"type": "unit_contract", "source": "src/lib/privacy/delete-automation.test.ts", "test": "keeps a completed deletion successful when its notification fails"}
       ],
       "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
-      "gap": "Route authorization, bounded persistence, existing-request conflict and retry identity recovery are tested; concurrent duplicate prevention, live RLS and complete downstream deletion remain unproven."
+      "gap": "Route authorization, bounded persistence, existing-request conflict, retry identity recovery and post-completion notification isolation are tested; concurrent duplicate prevention, live RLS and complete downstream deletion remain unproven."
     },
     {
       "id": "admin.privacy.transition", "risk": "P1", "actors": ["admin", "tourist", "organizer"], "modes": ["remote"],

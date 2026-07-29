@@ -337,6 +337,39 @@ export function completedDeleteMetadata(input: {
   return { ...input } as Json;
 }
 
+export async function settlePrivacyDeleteOperation<T>(input: {
+  perform: () => Promise<T>;
+  markFailed: (message: string) => Promise<string | null>;
+  notifyCompleted: (result: T) => Promise<unknown>;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  let result: T;
+  try {
+    result = await input.perform();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Неизвестная ошибка";
+    let failureMarkError: string | null;
+    try {
+      failureMarkError = await input.markFailed(message);
+    } catch (markError) {
+      failureMarkError = markError instanceof Error ? markError.message : "unknown failure mark error";
+    }
+
+    return failureMarkError
+      ? { ok: false, error: `${message}; additionally failed to mark request as failed: ${failureMarkError}` }
+      : { ok: false, error: message };
+  }
+
+  try {
+    await input.notifyCompleted(result);
+  } catch (error) {
+    console.error("[privacy_delete_completion_notification_failed]", {
+      error: error instanceof Error ? error.message : "unknown",
+    });
+  }
+
+  return { ok: true };
+}
+
 async function processDeleteRequest(
   supabase: DbClient,
   request: PrivacyRequestRow
@@ -362,131 +395,139 @@ async function processDeleteRequest(
     return { ok: false, error: "Заявка уже обрабатывается или закрыта" };
   }
 
-  try {
-    const { data: profile, error: profileError } = await supabase
+  return settlePrivacyDeleteOperation({
+    perform: async () => {
+      const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("id, email, first_name, last_name")
       .eq("id", request.user_id)
       .maybeSingle();
 
-    if (profileError) {
-      throw new Error(profileError.message);
-    }
+      if (profileError) {
+        throw new Error(profileError.message);
+      }
 
-    const { email: originalEmail, name: originalName } = resolvePrivacyDeleteIdentity(
-      profile,
-      request.metadata,
-    );
-    const completedAt = new Date().toISOString();
+      const { email: originalEmail, name: originalName } = resolvePrivacyDeleteIdentity(
+        profile,
+        request.metadata,
+      );
+      const completedAt = new Date().toISOString();
 
-    const { error: authBanError } = await supabase.auth.admin.updateUserById(request.user_id, {
-      ban_duration: "876000h",
-      user_metadata: {
-        gdpr_deleted_at: completedAt,
-      },
-    });
-    if (authBanError) {
-      throw new Error(authBanError.message);
-    }
+      const { error: authBanError } = await supabase.auth.admin.updateUserById(request.user_id, {
+        ban_duration: "876000h",
+        user_metadata: {
+          gdpr_deleted_at: completedAt,
+        },
+      });
+      if (authBanError) {
+        throw new Error(authBanError.message);
+      }
 
-    const revokeResult = await revokeSupabaseAuthSessions(request.user_id);
-    if (!revokeResult.ok) {
-      throw new Error("Не удалось отозвать auth-сессии: DATABASE_URL не задан");
-    }
+      const revokeResult = await revokeSupabaseAuthSessions(request.user_id);
+      if (!revokeResult.ok) {
+        throw new Error("Не удалось отозвать auth-сессии: DATABASE_URL не задан");
+      }
 
-    const { error: profileUpdateError } = await supabase
-      .from("profiles")
-      .update({
-        first_name: "Удалён",
-        last_name: "пользователь",
-        phone: null,
-        email: null,
-        avatar_url: null,
-        date_of_birth: null,
-        is_blocked: true,
-        deleted_at: completedAt,
-        anonymized_at: completedAt,
-        updated_at: completedAt,
-      })
-      .eq("id", request.user_id);
+      const { error: profileUpdateError } = await supabase
+        .from("profiles")
+        .update({
+          first_name: "Удалён",
+          last_name: "пользователь",
+          phone: null,
+          email: null,
+          avatar_url: null,
+          date_of_birth: null,
+          is_blocked: true,
+          deleted_at: completedAt,
+          anonymized_at: completedAt,
+          updated_at: completedAt,
+        })
+        .eq("id", request.user_id);
 
-    if (profileUpdateError) {
-      throw new Error(profileUpdateError.message);
-    }
+      if (profileUpdateError) {
+        throw new Error(profileUpdateError.message);
+      }
 
-    const bookingsAnonymized = await anonymizeBookings(
-      supabase,
-      request.user_id,
-      originalEmail,
-      completedAt
-    );
-    const personalRowsDeleted = await deletePersonalRows(supabase, request.user_id);
-    const emailRowsDeleted = await deleteRowsLinkedByEmail(supabase, originalEmail);
-    const relatedRowsDeleted = personalRowsDeleted + emailRowsDeleted;
-    const partnerRequestsAnonymized = await anonymizePartnerBookingRows(
-      supabase,
-      request.user_id,
-      originalEmail,
-    );
-    const otherCommerceRowsAnonymized = await anonymizeOtherCommerceRows(
-      supabase,
-      request.user_id,
-      originalEmail,
-    );
-    const commerceRowsAnonymized = partnerRequestsAnonymized + otherCommerceRowsAnonymized;
+      const bookingsAnonymized = await anonymizeBookings(
+        supabase,
+        request.user_id,
+        originalEmail,
+        completedAt
+      );
+      const personalRowsDeleted = await deletePersonalRows(supabase, request.user_id);
+      const emailRowsDeleted = await deleteRowsLinkedByEmail(supabase, originalEmail);
+      const relatedRowsDeleted = personalRowsDeleted + emailRowsDeleted;
+      const partnerRequestsAnonymized = await anonymizePartnerBookingRows(
+        supabase,
+        request.user_id,
+        originalEmail,
+      );
+      const otherCommerceRowsAnonymized = await anonymizeOtherCommerceRows(
+        supabase,
+        request.user_id,
+        originalEmail,
+      );
+      const commerceRowsAnonymized = partnerRequestsAnonymized + otherCommerceRowsAnonymized;
 
-    const { error: completeError } = await supabase
-      .from("privacy_requests")
-      .update({
-        status: "completed",
-        processed_at: completedAt,
-        reason: null,
-        metadata: completedDeleteMetadata({
-          processingStartedAt: startedAt,
-          completedAt,
-          bookingsAnonymized,
-          sessionsRevoked: revokeResult.revokedCount,
-          relatedRowsDeleted,
-          commerceRowsAnonymized,
-        }),
-      })
-      .eq("id", request.id);
+      const completeResult = await supabase
+        .from("privacy_requests")
+        .update({
+          status: "completed",
+          processed_at: completedAt,
+          reason: null,
+          metadata: completedDeleteMetadata({
+            processingStartedAt: startedAt,
+            completedAt,
+            bookingsAnonymized,
+            sessionsRevoked: revokeResult.revokedCount,
+            relatedRowsDeleted,
+            commerceRowsAnonymized,
+          }),
+        })
+        .eq("id", request.id)
+        .eq("status", "processing")
+        .select("id")
+        .maybeSingle();
 
-    if (completeError) {
-      throw new Error(completeError.message);
-    }
+      if (completeResult.error) {
+        throw new Error(completeResult.error.message);
+      }
+      if (!completeResult.data) {
+        throw new Error("Статус заявки изменился до завершения обработки");
+      }
 
-    if (originalEmail) {
+      return { originalEmail, originalName, completedAt };
+    },
+    markFailed: async (message) => {
+      const failResult = await supabase
+        .from("privacy_requests")
+        .update({
+          status: "failed",
+          notes: `Ошибка автоматической обработки: ${message}`.slice(0, 4000),
+          metadata: mergeMetadata(request.metadata, {
+            processingStartedAt: startedAt,
+            failedAt: new Date().toISOString(),
+            lastError: message,
+          }),
+        })
+        .eq("id", request.id)
+        .eq("status", "processing")
+        .select("id")
+        .maybeSingle();
+
+      if (failResult.error) return failResult.error.message;
+      return failResult.data ? null : "request status is no longer processing";
+    },
+    notifyCompleted: async ({ originalEmail, originalName, completedAt }) => {
+      if (!originalEmail) return;
       await sendPrivacyDeleteCompletedEmail({
         recipientEmail: originalEmail,
         recipientName: originalName,
         requestId: request.id,
         completedAt,
       });
-    }
-
-    return { ok: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Неизвестная ошибка";
-    const { error: failMarkError } = await supabase
-      .from("privacy_requests")
-      .update({
-        status: "failed",
-        notes: `Ошибка автоматической обработки: ${message}`.slice(0, 4000),
-        metadata: mergeMetadata(request.metadata, {
-          processingStartedAt: startedAt,
-          failedAt: new Date().toISOString(),
-          lastError: message,
-        }),
-      })
-      .eq("id", request.id);
-
-    if (failMarkError) {
-      return { ok: false, error: `${message}; additionally failed to mark request as failed` };
-    }
-
-    return { ok: false, error: message };
-  }
+    },
+  });
 }
 
 export async function processApprovedPrivacyDeleteRequests(

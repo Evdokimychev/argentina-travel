@@ -1,5 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { completedDeleteMetadata, resolvePrivacyDeleteIdentity } from "./delete-automation";
+import { describe, expect, it, vi } from "vitest";
+import {
+  completedDeleteMetadata,
+  resolvePrivacyDeleteIdentity,
+  settlePrivacyDeleteOperation,
+} from "./delete-automation";
 
 describe("completedDeleteMetadata", () => {
   it("retains only operational deletion evidence", () => {
@@ -44,5 +48,61 @@ describe("resolvePrivacyDeleteIdentity", () => {
       email: "current@example.com",
       name: "Current Reader",
     });
+  });
+});
+
+describe("settlePrivacyDeleteOperation", () => {
+  it("marks a destructive processing failure once and skips completion notification", async () => {
+    const markFailed = vi.fn().mockResolvedValue(null);
+    const notifyCompleted = vi.fn();
+
+    await expect(settlePrivacyDeleteOperation({
+      perform: async () => {
+        throw new Error("profile anonymization failed");
+      },
+      markFailed,
+      notifyCompleted,
+    })).resolves.toEqual({ ok: false, error: "profile anonymization failed" });
+
+    expect(markFailed).toHaveBeenCalledOnce();
+    expect(markFailed).toHaveBeenCalledWith("profile anonymization failed");
+    expect(notifyCompleted).not.toHaveBeenCalled();
+  });
+
+  it("keeps a completed deletion successful when its notification fails", async () => {
+    const markFailed = vi.fn().mockResolvedValue(null);
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    await expect(settlePrivacyDeleteOperation({
+      perform: async () => ({ requestId: "privacy-1" }),
+      markFailed,
+      notifyCompleted: async () => {
+        throw new Error("email provider unavailable");
+      },
+    })).resolves.toEqual({ ok: true });
+
+    expect(markFailed).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalledWith(
+      "[privacy_delete_completion_notification_failed]",
+      { error: "email provider unavailable" },
+    );
+    consoleError.mockRestore();
+  });
+
+  it("reports a lost processing CAS without overwriting the newer terminal state", async () => {
+    const notifyCompleted = vi.fn();
+
+    await expect(settlePrivacyDeleteOperation({
+      perform: async () => {
+        throw new Error("completion state changed");
+      },
+      markFailed: async () => "request status is no longer processing",
+      notifyCompleted,
+    })).resolves.toEqual({
+      ok: false,
+      error: "completion state changed; additionally failed to mark request as failed: request status is no longer processing",
+    });
+
+    expect(notifyCompleted).not.toHaveBeenCalled();
   });
 });
