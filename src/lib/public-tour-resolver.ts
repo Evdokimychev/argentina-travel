@@ -178,8 +178,35 @@ export async function filterToursWithResolvedPublicDetail(
   const settled = await Promise.all(
     candidates.map(async (tour) => {
       const resolution = await resolvePublicTourBySlug(tour.slug);
-      return resolution.status === "resolved" ? tour : null;
+      return { tour, resolution };
     }),
   );
-  return settled.filter((tour): tour is TourListing => Boolean(tour));
+  return settled
+    .filter(({ resolution }) => resolution.status === "resolved")
+    .map(({ tour }) => tour);
+}
+
+/**
+ * Optional commercial widgets may render nothing for confirmed absence, but
+ * must not present an operational detail-source failure as a valid empty set.
+ */
+export async function filterToursWithResolvedPublicDetailOrThrow(
+  tours: TourListing[],
+): Promise<TourListing[]> {
+  const candidates = tours.filter(isDefaultCatalogTour);
+  const settled = await Promise.all(
+    candidates.map(async (tour) => ({
+      tour,
+      resolution: await resolvePublicTourBySlug(tour.slug),
+    })),
+  );
+  const resolved = settled
+    .filter(({ resolution }) => resolution.status === "resolved")
+    .map(({ tour }) => tour);
+
+  if (resolved.length === 0 && settled.some(({ resolution }) => resolution.status === "unavailable")) {
+    throw new Error("public_tour_details_unavailable");
+  }
+
+  return resolved;
 }

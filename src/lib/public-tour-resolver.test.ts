@@ -114,6 +114,38 @@ describe("filterToursWithResolvedPublicDetail", () => {
     const filtered = await filterToursWithResolvedPublicDetail(tours);
     expect(filtered.map((tour) => tour.slug)).toEqual(["ar-ok"]);
   });
+
+  it("keeps confirmed empty distinct from operational unavailability for optional embeds", async () => {
+    const { filterToursWithResolvedPublicDetailOrThrow } = await import(
+      "@/lib/public-tour-resolver"
+    );
+    const tours = [
+      {
+        id: "1",
+        slug: "argentina-unavailable",
+        title: "Patagonia",
+        country: "Argentina",
+        destination: "El Calafate",
+        region: "Patagonia",
+        partnerSource: "tripster",
+      },
+    ] as never;
+
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({ status: "ok", data: null });
+    vi.mocked(fetchPartnerTourDetailResultServer).mockResolvedValue({ status: "ok", data: null });
+    vi.mocked(fetchYouTravelTourDetailResultServer).mockResolvedValue({ status: "ok", data: null });
+    await expect(filterToursWithResolvedPublicDetailOrThrow(tours)).resolves.toEqual([]);
+
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({
+      status: "unavailable",
+      retryable: true,
+      errorClass: "db_unavailable",
+      message: "database down",
+    });
+    await expect(filterToursWithResolvedPublicDetailOrThrow(tours)).rejects.toThrow(
+      "public_tour_details_unavailable",
+    );
+  });
 });
 
 describe("platform source fault injection", () => {

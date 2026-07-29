@@ -3,7 +3,7 @@ import type { TourListing } from "@/types";
 
 type GuidePillarTourDataDependencies = {
   fetchMarketplaceTours: () => Promise<TourListing[]>;
-  filterToursWithResolvedPublicDetail: (tours: TourListing[]) => Promise<TourListing[]>;
+  filterToursForOptionalEmbed: (tours: TourListing[]) => Promise<TourListing[]>;
 };
 
 export type GuideTourEmbedState =
@@ -20,12 +20,16 @@ export function guidePillarNeedsMarketplaceTours(pillar: GuidePillarContent): bo
 }
 
 async function loadDefaultDependencies(): Promise<GuidePillarTourDataDependencies> {
-  const [{ fetchMarketplaceTours }, { filterToursWithResolvedPublicDetail }] = await Promise.all([
-    import("@/data/marketplace-tours-server"),
-    import("@/lib/public-tour-resolver"),
-  ]);
+  const [{ fetchMarketplaceTours }, { filterToursWithResolvedPublicDetailOrThrow }] =
+    await Promise.all([
+      import("@/data/marketplace-tours-server"),
+      import("@/lib/public-tour-resolver"),
+    ]);
 
-  return { fetchMarketplaceTours, filterToursWithResolvedPublicDetail };
+  return {
+    fetchMarketplaceTours,
+    filterToursForOptionalEmbed: filterToursWithResolvedPublicDetailOrThrow,
+  };
 }
 
 export async function loadGuidePillarInitialTours(
@@ -36,7 +40,7 @@ export async function loadGuidePillarInitialTours(
 
   const loaders = dependencies ?? (await loadDefaultDependencies());
   const marketplaceTours = await loaders.fetchMarketplaceTours();
-  return loaders.filterToursWithResolvedPublicDetail(marketplaceTours);
+  return loaders.filterToursForOptionalEmbed(marketplaceTours);
 }
 
 export async function resolveGuideTourEmbedState(
