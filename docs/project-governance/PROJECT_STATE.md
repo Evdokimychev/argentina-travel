@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 05:17 ART / 2026-07-29 08:17 UTC**
+Последняя проверка: **2026-07-29 05:19 ART / 2026-07-29 08:19 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -137,7 +137,7 @@ Master Goal V6 принят как главный норматив проект�
 - Protected exact-SHA `d07f48c8` build: exit 0, **685/685** static pages, runtime-text audit pass, demo auth markers absent. Первый runtime start унаследовал stale глобальный Vercel SHA и был отклонён как evidence; повторный start явно сообщил полный `d07f48c85e2d33a5666ffc7513ffcf46190d9abc`.
 - Local exact-SHA health/public/database/partners — 503/down; tours/excursions — 503 + `Retry-After: 60`; штатный `production-smoke` exit 1 на mandatory health gate. Browser QA `/join`: desktop 1280×900 и mobile 390×844, H1 и формы присутствуют, console errors/route error/overflow — 0.
 - Immutable preview exact `d07f48c8` / deployment `8QR63FhdmjYAfbgQiKPx8vQ9DgnM`: health/public/database/partners и tours/excursions — 503/down, каталоги имеют `Retry-After: 60`, health связывает полный SHA. Remote `/join` desktop 1280 и mobile 390: H1/формы, console errors/route error/overflow — 0. Штатный smoke exit 1 ровно на health gate; promotion запрещён.
-- Canonical production recheck 07:31 UTC: health/public/database/partners — 503/down на старом SHA `993e82fb`; tours/excursions всё ещё возвращают 200 на outage. WP-001/WP-006 candidate не продвигался.
+- Canonical production recheck 08:19 UTC: health/public/database/partners — 503/down на старом SHA `993e82fb`; tours/excursions всё ещё возвращают ложный 200 empty на outage. Candidate не продвигался.
 - WP-007 focused privacy routes: **3 files / 8 tests** — pass. `audit:quick`: TypeScript + ESLint + inventory stale-check + **427 files / 2 014 tests** + **8 release-evidence tests** — pass.
 - Critical evidence snapshot: **11×20**, source-only **0**, route-integration **3**, unit-contract **8**, digest `59baff56fe6c853d`; все production statuses остаются `unknown_db_down`.
 - Protected exact-SHA `cad6aa35` build: exit 0, **685/685** static pages, runtime-text audit pass, demo auth markers absent. Local health сообщает полный exact SHA и 503/down; штатный smoke exit 1 на mandatory health gate.
