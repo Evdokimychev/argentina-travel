@@ -1,8 +1,8 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 00:16 ART / 2026-07-29 03:16 UTC**
+Последняя проверка: **2026-07-29 01:24 ART / 2026-07-29 04:24 UTC**
 Статус: **NOT READY**
-Фаза: **Wave 0 baseline + Wave 1 P0/P1 recovery**
+Фаза: **Wave 1 P0/P1 recovery**
 
 ## Конституция
 
@@ -10,71 +10,67 @@ Master Goal V6 принят как главный норматив проект�
 
 ## Git и candidate state
 
-- Активная ветка: `feat/blog-argentinian-steak-guide`.
-- Локальный HEAD: `db4cd390a5563b0015f543d23a1619dd308cfc36`.
-- `origin/main`: `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Production SHA из `/api/health`: `993e82fb7a6d59b47260387856acce68bb52b651`.
-- Рабочее дерево: 76 entries, 62 изменённых tracked-файла, 14 untracked-файлов; изменения принадлежат нескольким потокам и не образуют замороженный release candidate.
-- WP-001 реализован и локально проверен; отдельные commit/preview/deployment ещё не созданы.
+- Активная ветка: `codex/master-goal-wave1-catalog-fail-closed`.
+- Candidate HEAD: `ef447d8e0c7f722f68099b2cc76b733c5fd88be1`.
+- WP-001 commits: `6927bf78` (catalog fail-closed), `efd7f30a` (healthy SHA-bound readiness evidence).
+- WP-002 commits: `4c209069` (global product-truth copy), `ef447d8e` (remaining unsupported booking/verification claims).
+- В рабочем дереве остаются 24 не относящихся к пакетам entries (23 tracked + 1 untracked); они не staged и не включены в candidate commits.
+- Ветка содержит более раннюю feature-историю и пока не является чистым release branch от `main`; перед production promotion нужен controlled integration/cherry-pick.
 
-## Production
+## Production и deployments
 
-- Канонический URL: `https://www.goargentina.ru`.
-- Apex `https://goargentina.ru` возвращает 308 на `www`.
-- Vercel project: `argentina-travel`, project ID `prj_Xjbr4awgjc56swIgwUEmybVd69PP`, team ID `team_yWNX34oFl2Yk6lrllqiulis0`.
-- Immutable deployment ID и `*.vercel.app` URL: **не подтверждены** — Vercel MCP OAuth отвечает 403 для scope `go-argentina`.
-- `/api/health`, `/api/health/public`, `/api/health/database`, `/api/health/partners`: HTTP 503, `status=down`.
-- Production REST и direct Postgres: `dependency_unavailable`; partner counts и last sync отсутствуют.
-- Production-equivalent build получил от canonical REST точный ответ `exceed_egress_quota`. В локальном production runtime direct Postgres при этом отвечает успешно (`tripsterCount=68`), поэтому production direct-PG failure — отдельная проблема runtime environment/connectivity, требующая Vercel logs/env inspection.
-- Build metadata сообщает migration `20260720230600_final_explicit_data_api_grants`, file count 107, но это не доказывает состояние live migration journal при недоступной БД.
+- Канонический URL: `https://www.goargentina.ru`; production SHA по health: `993e82fb7a6d59b47260387856acce68bb52b651`.
+- Vercel project ID: `prj_Xjbr4awgjc56swIgwUEmybVd69PP`; team ID: `team_yWNX34oFl2Yk6lrllqiulis0`.
+- `efd7f30a` собран Vercel успешно: deployment `2P6Pnq4T1dY1kbn4VQQ8ksAKVu6R`.
+- `4c209069` собран Vercel успешно: deployment `D9WetK9zSgNuom1ytiAUYmmLfsne`.
+- `ef447d8e`: deployment **не создан**; GitHub/Vercel status `failure`, точная причина `Account is blocked` (2026-07-29 04:17 UTC).
+- Immutable preview URL и runtime logs недоступны: Vercel MCP/API/CLI/Browser account scopes не дают доступ к проекту. Поэтому remote browser QA не считается выполненным.
+- Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
-## Supabase, CMS и данные
+## Supabase, migrations, CMS и recovery
 
-- Канонический production ref по baseline/docs: `uooxrypocahomoqzdvzy`.
-- Подключённый Supabase MCP не имеет доступа к этому ref; доступные проекты не используются как proxy.
-- Local tree: 107 SQL migrations. Baseline 2026-07-19 подтверждал 102; применение пяти более новых миграций в live journal независимо не проверено.
-- CMS имеет новые native ingestion/control-plane документы и старое описание `DB override → TS fallback`; source-of-truth требует live reconciliation.
-- Managed backup/PITR не подтверждены; encrypted logical backup требует owner secrets; restore rehearsal имеет статус `not_run`.
+- Канонический production ref: `uooxrypocahomoqzdvzy`; подключённый MCP не имеет к нему доступа.
+- REST root cause подтверждён точным ответом `exceed_egress_quota`.
+- Локальный production runtime при тех же project settings видит direct Postgres (`tripsterCount=68`), тогда как deployed production direct PG недоступен: это отдельная Vercel runtime/env/connectivity ветка P0.
+- Local tree: 107 SQL migrations; live journal/checksum/RLS/grants не подтверждены. Новые DDL не создавались и не применялись.
+- Managed backup/PITR и disposable restore rehearsal не подтверждены.
+- CMS source-of-truth и operational writes нельзя считать доказанными до восстановления canonical DB и reconciliation.
 
-## Воспроизведённые P0/P1
+## Реализовано
 
-1. **P0-GA-001:** production data plane down — все health endpoints 503, оба DB пути недоступны.
-2. **P1-GA-001:** outage маскируется под business-empty: `/api/tours` → 200 `{"tours":[]}`, `/api/excursions` → 200 empty.
-3. **P1-GA-002:** `/excursions` визуально сообщает «Экскурсий по этому запросу нет» во время инфраструктурного отказа; server snapshot кратко содержит «Загружаем страницу…».
-4. **P1-GA-003:** mobile `/tours` показывает `0 туров найдено` до видимого error-state ниже fold.
-5. **P1-GA-004:** footer продолжает называть продукт маркетплейсом и обещать проверенных организаторов без текущего end-to-end proof.
-6. **P1-GA-005:** deployment/migration/backup evidence не замкнуты на текущий production artifact.
+### WP-001 — fail-closed catalogs
 
-## WP-001 — локальный результат
+- Operational failure больше не превращается в `200 []`/ложный `404`: unavailable → 503/LKG; empty/missing выдаются только после подтверждённого чтения.
+- `/api/tours` на outage → 503 + `Retry-After: 60`; `/api/excursions` при доступных партнёрах → 200 partial, при total outage → 503.
+- UI tours/excursions не показывает ложный zero/empty; tour LKG имеет TTL 5 минут и не отравляется ошибкой.
+- Release/readiness отчёты привязываются только к healthy HTTP 200 health с совпадающим SHA.
 
-- `/api/tours`: dependency outage → HTTP 503 + `Retry-After: 60`; confirmed empty → 200.
-- `/api/excursions`: total outage → HTTP 503 + `Retry-After: 60`; available partner data + unavailable platform → 200 `catalogState=partial`, 59 items total.
-- `/tours`: при доступных партнёрах 53 карточки; при искусственном total-outage используется свежий 5-минутный LKG, не `0`.
-- `/excursions`: при total-outage route error показывает «Не удалось загрузить каталог экскурсий», retry и альтернативные переходы; false-empty отсутствует.
-- Browser QA: 1440×900 и 390×844, horizontal overflow 0, console чиста на normal/partial path. На fault path виден ожидаемый Next route-error log, пользовательский текст не раскрывает backend details.
-- Production build: exit 0, 930/930 static pages, demo auth markers отсутствуют. Первый build был ожидаемо остановлен safety-gate из-за локального demo flag; успешный build использовал одноразовый `NEXT_PUBLIC_ENABLE_DEMO_SEED=false`, `.env` не менялся.
-- Clean install: `npm ci`; `npm audit --omit=dev` — 0. Dev toolchain — 9 high, без production dependencies.
-- `npm run audit:quick`: TypeScript + ESLint + 427 test files / 2 049 tests + 8 release-evidence tests — pass.
+### WP-002 — product truth
 
-Полный реестр: `ISSUE_LEDGER.csv`. Root-cause matrix: `ROOT_CAUSE_MATRIX.md`.
+- Footer, hero, about, navigation, marketplace value props и guide copy больше не называют весь продукт доказанным marketplace и не обещают глобально проверенных организаторов, реальные отзывы или отсутствие предоплаты.
+- Copy различает внутреннюю заявку GoArgentina и партнёрский checkout/status/payment/cancellation.
+- Контрактный тест сканирует четыре локали и наиболее рискованные public-copy sources.
 
-## Последние доказательства
+## Проверки candidate
 
-- Live curl: health 503; tours/excursions API false-empty 200.
-- Production browser baseline 1440×900: `/tours` показывал error block после `0 найдено`, `/excursions` — ложный empty-state.
-- Local candidate browser QA 1440×900 и 390×844: real fallback/partial data отображаются без ложного zero; total-outage `/excursions` показывает error boundary; overflow отсутствует.
-- Existing inventory: `docs/release-2026-07/route-inventory.csv` — 370 записей + header; текущий код содержит 157 pages и 311 route handlers, поэтому inventory требует regeneration.
-- Production runtime dependencies: `npm audit --omit=dev` ранее подтверждён 0; dev-only advisory остаётся документированным.
+- `npm run audit:quick`: TypeScript + ESLint + **428 files / 2 058 tests** + **8 release-evidence tests** — pass.
+- Focused product-truth: **15 tests** — pass.
+- Защищённый production build точного `ef447d8e`: exit 0, **930/930**, demo auth markers absent; health bundle сообщает полный SHA `ef447d8e0c7f722f68099b2cc76b733c5fd88be1`.
+- Local production-equivalent smoke: `/api/health` 503 degraded с exact SHA, `/api/tours` 503 + `Retry-After: 60`, `/api/excursions` 200 partial с 59 total и `unavailableSources=[platform]`; `/`, `/about`, booking guide и safety guide — 200.
+- Browser QA свежего bundle: 1440×900 и 390×844, unsupported claims absent, horizontal overflow 0. `/guide/bezopasnost` имеет холодный SSR 7.9–8.6 s — отдельный performance-риск, не функциональный false-loader.
+- Production dependencies: `npm audit --omit=dev` — 0; dev toolchain — 9 high.
+- Финальная production перепроверка 2026-07-29 04:24 UTC: health/public/database/partners — 503; tours/excursions по-прежнему возвращают ложный 200 empty на старом SHA `993e82fb`.
 
-## Блокеры
+## Открытые P0/P1
 
-- Внешний P0: восстановление/диагностика production Supabase data plane требует доступа владельца к canonical project/billing/network/credentials.
-- Supabase MCP: production ref отсутствует в текущем account scope.
-- Vercel MCP: 403 scope; deployment ID, preview и runtime/build logs недоступны.
-- Нельзя честно публиковать preview/production из смешанного dirty worktree без изоляции candidate.
+1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
+2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
+3. **P1-GA-005:** разблокировать Vercel account/project scope и получить remote immutable preview/log evidence.
+4. **P1-GA-009:** перенести candidate commits на чистую release ancestry без пользовательских изменений.
+5. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
 
 ## Следующие три задачи
 
-1. Снять Vercel preview с изолированного WP-001 commit и привязать browser/smoke evidence к immutable deployment ID.
-2. Владелец: снять `exceed_egress_quota`/spend cap на canonical Supabase; engineering: отдельно диагностировать несовпадение production direct-PG с локально успешным direct-PG.
-3. Проверить live migration journal/RLS/grants после восстановления, затем исправить product-truth copy/visibility для marketplace/verified-organizer обещаний.
+1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
+2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать `ef447d8e`, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
+3. Engineering: сформировать чистый release candidate из доказанных WP-001/WP-002 commits и выполнить полный card/detail/CTA crawl без production promotion до закрытия P0.

@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: 2026-07-29 00:16 ART. План изменён по build/runtime evidence: REST root cause подтверждён как egress quota, а production direct-PG требует отдельной диагностики, потому что тот же путь локально исправен.
+Обновлён: **2026-07-29 01:18 ART**. План перестроен по доказательствам: WP-001 и WP-002 реализованы независимо, но последний preview остановлен новым внешним блокером `Vercel Account is blocked`; Supabase P0 и live migration evidence по-прежнему выше promotion.
 
 ## Правило выбора пакета
 
@@ -10,32 +10,31 @@
 
 | Order | Work packet | Severity | Exit evidence | State |
 |---:|---|---|---|---|
-| 0 | Freeze evidence: identity, dirty ownership, production SHA, infra scopes | P0 support | PROJECT_STATE + exact SHA/scope/timestamp | done |
-| 1 | Restore/diagnose production Supabase REST + direct PG | P0 | both required health checks 200; root cause and incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
-| 2 | Reconcile 107-file migration journal/RLS/grants against canonical ref | P0/P1 | read-only checksum parity, advisors, logs, backup decision | blocked by Supabase access/data plane |
-| 3 | Fail-closed public catalog resolution | P1 | outage→503/LKG, confirmed empty→200, confirmed missing→404; route/unit tests; no cache poison | implemented; local tests/build/browser/smoke pass |
-| 4 | Candidate isolation and preview | P1 | scoped commit, immutable preview ID/URL, browser QA 390/1440, smoke bound to commit | in progress; Vercel MCP scope remains a metadata blocker |
-| 5 | Production promote and post-deploy proof | P0/P1 | deployment ID/SHA, health, catalog/detail parity, all-card crawl, rollback | pending |
-| 6 | Product truth: marketplace, organizer, payment, messaging claims | P1 | capability matrix + copy/visibility + tests | pending |
-| 7 | Backup/restore and incident recovery | P1 | encrypted backup evidence + disposable restore rehearsal | owner setup required; runbook exists |
-| 8 | Analytics/consent/conversion deployment binding | P1 | healthy SHA-bound report, clean-browser consent test | pending |
-| 9 | Regenerate route/interaction/data matrix and close stale inventory gaps | P1/P2 | current counts, owners, states and test coverage | pending |
+| 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
+| 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
+| 2 | Unblock Vercel account/project evidence | P1 | successful deployment for exact candidate SHA + logs + immutable URL | `ef447d8e` rejected: `Account is blocked`; owner action required |
+| 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
+| 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
+| 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | pending |
+| 6 | Remote preview full-flow verification | P1 | catalog/detail/card/CTA crawl, no-JS/slow path, smoke bound to deployment | blocked by Vercel account/scope |
+| 7 | Production promote and post-deploy proof | P0/P1 | same artifact ID/SHA, health, rollback, catalog/detail parity | forbidden until orders 0–2 close |
+| 8 | Analytics/consent/conversion proof | P1 | healthy SHA-bound report + clean-browser consent matrix | code binding improved; production proof pending healthy deployment |
+| 9 | Route/interaction/data inventory regeneration | P1/P2 | current owners, states, coverage and evidence links | pending |
+| 10 | Profile `/guide/bezopasnost` cold SSR | P2 | server timing decomposition and safe latency reduction | newly observed 7.9–8.6 s; functional render succeeds |
 
-## Первый безопасный work packet
+## Выполненные безопасные пакеты
 
-**WP-001: Fail-closed catalog resolution.** Он выбран, потому что P1 уже воспроизведён, изменение обратимо, не требует DDL и не зависит от восстановления production для локальной реализации.
+### WP-001 — fail-closed catalog resolution
 
-Scope:
+Typed result boundaries preserve `unavailable` instead of collapsing failures to absence. APIs, RSC/UI, LKG and evidence producers now distinguish outage, confirmed empty and confirmed missing. No schema, partner write or checkout behavior changed.
 
-- typed `ok/data | confirmed empty/missing | unavailable` на data boundaries;
-- `/api/tours`, `/api/v1/tours`, `/api/excursions`, `/api/v1/excursions`, detail routes;
-- public tour resolver propagation;
-- no caching operational errors as absence;
-- route/fault matrix tests;
-- preview QA и production-equivalent smoke после candidate isolation.
+### WP-002 — product truth
 
-Not in scope: schema/migrations, checkout/payment, partner write calls, production deploy before P0 recovery.
+Global and high-risk route copy now derives from proven current behavior: GoArgentina may accept an internal request or hand off to a partner, and the card/seller owns the applicable payment/cancellation rules. Unsupported blanket promises were removed across RU/EN/ES/PT and protected with source/locale tests.
 
-## Почему план изменён
+## Почему порядок изменён
 
-До live baseline приоритетом был semantic catalog gap. После доказанного simultaneous REST/direct-PG outage он остаётся первым независимым кодовым пакетом, но deployment перенесён после восстановления data plane и migration parity. Новые функции, дизайн и SEO не допускаются раньше P0/P1 recovery.
+- WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
+- Candidate promotion moved below Vercel account recovery: a locally proven SHA without a deploy ID is not a remote preview.
+- Safety guide latency is recorded as P2, not allowed to displace the production data-plane P0 without profiling evidence.
+- No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
