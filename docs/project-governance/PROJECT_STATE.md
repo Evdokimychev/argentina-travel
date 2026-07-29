@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 17:32 ART / 2026-07-29 20:32 UTC**
+Последняя проверка: **2026-07-29 18:56 ART / 2026-07-29 21:56 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `5c79c4cb19b95c6083230a958f741fda82a71a53`; exact evidence/deploy candidate: `5c79c4cb19b95c6083230a958f741fda82a71a53`; `origin/main` является ancestor.
+- Product implementation SHA: `966be464563f410ff98d117d8dbeab09d21ce231`; exact evidence/deploy candidate: `966be464563f410ff98d117d8dbeab09d21ce231`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `5c79c4cb19b95c6083230a958f741fda82a71a53` (`chore(security): bound dev dependency audit risk`); runtime behavior остаётся WP-024 `d4fbbbc1`, WP-023 — `e22b5885`, WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`.
+- Последний runtime-product SHA: `966be464563f410ff98d117d8dbeab09d21ce231` (`fix(observability): bound partner failure logs`); предыдущие пакеты: WP-025 `5c79c4cb`, WP-024 `d4fbbbc1`, WP-023 `e22b5885`, WP-022 `4aa7f52c`, WP-021 `d6808a5c`.
 
 ## Production и deployments
 
@@ -52,6 +52,7 @@ Master Goal V6 принят как главный норматив проект�
 - Повторная read-only сверка 19:26 UTC: WP-021 `d6808a5c` восстановился до success/deployment `BMXQzSXBg6o2r22LawaFRUQvLsVp`, WP-022 `4aa7f52c` — `GWXM4ciE3sQW4jcYfiPeq4gnDcU3`, WP-023 `e22b5885` — `5HameBiSUPAUurXE8GVT2rouQAtx`. Это закрывает отсутствие immutable build IDs, но не заменяет healthy distributed/production proof.
 - WP-024 exact `d4fbbbc1` успешно развернут в 19:23:54 UTC: Vercel deployment `9nLoBaDbY1Aq6nnKkgPdPEXypT2e`, GitHub deployment `5663714750`, immutable URL `https://argentina-travel-cu53i1tbf-go-argentina.vercel.app`. Health связывает полный SHA и остаётся `503/down`; article 200, comments 503 с `Retry-After: 60`/`private, no-store`, CMS-only existence 503 вместо ложного 404. Remote browser показывает полный article/outage-state без framework overlay; strict/recovery smoke exit 1 из-за down direct PG. Promotion не выполнялся.
 - WP-025 exact `5c79c4cb` pushed в 20:29 UTC. GitHub/Vercel немедленно вернул `failure: Account is blocked` в 20:30:07 UTC; deployment ID и immutable preview отсутствуют. Vercel CLI `Not authorized`, connector `403` для scope `go-argentina`; локальный exact artifact доказан, но не подменяет remote deployment evidence.
+- WP-026 exact `966be464` pushed в 21:54 UTC. GitHub/Vercel вернул `failure: Account is blocked` в 21:54:16 UTC; deployment ID и immutable preview отсутствуют. Локальный exact artifact и реальные quota logs доказаны, но remote preview/runtime evidence не заявляется.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -260,7 +261,21 @@ Master Goal V6 принят как главный норматив проект�
 - Вместо blind force upgrade добавлен machine-enforced policy `P1-GA-019` до **2026-08-12**. Gate fail-closed при любой production vulnerability, новом package/source/severity, переносе direct root в production, чистом upstream graph с оставшимся исключением или истечении срока.
 - Policy встроен в `audit:security` и blocking static release gate; причина, срок и removal trigger хранятся в repository. Lockfile/runtime dependency graph не менялись.
 
+### WP-026 — bounded partner failure observability
+
+- Root cause подтверждён в трёх границах: общий `logPartnerSourceUnavailable` сериализовал raw `result.message`; Tripster/YouTravel compatibility wrappers включали его в thrown error; External Orders route отдельно логировал `error.details`.
+- Введён compile-time allowlist имён источников. Structured event содержит только `source`, `errorClass`, `retryable`; совместимое исключение — только `<source>_unavailable:<errorClass>`. Исходный текст остаётся внутренним значением классификации/fallback/persistence и не пересекает log/throw boundary.
+- Checkout URL, affiliate wrapping, External Orders fallback, idempotency, сохранение заявки и public response не менялись. Документация Tripster фиксирует observability boundary.
+- Protected build exact `966be464` воспроизвёл реальные quota faults при data collection и prerender: `tripster_slugs_supabase` и `tripster_listings_supabase` выводятся только с class/retryability, без provider body. Runtime дополнительно доказал безопасные compatibility codes для Tripster и YouTravel.
+- Exact preview отсутствует: Vercel вернул `Account is blocked`; production остаётся на legacy `993e82fb`, поэтому production logging boundary не считается закрытой.
+
 ## Проверки candidate
+
+- WP-026 focused partner/result/resolver/booking suite: **6 files / 33 tests** — pass. `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **449 files / 2 135 tests** + **31/31 release-evidence contracts** — pass.
+- Protected production build exact `966be464`: **929/929**, build ID `DK2Xrr6ezEN7kC9ZAh6ag`, runtime/demo guards pass. Реальные quota events содержат только allowlisted source/class/retryability; статический boundary scan пуст.
+- Exact local runtime на `127.0.0.1:3112`: full SHA bound, direct PG healthy (`tripsterCount=68`), REST quota degraded; `/`, `/tours`, `/excursions` — 200, `/api/tours` — 503, `/api/excursions` — 200. Strict smoke exit 1. Два штатных recovery smoke с 15-second timeout дошли до public pages, но упали на commercial detail latency; diagnostic recovery с `SMOKE_TIMEOUT_MS=60000` прошёл реальные tour/excursion details, redirects, assets и hero images. Это новый latency gap, а не production-ready pass.
+- In-app browser exact build: `/tours`, реальный YouTravel detail и реальный Tripster detail имеют корректные title/H1, CTA/date controls, без framework overlay, horizontal overflow и browser logs; визуальные captures проверены. GoArgentina освободил `3112`, порт отдельного проекта `3001` не затрагивался.
+- Exact `966be464` pushed; Vercel status `failure: Account is blocked`, deployment ID отсутствует. DDL, DB/provider writes, env/secret mutation и production promotion не выполнялись.
 
 - WP-025 policy contracts: **5/5** pass; реальный `npm run audit:deps:policy` pass: production=0, 9 exact dev packages, advisory `1124334`, expiry 2026-08-12. Blocking static release gate на чистом exact SHA: **50/50 evidence contracts**, environment/secrets/types/lint/inventory — pass.
 - `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **449 files / 2 133 tests** + **31/31 release-evidence contracts** — pass. Protected production build exact `5c79c4cb`: **929/929**, build ID `06AUryFQbpEYhI-LpxJ8f`, runtime/demo guards pass.
@@ -414,10 +429,11 @@ Master Goal V6 принят как главный норматив проект�
 17. **P1-GA-019:** WP-025 ограничил exact dev-only graph fail-closed policy до 2026-08-12 и доказал production audit=0. Advisory-цепочка остаётся физически присутствующей и требует upstream remediation до deadline; исключение не является закрытием finding.
 18. **P1-GA-020:** 25–28-секундная public-route задержка оказалась full-catalog optional detail fan-out, а не CMS query latency. WP-023 `e22b5885` сначала выбирает 4–6/widget/geography candidates и только затем валидирует detail; article cold сокращён с 23.601 s до 616 ms, recovery smoke и deployment `5HameB…` проходят. Healthy distributed behavior и production same-artifact proof остаются открыты.
 19. **P1-GA-021:** WP-024 `d4fbbbc1` устраняет CMS error→missing/empty collapse, не кеширует degraded fallback и доказан exact local/preview. Production всё ещё на старом artifact и возвращает false-empty comments; healthy read/recovery и same-artifact production proof остаются открыты.
-20. **P1-GA-022:** Tripster public fallback включает raw provider `message` в build/runtime log. Секрет в текущем evidence не обнаружен, но внешняя строка не является bounded observability contract; нужна structured class-only sanitization и regression test.
+20. **P1-GA-022:** WP-026 `966be464` удалил raw provider text из structured logs и compatibility exceptions; unit, exact build и local runtime quota evidence проходят. Production остаётся на legacy logger, а exact preview заблокирован Vercel, поэтому same-artifact production proof открыт.
+21. **P1-GA-023:** два последовательных recovery smoke на default 15-second budget упали при переходе к commercial detail, хотя оба genuine details отвечают 200 и полный diagnostic smoke проходит с 60-second budget. Нужен WP-027 latency trace и исправление degraded fallback path без ослабления штатного SLO.
 
 ## Следующие три задачи
 
 1. Owner/ops + engineering: снять Supabase `exceed_egress_quota`, восстановить canonical verified runtime connectivity и сразу выполнить read-only 107 migrations/journal/checksums, RLS/grants и backup/PITR reconciliation; до parity не применять DDL.
-2. Engineering WP-026: заменить raw Tripster provider-message logging на bounded `source/errorClass/retryable`, добавить secret-marker/structured-log contracts и повторить outage build/runtime evidence.
+2. Engineering WP-027: инструментировать и локализовать 15-second commercial detail latency в degraded REST-quota режиме; сохранить genuine-link/fail-closed semantics и вернуть штатный recovery smoke в зелёное состояние без увеличения default timeout.
 3. Engineering/tooling: мониторить upstream ESLint plugin graph и удалить policy P1-GA-019 при совместимой remediation, обязательно до 2026-08-12; не продлевать без нового registry/audit/compatibility evidence.

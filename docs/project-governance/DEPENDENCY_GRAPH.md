@@ -1,6 +1,6 @@
 # DEPENDENCY_GRAPH
 
-Обновлён по repository + production/candidate evidence 2026-07-29.
+Обновлён по repository + production/candidate evidence 2026-07-29 18:56 ART.
 
 ```mermaid
 flowchart TD
@@ -10,6 +10,8 @@ flowchart TD
   Next --> Resolver["Public catalog/detail resolvers"]
   Resolver --> DetailFanout["Catalog detail fan-out / href-bound offer evidence"]
   DetailFanout --> DetailGuard["WP-021 FIFO resolver limit=3 + in-flight slug dedupe"]
+  DetailFanout --> DetailBudget["WP-027 default 15s detail budget / per-stage trace"]
+  DetailBudget --> Contracts
   Next --> Guide["Editorial guide stream"]
   Guide --> Optional["Optional tour embed / Suspense"]
   Optional --> Resolver
@@ -69,7 +71,8 @@ flowchart TD
   PG --> PGFingerprint["Safe env source / mode / port / project-ref / target status"]
   PGFingerprint --> Ops
   Resolver --> Partners["Tripster / YouTravel / Sputnik8"]
-  Partners --> PartnerLog["WP-026 pending: bounded provider logging"]
+  Partners --> PartnerBoundary["WP-026 raw text internal; allowlisted source/class/retryable"]
+  PartnerBoundary --> Ops
   DetailFanout --> Partners
   DetailGuard --> PGPool["Shared attested partner PG pool max=2 / 8s deadlines"]
   PGPool --> PG
@@ -103,7 +106,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` / `BMXQzS…` bounds per-instance catalog/direct-PG pressure. WP-022 `4aa7f52c` / `GWXM4c…` bounds public catalog REST quota amplification. WP-023 `e22b5885` / `5HameB…` selects renderable candidates before strict detail validation. WP-024 exact `d4fbbbc1` / `9nLoBa…` preserves CMS/comments truth and prevents degraded-cache/false-404 behavior. WP-025 `5c79c4cb` keeps the production graph clean and fail-closed bounds the exact dev advisory graph until 2026-08-12, but Vercel rejected its preview as `Account is blocked`. REST remains quota-restricted, production runs old `993e82fb`, and raw Tripster provider logging is registered as WP-026; migration parity, backup effect, distributed recovery and same-artifact production proof remain unavailable.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` / `BMXQzS…` bounds per-instance catalog/direct-PG pressure. WP-022 `4aa7f52c` / `GWXM4c…` bounds public catalog REST quota amplification. WP-023 `e22b5885` / `5HameB…` selects renderable candidates before strict detail validation. WP-024 exact `d4fbbbc1` / `9nLoBa…` preserves CMS/comments truth and prevents degraded-cache/false-404 behavior. WP-025 `5c79c4cb` keeps the production graph clean and fail-closed bounds the exact dev advisory graph until 2026-08-12. WP-026 `966be464` bounds partner log/throw telemetry under real quota faults, but Vercel rejected its preview as `Account is blocked`. Two default detail smokes now expose WP-027 tail latency. REST remains quota-restricted, production runs old `993e82fb`, and migration parity, backup effect, distributed recovery and same-artifact production proof remain unavailable.
 
 ## Data ownership boundaries
 
@@ -111,6 +114,7 @@ Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target 
 - Public health may expose only a bounded Postgres connection fingerprint (supported env source name, connection mode, effective port, Supabase project ref and attestation status). It must never expose URL, hostname, username, password or query parameters.
 - Direct Postgres access is owned by canonical project attestation: only official Supabase direct/pooler formats whose ref equals an independent trusted project ref may connect. Higher-precedence unknown/mismatch values are skipped; absence of any verified target fails closed. Runtime, session revocation, RLS audit, Prisma gating, backup/restore, migration, partner sync and maintenance tooling share this rule. Cross-project copy requires two distinct refs and explicit production confirmation; the legacy unjournaled runner is disabled.
 - Partner APIs own partner booking/payment; GoArgentina owns disclosure, attribution and safe redirect.
+- Raw partner response/error text is internal classification data. Release telemetry owns only an allowlisted source, normalized error class and retryability; compatibility errors expose only the same source/class code.
 - Internal requests require persisted state, notifications, SLA and admin ownership before public promise.
 - No B2B product may share production DB/secrets/releases without ADR.
 - Current source topology is recorded in `docs/audit/architecture-current.md`; its data/access candidates remain static evidence until live Supabase and effect tests confirm them.
