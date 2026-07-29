@@ -13,7 +13,10 @@ flowchart TD
   Optional --> Resolver
   Next --> Auth["Supabase Auth + RLS"]
   Next --> Privacy["Privacy request route / CAS queue state"]
-  Next --> BookingCreate["Canonical booking command / idempotency"]
+  Next --> BookingCreate["Canonical booking command / actor-bound idempotency"]
+  BookingCreate --> BookingReceipt["Bounded create/replay receipt: booking id only"]
+  Auth --> GuestAttach["Confirmed-email guest ownership attach"]
+  GuestAttach --> BookingCreate
   BookingCreate --> Availability["Canonical availability slot reservation"]
   BookingCreate --> Notify["Booking-created notification enqueue"]
   Availability --> Supabase
@@ -67,7 +70,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-013 exact SHA `26aeda4c` is immutable deployment `7w7fLVQJZzod562BUBKVxN1XACUo` with exact local build, refund route/service contracts and local/remote browser evidence. It recovered only after an initial Vercel account block. The packet still does not prove live refund persistence/provider execution: migration parity and runtime-log scope are unavailable, while preview/production data-plane health is down.
+Current breaks: WP-014 exact candidate `84f6244b` recovered from the recurring account block as immutable deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN`; local/remote browser and health bind the SHA. The packet still cannot prove live booking/attach/RPC behavior: migration parity and runtime-log scope are unavailable, while preview/production data-plane health is down.
 
 ## Data ownership boundaries
 
@@ -82,4 +85,5 @@ Current breaks: WP-013 exact SHA `26aeda4c` is immutable deployment `7w7fLVQJZzo
 - A webhook notification/event ID owns booking-state idempotency; the provider payment resource ID owns charge-ledger uniqueness. Exact event replay may repair a missing charge row, but may not repeat a booking transition or duplicate notification for an existing row.
 - A successful webhook response proves only durable charge persistence. Commission snapshot and customer notification remain separate best-effort effects until an idempotent outbox/reconciliation path is live-proven.
 - A native booking request owns only canonical server-derived commercial fields. Quote intent never owns inventory; a scheduled booking must confirm its canonical availability slot before the atomic persistence command. Notification enqueue follows only a newly created booking, not an idempotent replay.
+- A booking idempotency key identifies an operation, not a bearer CRM capability. The stored actor must match the new canonical actor; an authenticated same-email retry may first claim a guest row only through the confirmed-email attach RPC. Public create and replay responses contain only the deterministic booking ID, never the stored CRM row.
 - A refund request never owns money supplied by the browser or booking USD presentation. The completed charge owns provider, amount and currency; the atomic RPC owns replay, source lock and cumulative reservation. A different personal finance actor owns execution claim. Provider-uncertain `processing` currently has no proven recovery lease and remains an explicit gap.

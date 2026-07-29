@@ -212,3 +212,10 @@
 - Decision: do not reopen or blindly retry a `processing` refund in WP-013. Stable provider idempotency is necessary but insufficient without provider status lookup, an atomic retry/reconcile lease and live RPC/provider evidence.
 - Evidence: provider execution follows pending→processing claim; provider/finalize uncertainty records `processing`, while approval accepts only `pending`. Two recovery workers could currently call the provider concurrently even if provider idempotency usually deduplicates.
 - Consequence: initial request/approval integrity is repaired and tested; processing recovery remains an explicit critical risk/work packet rather than a hidden automatic retry.
+
+## D-033 — Booking idempotency is actor-bound and returns only a receipt
+
+- Date: 2026-07-29
+- Decision: treat the booking idempotency key as an operation identifier, not a capability to read the canonical booking. An exact replay succeeds only when the stored and new canonical `userId` match. Authenticated retries run the existing confirmed-email guest attach before the atomic command. Both first creation and replay return only `{ booking: { id } }`.
+- Evidence: the RPC compared only the command fingerprint and returned the complete current row; the route serialized it unchanged. Route/service tests cover same account, same derived guest, confirmed same-email guest→account attach, unrelated account denial and absence of traveler/passport/payment/portal tokens from the public response.
+- Consequence: a leaked key and payload no longer disclose the evolving CRM record through the public route. The service-role RPC still returns its internal row to the single wrapper; adding the ownership predicate inside SQL is deferred until canonical migration parity is readable and must not be mistaken for live proof.

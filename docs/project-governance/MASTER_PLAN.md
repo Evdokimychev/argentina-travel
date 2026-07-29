@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 08:22 ART**. WP-013 привязал refund request к исходному ledger, выровнял actor ownership и получил exact immutable preview; live RPC/RLS/provider effect и processing recovery остаются заблокированы Supabase/provider evidence.
+Обновлён: **2026-07-29 08:57 ART**. WP-014 ограничил booking-create response идентификатором, связал replay с guest/session actor и получил exact immutable preview; live RPC/RLS/attach effect и SQL-layer hardening остаются заблокированы migration parity.
 
 ## Правило выбора пакета
 
@@ -28,9 +28,10 @@
 | 15 | Booking creation route integration (WP-011) | P0 | App Router + fake atomic command: canonical pricing, idempotency, slot conflict, safe failure; no live booking | done `84988cf` / `8aKBjCN2…`; 14 focused + 2 040 full tests, exact build/journey/local+remote browser; smoke correctly blocked by health |
 | 16 | Payment webhook ledger recovery (WP-012) | P0 | signed App Router delivery; durable ledger before 2xx; retry/replay recovery; out-of-order state; safe failure with fake provider/store | done `77cf5674` / `13SV9J…`; 33 focused + 2 053 full + build/journey/local+remote browser; live DB/provider effects unknown |
 | 17 | Refund request/approval route integrity (WP-013) | P0 | authenticated App Router tests; actor/ownership; operation-id replay; cumulative cap/race; no provider execution | done `26aeda4c` / `7w7fLVQ…`; 21 focused + 2 063 full + exact build/local+remote browser/smoke; live DB/provider/recovery unknown |
-| 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | active next independent packet; source reproduction confirms replay returns canonical booking payload |
-| 19 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
-| 20 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
+| 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | done `32038cc9` + exact `84f6244b` / `CJ3fcfursTMefpDtXoJRX7h1TpmN`; 21 focused + 2 070 full + local/remote browser/smoke |
+| 19 | Refund `processing` reconciliation (WP-015) | P0/P1 | provider lookup; same durable key; atomic recovery lease; finalize/audit; no blind retry | next financial packet after live journal/provider capability evidence; R-024 remains active |
+| 20 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
+| 21 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
 ## Выполненные безопасные пакеты
 
@@ -86,6 +87,10 @@ Signed Stripe and Mercado Pago routes now use a detailed booking outcome and req
 
 Refund preparation now derives money from the completed source charge instead of client/booking USD fields, rejects currency/provider mismatch, and returns an identical UUID replay without another reservation. Tourist POST uses shared booking ownership, so matching contact email alone cannot mutate finance; organizer/admin paths retain explicit role/capability and personal-session gates. Approve/reject responses no longer expose raw provider or SQL failures, and ledger UI renders the stored currency directly. Existing SQL still owns charge locking, cumulative cap, active-request uniqueness and four-eyes claim. No migration or live provider/refund mutation was performed; uncertain `processing` recovery remains a separately registered risk.
 
+### WP-014 — booking replay actor and response integrity
+
+The public booking-create handler no longer serializes the canonical CRM row: first creation and exact replay return the same ID-only receipt. The service wrapper rejects a stored booking whose owner differs from the new canonical actor even when the operation key and command fingerprint match. Anonymous replay remains bound to the deterministic guest identity; a signed-in user may transition guest→account only through the existing confirmed-email attach RPC before replay. Client types now reflect the minimal receipt. No migration was added while the 107-file live journal is unreadable; the service-role SQL function still returns its internal row to the single wrapper and remains an explicit DB-layer hardening/evidence gap.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
@@ -119,5 +124,8 @@ Refund preparation now derives money from the completed source charge instead of
 - WP-013 reproduction found the booking USD summary was incorrectly treated as refund money, breaking ARS/non-USD charges and encouraging unsafe conversion semantics. The completed charge is now the sole money authority; email-only POST access and raw provider/SQL responses were removed in the same route boundary.
 - Existing claim/finalize SQL safely prevents two initial approvers, but a provider success or timeout followed by finalize failure can leave `processing` with no lease/reconcile command. Replaying provider idempotency without an atomic recovery claim was rejected as insufficient evidence; this remains ahead of growth but behind restoration of live journal/provider lookup evidence.
 - WP-014 moved active after source reproduction showed idempotent booking replay returns the full canonical booking object. It is independent of the broken data plane and can be fixed with a bounded response/actor matrix without adding schema.
+- WP-014 route/service evidence now proves the full guest/session matrix and ID-only receipt. Because the SQL RPC is service-role-only and has one wrapper call site, the safe application fix ships independently; duplicating the owner predicate in SQL is deferred until migration parity rather than editing an already-applied migration or inventing unverified DDL.
+- Exact `84f6244b` recovered from the recurring Vercel account block after about seven minutes as deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN`. Immutable health and 16/1 browser evidence bind the SHA, but REST/direct PG remain down and strict smoke blocks promotion.
+- The next financial packet is WP-015 refund `processing` reconciliation, but implementation of provider lookup and an atomic recovery lease remains behind canonical journal/provider evidence. Infrastructure recovery therefore retains orders 0–2 and no growth work moves upward.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
