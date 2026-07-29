@@ -299,7 +299,7 @@ export async function createRefundRequest(
   supabase: DbClient,
   input: CreateRefundRequestInput
 ): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
-  const provider = input.provider ?? "manual";
+  const requestedProvider = input.provider;
   const requestedSourceTransactionId = input.sourceTransactionId?.trim();
 
   const { data: existing, error: existingError } = await supabase
@@ -320,7 +320,7 @@ export async function createRefundRequest(
     if (
       transaction.bookingId !== input.bookingId ||
       transaction.requestedBy !== input.requestedBy ||
-      transaction.provider !== provider ||
+      (requestedProvider !== undefined && transaction.provider !== requestedProvider) ||
       (requestedSourceTransactionId !== undefined &&
         transaction.sourceTransactionId !== requestedSourceTransactionId) ||
       !amountMatches ||
@@ -347,15 +347,18 @@ export async function createRefundRequest(
     }
     sourceCharge = data;
   } else {
-    const { data: charges, error: chargeError } = await supabase
+    let chargeQuery = supabase
       .from("payment_transactions")
       .select("*")
       .eq("booking_id", input.bookingId)
       .eq("type", "charge")
       .eq("status", "completed")
-      .eq("provider", provider)
       .order("created_at", { ascending: false })
       .limit(2);
+    if (requestedProvider) {
+      chargeQuery = chargeQuery.eq("provider", requestedProvider);
+    }
+    const { data: charges, error: chargeError } = await chargeQuery;
 
     if (chargeError || !charges?.length) {
       return { error: "Не найдено исходное завершённое списание для возврата" };
@@ -366,7 +369,11 @@ export async function createRefundRequest(
     sourceCharge = charges[0];
   }
 
-  if (sourceCharge.provider !== provider) {
+  const sourceProvider = sourceCharge.provider as BookingPaymentWebhookPatch["provider"];
+  if (
+    !["manual", "stripe", "mercadopago"].includes(sourceProvider) ||
+    (requestedProvider !== undefined && sourceProvider !== requestedProvider)
+  ) {
     return { error: "Провайдер возврата не совпадает с исходным списанием" };
   }
 
@@ -391,7 +398,7 @@ export async function createRefundRequest(
     p_source_transaction_id: sourceCharge.id,
     p_amount: amount,
     p_currency: sourceCurrency,
-    p_provider: provider,
+    p_provider: sourceProvider,
     p_requested_by: input.requestedBy,
     p_request_reason: input.reason?.trim() || null,
     p_request_idempotency_key: input.operationId,

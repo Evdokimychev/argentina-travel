@@ -77,7 +77,6 @@ function fakeSupabase(input?: { existingRefund?: Row | null; charge?: Row }) {
 
 const baseInput = {
   bookingId: "booking-1",
-  provider: "mercadopago" as const,
   requestedBy: "33333333-3333-4333-8333-333333333333",
   operationId: "44444444-4444-4444-8444-444444444444",
 };
@@ -97,6 +96,7 @@ describe("refund request ledger integrity", () => {
         p_source_transaction_id: "11111111-1111-4111-8111-111111111111",
         p_amount: 120000,
         p_currency: "ARS",
+        p_provider: "mercadopago",
       }),
     );
   });

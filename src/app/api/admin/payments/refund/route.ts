@@ -6,8 +6,6 @@ import {
   createRefundRequest,
 } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { BookingPaymentGateway } from "@/types/booking-payment";
-import type { PaymentProviderId } from "@/types/payment-webhook";
 import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
@@ -20,12 +18,6 @@ type PostBody = {
   operationId?: string;
   sourceTransactionId?: string;
 };
-
-function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
-  if (gateway === "mercadopago") return "mercadopago";
-  if (gateway === "stripe") return "stripe";
-  return "manual";
-}
 
 export async function POST(request: Request) {
   const auth = await authorizeAdminRequest(request, "finance.refunds.prepare");
@@ -68,7 +60,6 @@ export async function POST(request: Request) {
     bookingId,
     amount,
     currency,
-    provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: auth.actorId,
     operationId: body.operationId,
     sourceTransactionId: body.sourceTransactionId,

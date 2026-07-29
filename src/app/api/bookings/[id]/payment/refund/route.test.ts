@@ -100,13 +100,13 @@ describe("POST /api/bookings/[id]/payment/refund", () => {
       expect.anything(),
       expect.objectContaining({
         bookingId: "booking-1",
-        provider: "mercadopago",
         requestedBy: "tourist-1",
         operationId,
       }),
     );
     expect(mocks.createRefundRequest.mock.calls[0][1]).not.toHaveProperty("amount");
     expect(mocks.createRefundRequest.mock.calls[0][1]).not.toHaveProperty("currency");
+    expect(mocks.createRefundRequest.mock.calls[0][1]).not.toHaveProperty("provider");
   });
 
   it("does not grant a financial mutation from matching email alone", async () => {

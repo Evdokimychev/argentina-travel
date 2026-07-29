@@ -13,20 +13,12 @@ import {
   findPendingRefundForBooking,
 } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { BookingPaymentGateway } from "@/types/booking-payment";
-import type { PaymentProviderId } from "@/types/payment-webhook";
 import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   reason?: string;
   operationId?: string;
 };
-
-function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
-  if (gateway === "mercadopago") return "mercadopago";
-  if (gateway === "stripe") return "stripe";
-  return "manual";
-}
 
 export async function GET(
   _request: Request,
@@ -109,7 +101,6 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const result = await createRefundRequest(admin, {
       bookingId: id,
-      provider: gatewayToProvider(booking.paymentLink?.gateway),
       requestedBy: sessionUser.id,
       operationId,
       reason: body.reason,

@@ -8,8 +8,6 @@ import {
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
-import type { BookingPaymentGateway } from "@/types/booking-payment";
-import type { PaymentProviderId } from "@/types/payment-webhook";
 import { userHasAccountRole } from "@/types/user";
 import { isUuid } from "@/lib/admin/user-identity-management";
 
@@ -18,12 +16,6 @@ type PostBody = {
   reason?: string;
   operationId?: string;
 };
-
-function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
-  if (gateway === "mercadopago") return "mercadopago";
-  if (gateway === "stripe") return "stripe";
-  return "manual";
-}
 
 export async function POST(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
@@ -66,7 +58,6 @@ export async function POST(request: Request) {
   const admin = createSupabaseAdminClient();
   const created = await createRefundRequest(admin, {
     bookingId,
-    provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: sessionUser.id,
     operationId,
     reason: body.reason,
