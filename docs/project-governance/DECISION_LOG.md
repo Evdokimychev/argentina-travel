@@ -240,3 +240,10 @@
 - Decision: register WP-017 and move it ahead of WP-015B. A page is not browser-ready merely because HTTP/SSR contains the article; a post-load error boundary that hides the valid content fails acceptance.
 - Evidence: immutable WP-015A preview binds exact `d576bae2`, then Playwright finds two H1s on the Iguazú article: visible «Не удалось загрузить блог» and the expected article headline hidden. The suite ends 9 pass, 1 skip, 1 fail, 6 not run; strict smoke separately fails mandatory health.
 - Consequence: no promotion or growth work. The next independent engineering packet must isolate the client dependency and preserve the editorial parent under failure, then rerun the complete immutable browser suite. Runtime-log absence is recorded, not replaced with an assumed root cause.
+
+## D-037 — Optional commercial RSC boundaries must resolve fail-soft
+
+- Date: 2026-07-29
+- Decision: an optional partner/catalog promise rendered inside an editorial route must catch its own operational rejection and omit only that commercial embed. `Suspense` is retained for latency, but is not treated as an error boundary; route-wide blog errors remain reserved for failures of the article itself.
+- Evidence: the exact failing preview returned a complete article plus placeholder `B:1`; the streamed tail rejected only `B:1` with digest `572502285`, and that placeholder maps exactly to `BlogPostTourEmbeds`. `fetchMarketplaceTours` intentionally rejects on total outage without LKG. After the bounded catch, focused 56, full 2 084 and local public browser 17/17 pass; strict health still blocks promotion.
+- Consequence: CMS/editorial availability no longer inherits marketplace availability, raw provider errors are not logged by this boundary, and successful tour embeds are unchanged. Remote exact-SHA evidence is still mandatory before resolving the issue for preview/production.

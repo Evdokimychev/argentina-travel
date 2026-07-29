@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 09:45 ART**. WP-015A получил exact deployment, но remote browser выявил новый public blog error-boundary P1. WP-017 поднят выше schema-зависимого WP-015B; WP-016 fingerprint остаётся local-only из-за следующего Vercel block.
+Обновлён: **2026-07-29 10:10 ART**. WP-017 root cause доказан и fail-soft fix `a8efc1e6` полностью прошёл local release evidence. Пакет остаётся выше schema-зависимого WP-015B до exact remote acceptance; Vercel не создал deployment из-за `Account is blocked`.
 
 ## Правило выбора пакета
 
@@ -12,8 +12,8 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota. WP-016 safe source/ref/mode/port fingerprint built locally; exact deploy blocked |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-015A `d576bae2` recovered as `4wqcePJy…`; WP-016 exact `2fccb050` blocked; CLI `Not authorized`; logs absent |
-| 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | reproduced on `d576bae2` preview: error-boundary H1 plus hidden article H1; root dependency pending |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-015A `d576bae2` recovered as `4wqcePJy…`; WP-016 `2fccb050` and WP-017 `a8efc1e6` blocked; CLI `Not authorized`; logs absent |
+| 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | root cause proven at rejected optional catalog boundary; `a8efc1e6` local build/17-browser/smoke pass; exact remote deployment pending |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -53,6 +53,10 @@ Guide pillar SSR now loads marketplace data only when the content schema actuall
 ### WP-004 — optional guide widget boundary
 
 The real weather `tour-embed` now receives a catalog promise inside a local Suspense boundary. The guide streams independently; confirmed empty remains empty, while a total operational detail failure becomes a visible local unavailable state. Current partial-source production-equivalent behavior omits an unmatched optional offer without damaging the editorial parent.
+
+### WP-017 — fail-soft optional blog tour catalog
+
+Exact preview stream evidence tied rejected boundary `B:1` to `BlogPostTourEmbeds`: a total marketplace outage rejected the promise inside ordinary `Suspense` and escalated into the segment error boundary over a valid SSR article. The optional commercial boundary now catches only its own catalog rejection, emits a generic non-secret event and omits the embed; successful catalogs and the editorial parent remain unchanged. Exact local build, 2 084 unit tests, 17 browser tests and recovery smoke pass; immutable preview acceptance is still blocked externally.
 
 ### WP-005 — reproducible product surface inventory
 
@@ -140,6 +144,6 @@ Public health now reports only which supported env source won resolution, the ef
 - WP-015 source reproduction split the packet: provider GET lookup and operator diagnosis require no schema and are safely deliverable as WP-015A, while any retry/finalize remains unsafe without an atomic recovery owner. This moves 015A to done and leaves 015B behind canonical journal/RLS/provider sandbox evidence.
 - Stripe pagination evidence changed the classifier once more: `has_more=true` is `unavailable`, never `not_found`, because an incomplete list cannot prove absence. Mercado Pago amount-only matches remain candidates because no internal refund metadata is available.
 - Vercel CLI diagnosis then proved the local link IDs are correct but the current account is unauthorized. WP-016 therefore moved ahead of mutation work: a safe in-band runtime fingerprint supplies the missing source/ref/mode evidence without exposing or changing secrets; exact remote proof still depends on Vercel account recovery.
-- Delayed Vercel recovery produced exact WP-015A deployment `4wqcePJy…`, but remote browser evidence exposed a blog client-transition error boundary while the SSR article remained in the DOM. Because this is an actively broken public journey, WP-017 moves ahead of WP-015B and all growth work; exact root cause remains open until fault isolation or runtime logs identify the failing dependency.
+- Delayed Vercel recovery produced exact WP-015A deployment `4wqcePJy…`, where remote browser exposed an error boundary over valid SSR content. Streamed HTML then proved rejected boundary `B:1` is the optional `BlogPostTourEmbeds` catalog promise, not CMS content or a Leaflet/client loader. WP-017 `a8efc1e6` makes that boundary fail-soft and passes exact local 17/17 browser evidence; it remains ahead of WP-015B until Vercel creates the exact immutable preview and remote acceptance passes.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.
