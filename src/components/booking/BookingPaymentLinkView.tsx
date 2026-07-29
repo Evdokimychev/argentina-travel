@@ -129,11 +129,13 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
   }, [booking?.id, booking?.metadata?.checkoutCurrency, localeCurrency]);
 
   useEffect(() => {
-    if (selectedGateway) return;
     if (booking?.paymentLink?.gateway === "mercadopago" || booking?.paymentLink?.gateway === "stripe") {
-      setSelectedGateway(booking.paymentLink.gateway);
+      if (selectedGateway !== booking.paymentLink.gateway) {
+        setSelectedGateway(booking.paymentLink.gateway);
+      }
       return;
     }
+    if (selectedGateway) return;
     if (defaultProvider) {
       setSelectedGateway(defaultProvider);
     }
@@ -213,6 +215,11 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
   const displayNumber = formatBookingDisplayNumber(booking.id);
   const expired = isBookingPaymentLinkExpired(link);
   const paid = link.status === "paid";
+  const lockedGateway =
+    link.gateway === "mercadopago" || link.gateway === "stripe" ? link.gateway : null;
+  const selectableProviders = lockedGateway
+    ? availableProviders.filter((provider) => provider === lockedGateway)
+    : availableProviders;
   const paymentProvider =
     selectedGateway === "stripe" ? "stripe" : selectedGateway === "mercadopago" ? "mercadopago" : undefined;
 
@@ -372,11 +379,11 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
         </div>
       ) : (
         <div className="mt-6 space-y-4">
-          {availableProviders.length > 1 ? (
+          {selectableProviders.length > 1 ? (
             <fieldset className="space-y-2">
               <legend className="text-sm font-medium text-charcoal">Способ оплаты</legend>
               <div className="grid gap-2 sm:grid-cols-2">
-                {availableProviders.map((provider) => (
+                {selectableProviders.map((provider) => (
                   <label
                     key={provider}
                     className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${

@@ -10,6 +10,8 @@ export const PUBLIC_API_ERROR_MESSAGES = {
   PAYMENT_LINK_EXPIRED: "Срок действия ссылки на оплату истёк. Запросите новую ссылку.",
   PAYMENT_NOT_ALLOWED: "Эту заявку сейчас нельзя оплатить.",
   PAYMENT_ALREADY_COMPLETED: "Эта заявка уже оплачена.",
+  PAYMENT_PROVIDER_LOCKED:
+    "Для этой ссылки уже выбран другой способ оплаты. Повторите выбранный способ или обратитесь в поддержку.",
   PAYMENT_PROCESSING_FAILED: "Не удалось открыть оплату. Попробуйте снова или обратитесь в поддержку.",
   REQUEST_NOT_FOUND: "Заявка не найдена или больше недоступна.",
 } as const;

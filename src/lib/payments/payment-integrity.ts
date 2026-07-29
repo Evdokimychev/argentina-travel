@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { BookingPaymentStatus } from "@/types/booking-params";
+import type { BookingPaymentGateway } from "@/types/booking-payment";
 import type { PaymentProviderId } from "@/types/payment-webhook";
 import type { BookingStatus } from "@/types/tourist";
 
@@ -9,6 +10,19 @@ export function canStartPaymentForBookingStatus(status: BookingStatus): boolean 
 
 export function canIssuePaymentLinkForBookingStatus(status: BookingStatus): boolean {
   return status === "confirmed" || status === "waiting_payment";
+}
+
+export function isPaymentProviderLocked(
+  gateway: BookingPaymentGateway | undefined,
+  provider: Exclude<PaymentProviderId, "manual">,
+): boolean {
+  return gateway !== undefined && gateway !== "manual" && gateway !== provider;
+}
+
+export function nextPaymentBookingUpdatedAt(previousUpdatedAt: string, now = Date.now()): string {
+  const previous = Date.parse(previousUpdatedAt);
+  const next = Number.isFinite(previous) ? Math.max(now, previous + 1) : now;
+  return new Date(next).toISOString();
 }
 
 export function readPaymentMetadataString(

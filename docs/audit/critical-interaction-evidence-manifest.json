@@ -23,12 +23,15 @@
       "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "POST", "endpoint": "/api/bookings/[bookingId]/payment/preference"},
       "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/preference"},
       "handler": {"source": "src/app/api/bookings/[id]/payment/preference/route.ts", "export": "POST"},
-      "effects": ["Mercado Pago preference creation", "checkout URL persistence on booking payment link"],
+      "effects": ["atomic Mercado Pago provider claim", "Mercado Pago preference creation", "checkout URL persistence on booking payment link"],
       "guards": ["remote booking capability", "provider configuration", "booking payment status", "payment-link token and expiry"],
-      "invariants": ["provider idempotency key uses durable payment identity", "an existing preference is reused", "cancelled completed or paid links cannot create checkout"],
-      "evidence": [{"type": "unit_contract", "source": "src/lib/payments/payment-integrity.test.ts", "test": "reuses one provider idempotency key for the same payment link"}],
-      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
-      "gap": "No route/provider integration, browser redirect, webhook, or live persistence evidence."
+      "invariants": ["provider is claimed with booking compare-and-set before external creation", "provider callback URLs never trust request origin", "provider idempotency key uses durable payment identity", "an existing preference is reused", "cancelled completed or paid links cannot create checkout"],
+      "evidence": [
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/checkout-routes.test.ts", "test": "claims Mercado Pago before provider creation and never trusts the request origin"},
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/checkout-routes.test.ts", "test": "lets only one provider create checkout under a cross-provider race"}
+      ],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Route/provider orchestration and cross-provider concurrency are tested with fakes; no browser redirect, live webhook, or live persistence evidence while Supabase is down."
     },
     {
       "id": "booking.payment.stripe", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],
@@ -36,12 +39,15 @@
       "interactionMatch": {"source": "src/lib/bookings-api.ts", "method": "POST", "endpoint": "/api/bookings/[bookingId]/payment/stripe/session"},
       "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/stripe/session"},
       "handler": {"source": "src/app/api/bookings/[id]/payment/stripe/session/route.ts", "export": "POST"},
-      "effects": ["Stripe checkout session creation", "checkout URL persistence on booking payment link"],
+      "effects": ["atomic Stripe provider claim", "Stripe checkout session creation", "checkout URL persistence on booking payment link"],
       "guards": ["remote booking capability", "provider configuration", "booking payment status", "payment-link token and expiry"],
-      "invariants": ["provider idempotency key uses durable payment identity", "an existing Stripe session is reused", "cancelled completed or paid links cannot create checkout"],
-      "evidence": [{"type": "unit_contract", "source": "src/lib/payments/payment-integrity.test.ts", "test": "reuses one provider idempotency key for the same payment link"}],
-      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
-      "gap": "No route/provider integration, browser redirect, webhook, or live persistence evidence."
+      "invariants": ["provider is claimed with booking compare-and-set before external creation", "provider callback URLs never trust request origin", "provider idempotency key uses durable payment identity", "an existing Stripe session is reused", "cancelled completed or paid links cannot create checkout", "provider failures expose only public-safe errors"],
+      "evidence": [
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/checkout-routes.test.ts", "test": "claims Stripe before provider creation and returns only public-safe failures"},
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/checkout-routes.test.ts", "test": "lets only one provider create checkout under a cross-provider race"}
+      ],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Route/provider orchestration, safe failures and cross-provider concurrency are tested with fakes; no browser redirect, live webhook, or live persistence evidence while Supabase is down."
     },
     {
       "id": "booking.refund.request", "risk": "P0", "actors": ["tourist", "organizer"], "modes": ["remote"],

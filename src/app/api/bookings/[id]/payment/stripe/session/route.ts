@@ -8,8 +8,11 @@ import { createCheckoutSession, isStripeConfigured } from "@/lib/payments/stripe
 import {
   buildPaymentCheckoutIdempotencyKey,
   canStartPaymentForBookingStatus,
+  isPaymentProviderLocked,
+  nextPaymentBookingUpdatedAt,
 } from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { publicApiError } from "@/lib/public-api/safe-error";
 
 type CreateSessionBody = {
   paymentLinkToken?: string;
@@ -20,18 +23,12 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   if (!isSupabaseBookingsEnabled()) {
-    return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
+    return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
   }
 
   const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
   if (!secretKey || !isStripeConfigured()) {
-    return NextResponse.json(
-      {
-        error:
-          "Stripe не настроен. Задайте STRIPE_SECRET_KEY для создания сессии оплаты.",
-      },
-      { status: 503 }
-    );
+    return NextResponse.json(publicApiError("PAYMENT_UNAVAILABLE"), { status: 503 });
   }
 
   const { id } = await context.params;
@@ -41,38 +38,38 @@ export async function POST(
     const supabase = createSupabaseAdminClient();
     const booking = await fetchBookingById(supabase, id);
     if (!booking) {
-      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+      return NextResponse.json(publicApiError("RESOURCE_NOT_FOUND"), { status: 404 });
     }
 
     if (!booking.paymentLink) {
-      return NextResponse.json({ error: "Booking has no active payment link" }, { status: 400 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_UNAVAILABLE"), { status: 400 });
     }
 
     if (!canStartPaymentForBookingStatus(booking.status)) {
       return NextResponse.json(
-        { error: "Cancelled or completed booking cannot be paid" },
+        publicApiError("PAYMENT_NOT_ALLOWED"),
         { status: 409 },
       );
     }
 
     if (!body.paymentLinkToken?.trim()) {
-      return NextResponse.json({ error: "paymentLinkToken is required" }, { status: 400 });
+      return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
     }
 
     if (booking.paymentLink.token !== body.paymentLinkToken.trim()) {
-      return NextResponse.json({ error: "Invalid payment link token" }, { status: 403 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_UNAVAILABLE"), { status: 403 });
     }
 
     if (isBookingPaymentLinkExpired(booking.paymentLink)) {
-      return NextResponse.json({ error: "Payment link expired" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_EXPIRED"), { status: 409 });
     }
 
     if (booking.paymentLink.status === "cancelled") {
-      return NextResponse.json({ error: "Payment link cancelled" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_NOT_ALLOWED"), { status: 409 });
     }
 
     if (booking.paymentLink.status === "paid") {
-      return NextResponse.json({ error: "Booking already paid" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_ALREADY_COMPLETED"), { status: 409 });
     }
 
     if (
@@ -86,15 +83,46 @@ export async function POST(
       });
     }
 
-    const session = await createCheckoutSession(booking, {
+    if (isPaymentProviderLocked(booking.paymentLink.gateway, "stripe")) {
+      return NextResponse.json(publicApiError("PAYMENT_PROVIDER_LOCKED"), { status: 409 });
+    }
+
+    let providerBooking = booking;
+    if (booking.paymentLink.gateway !== "stripe") {
+      const claimTime = nextPaymentBookingUpdatedAt(booking.updatedAt);
+      const claimedBooking = normalizeBooking({
+        ...booking,
+        updatedAt: claimTime,
+        paymentLink: {
+          ...booking.paymentLink,
+          gateway: "stripe",
+        },
+      });
+      const claimResult = await updateBookingRecord(
+        supabase,
+        claimedBooking,
+        booking.updatedAt,
+      );
+      if ("error" in claimResult) {
+        addPaymentBreadcrumb("stripe.checkout_session.claim_failed", {
+          bookingId: booking.id,
+          error: claimResult.error,
+        });
+        return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), {
+          status: claimResult.status ?? 500,
+        });
+      }
+      providerBooking = claimResult.booking;
+    }
+
+    const session = await createCheckoutSession(providerBooking, {
       secretKey,
-      baseUrl: new URL(request.url).origin,
       idempotencyKey: buildPaymentCheckoutIdempotencyKey({
         provider: "stripe",
-        bookingId: booking.id,
-        paymentLinkToken: booking.paymentLink.token,
-        amountUsd: booking.paymentLink.amountUsd,
-        currency: booking.metadata?.checkoutCurrency ?? "USD",
+        bookingId: providerBooking.id,
+        paymentLinkToken: providerBooking.paymentLink!.token,
+        amountUsd: providerBooking.paymentLink!.amountUsd,
+        currency: providerBooking.metadata?.checkoutCurrency ?? "USD",
       }),
     });
     addPaymentBreadcrumb("stripe.checkout_session.created", {
@@ -102,12 +130,12 @@ export async function POST(
       sessionId: session.sessionId,
     });
 
-    const now = new Date().toISOString();
+    const now = nextPaymentBookingUpdatedAt(providerBooking.updatedAt);
     const updatedBooking = normalizeBooking({
-      ...booking,
+      ...providerBooking,
       updatedAt: now,
       paymentLink: {
-        ...booking.paymentLink,
+        ...providerBooking.paymentLink!,
         gateway: "stripe",
         sessionId: session.sessionId,
         checkoutUrl: session.checkoutUrl,
@@ -115,13 +143,19 @@ export async function POST(
       },
     });
 
-    const updateResult = await updateBookingRecord(supabase, updatedBooking);
+    const updateResult = await updateBookingRecord(
+      supabase,
+      updatedBooking,
+      providerBooking.updatedAt,
+    );
     if ("error" in updateResult) {
       addPaymentBreadcrumb("stripe.checkout_session.persist_failed", {
         bookingId: booking.id,
         error: updateResult.error,
       });
-      return NextResponse.json({ error: updateResult.error }, { status: 500 });
+      return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), {
+        status: updateResult.status ?? 500,
+      });
     }
 
     return NextResponse.json({
@@ -137,14 +171,6 @@ export async function POST(
       tags: { area: "payments", provider: "stripe", action: "create_checkout_session" },
       extra: { bookingId: id },
     });
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unexpected error while creating Stripe checkout session",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), { status: 500 });
   }
 }

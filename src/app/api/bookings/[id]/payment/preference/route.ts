@@ -8,6 +8,8 @@ import { createPreference } from "@/lib/payments/mercadopago-client";
 import {
   buildPaymentCheckoutIdempotencyKey,
   canStartPaymentForBookingStatus,
+  isPaymentProviderLocked,
+  nextPaymentBookingUpdatedAt,
 } from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { publicApiError } from "@/lib/public-api/safe-error";
@@ -70,7 +72,11 @@ export async function POST(
       return NextResponse.json(publicApiError("PAYMENT_ALREADY_COMPLETED"), { status: 409 });
     }
 
-    if (booking.paymentLink.preferenceId && booking.paymentLink.checkoutUrl) {
+    if (
+      booking.paymentLink.gateway === "mercadopago" &&
+      booking.paymentLink.preferenceId &&
+      booking.paymentLink.checkoutUrl
+    ) {
       return NextResponse.json({
         preferenceId: booking.paymentLink.preferenceId,
         checkoutUrl: booking.paymentLink.checkoutUrl,
@@ -78,15 +84,46 @@ export async function POST(
       });
     }
 
-    const preference = await createPreference(booking, {
+    if (isPaymentProviderLocked(booking.paymentLink.gateway, "mercadopago")) {
+      return NextResponse.json(publicApiError("PAYMENT_PROVIDER_LOCKED"), { status: 409 });
+    }
+
+    let providerBooking = booking;
+    if (booking.paymentLink.gateway !== "mercadopago") {
+      const claimTime = nextPaymentBookingUpdatedAt(booking.updatedAt);
+      const claimedBooking = normalizeBooking({
+        ...booking,
+        updatedAt: claimTime,
+        paymentLink: {
+          ...booking.paymentLink,
+          gateway: "mercadopago",
+        },
+      });
+      const claimResult = await updateBookingRecord(
+        supabase,
+        claimedBooking,
+        booking.updatedAt,
+      );
+      if ("error" in claimResult) {
+        addPaymentBreadcrumb("mercadopago.preference.claim_failed", {
+          bookingId: booking.id,
+          error: claimResult.error,
+        });
+        return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), {
+          status: claimResult.status ?? 500,
+        });
+      }
+      providerBooking = claimResult.booking;
+    }
+
+    const preference = await createPreference(providerBooking, {
       accessToken,
-      baseUrl: new URL(request.url).origin,
       idempotencyKey: buildPaymentCheckoutIdempotencyKey({
         provider: "mercadopago",
-        bookingId: booking.id,
-        paymentLinkToken: booking.paymentLink.token,
-        amountUsd: booking.paymentLink.amountUsd,
-        currency: booking.metadata?.checkoutCurrency ?? "USD",
+        bookingId: providerBooking.id,
+        paymentLinkToken: providerBooking.paymentLink!.token,
+        amountUsd: providerBooking.paymentLink!.amountUsd,
+        currency: providerBooking.metadata?.checkoutCurrency ?? "USD",
       }),
     });
     addPaymentBreadcrumb("mercadopago.preference.created", {
@@ -94,12 +131,12 @@ export async function POST(
       preferenceId: preference.preferenceId,
     });
 
-    const now = new Date().toISOString();
+    const now = nextPaymentBookingUpdatedAt(providerBooking.updatedAt);
     const updatedBooking = normalizeBooking({
-      ...booking,
+      ...providerBooking,
       updatedAt: now,
       paymentLink: {
-        ...booking.paymentLink,
+        ...providerBooking.paymentLink!,
         gateway: "mercadopago",
         preferenceId: preference.preferenceId,
         checkoutUrl: preference.checkoutUrl,
@@ -108,13 +145,19 @@ export async function POST(
       },
     });
 
-    const updateResult = await updateBookingRecord(supabase, updatedBooking);
+    const updateResult = await updateBookingRecord(
+      supabase,
+      updatedBooking,
+      providerBooking.updatedAt,
+    );
     if ("error" in updateResult) {
       addPaymentBreadcrumb("mercadopago.preference.persist_failed", {
         bookingId: booking.id,
         error: updateResult.error,
       });
-      return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), { status: 500 });
+      return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), {
+        status: updateResult.status ?? 500,
+      });
     }
 
     return NextResponse.json({

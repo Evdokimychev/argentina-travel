@@ -3,6 +3,8 @@ import {
   buildPaymentCheckoutIdempotencyKey,
   canIssuePaymentLinkForBookingStatus,
   canStartPaymentForBookingStatus,
+  isPaymentProviderLocked,
+  nextPaymentBookingUpdatedAt,
   reconcileBookingPayment,
 } from "./payment-integrity";
 
@@ -26,6 +28,19 @@ describe("payment checkout integrity", () => {
     expect(buildPaymentCheckoutIdempotencyKey({ ...input, amountUsd: 99 })).not.toBe(key);
     expect(buildPaymentCheckoutIdempotencyKey({ ...input, paymentLinkToken: "other" })).not.toBe(key);
     expect(buildPaymentCheckoutIdempotencyKey({ ...input, provider: "mercadopago" })).not.toBe(key);
+  });
+
+  it("locks one payment link to the first online provider", () => {
+    expect(isPaymentProviderLocked("manual", "stripe")).toBe(false);
+    expect(isPaymentProviderLocked("stripe", "stripe")).toBe(false);
+    expect(isPaymentProviderLocked("stripe", "mercadopago")).toBe(true);
+    expect(isPaymentProviderLocked("mercadopago", "stripe")).toBe(true);
+  });
+
+  it("advances the booking version even inside the same millisecond", () => {
+    expect(
+      nextPaymentBookingUpdatedAt("2026-07-29T12:00:00.000Z", Date.parse("2026-07-29T12:00:00.000Z")),
+    ).toBe("2026-07-29T12:00:00.001Z");
   });
 });
 
