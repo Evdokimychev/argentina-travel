@@ -64,6 +64,7 @@ import type { SiteBlogGlobal } from "@/types/site-globals";
 import { DEFAULT_SITE_BLOG } from "@/lib/cms/site-globals/normalize";
 import ContentExcursionSection from "@/components/content/ContentExcursionSection";
 import type { ContentExcursionMatch } from "@/lib/content-excursion-match";
+import { resolveOptionalBlogTourCatalog } from "@/lib/blog-optional-tour-catalog";
 
 type BlogPostViewProps = {
   post: BlogPost;
@@ -84,7 +85,7 @@ async function BlogPostTourEmbeds({
   embeds: TourEmbedConfig[];
   initialTours: TourListing[] | Promise<TourListing[]>;
 }) {
-  const tours = await initialTours;
+  const tours = await resolveOptionalBlogTourCatalog(initialTours);
   if (tours.length === 0) return null;
 
   return (
