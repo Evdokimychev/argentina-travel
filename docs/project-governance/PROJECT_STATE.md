@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 12:46 ART / 2026-07-29 15:46 UTC**
+Последняя проверка: **2026-07-29 13:17 ART / 2026-07-29 16:17 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `a3301ec9d1ba33d010abb7eeda7d75c0ec8ae16e`; exact evidence/deploy candidate: `a3301ec9d1ba33d010abb7eeda7d75c0ec8ae16e`; `origin/main` является ancestor.
+- Product implementation SHA: `ed29b3359668217e45e70e8e907cd68fdeae1a85`; exact evidence/deploy candidate: `ed29b3359668217e45e70e8e907cd68fdeae1a85`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `a3301ec9d1ba33d010abb7eeda7d75c0ec8ae16e` (`fix: attest operational Postgres targets`); WP-018 — `8f0dbad2`, WP-017 — `a8efc1e6`, WP-015A implementation — `0d5f4472` + fail-closed `d576bae2`.
+- Последний runtime-product SHA: `ed29b3359668217e45e70e8e907cd68fdeae1a85` (`fix: reject catalog smoke asset false positives`); WP-019 — `a3301ec9`, WP-018 — `8f0dbad2`, WP-017 — `a8efc1e6`.
 
 ## Production и deployments
 
@@ -45,6 +45,7 @@ Master Goal V6 принят как главный норматив проект�
 - WP-017 exact `a8efc1e6` после initial `Account is blocked` восстановился в 14:03:46 UTC: Vercel deployment `9K5mTZEXjGeWifXFYGMM4FVPLLJk`, GitHub deployment `5657988678`, immutable URL `https://argentina-travel-14eapwolb-go-argentina.vercel.app`. Targeted article browser **1/1**, public/tour suite **16 passed, 1 skipped**; strict и recovery smoke остаются красными из-за недоступного direct PG. Preview закрывает client-transition дефект, но не production promotion.
 - WP-018 exact `8f0dbad2` успешно развернут в 13:32:16 UTC: Vercel deployment `E288FhjDXKUA78YQ3ibN54krLY3z`, GitHub deployment `5658339232`, immutable URL `https://argentina-travel-6i6fqeyg8-go-argentina.vercel.app`. Health связывает полный SHA и выбирает только verified `POSTGRES_URL_NON_POOLING`, `supabase_direct`, port 5432, ref `uooxrypocahomoqzdvzy`; generic `POSTGRES_URL` больше не используется. Подтверждённый target недоступен, поэтому tours/excursions корректно 503.
 - WP-019 exact `a3301ec9` успешно развернут в 15:41:16 UTC: Vercel deployment `E17wLXYUjTNpHJSN6x1AUQs8rf1J`, GitHub deployment `5660442868`, immutable URL `https://argentina-travel-ia1lcek04-go-argentina.vercel.app`. Health связывает полный SHA, выбирает verified canonical `POSTGRES_URL_NON_POOLING` direct:5432/ref `uooxrypocahomoqzdvzy`, но соединение остаётся down; tours/excursions корректно 503. Remote browser: **16 passed, 1 data-dependent skip**; strict и recovery smoke exit 1 на mandatory health.
+- WP-020 exact `ed29b335` успешно развернут в 16:11:01 UTC: Vercel deployment `3hwMwixfCmgr5nx8gWkj26SskbJW`, GitHub deployment `5660918469`, immutable URL `https://argentina-travel-kjjwy06uv-go-argentina.vercel.app`. Health связывает полный SHA; required health и commercial APIs остаются 503/down. Новый parser на HTML `/tours` и `/excursions` возвращает `null`, а не Next asset route; remote browser **16 passed, 1 data-dependent skip**. Strict/recovery smoke exit 1 на mandatory health; promotion не выполнялся.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -52,6 +53,7 @@ Master Goal V6 принят как главный норматив проект�
 - Production recheck 13:11 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-017 не продвигался, потому что exact preview не существует и production gate закрыт.
 - Production recheck 14:42 UTC: `/api/health/public` и `/database` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. Ни WP-017, ни WP-018 не продвигались: preview data plane unhealthy, production same-artifact gate закрыт.
 - Production recheck 15:45 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-019 не продвигался: exact preview fail-closed, но backend health и same-artifact production gate закрыты.
+- Production recheck 16:17 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-020 не продвигался.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -196,7 +198,13 @@ Master Goal V6 принят как главный норматив проект�
 - Root cause: operational Node ESM scripts продолжали брать первый непустой `DATABASE_URL`/`POSTGRES_URL`, а logical backup использовал substring matching ref. Backup/restore, миграции, partner sync и maintenance могли подключиться к unknown/mismatched target вне runtime guard WP-018.
 - Создан единый fail-closed parser/resolver для official Supabase direct/pooler URL, независимого trusted ref и safe diagnostics. Все найденные `pg.Client`, `pg_dump` и `psql` operational paths удостоверяют target до connection/process spawn; backup credentials передаются через process env, а не URL argv.
 - Legacy unjournaled migration runner отключён; journaled staging требует explicit ref/public URL agreement. Data-copy требует source/target attestation, разные refs и production confirmation независимо от dry-run. Review нашёл и закрыл первоначальный dry-run bypass до commit.
-- DDL, migration execution, DB connection, secret/env mutation, backup/restore и partner write не выполнялись. Пакет доказывает fail-closed control path, а не live backend effect.
+
+### WP-020 — commercial smoke evidence integrity
+
+- Root cause: `findCommercialDetailPath` сканировал любое совпадение `/tours/<slug>` или `/excursions/<slug>` во всём Next HTML. Имена JS chunks `app/tours/error-*.js` и `app/excursions/error-*.js` удовлетворяли форме, потому что исключались только `city`/`region`.
+- Parser теперь принимает только HTML `href=` или сериализованное RSC-поле `href`, нормализует escaped slash/quote и отклоняет `city`, `guide`, `region`, `error-*`, `page-*` и path-shaped text без href boundary.
+- Параллельный exact browser QA дополнительно воспроизвёл P1-GA-017: 5 workers дали partner 429/timeouts и direct-PG `too many clients`/reserved slots. Source trace: оба public-detail filter используют unbounded `Promise.all`, а Tripster/YouTravel PG fallback создаёт отдельный `pg.Client` на каждую detail resolution. Последовательный 1-worker прогон 17/17 подтверждает отсутствие WP-020 UI-регрессии, но не закрывает capacity root cause.
+- DDL, migration execution, secret/env mutation, backup/restore и partner write не выполнялись. Local exact health/browser выполняли только штатные application reads; DB/provider writes не выполнялись. Пакеты доказывают control/read paths, а не live mutation effect.
 
 ## Проверки candidate
 
@@ -212,6 +220,10 @@ Master Goal V6 принят как главный норматив проект�
 - Protected production build exact `a3301ec9`: exit 0, **929/929** static pages, runtime-text pass, demo auth markers absent. Первая попытка fail-closed остановилась без public Supabase env, вторая — без canonical site URL; финальная explicit production build успешна. Build наблюдал существующий `exceed_egress_quota`, но не выполнял миграции.
 - Local exact public smoke pass; Chromium public/mobile browser **17/17**. Strict production-equivalent smoke exit 1 на `health.ok=false`; explicit recovery smoke прошёл, но выявил отдельный P1 evidence root cause: `/tours/error-*` и `/excursions/error-*` ошибочно распознавались как commercial detail.
 - Immutable WP-019 preview `a3301ec9` / `E17wLXYUjTNpHJSN6x1AUQs8rf1J`: health 503/down с verified canonical target; tours/excursions 503, home/blog 200. Browser **16 passed, 1 data-dependent skip**. Strict и recovery smoke exit 1; commercial backend effect не доказан.
+- WP-020 focused commercial-smoke contracts: **6/6**; `audit:quick`: TypeScript + ESLint + fresh inventory + **440 files / 2 095 tests** + **31/31 release-evidence contracts** — pass. `npm audit --omit=dev`: **0 vulnerabilities**.
+- Protected production build exact `ed29b335`: exit 0, **929/929** static pages, runtime-text pass, demo auth markers absent. Build повторно наблюдал Supabase `exceed_egress_quota`, но миграции/DB writes не выполнялись.
+- Local exact browser: parallel 5-worker run **2 passed, 5 failed, 10 not run** на partner timeout/429 и PG slot exhaustion; deterministic 1-worker rerun **17/17**. Strict smoke exit 1 на degraded health; explicit recovery smoke exit 0 и выбирает настоящие `/tours/...yt52537` и `/excursions/...t50900`.
+- Immutable WP-020 preview `ed29b335` / `3hwMwixfCmgr5nx8gWkj26SskbJW`: full SHA; health/public/database/partners и tours/excursions API 503/down; `/` и `/blog` 200. Browser **16 passed, 1 data-dependent skip**. Both strict/recovery smoke exit 1 because verified direct PG is down. HTML parser returns no commercial detail for both broken catalogs, so false pass is closed.
 
 - WP-015A focused route/classifier/provider suite: **3 files / 13 tests** — pass, включая fail-closed `has_more`, Stripe metadata exact-match и Mercado Pago amount-only ambiguity.
 - `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **438 files / 2 080 tests** + **8 release-evidence tests** — pass; существующие lint warnings не стали errors.
@@ -315,10 +327,11 @@ Master Goal V6 принят как главный норматив проект�
 11. **P1-GA-014:** booking replay response/actor boundary исправлена и route/service-tested; live RPC/attach/RLS effect и DB-layer owner predicate не доказаны.
 12. **P1-GA-015:** root cause и fail-soft boundary исправлены и доказаны на exact immutable preview `9K5mTZ…`; production same-artifact behavior не доказано из-за P0 data plane.
 13. **P0-GA-018:** application и operational direct-PG target attestation исправлены и доказаны на exact previews `E288Fh…`/`E17wLXY…`; verified target connectivity и production same-artifact proof остаются открыты.
-14. **P1-GA-016:** commercial smoke parser принимает служебные Next error-slug как настоящие detail links; local recovery run дал ложный pass. Исправление и regression contract — текущий независимый WP-020.
+14. **P1-GA-016:** commercial smoke false positive исправлен и доказан на exact preview `ed29b335` / `3hwMwixf…`; production остаётся на старом parser/artifact, same-artifact production proof заблокирован P0-GA-001.
+15. **P1-GA-017:** unbounded catalog detail fan-out + standalone `pg.Client` per Tripster/YouTravel detail исчерпывают connection slots при параллельном browser/load сценарии; bounded concurrency/dedup/pool contract ещё не реализован.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota` и восстановить canonical verified direct-PG connectivity; engineering сразу повторяет strict health/catalog/detail smoke на exact preview.
 2. Engineering/ops: после read-only восстановления сверить 107 migrations/journal/checksums, RLS/grants и backup/PITR posture; до этого DDL и live mutation rehearsal запрещены.
-3. Engineering/release: WP-020 — исключить служебные/error routes из commercial-detail evidence, добавить regression contracts и повторить production-equivalent/preview smoke; затем вернуться к WP-015B design без DDL до parity/provider sandbox.
+3. Engineering/reliability: WP-021 — ограничить и дедуплицировать catalog detail fan-out/direct-PG pressure, добавить deterministic concurrency/fault contract и повторить exact browser/load QA; затем вернуться к WP-015B design без DDL до parity/provider sandbox.

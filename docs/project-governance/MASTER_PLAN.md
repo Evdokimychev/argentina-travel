@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 12:46 ART**. WP-019 закрыл residual operational Postgres bypasses и доказан exact preview `a3301ec9` / `E17wLXY…`. QA выявил новый P1: recovery smoke принимал Next `error-*` route как commercial detail. Production data plane и schema parity остаются главными блокерами; WP-020 — текущая независимая release-evidence работа.
+Обновлён: **2026-07-29 13:17 ART**. WP-020 закрыл ложноположительный commercial smoke на exact preview `ed29b335` / `3hwMwixf…`: только href-bound offer links считаются evidence. Параллельный browser QA выявил новый P1 — неограниченный detail fan-out создаёт отдельный `pg.Client` на карточку и исчерпывает direct-PG slots. Production data plane и schema parity остаются главными блокерами; WP-021 — следующий независимый packet.
 
 ## Правило выбора пакета
 
@@ -16,7 +16,8 @@
 | 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | done `a8efc1e6` / `9K5mTZ…`; targeted 1/1 and public/tour 16 pass/1 data-dependent skip; production old |
 | 2B | Direct-PG canonical target attestation (WP-018) | P0 | every app PG path accepts only canonical ref; health/readiness/bypass tests; exact preview fingerprint | done `8f0dbad2` / `E288Fh…`; verified canonical non-pooling target selected, connection still down; production old |
 | 2C | Operational Postgres target attestation (WP-019) | P0 | backup/restore/migration/sync/maintenance paths attest exact refs before process/network; legacy raw runner disabled | done `a3301ec9` / `E17wLXY…`; 20 focused, 2 095 full, 28 evidence, local 17/17, remote 16/1; no DB action |
-| 2D | Commercial smoke evidence integrity (WP-020) | P1 | `error-*`/reserved routes cannot satisfy detail discovery; negative/positive contracts; exact smoke fails on no real offers | active after local recovery-smoke false positive |
+| 2D | Commercial smoke evidence integrity (WP-020) | P1 | `error-*`/reserved routes cannot satisfy detail discovery; negative/positive contracts; exact smoke fails on no real offers | done `ed29b335` / `3hwMwixf…`; 6 focused, 2 095 full, 31 evidence, local recovery smoke pass with real links, remote 16/1 |
+| 2E | Bound catalog detail fan-out and direct-PG connection pressure (WP-021) | P1 | bounded concurrency/deduplicated detail resolution; no `too many clients`; fault/load contract + exact preview | active after 5-worker browser reproduction and source trace to unbounded `Promise.all` + per-detail `pg.Client` |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -68,6 +69,10 @@ WP-017 preview exposed `POSTGRES_URL` as the selected `mode=other`, `projectRef=
 ### WP-019 — operational Postgres target attestation
 
 Every operational `pg.Client`/`pg_dump`/`psql` path now uses a shared strict Supabase target parser and an independently trusted 20-character project ref before network/process execution. Schema/logical backup, restore, journaled migration, cross-project copy, partner sync, media/auth maintenance and readiness fail closed on generic/mismatched targets. The legacy unjournaled admin migration runner is disabled; cross-project copy requires distinct refs and production confirmation even for dry-run. Exact `a3301ec9` deployment `E17wLXY…` proves artifact identity and unchanged fail-closed runtime, but no DB/backup/migration effect was executed.
+
+### WP-020 — commercial smoke evidence integrity
+
+Commercial detail discovery now reads only actual HTML `href` attributes or serialized RSC `href` fields. It rejects `city`, `guide`, `region`, `error-*`, `page-*` and path-shaped asset/text fragments. Focused contracts pass 6/6; `audit:quick` passes 2 095 unit tests and 31 release-evidence contracts; protected exact build generated 929/929 pages. Local exact recovery smoke passes with genuine tour/excursion links, while exact preview `ed29b335` / `3hwMwixfCmgr5nx8gWkj26SskbJW` correctly returns no commercial detail for the broken catalogs and remains blocked by health. Production was not promoted.
 
 ### WP-005 — reproducible product surface inventory
 
@@ -160,5 +165,7 @@ Public health now reports only which supported env source won resolution, the ef
 - WP-018 changes the next order again: application target-selection safety is closed in candidate, so the highest remaining work is external restoration of canonical REST/direct PG, followed by read-only 107-migration/RLS/backup reconciliation. Independent engineering then returns to WP-015B design/evidence without applying unverified DDL.
 - WP-019 audit found the runtime rule was not system-wide: backup/restore, migration, sync and maintenance tooling still accepted raw targets. This displaced refund recovery design until every direct operational path failed closed; exact preview now closes that source-level bypass without any DB action.
 - WP-019 production-equivalent recovery smoke then accepted `/tours/error-*` and `/excursions/error-*` as real offers because the discovery regex excluded only `city`/`region`. This is a release-gate false positive, so WP-020 moves ahead of WP-015B and growth work while external data-plane/parity work remains blocked.
+- WP-020 exact evidence closes that false pass: the parser now requires an href boundary, local recovery smoke selects genuine offer paths, and the broken exact preview yields no detail instead of asset-derived success. Production promotion remains forbidden because required health is down.
+- A 5-worker exact browser run then reproduced `too many clients`, reserved-slot errors, partner 429s and timeouts. Source trace shows both catalog detail filters use unbounded `Promise.all`, while Tripster/YouTravel PG fallbacks open one standalone `pg.Client` per detail. WP-021 therefore precedes WP-015B design and lower-risk work, without changing provider/DB state.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

@@ -266,5 +266,12 @@
 
 - Date: 2026-07-29
 - Decision: release smoke must accept only a genuine offer detail link and reject framework/service error routes, reserved catalog navigation and other non-offer segments. A 200 error boundary page cannot satisfy catalog/detail proof.
-- Evidence: exact local recovery smoke reported `/tours/error-3d3f202a6b80c451` and `/excursions/error-1f093ea7aa2b89fa` as successful detail paths. `findCommercialDetailPath` used a broad regex and excluded only `city`/`region`.
-- Consequence: P1-GA-016/WP-020 moves ahead of lower-priority work. Until its negative contract passes, the local recovery-smoke success is not valid commercial evidence.
+- Evidence: exact local recovery smoke reported `/tours/error-3d3f202a6b80c451` and `/excursions/error-1f093ea7aa2b89fa` as successful detail paths. `findCommercialDetailPath` scanned the whole document, so Next chunk filenames matched. WP-020 now requires actual HTML/serialized `href`, rejects reserved/error/page segments and passes **6/6 focused**, **2 095 full**, **31/31 evidence**, exact local recovery smoke with real links and exact preview `ed29b335` / `3hwMwixfCmgr5nx8gWkj26SskbJW` with `null` for both broken catalogs.
+- Consequence: P1-GA-016 is resolved in the preview candidate, but production remains old and promotion is still blocked by required health. Asset/text paths can no longer create commercial proof.
+
+## D-041 — Public detail fan-out must be bounded before direct-PG fallback
+
+- Date: 2026-07-29
+- Decision: catalog filtering may not resolve every card with unbounded `Promise.all` when each resolution can open standalone partner/direct-PG work. WP-021 must add bounded concurrency and in-flight deduplication (or a shared bounded connection primitive) while preserving `unavailable ≠ empty`; increasing connection limits is not accepted as the code fix.
+- Evidence: exact `ed29b335` browser QA with five workers ended **2 passed, 5 failed, 10 not run**. Server evidence contains Tripster 429, partner timeouts, `sorry, too many clients already` and reserved-slot errors. Source trace binds the fan-out to both functions in `public-tour-resolver.ts` and one `pg.Client` lifecycle per detail in Tripster/YouTravel fallback repositories. The same artifact passes **17/17** with one worker.
+- Consequence: register P1-GA-017/R-029 and place WP-021 ahead of WP-015B/lower-risk work. No DDL, provider write, secret/env or production capacity change is authorized; live load proof remains blocked until the canonical data plane is restored.
