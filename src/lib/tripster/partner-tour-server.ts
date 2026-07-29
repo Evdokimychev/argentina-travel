@@ -34,6 +34,7 @@ import type { TripsterExperience } from "@/lib/tripster/types";
 import {
   logPartnerSourceUnavailable,
   partnerOk,
+  partnerSourceUnavailableError,
   partnerUnavailableFromError,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
@@ -294,9 +295,7 @@ async function loadPartnerTourListings(): Promise<TourListing[]> {
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("tripster_listings", result);
   }
-  throw new Error(
-    `tripster_listings_unavailable:${result.errorClass}: ${result.message}`,
-  );
+  throw partnerSourceUnavailableError("tripster_listings", result);
 }
 
 const cachedPartnerTourListings = unstable_cache(
@@ -381,7 +380,7 @@ async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("tripster_detail", result);
   }
-  throw new Error(`tripster_detail_unavailable:${result.errorClass}: ${result.message}`);
+  throw partnerSourceUnavailableError("tripster_detail", result);
 }
 
 /**
@@ -460,7 +459,7 @@ export async function fetchPartnerTourSlugsServer(): Promise<string[]> {
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("tripster_slugs", result);
   }
-  throw new Error(`tripster_slugs_unavailable:${result.errorClass}: ${result.message}`);
+  throw partnerSourceUnavailableError("tripster_slugs", result);
 }
 
 export async function fetchSimilarPartnerToursServer(

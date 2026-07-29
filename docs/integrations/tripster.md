@@ -302,6 +302,15 @@ https://tp.media/r?marker=434047&u=https%3A%2F%2Fexperience.tripster.ru%2Fexperi
 | UI (partner tour) | `src/components/tour-detail/PartnerTourBookingContactSection.tsx` |
 | Sync / catalog | `scripts/tripster-sync.mjs`, `src/lib/tripster/repository.ts` |
 
+## Граница observability для ошибок провайдера
+
+Ответы Tripster, `error.details`, контактные данные и исходный текст ошибки не
+должны попадать в application logs или в сообщения исключений, которые может
+вывести Next.js. Событие `[partner_source_unavailable]` содержит только
+allowlisted `source`, нормализованный `errorClass` и `retryable`. Полный текст
+ошибки остаётся внутренним значением для классификации и существующего
+fallback/persistence flow, но не пересекает границу логирования.
+
 ## Что сломало prefilling (регрессии и исправления)
 
 ### 1. Прямое использование `order.url` с `/orders/{id}/` (до e4f7786)
@@ -355,3 +364,4 @@ https://tp.media/r?marker=434047&u=https%3A%2F%2Fexperience.tripster.ru%2Fexperi
 - [ ] Авторизация: `Bearer`, с автоповтором на `Token` при `401/403`
 - [ ] Тесты: `checkout-url.test.ts`, `open-partner-booking-url.test.ts`, `booking-api.test.ts`
 - [ ] E2E: `tests/e2e/tripster-partner-invariants.spec.ts`
+- [ ] Ошибка провайдера логируется только как `source`, `errorClass`, `retryable`

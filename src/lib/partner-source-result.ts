@@ -12,6 +12,24 @@ export type PartnerSourceErrorClass =
   | "malformed_payload"
   | "unknown";
 
+export type PartnerSourceLogName =
+  | "tripster_listings_supabase"
+  | "tripster_listings_live_fallback"
+  | "tripster_listings"
+  | "tripster_detail_supabase"
+  | "tripster_detail"
+  | "tripster_slugs_supabase"
+  | "tripster_slugs"
+  | "tripster_resolve"
+  | "tripster_external_orders"
+  | "youtravel_listings_supabase"
+  | "youtravel_listings"
+  | "youtravel_detail_supabase"
+  | "youtravel_detail"
+  | "youtravel_slugs_supabase"
+  | "youtravel_slugs"
+  | "youtravel_resolve";
+
 export type PartnerSourceResult<T> =
   | { status: "ok"; data: T }
   | {
@@ -21,6 +39,11 @@ export type PartnerSourceResult<T> =
       message: string;
     };
 
+export type PartnerSourceUnavailable = Extract<
+  PartnerSourceResult<unknown>,
+  { status: "unavailable" }
+>;
+
 export function partnerOk<T>(data: T): PartnerSourceResult<T> {
   return { status: "ok", data };
 }
@@ -28,7 +51,7 @@ export function partnerOk<T>(data: T): PartnerSourceResult<T> {
 export function partnerUnavailable(
   errorClass: PartnerSourceErrorClass,
   message: string,
-): PartnerSourceResult<never> {
+): PartnerSourceUnavailable {
   return { status: "unavailable", retryable: true, errorClass, message };
 }
 
@@ -71,7 +94,7 @@ export function classifyPartnerError(error: unknown): PartnerSourceErrorClass {
   return "unknown";
 }
 
-export function partnerUnavailableFromError(error: unknown): PartnerSourceResult<never> {
+export function partnerUnavailableFromError(error: unknown): PartnerSourceUnavailable {
   return partnerUnavailable(
     classifyPartnerError(error),
     error instanceof Error ? error.message : String(error),
@@ -79,13 +102,21 @@ export function partnerUnavailableFromError(error: unknown): PartnerSourceResult
 }
 
 export function logPartnerSourceUnavailable(
-  source: string,
-  result: Extract<PartnerSourceResult<unknown>, { status: "unavailable" }>,
+  source: PartnerSourceLogName,
+  result: PartnerSourceUnavailable,
 ): void {
   console.error("[partner_source_unavailable]", {
     source,
     errorClass: result.errorClass,
     retryable: result.retryable,
-    message: result.message,
   });
+}
+
+export function partnerSourceUnavailableError(
+  source: PartnerSourceLogName,
+  result: PartnerSourceUnavailable,
+): Error {
+  const error = new Error(`${source}_unavailable:${result.errorClass}`);
+  error.name = "PartnerSourceUnavailableError";
+  return error;
 }

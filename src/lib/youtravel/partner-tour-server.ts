@@ -12,6 +12,7 @@ import {
 import {
   logPartnerSourceUnavailable,
   partnerOk,
+  partnerSourceUnavailableError,
   partnerUnavailableFromError,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
@@ -73,7 +74,7 @@ export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]>
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("youtravel_listings", result);
   }
-  throw new Error(`youtravel_listings_unavailable:${result.errorClass}: ${result.message}`);
+  throw partnerSourceUnavailableError("youtravel_listings", result);
 }
 
 const cachedYouTravelTourListings = unstable_cache(
@@ -132,7 +133,7 @@ export async function fetchYouTravelTourSlugsServer(): Promise<string[]> {
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("youtravel_slugs", result);
   }
-  throw new Error(`youtravel_slugs_unavailable:${result.errorClass}: ${result.message}`);
+  throw partnerSourceUnavailableError("youtravel_slugs", result);
 }
 
 async function loadYouTravelTourDetailResult(
@@ -192,7 +193,7 @@ export async function fetchYouTravelTourDetailServer(slug: string): Promise<Tour
   if (shouldLogCatalogRestError(result.message)) {
     logPartnerSourceUnavailable("youtravel_detail", result);
   }
-  throw new Error(`youtravel_detail_unavailable:${result.errorClass}: ${result.message}`);
+  throw partnerSourceUnavailableError("youtravel_detail", result);
 }
 
 export const fetchYouTravelTourDetailCached = cache(fetchYouTravelTourDetailServer);

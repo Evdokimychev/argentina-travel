@@ -35,6 +35,10 @@ import {
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import { publicBookingError } from "@/lib/partner-booking/public-errors";
+import {
+  logPartnerSourceUnavailable,
+  partnerUnavailableFromError,
+} from "@/lib/partner-source-result";
 
 type BookingRequestBody = {
   slug?: string;
@@ -520,15 +524,10 @@ async function postTripsterBookingRequest(request: Request) {
       const isInfraError =
         error.status === 401 || error.status === 403 || error.status === 503;
 
-      console.warn("[tripster/booking-request] external_orders failed", {
-        status: error.status,
-        experienceId,
-        slug,
-        reason: isInfraError
-          ? resolveAffiliateFallbackReason(error.status)
-          : "api_booking_rejected",
-        details: error.details,
-      });
+      logPartnerSourceUnavailable(
+        "tripster_external_orders",
+        partnerUnavailableFromError(error),
+      );
 
       await persistTripsterRequest({
         ...body,
