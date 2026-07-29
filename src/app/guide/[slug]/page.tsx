@@ -18,13 +18,12 @@ import {
   getGuideTopicMetadata,
   isGuideTopicSlug,
 } from "@/lib/guide-topics";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
-import { filterToursWithResolvedPublicDetail } from "@/lib/public-tour-resolver";
+import { loadGuidePillarInitialTours } from "@/lib/guide-pillar-tour-data";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -92,15 +91,13 @@ export default async function GuideSlugPage({ params }: PageProps) {
     if (!topic) notFound();
     if (slug === "kak-dobratsya") {
       if (topic.cmsPage && topic.pillarPage) {
-        const marketplaceTours = await fetchMarketplaceTours();
-        const initialTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
+        const initialTours = await loadGuidePillarInitialTours(topic.pillarPage);
         return <GuidePillarView topic={topic} initialTours={initialTours} />;
       }
       return <KakDobratsyaHubView topic={topic} />;
     }
     if (topic.pillarPage) {
-      const marketplaceTours = await fetchMarketplaceTours();
-      const initialTours = await filterToursWithResolvedPublicDetail(marketplaceTours);
+      const initialTours = await loadGuidePillarInitialTours(topic.pillarPage);
       return <GuidePillarView topic={topic} initialTours={initialTours} />;
     }
     return <GuideTopicView topic={topic} />;
