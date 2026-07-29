@@ -21,6 +21,7 @@ import {
   type PartnerSourceErrorClass,
 } from "@/lib/partner-source-result";
 import { isDefaultCatalogTour } from "@/lib/catalog-country-relevance";
+import { shouldLogCatalogRestError } from "@/lib/catalog-rest-circuit";
 
 export type PublicTourResolution =
   | {
@@ -168,7 +169,9 @@ export async function resolvePublicTourBySlug(
         return resolved("youtravel", await enrichTourWithPublicReviews(youtravel.data));
       }
     } else {
-      logPartnerSourceUnavailable("youtravel_resolve", youtravel);
+      if (shouldLogCatalogRestError(youtravel.message)) {
+        logPartnerSourceUnavailable("youtravel_resolve", youtravel);
+      }
       unavailable.push({
         status: "unavailable",
         source: "youtravel",
@@ -184,7 +187,9 @@ export async function resolvePublicTourBySlug(
       return resolved("tripster", await enrichTourWithPublicReviews(tripster.data));
     }
   } else {
-    logPartnerSourceUnavailable("tripster_resolve", tripster);
+    if (shouldLogCatalogRestError(tripster.message)) {
+      logPartnerSourceUnavailable("tripster_resolve", tripster);
+    }
     unavailable.push({
       status: "unavailable",
       source: "tripster",

@@ -6,6 +6,7 @@ import {
   partnerOk,
   partnerUnavailable,
 } from "@/lib/partner-source-result";
+import { requireHealthyTourSlugSnapshot } from "@/lib/public-detail-existence";
 
 describe("public detail existence contracts", () => {
   it("keeps middleware free of self-HEAD existence preflight", () => {
@@ -37,6 +38,23 @@ describe("public detail existence contracts", () => {
     expect(route).toContain('status: 503');
     expect(route).toContain('"Cache-Control": "no-store"');
     expect(route).not.toContain("status: exists ? 204 : 404");
+  });
+
+  it("never stores a degraded tour-slug snapshot as a successful cache value", () => {
+    expect(() =>
+      requireHealthyTourSlugSnapshot({
+        snapshotId: "n0:t-unavail:y0",
+        slugs: new Set(),
+        unavailableReasons: ["tripster:quota"],
+      }),
+    ).toThrow("public_tour_slug_snapshot_unavailable:tripster:quota");
+
+    const healthy = {
+      snapshotId: "n1:t1:y1",
+      slugs: new Set(["known-tour"]),
+      unavailableReasons: [],
+    };
+    expect(requireHealthyTourSlugSnapshot(healthy)).toBe(healthy);
   });
 });
 

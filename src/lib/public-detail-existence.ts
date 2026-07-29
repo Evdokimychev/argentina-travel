@@ -19,6 +19,7 @@ import {
   logPartnerSourceUnavailable,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
+import { shouldLogCatalogRestError } from "@/lib/catalog-rest-circuit";
 
 export type PublicDetailKind =
   | "tours"
@@ -60,14 +61,18 @@ async function loadTourSlugSnapshot(): Promise<SlugSourceSnapshot> {
   if (tripster.status === "ok") {
     for (const slug of tripster.data) slugs.add(slug);
   } else {
-    logPartnerSourceUnavailable("tripster_slugs", tripster);
+    if (shouldLogCatalogRestError(tripster.message)) {
+      logPartnerSourceUnavailable("tripster_slugs", tripster);
+    }
     unavailableReasons.push(`tripster:${tripster.errorClass}`);
   }
 
   if (youtravel.status === "ok") {
     for (const slug of youtravel.data) slugs.add(slug);
   } else {
-    logPartnerSourceUnavailable("youtravel_slugs", youtravel);
+    if (shouldLogCatalogRestError(youtravel.message)) {
+      logPartnerSourceUnavailable("youtravel_slugs", youtravel);
+    }
     unavailableReasons.push(`youtravel:${youtravel.errorClass}`);
   }
 
@@ -80,9 +85,20 @@ async function loadTourSlugSnapshot(): Promise<SlugSourceSnapshot> {
   return { snapshotId, slugs, unavailableReasons };
 }
 
+export function requireHealthyTourSlugSnapshot(
+  snapshot: SlugSourceSnapshot,
+): SlugSourceSnapshot {
+  if (snapshot.unavailableReasons.length > 0) {
+    throw new Error(
+      `public_tour_slug_snapshot_unavailable:${snapshot.unavailableReasons.join(",")}`,
+    );
+  }
+  return snapshot;
+}
+
 const fetchPublicTourSlugSnapshot = unstable_cache(
-  loadTourSlugSnapshot,
-  ["public-tour-slug-snapshot-v3"],
+  async () => requireHealthyTourSlugSnapshot(await loadTourSlugSnapshot()),
+  ["public-tour-slug-snapshot-v4"],
   { revalidate: 300, tags: ["tours", "partner-tours", "youtravel-tours"] },
 );
 

@@ -18,6 +18,7 @@ import {
   partnerUnavailableFromError,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
+import { withCatalogRestResultCircuit } from "@/lib/catalog-rest-circuit";
 type DbClient = SupabaseClient<Database>;
 export type TourContentReadResult<T> = PartnerSourceResult<T>;
 const PUBLIC_OR_SNAPSHOTTED_MODERATION_STATUSES = [
@@ -355,7 +356,7 @@ export async function fetchPublishedListingsResultServer(): Promise<
 > {
   const client = await getServerSupabaseResult();
   if (client.status === "unavailable") return client;
-  return fetchPublishedListingsResult(client.data);
+  return withCatalogRestResultCircuit(() => fetchPublishedListingsResult(client.data));
 }
 
 export async function fetchPublishedTourBookingSourceByIdServer(tourId: string) {
@@ -385,7 +386,9 @@ export async function fetchTourDetailBySlugResultServer(
 ): Promise<TourContentReadResult<TourDetail | null>> {
   const client = await getServerSupabaseResult();
   if (client.status === "unavailable") return client;
-  return fetchTourDetailBySlugResult(client.data, slug, opts?.accessToken);
+  return withCatalogRestResultCircuit(() =>
+    fetchTourDetailBySlugResult(client.data, slug, opts?.accessToken),
+  );
 }
 
 export async function fetchCanonicalTourBySlugServer(

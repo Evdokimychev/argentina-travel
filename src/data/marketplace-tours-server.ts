@@ -11,6 +11,12 @@ let lastSuccessfulMarketplaceTours: TourListing[] | null = null;
 let marketplaceToursInFlight: Promise<TourListing[]> | null = null;
 
 function reportMarketplaceSourceError(source: string, error: unknown): void {
+  if (
+    error instanceof Error &&
+    error.message.includes("catalog_rest_circuit_open:quota")
+  ) {
+    return;
+  }
   console.error("[marketplace_source_error]", {
     source,
     message: error instanceof Error ? error.message : String(error),
@@ -29,8 +35,11 @@ async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
   try {
     const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
     const { fetchPublishedListingsResult } = await import("@/lib/tour-content-server");
+    const { withCatalogRestResultCircuit } = await import("@/lib/catalog-rest-circuit");
     const supabase = createSupabaseAdminClient();
-    const result = await fetchPublishedListingsResult(supabase);
+    const result = await withCatalogRestResultCircuit(() =>
+      fetchPublishedListingsResult(supabase),
+    );
     if (result.status === "unavailable") {
       throw new Error(`platform_tours_${result.errorClass}: ${result.message}`);
     }

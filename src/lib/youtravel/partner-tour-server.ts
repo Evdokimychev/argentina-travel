@@ -16,6 +16,10 @@ import {
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
 import type { TourDetail, TourListing } from "@/types";
+import {
+  shouldLogCatalogRestError,
+  withCatalogRestCircuit,
+} from "@/lib/catalog-rest-circuit";
 
 function getClient() {
   try {
@@ -33,17 +37,21 @@ export async function fetchYouTravelTourListingsResultServer(): Promise<
 
   if (supabase) {
     try {
-      const listings = await fetchYouTravelTourListings(supabase);
+      const listings = await withCatalogRestCircuit(() =>
+        fetchYouTravelTourListings(supabase),
+      );
       if (listings.length > 0) return partnerOk(listings);
     } catch (error) {
       supabaseError = error;
-      logPartnerSourceUnavailable(
-        "youtravel_listings_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "youtravel_listings_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
   } else {
     supabaseError = new Error("supabase_admin_client_unavailable");
@@ -62,8 +70,10 @@ export async function fetchYouTravelTourListingsResultServer(): Promise<
 export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]> {
   const result = await fetchYouTravelTourListingsResultServer();
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("youtravel_listings", result);
-  throw new Error(`youtravel_listings_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("youtravel_listings", result);
+  }
+  throw new Error(`youtravel_listings_unavailable:${result.errorClass}: ${result.message}`);
 }
 
 const cachedYouTravelTourListings = unstable_cache(
@@ -86,17 +96,21 @@ export async function fetchYouTravelTourSlugsResultServer(): Promise<
 
   if (supabase) {
     try {
-      const slugs = await fetchYouTravelTourSlugs(supabase);
+      const slugs = await withCatalogRestCircuit(() =>
+        fetchYouTravelTourSlugs(supabase),
+      );
       if (slugs.length > 0) return partnerOk(slugs);
     } catch (error) {
       supabaseError = error;
-      logPartnerSourceUnavailable(
-        "youtravel_slugs_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "youtravel_slugs_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
   } else {
     supabaseError = new Error("supabase_admin_client_unavailable");
@@ -115,8 +129,10 @@ export async function fetchYouTravelTourSlugsResultServer(): Promise<
 export async function fetchYouTravelTourSlugsServer(): Promise<string[]> {
   const result = await fetchYouTravelTourSlugsResultServer();
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("youtravel_slugs", result);
-  throw new Error(`youtravel_slugs_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("youtravel_slugs", result);
+  }
+  throw new Error(`youtravel_slugs_unavailable:${result.errorClass}: ${result.message}`);
 }
 
 async function loadYouTravelTourDetailResult(
@@ -127,19 +143,23 @@ async function loadYouTravelTourDetailResult(
 
   if (supabase) {
     try {
-      const detail = await fetchYouTravelTourDetail(supabase, slug);
+      const detail = await withCatalogRestCircuit(() =>
+        fetchYouTravelTourDetail(supabase, slug),
+      );
       if (detail) {
         return partnerOk(await enrichYouTravelTourDetailOffers(detail));
       }
     } catch (error) {
       supabaseError = error;
-      logPartnerSourceUnavailable(
-        "youtravel_detail_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "youtravel_detail_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
   } else {
     supabaseError = new Error("supabase_admin_client_unavailable");
@@ -169,8 +189,10 @@ export async function fetchYouTravelTourDetailResultServer(
 export async function fetchYouTravelTourDetailServer(slug: string): Promise<TourDetail | null> {
   const result = await loadYouTravelTourDetailResult(slug);
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("youtravel_detail", result);
-  throw new Error(`youtravel_detail_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("youtravel_detail", result);
+  }
+  throw new Error(`youtravel_detail_unavailable:${result.errorClass}: ${result.message}`);
 }
 
 export const fetchYouTravelTourDetailCached = cache(fetchYouTravelTourDetailServer);

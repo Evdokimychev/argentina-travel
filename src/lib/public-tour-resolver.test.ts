@@ -62,6 +62,28 @@ describe("resolvePublicTourBySlug fault injection", () => {
     const resolution = await resolvePublicTourBySlug("no-such-tour-yt99999");
     expect(resolution).toEqual({ status: "missing", reason: "confirmed_absent" });
   });
+
+  it("does not repeat synthetic circuit-open logs at the resolver layer", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.mocked(fetchCutoverTourDetailResultBySlug).mockResolvedValue({ status: "ok", data: null });
+    vi.mocked(fetchYouTravelTourDetailResultServer).mockResolvedValue({
+      status: "ok",
+      data: null,
+    });
+    vi.mocked(fetchPartnerTourDetailResultServer).mockResolvedValue({
+      status: "unavailable",
+      retryable: true,
+      errorClass: "quota",
+      message: "tripster_detail_unavailable:quota: catalog_rest_circuit_open:quota",
+    });
+
+    await expect(resolvePublicTourBySlug("argentina-circuit-open")).resolves.toMatchObject({
+      status: "unavailable",
+      errorClass: "quota",
+    });
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
 });
 
 describe("filterToursWithResolvedPublicDetail", () => {

@@ -37,6 +37,10 @@ import {
   partnerUnavailableFromError,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
+import {
+  shouldLogCatalogRestError,
+  withCatalogRestCircuit,
+} from "@/lib/catalog-rest-circuit";
 
 function getClient() {
   try {
@@ -228,20 +232,28 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
 
 async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<TourListing[]>> {
   const supabase = getClient();
+  let supabaseError: unknown = null;
 
   if (supabase) {
     try {
-      const fromSupabase = await fetchPartnerTourListings(supabase);
+      const fromSupabase = await withCatalogRestCircuit(() =>
+        fetchPartnerTourListings(supabase),
+      );
       if (fromSupabase.length > 0) return partnerOk(fromSupabase);
     } catch (error) {
-      logPartnerSourceUnavailable(
-        "tripster_listings_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      supabaseError = error;
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "tripster_listings_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
   }
 
   try {
@@ -272,15 +284,19 @@ async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<Tour
   }
 
   return partnerUnavailableFromError(
-    new Error("tripster_listings_all_sources_unavailable"),
+    supabaseError ?? new Error("tripster_listings_all_sources_unavailable"),
   );
 }
 
 async function loadPartnerTourListings(): Promise<TourListing[]> {
   const result = await loadPartnerTourListingsResult();
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("tripster_listings", result);
-  throw new Error(`tripster_listings_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("tripster_listings", result);
+  }
+  throw new Error(
+    `tripster_listings_unavailable:${result.errorClass}: ${result.message}`,
+  );
 }
 
 const cachedPartnerTourListings = unstable_cache(
@@ -301,7 +317,9 @@ async function loadPartnerTourDetailResult(
 
   if (supabase) {
     try {
-      const tour = await fetchPartnerTourDetail(supabase, slug);
+      const tour = await withCatalogRestCircuit(() =>
+        fetchPartnerTourDetail(supabase, slug),
+      );
       if (tour) {
         if (process.env.ENABLE_LIVE_PARTNER_DETAIL_ENRICHMENT === "true") {
           return partnerOk(await enrichPartnerTourDetail(tour));
@@ -310,14 +328,18 @@ async function loadPartnerTourDetailResult(
       }
     } catch (error) {
       supabaseError = error;
-      logPartnerSourceUnavailable(
-        "tripster_detail_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "tripster_detail_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
   }
 
   try {
@@ -356,8 +378,10 @@ async function loadPartnerTourDetailResult(
 async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
   const result = await loadPartnerTourDetailResult(slug);
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("tripster_detail", result);
-  throw new Error(`tripster_detail_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("tripster_detail", result);
+  }
+  throw new Error(`tripster_detail_unavailable:${result.errorClass}: ${result.message}`);
 }
 
 /**
@@ -399,18 +423,24 @@ export async function fetchPartnerTourSlugsResultServer(): Promise<
 
   if (supabase) {
     try {
-      const slugs = await fetchPartnerTourSlugs(supabase);
+      const slugs = await withCatalogRestCircuit(() =>
+        fetchPartnerTourSlugs(supabase),
+      );
       if (slugs.length > 0) return partnerOk(slugs);
     } catch (error) {
       supabaseError = error;
-      logPartnerSourceUnavailable(
-        "tripster_slugs_supabase",
-        partnerUnavailableFromError(error) as Extract<
-          PartnerSourceResult<never>,
-          { status: "unavailable" }
-        >,
-      );
+      if (shouldLogCatalogRestError(error)) {
+        logPartnerSourceUnavailable(
+          "tripster_slugs_supabase",
+          partnerUnavailableFromError(error) as Extract<
+            PartnerSourceResult<never>,
+            { status: "unavailable" }
+          >,
+        );
+      }
     }
+  } else {
+    supabaseError = new Error("supabase_admin_client_unavailable");
   }
 
   try {
@@ -427,8 +457,10 @@ export async function fetchPartnerTourSlugsResultServer(): Promise<
 export async function fetchPartnerTourSlugsServer(): Promise<string[]> {
   const result = await fetchPartnerTourSlugsResultServer();
   if (result.status === "ok") return result.data;
-  logPartnerSourceUnavailable("tripster_slugs", result);
-  throw new Error(`tripster_slugs_unavailable:${result.errorClass}`);
+  if (shouldLogCatalogRestError(result.message)) {
+    logPartnerSourceUnavailable("tripster_slugs", result);
+  }
+  throw new Error(`tripster_slugs_unavailable:${result.errorClass}: ${result.message}`);
 }
 
 export async function fetchSimilarPartnerToursServer(
