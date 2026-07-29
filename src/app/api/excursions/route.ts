@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
+import { fetchExcursionsResultServer } from "@/lib/tripster/excursion-server";
 import type { ExcursionListFilters } from "@/types/excursion";
 
 function parseNumber(value: string | null): number | undefined {
@@ -21,6 +21,12 @@ export async function GET(request: Request) {
     pageSize: parseNumber(searchParams.get("pageSize")) ?? 24,
   };
 
-  const result = await fetchExcursionsServer(filters);
-  return NextResponse.json(result);
+  const result = await fetchExcursionsResultServer(filters);
+  if (result.status === "unavailable") {
+    return NextResponse.json(
+      { error: "Excursions catalog unavailable", code: "catalog_unavailable" },
+      { status: 503, headers: { "Retry-After": "60" } },
+    );
+  }
+  return NextResponse.json(result.data);
 }

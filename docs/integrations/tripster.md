@@ -71,6 +71,23 @@ Content-Type: application/json
 
 Реализация: `src/lib/tripster/client.ts`, `src/lib/tripster/booking-api.ts`
 
+### Аварийное чтение каталога
+
+Обычный production-путь остаётся прежним: Supabase REST → direct Postgres. Если оба
+синхронизированных хранилища временно недоступны, сервер запрашивает актуальный
+публичный каталог напрямую из Partner API по городам Аргентины. На cold start
+загружается до 100 карточек на город, результат кэшируется на 30 минут; detail и
+affiliate-переход восстанавливаются по Tripster ID из slug.
+
+- live fallback используется только после неуспеха обоих хранилищ;
+- демонстрационные seed-карточки в production не включаются;
+- пустой результат при ошибке источника не записывается как успешный каталог;
+- все переходы по-прежнему проходят через существующие server-side checkout и
+  affiliate builders.
+
+Реализация: `src/lib/tripster/live-catalog-fallback.ts`,
+`src/lib/tripster/partner-tour-server.ts`, `src/lib/excursion-server.ts`.
+
 ### Уточнение цены перед заказом (официально)
 
 `GET /api/partners/{partner}/experiences/{experience_id}/price/` с query: `persons_count`, `tickets` (`[{"id":int,"count":int}]`), `date`, `time`.

@@ -228,14 +228,12 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
 
 async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<TourListing[]>> {
   const supabase = getClient();
-  let supabaseFailed = false;
 
   if (supabase) {
     try {
       const fromSupabase = await fetchPartnerTourListings(supabase);
       if (fromSupabase.length > 0) return partnerOk(fromSupabase);
     } catch (error) {
-      supabaseFailed = true;
       logPartnerSourceUnavailable(
         "tripster_listings_supabase",
         partnerUnavailableFromError(error) as Extract<
@@ -244,8 +242,6 @@ async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<Tour
         >,
       );
     }
-  } else {
-    supabaseFailed = true;
   }
 
   try {
@@ -253,13 +249,32 @@ async function loadPartnerTourListingsResult(): Promise<PartnerSourceResult<Tour
       "@/lib/tripster/partner-tour-pg-repository"
     );
     const fromPg = await pgFetchPartnerTourListings();
-    return partnerOk(fromPg);
-  } catch (error) {
-    if (supabaseFailed) {
-      return partnerUnavailableFromError(error);
-    }
-    return partnerUnavailableFromError(error);
+    if (fromPg.length > 0) return partnerOk(fromPg);
+  } catch {
+    // REST repositories can normalize transport failures to an empty list,
+    // so `supabaseFailed` alone is not a reliable outage signal here.
+    // Continue to the live partner API before returning unavailable.
   }
+
+  try {
+    const { fetchLiveTripsterTourListingsFallback } = await import(
+      "@/lib/tripster/live-catalog-fallback"
+    );
+    const live = await fetchLiveTripsterTourListingsFallback();
+    if (live.length > 0) return partnerOk(live);
+  } catch (error) {
+    logPartnerSourceUnavailable(
+      "tripster_listings_live_fallback",
+      partnerUnavailableFromError(error) as Extract<
+        PartnerSourceResult<never>,
+        { status: "unavailable" }
+      >,
+    );
+  }
+
+  return partnerUnavailableFromError(
+    new Error("tripster_listings_all_sources_unavailable"),
+  );
 }
 
 async function loadPartnerTourListings(): Promise<TourListing[]> {
@@ -320,10 +335,23 @@ async function loadPartnerTourDetailResult(
       return partnerOk(await enrichPartnerTourDetail(tour));
     }
     return partnerOk(tour);
-  } catch (error) {
-    if (supabaseError) return partnerUnavailableFromError(supabaseError);
-    return partnerUnavailableFromError(error);
+  } catch {
+    // Direct Postgres is optional during a Supabase outage; continue to the
+    // authenticated Tripster catalog API before declaring the product unavailable.
   }
+
+  try {
+    const { fetchLiveTripsterTourDetailFallback } = await import(
+      "@/lib/tripster/live-catalog-fallback"
+    );
+    const live = await fetchLiveTripsterTourDetailFallback(slug);
+    if (live) return partnerOk(live);
+  } catch (error) {
+    return partnerUnavailableFromError(supabaseError ?? error);
+  }
+
+  if (supabaseError) return partnerUnavailableFromError(supabaseError);
+  return partnerOk(null);
 }
 
 async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {

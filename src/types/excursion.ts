@@ -169,4 +169,6 @@ export type ExcursionListResult = {
   page: number;
   pageSize: number;
   cities: ExcursionCity[];
+  catalogState?: "ready" | "partial" | "empty";
+  unavailableSources?: Array<"platform" | "tripster" | "sputnik8">;
 };

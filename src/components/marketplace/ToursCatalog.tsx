@@ -33,7 +33,7 @@ import { formatCatalogBrowseHint } from "@/lib/catalog-stats";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
-import { MapPin, RefreshCw } from "lucide-react";
+import { MapPin } from "lucide-react";
 import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
 import CatalogDepartureCalendarButton from "@/components/marketplace/CatalogDepartureCalendarButton";
 import CatalogLazyLoadFooter from "@/components/marketplace/CatalogLazyLoadFooter";
@@ -238,8 +238,6 @@ export default function ToursCatalog({
     return items;
   }, [activeFilterCount, resetFilters]);
 
-  const catalogUnavailable = tours.length === 0 && activeFilterCount === 0;
-
   return (
     <div className="catalog-listing-page-root w-full max-w-full overflow-x-clip pb-16">
       <header className="catalog-listing-page-hero editorial-hero" data-scroll-rail-tone="light" data-editorial-theme="highland">
@@ -379,28 +377,15 @@ export default function ToursCatalog({
 
           {sorted.length === 0 ? (
             <CatalogEmptyResults
-              icon={catalogUnavailable ? RefreshCw : MapPin}
-              title={catalogUnavailable ? "Каталог временно недоступен" : "Туры не найдены"}
-              description={
-                catalogUnavailable
-                  ? "Не удалось загрузить туры с сервера. Попробуйте обновить страницу или зайти позже."
-                  : "Попробуйте изменить фильтры или сбросить поиск."
-              }
+              icon={MapPin}
+              title="Туры не найдены"
+              description="Попробуйте изменить фильтры или сбросить поиск."
               action={
-                catalogUnavailable
-                  ? {
-                      label: "Обновить страницу",
-                      onClick: () => window.location.reload(),
-                    }
-                  : activeFilterCount > 0
-                    ? { label: "Сбросить фильтры", onClick: resetFilters }
-                    : undefined
+                activeFilterCount > 0
+                  ? { label: "Сбросить фильтры", onClick: resetFilters }
+                  : undefined
               }
-              secondaryAction={
-                catalogUnavailable
-                  ? { label: "Написать в поддержку", href: "/contacts" }
-                  : { label: "Смотреть экскурсии", href: "/excursions" }
-              }
+              secondaryAction={{ label: "Смотреть экскурсии", href: "/excursions" }}
               suggestions={emptySuggestions}
             />
           ) : viewMode === "map" ? (

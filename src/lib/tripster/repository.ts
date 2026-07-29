@@ -17,19 +17,33 @@ import {
 import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
 import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { isTripsterTourExperience } from "@/lib/tripster/partner-tour-utils";
+import {
+  partnerOk,
+  partnerUnavailable,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 
 type DbClient = SupabaseClient<Database>;
 
 const DEFAULT_PAGE_SIZE = 24;
 
 export async function fetchExcursionCities(supabase: DbClient): Promise<ExcursionCity[]> {
+  const result = await fetchExcursionCitiesResult(supabase);
+  return result.status === "ok" ? result.data : [];
+}
+
+export async function fetchExcursionCitiesResult(
+  supabase: DbClient,
+): Promise<PartnerSourceResult<ExcursionCity[]>> {
   const { data, error } = await supabase
     .from("tripster_cities")
     .select("id, slug, name_ru, name_en, experience_count, cover_image")
     .order("experience_count", { ascending: false });
 
-  if (error || !data) return [];
-  return data.map((row) => rowToExcursionCity(row));
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerUnavailable("malformed_payload", "Tripster cities returned no data");
+  return partnerOk(data.map((row) => rowToExcursionCity(row)));
 }
 
 export async function fetchExcursionCityBySlug(
@@ -50,15 +64,32 @@ export async function fetchExcursionListings(
   supabase: DbClient,
   filters: ExcursionListFilters = {}
 ): Promise<ExcursionListResult> {
+  const result = await fetchExcursionListingsResult(supabase, filters);
+  if (result.status === "ok") return result.data;
+  return {
+    items: [],
+    total: 0,
+    page: Math.max(1, filters.page ?? 1),
+    pageSize: Math.min(48, Math.max(1, filters.pageSize ?? DEFAULT_PAGE_SIZE)),
+    cities: [],
+  };
+}
+
+export async function fetchExcursionListingsResult(
+  supabase: DbClient,
+  filters: ExcursionListFilters = {}
+): Promise<PartnerSourceResult<ExcursionListResult>> {
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(48, Math.max(1, filters.pageSize ?? DEFAULT_PAGE_SIZE));
-  const cities = await fetchExcursionCities(supabase);
+  const cityResult = await fetchExcursionCitiesResult(supabase);
+  const cities = cityResult.status === "ok" ? cityResult.data : [];
 
   let cityId: number | undefined;
   if (filters.citySlug) {
+    if (cityResult.status === "unavailable") return cityResult;
     const city = cities.find((c) => c.slug === filters.citySlug);
     if (!city) {
-      return { items: [], total: 0, page, pageSize, cities };
+      return partnerOk({ items: [], total: 0, page, pageSize, cities });
     }
     cityId = city.id;
   }
@@ -104,9 +135,8 @@ export async function fetchExcursionListings(
   const to = from + pageSize - 1;
   const { data, error, count } = await query.range(from, to);
 
-  if (error || !data) {
-    return { items: [], total: 0, page, pageSize, cities };
-  }
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerUnavailable("malformed_payload", "Tripster excursions returned no data");
 
   const cityMap = new Map(cities.map((city) => [city.id, city]));
   const items = data
@@ -126,13 +156,13 @@ export async function fetchExcursionListings(
     return rowToExcursionListing(row, cityRow);
   });
 
-  return {
+  return partnerOk({
     items,
     total: count ?? items.length,
     page,
     pageSize,
     cities,
-  };
+  });
 }
 
 export async function fetchExcursionSlugs(supabase: DbClient): Promise<string[]> {
@@ -254,14 +284,23 @@ export async function fetchExcursionBySlug(
   supabase: DbClient,
   slug: string
 ): Promise<ExcursionDetail | null> {
+  const result = await fetchExcursionBySlugResult(supabase, slug);
+  return result.status === "ok" ? result.data : null;
+}
+
+export async function fetchExcursionBySlugResult(
+  supabase: DbClient,
+  slug: string
+): Promise<PartnerSourceResult<ExcursionDetail | null>> {
   const { data, error } = await supabase
     .from("tripster_experiences")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
 
-  if (error || !data) return null;
-  if (isTripsterTourExperience(data)) return null;
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerOk(null);
+  if (isTripsterTourExperience(data)) return partnerOk(null);
 
   const { data: city } = await supabase
     .from("tripster_cities")
@@ -271,7 +310,7 @@ export async function fetchExcursionBySlug(
 
   const detail = rowToExcursionDetail(data, city);
   const reviews = await fetchExcursionReviews(supabase, data.id);
-  return { ...detail, reviews };
+  return partnerOk({ ...detail, reviews });
 }
 
 export async function fetchExcursionListingBySlug(

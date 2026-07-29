@@ -8,20 +8,29 @@ import {
   parsePublicApiPagination,
   serializePublicTourListing,
 } from "@/lib/public-api/serializers";
-import { fetchPublishedListingsServer } from "@/lib/tour-content-server";
+import { fetchPublishedListingsResultServer } from "@/lib/tour-content-server";
 
 export async function GET(request: Request) {
   return handlePublicApiRequest(request, "tours:read", async (req, { key }) => {
     if (!isSupabaseToursEnabled()) {
-      return publicApiJson({ error: "Tours API unavailable" }, { status: 503 });
+      return publicApiJson(
+        { error: "Tours API unavailable" },
+        { status: 503, headers: { "Retry-After": "60" } },
+      );
     }
 
     const { searchParams } = new URL(req.url);
     const { page, pageSize } = parsePublicApiPagination(searchParams);
     const organizerSlug = searchParams.get("organizer")?.trim() || null;
 
-    const tours = await fetchPublishedListingsServer();
-    const filtered = filterToursForPublicApi(tours, {
+    const result = await fetchPublishedListingsResultServer();
+    if (result.status === "unavailable") {
+      return publicApiJson(
+        { error: "Tours API unavailable" },
+        { status: 503, headers: { "Retry-After": "60" } },
+      );
+    }
+    const filtered = filterToursForPublicApi(result.data, {
       organizerSlug,
       organizerId: key.organizerId,
     });

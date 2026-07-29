@@ -12,6 +12,11 @@ import {
   getRepositoryTourDetail,
 } from "@/lib/tour-repository";
 import { getLegacyTourDetail } from "@/lib/tours-legacy";
+import {
+  partnerOk,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 
 function shouldFallbackToSeedCatalog(): boolean {
   if (!isSupabaseToursEnabled()) return true;
@@ -69,19 +74,43 @@ export async function fetchCutoverTourDetailBySlug(
   slug: string,
   opts?: { accessToken?: string | null }
 ): Promise<TourDetail | null> {
+  const result = await fetchCutoverTourDetailResultBySlug(slug, opts);
+  if (result.status === "unavailable") {
+    throw new Error(`tour_detail_${result.errorClass}: ${result.message}`);
+  }
+  return result.data;
+}
+
+export async function fetchCutoverTourDetailResultBySlug(
+  slug: string,
+  opts?: { accessToken?: string | null }
+): Promise<PartnerSourceResult<TourDetail | null>> {
+  let databaseUnavailable: Extract<PartnerSourceResult<never>, { status: "unavailable" }> | null = null;
+
   if (isSupabaseToursEnabled()) {
     try {
-      const { fetchTourDetailBySlugServer } = await import("@/lib/tour-content-server");
-      const fromDb = await fetchTourDetailBySlugServer(slug, opts);
-      if (fromDb) return fromDb;
-      if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
+      const { fetchTourDetailBySlugResultServer } = await import("@/lib/tour-content-server");
+      const fromDb = await fetchTourDetailBySlugResultServer(slug, opts);
+      if (fromDb.status === "ok") {
+        if (fromDb.data) return fromDb;
+        if (shouldUseSupabaseToursAsSourceOfTruth()) return fromDb;
+      } else {
+        databaseUnavailable = fromDb;
+        if (shouldUseSupabaseToursAsSourceOfTruth()) return fromDb;
+      }
     } catch (error) {
       reportCatalogSourceError("tour_detail", error);
-      if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
+      const unavailable = partnerUnavailableFromError(error);
+      if (unavailable.status === "unavailable") {
+        databaseUnavailable = unavailable;
+        if (shouldUseSupabaseToursAsSourceOfTruth()) return unavailable;
+      }
     }
   }
 
-  return getRepositoryTourDetail(slug, opts?.accessToken) ?? getLegacyTourDetail(slug) ?? null;
+  const fallback = getRepositoryTourDetail(slug, opts?.accessToken) ?? getLegacyTourDetail(slug) ?? null;
+  if (fallback) return partnerOk(fallback);
+  return databaseUnavailable ?? partnerOk(null);
 }
 
 export async function fetchCutoverCanonicalTourBySlug(slug: string): Promise<Tour | null> {

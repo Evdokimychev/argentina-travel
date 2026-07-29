@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { TourDetail, TourListing } from "@/types";
-import { fetchCutoverTourDetailBySlug } from "@/lib/tours-server-cutover";
+import { fetchCutoverTourDetailResultBySlug } from "@/lib/tours-server-cutover";
 import {
   fetchPartnerTourDetailResultServer,
 } from "@/lib/tripster/partner-tour-server";
@@ -107,9 +107,17 @@ export async function resolvePublicTourBySlug(
   const unavailable: Array<Extract<PublicTourResolution, { status: "unavailable" }>> = [];
 
   try {
-    const native = await fetchCutoverTourDetailBySlug(slug, opts);
-    if (native) {
-      return resolved("platform", await enrichTourWithPublicReviews(native));
+    const native = await fetchCutoverTourDetailResultBySlug(slug, opts);
+    if (native.status === "ok" && native.data) {
+      return resolved("platform", await enrichTourWithPublicReviews(native.data));
+    }
+    if (native.status === "unavailable") {
+      unavailable.push({
+        status: "unavailable",
+        source: "platform",
+        retryable: true,
+        errorClass: native.errorClass,
+      });
     }
   } catch (error) {
     unavailable.push({

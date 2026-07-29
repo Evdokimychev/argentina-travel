@@ -188,7 +188,18 @@ export async function GET(request: Request, context: RouteContext) {
 
   const requestUrl = new URL(request.url);
 
-  const experience = await fetchExperienceForAffiliate(supabase, normalizedSlug);
+  let experience = await fetchExperienceForAffiliate(supabase, normalizedSlug);
+
+  if (!experience && parsed?.partner === "tripster") {
+    try {
+      const { fetchLiveTripsterAffiliateExperienceFallback } = await import(
+        "@/lib/tripster/live-catalog-fallback"
+      );
+      experience = await fetchLiveTripsterAffiliateExperienceFallback(normalizedSlug);
+    } catch {
+      experience = null;
+    }
+  }
 
   if (!experience) {
     const excursion = await fetchExcursionDetailServer(normalizedSlug);

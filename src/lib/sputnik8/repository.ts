@@ -16,19 +16,33 @@ import {
   mapSputnik8ReviewRow,
 } from "@/lib/sputnik8/mapper";
 import { enrichSputnik8ExcursionDetail } from "@/lib/sputnik8/detail-enrichment";
+import {
+  partnerOk,
+  partnerUnavailable,
+  partnerUnavailableFromError,
+  type PartnerSourceResult,
+} from "@/lib/partner-source-result";
 
 type DbClient = SupabaseClient<Database>;
 
 const DEFAULT_PAGE_SIZE = 24;
 
 export async function fetchSputnik8ExcursionCities(supabase: DbClient): Promise<ExcursionCity[]> {
+  const result = await fetchSputnik8ExcursionCitiesResult(supabase);
+  return result.status === "ok" ? result.data : [];
+}
+
+export async function fetchSputnik8ExcursionCitiesResult(
+  supabase: DbClient,
+): Promise<PartnerSourceResult<ExcursionCity[]>> {
   const { data, error } = await supabase
     .from("sputnik8_cities")
     .select("id, slug, name_ru, name_en, experience_count, cover_image")
     .order("experience_count", { ascending: false });
 
-  if (error || !data) return [];
-  return data.map((row) => rowToExcursionCity(row));
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerUnavailable("malformed_payload", "Sputnik8 cities returned no data");
+  return partnerOk(data.map((row) => rowToExcursionCity(row)));
 }
 
 export async function fetchSputnik8ExcursionCityBySlug(
@@ -43,15 +57,32 @@ export async function fetchSputnik8ExcursionListings(
   supabase: DbClient,
   filters: ExcursionListFilters = {}
 ): Promise<ExcursionListResult> {
+  const result = await fetchSputnik8ExcursionListingsResult(supabase, filters);
+  if (result.status === "ok") return result.data;
+  return {
+    items: [],
+    total: 0,
+    page: Math.max(1, filters.page ?? 1),
+    pageSize: Math.min(48, Math.max(1, filters.pageSize ?? DEFAULT_PAGE_SIZE)),
+    cities: [],
+  };
+}
+
+export async function fetchSputnik8ExcursionListingsResult(
+  supabase: DbClient,
+  filters: ExcursionListFilters = {}
+): Promise<PartnerSourceResult<ExcursionListResult>> {
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(48, Math.max(1, filters.pageSize ?? DEFAULT_PAGE_SIZE));
-  const cities = await fetchSputnik8ExcursionCities(supabase);
+  const cityResult = await fetchSputnik8ExcursionCitiesResult(supabase);
+  const cities = cityResult.status === "ok" ? cityResult.data : [];
 
   let cityId: number | undefined;
   if (filters.citySlug) {
+    if (cityResult.status === "unavailable") return cityResult;
     const city = cities.find((c) => c.slug === filters.citySlug);
     if (!city) {
-      return { items: [], total: 0, page, pageSize, cities };
+      return partnerOk({ items: [], total: 0, page, pageSize, cities });
     }
     cityId = city.id;
   }
@@ -97,9 +128,8 @@ export async function fetchSputnik8ExcursionListings(
   const to = from + pageSize - 1;
   const { data, error, count } = await query.range(from, to);
 
-  if (error || !data) {
-    return { items: [], total: 0, page, pageSize, cities };
-  }
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerUnavailable("malformed_payload", "Sputnik8 excursions returned no data");
 
   const cityMap = new Map(cities.map((city) => [city.id, city]));
   const items = data.map((row) => {
@@ -117,13 +147,13 @@ export async function fetchSputnik8ExcursionListings(
     return rowToExcursionListing(row, cityRow);
   });
 
-  return {
+  return partnerOk({
     items,
     total: count ?? items.length,
     page,
     pageSize,
     cities,
-  };
+  });
 }
 
 export async function fetchSputnik8ExcursionSlugs(supabase: DbClient): Promise<string[]> {
@@ -172,13 +202,22 @@ export async function fetchSputnik8ExcursionBySlug(
   supabase: DbClient,
   slug: string
 ): Promise<ExcursionDetail | null> {
+  const result = await fetchSputnik8ExcursionBySlugResult(supabase, slug);
+  return result.status === "ok" ? result.data : null;
+}
+
+export async function fetchSputnik8ExcursionBySlugResult(
+  supabase: DbClient,
+  slug: string
+): Promise<PartnerSourceResult<ExcursionDetail | null>> {
   const { data, error } = await supabase
     .from("sputnik8_products")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) return partnerUnavailableFromError(new Error(error.message));
+  if (!data) return partnerOk(null);
 
   const { data: city } = await supabase
     .from("sputnik8_cities")
@@ -195,7 +234,7 @@ export async function fetchSputnik8ExcursionBySlug(
       : enriched.reviews && enriched.reviews.length > 0
         ? enriched.reviews
         : reviews;
-  return { ...enriched, reviews: mergedReviews };
+  return partnerOk({ ...enriched, reviews: mergedReviews });
 }
 
 export async function fetchSputnik8ExcursionReviews(

@@ -1,6 +1,8 @@
 export {
   fetchExcursionsServer,
+  fetchExcursionsResultServer,
   fetchExcursionDetailServer,
+  fetchExcursionDetailResultServer,
   fetchExcursionCityServer,
   fetchExcursionSlugsServer,
   fetchSimilarExcursionsServer,
