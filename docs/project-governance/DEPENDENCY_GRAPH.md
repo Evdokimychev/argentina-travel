@@ -25,6 +25,11 @@ flowchart TD
   PayWebhook --> EventIdentity["Notification/event identity / booking replay guard"]
   EventIdentity --> PaymentClaim
   EventIdentity --> ChargeLedger["payment_transactions durable charge"]
+  ChargeLedger --> RefundPrepare["Refund source amount/currency + atomic reserve"]
+  RefundPrepare --> RefundClaim["Four-eyes pending→processing claim"]
+  RefundClaim --> PayProviders
+  PayProviders --> RefundFinalize["Refund finalize / reconciliation gap"]
+  RefundFinalize --> ChargeLedger
   ChargeLedger --> Commission["Commission snapshot / notification (best-effort)"]
   ChargeLedger --> Supabase
   Commission --> Supabase
@@ -62,7 +67,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-012 exact SHA `77cf5674` is immutable deployment `13SV9JYanV2pCP2ZZwJM9fhrh55f` with exact local build, signed route, candidate-integrity journey and local/remote recovery-browser evidence. It recovered only after an initial Vercel account block. The packet still does not prove live payment persistence: migration parity and runtime-log scope are unavailable, while preview/production data-plane health is down.
+Current breaks: WP-013 exact SHA `26aeda4c` is immutable deployment `7w7fLVQJZzod562BUBKVxN1XACUo` with exact local build, refund route/service contracts and local/remote browser evidence. It recovered only after an initial Vercel account block. The packet still does not prove live refund persistence/provider execution: migration parity and runtime-log scope are unavailable, while preview/production data-plane health is down.
 
 ## Data ownership boundaries
 
@@ -77,3 +82,4 @@ Current breaks: WP-012 exact SHA `77cf5674` is immutable deployment `13SV9JYanV2
 - A webhook notification/event ID owns booking-state idempotency; the provider payment resource ID owns charge-ledger uniqueness. Exact event replay may repair a missing charge row, but may not repeat a booking transition or duplicate notification for an existing row.
 - A successful webhook response proves only durable charge persistence. Commission snapshot and customer notification remain separate best-effort effects until an idempotent outbox/reconciliation path is live-proven.
 - A native booking request owns only canonical server-derived commercial fields. Quote intent never owns inventory; a scheduled booking must confirm its canonical availability slot before the atomic persistence command. Notification enqueue follows only a newly created booking, not an idempotent replay.
+- A refund request never owns money supplied by the browser or booking USD presentation. The completed charge owns provider, amount and currency; the atomic RPC owns replay, source lock and cumulative reservation. A different personal finance actor owns execution claim. Provider-uncertain `processing` currently has no proven recovery lease and remains an explicit gap.

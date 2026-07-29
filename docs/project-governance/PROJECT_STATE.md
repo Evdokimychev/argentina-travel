@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 07:32 ART / 2026-07-29 10:32 UTC**
+Последняя проверка: **2026-07-29 08:22 ART / 2026-07-29 11:22 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product candidate SHA до этой записи: `77cf56746e7f3818b51d713d85e710293fedf415`; `origin/main` является ancestor.
+- Product candidate SHA до этой записи: `26aeda4c75bbcc1b5305b7a8664be11322c09f6e`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `77cf56746e7f3818b51d713d85e710293fedf415` (`fix: make payment webhook ledger durable`), parent WP-011 governance SHA `000b26c046c48caf7878c285db64824f20223fdf`.
+- Последний runtime-product SHA: `26aeda4c75bbcc1b5305b7a8664be11322c09f6e` (`fix: derive refund provider from source charge`), поверх `c53b9eb0` (`fix: bind refunds to the payment ledger`).
 
 ## Production и deployments
 
@@ -37,7 +37,10 @@ Master Goal V6 принят как главный норматив проект�
 - Exact WP-010 SHA `179d3e51` успешно развернут как deployment `4aRm8X7QNDMLPXcoTgZseo64KrSK` в 09:04:49 UTC. Immutable branch preview health связывает полный SHA; promotion не выполняется, потому что data plane unhealthy.
 - Exact WP-011 SHA `84988cf` первоначально получил `failure: Account is blocked` в 09:44 UTC, затем success в 09:52:58 UTC и развернулся как deployment `8aKBjCN2veH3BPrjgcpooPVnn7k8`. Immutable branch preview health связывает полный SHA; remote desktop/mobile recovery QA pass, smoke корректно блокируется на unhealthy health.
 - Exact WP-012 SHA `77cf5674` сначала получил `failure: Account is blocked` в 10:21 UTC, затем success в 10:30:08 UTC и развернулся как deployment `13SV9JYanV2pCP2ZZwJM9fhrh55f`. Immutable branch preview health связывает полный SHA; remote booking-find/payment-recovery browser QA pass, smoke корректно блокируется на unhealthy health.
+- Промежуточный WP-013 SHA `c53b9eb0` отправлен в Vercel в 10:58 UTC и немедленно получил `failure: Account is blocked`; после финальной ledger-provider сверки он заменён exact product SHA `26aeda4c` и не считается release evidence.
+- Exact WP-013 SHA `26aeda4c` сначала получил `failure: Account is blocked` в 11:11 UTC, затем success в 11:20:50 UTC и развернулся как Vercel deployment `7w7fLVQJZzod562BUBKVxN1XACUo` (GitHub deployment `5656415601`). Immutable URL: `https://argentina-travel-j1as4a3hd-go-argentina.vercel.app`.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
+- Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -132,7 +135,23 @@ Master Goal V6 принят как главный норматив проект�
 - Mercado Pago больше не подменяет notification identity payment resource ID: отсутствие durable notification ID отклоняется до provider fetch и DB. Это соответствует разделению notification `id` и payment `data.id` у провайдера.
 - Новая migration не создана: live journal/checksum/RLS/grants всё ещё недоказаны. Commission snapshot остаётся best-effort после durable charge; live provider delivery, Data API/RLS и outbox/commission effects не заявляются.
 
+### WP-013 — refund request/approval route integrity
+
+- Tourist, organizer и admin preparation больше не вычисляют возврат из USD-сводки бронирования. Сервис разрешает единственное завершённое исходное списание и передаёт в атомарный RPC его точную сумму/валюту; admin partial input обязан совпадать с валютой ledger.
+- Идентичный UUID replay возвращает существующий refund до нового reserve; смена actor/booking/provider/source/amount/currency даёт безопасный conflict. Cumulative cap, source lock, active-request uniqueness и maker/approver separation остаются в существующем service-role-only RPC.
+- POST туриста использует ту же `canAccessBooking`, что GET: совпадение email без `booking.userId` больше не авторизует финансовую мутацию. Organizer ownership и admin personal-session/capability boundaries route-tested.
+- Prepare routes не вызывают provider. Approve/reject скрывают сырые provider/SQL ошибки; exact ledger amount/currency теперь показываются без повторной USD-конвертации.
+- Новая migration не создана. После неопределённого provider outcome refund может остаться `processing`; безопасный recovery требует lookup/lease/reconcile boundary и live schema/provider evidence, поэтому автоматический retry поверх текущего RPC не добавлялся.
+
 ## Проверки candidate
+
+- WP-013 focused refund/inventory suite: **5 files / 21 tests** — pass; core refund route/service/approval set **4 files / 16 tests**.
+- `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **435 files / 2 063 tests** + release-evidence contracts — pass; существующие lint warnings не выросли в ошибки.
+- Critical evidence `booking.refund.request` повышен с `contract_tested` до `integration_tested`: owner/organizer route, email-only denial, ARS ledger authority и UUID replay связаны с точными тестами; live DB/RLS/provider остаются `unknown_db_down`.
+- Protected production build exact `26aeda4c`: ранний packet-run fail-closed из-за отсутствующего локального `NEXT_PUBLIC_SITE_URL` отклонён; финальный explicit canonical build exit 0, **929/929**, runtime-text audit pass, demo auth markers absent.
+- Local exact `.next-production`: health связывает полный SHA, Data API 503/degraded, direct PG healthy (`tripsterCount=68`); unauthenticated tourist refund и admin approve возвращают 401 до финансового сервиса, `/booking/find` 200.
+- Browser smoke exact `26aeda4c`: **16 passed, 1 skipped**. Строгий production smoke exit 1 на mandatory health; explicit recovery-smoke pass и фиксирует `/tours`/`/excursions` error-boundary redirects. Provider POST и refund mutation не выполнялись.
+- Immutable WP-013 preview `26aeda4c` / `7w7fLVQJZzod562BUBKVxN1XACUo`: health 503/down связывает полный SHA, REST/direct PG недоступны; `/booking/find` 200, unauthenticated refund POST 401. Remote browser smoke **16 passed, 1 skipped**; строгий smoke exit 1 на mandatory health. Provider/refund mutation не выполнялись.
 
 - Текущий `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **432 files / 2 053 tests** + **8 release-evidence tests** — pass.
 - WP-012 focused signed-route/state/ledger suite: **4 files / 33 tests** — pass; настоящий HMAC raw-body Stripe request и signed Mercado manifest проходят App Router handlers с fake provider/store.
@@ -201,16 +220,17 @@ Master Goal V6 принят как главный норматив проект�
 
 1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
-3. **P1-GA-005:** latest `84988cf` развернут как `8aKBjCN2…` после начального account block и ~9 минут recovery, как несколько предыдущих SHA. Вернуть стабильный deploy path и read-only Vercel project/runtime-log scope.
+3. **P1-GA-005:** latest `26aeda4c` развернут как `7w7fLVQ…` после начального account block и ~9 минут recovery, как несколько предыдущих SHA. Вернуть стабильный deploy path и read-only Vercel project/runtime-log scope.
 4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
 5. **P1-GA-012:** route evidence и CAS исправлены; DB-level unique active request, durable audit и live deletion processor effect не доказаны.
 6. **P1-GA-013:** identity retry и terminal-state monotonicity исправлены; DB uniqueness, lease/recovery, durable audit и live multi-system effect остаются недоказанными.
 7. **P0-GA-014:** checkout race/origin/PII boundary исправлены и fake-tested; valid-token live DB/provider/webhook effect не доказан из-за P0-GA-001 и не выполнялся на production.
 8. **P0-GA-015:** quote/inventory и scheduled fail-open исправлены и route-tested; live atomic RPC, RLS, notification delivery и end-to-end booking completion не доказаны из-за P0-GA-001.
-9. **P0-GA-016:** signed Stripe/Mercado webhook может применить paid/refunded booking patch, проглотить failure записи charge ledger, вернуть 200 и навсегда заблокировать recovery как replay. Route-level repair ещё не реализован.
+9. **P0-GA-016:** code-level webhook ledger/replay repair реализован и fake-tested; live provider/Data API/RLS/commission/outbox effect не доказан.
+10. **P0-GA-017:** refund currency/ownership/replay boundary исправлена и route-tested; live RPC/RLS/provider effect и безопасное восстановление зависшего `processing` не доказаны.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
 2. Owner/ops: вернуть read-only Vercel project/runtime-log scope; engineering: сопоставить env names/regions/connectivity для preview/prod direct PG без вывода или ротации секретов.
-3. Engineering: WP-012 — сделать charge-ledger persistence явной/retryable после signed webhook, разрешить exact replay repair без повторной notification, атомарный upsert `(provider, external_id)` и App Router tests для Stripe/Mercado; без live webhook/payment.
+3. Engineering: WP-014 — ограничить booking replay response и привязать replay capability к guest/session actor matrix; leaked idempotency key не должен раскрывать canonical CRM booking.

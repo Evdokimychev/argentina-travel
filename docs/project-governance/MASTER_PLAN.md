@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 07:32 ART**. WP-012 закрыл подтверждённый 2xx-without-ledger и replay-without-repair на fake provider/store evidence и получил exact preview; live webhook/RLS/commission/outbox остаются заблокированы Supabase.
+Обновлён: **2026-07-29 08:22 ART**. WP-013 привязал refund request к исходному ledger, выровнял actor ownership и получил exact immutable preview; live RPC/RLS/provider effect и processing recovery остаются заблокированы Supabase/provider evidence.
 
 ## Правило выбора пакета
 
@@ -12,7 +12,7 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-012 `77cf5674` recovered after ~9 min as `13SV9JYanV2pCP2ZZwJM9fhrh55f`; build path remains volatile and logs/scope are blocked |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | final `26aeda4c` recovered after ~9 min as `7w7fLVQJZzod562BUBKVxN1XACUo`; build remains volatile and logs/scope blocked |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -27,8 +27,8 @@
 | 14 | Booking/payment route integration packet (WP-010) | P0 | fake-provider route tests for token/state/race/provider failure/status projection; no real payment | done `beb236fb` + `179d3e51` / `4aRm8X7Q…`; 21 focused + 2 031 full tests, exact build/local+remote browser; smoke correctly blocked by health |
 | 15 | Booking creation route integration (WP-011) | P0 | App Router + fake atomic command: canonical pricing, idempotency, slot conflict, safe failure; no live booking | done `84988cf` / `8aKBjCN2…`; 14 focused + 2 040 full tests, exact build/journey/local+remote browser; smoke correctly blocked by health |
 | 16 | Payment webhook ledger recovery (WP-012) | P0 | signed App Router delivery; durable ledger before 2xx; retry/replay recovery; out-of-order state; safe failure with fake provider/store | done `77cf5674` / `13SV9J…`; 33 focused + 2 053 full + build/journey/local+remote browser; live DB/provider effects unknown |
-| 17 | Refund request/approval route integrity (WP-013) | P0 | authenticated App Router tests; actor/ownership; operation-id replay; cumulative cap/race; no provider execution | next independent packet while orders 0–2 are externally blocked |
-| 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | queued after refund route evidence |
+| 17 | Refund request/approval route integrity (WP-013) | P0 | authenticated App Router tests; actor/ownership; operation-id replay; cumulative cap/race; no provider execution | done `26aeda4c` / `7w7fLVQ…`; 21 focused + 2 063 full + exact build/local+remote browser/smoke; live DB/provider/recovery unknown |
+| 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | active next independent packet; source reproduction confirms replay returns canonical booking payload |
 | 19 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
 | 20 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
@@ -82,6 +82,10 @@ The App Router booking handler now derives reservation eligibility server-side. 
 
 Signed Stripe and Mercado Pago routes now use a detailed booking outcome and require a durable charge row before 2xx. Retryable booking/ledger failures return 500; an exact event replay attempts ledger repair and emits a notification only when that repair inserts the first charge row. Charge persistence is insert-first against the existing provider/external-ID uniqueness boundary, rejects cross-booking identity reuse and refuses delayed state regression. Mercado requires the notification ID separately from the payment resource ID. No DDL or live webhook/payment mutation was performed; commission/outbox and live PostgREST/RLS behavior remain explicit gaps.
 
+### WP-013 — refund request/approval route integrity
+
+Refund preparation now derives money from the completed source charge instead of client/booking USD fields, rejects currency/provider mismatch, and returns an identical UUID replay without another reservation. Tourist POST uses shared booking ownership, so matching contact email alone cannot mutate finance; organizer/admin paths retain explicit role/capability and personal-session gates. Approve/reject responses no longer expose raw provider or SQL failures, and ledger UI renders the stored currency directly. Existing SQL still owns charge locking, cumulative cap, active-request uniqueness and four-eyes claim. No migration or live provider/refund mutation was performed; uncertain `processing` recovery remains a separately registered risk.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
@@ -112,4 +116,8 @@ Signed Stripe and Mercado Pago routes now use a detailed booking outcome and req
 - WP-012 implementation changes the next packet: exact replay is now a repair path, 2xx is gated by the charge row, and Mercado notification identity is mandatory. Local signed route/concurrency evidence is sufficient for candidate code, but cannot establish live partial-index inference, RLS, commission or provider delivery while Supabase is restricted.
 - Exact WP-012 deployment recovered after the same transient Vercel block pattern and now binds `77cf5674` remotely. This closes artifact identity for the packet but not infrastructure stability, runtime-log access or any live payment effect.
 - Strict smoke and Browser QA show the candidate shell can render recovery paths while the home/catalog enter error boundaries. Therefore no UX/growth work moves upward; the next independent P0 is existing refund request/approval route integrity, followed by booking replay actor binding.
+- WP-013 reproduction found the booking USD summary was incorrectly treated as refund money, breaking ARS/non-USD charges and encouraging unsafe conversion semantics. The completed charge is now the sole money authority; email-only POST access and raw provider/SQL responses were removed in the same route boundary.
+- Existing claim/finalize SQL safely prevents two initial approvers, but a provider success or timeout followed by finalize failure can leave `processing` with no lease/reconcile command. Replaying provider idempotency without an atomic recovery claim was rejected as insufficient evidence; this remains ahead of growth but behind restoration of live journal/provider lookup evidence.
+- WP-014 moved active after source reproduction showed idempotent booking replay returns the full canonical booking object. It is independent of the broken data plane and can be fixed with a bounded response/actor matrix without adding schema.
+- Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

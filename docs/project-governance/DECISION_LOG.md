@@ -191,3 +191,24 @@
 - Decision: charge persistence inserts first, treats SQLSTATE `23505` as the concurrency signal, then reads the exact `(provider, external_id)` row and updates only if booking ownership and monotonic state permit. Do not add a new migration while the 107-file live journal is unavailable.
 - Evidence: the repository already contains a partial unique index for non-null provider/external ID. Fake-store concurrency produces one row; cross-booking reuse is rejected; delayed paid cannot regress a refunded row.
 - Consequence: candidate removes the application read→insert race without claiming live PostgREST/RLS/index parity. That behavior must be re-run against the canonical data plane after recovery.
+
+## D-030 — The completed charge owns refund money
+
+- Date: 2026-07-29
+- Decision: tourist and organizer full-refund preparation omits client money entirely; the server resolves one completed source charge and uses its stored amount/currency. Admin partial input is allowed only in that same currency.
+- Evidence: all preparation routes previously hard-coded `USD` from `paidAmountUsd`, while `prepare_refund_request_atomic` requires exact source currency. ARS service tests prove ledger-derived `120000 ARS`; legacy USD input is rejected before RPC.
+- Consequence: presentation/base-price fields cannot redefine captured money. Existing source lock and cumulative cap remain the database authority.
+
+## D-031 — Booking ownership, not contact email, authorizes a refund mutation
+
+- Date: 2026-07-29
+- Decision: use the shared `canAccessBooking` policy for refund POST as for GET. A session email matching `contactEmail` is not a financial capability; guest attachment must first establish `booking.userId` through its dedicated flow.
+- Evidence: the former POST added an email fallback absent from GET and other protected booking routes. App Router tests prove owner/assigned organizer access and 403 for an unrelated actor with matching email.
+- Consequence: authentication and booking ownership are consistent across read/mutation boundaries without removing the explicit guest-claim workflow.
+
+## D-032 — Do not invent refund processing recovery without an atomic claim
+
+- Date: 2026-07-29
+- Decision: do not reopen or blindly retry a `processing` refund in WP-013. Stable provider idempotency is necessary but insufficient without provider status lookup, an atomic retry/reconcile lease and live RPC/provider evidence.
+- Evidence: provider execution follows pending→processing claim; provider/finalize uncertainty records `processing`, while approval accepts only `pending`. Two recovery workers could currently call the provider concurrently even if provider idempotency usually deduplicates.
+- Consequence: initial request/approval integrity is repaired and tested; processing recovery remains an explicit critical risk/work packet rather than a hidden automatic retry.
