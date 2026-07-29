@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  applyPaymentWebhookPatch,
+  applyPaymentWebhookPatchDetailed,
   mapWebhookToBookingPaymentUpdate,
   persistWebhookChargeTransaction,
 } from "@/lib/payments/webhook-handler";
@@ -45,8 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Stripe webhook secret is not configured. Set STRIPE_WEBHOOK_SECRET to process payments.",
+        error: "Stripe webhook is temporarily unavailable.",
       },
       { status: 503 }
     );
@@ -83,8 +82,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Stripe secret key is not configured. Set STRIPE_SECRET_KEY to process payments.",
+        error: "Stripe webhook is temporarily unavailable.",
       },
       { status: 503 }
     );
@@ -195,10 +193,24 @@ export async function POST(request: Request) {
 
     const patch = mapWebhookToBookingPaymentUpdate(paymentEvent, verified);
     const supabase = createSupabaseAdminClient();
-    const applied = await applyPaymentWebhookPatch(supabase, paymentEvent.bookingId, patch);
+    const outcome = await applyPaymentWebhookPatchDetailed(
+      supabase,
+      paymentEvent.bookingId,
+      patch,
+    );
 
-    if (applied) {
-      await persistWebhookChargeTransaction(supabase, {
+    if (outcome.kind === "retryable_failure") {
+      if (outcome.error) {
+        captureException(new Error(outcome.error), {
+          tags: { area: "payments", provider: "stripe", action: "webhook_booking_patch" },
+          extra: { eventId: event.id, reason: outcome.reason },
+        });
+      }
+      throw new Error(`booking_patch_${outcome.reason}`);
+    }
+
+    if (outcome.kind === "applied" || outcome.kind === "event_replay") {
+      const ledger = await persistWebhookChargeTransaction(supabase, {
         bookingId: paymentEvent.bookingId,
         patch,
         externalId,
@@ -206,7 +218,25 @@ export async function POST(request: Request) {
         currency,
         receiptMetadata,
       });
-      void notifyPaymentReceivedFromWebhook(supabase, paymentEvent.bookingId, patch);
+      if (!ledger.ok) {
+        if (ledger.error) {
+          captureException(new Error(ledger.error), {
+            tags: { area: "payments", provider: "stripe", action: "webhook_ledger" },
+            extra: { eventId: event.id, reason: ledger.reason },
+          });
+        }
+        throw new Error(`payment_ledger_${ledger.reason}`);
+      }
+      if (outcome.kind === "applied" || ledger.operation === "inserted") {
+        void notifyPaymentReceivedFromWebhook(supabase, paymentEvent.bookingId, patch).catch(
+          (error) => {
+            captureException(error, {
+              tags: { area: "payments", provider: "stripe", action: "webhook_notification" },
+              extra: { eventId: event.id, bookingId: paymentEvent.bookingId },
+            });
+          },
+        );
+      }
     }
 
     console.info("[payments-webhook][stripe] event processed", {
@@ -215,7 +245,7 @@ export async function POST(request: Request) {
       externalId,
       capturePhase: receiptMetadata?.capturePhase,
       paymentStatus: patch.paymentStatus,
-      applied,
+      outcome: outcome.kind,
     });
     addPaymentBreadcrumb("stripe.webhook.processed", {
       provider: "stripe",
@@ -223,10 +253,14 @@ export async function POST(request: Request) {
       eventType: event.type,
       bookingId: paymentEvent.bookingId,
       paymentStatus: patch.paymentStatus,
-      applied,
+      outcome: outcome.kind,
     });
 
-    return NextResponse.json({ ok: true, applied });
+    return NextResponse.json({
+      ok: true,
+      applied: outcome.kind === "applied",
+      replayed: outcome.kind === "event_replay",
+    });
   } catch (error) {
     addPaymentBreadcrumb("stripe.webhook.failed", {
       provider: "stripe",

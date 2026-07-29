@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  applyPaymentWebhookPatch,
+  applyPaymentWebhookPatchDetailed,
   mapWebhookToBookingPaymentUpdate,
   persistWebhookChargeTransaction,
 } from "@/lib/payments/webhook-handler";
@@ -54,8 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Mercado Pago webhook secret is not configured. Set MERCADOPAGO_WEBHOOK_SECRET to process payments.",
+        error: "Mercado Pago webhook is temporarily unavailable.",
       },
       { status: 503 }
     );
@@ -93,8 +92,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Mercado Pago access token is not configured. Set MERCADOPAGO_ACCESS_TOKEN to process payments.",
+        error: "Mercado Pago webhook is temporarily unavailable.",
       },
       { status: 503 }
     );
@@ -104,6 +102,12 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { ok: false, error: "Mercado Pago payment notification has no data.id." },
       { status: 400 }
+    );
+  }
+  if (!notification.notificationId) {
+    return NextResponse.json(
+      { ok: false, error: "Mercado Pago notification identity is missing." },
+      { status: 400 },
     );
   }
 
@@ -126,7 +130,7 @@ export async function POST(request: Request) {
 
     const event: PaymentWebhookEvent = {
       provider: "mercadopago",
-      eventId: notification.notificationId ?? `mp-payment-${payment.id}`,
+      eventId: notification.notificationId,
       eventType: notification.action ?? "payment.updated",
       bookingId,
       paymentLinkToken: readPaymentMetadataString(payment.metadata, "paymentLinkToken"),
@@ -142,10 +146,24 @@ export async function POST(request: Request) {
 
     const patch = mapWebhookToBookingPaymentUpdate(event, verified);
     const supabase = createSupabaseAdminClient();
-    const applied = await applyPaymentWebhookPatch(supabase, bookingId, patch);
+    const outcome = await applyPaymentWebhookPatchDetailed(supabase, bookingId, patch);
 
-    if (applied) {
-      await persistWebhookChargeTransaction(supabase, {
+    if (outcome.kind === "retryable_failure") {
+      if (outcome.error) {
+        captureException(new Error(outcome.error), {
+          tags: {
+            area: "payments",
+            provider: "mercadopago",
+            action: "webhook_booking_patch",
+          },
+          extra: { notificationId: notification.notificationId, reason: outcome.reason },
+        });
+      }
+      throw new Error(`booking_patch_${outcome.reason}`);
+    }
+
+    if (outcome.kind === "applied" || outcome.kind === "event_replay") {
+      const ledger = await persistWebhookChargeTransaction(supabase, {
         bookingId,
         patch,
         externalId: payment.id,
@@ -153,7 +171,31 @@ export async function POST(request: Request) {
         currency: payment.currencyId ?? "USD",
         receiptMetadata,
       });
-      void notifyPaymentReceivedFromWebhook(supabase, bookingId, patch);
+      if (!ledger.ok) {
+        if (ledger.error) {
+          captureException(new Error(ledger.error), {
+            tags: {
+              area: "payments",
+              provider: "mercadopago",
+              action: "webhook_ledger",
+            },
+            extra: { notificationId: notification.notificationId, reason: ledger.reason },
+          });
+        }
+        throw new Error(`payment_ledger_${ledger.reason}`);
+      }
+      if (outcome.kind === "applied" || ledger.operation === "inserted") {
+        void notifyPaymentReceivedFromWebhook(supabase, bookingId, patch).catch((error) => {
+          captureException(error, {
+            tags: {
+              area: "payments",
+              provider: "mercadopago",
+              action: "webhook_notification",
+            },
+            extra: { notificationId: notification.notificationId, bookingId },
+          });
+        });
+      }
     }
 
     console.info("[payments-webhook][mercadopago] payment processed", {
@@ -162,7 +204,7 @@ export async function POST(request: Request) {
       status: payment.status,
       capturePhase: receiptMetadata.capturePhase,
       paymentStatus: patch.paymentStatus,
-      applied,
+      outcome: outcome.kind,
     });
     addPaymentBreadcrumb("mercadopago.webhook.processed", {
       provider: "mercadopago",
@@ -170,10 +212,14 @@ export async function POST(request: Request) {
       paymentId: payment.id,
       bookingId,
       paymentStatus: patch.paymentStatus,
-      applied,
+      outcome: outcome.kind,
     });
 
-    return NextResponse.json({ ok: true, applied });
+    return NextResponse.json({
+      ok: true,
+      applied: outcome.kind === "applied",
+      replayed: outcome.kind === "event_replay",
+    });
   } catch (error) {
     addPaymentBreadcrumb("mercadopago.webhook.failed", {
       provider: "mercadopago",

@@ -134,13 +134,60 @@ export type UpsertChargeFromWebhookInput = {
   receiptMetadata?: Record<string, unknown>;
 };
 
-/** Idempotent insert/update of charge row keyed by provider + external_id. */
+export type UpsertChargeFromWebhookResult =
+  | { ok: true; transaction: PaymentTransactionRow; operation: "inserted" | "updated" | "unchanged" }
+  | {
+      ok: false;
+      reason:
+        | "invalid_external_id"
+        | "insert_failed"
+        | "existing_lookup_failed"
+        | "booking_mismatch"
+        | "update_failed";
+      error?: string;
+    };
+
+function paymentStatusRank(value: unknown): number {
+  if (value === "refunded") return 4;
+  if (value === "paid") return 3;
+  if (value === "partial") return 2;
+  if (value === "pending") return 1;
+  return 0;
+}
+
+function shouldAdvanceWebhookCharge(
+  existing: PaymentTransactionDbRow,
+  patch: BookingPaymentWebhookPatch,
+): boolean {
+  const metadata = asRecord(existing.metadata);
+  const existingPaymentStatus = metadata.paymentStatus;
+  if (existingPaymentStatus === "refunded" && patch.paymentStatus !== "refunded") return false;
+  if (patch.paymentStatus === "refunded") return true;
+
+  const existingOccurredAt =
+    typeof metadata.occurredAt === "string" ? Date.parse(metadata.occurredAt) : Number.NaN;
+  const incomingOccurredAt = Date.parse(patch.occurredAt);
+  if (
+    Number.isFinite(existingOccurredAt) &&
+    Number.isFinite(incomingOccurredAt) &&
+    incomingOccurredAt < existingOccurredAt
+  ) {
+    return false;
+  }
+
+  return paymentStatusRank(patch.paymentStatus) >= paymentStatusRank(existingPaymentStatus);
+}
+
+/**
+ * Idempotent charge insert/update keyed by provider + external_id.
+ * The insert-first path lets the existing partial unique index arbitrate concurrent deliveries.
+ */
 export async function upsertChargeFromWebhook(
   supabase: DbClient,
   input: UpsertChargeFromWebhookInput
-): Promise<PaymentTransactionRow | null> {
+): Promise<UpsertChargeFromWebhookResult> {
   const externalId = input.externalId.trim();
-  if (!externalId) return null;
+  if (!externalId) return { ok: false, reason: "invalid_external_id" };
 
   const capturePhase =
     typeof input.receiptMetadata?.capturePhase === "string"
@@ -164,39 +211,58 @@ export async function upsertChargeFromWebhook(
     } as unknown as Json,
   };
 
-  const { data: existing } = await supabase
-    .from("payment_transactions")
-    .select("id")
-    .eq("provider", input.provider)
-    .eq("external_id", externalId)
-    .maybeSingle();
-
-  if (existing?.id) {
-    const { data, error } = await supabase
-      .from("payment_transactions")
-      .update({
-        status,
-        amount: payload.amount,
-        source_event_id: input.patch.sourceEventId,
-        metadata: payload.metadata,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", existing.id)
-      .select("*")
-      .single();
-
-    if (error || !data) return null;
-    return mapTransactionRow(data);
-  }
-
-  const { data, error } = await supabase
+  const { data: inserted, error: insertError } = await supabase
     .from("payment_transactions")
     .insert(payload)
     .select("*")
     .single();
 
-  if (error || !data) return null;
-  return mapTransactionRow(data);
+  if (inserted && !insertError) {
+    return { ok: true, transaction: mapTransactionRow(inserted), operation: "inserted" };
+  }
+  if (insertError?.code !== "23505") {
+    return { ok: false, reason: "insert_failed", error: insertError?.message };
+  }
+
+  const { data: existing, error: lookupError } = await supabase
+    .from("payment_transactions")
+    .select("*")
+    .eq("provider", input.provider)
+    .eq("external_id", externalId)
+    .maybeSingle();
+
+  if (lookupError || !existing) {
+    return {
+      ok: false,
+      reason: "existing_lookup_failed",
+      error: lookupError?.message,
+    };
+  }
+  if (existing.booking_id !== input.bookingId) {
+    return { ok: false, reason: "booking_mismatch" };
+  }
+  if (!shouldAdvanceWebhookCharge(existing, input.patch)) {
+    return { ok: true, transaction: mapTransactionRow(existing), operation: "unchanged" };
+  }
+
+  const { data: updated, error: updateError } = await supabase
+    .from("payment_transactions")
+    .update({
+      status,
+      amount: payload.amount,
+      currency: payload.currency,
+      source_event_id: input.patch.sourceEventId,
+      metadata: payload.metadata,
+    })
+    .eq("id", existing.id)
+    .eq("booking_id", input.bookingId)
+    .select("*")
+    .single();
+
+  if (updateError || !updated) {
+    return { ok: false, reason: "update_failed", error: updateError?.message };
+  }
+  return { ok: true, transaction: mapTransactionRow(updated), operation: "updated" };
 }
 
 export type CreateRefundRequestInput = {

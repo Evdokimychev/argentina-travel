@@ -86,6 +86,13 @@ export function reconcileBookingPayment(input: {
   if (input.incomingStatus === "refunded") {
     return { paymentStatus: "refunded", paidAmountUsd: 0, duplicate: false };
   }
+  if (input.currentStatus === "paid" || input.paymentLinkAlreadyPaid) {
+    return {
+      paymentStatus: input.currentStatus,
+      paidAmountUsd: currentPaid,
+      duplicate: true,
+    };
+  }
   if (input.incomingStatus === "pending") {
     return {
       paymentStatus: input.currentStatus,
@@ -100,14 +107,6 @@ export function reconcileBookingPayment(input: {
       duplicate: false,
     };
   }
-  if (input.currentStatus === "paid" || input.paymentLinkAlreadyPaid) {
-    return {
-      paymentStatus: input.currentStatus,
-      paidAmountUsd: currentPaid,
-      duplicate: true,
-    };
-  }
-
   const remaining = total > 0 ? Math.max(0, total - currentPaid) : Number.POSITIVE_INFINITY;
   const captured = Math.min(Math.max(0, input.serverChargeAmountUsd), remaining);
   const paidAmountUsd = currentPaid + captured;

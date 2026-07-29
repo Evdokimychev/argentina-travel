@@ -97,7 +97,7 @@ export async function simulateSandboxPayment(
     return { error: "Не удалось обновить статус оплаты" };
   }
 
-  await persistWebhookChargeTransaction(supabase, {
+  const ledger = await persistWebhookChargeTransaction(supabase, {
     bookingId,
     patch,
     externalId,
@@ -110,6 +110,9 @@ export async function simulateSandboxPayment(
       statusDetail: "sandbox_simulation",
     },
   });
+  if (!ledger.ok) {
+    return { error: "Статус оплаты обновлён, но финансовая операция не сохранена" };
+  }
 
   const updated = await fetchBookingById(supabase, bookingId);
   if (!updated) return { error: "Бронирование не найдено после обновления" };

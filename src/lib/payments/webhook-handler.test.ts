@@ -4,6 +4,7 @@ import { verifyWebhookSignature } from "./mercadopago-client";
 import { verifyStripeWebhookSignature } from "./stripe-client";
 import {
   applyPaymentWebhookPatch,
+  applyPaymentWebhookPatchDetailed,
   mapWebhookToBookingPaymentUpdate,
   parseAndValidateWebhook,
 } from "./webhook-handler";
@@ -240,6 +241,9 @@ describe("payment webhook application", () => {
       processedPaymentEventIds: ["evt-1"],
     });
     expect(await applyPaymentWebhookPatch(state.db as never, "booking-1", patch)).toBe(false);
+    await expect(
+      applyPaymentWebhookPatchDetailed(state.db as never, "booking-1", patch),
+    ).resolves.toEqual({ kind: "event_replay" });
     expect(state.updateCalls).toBe(1);
   });
 
@@ -272,6 +276,16 @@ describe("payment webhook application", () => {
     expect(state.readCalls).toBe(2);
     expect(state.updateCalls).toBe(2);
     expect(state.row.payload).toMatchObject({ processedPaymentEventIds: ["evt-1"] });
+  });
+
+  it("returns a retryable outcome after exhausting optimistic-lock retries", async () => {
+    const state = createBookingDb(bookingRow(), { conflicts: 3 });
+    const patch = mapWebhookToBookingPaymentUpdate(paymentEvent(), true);
+
+    await expect(
+      applyPaymentWebhookPatchDetailed(state.db as never, "booking-1", patch),
+    ).resolves.toEqual({ kind: "retryable_failure", reason: "write_conflict_exhausted" });
+    expect(state.updateCalls).toBe(3);
   });
 
   it("moves a paid booking to refunded and clears captured totals", async () => {
@@ -307,6 +321,39 @@ describe("payment webhook application", () => {
       paymentLink: { status: "cancelled" },
       processedPaymentEventIds: ["evt-paid", "evt-refund"],
     });
+  });
+
+  it("classifies a delayed paid event after refund as a state duplicate", async () => {
+    const state = createBookingDb(
+      bookingRow({
+        payment_status: "refunded",
+        payload: {
+          ...(bookingRow().payload as Record<string, unknown>),
+          paymentStatus: "refunded",
+          paymentSummary: {
+            totalAmountUsd: 100,
+            paidAmountUsd: 0,
+            remainingAmountUsd: 100,
+            serviceFeeUsd: 0,
+          },
+          paymentLink: {
+            token: "link-token",
+            amountUsd: 100,
+            status: "cancelled",
+          },
+          processedPaymentEventIds: ["evt-refund"],
+        },
+      }),
+    );
+    const patch = mapWebhookToBookingPaymentUpdate(
+      paymentEvent({ eventId: "evt-late-paid", occurredAt: "2026-07-16T00:00:00.000Z" }),
+      true,
+    );
+
+    await expect(
+      applyPaymentWebhookPatchDetailed(state.db as never, "booking-1", patch),
+    ).resolves.toEqual({ kind: "ignored", reason: "state_duplicate" });
+    expect(state.updateCalls).toBe(0);
   });
 
   it("keeps only the latest 50 processed event ids", async () => {

@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { BookingPaymentStatus } from "@/types/booking-params";
+import type { PaymentTransactionRow } from "@/types/payment-platform";
 import type {
   BookingPaymentWebhookPatch,
   PaymentWebhookEvent,
@@ -288,13 +289,31 @@ export function mapWebhookToBookingPaymentUpdate(
   };
 }
 
-export async function applyPaymentWebhookPatch(
+export type PaymentWebhookApplyOutcome =
+  | { kind: "applied" }
+  | { kind: "event_replay" }
+  | {
+      kind: "ignored";
+      reason:
+        | "unverified"
+        | "booking_missing"
+        | "token_mismatch"
+        | "amount_mismatch"
+        | "state_duplicate";
+    }
+  | {
+      kind: "retryable_failure";
+      reason: "booking_read_failed" | "write_failed" | "write_conflict_exhausted";
+      error?: string;
+    };
+
+export async function applyPaymentWebhookPatchDetailed(
   supabase: DbClient,
   bookingId: string,
   patch: BookingPaymentWebhookPatch,
   attempt = 0,
-): Promise<boolean> {
-  if (!patch.verified) return false;
+): Promise<PaymentWebhookApplyOutcome> {
+  if (!patch.verified) return { kind: "ignored", reason: "unverified" };
 
   const { data, error } = await supabase
     .from("bookings")
@@ -302,13 +321,20 @@ export async function applyPaymentWebhookPatch(
     .eq("id", bookingId)
     .maybeSingle();
 
-  if (error || !data) return false;
+  if (error) {
+    return {
+      kind: "retryable_failure",
+      reason: "booking_read_failed",
+      error: error.message,
+    };
+  }
+  if (!data) return { kind: "ignored", reason: "booking_missing" };
 
   const payload = asRecord(data.payload) ?? {};
   const processedEventIds = Array.isArray(payload.processedPaymentEventIds)
     ? payload.processedPaymentEventIds.filter((value): value is string => typeof value === "string")
     : [];
-  if (processedEventIds.includes(patch.sourceEventId)) return false;
+  if (processedEventIds.includes(patch.sourceEventId)) return { kind: "event_replay" };
 
   const currentSummary = normalizeSummary(payload.paymentSummary, Number(data.total_price_usd) || 0);
   const currentStatus = normalizeStateMachineStatus(payload.paymentStatus ?? data.payment_status);
@@ -321,7 +347,7 @@ export async function applyPaymentWebhookPatch(
     currentPaymentLinkToken &&
     patch.paymentLinkToken !== currentPaymentLinkToken
   ) {
-    return false;
+    return { kind: "ignored", reason: "token_mismatch" };
   }
 
   const totalAmountUsd = Math.max(
@@ -340,7 +366,7 @@ export async function applyPaymentWebhookPatch(
     patchSummary.totalAmountUsd > 0 &&
     Math.abs(patchSummary.totalAmountUsd - serverChargeAmountUsd) > 0.01
   ) {
-    return false;
+    return { kind: "ignored", reason: "amount_mismatch" };
   }
 
   const reconciled = reconcileBookingPayment({
@@ -351,7 +377,7 @@ export async function applyPaymentWebhookPatch(
     incomingStatus: normalizeStateMachineStatus(patch.paymentStatus),
     paymentLinkAlreadyPaid: currentPaymentLink?.status === "paid",
   });
-  if (reconciled.duplicate) return false;
+  if (reconciled.duplicate) return { kind: "ignored", reason: "state_duplicate" };
   const nextPaymentStatus = reconciled.paymentStatus;
   const paidAmountUsd = reconciled.paidAmountUsd;
   const remainingAmountUsd = Math.max(0, totalAmountUsd - paidAmountUsd);
@@ -401,11 +427,28 @@ export async function applyPaymentWebhookPatch(
     .select("id")
     .maybeSingle();
 
-  if (updateError) return false;
-  if (!updated && attempt < 2) {
-    return applyPaymentWebhookPatch(supabase, bookingId, patch, attempt + 1);
+  if (updateError) {
+    return {
+      kind: "retryable_failure",
+      reason: "write_failed",
+      error: updateError.message,
+    };
   }
-  return Boolean(updated);
+  if (!updated && attempt < 2) {
+    return applyPaymentWebhookPatchDetailed(supabase, bookingId, patch, attempt + 1);
+  }
+  if (!updated) return { kind: "retryable_failure", reason: "write_conflict_exhausted" };
+  return { kind: "applied" };
+}
+
+/** Backward-compatible boolean contract for non-provider callers. */
+export async function applyPaymentWebhookPatch(
+  supabase: DbClient,
+  bookingId: string,
+  patch: BookingPaymentWebhookPatch,
+): Promise<boolean> {
+  const outcome = await applyPaymentWebhookPatchDetailed(supabase, bookingId, patch);
+  return outcome.kind === "applied";
 }
 
 export type PersistWebhookTransactionInput = {
@@ -418,15 +461,30 @@ export type PersistWebhookTransactionInput = {
 };
 
 /** Persist charge row after webhook patch — idempotent on provider + external_id. */
+export type PersistWebhookChargeTransactionResult =
+  | {
+      ok: true;
+      transaction: PaymentTransactionRow;
+      operation: "inserted" | "updated" | "unchanged";
+      commission: "created" | "skipped" | "failed";
+    }
+  | {
+      ok: false;
+      reason: "invalid_input" | "charge_upsert_failed";
+      error?: string;
+    };
+
 export async function persistWebhookChargeTransaction(
   supabase: DbClient,
   input: PersistWebhookTransactionInput
-): Promise<void> {
-  if (!input.patch.verified || !input.externalId.trim()) return;
+): Promise<PersistWebhookChargeTransactionResult> {
+  if (!input.patch.verified || !input.externalId.trim()) {
+    return { ok: false, reason: "invalid_input" };
+  }
 
   try {
     const { upsertChargeFromWebhook } = await import("@/lib/payments/transaction-server");
-    const transaction = await upsertChargeFromWebhook(supabase, {
+    const result = await upsertChargeFromWebhook(supabase, {
       bookingId: input.bookingId,
       provider: input.patch.provider,
       externalId: input.externalId,
@@ -435,27 +493,62 @@ export async function persistWebhookChargeTransaction(
       patch: input.patch,
       receiptMetadata: input.receiptMetadata,
     });
+    if (!result.ok) {
+      return {
+        ok: false,
+        reason: "charge_upsert_failed",
+        error: result.error ?? result.reason,
+      };
+    }
+
+    const transaction = result.transaction;
+    let commission: "created" | "skipped" | "failed" = "skipped";
 
     if (transaction?.status === "completed" && transaction.type === "charge") {
-      const { data: booking } = await supabase
+      const { data: booking, error: bookingError } = await supabase
         .from("bookings")
         .select("organizer_user_id")
         .eq("id", input.bookingId)
         .maybeSingle();
 
-      const organizerUserId = booking?.organizer_user_id?.trim();
-      if (organizerUserId) {
-        const { createCommissionSnapshotForCharge } = await import("@/lib/payments/commission-server");
-        await createCommissionSnapshotForCharge(supabase, {
+      if (bookingError) {
+        commission = "failed";
+        console.error("[payments-webhook] commission booking lookup failed", {
           bookingId: input.bookingId,
-          paymentTransactionId: transaction.id,
-          organizerUserId,
-          grossAmount: transaction.amount,
-          currency: transaction.currency,
+          transactionId: transaction.id,
+          error: bookingError.message,
         });
+      } else {
+        const organizerUserId = booking?.organizer_user_id?.trim();
+        if (organizerUserId) {
+          try {
+            const { createCommissionSnapshotForCharge } = await import("@/lib/payments/commission-server");
+            const snapshot = await createCommissionSnapshotForCharge(supabase, {
+              bookingId: input.bookingId,
+              paymentTransactionId: transaction.id,
+              organizerUserId,
+              grossAmount: transaction.amount,
+              currency: transaction.currency,
+            });
+            commission = snapshot ? "created" : "failed";
+          } catch (error) {
+            commission = "failed";
+            console.error("[payments-webhook] commission snapshot failed", {
+              bookingId: input.bookingId,
+              transactionId: transaction.id,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        }
       }
     }
-  } catch {
-    // Ledger persistence must not break webhook processing
+
+    return { ok: true, transaction, operation: result.operation, commission };
+  } catch (error) {
+    return {
+      ok: false,
+      reason: "charge_upsert_failed",
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
