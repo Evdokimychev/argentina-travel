@@ -20,7 +20,7 @@ export const esDictionary: Record<DictionaryKey, string> = {
   "nav.chooseTour": "Elegir tour",
   "nav.profile": "Perfil",
   "nav.favorites": "Favoritos",
-  "nav.utility.tours": "Reserva los mejores tours",
+  "nav.utility.tours": "Ver tours",
   "nav.utility.join": "Para organizadores",
   "nav.utility.contacts": "Contáctanos",
 
@@ -28,12 +28,12 @@ export const esDictionary: Record<DictionaryKey, string> = {
   "home.hero.title": "Argentina — de los glaciares patagónicos",
   "home.hero.titleAccent": "al tango de Buenos Aires",
   "home.hero.subtitle":
-    "Rutas verificadas con guías de habla rusa, guía honesta del país y ayuda con la mudanza — todo en un solo lugar.",
+    "Un catálogo de tours y excursiones, una guía práctica del país y recursos para mudarse — todo en un solo lugar.",
   "home.hero.ctaRoute": "Encontrar ruta",
   "home.hero.ctaHint": "Responde 4 preguntas — te propondremos tours adecuados",
 
   "footer.description":
-    "Marketplace de tours a medida en Argentina: Patagonia, Buenos Aires, vino y tango. Reserva directamente con organizadores verificados.",
+    "Catálogo de tours y excursiones en Argentina: compare ofertas y continúe con el socio o envíe una solicitud, según la oferta concreta.",
   "footer.navigation": "Navegación",
   "footer.documents": "Documentos",
   "footer.contacts": "Contacto",
@@ -44,7 +44,7 @@ export const esDictionary: Record<DictionaryKey, string> = {
   "footer.routeCta": "Planificar viaje",
   "footer.copyright": "Hora de ir a Argentina. Todos los derechos reservados.",
   "footer.support": "Soporte:",
-  "footer.marketplaceTag": "Marketplace de tours a medida",
+  "footer.marketplaceTag": "Catálogo de viajes por Argentina",
   "footer.contact.write": "Escríbenos",
   "footer.contact.organizer": "Ser organizador",
   "footer.contact.findBooking": "Buscar reserva",
