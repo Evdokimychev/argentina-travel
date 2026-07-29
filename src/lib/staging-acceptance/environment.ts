@@ -2,6 +2,15 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import {
+  supabaseProjectRefFromDatabaseUrl,
+  supabaseProjectRefFromUrl,
+} from "@/lib/supabase/project-ref";
+
+export {
+  supabaseProjectRefFromDatabaseUrl,
+  supabaseProjectRefFromUrl,
+} from "@/lib/supabase/project-ref";
 
 export const PRODUCTION_SUPABASE_PROJECT_REF = "uooxrypocahomoqzdvzy";
 export const PRODUCTION_ORIGINS = [
@@ -47,26 +56,6 @@ function parseHttpsOrigin(value: string, key: string): URL {
     throw new Error(`[staging-acceptance] ${key} must not contain credentials, query, or hash`);
   }
   return parsed;
-}
-
-export function supabaseProjectRefFromUrl(value: string): string | null {
-  try {
-    const hostname = new URL(value).hostname.toLowerCase();
-    return hostname.match(/^([a-z0-9]{20})\.supabase\.(?:co|com)$/)?.[1] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export function supabaseProjectRefFromDatabaseUrl(value: string): string | null {
-  try {
-    const parsed = new URL(value);
-    const fromHost = parsed.hostname.match(/^(?:db\.)?([a-z0-9]{20})\.supabase\.(?:co|com)$/)?.[1];
-    if (fromHost) return fromHost;
-    return decodeURIComponent(parsed.username).match(/^postgres\.([a-z0-9]{20})$/)?.[1] ?? null;
-  } catch {
-    return null;
-  }
 }
 
 export function supabaseProjectRefFromJwt(value: string): string | null {

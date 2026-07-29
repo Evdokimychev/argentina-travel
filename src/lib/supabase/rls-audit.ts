@@ -5,6 +5,7 @@ import pg from "pg";
 import { isServiceRoleOnlyTable } from "@/lib/supabase/rls-audit-config";
 import type { StaticRlsAuditIssue } from "@/lib/supabase/rls-audit-static";
 import type { Database } from "@/types/database";
+import { createPgClientConfig, resolveDatabaseUrl } from "@/lib/database-url";
 
 export type RlsAuditTable = {
   table: string;
@@ -18,10 +19,6 @@ export type RlsAuditResult = {
   error: string | null;
   criticalIssues?: StaticRlsAuditIssue[];
 };
-
-function getDatabaseUrl(): string | null {
-  return process.env.DATABASE_URL?.trim() ?? null;
-}
 
 type SupabaseSchemaClient = SupabaseClient<Database> & {
   schema: (schema: string) => SupabaseClient<Database>;
@@ -85,15 +82,12 @@ async function fetchViaSupabaseCatalog(
 }
 
 async function fetchViaDirectPg(): Promise<{ tables: RlsAuditTable[]; error: string | null }> {
-  const connectionString = getDatabaseUrl();
+  const connectionString = resolveDatabaseUrl();
   if (!connectionString) {
-    return { tables: [], error: "DATABASE_URL is not configured" };
+    return { tables: [], error: "Direct Postgres target is not configured or attested" };
   }
 
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  });
+  const client = new pg.Client(createPgClientConfig(connectionString));
 
   try {
     await client.connect();

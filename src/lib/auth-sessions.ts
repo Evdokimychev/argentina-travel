@@ -1,20 +1,18 @@
 import "server-only";
 
 import pg from "pg";
+import { createPgClientConfig, resolveDatabaseUrl } from "@/lib/database-url";
 
-/** Revoke all Supabase Auth refresh sessions for a user (requires DATABASE_URL). */
+/** Revoke all Supabase Auth refresh sessions for a user on the attested project. */
 export async function revokeSupabaseAuthSessions(
   userId: string
 ): Promise<{ ok: boolean; revokedCount: number }> {
-  const connectionString = process.env.DATABASE_URL?.trim();
+  const connectionString = resolveDatabaseUrl();
   if (!connectionString) {
     return { ok: false, revokedCount: 0 };
   }
 
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  });
+  const client = new pg.Client(createPgClientConfig(connectionString));
 
   try {
     await client.connect();

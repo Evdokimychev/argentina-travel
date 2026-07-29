@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { isDatabaseUrlAttested } from "@/lib/database-url";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -13,5 +14,5 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export function isPlacesDbEnabled(): boolean {
-  return process.env.PLACES_USE_DB === "true" && Boolean(process.env.DATABASE_URL);
+  return process.env.PLACES_USE_DB === "true" && isDatabaseUrlAttested(process.env.DATABASE_URL);
 }

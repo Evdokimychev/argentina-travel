@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildDirectPostgresTargetReadinessCheck,
   buildRecoveryReadinessCheck,
   classifyProductionReadiness,
 } from "@/lib/ops/production-readiness-server";
@@ -68,5 +69,51 @@ describe("production readiness truth", () => {
       isProdLike: true,
       now,
     }).status).toBe("fail");
+  });
+
+  it("fails production readiness for unattested or mismatched direct Postgres", () => {
+    expect(
+      buildDirectPostgresTargetReadinessCheck({
+        isProdLike: true,
+        connectionAvailable: false,
+        diagnostics: {
+          source: "POSTGRES_URL",
+          mode: "other",
+          port: null,
+          projectRef: null,
+          targetStatus: "unverified",
+        },
+      }),
+    ).toMatchObject({ id: "database:direct-target", status: "fail" });
+
+    expect(
+      buildDirectPostgresTargetReadinessCheck({
+        isProdLike: true,
+        connectionAvailable: false,
+        diagnostics: {
+          source: "POSTGRES_URL",
+          mode: "supabase_session_pooler",
+          port: 5432,
+          projectRef: "zyxwvutsrqponmlkjihg",
+          targetStatus: "mismatch",
+        },
+      }),
+    ).toMatchObject({ status: "fail" });
+  });
+
+  it("accepts only an available verified direct Postgres target", () => {
+    expect(
+      buildDirectPostgresTargetReadinessCheck({
+        isProdLike: true,
+        connectionAvailable: true,
+        diagnostics: {
+          source: "DATABASE_URL",
+          mode: "supabase_direct",
+          port: 5432,
+          projectRef: "abcdefghijklmnopqrst",
+          targetStatus: "verified",
+        },
+      }),
+    ).toMatchObject({ status: "ok" });
   });
 });

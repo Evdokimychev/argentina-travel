@@ -14,6 +14,8 @@ import { getLatestMigrationId, getMigrationFileCount } from "@/lib/ops/migration
 export type PublicHealthStatus = "ok" | "degraded" | "down";
 export type PublicHealthError =
   | "not_configured"
+  | "target_unverified"
+  | "target_mismatch"
   | "dependency_unavailable"
   | "dependency_timeout";
 
@@ -253,7 +255,13 @@ export async function fetchPublicHealthSnapshotForTest(
         ok: false,
         skipped: true,
         latencyMs: null,
-        error: directPostgresConfigured ? null : "not_configured",
+        error: directPostgresConfigured
+          ? null
+          : directPostgresConnection?.targetStatus === "mismatch"
+            ? "target_mismatch"
+            : directPostgresConnection?.targetStatus === "unverified"
+              ? "target_unverified"
+              : "not_configured",
         tripsterCount: null,
         connection: directPostgresConnection,
       };

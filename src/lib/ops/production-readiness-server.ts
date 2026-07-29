@@ -17,6 +17,11 @@ import type {
 } from "@/lib/ops/production-readiness-types";
 import { readOpsStatusSnapshot } from "@/lib/ops/ops-status";
 import { getGitSha } from "@/lib/monitoring/build-info";
+import {
+  resolveDatabaseConnectionDiagnostics,
+  resolveDatabaseUrl,
+  type DatabaseConnectionDiagnostics,
+} from "@/lib/database-url";
 
 export type {
   ProductionReadinessScriptReport,
@@ -53,6 +58,35 @@ function isTruthyEnv(value: string | undefined): boolean {
   if (!value) return false;
   const normalized = value.trim().toLowerCase();
   return normalized === "1" || normalized === "true" || normalized === "yes";
+}
+
+export function buildDirectPostgresTargetReadinessCheck(input: {
+  isProdLike: boolean;
+  connectionAvailable: boolean;
+  diagnostics: DatabaseConnectionDiagnostics | null;
+}): ReadinessCheckItem {
+  const verified =
+    input.connectionAvailable && input.diagnostics?.targetStatus === "verified";
+  const status: ReadinessCheckStatus = verified
+    ? "ok"
+    : input.isProdLike
+      ? "fail"
+      : "warn";
+  const message = verified
+    ? `Аттестован ${input.diagnostics?.source ?? "direct Postgres"}`
+    : input.diagnostics?.targetStatus === "mismatch"
+      ? "Direct Postgres указывает на другой Supabase project ref"
+      : input.diagnostics?.targetStatus === "unverified"
+        ? "Direct Postgres target не содержит проверяемый Supabase project ref"
+        : "Аттестованный direct Postgres target не настроен";
+
+  return {
+    id: "database:direct-target",
+    label: "Direct Postgres target",
+    status,
+    message,
+    category: "database",
+  };
 }
 
 function readScriptReport(): ProductionReadinessScriptReport | null {
@@ -173,6 +207,14 @@ export function runInlineProductionReadinessChecks(): ReadinessCheckItem[] {
       category: "env",
     });
   }
+
+  checks.push(
+    buildDirectPostgresTargetReadinessCheck({
+      isProdLike,
+      connectionAvailable: Boolean(resolveDatabaseUrl()),
+      diagnostics: resolveDatabaseConnectionDiagnostics(),
+    }),
+  );
 
   for (const key of PRODUCTION_RECOMMENDED_ENV_VARS) {
     const present = Boolean(process.env[key]?.trim());

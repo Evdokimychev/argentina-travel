@@ -1,6 +1,10 @@
 import "server-only";
 
 import type { ClientConfig } from "pg";
+import {
+  supabaseProjectRefFromDatabaseUrl,
+  supabaseProjectRefFromUrl,
+} from "@/lib/supabase/project-ref";
 
 /**
  * Resolve Postgres connection string for server-side fallbacks when Supabase REST
@@ -34,29 +38,59 @@ export type DatabaseConnectionDiagnostics = {
   mode: "supabase_direct" | "supabase_session_pooler" | "other";
   port: number | null;
   projectRef: string | null;
+  targetStatus: "verified" | "unverified" | "mismatch";
 };
 
-function diagnosticsFor(source: DatabaseConnectionDiagnostics["source"], value: string): DatabaseConnectionDiagnostics {
+function expectedSupabaseProjectRef(): string | null {
+  const publicUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  return publicUrl ? supabaseProjectRefFromUrl(publicUrl) : null;
+}
+
+function diagnosticsFor(
+  source: DatabaseConnectionDiagnostics["source"],
+  value: string,
+  expectedProjectRef: string | null,
+): DatabaseConnectionDiagnostics {
   try {
     const parsed = new URL(value);
-    const pooler = parsed.hostname.includes("pooler.supabase.com");
-    const directMatch = parsed.hostname.match(/^db\.([a-z0-9]+)\.supabase\.co$/i);
-    const userMatch = decodeURIComponent(parsed.username).match(/^postgres\.([a-z0-9]+)$/i);
+    const pooler = /(^|\.)pooler\.supabase\.com$/.test(parsed.hostname.toLowerCase());
+    const projectRef = supabaseProjectRefFromDatabaseUrl(value);
     return {
       source,
-      mode: pooler ? "supabase_session_pooler" : directMatch ? "supabase_direct" : "other",
+      mode: pooler
+        ? "supabase_session_pooler"
+        : parsed.hostname.toLowerCase().startsWith("db.") && projectRef
+          ? "supabase_direct"
+          : "other",
       port: parsed.port ? Number.parseInt(parsed.port, 10) : null,
-      projectRef: directMatch?.[1] ?? userMatch?.[1] ?? null,
+      projectRef,
+      targetStatus: !expectedProjectRef
+        ? "unverified"
+        : !projectRef
+          ? "unverified"
+          : projectRef === expectedProjectRef
+            ? "verified"
+            : "mismatch",
     };
   } catch {
-    return { source, mode: "other", port: null, projectRef: null };
+    return {
+      source,
+      mode: "other",
+      port: null,
+      projectRef: null,
+      targetStatus: "unverified",
+    };
   }
 }
 
-export function resolveDatabaseConnection(): {
-  connectionString: string;
-  diagnostics: DatabaseConnectionDiagnostics;
-} | null {
+type DatabaseConnectionResolution = {
+  connectionString: string | null;
+  diagnostics: DatabaseConnectionDiagnostics | null;
+};
+
+function resolveDatabaseConnectionState(): DatabaseConnectionResolution {
+  const expectedProjectRef = expectedSupabaseProjectRef();
+  let firstRejected: DatabaseConnectionDiagnostics | null = null;
   const candidates: Array<[DatabaseConnectionDiagnostics["source"], string | undefined]> = [
     ["POSTGRES_URL", process.env.POSTGRES_URL],
     ["POSTGRES_PRISMA_URL", process.env.POSTGRES_PRISMA_URL],
@@ -64,16 +98,33 @@ export function resolveDatabaseConnection(): {
     ["POSTGRES_URL_NON_POOLING", process.env.POSTGRES_URL_NON_POOLING],
   ];
 
+  const fromParts = buildDatabaseUrlFromParts();
+  if (fromParts) candidates.push(["POSTGRES_PARTS", fromParts]);
+
   for (const [source, value] of candidates) {
-    if (isUsableDatabaseUrl(value)) {
-      const connectionString = preferPgSessionPoolerUrl(value);
-      return { connectionString, diagnostics: diagnosticsFor(source, connectionString) };
+    if (!isUsableDatabaseUrl(value)) continue;
+
+    const connectionString = preferPgSessionPoolerUrl(value);
+    const diagnostics = diagnosticsFor(source, connectionString, expectedProjectRef);
+    if (diagnostics.targetStatus === "verified") {
+      return { connectionString, diagnostics };
     }
+    firstRejected ??= diagnostics;
   }
 
-  const connectionString = buildDatabaseUrlFromParts();
-  return connectionString
-    ? { connectionString, diagnostics: diagnosticsFor("POSTGRES_PARTS", connectionString) }
+  return { connectionString: null, diagnostics: firstRejected };
+}
+
+export function resolveDatabaseConnection(): {
+  connectionString: string;
+  diagnostics: DatabaseConnectionDiagnostics;
+} | null {
+  const resolution = resolveDatabaseConnectionState();
+  return resolution.connectionString && resolution.diagnostics
+    ? {
+        connectionString: resolution.connectionString,
+        diagnostics: resolution.diagnostics,
+      }
     : null;
 }
 
@@ -82,7 +133,12 @@ export function resolveDatabaseUrl(): string | null {
 }
 
 export function resolveDatabaseConnectionDiagnostics(): DatabaseConnectionDiagnostics | null {
-  return resolveDatabaseConnection()?.diagnostics ?? null;
+  return resolveDatabaseConnectionState().diagnostics;
+}
+
+export function isDatabaseUrlAttested(value: string | undefined): boolean {
+  if (!isUsableDatabaseUrl(value)) return false;
+  return diagnosticsFor("DATABASE_URL", value, expectedSupabaseProjectRef()).targetStatus === "verified";
 }
 
 function preferPgSessionPoolerUrl(url: string): string {

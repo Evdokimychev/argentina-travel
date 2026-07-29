@@ -18,6 +18,7 @@ function dependencies(
       mode: "supabase_session_pooler",
       port: 5432,
       projectRef: "uooxrypocahomoqzdvzy",
+      targetStatus: "verified",
     }),
     now: () => {
       clock += 5;
@@ -48,6 +49,7 @@ describe("public health snapshot", () => {
         mode: "supabase_session_pooler",
         port: 5432,
         projectRef: "uooxrypocahomoqzdvzy",
+        targetStatus: "verified",
       },
     });
     expect(snapshot.checks.searchIndex).toMatchObject({
@@ -139,4 +141,39 @@ describe("public health snapshot", () => {
     expect(snapshot.checks.postgresDirect.error).toBe("not_configured");
     expect(snapshot.checks.postgresDirect.connection).toBeNull();
   });
+
+  it.each([
+    ["unverified", "target_unverified"],
+    ["mismatch", "target_mismatch"],
+  ] as const)(
+    "never probes a %s direct Postgres target",
+    async (targetStatus, expectedError) => {
+      let probeCalls = 0;
+      const snapshot = await fetchPublicHealthSnapshotForTest(
+        {},
+        dependencies({
+          hasDirectPostgres: () => false,
+          describeDirectPostgres: () => ({
+            source: "POSTGRES_URL",
+            mode: "other",
+            port: null,
+            projectRef: targetStatus === "mismatch" ? "zyxwvutsrqponmlkjihg" : null,
+            targetStatus,
+          }),
+          pingPostgresDirect: async () => {
+            probeCalls += 1;
+            return 99;
+          },
+        }),
+      );
+
+      expect(probeCalls).toBe(0);
+      expect(snapshot.checks.postgresDirect).toMatchObject({
+        ok: false,
+        skipped: true,
+        error: expectedError,
+        connection: { targetStatus },
+      });
+    },
+  );
 });
