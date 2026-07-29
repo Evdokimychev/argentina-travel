@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 15:05 ART / 2026-07-29 18:05 UTC**
+Последняя проверка: **2026-07-29 15:41 ART / 2026-07-29 18:41 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `4aa7f52c727cfbbcebf9c5fd77c90cd692be0018`; exact evidence/deploy candidate: `4aa7f52c727cfbbcebf9c5fd77c90cd692be0018`; `origin/main` является ancestor.
+- Product implementation SHA: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc`; exact evidence/deploy candidate: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `4aa7f52c727cfbbcebf9c5fd77c90cd692be0018` (`fix: bound catalog REST quota amplification`); WP-021 — `d6808a5c`, WP-020 — `ed29b335`, WP-019 — `a3301ec9`.
+- Последний runtime-product SHA: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc` (`fix: bound optional catalog detail validation`); WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`, WP-020 — `ed29b335`.
 
 ## Production и deployments
 
@@ -48,6 +48,7 @@ Master Goal V6 принят как главный норматив проект�
 - WP-020 exact `ed29b335` успешно развернут в 16:11:01 UTC: Vercel deployment `3hwMwixfCmgr5nx8gWkj26SskbJW`, GitHub deployment `5660918469`, immutable URL `https://argentina-travel-kjjwy06uv-go-argentina.vercel.app`. Health связывает полный SHA; required health и commercial APIs остаются 503/down. Новый parser на HTML `/tours` и `/excursions` возвращает `null`, а не Next asset route; remote browser **16 passed, 1 data-dependent skip**. Strict/recovery smoke exit 1 на mandatory health; promotion не выполнялся.
 - WP-021 exact `d6808a5c` отправлен в 17:03 UTC и немедленно получил GitHub/Vercel `failure: Account is blocked`; deployment ID пока отсутствует. Локальный exact artifact полностью доказан, но immutable remote preview и deployment ID не подменяются локальным результатом.
 - WP-022 exact `4aa7f52c` отправлен в 18:02 UTC. На 18:05 UTC GitHub/Vercel status остаётся `pending: Vercel is deploying your app`, target build `GWXM4ciE3sQW4jcYfiPeq4gnDcU3`; GitHub deployment и immutable preview URL ещё не созданы. Локальный exact artifact полностью доказан, но pending build не считается deployment evidence.
+- WP-023 exact `e22b5885` отправлен в 18:39 UTC. На 18:41 UTC GitHub/Vercel status остаётся `pending: Vercel is deploying your app`, target build/deployment `5HameBiSUPAUurXE8GVT2rouQAtx`; immutable deployment URL и successful build evidence ещё отсутствуют. Vercel CLI не может прочитать канонический project settings, поэтому pending status не считается готовым preview.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -58,6 +59,7 @@ Master Goal V6 принят как главный норматив проект�
 - Production recheck 16:17 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` продолжают ложный 200 empty. WP-020 не продвигался.
 - Production recheck 17:09 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` по-прежнему возвращают ложный 200 empty. WP-021 не продвигался, exact deployment отсутствует.
 - Production recheck 18:05 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. WP-022 не продвигался; same-artifact gate закрыт.
+- Production recheck 18:41 UTC: `/api/health` — 503/down; `/api/tours` возвращает ложный `200` с 0 tours, `/api/excursions` — ложный `200` с `items=0,total=0`. WP-023 не продвигался; production по-прежнему работает на старом artifact, same-artifact gate закрыт.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -227,13 +229,28 @@ Master Goal V6 принят как главный норматив проект�
 - Финальная cold concurrency проверка трёх разных production detail routes: HTTP 200 за 3.69/4.30/6.47 с одним `[catalog_rest_circuit_open]` и без `tripster_resolve` повторов. Serial и parallel Playwright проходят **17/17**; это доказывает backend fail-fast effect одного process, но не distributed multi-instance recovery.
 - DDL/migration/provider/DB write, env/secret mutation и production promotion не выполнялись. Circuit покрывает только публичные catalog read paths; auth, booking, payment, admin и write paths не используют его.
 
+### WP-023 — candidate-first optional commercial detail validation
+
+- Исходная гипотеза о 25–28-секундном CMS resolver оказалась неверной. Fresh production-build benchmark воспроизвёл `/blog/natsionalnyy-park-iguasu` за **23.601 s** и `/blog` за **24.674 s**, тогда как уже прогретые `/destinations` и `/places` отвечали за 245/93 ms.
+- Root cause: пять публичных маршрутов передавали весь marketplace catalog (около 68 карточек) в `filterToursWithResolvedPublicDetail()`. Глобальный FIFO=3 ограничивал одновременную нагрузку, но каждая необязательная карточка всё равно последовательно проходила platform → YouTravel/Tripster detail fallback, хотя UI показывал только 4–6 совпавших карточек или article embeds.
+- Маршруты теперь сначала выбирают только фактических кандидатов виджета/географии, затем выполняют дорогую detail validation. `/blog` и blog hub дополнительно считают marketplace enrichment fail-soft; article/author оставляют необязательный promise внутри локальной Suspense/fail-soft boundary. Подтверждённый empty/missing contract detail resolver не изменён.
+- Промежуточная QA-сборка обнаружила вторую ошибку до commit: cold `/blog` возвращал HTTP 200 с route error boundary, потому что rejected optional marketplace promise оставался в critical `Promise.all`. Финальная реализация закрывает отказ через `resolveOptionalBlogTourCatalog`; корректный H1 и editorial catalog сохраняются.
+- Fresh exact runtime после финального build: article cold **200 / 616 ms** с правильным H1 вместо 23.601 s; `/blog` cold **200 / 6.030 s** без route error; destination/place/Iguazú route — 2.967/4.580/10.021 s и корректный H1. Recovery smoke полностью проходит, но strict smoke корректно блокируется на mandatory degraded health.
+- Отдельный source/log trace показал следующий P1, не смешанный с WP-023: public CMS resolver и comments превращают timeout/402/RLS/unknown read failure в `null`/`[]`, а fallback может кешироваться 300 секунд. Это создаёт риск ложного CMS-only 404 и зарегистрировано как P1-GA-021/WP-024.
+- DDL, migration, provider/DB write, env/secret mutation и production promotion не выполнялись.
+
 ## Проверки candidate
+
+- WP-023 focused regression suite: **7 files / 51 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **444 files / 2 116 tests** + **31/31 release-evidence contracts** — pass.
+- Protected production build exact `e22b5885`: exit 0, **929/929** static pages, production isolation/runtime-text guards pass; существующие Edge/Sentry/lint warnings не стали errors.
+- Exact local browser QA на `127.0.0.1:3112`: article и `/blog` имеют корректные title/H1, browser errors отсутствуют, desktop screenshots сохранены. Strict production-smoke exit 1 на `health.ok=false`; explicit recovery smoke exit 0 и проходит все public routes, genuine tour/excursion detail, assets и hero images.
+- Product SHA `e22b5885` pushed. GitHub/Vercel target `5HameBiSUPAUurXE8GVT2rouQAtx` остаётся pending; immutable preview/runtime logs пока не доказаны. Порт `127.0.0.1:3001` отдельного проекта не затрагивался; GoArgentina `3112` после QA освобождён.
 
 - WP-022 focused circuit/resolver/existence suite: финально **19/19**; общий packet suite ранее **28/28**. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **444 files / 2 113 tests** + **31/31 release-evidence contracts** — pass.
 - Protected production build exact `4aa7f52c`: exit 0, **929/929** static pages, production bundle guard pass, production mode/demo seeds off. Existing Edge/Sentry/lint warnings не стали errors. `npm audit --omit=dev --audit-level=high`: **0 vulnerabilities**.
 - Full dev dependency audit отдельно обнаружил **9 high** в цепочке `brace-expansion → minimatch → eslint ecosystem`; доступный автоматический full fix требует breaking `eslint@10.8` через `--force`, поэтому в reliability packet он не применялся и зарегистрирован как P1-GA-019.
-- Exact local browser: serial **17/17** и parallel five-worker **17/17**. `/about`, `/tours` и повторная `/` имеют корректные H1/title без framework overlay; initial cold home честно показал штатную error boundary при total outage и отсутствии LKG. CMS routes в outage занимали примерно 25–28 секунд и вынесены в P1-GA-020/WP-023 latency follow-up.
-- Strict production-equivalent smoke exit 1 на обязательном `health.ok=false`. Recovery smoke разрешил degraded health и прошёл базовые `/`, `/tours`, `/excursions`, `/destinations`, `/places`, но остановлен timeout на CMS path; поэтому recovery smoke не записан как pass. Product SHA `4aa7f52c` pushed; Vercel build пока pending, deployment ID отсутствует.
+- Exact local browser: serial **17/17** и parallel five-worker **17/17**. `/about`, `/tours` и повторная `/` имеют корректные H1/title без framework overlay; initial cold home честно показал штатную error boundary при total outage и отсутствии LKG. Наблюдавшиеся 25–28 секунд первоначально были ошибочно отнесены к CMS; WP-023 позже доказал full-catalog optional detail fan-out.
+- Strict production-equivalent smoke exit 1 на обязательном `health.ok=false`. Recovery smoke разрешил degraded health и прошёл базовые `/`, `/tours`, `/excursions`, `/destinations`, `/places`, но остановился на тогда ещё не локализованном optional detail path; поэтому для WP-022 он не записан как pass. Product SHA `4aa7f52c` pushed; Vercel build пока pending, deployment ID отсутствует.
 
 - WP-021 focused concurrency/pool/truth/deadline suite: **6 files / 24 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **443 files / 2 105 tests** + **31/31 release-evidence contracts** — pass. `npm audit --omit=dev`: **0 vulnerabilities**.
 - Protected production build exact `d6808a5c`: exit 0, **929/929** static pages, runtime-text audit pass, production mode/demo seeds off. Build logs честно фиксируют Supabase REST `exceed_egress_quota`; generated timestamp возвращён к committed state, worktree clean.
@@ -363,10 +380,11 @@ Master Goal V6 принят как главный норматив проект�
 15. **P1-GA-017:** bounded fan-out, in-flight dedupe, shared pool/deadlines и error-vs-empty semantics реализованы в `d6808a5c`; local cold five-worker evidence закрывает воспроизведённое slot exhaustion. Immutable preview, distributed multi-instance capacity и production same-artifact proof остаются открыты.
 16. **P1-GA-018:** public catalog REST quota circuit, bounded logging и no-cache degraded snapshot реализованы в `4aa7f52c`; local serial/parallel и cold backend effect доказаны. Exact Vercel deployment, multi-instance recovery и production same-artifact behavior остаются открыты.
 17. **P1-GA-019:** production dependency audit чист, но полный dev-toolchain audit содержит 9 high в транзитивной ESLint-цепочке; безопасная non-breaking remediation ещё не доказана.
-18. **P1-GA-020:** CMS/public content fallback при outage занимает 25–28 секунд и срывает recovery smoke timeout; точный источник последовательных retries/log amplification ещё требует WP-023.
+18. **P1-GA-020:** 25–28-секундная public-route задержка оказалась full-catalog optional detail fan-out, а не CMS query latency. WP-023 `e22b5885` сначала выбирает 4–6/widget/geography candidates и только затем валидирует detail; article cold сокращён с 23.601 s до 616 ms, recovery smoke проходит. Exact preview, distributed behavior и production same-artifact proof остаются открыты.
+19. **P1-GA-021:** public CMS read path превращает timeout/quota/RLS/unknown failure в `null`/`[]` и может кешировать fallback 300 секунд, поэтому CMS-only outage способен дать ложный 404/empty. Нужен typed `available|unavailable|missing` contract и WP-024 fault/browser evidence без ослабления редакционного fallback.
 
 ## Следующие три задачи
 
 1. Owner/ops + engineering: снять Supabase `exceed_egress_quota`, восстановить canonical verified runtime connectivity и сразу выполнить read-only 107 migrations/journal/checksums, RLS/grants и backup/PITR reconciliation; до parity не применять DDL.
-2. Engineering WP-023: воспроизвести public CMS/blog/destination/place outage latency и repeated logging, затем добавить bounded fail-fast/recovery без превращения `unavailable` в empty/404.
-3. Engineering/tooling: найти non-breaking remediation для `brace-expansion/minimatch/eslint` dev-only цепочки; не применять `npm audit fix --force` и не переходить на ESLint 10 без compatibility proof.
+2. Engineering WP-024: ввести typed public CMS read result, различить confirmed missing и operational unavailable, запретить cache degraded fallback и доказать CMS-only outage без ложного 404; отдельно ограничить comments logging.
+3. Engineering/tooling: подготовить совместимый пакет Next/eslint-config-next/ESLint для устранения `brace-expansion/minimatch` dev-only цепочки; не применять `npm audit fix --force` без полного compatibility proof.

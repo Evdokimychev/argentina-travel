@@ -296,3 +296,17 @@
 - Decision: retain the production fix and register the dev-only dependency finding separately. Do not run `npm audit fix --force` or accept ESLint 10 until Next/lint/plugin compatibility and the full audit/build/CI surface pass on an isolated packet; prefer a compatible upstream release or proven bounded override.
 - Evidence: `npm audit --omit=dev --audit-level=high` reports **0 vulnerabilities**. Full `npm audit --audit-level=high` reports **9 high** through `brace-expansion → minimatch → eslint ecosystem`; npm's advertised full fix is breaking `eslint@10.8`. Current TypeScript, ESLint, 2 113 tests, 31 evidence contracts and production build pass.
 - Consequence: P1-GA-019/R-032 remain open and visible without mixing a broad toolchain upgrade into WP-022 or weakening the current release gates.
+
+## D-045 — Select renderable candidates before optional detail validation
+
+- Date: 2026-07-29
+- Decision: a public editorial/destination page must reduce the marketplace catalog to the cards, embeds or geography matches it can actually render before invoking strict partner/platform detail validation. Optional marketplace rejection may remove commercial enrichment but may not reject the editorial blog index, hub or article route. Full-catalog strict validation remains appropriate only for a genuine full catalog surface.
+- Evidence: fresh exact build measured article/index at **23.601/24.674 s**. Source trace showed about 68 listings queued through FIFO=3 and sequential platform → YouTravel/Tripster detail fallback before the UI selected 4–6 cards. The first candidate was rejected after cold `/blog` rendered its route error boundary; the final `e22b5885` wraps optional catalog failure and passes **51 focused**, **2 116 full**, **31/31 evidence**, **929/929 build**, browser article/index checks and full recovery smoke. Fresh article cold time is **616 ms** with correct H1.
+- Consequence: P1-GA-020/R-031 move to mitigated local candidate. Exact preview, distributed instance behavior and production same-artifact proof remain required; the strict missing/unavailable detail contract is unchanged.
+
+## D-046 — Treat CMS truth collapse as a separate packet, not as latency evidence
+
+- Date: 2026-07-29
+- Decision: do not add a broad shared circuit or merely shorten timeouts in the public CMS path. WP-024 must first introduce a typed result that distinguishes confirmed missing/empty from timeout, quota, RLS and unknown operational failure; degraded fallback must not be cached as authoritative content. CMS-only unavailability must not become a public 404.
+- Evidence: WP-023 removed the measured 25–28-second fan-out without changing CMS queries, disproving the original latency hypothesis. Independent source/log trace shows CMS reads and comments collapsing failures to `null`/`[]`, with fallback eligible for a 300-second cache. Runtime logs contain the current quota error followed by an empty comments response.
+- Consequence: P1-GA-021/R-033 and WP-024 move ahead of the dev-toolchain upgrade. The implementation must preserve the existing editorial fallback where it is known-good and cannot claim completion without fault, browser and production-equivalent behavior evidence.

@@ -15,7 +15,8 @@ flowchart TD
   Optional --> Resolver
   Next --> Blog["Editorial blog RSC stream"]
   Blog --> BlogOptional["Optional tour catalog / fail-soft boundary"]
-  BlogOptional --> Resolver
+  BlogOptional --> CandidatePick["WP-023 renderable widget/geography candidates first"]
+  CandidatePick --> Resolver
   Next --> Auth["Supabase Auth + RLS"]
   Next --> Privacy["Privacy request route / CAS queue state"]
   Next --> BookingCreate["Canonical booking command / actor-bound idempotency"]
@@ -50,8 +51,8 @@ flowchart TD
   Resolver --> RestCircuit["WP-022 quota-only catalog REST circuit: cold/open/half-open"]
   RestCircuit --> Rest["Supabase Data API catalog snapshots"]
   CMS --> CMSRest["Public CMS Data API/fallback path"]
-  CMSRest --> CMSLatency["WP-023 pending: bounded outage latency/logging"]
-  CMSLatency --> Rest
+  CMSRest --> CMSTruth["WP-024 pending: typed available/unavailable/missing + no degraded cache"]
+  CMSTruth --> Rest
   Resolver --> PGResolve["Postgres candidate resolver"]
   TrustedRef["Trusted NEXT_PUBLIC_SUPABASE_URL ref"] --> PGAttest["Canonical project-ref attestation"]
   PGResolve --> PGAttest
@@ -97,7 +98,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` bounds per-instance catalog/direct-PG pressure. WP-022 exact `4aa7f52c` bounds public catalog REST quota amplification and degraded cache/log state; Vercel build `GWXM4ciE3sQW4jcYfiPeq4gnDcU3` is pending and has no deployment ID yet. REST remains quota-restricted, CMS fallback latency remains open, and production still runs old `993e82fb`; migration parity, runtime logs, backup effect, distributed recovery and same-artifact production proof remain unavailable.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` bounds per-instance catalog/direct-PG pressure. WP-022 exact `4aa7f52c` bounds public catalog REST quota amplification. WP-023 exact `e22b5885` selects only renderable optional candidates before strict detail validation and restores bounded recovery smoke; Vercel target `5HameBiSUPAUurXE8GVT2rouQAtx` remains pending. REST is still quota-restricted, WP-024 CMS truth collapse remains open, and production still runs old `993e82fb`; migration parity, runtime logs, backup effect, distributed recovery and same-artifact production proof remain unavailable.
 
 ## Data ownership boundaries
 
