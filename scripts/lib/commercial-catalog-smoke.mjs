@@ -43,3 +43,59 @@ export function findCommercialDetailPath(html, catalogPath) {
 
   return null;
 }
+
+export async function requestSmokeDocument({
+  baseUrl,
+  pathname,
+  stage,
+  timeoutMs = 15_000,
+  fetchImpl = fetch,
+  now = Date.now,
+}) {
+  const startedAt = now();
+  try {
+    const response = await fetchImpl(`${baseUrl}${pathname}`, {
+      method: "GET",
+      signal: AbortSignal.timeout(Number.isFinite(timeoutMs) ? timeoutMs : 15_000),
+    });
+    const text = await response.text();
+    return {
+      status: response.status,
+      text,
+      contentType: response.headers.get("content-type") ?? "",
+      durationMs: Math.max(0, now() - startedAt),
+    };
+  } catch (error) {
+    const durationMs = Math.max(0, now() - startedAt);
+    const reason = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Smoke request failed: stage=${stage} path=${pathname} durationMs=${durationMs} timeoutMs=${timeoutMs}: ${reason}`,
+      { cause: error },
+    );
+  }
+}
+
+export async function verifyCommercialCatalogFromHtml({
+  catalogPath,
+  catalogHtml,
+  fetchDetail,
+}) {
+  const detailPath = findCommercialDetailPath(catalogHtml, catalogPath);
+  if (!detailPath) {
+    throw new Error(
+      `${catalogPath}: no commercial detail link found; catalog may be empty or unavailable`,
+    );
+  }
+
+  const detail = await fetchDetail(detailPath);
+  if (detail.status !== 200) {
+    throw new Error(`GET ${detailPath} returned ${detail.status}`);
+  }
+  if (
+    !detail.contentType.includes("text/html") ||
+    !detail.text.toLowerCase().includes("<html")
+  ) {
+    throw new Error(`GET ${detailPath} did not return an HTML document`);
+  }
+  return detailPath;
+}

@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { findCommercialDetailPath } from "./commercial-catalog-smoke.mjs";
+import {
+  findCommercialDetailPath,
+  requestSmokeDocument,
+  verifyCommercialCatalogFromHtml,
+} from "./commercial-catalog-smoke.mjs";
 
 describe("commercial catalog smoke", () => {
   it("finds a real tour detail and ignores region navigation", () => {
@@ -46,6 +50,42 @@ describe("commercial catalog smoke", () => {
     assert.equal(
       findCommercialDetailPath("asset=/tours/not-an-offer title=/tours/still-not-an-offer", "/tours"),
       null,
+    );
+  });
+
+  it("reuses the already checked catalog HTML and fetches only the genuine detail", async () => {
+    const requested = [];
+    const detailPath = await verifyCommercialCatalogFromHtml({
+      catalogPath: "/excursions",
+      catalogHtml:
+        '<a href="/excursions/city/buenos-aires">Город</a><a href="/excursions/san-telmo-t50248">Экскурсия</a>',
+      fetchDetail: async (pathname) => {
+        requested.push(pathname);
+        return {
+          status: 200,
+          text: "<html><main>Экскурсия</main></html>",
+          contentType: "text/html; charset=utf-8",
+        };
+      },
+    });
+
+    assert.equal(detailPath, "/excursions/san-telmo-t50248");
+    assert.deepEqual(requested, ["/excursions/san-telmo-t50248"]);
+  });
+
+  it("reports the exact smoke stage and path without relaxing the 15 second default", async () => {
+    const timestamps = [100, 175];
+    await assert.rejects(
+      requestSmokeDocument({
+        baseUrl: "http://127.0.0.1:3112",
+        pathname: "/excursions",
+        stage: "public_page",
+        fetchImpl: async () => {
+          throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+        },
+        now: () => timestamps.shift() ?? 175,
+      }),
+      /stage=public_page path=\/excursions durationMs=75 timeoutMs=15000/,
     );
   });
 });

@@ -33,6 +33,8 @@ describe("direct Postgres target attestation", () => {
 
     for (const relativePath of [
       "src/lib/tripster/partner-tour-pg-repository.ts",
+      "src/lib/tripster/pg-repository.ts",
+      "src/lib/sputnik8/pg-repository.ts",
       "src/lib/youtravel/partner-tour-pg-repository.ts",
     ]) {
       const contents = source(relativePath);

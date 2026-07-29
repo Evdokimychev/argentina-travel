@@ -60,6 +60,7 @@ import {
   partnerUnavailableFromError,
   type PartnerSourceResult,
 } from "@/lib/partner-source-result";
+import { withCatalogRestResultCircuit } from "@/lib/catalog-rest-circuit";
 
 export type ExcursionCatalogSource = "platform" | "tripster" | "sputnik8";
 type ExcursionSourceResult<T> = PartnerSourceResult<T>;
@@ -135,7 +136,9 @@ async function fetchNativeExcursionListingsResult(
 ): Promise<ExcursionSourceResult<ExcursionListing[]>> {
   if (!supabase) return partnerUnavailable("db_unavailable", "Supabase client is not configured");
   try {
-    const result = await fetchPublishedExcursionListingsResult(supabase);
+    const result = await withCatalogRestResultCircuit(() =>
+      fetchPublishedExcursionListingsResult(supabase),
+    );
     return result.status === "ok"
       ? partnerOk(result.data.map(nativeTourListingToExcursion))
       : result;
@@ -168,9 +171,9 @@ async function fetchTripsterListResult(
   const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
 
   const restResult = supabase
-    ? await fetchTripsterExcursionListingsResult(supabase, pgFilters).catch(
-        partnerUnavailableFromError,
-      )
+    ? await withCatalogRestResultCircuit(() =>
+        fetchTripsterExcursionListingsResult(supabase, pgFilters),
+      ).catch(partnerUnavailableFromError)
     : partnerUnavailable("db_unavailable", "Supabase client is not configured");
   if (restResult.status === "ok" && restResult.data.total > 0) return restResult;
 
@@ -203,9 +206,9 @@ async function fetchSputnik8ListResult(
   const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
 
   const restResult = supabase
-    ? await fetchSputnik8ExcursionListingsResult(supabase, pgFilters).catch(
-        partnerUnavailableFromError,
-      )
+    ? await withCatalogRestResultCircuit(() =>
+        fetchSputnik8ExcursionListingsResult(supabase, pgFilters),
+      ).catch(partnerUnavailableFromError)
     : partnerUnavailable("db_unavailable", "Supabase client is not configured");
   if (restResult.status === "ok" && restResult.data.total > 0) return restResult;
 
@@ -308,7 +311,9 @@ async function fetchTripsterDetailResult(
 
   const supabase = getClient();
   const restResult = supabase
-    ? await fetchTripsterExcursionBySlugResult(supabase, slug).catch(partnerUnavailableFromError)
+    ? await withCatalogRestResultCircuit(() =>
+        fetchTripsterExcursionBySlugResult(supabase, slug),
+      ).catch(partnerUnavailableFromError)
     : partnerUnavailable("db_unavailable", "Supabase client is not configured");
   if (restResult.status === "ok" && restResult.data) {
     return partnerOk(await withTripsterGuide(restResult.data));
@@ -342,7 +347,9 @@ async function fetchSputnik8DetailResult(
 
   const supabase = getClient();
   if (!supabase) return partnerUnavailable("db_unavailable", "Sputnik8 detail stores are unavailable");
-  return fetchSputnik8ExcursionBySlugResult(supabase, slug).catch(partnerUnavailableFromError);
+  return withCatalogRestResultCircuit(() =>
+    fetchSputnik8ExcursionBySlugResult(supabase, slug),
+  ).catch(partnerUnavailableFromError);
 }
 
 async function fetchNativeDetailResult(
@@ -351,7 +358,9 @@ async function fetchNativeDetailResult(
   const supabase = getClient();
   if (!supabase) return partnerUnavailable("db_unavailable", "Supabase client is not configured");
   try {
-    const source = await fetchPublishedExcursionBySlugResult(supabase, slug);
+    const source = await withCatalogRestResultCircuit(() =>
+      fetchPublishedExcursionBySlugResult(supabase, slug),
+    );
     return source.status === "ok"
       ? partnerOk(
           source.data ? nativeTourDetailToExcursion(source.data.canonical, source.data.detail) : null,

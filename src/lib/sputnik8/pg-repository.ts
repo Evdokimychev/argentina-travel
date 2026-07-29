@@ -1,6 +1,6 @@
 import "server-only";
 
-import pg from "pg";
+import type { PoolClient } from "pg";
 import {
   rowToExcursionCity,
   rowToExcursionDetail,
@@ -8,7 +8,7 @@ import {
   mapSputnik8ReviewRow,
 } from "@/lib/sputnik8/mapper";
 import { enrichSputnik8ExcursionDetail } from "@/lib/sputnik8/detail-enrichment";
-import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import { withPartnerPgClient } from "@/lib/partner-pg-pool";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -17,19 +17,11 @@ import type {
   ExcursionListing,
 } from "@/types/excursion";
 
-async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
-  const connectionString = resolveDatabaseUrl();
-  if (!connectionString) return null;
-
-  const client = new pg.Client(createPgClientConfig(connectionString));
-
+async function withPgClient<T>(fn: (client: PoolClient) => Promise<T>): Promise<T | null> {
   try {
-    await client.connect();
-    return await fn(client);
+    return await withPartnerPgClient(fn);
   } catch {
     return null;
-  } finally {
-    await client.end().catch(() => undefined);
   }
 }
 

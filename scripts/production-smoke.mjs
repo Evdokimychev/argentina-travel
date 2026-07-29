@@ -12,7 +12,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { findCommercialDetailPath } from "./lib/commercial-catalog-smoke.mjs";
+import {
+  requestSmokeDocument,
+  verifyCommercialCatalogFromHtml,
+} from "./lib/commercial-catalog-smoke.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -63,22 +66,12 @@ function truncate(text, max = 240) {
   return `${text.slice(0, max)}…`;
 }
 
-async function get(pathname) {
-  const response = await fetch(`${baseUrl}${pathname}`, {
-    method: "GET",
-    signal: AbortSignal.timeout(Number.isFinite(timeoutMs) ? timeoutMs : 15000),
-  });
-
-  const text = await response.text();
-  return {
-    status: response.status,
-    text,
-    contentType: response.headers.get("content-type") ?? "",
-  };
+async function get(pathname, stage = "request") {
+  return requestSmokeDocument({ baseUrl, pathname, stage, timeoutMs });
 }
 
 async function checkHealth() {
-  const health = await get("/api/health");
+  const health = await get("/api/health", "health");
   assert(
     health.status === 200 || health.status === 503,
     `GET /api/health returned ${health.status}: ${truncate(health.text)}`,
@@ -143,20 +136,20 @@ async function checkHealth() {
 }
 
 async function checkAsset(pathname, expectedType) {
-  const asset = await get(pathname);
+  const asset = await get(pathname, "asset");
   assert(asset.status === 200, `GET ${pathname} returned ${asset.status}`);
   assert(asset.contentType.includes(expectedType), `GET ${pathname} expected ${expectedType}, got ${asset.contentType}`);
   console.log(`✓ ${pathname}`);
 }
 
 async function checkInternalRouteClosed(pathname) {
-  const page = await get(pathname);
+  const page = await get(pathname, "internal_route");
   assert(page.status === 404, `GET ${pathname} expected 404, got ${page.status}`);
   console.log(`✓ ${pathname} closed`);
 }
 
 async function checkAnonymousReadingHistory() {
-  const response = await get("/api/blog/reading-history");
+  const response = await get("/api/blog/reading-history", "anonymous_reading_history");
   assert(response.status === 200, `GET /api/blog/reading-history returned ${response.status}`);
   const json = JSON.parse(response.text);
   assert(Array.isArray(json.entries), "Anonymous reading history must return entries array");
@@ -164,7 +157,7 @@ async function checkAnonymousReadingHistory() {
 }
 
 async function checkPage(pathname) {
-  const page = await get(pathname);
+  const page = await get(pathname, "public_page");
   assert(page.status === 200, `GET ${pathname} returned ${page.status}: ${truncate(page.text)}`);
   assert(
     page.contentType.includes("text/html"),
@@ -172,6 +165,7 @@ async function checkPage(pathname) {
   );
   assert(page.text.toLowerCase().includes("<html"), `GET ${pathname} did not return HTML document.`);
   console.log(`✓ ${pathname}`);
+  return page;
 }
 
 async function checkRedirect(pathname, expectedPathFragment) {
@@ -194,7 +188,7 @@ async function checkRedirect(pathname, expectedPathFragment) {
 }
 
 async function checkBlogPostHasHeroImage(pathname) {
-  const page = await get(pathname);
+  const page = await get(pathname, "blog_hero");
   assert(page.status === 200, `GET ${pathname} returned ${page.status}`);
 
   const ogMatch = page.text.match(
@@ -214,24 +208,12 @@ async function checkBlogPostHasHeroImage(pathname) {
   console.log(`✓ ${pathname} hero image (og:image set)`);
 }
 
-async function checkCommercialCatalog(catalogPath) {
-  const catalog = await get(catalogPath);
-  assert(catalog.status === 200, `GET ${catalogPath} returned ${catalog.status}`);
-  const detailPath = findCommercialDetailPath(catalog.text, catalogPath);
-  assert(
-    detailPath,
-    `${catalogPath}: no commercial detail link found; catalog may be empty or unavailable`,
-  );
-
-  const detail = await get(detailPath);
-  assert(
-    detail.status === 200,
-    `GET ${detailPath} returned ${detail.status}: ${truncate(detail.text)}`,
-  );
-  assert(
-    detail.contentType.includes("text/html") && detail.text.toLowerCase().includes("<html"),
-    `GET ${detailPath} did not return an HTML document`,
-  );
+async function checkCommercialCatalog(catalogPath, catalogHtml) {
+  const detailPath = await verifyCommercialCatalogFromHtml({
+    catalogPath,
+    catalogHtml,
+    fetchDetail: (pathname) => get(pathname, "commercial_detail"),
+  });
   console.log(`✓ ${catalogPath} → ${detailPath}`);
 }
 
@@ -240,11 +222,12 @@ async function main() {
   console.log(`Production smoke base URL: ${baseUrl}`);
 
   await checkHealth();
+  const checkedPages = new Map();
   for (const pathname of PAGE_PATHS) {
-    await checkPage(pathname);
+    checkedPages.set(pathname, await checkPage(pathname));
   }
-  await checkCommercialCatalog("/tours");
-  await checkCommercialCatalog("/excursions");
+  await checkCommercialCatalog("/tours", checkedPages.get("/tours")?.text ?? "");
+  await checkCommercialCatalog("/excursions", checkedPages.get("/excursions")?.text ?? "");
 
   await checkRedirect("/map", "/mapa-argentina");
   await checkInternalRouteClosed("/dev/design-system");

@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   resolveExcursionCatalogSources,
@@ -32,6 +34,15 @@ const unavailable = {
 };
 
 describe("resolveExcursionCatalogSources", () => {
+  it("routes public excursion REST reads through the shared quota circuit", () => {
+    const contents = fs.readFileSync(
+      path.join(process.cwd(), "src/lib/excursion-server.ts"),
+      "utf8",
+    );
+    const circuitCalls = contents.match(/withCatalogRestResultCircuit\(/g) ?? [];
+    expect(circuitCalls.length).toBeGreaterThanOrEqual(6);
+  });
+
   it("confirms an empty catalog only when every source answered", () => {
     const result = resolveExcursionCatalogSources({}, {
       platform: { status: "ok", data: [] },
