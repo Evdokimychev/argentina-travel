@@ -47,7 +47,11 @@ flowchart TD
   Privacy --> Processor["Cron deletion processor / auth + profile + related data"]
   Processor --> Auth
   Next --> CMS["CMS / knowledge / ingestion"]
-  Resolver --> Rest["Supabase Data API snapshots"]
+  Resolver --> RestCircuit["WP-022 quota-only catalog REST circuit: cold/open/half-open"]
+  RestCircuit --> Rest["Supabase Data API catalog snapshots"]
+  CMS --> CMSRest["Public CMS Data API/fallback path"]
+  CMSRest --> CMSLatency["WP-023 pending: bounded outage latency/logging"]
+  CMSLatency --> Rest
   Resolver --> PGResolve["Postgres candidate resolver"]
   TrustedRef["Trusted NEXT_PUBLIC_SUPABASE_URL ref"] --> PGAttest["Canonical project-ref attestation"]
   PGResolve --> PGAttest
@@ -93,7 +97,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 exact candidate `d6808a5c` bounds per-instance catalog and direct-PG pressure and passes cold five-worker local QA; its immutable Vercel preview is initially blocked by account state. REST remains quota-restricted and production still runs old `993e82fb`; migration parity, runtime logs, backup effect, distributed capacity and same-artifact production proof remain unavailable.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. WP-020 exact `ed29b335` / `3hwMwixf…` closes asset/error-route false commercial evidence. WP-021 `d6808a5c` bounds per-instance catalog/direct-PG pressure. WP-022 exact `4aa7f52c` bounds public catalog REST quota amplification and degraded cache/log state; Vercel build `GWXM4ciE3sQW4jcYfiPeq4gnDcU3` is pending and has no deployment ID yet. REST remains quota-restricted, CMS fallback latency remains open, and production still runs old `993e82fb`; migration parity, runtime logs, backup effect, distributed recovery and same-artifact production proof remain unavailable.
 
 ## Data ownership boundaries
 
