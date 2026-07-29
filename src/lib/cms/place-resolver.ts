@@ -24,6 +24,10 @@ import {
   type CmsDocument,
 } from "@/types/cms-content";
 import { placeListingFromCmsDocument } from "@/lib/cms/place-listing-from-cms";
+import {
+  CmsPublicContentUnavailableError,
+  withCmsPublicFallback,
+} from "@/lib/cms/public-read-result";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedPlaceOverride,
@@ -39,7 +43,7 @@ function placeListingFromCms(doc: CmsDocument, fallback?: PlaceListing): PlaceLi
 
 export async function fetchPublishedPlacesFromCms(locale = "ru"): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return [];
+  if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
   return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
 }
 
@@ -73,12 +77,20 @@ export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]
   if (!supabase) return fallback;
 
   const cutover = await getCmsCutoverFlags();
-  const cmsPlaces = cutover.place
-    ? await fetchPublishedCmsDocumentsForCutover("place", locale)
-    : await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
-  if (cmsPlaces.length === 0) return fallback;
+  if (cutover.place) {
+    const cmsPlaces = await fetchPublishedCmsDocumentsForCutover("place", locale);
+    return mergePlaceCatalog(fallback, cmsPlaces);
+  }
 
-  return mergePlaceCatalog(fallback, cmsPlaces);
+  return withCmsPublicFallback("place:catalog", fallback, async () => {
+    const cmsPlaces = await fetchPublishedCmsDocumentsMergedByLocaleChain(
+      supabase,
+      "place",
+      locale,
+    );
+    if (cmsPlaces.length === 0) return fallback;
+    return mergePlaceCatalog(fallback, cmsPlaces);
+  });
 }
 
 /** Published CMS override merged with source place data by slug. */

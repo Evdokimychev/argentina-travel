@@ -9,6 +9,10 @@ import {
 import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
 import { authorArticleFromCms, type CmsDocument } from "@/types/cms-content";
 import type { BlogPost } from "@/types";
+import {
+  CmsPublicContentUnavailableError,
+  cmsPublicUnavailable,
+} from "@/lib/cms/public-read-result";
 
 export function authorArticleOverrideId(slug: string, locale = "ru"): string {
   return cmsOverrideId("author_article", slug, locale);
@@ -51,16 +55,25 @@ export async function resolveAuthorArticle(
 
 export async function listPublishedAuthorArticleSlugs(locale = "ru"): Promise<string[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return [];
+  if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("content_documents")
     .select("slug, seo")
     .eq("doc_type", "author_article")
     .eq("locale", locale)
-    .eq("status", "published");
+    .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(1_500))
+    .retry(false);
 
-  return (data ?? [])
+  if (error || !Array.isArray(data)) {
+    const result = cmsPublicUnavailable(
+      error ?? new Error("cms_public_malformed_author_slug_list"),
+    );
+    throw new CmsPublicContentUnavailableError(result.errorClass);
+  }
+
+  return data
     .filter((row) => {
       const seo = row.seo;
       return !(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);

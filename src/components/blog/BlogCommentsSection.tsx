@@ -35,6 +35,7 @@ export default function BlogCommentsSection({ slug, title, className }: BlogComm
   const { user } = useAuth();
   const [comments, setComments] = useState<BlogComment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [commentsUnavailable, setCommentsUnavailable] = useState(false);
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,22 +43,27 @@ export default function BlogCommentsSection({ slug, title, className }: BlogComm
 
   const loadComments = useCallback(async () => {
     if (!isSupabaseAuthEnabled()) {
+      setCommentsUnavailable(false);
       setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await fetch(`/api/blog/comments?slug=${encodeURIComponent(slug)}`, {
         credentials: "same-origin",
       });
       if (!response.ok) {
         setComments([]);
+        setCommentsUnavailable(true);
         return;
       }
       const payload = (await response.json()) as { comments?: BlogComment[] };
       setComments(Array.isArray(payload.comments) ? payload.comments : []);
+      setCommentsUnavailable(false);
     } catch {
       setComments([]);
+      setCommentsUnavailable(true);
     } finally {
       setLoading(false);
     }
@@ -151,6 +157,17 @@ export default function BlogCommentsSection({ slug, title, className }: BlogComm
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
           Загрузка…
         </p>
+      ) : commentsUnavailable ? (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-900">
+          <p>Комментарии временно недоступны. Статья и остальные материалы работают.</p>
+          <button
+            type="button"
+            onClick={() => void loadComments()}
+            className="mt-2 font-semibold text-sky hover:underline"
+          >
+            Повторить загрузку
+          </button>
+        </div>
       ) : comments.length === 0 ? (
         <p className="mt-4 text-xs text-slate">Пока нет комментариев — будьте первым.</p>
       ) : (
@@ -201,13 +218,13 @@ export default function BlogCommentsSection({ slug, title, className }: BlogComm
           rows={3}
           maxLength={4000}
           placeholder={user ? "Поделитесь опытом или задайте вопрос…" : "Войдите, чтобы комментировать"}
-          disabled={!user || submitting}
+          disabled={!user || submitting || commentsUnavailable}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal placeholder:text-slate/60 focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
         />
         {error ? <p className="text-xs text-amber-800">{error}</p> : null}
         <button
           type="submit"
-          disabled={!user || submitting || !body.trim()}
+          disabled={!user || submitting || commentsUnavailable || !body.trim()}
           className="inline-flex items-center gap-1.5 rounded-full bg-sky px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? (

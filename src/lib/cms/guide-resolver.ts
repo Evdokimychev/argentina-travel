@@ -22,6 +22,10 @@ import {
 } from "@/types/cms-content";
 import { getGuideTopicBySlug } from "@/lib/guide-topics";
 import type { GuideTopicPage } from "@/types/guide-topic";
+import {
+  CmsPublicContentUnavailableError,
+  withCmsPublicFallback,
+} from "@/lib/cms/public-read-result";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedGuideOverride,
@@ -59,7 +63,7 @@ export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]>
   const supabase = await getCmsServerClient();
 
   if (cutover.guide) {
-    if (!supabase) return [];
+    if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
     const cmsGuides = await fetchPublishedCmsDocumentsForCutover("guide", locale);
     return guidePagesFromCmsDocuments(cmsGuides);
   }
@@ -67,10 +71,15 @@ export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]>
   const fallback = getPagesBySection("guide");
   if (!supabase) return fallback;
 
-  const cmsGuides = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "guide", locale);
-  if (cmsGuides.length === 0) return fallback;
-
-  return mergeGuideCatalog(fallback, cmsGuides);
+  return withCmsPublicFallback("guide:catalog", fallback, async () => {
+    const cmsGuides = await fetchPublishedCmsDocumentsMergedByLocaleChain(
+      supabase,
+      "guide",
+      locale,
+    );
+    if (cmsGuides.length === 0) return fallback;
+    return mergeGuideCatalog(fallback, cmsGuides);
+  });
 }
 
 /** Published DB override takes precedence over TS file. */

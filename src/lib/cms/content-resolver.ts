@@ -16,6 +16,14 @@ import {
   type CmsDocument,
   type CmsDocumentSeo,
 } from "@/types/cms-content";
+import {
+  CmsPublicContentUnavailableError,
+  cmsPublicAvailable,
+  cmsPublicUnavailable,
+  reportCmsPublicUnavailable,
+  type CmsPublicReadResult,
+  type CmsPublicResolution,
+} from "@/lib/cms/public-read-result";
 
 export type CmsDbClient = SupabaseClient<Database>;
 
@@ -91,12 +99,12 @@ export async function getCmsServerClient(): Promise<CmsDbClient | null> {
   }
 }
 
-export async function fetchPublishedCmsDocument(
+export async function readPublishedCmsDocument(
   supabase: CmsDbClient,
   docType: CmsDocType,
   slug: string,
   locale = "ru"
-): Promise<CmsDocument | null> {
+): Promise<CmsPublicReadResult<CmsDocument | null>> {
   const id = cmsDocumentId(docType, slug, locale);
   const { data, error } = await supabase
     .from("content_documents")
@@ -107,16 +115,29 @@ export async function fetchPublishedCmsDocument(
     .retry(false)
     .maybeSingle();
 
-  if (error || !data) return null;
-  return rowToCmsDocument(data);
+  if (error) return cmsPublicUnavailable(error);
+  return cmsPublicAvailable(data ? rowToCmsDocument(data) : null);
 }
 
-export async function fetchPublishedCmsDocumentsByType(
+export async function fetchPublishedCmsDocument(
+  supabase: CmsDbClient,
+  docType: CmsDocType,
+  slug: string,
+  locale = "ru",
+): Promise<CmsDocument | null> {
+  const result = await readPublishedCmsDocument(supabase, docType, slug, locale);
+  if (result.status === "unavailable") {
+    throw new CmsPublicContentUnavailableError(result.errorClass);
+  }
+  return result.data;
+}
+
+export async function readPublishedCmsDocumentsByType(
   supabase: CmsDbClient,
   docType: CmsDocType,
   locale = "ru",
   timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
-): Promise<CmsDocument[]> {
+): Promise<CmsPublicReadResult<CmsDocument[]>> {
   const { data, error } = await supabase
     .from("content_documents")
     .select("*")
@@ -126,35 +147,79 @@ export async function fetchPublishedCmsDocumentsByType(
     .abortSignal(AbortSignal.timeout(timeoutMs))
     .retry(false);
 
-  if (error || !data) return [];
-  return data.map(rowToCmsDocument);
+  if (error) return cmsPublicUnavailable(error);
+  if (!Array.isArray(data)) {
+    return cmsPublicUnavailable(new Error("cms_public_malformed_list"));
+  }
+  return cmsPublicAvailable(data.map(rowToCmsDocument));
+}
+
+export async function fetchPublishedCmsDocumentsByType(
+  supabase: CmsDbClient,
+  docType: CmsDocType,
+  locale = "ru",
+  timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
+): Promise<CmsDocument[]> {
+  const result = await readPublishedCmsDocumentsByType(supabase, docType, locale, timeoutMs);
+  if (result.status === "unavailable") {
+    throw new CmsPublicContentUnavailableError(result.errorClass);
+  }
+  return result.data;
 }
 
 /**
  * Published CMS documents merged across locale fallback chain (ru → requested).
  * Per slug, the requested locale wins over Russian when both exist.
  */
+export async function readPublishedCmsDocumentsMergedByLocaleChain(
+  supabase: CmsDbClient,
+  docType: CmsDocType,
+  locale = "ru",
+  timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
+): Promise<CmsPublicReadResult<CmsDocument[]>> {
+  const bySlug = new Map<string, CmsDocument>();
+  const chain = [...cmsLocaleFallbackChain(locale)].reverse();
+  const results = await Promise.all(
+    chain.map((tryLocale) =>
+      readPublishedCmsDocumentsByType(supabase, docType, tryLocale, timeoutMs),
+    ),
+  );
+
+  for (const result of results) {
+    const docs = result.status === "available" ? result.data : (result.partial ?? []);
+    for (const doc of docs) {
+      bySlug.set(doc.slug, doc);
+    }
+  }
+
+  const data = [...bySlug.values()];
+  const unavailable = results.find((result) => result.status === "unavailable");
+  return unavailable
+    ? {
+        status: "unavailable",
+        retryable: true,
+        errorClass: unavailable.errorClass,
+        partial: data,
+      }
+    : cmsPublicAvailable(data);
+}
+
 export async function fetchPublishedCmsDocumentsMergedByLocaleChain(
   supabase: CmsDbClient,
   docType: CmsDocType,
   locale = "ru",
   timeoutMs = CMS_PUBLIC_QUERY_TIMEOUT_MS,
 ): Promise<CmsDocument[]> {
-  const bySlug = new Map<string, CmsDocument>();
-  const chain = [...cmsLocaleFallbackChain(locale)].reverse();
-  const docsByLocale = await Promise.all(
-    chain.map((tryLocale) =>
-      fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale, timeoutMs),
-    ),
+  const result = await readPublishedCmsDocumentsMergedByLocaleChain(
+    supabase,
+    docType,
+    locale,
+    timeoutMs,
   );
-
-  for (const docs of docsByLocale) {
-    for (const doc of docs) {
-      bySlug.set(doc.slug, doc);
-    }
+  if (result.status === "unavailable") {
+    throw new CmsPublicContentUnavailableError(result.errorClass);
   }
-
-  return [...bySlug.values()];
+  return result.data;
 }
 
 export function fetchPublishedCmsDocumentsMergedForCutover(
@@ -184,11 +249,19 @@ export async function resolvePublishedCmsLocaleSlugs(
   const localizedDocuments = await Promise.all(
     I18N_LOCALES.map(async (locale) => ({
       locale,
-      doc: await fetchPublishedCmsDocument(supabase, docType, slug, locale),
+      read: await readPublishedCmsDocument(supabase, docType, slug, locale),
     })),
   );
 
-  for (const { locale, doc } of localizedDocuments) {
+  for (const { locale, read } of localizedDocuments) {
+    if (read.status === "unavailable") {
+      reportCmsPublicUnavailable(
+        `${docType}:locale-slugs`,
+        new CmsPublicContentUnavailableError(read.errorClass),
+      );
+      continue;
+    }
+    const doc = read.data;
     if (locale === "ru" && doc) hasRuOverride = true;
     if (doc && !doc.seo.noIndex && isCmsDocumentComplete(doc)) {
       slugs[locale] = doc.slug;
@@ -232,6 +305,10 @@ export async function fetchCmsTranslationStatusForSlug(
     .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
     .retry(false);
   if (error) {
+    reportCmsPublicUnavailable(
+      `${docType}:translation-status`,
+      new CmsPublicContentUnavailableError(cmsPublicUnavailable(error).errorClass),
+    );
     return buildDefaultTranslationStatus(options?.ruFallbackComplete ?? false);
   }
 
@@ -258,9 +335,14 @@ export async function listPublishedCmsSlugs(
   options?: { cmsOnly?: boolean }
 ): Promise<string[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return options?.cmsOnly ? [] : fallbackSlugs;
+  if (!supabase) {
+    const unavailable = new CmsPublicContentUnavailableError("db_unavailable");
+    reportCmsPublicUnavailable(`${docType}:slug-list`, unavailable);
+    if (options?.cmsOnly) throw unavailable;
+    return fallbackSlugs;
+  }
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("content_documents")
     .select("slug, seo")
     .eq("doc_type", docType)
@@ -269,15 +351,24 @@ export async function listPublishedCmsSlugs(
     .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
     .retry(false);
 
+  if (error || !Array.isArray(data)) {
+    const unavailable = new CmsPublicContentUnavailableError(
+      cmsPublicUnavailable(error ?? new Error("cms_public_malformed_slug_list")).errorClass,
+    );
+    reportCmsPublicUnavailable(`${docType}:slug-list`, unavailable);
+    if (options?.cmsOnly) throw unavailable;
+    return fallbackSlugs;
+  }
+
   const noIndexSlugs = new Set(
-    (data ?? [])
+    data
       .filter((row) => {
         const seo = row.seo;
         return Boolean(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);
       })
       .map((row) => row.slug),
   );
-  const cmsSlugs = (data ?? [])
+  const cmsSlugs = data
     .map((row) => row.slug)
     .filter((slug) => !noIndexSlugs.has(slug));
   if (options?.cmsOnly) return Array.from(new Set(cmsSlugs));
@@ -296,6 +387,54 @@ export function cmsLocaleFallbackChain(locale: string): string[] {
   return [locale, "ru"];
 }
 
+export async function resolveWithPublishedCmsOverrideResult<T>(options: {
+  docType: CmsDocType;
+  slug: string;
+  locale?: string;
+  fallback: T | null;
+  merge: (doc: CmsDocument, fallback: T | undefined) => T | null;
+  supabase?: CmsDbClient | null;
+  isUsable?: (doc: CmsDocument) => boolean;
+  onResolvedDocument?: (doc: CmsDocument) => void;
+}): Promise<CmsPublicResolution<T>> {
+  const { docType, slug, locale = "ru", fallback, merge, isUsable, onResolvedDocument } = options;
+  const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
+  if (!supabase) {
+    return {
+      status: "degraded",
+      errorClass: "db_unavailable",
+      fallback,
+    };
+  }
+
+  const chain = cmsLocaleFallbackChain(locale);
+  const reads = await Promise.all(
+    chain.map((tryLocale) => readPublishedCmsDocument(supabase, docType, slug, tryLocale)),
+  );
+
+  for (const read of reads) {
+    if (read.status !== "available") continue;
+    const override = read.data;
+    if (override) {
+      if (isUsable && !isUsable(override)) continue;
+      onResolvedDocument?.(override);
+      const value = merge(override, fallback ?? undefined) ?? fallback;
+      return value === null ? { status: "missing" } : { status: "resolved", value };
+    }
+  }
+
+  const unavailable = reads.find((read) => read.status === "unavailable");
+  if (unavailable?.status === "unavailable") {
+    return {
+      status: "degraded",
+      errorClass: unavailable.errorClass,
+      fallback,
+    };
+  }
+
+  return fallback === null ? { status: "missing" } : { status: "resolved", value: fallback };
+}
+
 export async function resolveWithPublishedCmsOverride<T>(options: {
   docType: CmsDocType;
   slug: string;
@@ -306,24 +445,14 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   isUsable?: (doc: CmsDocument) => boolean;
   onResolvedDocument?: (doc: CmsDocument) => void;
 }): Promise<T | null> {
-  const { docType, slug, locale = "ru", fallback, merge, isUsable, onResolvedDocument } = options;
-  const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
-  if (!supabase) return fallback;
+  const result = await resolveWithPublishedCmsOverrideResult(options);
+  if (result.status === "resolved") return result.value;
+  if (result.status === "missing") return null;
 
-  const chain = cmsLocaleFallbackChain(locale);
-  const overrides = await Promise.all(
-    chain.map((tryLocale) => fetchPublishedCmsDocument(supabase, docType, slug, tryLocale)),
-  );
-
-  for (const override of overrides) {
-    if (override) {
-      if (isUsable && !isUsable(override)) continue;
-      onResolvedDocument?.(override);
-      return merge(override, fallback ?? undefined) ?? fallback;
-    }
-  }
-
-  return fallback;
+  const error = new CmsPublicContentUnavailableError(result.errorClass);
+  reportCmsPublicUnavailable(`${options.docType}:detail`, error);
+  if (result.fallback !== null) return result.fallback;
+  throw error;
 }
 
 /** All CMS documents (any status) keyed by id — used in admin inventory. */

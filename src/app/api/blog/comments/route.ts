@@ -9,6 +9,12 @@ import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  CMS_PUBLIC_RETRY_AFTER_SECONDS,
+  CmsPublicContentUnavailableError,
+  classifyCmsPublicReadError,
+  reportCmsPublicUnavailable,
+} from "@/lib/cms/public-read-result";
 
 type CommentBody = {
   slug?: string;
@@ -25,7 +31,10 @@ export async function GET(request: Request) {
   }
 
   if (!isSupabaseAuthEnabled()) {
-    return NextResponse.json({ comments: [] });
+    return NextResponse.json(
+      { comments: [] },
+      { headers: { "Cache-Control": "private, no-store" } },
+    );
   }
 
   try {
@@ -35,14 +44,22 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
 
     const comments = await listBlogArticleComments(supabase, slug, user?.id ?? null);
-    return NextResponse.json({ comments });
-  } catch (error) {
-    console.warn("[blog-comments] Read failed; returning an empty list", error);
     return NextResponse.json(
-      { comments: [] },
+      { comments },
+      { headers: { "Cache-Control": "private, no-store" } },
+    );
+  } catch (error) {
+    const unavailable = new CmsPublicContentUnavailableError(
+      classifyCmsPublicReadError(error),
+    );
+    reportCmsPublicUnavailable("blog-comments:read", unavailable);
+    return NextResponse.json(
+      { error: "Комментарии временно недоступны" },
       {
+        status: 503,
         headers: {
-          "Cache-Control": "no-store",
+          "Cache-Control": "private, no-store",
+          "Retry-After": String(CMS_PUBLIC_RETRY_AFTER_SECONDS),
           "X-GoArgentina-Degraded": "blog-comments",
         },
       },

@@ -27,6 +27,7 @@ import {
   type CmsDocument,
 } from "@/types/cms-content";
 import { placeListingFromCmsDocument } from "@/lib/cms/place-listing-from-cms";
+import { CmsPublicContentUnavailableError } from "@/lib/cms/public-read-result";
 
 export type CmsCutoverFlags = {
   blog: boolean;
@@ -273,6 +274,6 @@ export async function fetchPublishedCmsDocumentsForCutover(
   locale = "ru"
 ): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return [];
+  if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
   return fetchPublishedCmsDocumentsMergedForCutover(supabase, docType, locale);
 }

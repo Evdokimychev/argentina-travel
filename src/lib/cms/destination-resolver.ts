@@ -20,6 +20,10 @@ import {
   destinationPageFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
+import {
+  CmsPublicContentUnavailableError,
+  withCmsPublicFallback,
+} from "@/lib/cms/public-read-result";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedDestinationOverride,
@@ -31,7 +35,7 @@ export function destinationOverrideId(slug: string, locale = "ru"): string {
 
 export async function fetchPublishedDestinationsFromCms(locale = "ru"): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return [];
+  if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
   return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "destination", locale);
 }
 
@@ -66,7 +70,7 @@ export async function resolveDestinationCatalog(locale = "ru"): Promise<Destinat
   const supabase = await getCmsServerClient();
 
   if (cutover.destination) {
-    if (!supabase) return [];
+    if (!supabase) throw new CmsPublicContentUnavailableError("db_unavailable");
     const cmsDestinations = await fetchPublishedCmsDocumentsForCutover("destination", locale);
     return destinationsFromCmsDocuments(
       cmsDestinations,
@@ -78,14 +82,15 @@ export async function resolveDestinationCatalog(locale = "ru"): Promise<Destinat
   const fallback = getAllDestinations().map(applyKbToDestination);
   if (!supabase) return fallback;
 
-  const cmsDestinations = await fetchPublishedCmsDocumentsMergedByLocaleChain(
-    supabase,
-    "destination",
-    locale
-  );
-  if (cmsDestinations.length === 0) return fallback;
-
-  return mergeDestinationCatalog(fallback, cmsDestinations);
+  return withCmsPublicFallback("destination:catalog", fallback, async () => {
+    const cmsDestinations = await fetchPublishedCmsDocumentsMergedByLocaleChain(
+      supabase,
+      "destination",
+      locale,
+    );
+    if (cmsDestinations.length === 0) return fallback;
+    return mergeDestinationCatalog(fallback, cmsDestinations);
+  });
 }
 
 /** Published CMS override merged with TS defaults for media and metadata. */

@@ -10,6 +10,10 @@ import {
 } from "@/lib/blog-comments-types";
 
 import { parseBlogCommentBody } from "@/lib/blog-comments-parsers";
+import {
+  CmsPublicContentUnavailableError,
+  classifyCmsPublicReadError,
+} from "@/lib/cms/public-read-result";
 
 export type { BlogComment, BlogCommentAuthor, BlogCommentReportReason };
 export { BLOG_COMMENT_REPORT_REASON_LABELS };
@@ -228,13 +232,17 @@ export async function listBlogArticleComments(
     .select("*")
     .eq("article_slug", articleSlug)
     .eq("status", "published")
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: true })
+    .abortSignal(AbortSignal.timeout(1_500))
+    .retry(false);
 
-  if (error) {
-    throw new Error(error.message || "Не удалось загрузить комментарии");
+  if (error || !Array.isArray(data)) {
+    throw new CmsPublicContentUnavailableError(
+      classifyCmsPublicReadError(error ?? new Error("blog_comments_malformed_list")),
+    );
   }
 
-  const rows = data ?? [];
+  const rows = data;
   const authors = await loadAuthors(
     supabase,
     rows.map((row) => row.user_id),

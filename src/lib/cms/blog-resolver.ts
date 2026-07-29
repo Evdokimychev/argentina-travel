@@ -25,6 +25,7 @@ import {
   type CmsDocument,
 } from "@/types/cms-content";
 import type { BlogPost } from "@/types";
+import { withCmsPublicFallback } from "@/lib/cms/public-read-result";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedBlogOverride,
@@ -80,11 +81,14 @@ async function resolveBlogCatalogUncached(locale: string): Promise<BlogPost[]> {
 }
 
 export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
-  return unstable_cache(
-    () => resolveBlogCatalogUncached(locale),
-    ["blog-catalog", locale],
-    { revalidate: 300, tags: ["blog-catalog"] },
-  )();
+  const fallback = filterPublicBlogCatalog(blogPosts);
+  return withCmsPublicFallback("blog:catalog", fallback, () =>
+    unstable_cache(
+      () => resolveBlogCatalogUncached(locale),
+      ["blog-catalog", locale],
+      { revalidate: 300, tags: ["blog-catalog"] },
+    )(),
+  );
 }
 
 /** Published CMS override merged with TS defaults for missing media/metadata. */

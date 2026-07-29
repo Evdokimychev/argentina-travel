@@ -20,6 +20,7 @@ import {
 } from "@/lib/knowledge-base/publication-quality";
 import type { KbEntry, KbEntryType } from "@/lib/knowledge-base/types";
 import type { CmsDocument } from "@/types/cms-content";
+import { withCmsPublicFallback } from "@/lib/cms/public-read-result";
 
 const KB_ENTRY_TYPES = new Set<KbEntryType>([
   "city",
@@ -263,12 +264,14 @@ export async function resolveKnowledgeCatalog(locale = "ru"): Promise<KbEntry[]>
   const fallback = getAllEntries();
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
-  const documents = await fetchPublishedCmsDocumentsMergedByLocaleChain(
-    supabase,
-    "knowledge",
-    locale,
-  );
-  return mergeKnowledgeCatalog(fallback, documents, getArchivedEntryIds());
+  return withCmsPublicFallback("knowledge:catalog", fallback, async () => {
+    const documents = await fetchPublishedCmsDocumentsMergedByLocaleChain(
+      supabase,
+      "knowledge",
+      locale,
+    );
+    return mergeKnowledgeCatalog(fallback, documents, getArchivedEntryIds());
+  });
 }
 
 /** Published CMS content overrides a generated KB entry and may add a new detail page. */

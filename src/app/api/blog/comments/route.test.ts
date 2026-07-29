@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 
 const mocks = vi.hoisted(() => ({
   listComments: vi.fn(),
   fetchSiteModules: vi.fn(),
   fetchSiteNavigation: vi.fn(),
-  warn: vi.fn(),
+  error: vi.fn(),
 }));
 
 vi.mock("@/lib/auth-mode", () => ({
@@ -45,25 +47,43 @@ describe("blog comments API", () => {
     });
     mocks.fetchSiteNavigation.mockReset();
     mocks.fetchSiteNavigation.mockResolvedValue({ showJournal: true });
-    mocks.warn.mockReset();
-    vi.spyOn(console, "warn").mockImplementation(mocks.warn);
+    mocks.error.mockReset();
+    vi.spyOn(console, "error").mockImplementation(mocks.error);
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("keeps an article readable when comments storage is unavailable", async () => {
-    mocks.listComments.mockRejectedValue(new Error("database unavailable"));
+  it("returns retryable unavailable instead of a false empty comment list", async () => {
+    mocks.listComments.mockRejectedValue(new Error("database unavailable provider secret"));
+
+    const response = await GET(
+      new Request("https://www.goargentina.ru/api/blog/comments?slug=buenos-aires-rajony"),
+    );
+
+    expect(response.status).toBe(503);
+    expect(response.headers.get("x-goargentina-degraded")).toBe("blog-comments");
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(response.headers.get("retry-after")).toBe("60");
+    await expect(response.json()).resolves.toEqual({
+      error: "Комментарии временно недоступны",
+    });
+    expect(mocks.error).toHaveBeenCalledOnce();
+    expect(JSON.stringify(mocks.error.mock.calls)).not.toContain("provider secret");
+  });
+
+  it("keeps a confirmed empty comment list distinct from unavailable", async () => {
+    mocks.listComments.mockResolvedValue([]);
 
     const response = await GET(
       new Request("https://www.goargentina.ru/api/blog/comments?slug=buenos-aires-rajony"),
     );
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("x-goargentina-degraded")).toBe("blog-comments");
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(response.headers.get("x-goargentina-degraded")).toBeNull();
     await expect(response.json()).resolves.toEqual({ comments: [] });
-    expect(mocks.warn).toHaveBeenCalledOnce();
   });
 
   it("rejects a new comment before auth or storage when the blog is disabled", async () => {
@@ -89,5 +109,18 @@ describe("blog comments API", () => {
     expect(response.status).toBe(404);
     await expect(response.json()).resolves.toEqual({ error: "Блог отключён" });
     expect(mocks.listComments).not.toHaveBeenCalled();
+  });
+
+  it("shows an unavailable state with retry instead of the confirmed-empty copy", () => {
+    const component = fs.readFileSync(
+      path.join(process.cwd(), "src/components/blog/BlogCommentsSection.tsx"),
+      "utf8",
+    );
+    expect(component).toContain("commentsUnavailable");
+    expect(component).toContain("Комментарии временно недоступны");
+    expect(component).toContain("Повторить загрузку");
+    expect(component.indexOf("commentsUnavailable ?")).toBeLessThan(
+      component.indexOf("comments.length === 0 ?"),
+    );
   });
 });
