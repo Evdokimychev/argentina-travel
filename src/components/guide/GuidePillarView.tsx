@@ -35,7 +35,7 @@ import type { TourListing } from "@/types";
 
 interface GuidePillarViewProps {
   topic: GuideTopicPage;
-  initialTours?: TourListing[];
+  initialTours?: TourListing[] | Promise<TourListing[]>;
 }
 
 function QuickFactsFallback() {

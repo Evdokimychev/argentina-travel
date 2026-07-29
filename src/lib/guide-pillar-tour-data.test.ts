@@ -5,6 +5,7 @@ import { POGODA_PILLAR } from "@/data/guide-pillars/regions-sights";
 import {
   guidePillarNeedsMarketplaceTours,
   loadGuidePillarInitialTours,
+  resolveGuideTourEmbedState,
 } from "@/lib/guide-pillar-tour-data";
 import type { TourListing } from "@/types";
 
@@ -43,5 +44,15 @@ describe("guide pillar marketplace dependency", () => {
     ).resolves.toBe(resolvedTours);
     expect(fetchMarketplaceTours).toHaveBeenCalledTimes(1);
     expect(filterToursWithResolvedPublicDetail).toHaveBeenCalledWith(marketplaceTours);
+  });
+
+  it("keeps confirmed empty distinct from an unavailable optional widget", async () => {
+    await expect(resolveGuideTourEmbedState(Promise.resolve([]))).resolves.toEqual({
+      status: "ok",
+      tours: [],
+    });
+    await expect(
+      resolveGuideTourEmbedState(Promise.reject(new Error("catalog unavailable"))),
+    ).resolves.toEqual({ status: "unavailable" });
   });
 });

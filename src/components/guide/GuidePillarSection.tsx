@@ -191,7 +191,9 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
 
 type GuidePillarSectionProps = {
   section: GuidePillarSection;
-  initialTours?: import("@/types").TourListing[];
+  initialTours?:
+    | import("@/types").TourListing[]
+    | Promise<import("@/types").TourListing[]>;
 };
 
 export default function GuidePillarSectionBlock({

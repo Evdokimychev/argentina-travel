@@ -6,6 +6,10 @@ type GuidePillarTourDataDependencies = {
   filterToursWithResolvedPublicDetail: (tours: TourListing[]) => Promise<TourListing[]>;
 };
 
+export type GuideTourEmbedState =
+  | { status: "ok"; tours: TourListing[] }
+  | { status: "unavailable" };
+
 export function guidePillarNeedsMarketplaceTours(pillar: GuidePillarContent): boolean {
   const sectionSlots = pillar.sections.flatMap((section) =>
     section.widgetSlot ? [section.widgetSlot] : [],
@@ -33,4 +37,14 @@ export async function loadGuidePillarInitialTours(
   const loaders = dependencies ?? (await loadDefaultDependencies());
   const marketplaceTours = await loaders.fetchMarketplaceTours();
   return loaders.filterToursWithResolvedPublicDetail(marketplaceTours);
+}
+
+export async function resolveGuideTourEmbedState(
+  tours: TourListing[] | Promise<TourListing[]>,
+): Promise<GuideTourEmbedState> {
+  try {
+    return { status: "ok", tours: await tours };
+  } catch {
+    return { status: "unavailable" };
+  }
 }
