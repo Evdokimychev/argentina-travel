@@ -161,7 +161,7 @@ export async function insertCanonicalBookingAtomically(
     if (error.message.includes("BOOKING_SLOT_CAPACITY")) {
       return { error: "На выбранную дату уже недостаточно мест.", status: 409 };
     }
-    return { error: error.message, status: 500 };
+    throw new Error(error.message);
   }
 
   const result = data && typeof data === "object" && !Array.isArray(data)

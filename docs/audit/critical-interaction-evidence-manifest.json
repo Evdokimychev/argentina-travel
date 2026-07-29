@@ -9,13 +9,14 @@
       "handler": {"source": "src/app/api/bookings/route.ts", "export": "POST"},
       "effects": ["canonical booking persistence", "availability slot reservation", "booking-created notification enqueue"],
       "guards": ["remote booking capability", "guest form protection", "IP rate limit", "server-side product availability"],
-      "invariants": ["client-owned commercial fields are dropped", "price and organizer identity are canonical server values", "booking and slot reservation use the atomic server command"],
+      "invariants": ["client-owned commercial fields are dropped", "price and organizer identity are canonical server values", "booking and slot reservation use the atomic server command", "price quote requests never reserve inventory", "scheduled bookings fail closed when the canonical slot cannot be confirmed"],
       "evidence": [
         {"type": "unit_contract", "source": "src/lib/booking-create-command-integrity.test.ts", "test": "drops client-owned price, organizer, commission and payment fields"},
-        {"type": "unit_contract", "source": "src/lib/booking-create-pricing.test.ts", "test": "uses canonical prices for the complete total"}
+        {"type": "unit_contract", "source": "src/lib/booking-create-pricing.test.ts", "test": "uses canonical prices for the complete total"},
+        {"type": "route_integration", "source": "src/app/api/bookings/route.test.ts", "test": "creates a canonical booking through the atomic command and enqueues notification only once"}
       ],
-      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
-      "gap": "No route integration or live persistence evidence while Supabase health is down."
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Route orchestration is tested with fakes; Supabase RPC and availability persistence, RLS, notification delivery, browser completion, preview and production effects remain unproven while the data plane is down."
     },
     {
       "id": "booking.payment.mercadopago", "risk": "P0", "actors": ["tourist", "guest"], "modes": ["remote"],

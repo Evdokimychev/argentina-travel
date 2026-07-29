@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { BookingCommandError, parseCreateBookingCommand } from "./booking-create-server";
+import {
+  BookingCommandError,
+  parseCreateBookingCommand,
+  resolveCanonicalReservationSlotDate,
+} from "./booking-create-server";
 
 const baseCommand = {
   tourId: "tour-1",
@@ -33,5 +37,15 @@ describe("booking command tampering", () => {
     expect(() => parseCreateBookingCommand({ ...baseCommand, promoCode: "FREE100" })).toThrow(
       BookingCommandError,
     );
+  });
+
+  it("reserves a canonical scheduled slot only for a booking, never for a price quote", () => {
+    const selectedDate = { startDate: "2026-12-20" };
+
+    expect(resolveCanonicalReservationSlotDate({ intent: "booking" }, selectedDate)).toBe(
+      "2026-12-20",
+    );
+    expect(resolveCanonicalReservationSlotDate({ intent: "price_quote" }, selectedDate)).toBeUndefined();
+    expect(resolveCanonicalReservationSlotDate({ intent: "booking" }, undefined)).toBeUndefined();
   });
 });

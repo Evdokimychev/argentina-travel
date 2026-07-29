@@ -137,6 +137,13 @@ function fingerprint(command: CreateBookingCommand): string {
   return createHash("sha256").update(JSON.stringify(command)).digest("hex");
 }
 
+export function resolveCanonicalReservationSlotDate(
+  command: Pick<CreateBookingCommand, "intent">,
+  selectedDate: { startDate: string } | undefined,
+): string | undefined {
+  return command.intent !== "price_quote" ? selectedDate?.startDate : undefined;
+}
+
 export async function buildCanonicalBooking(
   supabase: DbClient,
   command: CreateBookingCommand,
@@ -146,6 +153,8 @@ export async function buildCanonicalBooking(
   organizerUserId: string;
   requestFingerprint: string;
   productKind: "tour" | "excursion";
+  /** Server-owned inventory decision. Quote requests and custom dates do not reserve. */
+  reservationSlotDate?: string;
 }> {
   const databaseSource = await fetchPublishedTourBookingSourceByIdServer(command.tourId);
   const canonicalTour = databaseSource
@@ -273,5 +282,6 @@ export async function buildCanonicalBooking(
     organizerUserId: ownerUserId,
     requestFingerprint,
     productKind: tour.productType === "excursion" ? "excursion" : "tour",
+    reservationSlotDate: resolveCanonicalReservationSlotDate(command, selectedDate),
   };
 }

@@ -15,10 +15,11 @@ import {
 import { notifyBookingCreatedEmail } from "@/lib/bookings-notify";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 
 async function postBooking(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
-    return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
+    return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), { status: 503 });
   }
 
   try {
@@ -36,12 +37,12 @@ async function postBooking(request: Request) {
     if (!protection.ok) {
       if (protection.kind === "configuration") {
         return NextResponse.json(
-          { error: "Защита формы временно не настроена. Сообщите администратору." },
+          publicBookingError("BOOKING_VERIFICATION_UNAVAILABLE"),
           { status: 503 },
         );
       }
       return NextResponse.json(
-        { error: "Не удалось подтвердить отправку формы." },
+        publicBookingError("BOOKING_VERIFICATION_FAILED"),
         { status: 400 },
       );
     }
@@ -70,22 +71,33 @@ async function postBooking(request: Request) {
       tourSlug: booking.tourSlug,
     });
 
-    await ensureAvailabilitySlotForBooking(admin, {
-      tourId: booking.tourId,
-      tourSlug: booking.tourSlug,
-      startDate: booking.startDate,
-    });
+    if (canonical.reservationSlotDate) {
+      const slotReady = await ensureAvailabilitySlotForBooking(admin, {
+        tourId: booking.tourId,
+        tourSlug: booking.tourSlug,
+        startDate: canonical.reservationSlotDate,
+      });
+      if (!slotReady) {
+        return NextResponse.json(
+          publicBookingError("BOOKING_AVAILABILITY_UNAVAILABLE"),
+          { status: 409 },
+        );
+      }
+    }
     const result = await insertCanonicalBookingAtomically(admin, {
       booking,
       organizerUserId: canonical.organizerUserId,
-      slotDate: booking.startDate,
+      slotDate: canonical.reservationSlotDate,
     });
     if ("error" in result) {
       addBookingBreadcrumb("booking.create.failed", {
         bookingId: booking.id,
         error: result.error,
       });
-      return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
+      const status = result.status ?? 500;
+      return status >= 500
+        ? NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), { status: 503 })
+        : NextResponse.json({ error: result.error }, { status });
     }
 
     if (result.created) {
@@ -112,10 +124,12 @@ async function postBooking(request: Request) {
       error: error instanceof Error ? error.message : "Unexpected error",
     });
     captureException(error, { tags: { area: "booking", action: "create" } });
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: error instanceof BookingCommandError ? error.status : 500 }
-    );
+    if (error instanceof BookingCommandError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), {
+      status: 503,
+    });
   }
 }
 

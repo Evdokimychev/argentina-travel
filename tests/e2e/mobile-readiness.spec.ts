@@ -160,10 +160,13 @@ test("[mobile-readiness] tour detail owns the bottom action", async ({ page }, t
   const isProductionAcceptance = /^https:\/\/www\.goargentina\.ru\/?$/i.test(
     process.env.PLAYWRIGHT_BASE_URL?.trim() || process.env.SMOKE_BASE_URL?.trim() || "",
   );
+  const detailLinkTimeout = isProductionAcceptance ? 15_000 : 2_000;
   await detailLink
-    .waitFor({ state: "attached", timeout: isProductionAcceptance ? 15_000 : 2_000 })
+    .waitFor({ state: "attached", timeout: detailLinkTimeout })
     .catch(() => undefined);
-  const catalogDetailHref = await detailLink.getAttribute("href").catch(() => null);
+  const catalogDetailHref = await detailLink
+    .getAttribute("href", { timeout: detailLinkTimeout })
+    .catch(() => null);
   if (isProductionAcceptance) {
     expect(catalogDetailHref, "Production catalog must expose a real tour detail").toBeTruthy();
   }
