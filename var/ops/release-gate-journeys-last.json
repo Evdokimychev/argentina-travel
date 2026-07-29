@@ -1,56 +1,29 @@
 {
   "schemaVersion": 3,
-  "evidenceScope": "invalid-candidate",
-  "candidateTree": null,
-  "evidenceRunId": "393f96b1-d5fd-47af-89f8-8f9ba5560091",
-  "evidenceStartedAt": "2026-07-29T11:30:31.039Z",
-  "evidenceGeneratedAt": "2026-07-29T11:32:07.018Z",
+  "evidenceScope": "candidate",
+  "candidateTree": "8efeed5637c26d81f95dde15a8fdfb57fc12ab3b",
+  "evidenceRunId": "cae97f7e-5b22-436a-92f3-0f4bcc5ee725",
+  "evidenceStartedAt": "2026-07-29T11:34:41.813Z",
+  "evidenceGeneratedAt": "2026-07-29T11:36:34.995Z",
   "evidenceEnvironment": "local-production",
   "evidenceBaseUrl": "http://127.0.0.1:3000",
   "evidenceIntegrity": {
-    "status": "rejected",
-    "reasons": [
-      "dirty-candidate-at-start",
-      "dirty-candidate-at-end"
-    ],
-    "dirtyPaths": [
-      "docs/audit/architecture-current.md",
-      "docs/audit/critical-interaction-evidence-manifest.json",
-      "docs/audit/critical-interaction-evidence.csv",
-      "docs/audit/route-component-data-matrix.csv",
-      "docs/audit/route-inventory.csv",
-      "src/app/api/bookings/route.test.ts",
-      "src/app/api/bookings/route.ts",
-      "src/lib/bookings-api.ts",
-      "src/lib/bookings-server.ts",
-      "src/lib/bookings-store.ts",
-      "src/lib/booking-replay-integrity.test.ts"
-    ]
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
   },
-  "commitSha": "a42ce6503e5e8926ffabd500182c0121301680cd",
+  "commitSha": "32038cc91fc7588674a99d3f403545441c5103e8",
   "commitShaSource": "git-head",
   "sourceFingerprint": {
-    "commitSha": "a42ce6503e5e8926ffabd500182c0121301680cd",
+    "commitSha": "32038cc91fc7588674a99d3f403545441c5103e8",
     "source": "git-head",
-    "gitHead": "a42ce6503e5e8926ffabd500182c0121301680cd",
+    "gitHead": "32038cc91fc7588674a99d3f403545441c5103e8",
     "branch": "codex/master-goal-release-candidate",
     "dirtyTree": {
-      "isDirty": true,
-      "entryCount": 11,
-      "fingerprint": "094a415bca9bcc11745907822e10f68b930a493cfb60cb5e9e44af993c1a3e58",
-      "entries": [
-        "M docs/audit/architecture-current.md",
-        " M docs/audit/critical-interaction-evidence-manifest.json",
-        " M docs/audit/critical-interaction-evidence.csv",
-        " M docs/audit/route-component-data-matrix.csv",
-        " M docs/audit/route-inventory.csv",
-        " M src/app/api/bookings/route.test.ts",
-        " M src/app/api/bookings/route.ts",
-        " M src/lib/bookings-api.ts",
-        " M src/lib/bookings-server.ts",
-        " M src/lib/bookings-store.ts",
-        "?? src/lib/booking-replay-integrity.test.ts"
-      ]
+      "isDirty": false,
+      "entryCount": 0,
+      "fingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "entries": []
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -62,32 +35,19 @@
       "sha256": "cd6ffeaf3f2c966b238372cf8b87b031eec9dd0c11e190e3ffae40b433f26ad1"
     }
   },
-  "timestamp": "2026-07-29T11:32:07.018Z",
+  "timestamp": "2026-07-29T11:36:34.996Z",
   "environment": "local-production",
   "requestedGroup": "journeys",
-  "status": "failed",
+  "status": "passed",
   "checks": [
     {
       "id": "journeys:playwright-critical",
       "group": "journeys",
       "status": "passed",
-      "durationMs": 95478,
+      "durationMs": 112659,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/journeys-playwright-critical.log",
       "command": "npm run test:e2e:smoke"
-    },
-    {
-      "id": "static:candidate-integrity",
-      "group": "static",
-      "status": "failed",
-      "durationMs": 0,
-      "blocking": true,
-      "artifact": null,
-      "command": "verify candidate snapshot remained unchanged",
-      "reasons": [
-        "dirty-candidate-at-start",
-        "dirty-candidate-at-end"
-      ]
     }
   ]
 }

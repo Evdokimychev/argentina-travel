@@ -5,34 +5,38 @@
 
 Running 17 tests using 5 workers
 
-  ✓   3 [chromium] › tests/e2e/smoke.spec.ts:13:7 › E100 public smoke › home page renders (12.2s)
-  ✓   6 [chromium] › tests/e2e/smoke.spec.ts:17:7 › E100 public smoke › tours catalog renders (3.4s)
-  -   5 [chromium] › tests/e2e/mobile-readiness.spec.ts:148:5 › [mobile-readiness] tour detail owns the bottom action
-  ✓   7 [chromium] › tests/e2e/smoke.spec.ts:21:7 › E100 public smoke › booking find page renders (8.7s)
-  ✓   8 [chromium] › tests/e2e/smoke.spec.ts:26:7 › E100 public smoke › login entry route opens auth modal (6.8s)
-  ✓   9 [chromium] › tests/e2e/smoke.spec.ts:31:7 › E100 public smoke › /api/health returns json payload (4.4s)
-  ✓   2 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] large public app shell (39.9s)
-  ✓   1 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] standard public app shell (39.9s)
-  ✓   4 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] small public app shell (39.9s)
-  ✓  10 [chromium] › tests/e2e/smoke.spec.ts:46:7 › I3 CMS cutover smoke › blog cornerstone post renders (10.2s)
-  ✓  11 [chromium] › tests/e2e/smoke.spec.ts:51:7 › I3 CMS cutover smoke › rich park article renders (2.9s)
-  ✓  12 [chromium] › tests/e2e/smoke.spec.ts:56:7 › I3 CMS cutover smoke › guide page renders (5.9s)
-  ✓  13 [chromium] › tests/e2e/smoke.spec.ts:61:7 › I3 CMS cutover smoke › destination page renders (6.6s)
-  ✓  14 [chromium] › tests/e2e/smoke.spec.ts:66:7 › I3 CMS cutover smoke › place page renders (6.9s)
-  ✓  15 [chromium] › tests/e2e/smoke.spec.ts:71:7 › I3 CMS cutover smoke › legacy blog slug redirects to canonical (2.9s)
-  ✓  16 [chromium] › tests/e2e/smoke.spec.ts:80:7 › I3 CMS cutover smoke › legacy map URL redirects to mapa-argentina (1.6s)
-  ✓  17 [chromium] › tests/e2e/smoke.spec.ts:87:7 › I3 CMS cutover smoke › blog cornerstone shows hero image not logo (2.7s)
+  ✓   2 [chromium] › tests/e2e/smoke.spec.ts:13:7 › E100 public smoke › home page renders (1.3s)
+  -   4 [chromium] › tests/e2e/mobile-readiness.spec.ts:148:5 › [mobile-readiness] tour detail owns the bottom action
+  ✓   6 [chromium] › tests/e2e/smoke.spec.ts:17:7 › E100 public smoke › tours catalog renders (15.5s)
+  ✓   7 [chromium] › tests/e2e/smoke.spec.ts:21:7 › E100 public smoke › booking find page renders (9.7s)
+  ✓   8 [chromium] › tests/e2e/smoke.spec.ts:26:7 › E100 public smoke › login entry route opens auth modal (14.1s)
+  ✓   3 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] standard public app shell (40.8s)
+  ✓   1 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] large public app shell (40.9s)
+  ✓   5 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] small public app shell (40.9s)
+  ✓   9 [chromium] › tests/e2e/smoke.spec.ts:31:7 › E100 public smoke › /api/health returns json payload (1.7s)
+  ✓  10 [chromium] › tests/e2e/smoke.spec.ts:46:7 › I3 CMS cutover smoke › blog cornerstone post renders (9.9s)
+  ✓  11 [chromium] › tests/e2e/smoke.spec.ts:51:7 › I3 CMS cutover smoke › rich park article renders (3.8s)
+  ✓  12 [chromium] › tests/e2e/smoke.spec.ts:56:7 › I3 CMS cutover smoke › guide page renders (5.3s)
+  ✓  13 [chromium] › tests/e2e/smoke.spec.ts:61:7 › I3 CMS cutover smoke › destination page renders (8.5s)
+  ✓  14 [chromium] › tests/e2e/smoke.spec.ts:66:7 › I3 CMS cutover smoke › place page renders (7.2s)
+  ✓  15 [chromium] › tests/e2e/smoke.spec.ts:71:7 › I3 CMS cutover smoke › legacy blog slug redirects to canonical (3.3s)
+  ✓  16 [chromium] › tests/e2e/smoke.spec.ts:80:7 › I3 CMS cutover smoke › legacy map URL redirects to mapa-argentina (1.9s)
+  ✓  17 [chromium] › tests/e2e/smoke.spec.ts:87:7 › I3 CMS cutover smoke › blog cornerstone shows hero image not logo (2.3s)
 
   1 skipped
-  16 passed (1.6m)
-[WebServer] (node:43436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+  16 passed (1.9m)
+[WebServer] (node:45996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] (node:43466) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (node:46059) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] (node:43471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (node:46095) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] [@sentry/nextjs] It appears you've configured a `sentry.server.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.server.config.ts` file afterward.
 [WebServer] [@sentry/nextjs] It appears you've configured a `sentry.edge.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.edge.config.ts` file afterward.
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (127kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (139kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
 [WebServer]   errorClass: 'db_unavailable',
@@ -67,41 +71,29 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-(node:43504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+(node:46161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
-(node:43503) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:46163) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
-(node:43505) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:46159) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
-(node:43507) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:46160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
-(node:43506) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:46162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
@@ -137,23 +129,55 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
@@ -162,7 +186,259 @@ Running 17 tests using 5 workers
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
 [WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 [WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
 [WebServer] [partner_source_unavailable] {
@@ -199,23 +475,7 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
@@ -224,7 +484,33 @@ Running 17 tests using 5 workers
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '89285138'
+[WebServer] }
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
 [WebServer]   errorClass: 'db_unavailable',
@@ -259,32 +545,20 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
 [WebServer]   errorClass: 'db_unavailable',
@@ -319,693 +593,7 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] (node:43622) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (node:46315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
@@ -1041,25 +629,11 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer] Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
@@ -1067,6 +641,44 @@ Running 17 tests using 5 workers
 [WebServer]   123 | }
 [WebServer]   124 |
 [WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ unhandledRejection: Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ unhandledRejection:  Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
 [WebServer]   errorClass: 'db_unavailable',
@@ -1101,25 +713,11 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer] Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
@@ -1127,65 +725,11 @@ Running 17 tests using 5 workers
 [WebServer]   123 | }
 [WebServer]   124 |
 [WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] (node:43629) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] (node:43672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] (node:43684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ unhandledRejection: Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
@@ -1193,7 +737,37 @@ Running 17 tests using 5 workers
 [WebServer]   123 | }
 [WebServer]   124 |
 [WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] (node:43730) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer]  ⨯ unhandledRejection:  Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+[WebServer] (node:46333) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
@@ -1229,93 +803,22 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]     at async DestinationDetailPage (src/app/destinations/[slug]/page.tsx:61:45)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'youtravel_listings',
-[WebServer]   errorClass: 'db_unavailable',
-[WebServer]   retryable: true,
-[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1524531086'
 [WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'youtravel',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings_live_fallback',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
-[WebServer] }
-[WebServer] [partner_source_unavailable] {
-[WebServer]   source: 'tripster_listings',
-[WebServer]   errorClass: 'unknown',
-[WebServer]   retryable: true,
-[WebServer]   message: 'tripster_listings_all_sources_unavailable'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'tripster',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'tripster_listings_unavailable:unknown'
-[WebServer] }
-[WebServer] [marketplace_source_error] {
-[WebServer]   source: 'catalog_source',
-[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
-[WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
-[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
-[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
-[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
-[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
-[WebServer]       |         ^
-[WebServer]   123 | }
-[WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] (node:43767) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (node:46388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
@@ -1351,32 +854,21 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]     at async PlaceDetailPage (src/app/places/[slug]/page.tsx:55:28)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
 [WebServer]       |         ^
 [WebServer]   123 | }
 [WebServer]   124 |
-[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '4249309120'
+[WebServer] }
 [WebServer] [partner_source_unavailable] {
 [WebServer]   source: 'youtravel_listings',
 [WebServer]   errorClass: 'db_unavailable',
@@ -1411,25 +903,11 @@ Running 17 tests using 5 workers
 [WebServer]   source: 'catalog_source',
 [WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
 [WebServer] }
-[WebServer] revalidating cache with key: async function loadMarketplaceToursUncached() {
-[WebServer]     const results = await Promise.allSettled([
-[WebServer]         loadPlatformTourListingsForCatalog(),
-[WebServer]         fetchPartnerTourListingsSafe(),
-[WebServer]         fetchYouTravelTourListingsSafe()
-[WebServer]     ]);
-[WebServer]     const platform = results[0].status === "fulfilled" ? results[0].value : [];
-[WebServer]     const tripster = results[1].status === "fulfilled" ? results[1].value : [];
-[WebServer]     const youtravel = results[2].status === "fulfilled" ? results[2].value : [];
-[WebServer]     const sourceFailures = results.filter((result)=>result.status === "rejected");
-[WebServer]     for (const failure of sourceFailures){
-[WebServer]         if (failure.status === "rejected") {
-[WebServer]             reportMarketplaceSourceError("catalog_source", failure.reason);
-[WebServer]         }
-[WebServer]     }
-[WebServer]     return resolveMarketplaceSourceResults(platform, tripster, youtravel, sourceFailures.length, lastSuccessfulMarketplaceTours);
-[WebServer] }-marketplace-tours-catalog-v3-[] Error: marketplace_catalog_sources_unavailable
+[WebServer] Error: marketplace_catalog_sources_unavailable
 [WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
 [WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
 [WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
 [WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
 [WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
@@ -1437,5 +915,163 @@ Running 17 tests using 5 workers
 [WebServer]   123 | }
 [WebServer]   124 |
 [WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
-[WebServer] (node:43787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer]  ⨯ unhandledRejection: Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ unhandledRejection:  Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer] (node:46417) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'catalog_source',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ unhandledRejection: Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer]  ⨯ unhandledRejection:  Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache(
+[WebServer] (node:46449) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer]  ⨯ Error: marketplace_catalog_sources_unavailable
+[WebServer]     at resolveMarketplaceSourceResults (src/data/marketplace-tours-server.ts:122:9)
+[WebServer]     at loadMarketplaceToursUncached (src/data/marketplace-tours-server.ts:100:10)
+[WebServer]     at async resolveMarketplaceCatalogWithinDeadline (src/data/marketplace-tours-server.ts:151:12)
+[WebServer]     at async eval (src/data/marketplace-tours-server.ts:175:17)
+[WebServer]   120 |   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
+[WebServer]   121 |   if (lastKnownGood?.length) return lastKnownGood;
+[WebServer] > 122 |   throw new Error("marketplace_catalog_sources_unavailable");
+[WebServer]       |         ^
+[WebServer]   123 | }
+[WebServer]   124 |
+[WebServer]   125 | const cachedMarketplaceTours = unstable_cache( {
+[WebServer]   digest: '1271955218'
+[WebServer] }
