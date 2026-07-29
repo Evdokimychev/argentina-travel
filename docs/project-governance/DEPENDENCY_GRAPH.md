@@ -21,6 +21,8 @@ flowchart TD
   Next --> Ops["Health / cron / jobs / logs / Sentry"]
   Next --> Analytics["Consent → GTM / GA4 / Metrica"]
   GitHub["GitHub Actions release gates"] --> Vercel
+  Source["src/app + local import graph"] --> Inventory["Generated route / data / interaction inventory"]
+  Inventory --> GitHub
   GitHub --> Backup["Encrypted logical backup workflow"]
   Backup --> Supabase[("Canonical Supabase uoox…")]
   Rest --> Supabase
@@ -39,7 +41,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: exact code SHA `189684fa` is built as deployment `NnmUYR17cEok1QXihkGjpMEgCqQA` and immutable browser evidence exists, but migration parity and Vercel runtime-log scope are unavailable; preview and production data-plane health are down. The deployment proves fail-closed behavior, not production readiness.
+Current breaks: exact SHA `91be7962` is built as deployment `6Y9E1pGV4DD85N5U9JzqztLadTEc` and immutable browser evidence exists, but migration parity and Vercel runtime-log scope are unavailable; preview and production data-plane health are down. The deployment proves the generated-inventory packet and fail-closed behavior, not production readiness.
 
 ## Data ownership boundaries
 
@@ -47,3 +49,4 @@ Current breaks: exact code SHA `189684fa` is built as deployment `NnmUYR17cEok1Q
 - Partner APIs own partner booking/payment; GoArgentina owns disclosure, attribution and safe redirect.
 - Internal requests require persisted state, notifications, SLA and admin ownership before public promise.
 - No B2B product may share production DB/secrets/releases without ADR.
+- Current source topology is recorded in `docs/audit/architecture-current.md`; its data/access candidates remain static evidence until live Supabase and effect tests confirm them.

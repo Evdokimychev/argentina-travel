@@ -35,8 +35,8 @@
 
 ## D-007 — Existing route inventories are baseline, not current truth
 
-- Decision: retain `docs/release-2026-07/*inventory*` as historical evidence and regenerate after P0 recovery/candidate freeze.
-- Reason: current tree has 157 pages and 311 route handlers; historical inventory has 370 total records.
+- Decision: retain `docs/release-2026-07/*inventory*` as historical evidence; use generated `docs/audit/*inventory*` as current source snapshot.
+- Reason: current tree has 157 pages and 312 route handlers; historical inventory recorded only 129 pages and 234 handlers.
 
 ## D-008 — Split REST quota recovery from production direct-PG diagnosis
 
@@ -86,3 +86,10 @@
 - Decision: accept `189684fa` / `NnmUYR17cEok1QXihkGjpMEgCqQA` as immutable remote evidence for WP-001/WP-004, but keep release status NOT READY and forbid promotion.
 - Evidence: Vercel status is success and preview health binds the full SHA; desktop/mobile QA passes. The same artifact reports health/public/database/partners 503/down, REST and direct PG unavailable, and the official production smoke exits 1 at the health gate.
 - Consequence: P1-GA-005 becomes partially resolved (build and browser evidence restored), while P0-GA-001 and runtime-log scope remain release blockers.
+
+## D-015 — Static product-surface evidence is reproducible but not live proof
+
+- Date: 2026-07-29
+- Decision: generate route, data-edge and interaction inventories from AST/import facts; label them `static_source`/`source_only` and keep runtime database state explicitly unknown.
+- Evidence: historical CSV missed 28 current pages and 78 current route handlers. WP-005 produces 471 route records, 470 route/data records and 2 298 unique source-line interactions; `inventory:check` is blocking in local and CI gates.
+- Consequence: current architecture drift becomes detectable without calling secrets or external services. No table candidate, access signal or UI handler may be cited as proof of live schema, RLS, authorization, backend effect or test coverage.
