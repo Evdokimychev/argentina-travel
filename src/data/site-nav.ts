@@ -17,7 +17,7 @@ import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 export const SITE_NAV_UTILITY_LINKS: SiteNavLink[] = [
   {
     id: "utility-tours",
-    label: "Бронируйте лучшие туры",
+    label: "Смотреть туры",
     labelKey: "nav.utility.tours",
     href: "/tours",
   },
