@@ -93,3 +93,10 @@
 - Decision: generate route, data-edge and interaction inventories from AST/import facts; label them `static_source`/`source_only` and keep runtime database state explicitly unknown.
 - Evidence: historical CSV missed 28 current pages and 78 current route handlers. WP-005 produces 471 route records, 470 route/data records and 2 298 unique source-line interactions; `inventory:check` is blocking in local and CI gates.
 - Consequence: current architecture drift becomes detectable without calling secrets or external services. No table candidate, access signal or UI handler may be cited as proof of live schema, RLS, authorization, backend effect or test coverage.
+
+## D-016 — Critical evidence layers are explicit and monotonic
+
+- Date: 2026-07-29
+- Decision: maintain a reviewed critical-journey manifest and generate the evidence ledger only after validating UI dependency reachability, request method/endpoint, route export and exact test title. Keep `unit_contract`, `route_integration`, `browser` and `remote_preview` as separate layers; never infer a higher layer.
+- Evidence: WP-006 maps 11 P0/P1 journeys; 8 have source-bound unit contracts and 3 privacy journeys remain `source_only`. Every production status remains `unknown_db_down`.
+- Consequence: existing contract tests become discoverable without being overstated. WP-007 addresses privacy transition atomicity and route contracts; real payment, refund, payout or deletion operations remain prohibited during evidence collection.

@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 04:04 ART / 2026-07-29 07:04 UTC**
+Последняя проверка: **2026-07-29 04:31 ART / 2026-07-29 07:31 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product/governance candidate SHA до этой записи: `91be7962cd5bdcb5609c31dde785382c8f3943eb`; `origin/main` является ancestor.
+- Product candidate SHA до этой записи: `d07f48c85e2d33a5666ffc7513ffcf46190d9abc`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний code/tooling SHA: `91be7962cd5bdcb5609c31dde785382c8f3943eb` (`chore: generate current product surface inventory`); последний runtime-product SHA остаётся `189684fa70d0bf020dcb7e835c29a38b5eca19ed`.
+- Последний code/tooling SHA: `d07f48c85e2d33a5666ffc7513ffcf46190d9abc` (`chore: map critical interaction evidence`); последний runtime-product SHA остаётся `189684fa70d0bf020dcb7e835c29a38b5eca19ed`.
 
 ## Production и deployments
 
@@ -30,6 +30,7 @@ Master Goal V6 принят как главный норматив проект�
 - Governance SHA `6f561171` успешно развёрнут как `9cogBLxxKgovByKTxfZ5UDmc7i92`.
 - Exact WP-005 SHA `91be7962` сначала получил GitHub/Vercel `failure: Account is blocked` в 06:39 UTC, но в 06:48 UTC status сменился на success и был создан deployment `6Y9E1pGV4DD85N5U9JzqztLadTEc`. Это доказывает восстановленный build path, но также его нестабильность.
 - Immutable branch preview теперь сообщает полный SHA `91be7962cd5bdcb5609c31dde785382c8f3943eb`. Vercel dashboard/CLI runtime-log scope всё ещё недоступен, поэтому runtime-логи не считаются проверенными.
+- Exact WP-006 SHA `d07f48c8` получил `failure: Account is blocked` в 07:19 UTC, затем в 07:28 UTC сменился на success и развернулся как deployment `8QR63FhdmjYAfbgQiKPx8vQ9DgnM`. Повторный девятиминутный recovery подтверждает волатильность account state.
 - Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
 ## Supabase, migrations, CMS и recovery
@@ -75,6 +76,13 @@ Master Goal V6 принят как главный норматив проект�
 - Матрица содержит 470 route/data строк, interaction ledger — 2 298 уникальных source-bound строк с line/column; CSV-ширина, ID и ссылки на исходные строки проверены.
 - `inventory:check` включён в `audit:quick` и blocking static release gate. Статические сигналы не выдаются за live-схему, RLS, backend effect или тестовое покрытие.
 
+### WP-006 — critical interaction evidence
+
+- Создан проверяемый manifest для 11 критических P0/P1 journey: UI → достижимый client request → HTTP method/endpoint → exported route handler → effects/guards/invariants → отдельные evidence layers.
+- Template URL теперь нормализуются без исполнения кода (`/api/bookings/[bookingId]/…`), а не теряются как `dynamic`; generator проверяет UI-якорь, dependency path, метод, handler export, source interaction, test-файл и точное имя теста.
+- Booking create, Mercado Pago, Stripe, tourist/organizer refund, admin refund preparation, payout, shop order и organizer application связаны с unit contracts. Privacy export, delete request и admin transition остаются `source_only`.
+- Все 11 production effects имеют статус `unknown_db_down`; unit contract не объявлен route integration, browser effect или live persistence proof.
+
 ## Проверки candidate
 
 - `npm run audit:quick`: TypeScript + ESLint + **428 files / 2 058 tests** + **8 release-evidence tests** — pass.
@@ -101,16 +109,23 @@ Master Goal V6 принят как главный норматив проект�
 - Protected exact-SHA `91be7962` build: exit 0, 685 static pages generated, runtime-text audit pass, demo auth markers absent. Первый запуск без canonical site URL и первый SHA-binding запуск со stale Vercel SHA были отклонены и не засчитаны; финальная сборка явно связана с полным exact SHA без изменения `.env`.
 - Local exact-SHA health/public/database/partners — 503/down; tours/excursions — 503 + `Retry-After: 60`; `production-smoke` exit 1 на mandatory health gate. Browser QA `/guide/bezopasnost`: desktop 1280 и mobile 390, H1/полный body, console errors 0, route error/overflow отсутствуют.
 - Immutable preview `91be7962` / `6Y9E1pGV4DD85N5U9JzqztLadTEc`: health связывает полный SHA, health/public/database/partners и каталоги остаются fail-closed 503, remote desktop/mobile browser QA pass, штатный smoke exit 1. Deployment доказывает пакет и запрет promotion, но не production readiness.
+- WP-006 `audit:quick`: TypeScript + ESLint + inventory stale-check + **424 files / 2 006 tests** + **8 release-evidence tests** — pass; focused generator suite **5/5** — pass.
+- Generated evidence contracts: critical journeys **11×20**, unique IDs/source interactions; 8 `contract_tested`, 3 `source_only`; interaction inventory remains **2 298×12** and snapshot digest is `61da167bb0241da1`.
+- Protected exact-SHA `d07f48c8` build: exit 0, **685/685** static pages, runtime-text audit pass, demo auth markers absent. Первый runtime start унаследовал stale глобальный Vercel SHA и был отклонён как evidence; повторный start явно сообщил полный `d07f48c85e2d33a5666ffc7513ffcf46190d9abc`.
+- Local exact-SHA health/public/database/partners — 503/down; tours/excursions — 503 + `Retry-After: 60`; штатный `production-smoke` exit 1 на mandatory health gate. Browser QA `/join`: desktop 1280×900 и mobile 390×844, H1 и формы присутствуют, console errors/route error/overflow — 0.
+- Immutable preview exact `d07f48c8` / deployment `8QR63FhdmjYAfbgQiKPx8vQ9DgnM`: health/public/database/partners и tours/excursions — 503/down, каталоги имеют `Retry-After: 60`, health связывает полный SHA. Remote `/join` desktop 1280 и mobile 390: H1/формы, console errors/route error/overflow — 0. Штатный smoke exit 1 ровно на health gate; promotion запрещён.
+- Canonical production recheck 07:31 UTC: health/public/database/partners — 503/down на старом SHA `993e82fb`; tours/excursions всё ещё возвращают 200 на outage. WP-001/WP-006 candidate не продвигался.
 
 ## Открытые P0/P1
 
 1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
-3. **P1-GA-005:** build/immutable preview восстановлены, но status для `91be7962` прошёл через transient `Account is blocked`; вернуть read-only Vercel project/runtime-log scope и диагностировать preview/prod direct-PG failure.
+3. **P1-GA-005:** build/immutable preview восстановлены, но `91be7962` и `d07f48c8` оба прошли через transient `Account is blocked`; вернуть read-only Vercel project/runtime-log scope и диагностировать preview/prod direct-PG failure.
 4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
+5. **P1-GA-012:** privacy export/delete/admin-transition — source-only; admin transition не имеет compare-and-set и durable atomic audit proof.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
 2. Owner/ops: вернуть read-only Vercel project/runtime-log scope; engineering: сопоставить env names/regions/connectivity для preview/prod direct PG без вывода или ротации секретов.
-3. Engineering: на основе нового interaction ledger выделить критические booking/payment/profile/admin эффекты без явного evidence, добавить deterministic coverage manifest; полный card/detail/CTA crawl выполнить после восстановления data plane.
+3. Engineering: добавить безопасные privacy route contracts и compare-and-set для admin transition без реального удаления; полный card/detail/CTA crawl выполнить после восстановления data plane.
