@@ -176,7 +176,7 @@ export async function PATCH(request: Request) {
   const supabase = createSupabaseAdminClient();
   const { data: existing, error: existingError } = await supabase
     .from("privacy_requests")
-    .select("id, user_id, status, metadata")
+    .select("id, status, metadata")
     .eq("id", id)
     .maybeSingle();
 
@@ -196,6 +196,13 @@ export async function PATCH(request: Request) {
   }
 
   if (action === "approve" && (existing.status === "approved" || existing.status === "processing")) {
+    return NextResponse.json(
+      { error: "Заявка уже подтверждена и находится в очереди обработки" },
+      { status: 409 }
+    );
+  }
+
+  if (action === "reject" && (existing.status === "approved" || existing.status === "processing")) {
     return NextResponse.json(
       { error: "Заявка уже подтверждена и находится в очереди обработки" },
       { status: 409 }
@@ -226,6 +233,7 @@ export async function PATCH(request: Request) {
     .from("privacy_requests")
     .update(updatePayload)
     .eq("id", id)
+    .eq("status", existing.status)
     .select("id, status, processed_at")
     .maybeSingle();
 
@@ -234,21 +242,14 @@ export async function PATCH(request: Request) {
   }
 
   if (!data) {
-    return NextResponse.json({ error: "Request not found" }, { status: 404 });
-  }
-
-  if (action === "approve") {
-    await supabase
-      .from("profiles")
-      .update({
-        deleted_at: now,
-      })
-      .eq("id", existing.user_id)
-      .is("deleted_at", null);
+    return NextResponse.json(
+      { error: "Статус заявки уже изменился. Обновите список и повторите действие." },
+      { status: 409 },
+    );
   }
 
   if (auth.via === "session") {
-    void writeAdminAuditLog({
+    await writeAdminAuditLog({
       actorUserId: auth.actorId,
       action: action === "approve" ? "privacy_request.approve" : "privacy_request.reject",
       entityType: "privacy_request",

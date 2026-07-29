@@ -2,7 +2,7 @@
 
 > Этот файл сгенерирован из исходного кода. Ручные правки будут перезаписаны командой `npm run inventory:generate`.
 
-Детерминированный digest снимка: `61da167bb0241da1`.
+Детерминированный digest снимка: `59baff56fe6c853d`.
 
 ## Покрытие
 
@@ -12,7 +12,7 @@
 - Middleware matchers: **1**.
 - Статически обнаруженные взаимодействия в достижимом от страниц UI: **2298**.
 - Строк route → component/data: **470**.
-- Критические P0/P1 journey mappings: **11**; только source evidence: **3**.
+- Критические P0/P1 journey mappings: **11**; только source evidence: **0**.
 
 ## HTTP-методы route handlers
 

@@ -117,8 +117,9 @@
       "effects": ["authenticated user data export assembly", "JSON attachment response"],
       "guards": ["remote auth capability", "authenticated session user"],
       "invariants": ["export is scoped to the current session user", "response is marked as an attachment"],
-      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
-      "gap": "No unit contract for PII scope and no authenticated route, download, or live data evidence."
+      "evidence": [{"type": "route_integration", "source": "src/app/api/privacy/export/route.test.ts", "test": "scopes the export to the authenticated session user"}],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Authenticated route orchestration is tested; complete PII field scope, browser download, and live data remain unproven."
     },
     {
       "id": "profile.privacy.delete_request", "risk": "P1", "actors": ["tourist", "organizer"], "modes": ["remote"],
@@ -129,8 +130,9 @@
       "effects": ["privacy deletion request persistence", "pending deletion lifecycle creation"],
       "guards": ["remote auth capability", "authenticated non-admin user", "no active duplicate request"],
       "invariants": ["admin accounts cannot self-delete through this route", "one active deletion request is returned as a conflict", "reason length is bounded"],
-      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
-      "gap": "No route contract for authorization, duplicate prevention, state transitions, audit, or live RLS."
+      "evidence": [{"type": "route_integration", "source": "src/app/api/privacy/delete-request/route.test.ts", "test": "persists one bounded deletion request for the authenticated non-admin user"}],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Route authorization, bounded persistence and an existing-request conflict are tested; concurrent duplicate prevention, live RLS and downstream deletion remain unproven."
     },
     {
       "id": "admin.privacy.transition", "risk": "P1", "actors": ["admin", "tourist", "organizer"], "modes": ["remote"],
@@ -138,11 +140,12 @@
       "interactionMatch": {"source": "src/components/admin/views/PrivacyRequestsView.tsx", "method": "PATCH", "endpoint": "/api/admin/privacy-requests"},
       "request": {"method": "PATCH", "endpoint": "/api/admin/privacy-requests"},
       "handler": {"source": "src/app/api/admin/privacy-requests/route.ts", "export": "PATCH"},
-      "effects": ["privacy request status transition", "profile soft-delete mark on approval", "admin audit log enqueue"],
-      "guards": ["operations.leads capability", "approve or reject action", "non-final request state"],
-      "invariants": ["completed or rejected requests cannot transition", "approval records actor metadata", "profile is only marked once"],
-      "evidence": [], "coverageStatus": "source_only", "productionStatus": "unknown_db_down",
-      "gap": "No route contract for capability, transition concurrency, profile mutation, downstream deletion, or durable audit evidence."
+      "effects": ["privacy request status transition", "durable actor metadata on the request row", "best-effort admin audit entry"],
+      "guards": ["operations.leads capability", "approve or reject action", "pending or failed request state"],
+      "invariants": ["completed rejected approved or processing requests cannot transition", "status update uses compare-and-set", "profile mutation is left to the deletion processor"],
+      "evidence": [{"type": "route_integration", "source": "src/app/api/admin/privacy-requests/route.test.ts", "test": "uses compare-and-set and leaves profile deletion to the processor"}],
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Route concurrency and orchestration are tested; admin_audit_log is still best-effort and live cron deletion remains unproven."
     },
     {
       "id": "organizer.application.submit", "risk": "P1", "actors": ["organizer"], "modes": ["remote"],
