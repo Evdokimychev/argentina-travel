@@ -1,12 +1,12 @@
 /** Yandex Metrika counter — loaded directly in app code (not via GTM). */
 
-function readEnv(name: string): string | null {
-  const value = process.env[name]?.trim();
-  return value || null;
+function readEnv(value: string | undefined): string | null {
+  const normalized = value?.trim();
+  return normalized || null;
 }
 
 export function getYandexMetrikaCounterId(): string | null {
-  return readEnv("NEXT_PUBLIC_YANDEX_METRIKA_ID");
+  return readEnv(process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID);
 }
 
 /** Production host with a counter ID configured. */

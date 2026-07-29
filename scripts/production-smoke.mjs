@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findCommercialDetailPath } from "./lib/commercial-catalog-smoke.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -113,15 +114,17 @@ async function checkHealth() {
     assert(json.checks?.postgresDirect?.ok === true, `Direct Postgres check failed: ${json.checks?.postgresDirect?.error ?? "unknown"}`);
   }
 
-  // REST/Auth can be degraded (e.g. 402 egress) while direct Postgres still serves
-  // partner catalogs. Allow degraded when the required PG path is healthy.
   if (json.ok !== true) {
+    const explicitlyAllowedRecovery =
+      process.env.ALLOW_DEGRADED_HEALTH === "1" &&
+      json.status === "degraded" &&
+      json.checks?.postgresDirect?.ok === true;
     assert(
-      json.status === "degraded" && json.checks?.postgresDirect?.ok === true,
-      "Health response must contain ok=true, or degraded with postgresDirect.ok=true.",
+      explicitlyAllowedRecovery,
+      "Health response must contain ok=true. Set ALLOW_DEGRADED_HEALTH=1 only for an explicit recovery run with healthy direct Postgres.",
     );
     console.log(
-      `⚠ /api/health degraded (deployEnv=${json.environment.deployEnv}, migrationVersion=${json.migrationVersion ?? "—"}) — postgresDirect ok`,
+      `⚠ /api/health degraded explicitly allowed for recovery (deployEnv=${json.environment.deployEnv}, migrationVersion=${json.migrationVersion ?? "—"})`,
     );
     return;
   }
@@ -211,6 +214,27 @@ async function checkBlogPostHasHeroImage(pathname) {
   console.log(`✓ ${pathname} hero image (og:image set)`);
 }
 
+async function checkCommercialCatalog(catalogPath) {
+  const catalog = await get(catalogPath);
+  assert(catalog.status === 200, `GET ${catalogPath} returned ${catalog.status}`);
+  const detailPath = findCommercialDetailPath(catalog.text, catalogPath);
+  assert(
+    detailPath,
+    `${catalogPath}: no commercial detail link found; catalog may be empty or unavailable`,
+  );
+
+  const detail = await get(detailPath);
+  assert(
+    detail.status === 200,
+    `GET ${detailPath} returned ${detail.status}: ${truncate(detail.text)}`,
+  );
+  assert(
+    detail.contentType.includes("text/html") && detail.text.toLowerCase().includes("<html"),
+    `GET ${detailPath} did not return an HTML document`,
+  );
+  console.log(`✓ ${catalogPath} → ${detailPath}`);
+}
+
 async function main() {
   loadEnvLocal();
   console.log(`Production smoke base URL: ${baseUrl}`);
@@ -219,6 +243,8 @@ async function main() {
   for (const pathname of PAGE_PATHS) {
     await checkPage(pathname);
   }
+  await checkCommercialCatalog("/tours");
+  await checkCommercialCatalog("/excursions");
 
   await checkRedirect("/map", "/mapa-argentina");
   await checkInternalRouteClosed("/dev/design-system");

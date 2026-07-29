@@ -10,6 +10,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { resolveHealthyDeploymentGitSha } from "./lib/ops-report-evidence.mjs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -189,6 +190,7 @@ async function main() {
   const checks = [];
   let gtmEventsCount = null;
   let liveGtmOk = false;
+  let liveGitSha = null;
 
   const gtmPresent = Boolean(process.env[GTM_ENV]?.trim());
   checks.push({
@@ -278,15 +280,51 @@ async function main() {
     const googleMeta = metaContent(home.text, "google-site-verification");
     const bingMeta = metaContent(home.text, "msvalidate.01");
     const ahrefsMeta = metaContent(home.text, "ahrefs-site-verification");
-    const hasGtm =
-      /googletagmanager\.com/i.test(home.text) || /GTM-[A-Z0-9]+/.test(home.text);
-    liveGtmOk = hasGtm;
+
+    try {
+      const health = await fetchText(`${baseUrl}/api/health`);
+      const healthJson = JSON.parse(health.text);
+      const candidateGitSha =
+        typeof healthJson?.gitSha === "string" && healthJson.gitSha.trim().length >= 7
+          ? healthJson.gitSha.trim()
+          : null;
+      liveGitSha = resolveHealthyDeploymentGitSha(health.status, healthJson);
+      checks.push({
+        id: "live:deployment-binding",
+        label: "Live deployment binding",
+        status: liveGitSha ? "ok" : "fail",
+        message: liveGitSha
+          ? `gitSha=${liveGitSha.slice(0, 12)}, health HTTP ${health.status}`
+          : `Deployment не готов: health HTTP ${health.status}, ok=${String(healthJson?.ok === true)}, gitSha=${candidateGitSha ? "present" : "missing"}`,
+        category: "live",
+      });
+    } catch (error) {
+      checks.push({
+        id: "live:deployment-binding",
+        label: "Live deployment binding",
+        status: "fail",
+        message: error instanceof Error ? error.message : String(error),
+        category: "live",
+      });
+    }
+    const hasConsentDefault =
+      /id=["']gtm-consent-default["']/i.test(home.text) ||
+      /gtag\s*\(\s*['"]consent['"]\s*,\s*['"]default['"]/i.test(home.text);
+    const hasDataLayerInit =
+      /window\.dataLayer\s*=\s*window\.dataLayer\s*\|\|\s*\[\]/i.test(home.text) ||
+      /w\[l\]\s*=\s*w\[l\]\s*\|\|\s*\[\]/i.test(home.text);
+    const hasExternalGtmLoader = /googletagmanager\.com\/gtm\.js/i.test(home.text);
+    liveGtmOk = hasConsentDefault && hasDataLayerInit && !hasExternalGtmLoader;
 
     checks.push({
       id: "live:gtm",
-      label: `Live GTM snippet (${baseUrl})`,
-      status: hasGtm ? "ok" : "fail",
-      message: hasGtm ? "googletagmanager.com найден в HTML" : "GTM не в HTML — проверьте env на хостинге и redeploy",
+      label: `Live GTM consent bootstrap (${baseUrl})`,
+      status: liveGtmOk ? "ok" : "fail",
+      message: liveGtmOk
+        ? "denied-bootstrap готов; внешний gtm.js ожидаемо загружается только после согласия"
+        : hasExternalGtmLoader
+          ? "Внешний gtm.js найден до согласия пользователя"
+          : "Consent/dataLayer bootstrap отсутствует — проверьте GTM env на хостинге и redeploy",
       category: "live",
     });
 
@@ -297,19 +335,16 @@ async function main() {
 
     checks.push({
       id: "live:yandex-metrika",
-      label: `Live Yandex Metrika snippet (${baseUrl})`,
-      status: !ymEnvSet ? "skip" : hasMetrika ? "ok" : "fail",
+      label: `Live Yandex Metrika pre-consent policy (${baseUrl})`,
+      status: !ymEnvSet ? "skip" : hasMetrika ? "fail" : "warn",
       message: !ymEnvSet
         ? `${YM_ENV} не задан — проверка пропущена`
         : hasMetrika
-          ? "mc.yandex.ru/metrika найден в HTML"
-          : "Метрика не в HTML — проверьте env на хостинге и redeploy",
+          ? "Метрика найдена в сыром HTML до согласия пользователя"
+          : "Pre-consent HTML чист; загрузку после согласия нужно подтвердить браузерной проверкой",
       category: "live",
     });
 
-    const hasConsentDefault =
-      /id=["']gtm-consent-default["']/i.test(home.text) ||
-      /gtag\s*\(\s*['"]consent['"]\s*,\s*['"]default['"]/i.test(home.text);
     checks.push({
       id: "live:gtm-consent-default",
       label: "Live Consent Mode default (gtm-consent-default)",
@@ -320,9 +355,6 @@ async function main() {
       category: "live",
     });
 
-    const hasDataLayerInit =
-      /window\.dataLayer\s*=\s*window\.dataLayer\s*\|\|\s*\[\]/i.test(home.text) ||
-      /w\[l\]\s*=\s*w\[l\]\s*\|\|\s*\[\]/i.test(home.text);
     checks.push({
       id: "live:datalayer-init",
       label: "Live dataLayer initialization",
@@ -421,10 +453,13 @@ async function main() {
   }
 
   const summary = summarize(checks);
+  const generatedAt = new Date().toISOString();
   const payload = {
     ok: summary.fail === 0,
-    ranAt: new Date().toISOString(),
+    generatedAt,
+    ranAt: generatedAt,
     baseUrl,
+    gitSha: liveGitSha,
     checks,
     summary,
     runbook: "docs/i2-analytics-gsc-runbook.md",

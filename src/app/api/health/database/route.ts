@@ -3,16 +3,13 @@ import { fetchPublicHealthSnapshot } from "@/lib/monitoring/health-public";
 
 export async function GET() {
   const health = await fetchPublicHealthSnapshot({ includeSearchIndexCount: false });
-  const databaseOk = health.checks.database.ok || health.checks.postgresDirect.ok;
-  const status = databaseOk
-    ? health.checks.database.ok && health.checks.postgresDirect.ok
-      ? "ok"
-      : "degraded"
-    : "down";
+  const serviceAvailable = health.checks.database.ok || health.checks.postgresDirect.ok;
 
   return NextResponse.json(
     {
-      status,
+      status: health.status,
+      ok: health.ok,
+      serviceAvailable,
       generatedAt: health.generatedAt,
       checks: {
         rest: {
@@ -35,7 +32,7 @@ export async function GET() {
       },
     },
     {
-      status: status === "down" ? 503 : 200,
+      status: health.ok ? 200 : 503,
       headers: { "Cache-Control": "no-store" },
     },
   );
