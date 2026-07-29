@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 15:41 ART / 2026-07-29 18:41 UTC**
+Последняя проверка: **2026-07-29 16:26 ART / 2026-07-29 19:26 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc`; exact evidence/deploy candidate: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc`; `origin/main` является ancestor.
+- Product implementation SHA: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8`; exact evidence/deploy candidate: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `e22b58852210fa92e27e0f573d1a95c1b24eb5cc` (`fix: bound optional catalog detail validation`); WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`, WP-020 — `ed29b335`.
+- Последний runtime-product SHA: `d4fbbbc1b79871f2b6633b11a2b03e5145cc8cd8` (`fix(cms): preserve public read failure semantics`); WP-023 — `e22b5885`, WP-022 — `4aa7f52c`, WP-021 — `d6808a5c`.
 
 ## Production и deployments
 
@@ -49,6 +49,8 @@ Master Goal V6 принят как главный норматив проект�
 - WP-021 exact `d6808a5c` отправлен в 17:03 UTC и немедленно получил GitHub/Vercel `failure: Account is blocked`; deployment ID пока отсутствует. Локальный exact artifact полностью доказан, но immutable remote preview и deployment ID не подменяются локальным результатом.
 - WP-022 exact `4aa7f52c` отправлен в 18:02 UTC. На 18:05 UTC GitHub/Vercel status остаётся `pending: Vercel is deploying your app`, target build `GWXM4ciE3sQW4jcYfiPeq4gnDcU3`; GitHub deployment и immutable preview URL ещё не созданы. Локальный exact artifact полностью доказан, но pending build не считается deployment evidence.
 - WP-023 exact `e22b5885` отправлен в 18:39 UTC. На 18:41 UTC GitHub/Vercel status остаётся `pending: Vercel is deploying your app`, target build/deployment `5HameBiSUPAUurXE8GVT2rouQAtx`; immutable deployment URL и successful build evidence ещё отсутствуют. Vercel CLI не может прочитать канонический project settings, поэтому pending status не считается готовым preview.
+- Повторная read-only сверка 19:26 UTC: WP-021 `d6808a5c` восстановился до success/deployment `BMXQzSXBg6o2r22LawaFRUQvLsVp`, WP-022 `4aa7f52c` — `GWXM4ciE3sQW4jcYfiPeq4gnDcU3`, WP-023 `e22b5885` — `5HameBiSUPAUurXE8GVT2rouQAtx`. Это закрывает отсутствие immutable build IDs, но не заменяет healthy distributed/production proof.
+- WP-024 exact `d4fbbbc1` успешно развернут в 19:23:54 UTC: Vercel deployment `9nLoBaDbY1Aq6nnKkgPdPEXypT2e`, GitHub deployment `5663714750`, immutable URL `https://argentina-travel-cu53i1tbf-go-argentina.vercel.app`. Health связывает полный SHA и остаётся `503/down`; article 200, comments 503 с `Retry-After: 60`/`private, no-store`, CMS-only existence 503 вместо ложного 404. Remote browser показывает полный article/outage-state без framework overlay; strict/recovery smoke exit 1 из-за down direct PG. Promotion не выполнялся.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -60,6 +62,7 @@ Master Goal V6 принят как главный норматив проект�
 - Production recheck 17:09 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` и `/api/excursions` по-прежнему возвращают ложный 200 empty. WP-021 не продвигался, exact deployment отсутствует.
 - Production recheck 18:05 UTC: `/api/health` — 503/down на старом `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. WP-022 не продвигался; same-artifact gate закрыт.
 - Production recheck 18:41 UTC: `/api/health` — 503/down; `/api/tours` возвращает ложный `200` с 0 tours, `/api/excursions` — ложный `200` с `items=0,total=0`. WP-023 не продвигался; production по-прежнему работает на старом artifact, same-artifact gate закрыт.
+- Production recheck 19:26 UTC: health `503/down` на старом `993e82fb`; tours/excursions остаются ложными `200` empty, а comments возвращает `200 {comments:[]}` с degraded header. Это доказывает отсутствие WP-024 promotion и сохраняет NOT READY.
 
 ## Supabase, migrations, CMS и recovery
 
@@ -239,23 +242,38 @@ Master Goal V6 принят как главный норматив проект�
 - Отдельный source/log trace показал следующий P1, не смешанный с WP-023: public CMS resolver и comments превращают timeout/402/RLS/unknown read failure в `null`/`[]`, а fallback может кешироваться 300 секунд. Это создаёт риск ложного CMS-only 404 и зарегистрировано как P1-GA-021/WP-024.
 - DDL, migration, provider/DB write, env/secret mutation и production promotion не выполнялись.
 
+### WP-024 — preserve public CMS truth during operational failure
+
+- Root cause подтверждён во всех public CMS single/list/detail paths: успешное отсутствие и operational error делили один `null`/`[]` результат; CMS-only detail мог стать 404, comments outage — копирайтом «нет комментариев», а blog catalog мог кешировать reviewed fallback на 300 секунд как будто CMS-read был успешным.
+- Введён типизированный `available|unavailable` read result и `resolved|missing|degraded` resolution. Классификация использует только bounded status/code/class (`quota`, `timeout`, `auth_restricted`, `db_unavailable`, `network`, `unknown`); rate-limited logs не содержат raw provider message. Подтверждённый missing/empty возникает только после успешного read.
+- Статический редакционный fallback сохраняется для известных страниц, но применяется снаружи `unstable_cache`, поэтому quota/timeout не создают 300-секундный authoritative cache. CMS-only detail и existence fail closed как unavailable/503, не 404. Locale partial reads не выдают полный успех.
+- Comments GET получил 1.5-second abort, `.retry(false)`, `private, no-store`, `503` + `Retry-After: 60` при storage failure. UI показывает отдельное amber outage-state с повтором и не предлагает отправку, пока read truth неизвестна; подтверждённый успешный `[]` сохраняет прежний empty copy.
+- Exact local `d4fbbbc1`: health 503/degraded с full SHA; article **200 / 405 ms**, comments **503 / 35 ms**, CMS-only existence **503 / 32 ms**. Strict smoke exit 1, explicit local recovery smoke exit 0 с genuine commercial details. Browser: правильный H1, 14 726 символов, outage/retry видимы, overlay 0.
+- Exact preview `9nLoBa…`: article 200, comments/CMS-only 503, full SHA bound; remote browser pass. Direct PG down, поэтому strict и recovery smoke закономерно exit 1. Production остаётся старым и продолжает false-empty comments/catalog behavior.
+- Новые schema/migration/DDL, DB/provider writes, env/secret mutation и production promotion не выполнялись. Build-log отдельно выявил следующий P1: старый Tripster fallback пишет raw provider message; WP-024 CMS logger сам bounded и секретов не выводит.
+
 ## Проверки candidate
+
+- WP-024 focused/fault/caller suite: **13 files / 72 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **449 files / 2 133 tests** + **31/31 release-evidence contracts** — pass.
+- Protected production build exact `d4fbbbc1`: exit 0, **929/929** static pages, runtime-text and demo-bundle guards pass. Existing Edge/Sentry/lint warnings remain non-blocking; raw Tripster provider-message log registered separately as P1-GA-022 rather than hidden.
+- Exact local production runtime on `127.0.0.1:3112`: health binds full SHA; article/comments/CMS-only evidence 200/503/503; strict smoke exit 1 and recovery smoke exit 0. Playwright screenshot/DOM QA passes with zero framework overlays; the expected comments 503 is the only console resource error.
+- Immutable preview `9nLoBaDbY1Aq6nnKkgPdPEXypT2e`: exact SHA, article/comments/CMS-only 200/503/503, remote browser pass. Both smoke profiles exit 1 because direct PG is down. Port `3001` was never targeted; GoArgentina used and released only `3112`.
 
 - WP-023 focused regression suite: **7 files / 51 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **444 files / 2 116 tests** + **31/31 release-evidence contracts** — pass.
 - Protected production build exact `e22b5885`: exit 0, **929/929** static pages, production isolation/runtime-text guards pass; существующие Edge/Sentry/lint warnings не стали errors.
 - Exact local browser QA на `127.0.0.1:3112`: article и `/blog` имеют корректные title/H1, browser errors отсутствуют, desktop screenshots сохранены. Strict production-smoke exit 1 на `health.ok=false`; explicit recovery smoke exit 0 и проходит все public routes, genuine tour/excursion detail, assets и hero images.
-- Product SHA `e22b5885` pushed. GitHub/Vercel target `5HameBiSUPAUurXE8GVT2rouQAtx` остаётся pending; immutable preview/runtime logs пока не доказаны. Порт `127.0.0.1:3001` отдельного проекта не затрагивался; GoArgentina `3112` после QA освобождён.
+- Product SHA `e22b5885` pushed. GitHub/Vercel target позже завершился success как deployment `5HameBiSUPAUurXE8GVT2rouQAtx`; runtime-log scope и healthy production proof не доказаны. Порт `127.0.0.1:3001` отдельного проекта не затрагивался; GoArgentina `3112` после QA освобождён.
 
 - WP-022 focused circuit/resolver/existence suite: финально **19/19**; общий packet suite ранее **28/28**. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **444 files / 2 113 tests** + **31/31 release-evidence contracts** — pass.
 - Protected production build exact `4aa7f52c`: exit 0, **929/929** static pages, production bundle guard pass, production mode/demo seeds off. Existing Edge/Sentry/lint warnings не стали errors. `npm audit --omit=dev --audit-level=high`: **0 vulnerabilities**.
 - Full dev dependency audit отдельно обнаружил **9 high** в цепочке `brace-expansion → minimatch → eslint ecosystem`; доступный автоматический full fix требует breaking `eslint@10.8` через `--force`, поэтому в reliability packet он не применялся и зарегистрирован как P1-GA-019.
 - Exact local browser: serial **17/17** и parallel five-worker **17/17**. `/about`, `/tours` и повторная `/` имеют корректные H1/title без framework overlay; initial cold home честно показал штатную error boundary при total outage и отсутствии LKG. Наблюдавшиеся 25–28 секунд первоначально были ошибочно отнесены к CMS; WP-023 позже доказал full-catalog optional detail fan-out.
-- Strict production-equivalent smoke exit 1 на обязательном `health.ok=false`. Recovery smoke разрешил degraded health и прошёл базовые `/`, `/tours`, `/excursions`, `/destinations`, `/places`, но остановился на тогда ещё не локализованном optional detail path; поэтому для WP-022 он не записан как pass. Product SHA `4aa7f52c` pushed; Vercel build пока pending, deployment ID отсутствует.
+- Strict production-equivalent smoke exit 1 на обязательном `health.ok=false`. Recovery smoke разрешил degraded health и прошёл базовые `/`, `/tours`, `/excursions`, `/destinations`, `/places`, но остановился на тогда ещё не локализованном optional detail path; поэтому для WP-022 он не записан как pass. Product SHA `4aa7f52c` pushed; deployment `GWXM4ciE3sQW4jcYfiPeq4gnDcU3` позже завершился success.
 
 - WP-021 focused concurrency/pool/truth/deadline suite: **6 files / 24 tests** — pass. Финальный `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **443 files / 2 105 tests** + **31/31 release-evidence contracts** — pass. `npm audit --omit=dev`: **0 vulnerabilities**.
 - Protected production build exact `d6808a5c`: exit 0, **929/929** static pages, runtime-text audit pass, production mode/demo seeds off. Build logs честно фиксируют Supabase REST `exceed_egress_quota`; generated timestamp возвращён к committed state, worktree clean.
 - Exact local runtime health связывает полный SHA: canonical direct PG `ok=true`, общий health 503/degraded из-за REST quota. Browser serial **17/17** и cold parallel five-worker **17/17**; parallel log не содержит slot/429/timeout exhaustion. Strict smoke exit 1; explicit recovery smoke exit 0 и проверяет реальные commercial details.
-- GitHub push exact `d6808a5c` выполнен. Initial Vercel status в 17:03 UTC — `failure: Account is blocked`; deployment ID/immutable preview/remote browser отсутствуют и не считаются пройденными.
+- GitHub push exact `d6808a5c` выполнен. Initial Vercel status в 17:03 UTC был `failure: Account is blocked`, затем восстановился до success/deployment `BMXQzSXBg6o2r22LawaFRUQvLsVp`; локальный load proof остаётся сильнее доступного remote evidence, а healthy distributed production proof всё ещё открыт.
 
 - WP-017 focused fault/UX suite: **3 files / 56 tests** — pass. `npm run audit:quick`: TypeScript + ESLint + fresh inventory + **439 files / 2 084 tests** + **8 release-evidence tests** — pass.
 - Protected production build exact `a8efc1e6`: exit 0, **806/806**, runtime-text audit pass, demo auth markers absent. Build/runtime logs независимо воспроизводят canonical Supabase `exceed_egress_quota`; article HTTP 200 сохраняет правильный H1.
@@ -377,14 +395,15 @@ Master Goal V6 принят как главный норматив проект�
 12. **P1-GA-015:** root cause и fail-soft boundary исправлены и доказаны на exact immutable preview `9K5mTZ…`; production same-artifact behavior не доказано из-за P0 data plane.
 13. **P0-GA-018:** application и operational direct-PG target attestation исправлены и доказаны на exact previews `E288Fh…`/`E17wLXY…`; verified target connectivity и production same-artifact proof остаются открыты.
 14. **P1-GA-016:** commercial smoke false positive исправлен и доказан на exact preview `ed29b335` / `3hwMwixf…`; production остаётся на старом parser/artifact, same-artifact production proof заблокирован P0-GA-001.
-15. **P1-GA-017:** bounded fan-out, in-flight dedupe, shared pool/deadlines и error-vs-empty semantics реализованы в `d6808a5c`; local cold five-worker evidence закрывает воспроизведённое slot exhaustion. Immutable preview, distributed multi-instance capacity и production same-artifact proof остаются открыты.
-16. **P1-GA-018:** public catalog REST quota circuit, bounded logging и no-cache degraded snapshot реализованы в `4aa7f52c`; local serial/parallel и cold backend effect доказаны. Exact Vercel deployment, multi-instance recovery и production same-artifact behavior остаются открыты.
+15. **P1-GA-017:** bounded fan-out, in-flight dedupe, shared pool/deadlines и error-vs-empty semantics реализованы в `d6808a5c`; local cold five-worker evidence закрывает воспроизведённое slot exhaustion, deployment `BMXQzS…` success. Healthy distributed multi-instance capacity и production same-artifact proof остаются открыты.
+16. **P1-GA-018:** public catalog REST quota circuit, bounded logging и no-cache degraded snapshot реализованы в `4aa7f52c`; local serial/parallel и cold backend effect доказаны, deployment `GWXM4c…` success. Multi-instance recovery и production same-artifact behavior остаются открыты.
 17. **P1-GA-019:** production dependency audit чист, но полный dev-toolchain audit содержит 9 high в транзитивной ESLint-цепочке; безопасная non-breaking remediation ещё не доказана.
-18. **P1-GA-020:** 25–28-секундная public-route задержка оказалась full-catalog optional detail fan-out, а не CMS query latency. WP-023 `e22b5885` сначала выбирает 4–6/widget/geography candidates и только затем валидирует detail; article cold сокращён с 23.601 s до 616 ms, recovery smoke проходит. Exact preview, distributed behavior и production same-artifact proof остаются открыты.
-19. **P1-GA-021:** public CMS read path превращает timeout/quota/RLS/unknown failure в `null`/`[]` и может кешировать fallback 300 секунд, поэтому CMS-only outage способен дать ложный 404/empty. Нужен typed `available|unavailable|missing` contract и WP-024 fault/browser evidence без ослабления редакционного fallback.
+18. **P1-GA-020:** 25–28-секундная public-route задержка оказалась full-catalog optional detail fan-out, а не CMS query latency. WP-023 `e22b5885` сначала выбирает 4–6/widget/geography candidates и только затем валидирует detail; article cold сокращён с 23.601 s до 616 ms, recovery smoke и deployment `5HameB…` проходят. Healthy distributed behavior и production same-artifact proof остаются открыты.
+19. **P1-GA-021:** WP-024 `d4fbbbc1` устраняет CMS error→missing/empty collapse, не кеширует degraded fallback и доказан exact local/preview. Production всё ещё на старом artifact и возвращает false-empty comments; healthy read/recovery и same-artifact production proof остаются открыты.
+20. **P1-GA-022:** Tripster public fallback включает raw provider `message` в build/runtime log. Секрет в текущем evidence не обнаружен, но внешняя строка не является bounded observability contract; нужна structured class-only sanitization и regression test.
 
 ## Следующие три задачи
 
 1. Owner/ops + engineering: снять Supabase `exceed_egress_quota`, восстановить canonical verified runtime connectivity и сразу выполнить read-only 107 migrations/journal/checksums, RLS/grants и backup/PITR reconciliation; до parity не применять DDL.
-2. Engineering WP-024: ввести typed public CMS read result, различить confirmed missing и operational unavailable, запретить cache degraded fallback и доказать CMS-only outage без ложного 404; отдельно ограничить comments logging.
-3. Engineering/tooling: подготовить совместимый пакет Next/eslint-config-next/ESLint для устранения `brace-expansion/minimatch` dev-only цепочки; не применять `npm audit fix --force` без полного compatibility proof.
+2. Engineering/tooling WP-025: подготовить совместимый пакет Next/eslint-config-next/ESLint для устранения `brace-expansion/minimatch` dev-only цепочки; не применять `npm audit fix --force` без полного compatibility proof.
+3. Engineering WP-026: заменить raw Tripster provider-message logging на bounded `source/errorClass/retryable`, добавить secret-marker/structured-log contracts и повторить outage build/runtime evidence.
