@@ -271,6 +271,7 @@ async function checkHealthEndpoint() {
       };
     }
 
+    const healthOk = res.ok && json.ok === true;
     const dbOk = json.checks?.database?.ok;
     const dbSkipped = json.checks?.database?.skipped;
     const migrationId = json.migrationVersion ?? json.checks?.migrations?.latestId;
@@ -278,12 +279,12 @@ async function checkHealthEndpoint() {
     return {
       id: "smoke:supabase-verify",
       label: "Smoke /api/health",
-      status: dbSkipped ? "warn" : dbOk ? "ok" : "fail",
+      status: dbSkipped ? "warn" : healthOk ? "ok" : "fail",
       message: dbSkipped
         ? `Ответ получен, БД не проверялась. migrationVersion=${migrationId ?? "—"}`
-        : dbOk
+        : healthOk
           ? `OK. migrationVersion=${migrationId ?? "—"}, deployEnv=${json.environment?.deployEnv ?? "—"}`
-          : `БД: ${json.checks?.database?.error ?? "ошибка"}`,
+          : `Health ${json.status ?? res.status}: REST=${dbOk ? "ok" : "down"}, PG=${json.checks?.postgresDirect?.ok ? "ok" : "down"}`,
       category: "smoke",
     };
   } catch {

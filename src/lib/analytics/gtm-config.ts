@@ -10,20 +10,20 @@ export type GtmPublicConfig = {
   yandexSiteVerification: string | null;
 };
 
-function readEnv(name: string): string | null {
-  const value = process.env[name]?.trim();
-  return value || null;
+function readEnv(value: string | undefined): string | null {
+  const normalized = value?.trim();
+  return normalized || null;
 }
 
 export function getGtmPublicConfig(): GtmPublicConfig {
   return {
-    gtmId: readEnv("NEXT_PUBLIC_GTM_ID"),
-    ga4MeasurementId: readEnv("NEXT_PUBLIC_GA4_MEASUREMENT_ID"),
-    clarityProjectId: readEnv("NEXT_PUBLIC_CLARITY_PROJECT_ID"),
-    googleSiteVerification: readEnv("NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION"),
-    bingSiteVerification: readEnv("NEXT_PUBLIC_BING_SITE_VERIFICATION"),
-    ahrefsSiteVerification: readEnv("NEXT_PUBLIC_AHREFS_SITE_VERIFICATION"),
-    yandexSiteVerification: readEnv("NEXT_PUBLIC_YANDEX_SITE_VERIFICATION"),
+    gtmId: readEnv(process.env.NEXT_PUBLIC_GTM_ID),
+    ga4MeasurementId: readEnv(process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID),
+    clarityProjectId: readEnv(process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID),
+    googleSiteVerification: readEnv(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION),
+    bingSiteVerification: readEnv(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION),
+    ahrefsSiteVerification: readEnv(process.env.NEXT_PUBLIC_AHREFS_SITE_VERIFICATION),
+    yandexSiteVerification: readEnv(process.env.NEXT_PUBLIC_YANDEX_SITE_VERIFICATION),
   };
 }
 

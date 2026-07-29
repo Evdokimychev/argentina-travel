@@ -100,7 +100,6 @@ async function main() {
     probeHealth("/api/health/partners"),
   ]);
 
-  const healthDown = health.filter((row) => row.status === "down" || row.httpStatus === 503 && row.pathname === "/api/health/public" && row.status === "down");
   // Partners/database may be degraded (REST 402 + PG ok) — allowed; full down fails.
   const hardDown = health.filter((row) => row.status === "down");
 
@@ -117,7 +116,7 @@ async function main() {
   fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`\nWrote ${reportPath}`);
 
-  if (steps.some((step) => step.required && !step.ok) || hardDown.length === health.length) {
+  if (steps.some((step) => step.required && !step.ok) || hardDown.length > 0) {
     console.error("release:public-production FAILED");
     process.exit(1);
   }

@@ -24,6 +24,7 @@ const groups = {
   static: [
     ["environment", "node", ["scripts/validate-build-mode.mjs"], true],
     ["secrets", "node", ["scripts/audit-secrets.mjs"], true],
+    ["production-dependencies", "npm", ["audit", "--omit=dev"], true],
     [
       "release-evidence-contracts",
       "node",
@@ -31,9 +32,11 @@ const groups = {
         "--test",
         "scripts/lib/candidate-evidence.test.mjs",
         "scripts/lib/critical-public-media.test.mjs",
+        "scripts/lib/commercial-catalog-smoke.test.mjs",
         "scripts/lib/data-api-grants.test.mjs",
         "scripts/lib/lighthouse-budget-policy.test.mjs",
         "scripts/lib/migration-journal.test.mjs",
+        "scripts/lib/ops-report-evidence.test.mjs",
         "scripts/kb-source-health.test.mjs",
         "scripts/lib/release-gate-content-contract.test.mjs",
         "scripts/lib/release-gate-env.test.mjs",

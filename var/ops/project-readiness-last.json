@@ -1,32 +1,43 @@
 {
-  "ranAt": "2026-07-20T19:59:08.023Z",
-  "overall": 9,
-  "grade": "B+",
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-29T02:23:22.759Z",
+  "ranAt": "2026-07-29T02:23:22.759Z",
+  "baseUrl": "https://www.goargentina.ru",
+  "gitSha": "993e82fb7a6d59b47260387856acce68bb52b651",
+  "overall": 0,
+  "grade": "D",
   "dimensions": {
     "code": {
-      "score": 9.9,
-      "note": "OK 15, warn 1, fail 0"
+      "score": null,
+      "manual": true,
+      "note": "publish evidence отклонён: missing-generated-at, stale-report, missing-git-sha"
     },
     "cms": {
-      "score": 10,
-      "note": "3/3 lanes @100%, cutover=false"
+      "score": null,
+      "manual": true,
+      "note": "CMS evidence отклонён: missing-generated-at, stale-report"
     },
     "production": {
-      "score": 10,
-      "note": "https://www.goargentina.ru"
+      "score": 0,
+      "note": "https://www.goargentina.ru: HTTP 503, status=down"
     },
     "analytics": {
-      "score": 0,
-      "manual": false,
-      "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
+      "score": null,
+      "manual": true,
+      "note": "analytics evidence отклонён: missing-generated-at, stale-report, missing-git-sha"
     },
     "performance": {
-      "score": 10,
-      "note": "median perf 86, a11y 99, worst CLS 0.150 (prod CDN)"
+      "score": null,
+      "manual": true,
+      "note": "Lighthouse evidence отклонён: missing-generated-at, missing-timestamp, git-sha-mismatch"
     }
   },
   "blockers": [
-    "analytics: 6 blocking failure(s)"
+    "production health is down",
+    "publish evidence rejected: missing-generated-at, stale-report, missing-git-sha",
+    "analytics evidence rejected: missing-generated-at, stale-report, missing-git-sha",
+    "cms evidence rejected: missing-generated-at, stale-report",
+    "lighthouse evidence rejected: missing-generated-at, missing-timestamp, git-sha-mismatch"
   ],
   "manualNext": [
     "Vercel: NEXT_PUBLIC_GTM_ID + verification tokens → redeploy",
@@ -36,10 +47,50 @@
     "Lighthouse perf sprint (local lab median ~59 vs budget 90)",
     "F2 i18n globals ES/EN (E77)"
   ],
-  "reports": {
-    "publish": "var/ops/publish-turnkey-last.json",
-    "analytics": "var/ops/analytics-readiness-last.json",
-    "cms": "var/ops/cms-cutover-readiness-last.json",
-    "lighthouse": "var/ops/lighthouse-phase2-sample-last.json"
+  "evidence": {
+    "liveHealth": {
+      "reachable": true,
+      "ok": false,
+      "httpStatus": 503,
+      "status": "down",
+      "gitSha": "993e82fb7a6d59b47260387856acce68bb52b651"
+    },
+    "reports": {
+      "publish": {
+        "path": "var/ops/publish-turnkey-last.json",
+        "valid": false,
+        "reasons": [
+          "missing-generated-at",
+          "stale-report",
+          "missing-git-sha"
+        ]
+      },
+      "analytics": {
+        "path": "var/ops/analytics-readiness-last.json",
+        "valid": false,
+        "reasons": [
+          "missing-generated-at",
+          "stale-report",
+          "missing-git-sha"
+        ]
+      },
+      "cms": {
+        "path": "var/ops/cms-cutover-readiness-last.json",
+        "valid": false,
+        "reasons": [
+          "missing-generated-at",
+          "stale-report"
+        ]
+      },
+      "lighthouse": {
+        "path": "var/ops/lighthouse-phase2-prod-last.json",
+        "valid": false,
+        "reasons": [
+          "missing-generated-at",
+          "missing-timestamp",
+          "git-sha-mismatch"
+        ]
+      }
+    }
   }
 }

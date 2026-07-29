@@ -17,11 +17,15 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateOpsReportEvidence } from "./lib/ops-report-evidence.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const opsDir = path.join(root, "var/ops");
-const reportFile = path.join(opsDir, "project-readiness-last.json");
+const reportFile = process.env.PROJECT_READINESS_REPORT_FILE
+  ? path.resolve(process.env.PROJECT_READINESS_REPORT_FILE)
+  : path.join(opsDir, "project-readiness-last.json");
+const DEFAULT_PRODUCTION_URL = "https://www.goargentina.ru";
 
 function readJson(relPath) {
   const full = path.join(opsDir, relPath);
@@ -124,7 +128,62 @@ function scoreLighthouse(lh) {
 }
 
 function readLighthouseReport() {
-  return readJson("lighthouse-phase2-prod-last.json") ?? readJson("lighthouse-phase2-sample-last.json");
+  return readJson("lighthouse-phase2-prod-last.json");
+}
+
+function rejectedDimension(label, validation) {
+  return {
+    score: null,
+    manual: true,
+    note: `${label}: ${validation.reasons.join(", ")}`,
+  };
+}
+
+async function fetchLiveHealth(baseUrl) {
+  if (process.env.PROJECT_READINESS_SKIP_LIVE === "1") {
+    return { reachable: false, ok: false, httpStatus: null, status: "skipped", gitSha: null };
+  }
+
+  try {
+    const response = await fetch(`${baseUrl}/api/health`, {
+      signal: AbortSignal.timeout(12_000),
+      headers: { Accept: "application/json" },
+    });
+    const body = await response.json().catch(() => null);
+    const gitSha =
+      typeof body?.gitSha === "string" && body.gitSha.trim().length >= 7
+        ? body.gitSha.trim()
+        : null;
+    return {
+      reachable: true,
+      ok: response.status === 200 && body?.ok === true,
+      httpStatus: response.status,
+      status: body?.status ?? null,
+      gitSha,
+    };
+  } catch {
+    return { reachable: false, ok: false, httpStatus: null, status: "unreachable", gitSha: null };
+  }
+}
+
+function scoreProduction(publish, publishEvidence, liveHealth, baseUrl) {
+  if (!liveHealth.reachable) {
+    return { score: null, manual: true, note: `${baseUrl}: live health недоступен` };
+  }
+  if (!liveHealth.ok) {
+    return {
+      score: 0,
+      note: `${baseUrl}: HTTP ${liveHealth.httpStatus}, status=${liveHealth.status ?? "unknown"}`,
+    };
+  }
+  if (!publishEvidence.valid) return rejectedDimension("publish evidence отклонён", publishEvidence);
+
+  const smokeOk = publish?.steps?.find((step) => step.id === "smoke:production")?.status === "ok";
+  const liveOk = publish?.steps?.find((step) => step.id === "live:health")?.status === "ok";
+  return {
+    score: smokeOk && liveOk ? 10 : smokeOk ? 9 : null,
+    note: smokeOk ? `${baseUrl}: live health + свежий publish evidence` : "production smoke не подтверждён",
+  };
 }
 
 function overallScore(dimensions) {
@@ -158,7 +217,7 @@ function grade(score) {
   return "D";
 }
 
-function main() {
+async function main() {
   const refresh = process.argv.includes("--refresh");
   if (refresh) {
     console.log("Refreshing publish:verify…\n");
@@ -176,27 +235,52 @@ function main() {
   const analytics = readJson("analytics-readiness-last.json");
   const cms = readJson("cms-cutover-readiness-last.json");
   const lighthouse = readLighthouseReport();
+  const baseUrl = (
+    process.env.PROJECT_READINESS_BASE_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    DEFAULT_PRODUCTION_URL
+  ).replace(/\/$/, "");
+  const liveHealth = await fetchLiveHealth(baseUrl);
+
+  const deploymentEvidenceOptions = {
+    expectedBaseUrl: baseUrl,
+    expectedGitSha: liveHealth.gitSha,
+    requireBaseUrl: true,
+    requireGitSha: true,
+    requireExpectedGitSha: true,
+    requireGeneratedAt: true,
+  };
+  const evidence = {
+    publish: validateOpsReportEvidence(publish, deploymentEvidenceOptions),
+    analytics: validateOpsReportEvidence(analytics, deploymentEvidenceOptions),
+    cms: validateOpsReportEvidence(cms, { requireGeneratedAt: true }),
+    lighthouse: validateOpsReportEvidence(lighthouse, deploymentEvidenceOptions),
+  };
 
   const dimensions = {
-    code: scorePublish(publish),
-    cms: scoreCms(cms),
-    production: {
-      score:
-        publish?.steps?.find((s) => s.id === "smoke:production")?.status === "ok" &&
-        publish?.steps?.find((s) => s.id === "live:health")?.status === "ok"
-          ? 10
-          : publish?.steps?.find((s) => s.id === "smoke:production")?.status === "ok"
-            ? 9
-            : null,
-      note: publish?.baseUrl ?? "https://www.goargentina.ru",
-    },
-    analytics: scoreAnalytics(analytics),
-    performance: scoreLighthouse(lighthouse),
+    code: evidence.publish.valid
+      ? scorePublish(publish)
+      : rejectedDimension("publish evidence отклонён", evidence.publish),
+    cms: evidence.cms.valid
+      ? scoreCms(cms)
+      : rejectedDimension("CMS evidence отклонён", evidence.cms),
+    production: scoreProduction(publish, evidence.publish, liveHealth, baseUrl),
+    analytics: evidence.analytics.valid
+      ? scoreAnalytics(analytics)
+      : rejectedDimension("analytics evidence отклонён", evidence.analytics),
+    performance: evidence.lighthouse.valid
+      ? scoreLighthouse(lighthouse)
+      : rejectedDimension("Lighthouse evidence отклонён", evidence.lighthouse),
   };
 
   const overall = overallScore(dimensions);
+  const generatedAt = new Date().toISOString();
   const payload = {
-    ranAt: new Date().toISOString(),
+    schemaVersion: 2,
+    generatedAt,
+    ranAt: generatedAt,
+    baseUrl,
+    gitSha: liveHealth.gitSha,
     overall: overall != null ? Math.round(overall * 10) / 10 : null,
     grade: grade(overall),
     dimensions: Object.fromEntries(
@@ -211,17 +295,28 @@ function main() {
       "Lighthouse perf sprint (local lab median ~59 vs budget 90)",
       "F2 i18n globals ES/EN (E77)",
     ],
-    reports: {
-      publish: "var/ops/publish-turnkey-last.json",
-      analytics: "var/ops/analytics-readiness-last.json",
-      cms: "var/ops/cms-cutover-readiness-last.json",
-      lighthouse: "var/ops/lighthouse-phase2-sample-last.json",
+    evidence: {
+      liveHealth,
+      reports: {
+        publish: { path: "var/ops/publish-turnkey-last.json", ...evidence.publish },
+        analytics: { path: "var/ops/analytics-readiness-last.json", ...evidence.analytics },
+        cms: { path: "var/ops/cms-cutover-readiness-last.json", ...evidence.cms },
+        lighthouse: { path: "var/ops/lighthouse-phase2-prod-last.json", ...evidence.lighthouse },
+      },
     },
   };
 
-  if (publish?.summary?.fail > 0) {
+  if (!liveHealth.reachable) {
+    payload.blockers.push("production health is not reachable");
+  } else if (!liveHealth.ok) {
+    payload.blockers.push(`production health is ${liveHealth.status ?? `HTTP ${liveHealth.httpStatus}`}`);
+  }
+  for (const [name, validation] of Object.entries(evidence)) {
+    if (!validation.valid) payload.blockers.push(`${name} evidence rejected: ${validation.reasons.join(", ")}`);
+  }
+  if (evidence.publish.valid && publish?.summary?.fail > 0) {
     payload.blockers.push("publish:verify has blocking failures");
-  } else if (analytics?.summary?.fail > 0 && !payload.dimensions.analytics?.manual) {
+  } else if (evidence.analytics.valid && analytics?.summary?.fail > 0 && !payload.dimensions.analytics?.manual) {
     payload.blockers.push(`analytics: ${analytics.summary.fail} blocking failure(s)`);
   }
 
@@ -247,4 +342,7 @@ function main() {
   console.log(`\nReport: ${path.relative(root, reportFile)}`);
 }
 
-main();
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});

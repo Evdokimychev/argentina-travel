@@ -24,9 +24,15 @@ const quick = () => {
   run("TypeScript", "npx", ["tsc", "--noEmit"]);
   run("ESLint", "npm", ["run", "lint"]);
   run("Unit tests", "npm", ["test"]);
+  run("Release evidence contracts", "node", [
+    "--test",
+    "scripts/lib/commercial-catalog-smoke.test.mjs",
+    "scripts/lib/ops-report-evidence.test.mjs",
+  ]);
 };
 
 const security = () => {
+  run("Production dependency audit", "npm", ["audit", "--omit=dev"]);
   run("RLS audit", "node", ["scripts/rls-audit.mjs"]);
   run("Secret patterns scan", "node", ["scripts/audit-secrets.mjs"]);
 };

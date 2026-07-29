@@ -10,8 +10,10 @@ export type AnalyticsReadinessCheckItem = {
 
 export type AnalyticsReadinessScriptReport = {
   ok: boolean;
+  generatedAt: string;
   ranAt: string;
   baseUrl: string;
+  gitSha?: string | null;
   checks: AnalyticsReadinessCheckItem[];
   summary: { ok: number; warn: number; fail: number; skip: number };
   runbook?: string;
@@ -20,5 +22,5 @@ export type AnalyticsReadinessScriptReport = {
 };
 
 export type AnalyticsReadinessSnapshot = AnalyticsReadinessScriptReport & {
-  source: "script" | "missing";
+  source: "script" | "missing" | "stale" | "invalid";
 };

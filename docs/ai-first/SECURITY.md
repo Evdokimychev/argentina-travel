@@ -58,6 +58,18 @@ npm run rls-audit
 ## Automated checks
 
 ```bash
+npm run audit:deps:production  # production supply chain, blocking
 npm run audit:security   # RLS + secret patterns
 npm run rls-audit
 ```
+
+## Dependency audit policy
+
+- Release gate блокирует уязвимости runtime-зависимостей через
+  `npm audit --omit=dev`; на 2026-07-29 результат — 0 известных уязвимостей.
+- Полный `npm audit` дополнительно отслеживается, но не подменяет production
+  gate. Сейчас он показывает 9 high-записей из одной dev-only цепочки
+  `ESLint → minimatch@3 → brace-expansion` (`GHSA-mh99-v99m-4gvg`).
+- `npm audit fix --force` не применять: предлагаемый ESLint 10 несовместим с
+  peer-контрактом `eslint-config-next@15.5.22`. Проверить исключение повторно
+  при обновлении Next/lint stack или появлении совместимого upstream patch.
