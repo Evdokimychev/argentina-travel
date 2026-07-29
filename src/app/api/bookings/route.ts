@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { insertCanonicalBookingAtomically } from "@/lib/bookings-server";
+import {
+  attachGuestBookingsToCurrentUser,
+  insertCanonicalBookingAtomically,
+} from "@/lib/bookings-server";
 import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
@@ -84,6 +87,9 @@ async function postBooking(request: Request) {
         );
       }
     }
+    if (authUser) {
+      await attachGuestBookingsToCurrentUser(supabase);
+    }
     const result = await insertCanonicalBookingAtomically(admin, {
       booking,
       organizerUserId: canonical.organizerUserId,
@@ -118,7 +124,7 @@ async function postBooking(request: Request) {
       userId: result.booking.userId,
       status: result.booking.status,
     });
-    return NextResponse.json({ booking: result.booking });
+    return NextResponse.json({ booking: { id: result.booking.id } });
   } catch (error) {
     addBookingBreadcrumb("booking.create.failed", {
       error: error instanceof Error ? error.message : "Unexpected error",

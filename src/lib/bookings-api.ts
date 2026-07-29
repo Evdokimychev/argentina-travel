@@ -20,8 +20,8 @@ async function parseJson<T>(response: Response): Promise<T> {
 export async function apiCreateBooking(
   command: CreateBookingCommand,
   protection?: { captchaToken?: string; honeypot?: string },
-): Promise<Booking> {
-  const data = await parseJson<{ booking: Booking }>(
+): Promise<Pick<Booking, "id">> {
+  const data = await parseJson<{ booking: Pick<Booking, "id"> }>(
     await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -173,6 +173,13 @@ export async function insertCanonicalBookingAtomically(
   const stored = normalizeBooking(rowToBooking(result.booking as Parameters<typeof rowToBooking>[0]));
   const created = result.created === true;
 
+  if (stored.userId !== input.booking.userId) {
+    return {
+      error: "Эта форма уже использовалась для другой заявки. Обновите страницу.",
+      status: 409,
+    };
+  }
+
   if (created) {
     if (input.booking.attribution && hasAttributionData(input.booking.attribution)) {
       await insertBookingAttribution(supabase, stored.id, input.booking.attribution);

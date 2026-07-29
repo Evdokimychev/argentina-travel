@@ -743,7 +743,7 @@ export async function createBookingFromCheckout(input: {
   idempotencyKey?: string;
   captchaToken?: string;
   honeypot?: string;
-}): Promise<Booking | { error: string }> {
+}): Promise<Pick<Booking, "id"> | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
   }

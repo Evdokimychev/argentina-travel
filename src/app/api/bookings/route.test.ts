@@ -4,13 +4,14 @@ import type { Booking } from "@/types/tourist";
 
 const mocks = vi.hoisted(() => ({
   enabled: true,
-  authUser: { id: "auth-user" } as { id: string } | null,
+  authUser: { id: "auth-user", email: "ivan@example.com" } as { id: string; email?: string } | null,
   admin: { kind: "fake-admin" },
   stored: new Map<string, { booking: Booking; fingerprint: string }>(),
   reservations: 0,
   verifyProtection: vi.fn(),
   buildCanonical: vi.fn(),
   ensureAvailability: vi.fn(),
+  attachGuest: vi.fn(),
   insertAtomic: vi.fn(),
   notifyCreated: vi.fn(),
   addBreadcrumb: vi.fn(),
@@ -23,6 +24,7 @@ vi.mock("@/lib/auth-mode", () => ({
 }));
 vi.mock("@/lib/supabase/server", () => ({
   createSupabaseServerClient: async () => ({
+    kind: "fake-server",
     auth: { getUser: async () => ({ data: { user: mocks.authUser } }) },
   }),
 }));
@@ -42,6 +44,7 @@ vi.mock("@/lib/tour-availability-server", () => ({
   ensureAvailabilitySlotForBooking: mocks.ensureAvailability,
 }));
 vi.mock("@/lib/bookings-server", () => ({
+  attachGuestBookingsToCurrentUser: mocks.attachGuest,
   insertCanonicalBookingAtomically: mocks.insertAtomic,
 }));
 vi.mock("@/lib/bookings-notify", () => ({
@@ -115,7 +118,16 @@ function canonicalBooking(command: CreateBookingCommand, authUserId?: string | n
     organizerComments: [],
     statusHistory: [],
     paymentStatus: "pending",
-    metadata: { requestFingerprint: fingerprint },
+    travelers: [{
+      id: "traveler-private",
+      fullName: "Иван Иванов",
+      dateOfBirth: "1990-01-01",
+      passportNumber: "PRIVATE-PASSPORT",
+    }],
+    travelersFormToken: "PRIVATE-TRAVELERS-TOKEN",
+    paymentLinkToken: "PRIVATE-PAYMENT-TOKEN",
+    clientPortalToken: "PRIVATE-PORTAL-TOKEN",
+    metadata: { requestFingerprint: fingerprint, idempotencyKeyHash: "PRIVATE-HASH" },
     createdAt: "2026-07-29T10:00:00.000Z",
     updatedAt: "2026-07-29T10:00:00.000Z",
   };
@@ -124,7 +136,7 @@ function canonicalBooking(command: CreateBookingCommand, authUserId?: string | n
 describe("POST /api/bookings route integration", () => {
   beforeEach(() => {
     mocks.enabled = true;
-    mocks.authUser = { id: "auth-user" };
+    mocks.authUser = { id: "auth-user", email: "ivan@example.com" };
     mocks.stored.clear();
     mocks.reservations = 0;
     mocks.verifyProtection.mockReset().mockResolvedValue({ ok: true });
@@ -133,6 +145,20 @@ describe("POST /api/bookings route integration", () => {
       showExcursions: true,
     });
     mocks.ensureAvailability.mockReset().mockResolvedValue(true);
+    mocks.attachGuest.mockReset().mockImplementation(async () => {
+      if (!mocks.authUser?.email) return 0;
+      let attached = 0;
+      for (const stored of mocks.stored.values()) {
+        if (
+          stored.booking.userId.startsWith("guest-") &&
+          stored.booking.contactEmail.toLowerCase() === mocks.authUser.email.toLowerCase()
+        ) {
+          stored.booking.userId = mocks.authUser.id;
+          attached += 1;
+        }
+      }
+      return attached;
+    });
     mocks.notifyCreated.mockReset().mockResolvedValue(undefined);
     mocks.addBreadcrumb.mockReset();
     mocks.captureException.mockReset();
@@ -156,6 +182,12 @@ describe("POST /api/bookings route integration", () => {
         const existing = mocks.stored.get(input.booking.id);
         if (existing) {
           if (existing.fingerprint !== fingerprint) {
+            return {
+              error: "Эта форма уже использовалась для другой заявки. Обновите страницу.",
+              status: 409,
+            };
+          }
+          if (existing.booking.userId !== input.booking.userId) {
             return {
               error: "Эта форма уже использовалась для другой заявки. Обновите страницу.",
               status: 409,
@@ -215,8 +247,70 @@ describe("POST /api/bookings route integration", () => {
     expect(mocks.reservations).toBe(2);
     expect(mocks.notifyCreated).toHaveBeenCalledTimes(1);
     await expect(first.json()).resolves.toEqual({
-      booking: expect.objectContaining({ totalPriceUsd: 840, status: "new" }),
+      booking: { id: canonicalBooking(baseCommand, "auth-user").id },
     });
+    await expect(second.json()).resolves.toEqual({
+      booking: { id: canonicalBooking(baseCommand, "auth-user").id },
+    });
+  });
+
+  it("binds exact replay to the authenticated actor without exposing the stored booking", async () => {
+    const first = await POST(request());
+    mocks.authUser = { id: "other-user", email: "other@example.com" };
+
+    const replay = await POST(request());
+
+    expect(first.status).toBe(200);
+    expect(replay.status).toBe(409);
+    await expect(replay.json()).resolves.toEqual({
+      error: "Эта форма уже использовалась для другой заявки. Обновите страницу.",
+    });
+    expect(mocks.reservations).toBe(2);
+    expect(mocks.notifyCreated).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows an exact guest replay with the same derived guest actor", async () => {
+    mocks.authUser = null;
+
+    const first = await POST(request());
+    const replay = await POST(request());
+
+    expect([first.status, replay.status]).toEqual([200, 200]);
+    expect(mocks.attachGuest).not.toHaveBeenCalled();
+    expect(mocks.reservations).toBe(2);
+    expect(mocks.notifyCreated).toHaveBeenCalledTimes(1);
+    await expect(replay.json()).resolves.toEqual({
+      booking: { id: canonicalBooking(baseCommand).id },
+    });
+  });
+
+  it("allows a confirmed same-email account to attach and replay its guest booking", async () => {
+    mocks.authUser = null;
+    const guestCreate = await POST(request());
+    mocks.authUser = { id: "confirmed-user", email: "ivan@example.com" };
+
+    const attachedReplay = await POST(request());
+
+    expect([guestCreate.status, attachedReplay.status]).toEqual([200, 200]);
+    expect(mocks.attachGuest).toHaveBeenCalledTimes(1);
+    expect(mocks.reservations).toBe(2);
+    expect(mocks.notifyCreated).toHaveBeenCalledTimes(1);
+    await expect(attachedReplay.json()).resolves.toEqual({
+      booking: { id: canonicalBooking(baseCommand).id },
+    });
+  });
+
+  it("rejects guest replay from an unrelated authenticated account", async () => {
+    mocks.authUser = null;
+    const guestCreate = await POST(request());
+    mocks.authUser = { id: "unrelated-user", email: "other@example.com" };
+
+    const replay = await POST(request());
+
+    expect(guestCreate.status).toBe(200);
+    expect(replay.status).toBe(409);
+    expect(mocks.reservations).toBe(2);
+    expect(mocks.notifyCreated).toHaveBeenCalledTimes(1);
   });
 
   it("stores a price quote without reserving inventory", async () => {
