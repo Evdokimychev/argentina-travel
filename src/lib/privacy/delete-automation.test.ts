@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { completedDeleteMetadata } from "./delete-automation";
+import { completedDeleteMetadata, resolvePrivacyDeleteIdentity } from "./delete-automation";
 
 describe("completedDeleteMetadata", () => {
   it("retains only operational deletion evidence", () => {
@@ -22,5 +22,27 @@ describe("completedDeleteMetadata", () => {
     });
     expect(JSON.stringify(metadata)).not.toContain("email");
     expect(JSON.stringify(metadata)).not.toContain("fullName");
+  });
+});
+
+describe("resolvePrivacyDeleteIdentity", () => {
+  it("recovers the original identity from request metadata after partial anonymization", () => {
+    expect(resolvePrivacyDeleteIdentity(
+      { email: null, first_name: "Удалён", last_name: "пользователь" },
+      { email: "reader@example.com", fullName: "Original Reader" },
+    )).toEqual({
+      email: "reader@example.com",
+      name: "Original Reader",
+    });
+  });
+
+  it("prefers the current profile identity before anonymization", () => {
+    expect(resolvePrivacyDeleteIdentity(
+      { email: "current@example.com", first_name: "Current", last_name: "Reader" },
+      { email: "stale@example.com", fullName: "Stale Reader" },
+    )).toEqual({
+      email: "current@example.com",
+      name: "Current Reader",
+    });
   });
 });

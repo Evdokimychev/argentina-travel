@@ -42,6 +42,33 @@ function asObject(value: Json | null): Record<string, unknown> {
   return value as Record<string, unknown>;
 }
 
+export function resolvePrivacyDeleteIdentity(
+  profile: {
+    email?: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
+  } | null,
+  requestMetadata: Json,
+): { email: string | null; name: string | null } {
+  const metadata = asObject(requestMetadata);
+  const metadataEmail =
+    typeof metadata.email === "string" && metadata.email.trim()
+      ? metadata.email.trim()
+      : null;
+  const metadataName =
+    typeof metadata.fullName === "string" && metadata.fullName.trim()
+      ? metadata.fullName.trim()
+      : null;
+  const profileEmail = profile?.email?.trim() || null;
+  const profileName =
+    [profile?.first_name, profile?.last_name].filter(Boolean).join(" ").trim() || null;
+
+  return {
+    email: profileEmail ?? metadataEmail,
+    name: profileEmail ? profileName ?? metadataName : metadataName ?? profileName,
+  };
+}
+
 function buildAnonymizedPayload(raw: Json, anonymizedAt: string): Json {
   const source = asObject(raw);
   const keepKeys = [
@@ -346,9 +373,10 @@ async function processDeleteRequest(
       throw new Error(profileError.message);
     }
 
-    const originalEmail = profile?.email ?? null;
-    const originalName =
-      [profile?.first_name, profile?.last_name].filter(Boolean).join(" ").trim() || null;
+    const { email: originalEmail, name: originalName } = resolvePrivacyDeleteIdentity(
+      profile,
+      request.metadata,
+    );
     const completedAt = new Date().toISOString();
 
     const { error: authBanError } = await supabase.auth.admin.updateUserById(request.user_id, {
