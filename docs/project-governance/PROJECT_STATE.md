@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 01:24 ART / 2026-07-29 04:24 UTC**
+Последняя проверка: **2026-07-29 01:31 ART / 2026-07-29 04:31 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -10,12 +10,10 @@ Master Goal V6 принят как главный норматив проект�
 
 ## Git и candidate state
 
-- Активная ветка: `codex/master-goal-wave1-catalog-fail-closed`.
-- Candidate HEAD: `ef447d8e0c7f722f68099b2cc76b733c5fd88be1`.
-- WP-001 commits: `6927bf78` (catalog fail-closed), `efd7f30a` (healthy SHA-bound readiness evidence).
-- WP-002 commits: `4c209069` (global product-truth copy), `ef447d8e` (remaining unsupported booking/verification claims).
-- В рабочем дереве остаются 24 не относящихся к пакетам entries (23 tracked + 1 untracked); они не staged и не включены в candidate commits.
-- Ветка содержит более раннюю feature-историю и пока не является чистым release branch от `main`; перед production promotion нужен controlled integration/cherry-pick.
+- Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
+- Product/governance candidate SHA до этой записи: `a07327dbc69493ccf666a9dd0f0df0567d324fcf`; worktree чистый, `origin/main` является ancestor.
+- Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
+- Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
 
 ## Production и deployments
 
@@ -24,6 +22,7 @@ Master Goal V6 принят как главный норматив проект�
 - `efd7f30a` собран Vercel успешно: deployment `2P6Pnq4T1dY1kbn4VQQ8ksAKVu6R`.
 - `4c209069` собран Vercel успешно: deployment `D9WetK9zSgNuom1ytiAUYmmLfsne`.
 - `ef447d8e`: deployment **не создан**; GitHub/Vercel status `failure`, точная причина `Account is blocked` (2026-07-29 04:17 UTC).
+- Чистый candidate `a07327db`: deployment **не создан**; Vercel немедленно вернул `failure: Account is blocked` (2026-07-29 04:30 UTC).
 - Immutable preview URL и runtime logs недоступны: Vercel MCP/API/CLI/Browser account scopes не дают доступ к проекту. Поэтому remote browser QA не считается выполненным.
 - Production `/api/health`, `/public`, `/database`, `/partners` остаются 503/down. Production promotion не выполнялся.
 
@@ -60,17 +59,17 @@ Master Goal V6 принят как главный норматив проект�
 - Browser QA свежего bundle: 1440×900 и 390×844, unsupported claims absent, horizontal overflow 0. `/guide/bezopasnost` имеет холодный SSR 7.9–8.6 s — отдельный performance-риск, не функциональный false-loader.
 - Production dependencies: `npm audit --omit=dev` — 0; dev toolchain — 9 high.
 - Финальная production перепроверка 2026-07-29 04:24 UTC: health/public/database/partners — 503; tours/excursions по-прежнему возвращают ложный 200 empty на старом SHA `993e82fb`.
+- Clean-candidate verification: lockfile install dry-run + install pass; 46 focused Vitest + 8 Node evidence tests pass; Prisma generate, TypeScript and lint pass (existing warnings only).
 
 ## Открытые P0/P1
 
 1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
 3. **P1-GA-005:** разблокировать Vercel account/project scope и получить remote immutable preview/log evidence.
-4. **P1-GA-009:** перенести candidate commits на чистую release ancestry без пользовательских изменений.
-5. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
+4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
 
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
 2. Owner/ops: разблокировать Vercel account и read-only project scope; пересобрать `ef447d8e`, получить deployment ID, затем remote desktop/mobile/no-JS smoke.
-3. Engineering: сформировать чистый release candidate из доказанных WP-001/WP-002 commits и выполнить полный card/detail/CTA crawl без production promotion до закрытия P0.
+3. Engineering: после разблокировки preview выполнить полный card/detail/CTA crawl на чистом candidate и подготовить promotion/rollback evidence без production promotion до закрытия P0.

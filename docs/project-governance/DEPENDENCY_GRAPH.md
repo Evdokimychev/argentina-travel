@@ -36,7 +36,7 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: clean release ancestry is not frozen; migration parity is unavailable; Vercel rejected the final candidate because the account is blocked; immutable preview/runtime scope is unavailable; production health is down. Successful earlier deployments `2P6Pnq…` and `D9WetK…` do not prove later SHA `ef447d8e`.
+Current breaks: clean release ancestry is frozen at `a07327db`, but migration parity is unavailable; Vercel rejected that exact clean candidate because the account is blocked; immutable preview/runtime scope is unavailable; production health is down. Successful earlier deployments `2P6Pnq…` and `D9WetK…` do not prove the clean candidate.
 
 ## Data ownership boundaries
 

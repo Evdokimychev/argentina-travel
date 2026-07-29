@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 01:18 ART**. План перестроен по доказательствам: WP-001 и WP-002 реализованы независимо, но последний preview остановлен новым внешним блокером `Vercel Account is blocked`; Supabase P0 и live migration evidence по-прежнему выше promotion.
+Обновлён: **2026-07-29 01:31 ART**. WP-001/WP-002 перенесены на чистую ancestry от `origin/main`; Vercel отклонил exact clean SHA с `Account is blocked`. Supabase P0 и live migration evidence по-прежнему выше promotion.
 
 ## Правило выбора пакета
 
@@ -15,7 +15,7 @@
 | 2 | Unblock Vercel account/project evidence | P1 | successful deployment for exact candidate SHA + logs + immutable URL | `ef447d8e` rejected: `Account is blocked`; owner action required |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
-| 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | pending |
+| 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
 | 6 | Remote preview full-flow verification | P1 | catalog/detail/card/CTA crawl, no-JS/slow path, smoke bound to deployment | blocked by Vercel account/scope |
 | 7 | Production promote and post-deploy proof | P0/P1 | same artifact ID/SHA, health, rollback, catalog/detail parity | forbidden until orders 0–2 close |
 | 8 | Analytics/consent/conversion proof | P1 | healthy SHA-bound report + clean-browser consent matrix | code binding improved; production proof pending healthy deployment |
@@ -35,6 +35,6 @@ Global and high-risk route copy now derives from proven current behavior: GoArge
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
-- Candidate promotion moved below Vercel account recovery: a locally proven SHA without a deploy ID is not a remote preview.
+- Candidate promotion remains below Vercel account recovery: exact clean SHA `a07327db` was rejected and a locally proven SHA without a deploy ID is not a remote preview.
 - Safety guide latency is recorded as P2, not allowed to displace the production data-plane P0 without profiling evidence.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

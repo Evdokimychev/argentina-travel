@@ -58,3 +58,10 @@
 - Decision: record deployment ID only when Vercel created one for the exact SHA; never reuse an earlier deployment as proof for a later commit.
 - Evidence: `4c209069` deployed successfully as `D9WetK9zSgNuom1ytiAUYmmLfsne`, but `ef447d8e` was rejected with `Account is blocked` and has no deployment ID.
 - Consequence: WP-002 final candidate remains remote-preview-blocked despite local production-equivalent QA.
+
+## D-011 — Release candidate must be rooted in current `origin/main`
+
+- Date: 2026-07-29
+- Decision: preserve the dirty user worktree and create `codex/master-goal-release-candidate` from `origin/main`, applying only the six proven governance/WP commits.
+- Evidence: all cherry-picks completed without conflicts; `origin/main` is ancestor of `a07327db`; worktree and diff checks are clean; 54 focused/evidence tests, TypeScript and lint pass.
+- Consequence: P1-GA-009 is resolved for the candidate branch, while production promotion remains gated by Supabase/Vercel P0/P1 evidence.
