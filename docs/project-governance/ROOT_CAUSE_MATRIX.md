@@ -1,0 +1,12 @@
+# P0/P1 root-cause matrix
+
+| Hypothesis | Reproduction | Root cause status | Scope | Fix/evidence next |
+|---|---|---|---|---|
+| Supabase outage becomes empty catalog | production APIs return 200 empty while health is 503; local fault runtime now returns 503/LKG | code cause fixed locally: wrappers converted query/client errors to `[]/null`; REST infrastructure cause confirmed `exceed_egress_quota`; production direct-PG cause unresolved | catalog APIs, RSC, search/sitemap/recommendations, detail | WP-001 preview; owner quota action; Vercel direct-PG diagnosis |
+| Operational error becomes cacheable 404 | source trace shows detail wrappers collapse error to null; public resolver can emit missing | confirmed local root cause; live detail slug unavailable because catalog has no cards | tour/excursion detail, metadata, affiliate/booking consumers | propagate unavailable; prevent cache poison; crawl all cards in preview |
+| Catalog/detail/snapshot mismatch | historical multiple REST/PG/partner/cutover paths; current health blocks live reconciliation | partially confirmed architectural cause | catalog, detail, slugs, sitemap, counts | unify result contract, then target reconciliation and count parity |
+| `/tours` slow/timeout | current page loads but catalog unavailable; no Vercel runtime logs due 403 | unresolved | `/tours`, partner aggregation, cold path | restore logs/access; capture server timing and preview trace |
+| `/excursions` SSR loader/empty | production hydrated UI says no results; local fault browser now shows actionable route error at desktop/mobile | source failure semantics fixed locally; streaming/no-JS behavior still requires preview | SSR/no-JS/slow network | immutable preview no-JS/slow 3G check |
+| Product promises exceed capability | footer says marketplace/verified organizers during outage and without current organizer evidence | confirmed copy/control mismatch; full capability audit pending | global footer, `/join`, tour detail/legal/schema | capability matrix + hide/qualify unsupported claims |
+| Migration state differs | baseline 102, local/build metadata 107, DB unreadable | evidence gap, not proven drift | all DB-backed modules | canonical journal checksum query after access restoration |
+| Recovery is reliable | runbook exists, restore rehearsal not_run | confirmed governance gap | entire asset | configure encrypted backup + disposable restore proof |
