@@ -13,6 +13,12 @@ function dependencies(
     pingSupabase: async () => undefined,
     countSearchDocuments: async () => 42,
     pingPostgresDirect: async () => 17,
+    describeDirectPostgres: () => ({
+      source: "DATABASE_URL",
+      mode: "supabase_session_pooler",
+      port: 5432,
+      projectRef: "uooxrypocahomoqzdvzy",
+    }),
     now: () => {
       clock += 5;
       return clock;
@@ -37,6 +43,12 @@ describe("public health snapshot", () => {
       required: true,
       ok: true,
       tripsterCount: 17,
+      connection: {
+        source: "DATABASE_URL",
+        mode: "supabase_session_pooler",
+        port: 5432,
+        projectRef: "uooxrypocahomoqzdvzy",
+      },
     });
     expect(snapshot.checks.searchIndex).toMatchObject({
       required: false,
@@ -112,6 +124,7 @@ describe("public health snapshot", () => {
       dependencies({
         isSupabaseConfigured: () => false,
         hasDirectPostgres: () => false,
+        describeDirectPostgres: () => null,
       }),
     );
 
@@ -124,5 +137,6 @@ describe("public health snapshot", () => {
       error: "not_configured",
     });
     expect(snapshot.checks.postgresDirect.error).toBe("not_configured");
+    expect(snapshot.checks.postgresDirect.connection).toBeNull();
   });
 });

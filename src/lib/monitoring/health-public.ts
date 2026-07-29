@@ -1,6 +1,11 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import {
+  resolveDatabaseUrl,
+  resolveDatabaseConnectionDiagnostics,
+  createPgClientConfig,
+  type DatabaseConnectionDiagnostics,
+} from "@/lib/database-url";
 import { getAppVersion, getGitSha } from "@/lib/monitoring/build-info";
 import pg from "pg";
 import { getDeployEnvironment } from "@/lib/ops/deploy-env";
@@ -41,6 +46,7 @@ export type PublicHealthSnapshot = {
     };
     postgresDirect: DependencyCheck & {
       tripsterCount: number | null;
+      connection: DatabaseConnectionDiagnostics | null;
     };
   };
   generatedAt: string;
@@ -52,6 +58,7 @@ type ProbeDependencies = {
   pingSupabase: () => Promise<void>;
   countSearchDocuments: () => Promise<number>;
   pingPostgresDirect: () => Promise<number>;
+  describeDirectPostgres: () => DatabaseConnectionDiagnostics | null;
   now: () => number;
 };
 
@@ -162,6 +169,7 @@ const DEFAULT_DEPENDENCIES: ProbeDependencies = {
   pingSupabase: defaultPingSupabase,
   countSearchDocuments: defaultCountSearchDocuments,
   pingPostgresDirect: defaultPingPostgresDirect,
+  describeDirectPostgres: resolveDatabaseConnectionDiagnostics,
   now: () => Date.now(),
 };
 
@@ -176,6 +184,7 @@ export async function fetchPublicHealthSnapshotForTest(
   const includeSearchIndexCount = options.includeSearchIndexCount ?? true;
   const supabaseConfigured = dependencies.isSupabaseConfigured();
   const directPostgresConfigured = dependencies.hasDirectPostgres();
+  const directPostgresConnection = dependencies.describeDirectPostgres();
 
   const databasePromise =
     pingDatabase && supabaseConfigured
@@ -237,6 +246,7 @@ export async function fetchPublicHealthSnapshotForTest(
         latencyMs: postgresProbe.latencyMs,
         error: postgresProbe.ok ? null : postgresProbe.error,
         tripsterCount: postgresProbe.ok ? postgresProbe.value : null,
+        connection: directPostgresConnection,
       }
     : {
         required: true,
@@ -245,6 +255,7 @@ export async function fetchPublicHealthSnapshotForTest(
         latencyMs: null,
         error: directPostgresConfigured ? null : "not_configured",
         tripsterCount: null,
+        connection: directPostgresConnection,
       };
 
   const overall = resolveOverallHealth([database, searchIndex, postgresDirect]);

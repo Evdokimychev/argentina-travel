@@ -29,21 +29,60 @@ function isUsableDatabaseUrl(value: string | undefined): value is string {
   return Boolean(trimmed && trimmed !== '""' && trimmed !== "''");
 }
 
-export function resolveDatabaseUrl(): string | null {
-  const candidates = [
-    process.env.POSTGRES_URL,
-    process.env.POSTGRES_PRISMA_URL,
-    process.env.DATABASE_URL,
-    process.env.POSTGRES_URL_NON_POOLING,
+export type DatabaseConnectionDiagnostics = {
+  source: "POSTGRES_URL" | "POSTGRES_PRISMA_URL" | "DATABASE_URL" | "POSTGRES_URL_NON_POOLING" | "POSTGRES_PARTS";
+  mode: "supabase_direct" | "supabase_session_pooler" | "other";
+  port: number | null;
+  projectRef: string | null;
+};
+
+function diagnosticsFor(source: DatabaseConnectionDiagnostics["source"], value: string): DatabaseConnectionDiagnostics {
+  try {
+    const parsed = new URL(value);
+    const pooler = parsed.hostname.includes("pooler.supabase.com");
+    const directMatch = parsed.hostname.match(/^db\.([a-z0-9]+)\.supabase\.co$/i);
+    const userMatch = decodeURIComponent(parsed.username).match(/^postgres\.([a-z0-9]+)$/i);
+    return {
+      source,
+      mode: pooler ? "supabase_session_pooler" : directMatch ? "supabase_direct" : "other",
+      port: parsed.port ? Number.parseInt(parsed.port, 10) : null,
+      projectRef: directMatch?.[1] ?? userMatch?.[1] ?? null,
+    };
+  } catch {
+    return { source, mode: "other", port: null, projectRef: null };
+  }
+}
+
+export function resolveDatabaseConnection(): {
+  connectionString: string;
+  diagnostics: DatabaseConnectionDiagnostics;
+} | null {
+  const candidates: Array<[DatabaseConnectionDiagnostics["source"], string | undefined]> = [
+    ["POSTGRES_URL", process.env.POSTGRES_URL],
+    ["POSTGRES_PRISMA_URL", process.env.POSTGRES_PRISMA_URL],
+    ["DATABASE_URL", process.env.DATABASE_URL],
+    ["POSTGRES_URL_NON_POOLING", process.env.POSTGRES_URL_NON_POOLING],
   ];
 
-  for (const value of candidates) {
+  for (const [source, value] of candidates) {
     if (isUsableDatabaseUrl(value)) {
-      return preferPgSessionPoolerUrl(value);
+      const connectionString = preferPgSessionPoolerUrl(value);
+      return { connectionString, diagnostics: diagnosticsFor(source, connectionString) };
     }
   }
 
-  return buildDatabaseUrlFromParts();
+  const connectionString = buildDatabaseUrlFromParts();
+  return connectionString
+    ? { connectionString, diagnostics: diagnosticsFor("POSTGRES_PARTS", connectionString) }
+    : null;
+}
+
+export function resolveDatabaseUrl(): string | null {
+  return resolveDatabaseConnection()?.connectionString ?? null;
+}
+
+export function resolveDatabaseConnectionDiagnostics(): DatabaseConnectionDiagnostics | null {
+  return resolveDatabaseConnection()?.diagnostics ?? null;
 }
 
 function preferPgSessionPoolerUrl(url: string): string {
