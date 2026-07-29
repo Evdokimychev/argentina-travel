@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 06:06 ART**. WP-010 закрыл cross-provider checkout race, stale booking overwrite, hostile callback origin и избыточную capability-проекцию; live provider/webhook/DB effect остаётся заблокирован unhealthy data plane.
+Обновлён: **2026-07-29 06:44 ART**. WP-011 закрыл quote-driven inventory consumption, scheduled-booking fail-open и raw booking storage errors; live RPC/RLS/notification/browser completion остаются заблокированы unhealthy data plane.
 
 ## Правило выбора пакета
 
@@ -12,7 +12,7 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | current `179d3e51` → `4aRm8X7Q…` success after ~9 min pending; delayed builds remain volatile and logs still blocked |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | current `84988cf` → `8aKBjCN2…` success after initial block/~9 min recovery; builds remain volatile and logs still blocked |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -25,9 +25,10 @@
 | 12 | Privacy deletion recovery/idempotency contracts (WP-008) | P1 | retry identity survives partial anonymization; no production mutation | done `e4c1dad5` / `B3yBJST…`; focused 11 + full 2 016 tests/build/local+remote browser pass; smoke blocked by data plane |
 | 13 | Privacy processor partial-failure contract (WP-009) | P1 | terminal-state CAS; post-completion notification cannot regress deletion; no live mutation | done `34c05f55` / `CKfpUHhx…`; 14 focused + full 2 019 tests/build/local+remote browser pass; smoke blocked by data plane |
 | 14 | Booking/payment route integration packet (WP-010) | P0 | fake-provider route tests for token/state/race/provider failure/status projection; no real payment | done `beb236fb` + `179d3e51` / `4aRm8X7Q…`; 21 focused + 2 031 full tests, exact build/local+remote browser; smoke correctly blocked by health |
-| 15 | Booking creation route integration (WP-011) | P0 | App Router + fake atomic command: canonical pricing, idempotency, slot conflict, safe failure; no live booking | next independent packet after WP-010 remote evidence |
-| 16 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
-| 17 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
+| 15 | Booking creation route integration (WP-011) | P0 | App Router + fake atomic command: canonical pricing, idempotency, slot conflict, safe failure; no live booking | done `84988cf` / `8aKBjCN2…`; 14 focused + 2 040 full tests, exact build/journey/local+remote browser; smoke correctly blocked by health |
+| 16 | Payment webhook ledger recovery (WP-012) | P0 | signed App Router delivery; booking patch + durable charge ledger ordering; retry/replay recovery; out-of-order state; safe failure with fake provider/store | root cause reproduced: ledger failure is swallowed after booking patch and route returns 200; implementation next, no live webhook/payment |
+| 17 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
+| 18 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
 ## Выполненные безопасные пакеты
 
@@ -57,7 +58,7 @@ A reviewed manifest now maps 11 P0/P1 journeys from UI through client request an
 
 ### WP-007 — privacy route integrity
 
-Privacy export and deletion-request orchestration now have authenticated route contracts. Admin approval/rejection uses status compare-and-set, rejects transitions after approval/processing, records actor metadata in the same request-row update and leaves profile deletion to the cron processor. A lost race returns 409 before audit. All 11 critical journeys now have at least unit or route-integration evidence; live effects remain unknown.
+Privacy export and deletion-request orchestration now have authenticated route contracts. Admin approval/rejection uses status compare-and-set, rejects transitions after approval/processing, records actor metadata in the same request-row update and leaves profile deletion to the cron processor. A lost race returns 409 before audit. На снимке WP-007 все тогда учтённые 11 critical journeys имели как минимум unit или route-integration evidence; live effects оставались unknown.
 
 ### WP-008 — privacy retry identity preservation
 
@@ -70,6 +71,10 @@ The deletion processor now resolves the original email/name from request metadat
 ### WP-010 — payment checkout route integrity
 
 Stripe and Mercado Pago checkout initiation now claims the payment link's first online provider through the existing booking version CAS before any external call, then CAS-persists the provider result. Cross-provider races create only one external checkout in the fake-provider route integration; stale webhook/admin state wins over checkout persistence. Provider callbacks use canonical site URL behavior, public errors contain no provider/storage details, and the payment-link status endpoint exposes only the checkout fields required by the two payment pages. No schema, live payment, webhook or production data mutation was performed.
+
+### WP-011 — native booking creation integrity
+
+The App Router booking handler now derives reservation eligibility server-side. A price quote may persist a lead but cannot consume a slot; a real scheduled booking must confirm its canonical slot before the atomic command or fail with 409 and zero persistence/notification effects. Route tests cover canonical commercial fields, idempotent replay, changed-fingerprint conflict, slot conflict, quote behavior, guard failures and public-safe unknown storage errors. No migration, live booking, notification delivery or production mutation was performed.
 
 ## Почему порядок изменён
 
@@ -95,4 +100,7 @@ Stripe and Mercado Pago checkout initiation now claims the payment link's first 
 - WP-010 reproduction changed the payment plan: a blind post-provider CAS alone would still allow Stripe and Mercado Pago to create one checkout each. The existing payment-link gateway field is therefore claimed with CAS before the provider boundary; a different provider is rejected, while same-provider recovery keeps its durable idempotency key.
 - Local production smoke exposed a second P0 in the same journey: the public status route leaked `supabaseKey is required` and the full booking payload, including CRM/traveler fields. WP-010 remained open until safe errors and a bounded checkout projection were route-tested.
 - An initial exact-SHA preview accidentally served stale `.next-production` because Vercel env made the build use `.next`. That result was rejected; final evidence explicitly binds `NEXT_DIST_DIR=.next-production` and `179d3e51`.
+- WP-011 reproduction showed that `priceQuoteRequest: true` reached the same unconditional availability bootstrap/atomic RPC as a real booking, so requesting a quote incremented `booked_count`. The same route ignored a false slot-bootstrap result, allowing a scheduled booking to persist without confirmed inventory. These demonstrated data-integrity defects moved booking creation ahead of webhook work.
+- WP-011 makes `reservationSlotDate` a server-owned derived field, fails closed before persistence when a required slot cannot be confirmed, and converts unknown RPC/storage failures to a generic public 503. Exact deployment `8aKBjCN2…` recovered after the initial Vercel account block; local+remote browser and smoke bind the artifact but deliberately do not execute a booking mutation.
+- WP-012 source audit then found a higher-value financial-integrity defect: both signed webhook routes update booking state before writing the charge ledger, while `persistWebhookChargeTransaction` swallows every ledger error. The route returns 200, and the same event is thereafter classified as processed, so the provider retry cannot repair `payment_transactions`. This moves ledger recovery/ordering ahead of lower-risk webhook refinements.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

@@ -142,3 +142,31 @@
 - Decision: bind local production evidence to source SHA, runtime behavior and the explicit build/start distDir. Reject a health SHA supplied only by runtime env when behavior belongs to an older bundle.
 - Evidence: importing Vercel env made Next build use `.next`, while local start used an old `.next-production`; smoke still observed the pre-fix raw error. Rebuilding `179d3e51` with `NEXT_DIST_DIR=.next-production` changed the endpoint to the expected public-safe 503.
 - Consequence: the rejected run is not counted. Future packets must record distDir or use one command that builds and starts the same artifact.
+
+## D-023 — Quote intent never owns inventory
+
+- Date: 2026-07-29
+- Decision: derive `reservationSlotDate` exclusively from the server-owned canonical booking intent and product schedule. A `price_quote` or custom-date lead may persist, but it never reserves an availability slot.
+- Evidence: the former route unconditionally passed the selected date to `ensureAvailabilitySlotForBooking` and the atomic RPC; `priceQuoteRequest: true` therefore advanced `booked_count`. Route integration now proves quote persistence with zero reservation calls.
+- Consequence: inventory represents bookable commitments rather than pricing leads. Live RPC behavior remains unproven until the canonical data plane is restored.
+
+## D-024 — Required booking availability fails closed before persistence
+
+- Date: 2026-07-29
+- Decision: when a canonical scheduled booking requires a slot, inability to bootstrap/confirm that slot returns public-safe 409 before the atomic booking command. The route may not rely on an absent availability row being tolerated downstream.
+- Evidence: `ensureAvailabilitySlotForBooking` already returned false on lookup/bootstrap failure, but the handler ignored it and the RPC proceeded when the requested row was absent. Route tests assert zero persistence/reservation/notification effects on this branch and 409 for an atomic slot conflict.
+- Consequence: degraded dependencies cannot create a scheduled booking without capacity validation. This is deliberately stricter than accepting a lead as a confirmed booking.
+
+## D-025 — Booking dependency details are internal telemetry only
+
+- Date: 2026-07-29
+- Decision: known command validation may keep explicit public status/codes; unknown storage/RPC/config failures are captured internally and returned as a generic 503 without raw detail.
+- Evidence: the atomic wrapper previously returned arbitrary RPC error messages through the public route. The App Router test injects a database message containing a secret marker, asserts that Sentry receives it and the response does not.
+- Consequence: public booking failures remain actionable without disclosing SQL, schema or configuration details.
+
+## D-026 — Webhook 2xx requires a durable charge ledger
+
+- Date: 2026-07-29
+- Decision: a verified payment webhook is not successfully processed merely because the booking state CAS applied. The route may acknowledge 2xx only after the corresponding charge ledger write is durable or an exact replay has idempotently repaired it; notification is emitted only for the first applied event after that boundary.
+- Evidence: both provider routes patch booking first, while the ledger helper catches all failures. The route then returns 200 and the processed event ID prevents the provider retry from attempting ledger persistence again.
+- Consequence: WP-012 is the next P0 packet. It must expose ledger failure as retryable, support exact replay repair and use the existing `(provider, external_id)` uniqueness atomically before any live webhook proof.

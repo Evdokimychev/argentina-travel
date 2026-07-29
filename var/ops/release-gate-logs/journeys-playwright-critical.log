@@ -5,65 +5,87 @@
 
 Running 17 tests using 5 workers
 
-  ✓   5 [chromium] › tests/e2e/smoke.spec.ts:13:7 › E100 public smoke › home page renders (2.8s)
-  ✓   6 [chromium] › tests/e2e/smoke.spec.ts:17:7 › E100 public smoke › tours catalog renders (2.9s)
-  ✓   7 [chromium] › tests/e2e/smoke.spec.ts:21:7 › E100 public smoke › booking find page renders (420ms)
-  ✓   8 [chromium] › tests/e2e/smoke.spec.ts:26:7 › E100 public smoke › login entry route opens auth modal (884ms)
-  ✓   9 [chromium] › tests/e2e/smoke.spec.ts:31:7 › E100 public smoke › /api/health returns json payload (2.9s)
-  ✓   3 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] small public app shell (11.1s)
-  ✓   1 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] standard public app shell (11.4s)
-  ✓  10 [chromium] › tests/e2e/smoke.spec.ts:46:7 › I3 CMS cutover smoke › blog cornerstone post renders (1.6s)
-  ✓   2 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] large public app shell (11.9s)
-  ✓  11 [chromium] › tests/e2e/smoke.spec.ts:51:7 › I3 CMS cutover smoke › rich park article renders (1.2s)
-  ✓  12 [chromium] › tests/e2e/smoke.spec.ts:56:7 › I3 CMS cutover smoke › guide page renders (1.0s)
-  ✓  13 [chromium] › tests/e2e/smoke.spec.ts:61:7 › I3 CMS cutover smoke › destination page renders (1.4s)
-  ✓  14 [chromium] › tests/e2e/smoke.spec.ts:66:7 › I3 CMS cutover smoke › place page renders (1.2s)
-  ✓   4 [chromium] › tests/e2e/mobile-readiness.spec.ts:148:5 › [mobile-readiness] tour detail owns the bottom action (17.4s)
-  ✓  15 [chromium] › tests/e2e/smoke.spec.ts:71:7 › I3 CMS cutover smoke › legacy blog slug redirects to canonical (1.2s)
-  ✓  16 [chromium] › tests/e2e/smoke.spec.ts:80:7 › I3 CMS cutover smoke › legacy map URL redirects to mapa-argentina (551ms)
-  ✓  17 [chromium] › tests/e2e/smoke.spec.ts:87:7 › I3 CMS cutover smoke › blog cornerstone shows hero image not logo (1.2s)
+  ✓   3 [chromium] › tests/e2e/smoke.spec.ts:13:7 › E100 public smoke › home page renders (18.2s)
+  -   5 [chromium] › tests/e2e/mobile-readiness.spec.ts:148:5 › [mobile-readiness] tour detail owns the bottom action
+  ✓   6 [chromium] › tests/e2e/smoke.spec.ts:17:7 › E100 public smoke › tours catalog renders (11.8s)
+  ✓   2 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] small public app shell (58.4s)
+  ✓   1 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] standard public app shell (58.5s)
+  ✓   4 [chromium] › tests/e2e/mobile-readiness.spec.ts:105:7 › [mobile-readiness] large public app shell (58.5s)
+  ✓   7 [chromium] › tests/e2e/smoke.spec.ts:21:7 › E100 public smoke › booking find page renders (28.5s)
+  ✓   8 [chromium] › tests/e2e/smoke.spec.ts:26:7 › E100 public smoke › login entry route opens auth modal (3.2s)
+  ✓   9 [chromium] › tests/e2e/smoke.spec.ts:31:7 › E100 public smoke › /api/health returns json payload (1.4s)
+  ✓  10 [chromium] › tests/e2e/smoke.spec.ts:46:7 › I3 CMS cutover smoke › blog cornerstone post renders (10.7s)
+  ✓  11 [chromium] › tests/e2e/smoke.spec.ts:51:7 › I3 CMS cutover smoke › rich park article renders (3.9s)
+  ✓  12 [chromium] › tests/e2e/smoke.spec.ts:56:7 › I3 CMS cutover smoke › guide page renders (11.6s)
+  ✓  13 [chromium] › tests/e2e/smoke.spec.ts:61:7 › I3 CMS cutover smoke › destination page renders (13.5s)
+  ✓  14 [chromium] › tests/e2e/smoke.spec.ts:66:7 › I3 CMS cutover smoke › place page renders (6.3s)
+  ✓  15 [chromium] › tests/e2e/smoke.spec.ts:71:7 › I3 CMS cutover smoke › legacy blog slug redirects to canonical (4.4s)
+  ✓  16 [chromium] › tests/e2e/smoke.spec.ts:80:7 › I3 CMS cutover smoke › legacy map URL redirects to mapa-argentina (999ms)
+  ✓  17 [chromium] › tests/e2e/smoke.spec.ts:87:7 › I3 CMS cutover smoke › blog cornerstone shows hero image not logo (2.4s)
 
-  17 passed (26.2s)
-[WebServer] (node:51125) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+  1 skipped
+  16 passed (2.6m)
+[WebServer] (node:89263) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] (node:51438) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (node:89297) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
-(node:54779) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:54771) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:54787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:54786) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:54775) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-[WebServer] objc[51438]: Class GNotificationCenterDelegate is implemented in both /Users/Study/Projects/argentina-travel/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.18.3.dylib (0x14499da58) and /Users/Study/Projects/argentina-travel/node_modules/next/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib (0x145b5d978). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
-[WebServer]  ⨯ [Error [TimeoutError]: The operation was aborted due to timeout] {
-[WebServer]   code: 23,
-[WebServer]   INDEX_SIZE_ERR: 1,
-[WebServer]   DOMSTRING_SIZE_ERR: 2,
-[WebServer]   HIERARCHY_REQUEST_ERR: 3,
-[WebServer]   WRONG_DOCUMENT_ERR: 4,
-[WebServer]   INVALID_CHARACTER_ERR: 5,
-[WebServer]   NO_DATA_ALLOWED_ERR: 6,
-[WebServer]   NO_MODIFICATION_ALLOWED_ERR: 7,
-[WebServer]   NOT_FOUND_ERR: 8,
-[WebServer]   NOT_SUPPORTED_ERR: 9,
-[WebServer]   INUSE_ATTRIBUTE_ERR: 10,
-[WebServer]   INVALID_STATE_ERR: 11,
-[WebServer]   SYNTAX_ERR: 12,
-[WebServer]   INVALID_MODIFICATION_ERR: 13,
-[WebServer]   NAMESPACE_ERR: 14,
-[WebServer]   INVALID_ACCESS_ERR: 15,
-[WebServer]   VALIDATION_ERR: 16,
-[WebServer]   TYPE_MISMATCH_ERR: 17,
-[WebServer]   SECURITY_ERR: 18,
-[WebServer]   NETWORK_ERR: 19,
-[WebServer]   ABORT_ERR: 20,
-[WebServer]   URL_MISMATCH_ERR: 21,
-[WebServer]   QUOTA_EXCEEDED_ERR: 22,
-[WebServer]   TIMEOUT_ERR: 23,
-[WebServer]   INVALID_NODE_TYPE_ERR: 24,
-[WebServer]   DATA_CLONE_ERR: 25
+[WebServer] (node:89311) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [@sentry/nextjs] It appears you've configured a `sentry.server.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.server.config.ts` file afterward.
+[WebServer] [@sentry/nextjs] It appears you've configured a `sentry.edge.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.edge.config.ts` file afterward.
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (127kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (139kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'youtravel_listings',
+[WebServer]   errorClass: 'db_unavailable',
+[WebServer]   retryable: true,
+[WebServer]   message: 'supabase_admin_client_unavailable'
 [WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'youtravel',
+[WebServer]   message: 'youtravel_listings_unavailable:db_unavailable'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings_live_fallback',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'TRIPSTER_PARTNER and TRIPSTER_SECRET must be configured'
+[WebServer] }
+[WebServer] [partner_source_unavailable] {
+[WebServer]   source: 'tripster_listings',
+[WebServer]   errorClass: 'unknown',
+[WebServer]   retryable: true,
+[WebServer]   message: 'tripster_listings_all_sources_unavailable'
+[WebServer] }
+[WebServer] [marketplace_source_error] {
+[WebServer]   source: 'tripster',
+[WebServer]   message: 'tripster_listings_unavailable:unknown'
+[WebServer] }
+(node:89501) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89498) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89499) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:89500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[WebServer] (node:90111) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90434) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90451) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90479) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
