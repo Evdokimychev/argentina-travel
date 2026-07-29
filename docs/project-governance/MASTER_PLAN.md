@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 09:33 ART**. WP-015 разделён по доказательствам: безопасный read-only provider lookup/операторская диагностика выполнены как WP-015A; mutation recovery WP-015B остаётся за atomic lease и live journal/RLS/provider sandbox evidence.
+Обновлён: **2026-07-29 09:40 ART**. После WP-015A следующий независимый P0 packet WP-016 добавил безопасный runtime fingerprint выбранного Postgres connection; точное deployed evidence остаётся заблокировано Vercel account/scope.
 
 ## Правило выбора пакета
 
@@ -10,9 +10,9 @@
 
 | Order | Work packet | Severity | Exit evidence | State |
 |---:|---|---|---|---|
-| 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota; owner action required. Direct-PG prod-only failure unresolved |
+| 0 | Restore canonical Supabase REST; diagnose deployed direct PG | P0 | all required health checks 200; incident timeline; no secret exposure | REST root cause confirmed: egress quota. WP-016 safe source/ref/mode/port fingerprint built locally; exact deploy blocked |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-015A exact `d576bae2` rejected with `Account is blocked`; deployment ID/log scope absent |
+| 2 | Restore Vercel deployment and project evidence | P1 | successful exact-SHA deployment + immutable URL + runtime logs | WP-016 exact `2fccb050` rejected with `Account is blocked`; CLI `Not authorized`; deployment ID/log scope absent |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -31,6 +31,7 @@
 | 18 | Booking replay capability/actor binding (WP-014) | P1 | bounded replay response; guest/session ownership matrix; leaked idempotency key cannot expose canonical CRM booking | done `32038cc9` + exact `84f6244b` / `CJ3fcfursTMefpDtXoJRX7h1TpmN`; 21 focused + 2 070 full + local/remote browser/smoke |
 | 19A | Refund read-only reconciliation (WP-015A) | P0/P1 | provider GET lookup; exact/candidate/ambiguous classification; operator UI; no mutation authority | done `0d5f4472` + `d576bae2`; 13 focused + 2 080 full + exact local build/browser/smoke; Vercel deployment blocked |
 | 19B | Refund mutation recovery (WP-015B) | P0 | atomic recovery lease; token-bound finalize/audit; controlled provider sandbox effect; no blind retry | blocked by canonical journal/RLS/provider sandbox evidence; R-024 remains active |
+| 19C | Direct-PG runtime fingerprint (WP-016) | P0 | health exposes only selected env source/mode/port/project ref; no connection secret; exact build/test | done `2fccb050`; 10 focused + 2 081 full + exact local build/health; Vercel deployment blocked |
 | 20 | Remove marketplace from editorial guide critical path (WP-003) | P2 | source predicate + tests + exact build + cold benchmark + browser | done: `b53daadd`; safety 3.797→0.399 s, yazyk 2.545→0.057 s |
 | 21 | Stream/fail-soft optional guide `tour-embed` (WP-004) | P2 | main editorial response independent; widget preserves unavailable vs empty semantics | done: `189684fa` / deployment `NnmUYR…`; local + immutable preview evidence pass |
 
@@ -96,6 +97,10 @@ The public booking-create handler no longer serializes the canonical CRM row: fi
 
 Finance detail now queries refunds by the completed source charge/payment resource and shows exact, candidate, ambiguous, not-found or unavailable evidence without any mutation control. Stripe creates future refunds with `goargentinaRefundId` metadata; exact classification additionally requires source/money agreement. Mercado Pago amount-only correlation is deliberately only a candidate. Empty or truncated provider lists and provider errors fail closed. No retry, finalize, migration or live provider action was added; those belong to WP-015B only after an atomic recovery ownership primitive is proven.
 
+### WP-016 — safe direct-Postgres runtime fingerprint
+
+Public health now reports only which supported env source won resolution, the effective connection mode/port and parsed Supabase project ref. It never returns the URL, hostname, username, password or query parameters. Local exact runtime proves `DATABASE_URL` direct port 5432 targets canonical `uoox…`; deploying the same diagnostic is required before the production mismatch can be narrowed further.
+
 ## Почему порядок изменён
 
 - WP-002 moved ahead of infrastructure-blocked work because it was reversible, testable and removed active trust/legal exposure without touching broken data paths.
@@ -133,5 +138,6 @@ Finance detail now queries refunds by the completed source charge/payment resour
 - Exact `84f6244b` recovered from the recurring Vercel account block after about seven minutes as deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN`. Immutable health and 16/1 browser evidence bind the SHA, but REST/direct PG remain down and strict smoke blocks promotion.
 - WP-015 source reproduction split the packet: provider GET lookup and operator diagnosis require no schema and are safely deliverable as WP-015A, while any retry/finalize remains unsafe without an atomic recovery owner. This moves 015A to done and leaves 015B behind canonical journal/RLS/provider sandbox evidence.
 - Stripe pagination evidence changed the classifier once more: `has_more=true` is `unavailable`, never `not_found`, because an incomplete list cannot prove absence. Mercado Pago amount-only matches remain candidates because no internal refund metadata is available.
+- Vercel CLI diagnosis then proved the local link IDs are correct but the current account is unauthorized. WP-016 therefore moved ahead of mutation work: a safe in-band runtime fingerprint supplies the missing source/ref/mode evidence without exposing or changing secrets; exact remote proof still depends on Vercel account recovery.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

@@ -1,6 +1,6 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 09:33 ART / 2026-07-29 12:33 UTC**
+Последняя проверка: **2026-07-29 09:40 ART / 2026-07-29 12:40 UTC**
 Статус: **NOT READY**
 Фаза: **Wave 1 P0/P1 recovery**
 
@@ -11,10 +11,10 @@ Master Goal V6 принят как главный норматив проект�
 ## Git и candidate state
 
 - Чистая ветка: `codex/master-goal-release-candidate`, base `origin/main` `8d7eec67ad8e9c3eb285fed2fdc39a501838b692`.
-- Product implementation SHA: `d576bae20e0c7ba80a00f85948e36eb8d2cad4f9`; exact evidence/deploy candidate: `d576bae20e0c7ba80a00f85948e36eb8d2cad4f9`; `origin/main` является ancestor.
+- Product implementation SHA: `2fccb050ff321c3d0a2bf4cf4a657b5562a654cb`; exact evidence/deploy candidate: `2fccb050ff321c3d0a2bf4cf4a657b5562a654cb`; `origin/main` является ancestor.
 - Все шесть доказанных пакетов перенесены последовательно без конфликтов: `41dac6d0`, `20f6b2d4`, `c4f97bda`, `a90f1c11`, `78c8446c`, `a07327db`.
 - Пользовательские 24 dirty entries остались только в исходном worktree и не попали в release candidate.
-- Последний runtime-product SHA: `d576bae20e0c7ba80a00f85948e36eb8d2cad4f9` (`fix: fail closed on truncated refund lookup`); основной WP-015A implementation commit — `0d5f44725f2d197a3b3c8bd10d3f0168ab7ab2a1`.
+- Последний runtime-product SHA: `2fccb050ff321c3d0a2bf4cf4a657b5562a654cb` (`feat: expose safe database connection diagnostics`); WP-015A implementation — `0d5f4472` + fail-closed `d576bae2`.
 
 ## Production и deployments
 
@@ -41,6 +41,7 @@ Master Goal V6 принят как главный норматив проект�
 - Exact WP-013 SHA `26aeda4c` сначала получил `failure: Account is blocked` в 11:11 UTC, затем success в 11:20:50 UTC и развернулся как Vercel deployment `7w7fLVQJZzod562BUBKVxN1XACUo` (GitHub deployment `5656415601`). Immutable URL: `https://argentina-travel-j1as4a3hd-go-argentina.vercel.app`.
 - Exact WP-014 candidate `84f6244b` отправлен в 11:46 UTC, немедленно получил `failure: Account is blocked`, затем success в 11:54:17 UTC и развернулся как Vercel deployment `CJ3fcfursTMefpDtXoJRX7h1TpmN` (GitHub deployment `5656855482`). Immutable URL: `https://argentina-travel-l8ivc8xon-go-argentina.vercel.app`.
 - WP-015A commits `0d5f4472` и exact fail-closed SHA `d576bae2` отправлены в 12:17/12:22 UTC. Оба немедленно получили `failure: Account is blocked`; на 12:33 UTC deployment ID отсутствует. Exact local artifact доказан, но remote preview не заявляется до появления immutable deployment.
+- WP-016 exact `2fccb050` отправлен в 12:36 UTC и также немедленно получил `failure: Account is blocked`; deployment ID отсутствует. Vercel CLI на правильно linked project IDs отвечает `Not authorized`, поэтому env-name/runtime-log scope независимо подтверждён как недоступный.
 - Production recheck 10:26 UTC: `/api/health`, `/public`, `/database`, `/partners` остаются 503/down на SHA `993e82fb`; `/api/tours` возвращает `200` с 0 tours, `/api/excursions` — `200` с `items=0,total=0`. Production promotion не выполнялся.
 - Production recheck 10:58 UTC дал тот же результат: required health 503/down на `993e82fb`, tours/excursions — ложный 200 empty. Promotion не выполнялся.
 - Production recheck 11:57 UTC: `/api/health`, `/public`, `/database`, `/partners` — 503/down на старом `993e82fb`; tours/excursions продолжают ложный 200 empty. WP-014 preview не продвигался.
@@ -52,6 +53,7 @@ Master Goal V6 принят как главный норматив проект�
 - REST root cause подтверждён точным ответом `exceed_egress_quota`.
 - Локальный production runtime при тех же project settings видит direct Postgres (`tripsterCount=68`), тогда как deployed production direct PG недоступен: это отдельная Vercel runtime/env/connectivity ветка P0.
 - Local tree: 107 SQL migrations; live journal/checksum/RLS/grants не подтверждены. Новые DDL не создавались и не применялись.
+- WP-016 local runtime теперь безопасно доказывает выбранный connection fingerprint: `DATABASE_URL`, `supabase_direct`, port 5432, canonical ref `uooxrypocahomoqzdvzy`; URL/host/user/password наружу не выдаются. Старый production artifact ещё не содержит fingerprint, поэтому deployed source/mode остаётся неизвестным до exact preview.
 - Managed backup/PITR и disposable restore rehearsal не подтверждены.
 - CMS source-of-truth и operational writes нельзя считать доказанными до восстановления canonical DB и reconciliation.
 
@@ -162,6 +164,12 @@ Master Goal V6 принят как главный норматив проект�
 - Новые Stripe refund requests получают нечувствительный `goargentinaRefundId` metadata для будущей точной корреляции. Существующие записи без metadata показываются как candidates; операторский UI не содержит mutation action и не раскрывает raw provider errors.
 - WP-015B — атомарный recovery lease и token-bound finalize/audit — остаётся отдельным P0 после canonical journal/RLS/provider sandbox evidence. Миграции и provider mutation в WP-015A не выполнялись.
 
+### WP-016 — safe direct-Postgres runtime fingerprint
+
+- `resolveDatabaseConnection` теперь сохраняет имя реально выбранного env source и строит публично безопасную диагностику: source, connection mode, effective port и Supabase project ref.
+- Health не раскрывает connection string, hostname, username, password или query params. Missing configuration возвращает `connection=null`; существующая fail-closed availability семантика не меняется.
+- Local exact runtime подтверждает canonical direct connection через `DATABASE_URL`. После exact Vercel deploy тот же payload позволит отличить wrong source/ref/port от network/runtime failure без чтения секретов.
+
 ## Проверки candidate
 
 - WP-015A focused route/classifier/provider suite: **3 files / 13 tests** — pass, включая fail-closed `has_more`, Stripe metadata exact-match и Mercado Pago amount-only ambiguity.
@@ -169,6 +177,7 @@ Master Goal V6 принят как главный норматив проект�
 - Protected production build exact `d576bae2`: exit 0, **806/806** static pages, runtime-text audit pass, demo auth markers absent.
 - Local exact `.next-production`: health связывает полный SHA; Data API 503/degraded из-за `exceed_egress_quota`, direct PG healthy (`tripsterCount=68`); admin payments без сессии → 307 sign-in. Browser QA **17/17 pass**. Строгий smoke exit 1 на mandatory health; explicit recovery-smoke exit 0. Refund/provider POST не выполнялись.
 - Vercel exact `d576bae2`: initial и повторный status `failure: Account is blocked`, deployment ID отсутствует на 12:33 UTC. Это внешний release blocker, не test pass.
+- WP-016 focused health/database suite: **3 files / 10 tests** — pass. `audit:quick`: TypeScript + ESLint + inventory + **438 files / 2 081 tests** + **8 evidence tests** — pass. Protected build exact `2fccb050`: **806/806**, runtime-text audit pass, demo auth markers absent. Local health exact SHA: direct PG healthy, canonical safe fingerprint present; remote deployment отсутствует.
 
 - WP-014 focused actor/response suite: **4 files / 21 tests** — pass; route matrix включает same account, same guest, confirmed guest→account attach, unrelated actor denial, fingerprint conflict и ID-only first/replay response.
 - `npm run audit:quick`: TypeScript + ESLint + inventory stale-check + **436 files / 2 070 tests** + release-evidence contracts — pass; существующие lint warnings не выросли в ошибки.
@@ -252,7 +261,7 @@ Master Goal V6 принят как главный норматив проект�
 
 ## Открытые P0/P1
 
-1. **P0-GA-001:** восстановить canonical Supabase REST и диагностировать deployed direct PG.
+1. **P0-GA-001:** восстановить canonical Supabase REST; WP-016 добавил безопасный deployed direct-PG fingerprint, но exact Vercel artifact заблокирован и runtime source пока не прочитан.
 2. **P1-GA-004/006/007:** вернуть Supabase scope, доказать migration parity/RLS/grants и recoverability.
 3. **P1-GA-005:** latest `84f6244b` восстановился после initial `Account is blocked` примерно за семь минут как `CJ3fcfurs…`; recurring volatility и read-only Vercel project/runtime-log scope остаются открыты.
 4. **P1-GA-010:** production analytics/consent/conversion evidence остаётся непригодным до healthy deployment.
@@ -267,5 +276,5 @@ Master Goal V6 принят как главный норматив проект�
 ## Следующие три задачи
 
 1. Owner/ops: снять Supabase `exceed_egress_quota`; engineering: после восстановления выполнить health + migration/RLS/grants reconciliation и диагностировать direct-PG расхождение по Vercel logs/env names.
-2. Owner/ops: вернуть read-only Vercel project/runtime-log scope; engineering: сопоставить env names/regions/connectivity для preview/prod direct PG без вывода или ротации секретов.
+2. Owner/ops: вернуть read-only Vercel project/runtime-log scope и deployment access; engineering: по WP-016 health fingerprint сопоставить source/ref/mode/port, затем runtime connectivity без вывода или ротации секретов.
 3. Engineering/payments: WP-015B — после live journal/RLS/provider sandbox evidence реализовать atomic recovery lease + token-bound finalize/audit; до этого read-only diagnosis не превращать в blind retry.

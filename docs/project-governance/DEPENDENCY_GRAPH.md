@@ -44,6 +44,8 @@ flowchart TD
   Next --> CMS["CMS / knowledge / ingestion"]
   Resolver --> Rest["Supabase Data API snapshots"]
   Resolver --> PG["Direct Postgres recovery path"]
+  PG --> PGFingerprint["Safe env source / mode / port / project-ref fingerprint"]
+  PGFingerprint --> Ops
   Resolver --> Partners["Tripster / YouTravel / Sputnik8"]
   Partners --> Affiliate["External checkout / affiliate attribution"]
   CMS --> Storage["Supabase Storage / Reg.ru media"]
@@ -73,11 +75,12 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-015A exact candidate `d576bae2` is locally built/browser-proven but Vercel returns `Account is blocked` and has created no deployment. Canonical production remains on unhealthy `993e82fb`; migration parity and runtime-log scope are unavailable. WP-015B cannot cross from read-only provider evidence to retry/finalize until atomic recovery ownership is proven.
+Current breaks: WP-016 exact candidate `2fccb050` safely exposes the selected Postgres source/mode/port/project ref and is locally build/runtime-proven, but Vercel returns `Account is blocked` and has created no deployment; CLI scope is `Not authorized`. Canonical production remains on unhealthy `993e82fb`, so deployed connection identity, migration parity and runtime logs remain unavailable. WP-015B also remains behind atomic recovery ownership evidence.
 
 ## Data ownership boundaries
 
 - GoArgentina production database is canonical ref `uooxrypocahomoqzdvzy`; other accessible Supabase projects are not evidence.
+- Public health may expose only a bounded Postgres connection fingerprint (supported env source name, connection mode, effective port and Supabase project ref). It must never expose URL, hostname, username, password or query parameters.
 - Partner APIs own partner booking/payment; GoArgentina owns disclosure, attribution and safe redirect.
 - Internal requests require persisted state, notifications, SLA and admin ownership before public promise.
 - No B2B product may share production DB/secrets/releases without ADR.

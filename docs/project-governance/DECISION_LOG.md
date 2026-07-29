@@ -226,3 +226,10 @@
 - Decision: split refund recovery into WP-015A diagnosis and WP-015B mutation. WP-015A may list provider refunds and classify evidence, but always returns `safeToMutate=false`; only a future atomic recovery lease plus token-bound finalize may authorize retry or reconciliation writes.
 - Evidence: provider success followed by local finalize failure leaves `processing` without external ID. Current SQL accepts initial pending→processing only and finalize checks only `status=processing`; it has no recovery owner/version. Stripe supports metadata correlation but may paginate, while Mercado Pago lookup has no internal refund metadata and amount-only matches can collide.
 - Consequence: finance operators gain visibility without duplicate-refund risk. Empty/truncated/error results never imply retry, Stripe exact matches still require source/money agreement, and Mercado Pago amount-only matches remain candidates. No DDL or provider mutation is introduced until canonical journal/RLS and a controlled provider sandbox are available.
+
+## D-035 — Diagnose deployed Postgres identity without exposing connection secrets
+
+- Date: 2026-07-29
+- Decision: add a bounded connection fingerprint to public health: the winning supported env source name, effective direct/session-pooler mode, port and parsed Supabase project ref. Never emit the connection string, hostname, username, password or query parameters.
+- Evidence: the exact local production runtime connects successfully via `DATABASE_URL` direct port 5432 to canonical `uoox…`, while old Vercel production reports `dependency_unavailable`. The linked Vercel project/team IDs are correct, but CLI access is `Not authorized`, so env names and runtime logs cannot be inspected out of band.
+- Consequence: once an exact preview deploys, operators can distinguish wrong env precedence/ref/transport from a same-target network/runtime failure without reading or rotating secrets. Until then the production root cause remains only partially diagnosed and promotion stays blocked.
