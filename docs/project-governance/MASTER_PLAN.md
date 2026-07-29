@@ -1,6 +1,6 @@
 # MASTER_PLAN — living plan
 
-Обновлён: **2026-07-29 11:45 ART**. WP-017 закрыт на exact immutable preview. WP-018 доказал более критичный root cause: direct-Postgres resolver не удостоверял canonical project identity; fail-closed attestation `8f0dbad2` полностью доказана локально и на exact preview. Production data plane и schema parity остаются главными блокерами.
+Обновлён: **2026-07-29 12:46 ART**. WP-019 закрыл residual operational Postgres bypasses и доказан exact preview `a3301ec9` / `E17wLXY…`. QA выявил новый P1: recovery smoke принимал Next `error-*` route как commercial detail. Production data plane и schema parity остаются главными блокерами; WP-020 — текущая независимая release-evidence работа.
 
 ## Правило выбора пакета
 
@@ -12,9 +12,11 @@
 |---:|---|---|---|---|
 | 0 | Restore canonical Supabase REST and verified direct PG | P0 | all required health checks 200; canonical target attested; incident timeline; no secret exposure | REST root cause confirmed: egress quota. WP-018 preview proves canonical target selection but both REST/direct PG are down |
 | 1 | Reconcile 107-file journal, checksums, RLS, grants and backup posture | P0/P1 | canonical read-only parity + advisors + backup/restore decision | blocked by Supabase scope/data plane |
-| 2 | Restore stable Vercel project/runtime-log evidence | P1 | repeatable exact-SHA deployment + immutable URL + runtime logs | WP-017 `9K5mTZ…` and WP-018 `E288Fh…` recovered exact deployments; CLI `Not authorized`, runtime logs and account stability still absent |
+| 2 | Restore stable Vercel project/runtime-log evidence | P1 | repeatable exact-SHA deployment + immutable URL + runtime logs | WP-017 `9K5mTZ…`, WP-018 `E288Fh…` and WP-019 `E17wLXY…` deployed; CLI `Not authorized`, runtime logs and account stability still absent |
 | 2A | Blog client-transition failure (WP-017) | P1 | exact fault reproduction; article remains visible/fail-soft; full remote browser pass | done `a8efc1e6` / `9K5mTZ…`; targeted 1/1 and public/tour 16 pass/1 data-dependent skip; production old |
 | 2B | Direct-PG canonical target attestation (WP-018) | P0 | every app PG path accepts only canonical ref; health/readiness/bypass tests; exact preview fingerprint | done `8f0dbad2` / `E288Fh…`; verified canonical non-pooling target selected, connection still down; production old |
+| 2C | Operational Postgres target attestation (WP-019) | P0 | backup/restore/migration/sync/maintenance paths attest exact refs before process/network; legacy raw runner disabled | done `a3301ec9` / `E17wLXY…`; 20 focused, 2 095 full, 28 evidence, local 17/17, remote 16/1; no DB action |
+| 2D | Commercial smoke evidence integrity (WP-020) | P1 | `error-*`/reserved routes cannot satisfy detail discovery; negative/positive contracts; exact smoke fails on no real offers | active after local recovery-smoke false positive |
 | 3 | Fail-closed catalog resolution (WP-001) | P1 | outage→503/LKG; confirmed empty→200; confirmed missing→404; tests/build/browser | implemented, committed, pushed; Vercel deployment `2P6Pnq…` built, remote browser access blocked |
 | 4 | Capability-driven public copy (WP-002) | P1 | locale/source contract + build + desktop/mobile browser + exact deployment | implemented, committed, pushed; `4c209069` deployed as `D9WetK…`; final `ef447d8e` deployment blocked |
 | 5 | Clean release-candidate integration | P1 | WP commits on controlled ancestry; no unrelated dirty state; reproducible SHA | done: `a07327db`, no conflicts, clean worktree, 54 focused/evidence tests pass |
@@ -62,6 +64,10 @@ Exact preview stream evidence tied rejected boundary `B:1` to `BlogPostTourEmbed
 ### WP-018 — canonical direct-Postgres target attestation
 
 WP-017 preview exposed `POSTGRES_URL` as the selected `mode=other`, `projectRef=null` target. The shared resolver previously used first-nonempty precedence without project identity, so an unrelated responsive database with the expected table could satisfy health/catalog reads or receive a direct session-revocation mutation. The new resolver accepts only direct/pooler Supabase candidates whose parsed ref equals trusted `NEXT_PUBLIC_SUPABASE_URL`; unknown/mismatch candidates are never connected, and a lower verified candidate may safely win. Session revocation, RLS audit and Prisma DB gating share the same rule. Exact `8f0dbad2` preview selects verified canonical `POSTGRES_URL_NON_POOLING`; the target remains unavailable, so promotion stays blocked.
+
+### WP-019 — operational Postgres target attestation
+
+Every operational `pg.Client`/`pg_dump`/`psql` path now uses a shared strict Supabase target parser and an independently trusted 20-character project ref before network/process execution. Schema/logical backup, restore, journaled migration, cross-project copy, partner sync, media/auth maintenance and readiness fail closed on generic/mismatched targets. The legacy unjournaled admin migration runner is disabled; cross-project copy requires distinct refs and production confirmation even for dry-run. Exact `a3301ec9` deployment `E17wLXY…` proves artifact identity and unchanged fail-closed runtime, but no DB/backup/migration effect was executed.
 
 ### WP-005 — reproducible product surface inventory
 
@@ -152,5 +158,7 @@ Public health now reports only which supported env source won resolution, the ef
 - Delayed Vercel recovery produced exact WP-015A deployment `4wqcePJy…`, where remote browser exposed an error boundary over valid SSR content. Streamed HTML then proved rejected boundary `B:1` is the optional `BlogPostTourEmbeds` catalog promise. WP-017 `a8efc1e6` makes that boundary fail-soft and exact deployment `9K5mTZ…` closes remote article acceptance.
 - The same WP-017 health payload exposed a higher-severity identity defect: the winning direct PG candidate was generic `POSTGRES_URL` with no Supabase ref. Because this affects health, catalog fallbacks and an auth-session mutation, WP-018 moved ahead of WP-015B and all growth work. Exact preview `E288Fh…` now proves canonical attestation; it also proves the verified target itself remains down.
 - WP-018 changes the next order again: application target-selection safety is closed in candidate, so the highest remaining work is external restoration of canonical REST/direct PG, followed by read-only 107-migration/RLS/backup reconciliation. Independent engineering then returns to WP-015B design/evidence without applying unverified DDL.
+- WP-019 audit found the runtime rule was not system-wide: backup/restore, migration, sync and maintenance tooling still accepted raw targets. This displaced refund recovery design until every direct operational path failed closed; exact preview now closes that source-level bypass without any DB action.
+- WP-019 production-equivalent recovery smoke then accepted `/tours/error-*` and `/excursions/error-*` as real offers because the discovery regex excluded only `city`/`region`. This is a release-gate false positive, so WP-020 moves ahead of WP-015B and growth work while external data-plane/parity work remains blocked.
 - Exact WP-013 recovered from the recurring Vercel account block after ~9 minutes. Immutable health/browser evidence binds `26aeda4c`, but the same preview proves both REST and direct PG down; promotion remains forbidden.
 - No growth or new feature work is allowed while production health, migration parity, recoverability and exact deployment evidence remain open.

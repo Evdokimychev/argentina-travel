@@ -52,6 +52,9 @@ flowchart TD
   AuthSession["Auth session revocation"] --> PGAttest
   RLSAudit["RLS audit"] --> PGAttest
   PrismaGate["Prisma DB feature gate"] --> PGAttest
+  OpsPG["Operational PG tooling: backup / restore / migration / sync / maintenance"] --> OpsAttest["Explicit trusted ref + target attestation"]
+  OpsAttest --> PGAttest
+  LegacyRunner["Legacy unjournaled admin migration runner"] --> FailClosed
   PGAttest -->|verified only| PG["Direct Postgres recovery path"]
   PGAttest -->|unverified / mismatch| FailClosed["No connection / readiness fail"]
   PG --> PGFingerprint["Safe env source / mode / port / project-ref / target status"]
@@ -85,13 +88,13 @@ Current production boundary is broken: Supabase REST and deployed direct PG are 
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: WP-017 exact `a8efc1e6` recovered as immutable deployment `9K5mTZ…` and closes the optional-blog browser defect on preview. Its health exposed a generic unverified Postgres winner. WP-018 exact `8f0dbad2` / `E288Fh…` now proves canonical target attestation and selects verified `POSTGRES_URL_NON_POOLING`, but both REST and that verified direct target remain down. Production still runs old `993e82fb`; migration parity, runtime logs, backup posture and same-artifact production proof remain unavailable. WP-015B mutation recovery stays behind those gates.
+Current breaks: WP-018 exact `8f0dbad2` / `E288Fh…` proves application target attestation. WP-019 exact `a3301ec9` / `E17wLXY…` extends the invariant to operational tooling and disables the unjournaled runner. Both REST and the verified canonical direct target remain down. Production still runs old `993e82fb`; migration parity, runtime logs, backup effect and same-artifact production proof remain unavailable. WP-019 QA also invalidated recovery commercial smoke because it accepted `error-*` routes; WP-020 precedes WP-015B while external gates remain closed.
 
 ## Data ownership boundaries
 
 - GoArgentina production database is canonical ref `uooxrypocahomoqzdvzy`; other accessible Supabase projects are not evidence.
 - Public health may expose only a bounded Postgres connection fingerprint (supported env source name, connection mode, effective port, Supabase project ref and attestation status). It must never expose URL, hostname, username, password or query parameters.
-- Direct Postgres application access is owned by canonical project attestation: only official Supabase direct/pooler formats whose ref equals the trusted public project ref may connect. Higher-precedence unknown/mismatch values are skipped; absence of any verified target fails closed. Session revocation, RLS audit and Prisma gating share this rule. Legacy schema-backup tooling remains a separate residual audit item.
+- Direct Postgres access is owned by canonical project attestation: only official Supabase direct/pooler formats whose ref equals an independent trusted project ref may connect. Higher-precedence unknown/mismatch values are skipped; absence of any verified target fails closed. Runtime, session revocation, RLS audit, Prisma gating, backup/restore, migration, partner sync and maintenance tooling share this rule. Cross-project copy requires two distinct refs and explicit production confirmation; the legacy unjournaled runner is disabled.
 - Partner APIs own partner booking/payment; GoArgentina owns disclosure, attribution and safe redirect.
 - Internal requests require persisted state, notifications, SLA and admin ownership before public promise.
 - No B2B product may share production DB/secrets/releases without ADR.

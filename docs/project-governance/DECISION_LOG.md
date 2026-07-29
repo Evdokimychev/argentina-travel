@@ -254,3 +254,17 @@
 - Decision: application code may connect to a direct/session/transaction Postgres candidate only when its Supabase project ref can be parsed from an official direct or pooler format and exactly matches the ref in trusted `NEXT_PUBLIC_SUPABASE_URL`. An unverified or mismatched higher-precedence value is never connected; a lower verified canonical candidate may win. If no verified candidate exists, the resolver returns no connection and readiness fails closed.
 - Evidence: exact WP-017 preview selected `POSTGRES_URL` with `mode=other`, `port=null`, `projectRef=null`, because the former resolver used first-nonempty precedence. The same resolver fed direct catalog fallbacks, while session revocation and RLS audit used raw `DATABASE_URL`. After `8f0dbad2`, 41 focused contracts and 2 095 full tests pass; exact deployment `E288FhjDXKUA78YQ3ibN54krLY3z` selects only canonical `POSTGRES_URL_NON_POOLING`, ref `uooxrypocahomoqzdvzy`, `targetStatus=verified`.
 - Consequence: a responsive unrelated database cannot be accepted as health/catalog evidence or receive the covered direct application mutations. Connection availability remains a separate gate: the verified preview target is currently down, so both strict and recovery smoke fail and production promotion remains forbidden. Secret values are never exposed; legacy operational backup tooling must be audited as a separate packet.
+
+## D-039 — Operational Postgres tooling attests before process or network execution
+
+- Date: 2026-07-29
+- Decision: every repository path that creates `pg.Client`, spawns `pg_dump`/`psql`, rewrites a database URL or copies data must validate an official Supabase direct/pooler target against an independent explicit project ref first. Cross-project operations require two distinct attestations; a production target requires confirmation even in dry-run. The legacy unjournaled admin migration runner remains as a fail-closed compatibility boundary only.
+- Evidence: WP-019 inventory found raw resolver, backup/restore, migration, partner sync, media/auth maintenance and readiness bypasses. Review additionally found `dryRun || confirmation`; it was removed before commit. Focused **20/20**, full **2 095**, release evidence **28/28**, exact preview `a3301ec9` / `E17wLXYUjTNpHJSN6x1AUQs8rf1J` pass the applicable code/artifact checks.
+- Consequence: generic or mismatched PostgreSQL targets cannot receive covered operational reads/writes, and schema-backup URLs no longer appear in process argv. No live connectivity, migration, backup or restore effect is inferred from these contracts.
+
+## D-040 — An error route is never commercial-detail evidence
+
+- Date: 2026-07-29
+- Decision: release smoke must accept only a genuine offer detail link and reject framework/service error routes, reserved catalog navigation and other non-offer segments. A 200 error boundary page cannot satisfy catalog/detail proof.
+- Evidence: exact local recovery smoke reported `/tours/error-3d3f202a6b80c451` and `/excursions/error-1f093ea7aa2b89fa` as successful detail paths. `findCommercialDetailPath` used a broad regex and excluded only `city`/`region`.
+- Consequence: P1-GA-016/WP-020 moves ahead of lower-priority work. Until its negative contract passes, the local recovery-smoke success is not valid commercial evidence.
