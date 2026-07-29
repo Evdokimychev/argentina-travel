@@ -267,7 +267,8 @@ export async function upsertChargeFromWebhook(
 
 export type CreateRefundRequestInput = {
   bookingId: string;
-  amount: number;
+  /** Omit for a full refund: the completed source charge is authoritative. */
+  amount?: number;
   currency?: string;
   provider?: BookingPaymentWebhookPatch["provider"];
   requestedBy: string;
@@ -299,11 +300,56 @@ export async function createRefundRequest(
   input: CreateRefundRequestInput
 ): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
   const provider = input.provider ?? "manual";
-  let sourceTransactionId = input.sourceTransactionId?.trim();
-  if (!sourceTransactionId) {
+  const requestedSourceTransactionId = input.sourceTransactionId?.trim();
+
+  const { data: existing, error: existingError } = await supabase
+    .from("payment_transactions")
+    .select("*")
+    .eq("type", "refund")
+    .eq("request_idempotency_key", input.operationId)
+    .maybeSingle();
+
+  if (existingError) {
+    return { error: "Не удалось проверить повтор операции возврата" };
+  }
+  if (existing) {
+    const transaction = mapTransactionRow(existing);
+    const amountMatches = input.amount === undefined || transaction.amount === input.amount;
+    const currencyMatches =
+      input.currency === undefined || transaction.currency === input.currency.trim().toUpperCase();
+    if (
+      transaction.bookingId !== input.bookingId ||
+      transaction.requestedBy !== input.requestedBy ||
+      transaction.provider !== provider ||
+      (requestedSourceTransactionId !== undefined &&
+        transaction.sourceTransactionId !== requestedSourceTransactionId) ||
+      !amountMatches ||
+      !currencyMatches
+    ) {
+      return { error: "Идентификатор операции уже использован для другого возврата" };
+    }
+    return { transaction };
+  }
+
+  let sourceCharge: PaymentTransactionDbRow | null = null;
+  if (requestedSourceTransactionId) {
+    const { data, error } = await supabase
+      .from("payment_transactions")
+      .select("*")
+      .eq("id", requestedSourceTransactionId)
+      .eq("booking_id", input.bookingId)
+      .eq("type", "charge")
+      .eq("status", "completed")
+      .maybeSingle();
+
+    if (error || !data) {
+      return { error: "Не найдено исходное завершённое списание для возврата" };
+    }
+    sourceCharge = data;
+  } else {
     const { data: charges, error: chargeError } = await supabase
       .from("payment_transactions")
-      .select("id")
+      .select("*")
       .eq("booking_id", input.bookingId)
       .eq("type", "charge")
       .eq("status", "completed")
@@ -317,14 +363,34 @@ export async function createRefundRequest(
     if (charges.length !== 1) {
       return { error: "Найдено несколько списаний: выберите исходную операцию" };
     }
-    sourceTransactionId = charges[0].id;
+    sourceCharge = charges[0];
+  }
+
+  if (sourceCharge.provider !== provider) {
+    return { error: "Провайдер возврата не совпадает с исходным списанием" };
+  }
+
+  const sourceCurrency = sourceCharge.currency.trim().toUpperCase();
+  const requestedCurrency = input.currency?.trim().toUpperCase() ?? sourceCurrency;
+  const parsedSourceCurrency = parseMoneyCurrency(sourceCurrency);
+  if (requestedCurrency !== sourceCurrency || !parsedSourceCurrency) {
+    return { error: "Валюта возврата не совпадает с валютой исходного списания" };
+  }
+
+  const amount = input.amount ?? Number(sourceCharge.amount);
+  try {
+    if (!Number.isFinite(amount) || moneyFromMajorUnits(parsedSourceCurrency, amount).minorUnits <= 0) {
+      return { error: "Сумма возврата должна быть больше нуля" };
+    }
+  } catch {
+    return { error: "Сумма возврата имеет недопустимую точность" };
   }
 
   const { data, error } = await supabase.rpc("prepare_refund_request_atomic", {
     p_booking_id: input.bookingId,
-    p_source_transaction_id: sourceTransactionId,
-    p_amount: input.amount,
-    p_currency: input.currency ?? "USD",
+    p_source_transaction_id: sourceCharge.id,
+    p_amount: amount,
+    p_currency: sourceCurrency,
     p_provider: provider,
     p_requested_by: input.requestedBy,
     p_request_reason: input.reason?.trim() || null,
@@ -343,7 +409,19 @@ export async function createRefundRequest(
     if (message.includes("payment_refund_active_source_idx")) {
       return { error: "По этому списанию уже есть активный запрос на возврат" };
     }
-    return { error: message };
+    if (message.includes("IDEMPOTENCY_KEY_REUSED")) {
+      return { error: "Идентификатор операции уже использован для другого возврата" };
+    }
+    if (message.includes("SOURCE_CHARGE_NOT_FOUND")) {
+      return { error: "Не найдено исходное завершённое списание для возврата" };
+    }
+    if (message.includes("SOURCE_CHARGE_MISMATCH")) {
+      return { error: "Параметры возврата не совпадают с исходным списанием" };
+    }
+    if (message.includes("INVALID_REFUND_AMOUNT")) {
+      return { error: "Сумма возврата некорректна" };
+    }
+    return { error: "Не удалось создать запрос на возврат" };
   }
 
   return { transaction: mapTransactionRow(data) };

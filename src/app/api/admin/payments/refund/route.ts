@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { resolveBookingPaymentSummary } from "@/lib/booking-payment";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById } from "@/lib/bookings-server";
 import {
@@ -13,6 +12,9 @@ import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   bookingId?: string;
+  amount?: number;
+  currency?: string;
+  /** Backward-compatible only; rejected by the service for non-USD charges. */
   amountUsd?: number;
   reason?: string;
   operationId?: string;
@@ -58,19 +60,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const summary = resolveBookingPaymentSummary(booking);
-  const amount = Math.max(
-    0,
-    Math.round((body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
-  );
-  if (amount <= 0) {
-    return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
-  }
+  const amount = body.amount ?? body.amountUsd;
+  const currency = body.currency?.trim().toUpperCase() ??
+    (body.amountUsd !== undefined ? "USD" : undefined);
 
   const created = await createRefundRequest(supabase, {
     bookingId,
     amount,
-    currency: "USD",
+    currency,
     provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: auth.actorId,
     operationId: body.operationId,

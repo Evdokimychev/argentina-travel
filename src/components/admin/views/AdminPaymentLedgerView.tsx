@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Receipt } from "lucide-react";
-import FormattedPrice from "@/components/FormattedPrice";
 import AdminStatusChip from "@/components/admin/AdminStatusChip";
 import { AdminTableState } from "@/components/admin/AdminTableState";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -80,6 +79,18 @@ function formatAdminDateTime(value: string | null | undefined): string {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return "—";
   return parsed.toLocaleString("ru-RU");
+}
+
+function formatTransactionAmount(amount: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  } catch {
+    return `${amount.toLocaleString("ru-RU")} ${currency}`;
+  }
 }
 
 export function AdminPaymentLedgerPanel() {
@@ -183,7 +194,8 @@ export function AdminPaymentLedgerPanel() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             bookingId: row.bookingId,
-            amountUsd: row.amount,
+            amount: row.amount,
+            currency: row.currency,
             reason: `Возврат по операции ${row.id}`,
             operationId: crypto.randomUUID(),
             sourceTransactionId: row.id,
@@ -358,8 +370,7 @@ export function AdminPaymentLedgerPanel() {
                   <div>
                     <p className="text-xs text-slate">{PAYMENT_PROVIDER_LABELS[row.provider]}</p>
                     <p className="mt-0.5 font-medium text-charcoal">
-                      <FormattedPrice priceUsd={row.amount} />{" "}
-                      <span className="text-xs text-slate">{row.currency}</span>
+                      {formatTransactionAmount(row.amount, row.currency)}
                     </p>
                   </div>
                   {renderLedgerRowActions(row)}
@@ -416,8 +427,7 @@ export function AdminPaymentLedgerPanel() {
                       ) : null}
                     </td>
                     <td className={cn(tdClass, "font-medium text-charcoal")}>
-                      <FormattedPrice priceUsd={row.amount} />{" "}
-                      <span className="text-xs text-slate">{row.currency}</span>
+                      {formatTransactionAmount(row.amount, row.currency)}
                     </td>
                     <td className={tdClass}>
                       <AdminStatusChip domain="payment-transaction" value={row.status} />
@@ -450,7 +460,7 @@ export function AdminPaymentLedgerPanel() {
                 <div>
                   <dt className="text-slate">Сумма</dt>
                   <dd className="mt-0.5 font-medium text-charcoal">
-                    <FormattedPrice priceUsd={selected.amount} /> {selected.currency}
+                    {formatTransactionAmount(selected.amount, selected.currency)}
                   </dd>
                 </div>
                 <div>

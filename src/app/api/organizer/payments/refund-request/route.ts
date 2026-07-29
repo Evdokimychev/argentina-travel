@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { resolveBookingPaymentSummary } from "@/lib/booking-payment";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById, organizerCanAccessBooking } from "@/lib/bookings-server";
 import {
@@ -16,7 +15,6 @@ import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   bookingId?: string;
-  amountUsd?: number;
   reason?: string;
   operationId?: string;
 };
@@ -65,20 +63,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const summary = resolveBookingPaymentSummary(booking);
-  const amount = Math.max(
-    0,
-    Math.round((body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
-  );
-  if (amount <= 0) {
-    return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
-  }
-
   const admin = createSupabaseAdminClient();
   const created = await createRefundRequest(admin, {
     bookingId,
-    amount,
-    currency: "USD",
     provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: sessionUser.id,
     operationId,

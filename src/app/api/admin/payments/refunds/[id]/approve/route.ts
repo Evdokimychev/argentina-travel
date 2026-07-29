@@ -24,9 +24,25 @@ export async function POST(
   const result = await approveRefundRequest(supabase, id, auth.actorId, body.adminNotes);
 
   if (!result.ok) {
-    const status =
-      result.code === "MP_NOT_CONFIGURED" || result.code === "STRIPE_NOT_CONFIGURED" ? 503 : 400;
-    return NextResponse.json({ error: result.error, code: result.code }, { status });
+    if (result.code === "NOT_FOUND") {
+      return NextResponse.json({ error: "Запрос на возврат не найден", code: result.code }, { status: 404 });
+    }
+    if (result.code === "MP_NOT_CONFIGURED" || result.code === "STRIPE_NOT_CONFIGURED") {
+      return NextResponse.json(
+        { error: "Провайдер возврата временно не настроен", code: result.code },
+        { status: 503 },
+      );
+    }
+    if (result.code === "MP_FAILED" || result.code === "STRIPE_FAILED") {
+      return NextResponse.json(
+        {
+          error: "Провайдер не подтвердил возврат. Операция сохранена для финансовой сверки.",
+          code: result.code,
+        },
+        { status: 502 },
+      );
+    }
+    return NextResponse.json({ error: result.error, code: result.code }, { status: 409 });
   }
 
   return NextResponse.json({

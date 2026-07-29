@@ -28,6 +28,18 @@ function statusTone(status: PaymentTransactionRow["status"]): string {
   return "bg-gray-100 text-slate-700 ring-gray-200";
 }
 
+function formatLedgerAmount(amount: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  } catch {
+    return `${amount.toLocaleString("ru-RU")} ${currency}`;
+  }
+}
+
 export default function BookingRefundRequestSection({
   bookingId,
   paymentStatus,
@@ -93,7 +105,6 @@ export default function BookingRefundRequestSection({
         body: JSON.stringify({
           bookingId,
           reason: reason.trim(),
-          amountUsd: paidAmountUsd,
           operationId: operationIdRef.current,
         }),
       });
@@ -134,7 +145,7 @@ export default function BookingRefundRequestSection({
           </span>
         </div>
         <p className="mt-1 text-slate">
-          Сумма: <FormattedPrice priceUsd={latest.amount} />
+          Сумма: {formatLedgerAmount(latest.amount, latest.currency)}
         </p>
         {latest.requestReason ? (
           <p className="mt-1 text-slate">Причина: {latest.requestReason}</p>
@@ -152,7 +163,7 @@ export default function BookingRefundRequestSection({
         </span>
       </div>
       <p className="mt-1 text-slate">
-        Сумма: <FormattedPrice priceUsd={latest.amount} />
+        Сумма: {formatLedgerAmount(latest.amount, latest.currency)}
       </p>
       {latest.requestReason ? (
         <p className="mt-1 text-slate">Причина: {latest.requestReason}</p>
@@ -189,7 +200,8 @@ export default function BookingRefundRequestSection({
                 />
               </label>
               <p className="text-sm text-slate">
-                Сумма к возврату: <FormattedPrice priceUsd={paidAmountUsd} />
+                Оплачено по заявке: <FormattedPrice priceUsd={paidAmountUsd} />. Точная сумма и
+                валюта возврата будут взяты из исходного списания.
               </p>
               {error ? <p className="text-sm text-red-600">{error}</p> : null}
               {message ? <p className="text-sm text-success">{message}</p> : null}

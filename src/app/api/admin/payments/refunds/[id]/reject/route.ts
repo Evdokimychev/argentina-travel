@@ -24,7 +24,10 @@ export async function POST(
   const result = await rejectRefundRequest(supabase, id, auth.actorId, body.adminNotes);
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
+    return NextResponse.json(
+      { error: "Запрос уже обработан либо должен быть проверен другим сотрудником" },
+      { status: 409 },
+    );
   }
 
   return NextResponse.json({ transaction: result.transaction });

@@ -74,14 +74,17 @@
       "request": {"method": "POST", "endpoint": "/api/bookings/[id]/payment/refund"},
       "handler": {"source": "src/app/api/bookings/[id]/payment/refund/route.ts", "export": "POST"},
       "effects": ["atomic refund reservation transaction", "refund lifecycle record creation"],
-      "guards": ["authenticated booking owner or organizer", "paid or partial payment state", "UUID operation identity", "full paid amount only"],
-      "invariants": ["cumulative refunds cannot exceed captured funds", "replayed operation identity does not create another reservation", "request does not call the payment provider"],
+      "guards": ["authenticated booking owner or organizer", "paid or partial payment state", "UUID operation identity", "completed source charge owns amount and currency"],
+      "invariants": ["cumulative refunds cannot exceed captured funds", "replayed operation identity does not create another reservation", "request does not call the payment provider", "matching email alone cannot authorize a financial mutation"],
       "evidence": [
         {"type": "unit_contract", "source": "src/lib/payments/finance-atomic-controls.test.ts", "test": "serializes concurrent refund reservations and enforces cumulative caps"},
-        {"type": "unit_contract", "source": "src/lib/payments/payment-idempotency.test.ts", "test": "returns the same key for the same durable operation identity"}
+        {"type": "unit_contract", "source": "src/lib/payments/refund-request-integrity.test.ts", "test": "derives a full refund amount and currency from the completed source charge"},
+        {"type": "unit_contract", "source": "src/lib/payments/refund-request-integrity.test.ts", "test": "returns the original refund for an identical operation replay"},
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/refund/route.test.ts", "test": "prepares an owner refund without trusting client USD amount or currency"},
+        {"type": "route_integration", "source": "src/app/api/bookings/[id]/payment/refund/route.test.ts", "test": "does not grant a financial mutation from matching email alone"}
       ],
-      "coverageStatus": "contract_tested", "productionStatus": "unknown_db_down",
-      "gap": "No authenticated route integration, concurrent database, or live RLS evidence."
+      "coverageStatus": "integration_tested", "productionStatus": "unknown_db_down",
+      "gap": "Authenticated route and ledger-source behavior are integration-tested; concurrent live database, RLS, provider execution and processing recovery remain unavailable."
     },
     {
       "id": "admin.refund.prepare", "risk": "P0", "actors": ["admin"], "modes": ["remote"],
