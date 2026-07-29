@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { getSyncMessages } from "@/lib/i18n/sync-messages";
 import type { LocaleCode } from "@/types/locale";
@@ -26,6 +28,24 @@ const UNSUPPORTED_GLOBAL_CLAIMS = [
   /no prepayment|без предоплат|sin prepago/iu,
 ] as const;
 
+const PUBLIC_COPY_SOURCES = [
+  "src/components/about/DesignSystemShowcase.tsx",
+  "src/components/marketplace/MarketplaceHome.tsx",
+  "src/data/guide-content.ts",
+  "src/data/guide-pillar-bezopasnost.ts",
+  "src/data/site-nav.ts",
+] as const;
+
+const UNSUPPORTED_SOURCE_PHRASES = [
+  /Проверенные организаторы/u,
+  /Каждый гид проходит отбор/u,
+  /Оплата без предоплаты/u,
+  /Бронируйте лучшие туры/u,
+  /маркетплейс авторских туров/iu,
+  /экскурсии с проверенными организаторами/iu,
+  /только реальные отзывы после поездок/iu,
+] as const;
+
 function publicProductTruthCopy(locale: LocaleCode): string {
   const messages = getSyncMessages(locale);
   return PUBLIC_PRODUCT_TRUTH_KEYS.map((key) => messages[key] ?? "").join("\n");
@@ -50,5 +70,15 @@ describe("public product-truth copy", () => {
     ["pt", /partner[\s\S]*request/iu],
   ] as const)("%s footer distinguishes partner handoff from a request", (locale, contract) => {
     expect(getSyncMessages(locale)["footer.description"]).toMatch(contract);
+  });
+
+  it("keeps high-risk public copy sources free of unsupported global promises", () => {
+    const source = PUBLIC_COPY_SOURCES.map((file) =>
+      fs.readFileSync(path.join(process.cwd(), file), "utf8")
+    ).join("\n");
+
+    for (const unsupportedPhrase of UNSUPPORTED_SOURCE_PHRASES) {
+      expect(source).not.toMatch(unsupportedPhrase);
+    }
   });
 });

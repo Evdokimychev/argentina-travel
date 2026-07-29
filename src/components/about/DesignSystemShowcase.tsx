@@ -86,7 +86,7 @@ export default function DesignSystemShowcase() {
             Визуальный язык платформы
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate">
-            «Пора в Аргентину» — светлый премиальный маркетплейс с аргентинской идентичностью:
+            «Пора в Аргентину» — светлый туристический портал с аргентинской идентичностью:
             небесно-голубой primary, тёплые нейтрали и сдержанные семантические акценты.
           </p>
         </div>
@@ -391,7 +391,7 @@ export default function DesignSystemShowcase() {
             <EmptyState
               icon={MessageSquare}
               title="Отзывов пока нет"
-              description="Мы показываем только реальные отзывы после поездок."
+              description="Когда появятся доступные отзывы, они будут показаны здесь."
             />
             <EmptyState
               icon={MapPin}
