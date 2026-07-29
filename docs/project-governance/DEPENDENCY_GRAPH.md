@@ -1,6 +1,6 @@
 # DEPENDENCY_GRAPH
 
-Обновлён по repository + production baseline 2026-07-28.
+Обновлён по repository + production/candidate evidence 2026-07-29.
 
 ```mermaid
 flowchart TD
@@ -30,13 +30,13 @@ flowchart TD
 
 `browser → page/RSC → resolver → snapshot/partner → typed mapper → catalog/detail → capability-driven CTA → partner outbound or internal persisted request`.
 
-Current broken boundary: both Supabase REST and direct PG are unavailable. Partner/list repositories historically collapse failure to `[]/null`, allowing `200 empty` or false `404`. WP-001 changes this boundary; it must not alter checkout URLs or create external orders.
+Current production boundary is broken: Supabase REST and deployed direct PG are unavailable. Candidate WP-001 preserves this as `unavailable` and does not alter checkout URLs or create external orders. Candidate WP-002 makes the next action and seller boundary explicit in public copy.
 
 ## Release dependency chain
 
 `frozen source SHA → npm ci → type/lint/unit/contracts → build → migration dry-run/parity → preview deployment ID → browser/e2e/smoke → promote same artifact → production SHA/ID → health/catalog/detail/analytics evidence`.
 
-Current breaks: source not frozen; migration parity unavailable; Vercel deployment scope unavailable; production health down.
+Current breaks: clean release ancestry is not frozen; migration parity is unavailable; Vercel rejected the final candidate because the account is blocked; immutable preview/runtime scope is unavailable; production health is down. Successful earlier deployments `2P6Pnq…` and `D9WetK…` do not prove later SHA `ef447d8e`.
 
 ## Data ownership boundaries
 
