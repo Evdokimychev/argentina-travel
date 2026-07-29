@@ -3,8 +3,8 @@
  * Copy public schema data between Supabase Postgres instances.
  *
  * Usage:
- *   OLD_DATABASE_URL=... DATABASE_URL=... node scripts/migrate-supabase-data.mjs --dry-run
- *   OLD_DATABASE_URL=... node scripts/migrate-supabase-data.mjs --execute
+ *   OLD_DATABASE_URL=... OLD_SUPABASE_PROJECT_REF=... DATABASE_URL=... SUPABASE_PROJECT_REF=... node scripts/migrate-supabase-data.mjs --dry-run
+ *   OLD_DATABASE_URL=... OLD_SUPABASE_PROJECT_REF=... SUPABASE_PROJECT_REF=... node scripts/migrate-supabase-data.mjs --execute
  *
  * Reads OLD_DATABASE_URL from env or var/ops/old-database-url.txt
  * Reads DATABASE_URL from env / .env.local (target = new project)
@@ -13,6 +13,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import {
+  assertDistinctDatabaseTargets,
+  resolveTrustedSupabaseProjectRef,
+} from "./lib/database-target-attestation.mjs";
+import {
+  PRODUCTION_CONFIRMATION,
+  PRODUCTION_PROJECT_REF,
+} from "./lib/migration-journal.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -146,8 +154,24 @@ async function resetSequences(client) {
 
 async function main() {
   console.log(dryRun ? "Mode: dry-run" : "Mode: execute");
-  const oldClient = pgClient(oldUrl);
-  const newClient = pgClient(newUrl);
+  const sourceProjectRef = process.env.OLD_SUPABASE_PROJECT_REF?.trim();
+  if (!sourceProjectRef) throw new Error("OLD_SUPABASE_PROJECT_REF is required");
+  const targetProjectRef = resolveTrustedSupabaseProjectRef(process.env, {
+    projectRefEnvNames: ["SUPABASE_PROJECT_REF"],
+    urlEnvNames: ["NEXT_PUBLIC_SUPABASE_URL"],
+  });
+  const targets = assertDistinctDatabaseTargets({
+    sourceConnectionString: oldUrl,
+    sourceProjectRef,
+    targetConnectionString: newUrl,
+    targetProjectRef,
+    purpose: "Supabase data migration",
+    productionProjectRef: PRODUCTION_PROJECT_REF,
+    allowProductionTarget:
+      process.env.MIGRATION_PRODUCTION_CONFIRMATION === PRODUCTION_CONFIRMATION,
+  });
+  const oldClient = pgClient(targets.source.connectionString);
+  const newClient = pgClient(targets.target.connectionString);
 
   await oldClient.connect();
   await newClient.connect();

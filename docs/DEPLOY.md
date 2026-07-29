@@ -6,6 +6,9 @@
 
 ```bash
 MIGRATION_TARGET_ENVIRONMENT=staging \
+MIGRATION_TARGET_PROJECT_REF="$STAGING_SUPABASE_PROJECT_REF" \
+SUPABASE_PROJECT_REF="$STAGING_SUPABASE_PROJECT_REF" \
+NEXT_PUBLIC_SUPABASE_URL="$STAGING_NEXT_PUBLIC_SUPABASE_URL" \
 DATABASE_URL="$STAGING_DATABASE_URL" \
 npm run supabase:migrate
 ```
@@ -54,12 +57,13 @@ npm run backup:full
 | `STAGING_NEXT_PUBLIC_SUPABASE_URL` | URL staging-проекта Supabase |
 | `STAGING_NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key staging |
 | `STAGING_SUPABASE_SERVICE_ROLE_KEY` | Service role staging (только сервер) |
+| `STAGING_SUPABASE_PROJECT_REF` | Явный ref staging; независимо сверяется с URL и DATABASE_URL |
 | `STAGING_DATABASE_URL` | Postgres connection string staging |
 
 Чек-лист staging-проекта:
 
 - [ ] Создан отдельный проект в [Supabase Dashboard](https://supabase.com/dashboard)
-- [ ] Применены 102 baseline-миграции и все последующие с журналом: `MIGRATION_TARGET_ENVIRONMENT=staging DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
+- [ ] Применены 102 baseline-миграции и все последующие с журналом; `MIGRATION_TARGET_PROJECT_REF`, `SUPABASE_PROJECT_REF`, public URL и database URL относятся к одному staging project
 - [ ] RLS-аудит пройден: `npm run rls-audit`
 - [ ] Data API grants проверены: все необходимые таблицы доступны `service_role`, у `anon` нет непредусмотренного DML
 - [ ] `NEXT_PUBLIC_ENABLE_DEMO_SEED=false`

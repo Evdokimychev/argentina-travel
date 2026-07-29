@@ -1,18 +1,15 @@
 import { createHash } from "node:crypto";
+import {
+  parseSupabaseDatabaseTarget,
+  resolveTrustedSupabaseProjectRef,
+} from "./database-target-attestation.mjs";
 
 export const PRODUCTION_PROJECT_REF = "uooxrypocahomoqzdvzy";
 export const PRODUCTION_CONFIRMATION = "BACKUP_RESTORE_AND_STAGING_ACCEPTANCE_PASSED";
 export const BASELINE_CONFIRMATION = "PRODUCTION_SCHEMA_FINGERPRINT_VERIFIED";
 
 export function databaseProjectRef(connectionString) {
-  try {
-    const url = new URL(connectionString);
-    const hostRef = url.hostname.match(/^(?:db\.)?([a-z0-9]{20})\.supabase\.(?:co|com)$/i)?.[1];
-    if (hostRef) return hostRef.toLowerCase();
-    return decodeURIComponent(url.username).match(/^postgres\.([a-z0-9]{20})$/i)?.[1]?.toLowerCase() ?? null;
-  } catch {
-    return null;
-  }
+  return parseSupabaseDatabaseTarget(connectionString).projectRef;
 }
 
 export function isLocalDatabaseUrl(connectionString) {
@@ -72,6 +69,15 @@ export function assertMigrationTarget(env, connectionString) {
   }
   if (environment === "staging" && !projectRef) {
     throw new Error("A hosted Supabase project URL is required for staging migrations");
+  }
+  if (environment === "staging") {
+    const expectedProjectRef = resolveTrustedSupabaseProjectRef(env, {
+      projectRefEnvNames: ["MIGRATION_TARGET_PROJECT_REF", "SUPABASE_PROJECT_REF"],
+      urlEnvNames: ["NEXT_PUBLIC_SUPABASE_URL"],
+    });
+    if (projectRef !== expectedProjectRef) {
+      throw new Error("The staging migration target does not match the explicitly trusted project ref");
+    }
   }
   if (environment === "production") {
     if (projectRef !== PRODUCTION_PROJECT_REF) {

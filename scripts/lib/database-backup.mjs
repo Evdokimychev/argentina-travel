@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { assertDatabaseTarget, parseSupabaseDatabaseTarget } from "./database-target-attestation.mjs";
 
 export const KNOWN_PRODUCTION_SUPABASE_PROJECT_REF = "uooxrypocahomoqzdvzy";
 export const RESTORE_DISPOSABLE_CONFIRMATION = "YES_DISPOSABLE_TARGET_ONLY";
@@ -80,11 +81,6 @@ export function postgresProcessEnv(connectionString, options = {}) {
   };
 }
 
-function connectionContainsRef(connection, projectRef) {
-  const username = decodeURIComponent(connection.username || "");
-  return connection.hostname.includes(projectRef) || username.includes(projectRef);
-}
-
 export function backupRetentionForDate(date = new Date()) {
   if (date.getUTCDate() === 1) return { tier: "monthly", days: 90 };
   if (date.getUTCDay() === 0) return { tier: "weekly", days: 35 };
@@ -107,11 +103,12 @@ export function assertBackupEnvironment(env = process.env) {
     throw new Error("BACKUP_OUTPUT_DIR must not contain line breaks");
   }
 
-  const connection = parsePostgresConnection(databaseUrl);
-  if (!connectionContainsRef(connection, sourceProjectRef)) {
-    throw new Error("Database connection does not match BACKUP_SOURCE_PROJECT_REF");
-  }
-  if (connection.port && connection.port !== "5432") {
+  const attested = assertDatabaseTarget({
+    connectionString: databaseUrl,
+    expectedProjectRef: sourceProjectRef,
+    purpose: "encrypted logical backup",
+  });
+  if (attested.diagnostics.port !== 5432) {
     throw new Error("Backups require a direct or session-pooler connection on port 5432");
   }
 
@@ -139,6 +136,7 @@ export function assertRestoreEnvironment(env = process.env, manifest = null) {
   }
 
   const connection = parsePostgresConnection(databaseUrl);
+  const diagnostics = parseSupabaseDatabaseTarget(databaseUrl);
   const productionRefs = new Set([
     KNOWN_PRODUCTION_SUPABASE_PROJECT_REF,
     configuredProductionRef,
@@ -147,9 +145,7 @@ export function assertRestoreEnvironment(env = process.env, manifest = null) {
 
   for (const productionRef of productionRefs) {
     if (
-      targetProjectRef === productionRef ||
-      connection.hostname.includes(productionRef) ||
-      decodeURIComponent(connection.username || "").includes(productionRef)
+      targetProjectRef === productionRef || diagnostics.projectRef === productionRef
     ) {
       throw new Error("Restore target resolves to a production/source project ref");
     }
@@ -160,8 +156,12 @@ export function assertRestoreEnvironment(env = process.env, manifest = null) {
     if (!new Set(["localhost", "127.0.0.1", "::1"]).has(connection.hostname)) {
       throw new Error("local-* restore refs are allowed only for a local database host");
     }
-  } else if (!PROJECT_REF_RE.test(targetProjectRef) || !connectionContainsRef(connection, targetProjectRef)) {
-    throw new Error("Restore connection does not match the disposable target ref");
+  } else {
+    assertDatabaseTarget({
+      connectionString: databaseUrl,
+      expectedProjectRef: targetProjectRef,
+      purpose: "disposable restore",
+    });
   }
 
   return { databaseUrl, targetProjectRef };

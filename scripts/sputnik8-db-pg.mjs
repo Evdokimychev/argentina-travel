@@ -7,7 +7,9 @@ export async function createPgClientFromEnv() {
     throw new Error("DATABASE_URL is missing in .env.local");
   }
 
-  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString);
+  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString, {
+    purpose: "Sputnik8 sync",
+  });
   const client = new pg.Client({
     connectionString: resolvedUrl,
     ssl: { rejectUnauthorized: false },

@@ -52,14 +52,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=   # publishable key из Dashboard
 ```
 
 Опционально для админ-операций: `SUPABASE_SERVICE_ROLE_KEY`  
-Для CLI: `DATABASE_URL` (direct Postgres, **не** в клиенте)
+Для CLI: `DATABASE_URL` (direct Postgres, **не** в клиенте) и независимый
+`SUPABASE_PROJECT_REF`. Ref должен совпадать с `NEXT_PUBLIC_SUPABASE_URL` и
+ref внутри direct/pooler URL; иначе любой Node/Postgres tool останавливается до сети.
 
 ### 2. Применить миграцию
 
 **Единственный канонический runner:**
 
 ```bash
-# DATABASE_URL и явный MIGRATION_TARGET_ENVIRONMENT должны быть заданы
+# Для hosted staging дополнительно обязателен MIGRATION_TARGET_PROJECT_REF.
+# Production требует канонический ref и MIGRATION_PRODUCTION_CONFIRMATION.
 npm run supabase:migrate
 ```
 

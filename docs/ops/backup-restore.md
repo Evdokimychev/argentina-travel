@@ -12,6 +12,12 @@
 
 ## Что уже подготовлено
 
+Диагностический `npm run backup:schema` не заменяет backup данных. Перед
+`pg_dump` он требует `DATABASE_URL` и независимый trusted ref из
+`SUPABASE_PROJECT_REF`/`NEXT_PUBLIC_SUPABASE_URL`, строго сверяет direct/pooler
+target и передаёт credentials только через `PG*` process environment. Unknown
+или mismatched target останавливается до запуска dump; URL не попадает в argv.
+
 Workflow `.github/workflows/supabase-logical-backup.yml` ежедневно в 03:30 по Буэнос-Айресу:
 
 1. Останавливается, если нет строки подключения, project ref или публичного получателя `age`.

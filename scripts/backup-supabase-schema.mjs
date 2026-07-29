@@ -14,15 +14,18 @@
  *   npm run backup:schema
  *   node scripts/backup-supabase-schema.mjs
  *
- * Manual equivalent:
- *   pg_dump "$DATABASE_URL" --schema-only --no-owner --no-privileges \
- *     --schema=public --schema=auth --schema=storage \
- *     -f var/backups/schema-manual.sql
+ * The connection URL is attested before pg_dump and passed via PG* process
+ * environment, never as a command-line argument.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  assertDatabaseTarget,
+  resolveTrustedSupabaseProjectRef,
+} from "./lib/database-target-attestation.mjs";
+import { postgresProcessEnv } from "./lib/database-backup.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -70,13 +73,17 @@ async function main() {
   if (!connectionString) {
     throw new Error("DATABASE_URL is missing. Set it in .env.local or the environment.");
   }
+  const expectedProjectRef = resolveTrustedSupabaseProjectRef(process.env);
+  const attested = assertDatabaseTarget({
+    connectionString,
+    expectedProjectRef,
+    purpose: "schema backup",
+  });
 
   if (!hasPgDump()) {
     console.error("pg_dump not found in PATH.");
     console.error("Install PostgreSQL client tools, then rerun:");
-    console.error(
-      '  pg_dump "$DATABASE_URL" --schema-only --no-owner --no-privileges --schema=public --schema=auth --schema=storage -f var/backups/schema-manual.sql'
-    );
+    console.error("  Configure the attested project variables, then run: npm run backup:schema");
     process.exit(1);
   }
 
@@ -91,7 +98,6 @@ async function main() {
   const dump = spawnSync(
     "pg_dump",
     [
-      connectionString,
       "--schema-only",
       "--no-owner",
       "--no-privileges",
@@ -101,11 +107,17 @@ async function main() {
       "-f",
       outputPath,
     ],
-    { encoding: "utf8" }
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        ...postgresProcessEnv(attested.connectionString),
+      },
+    }
   );
 
   if (dump.status !== 0) {
-    console.error(dump.stderr || dump.stdout || "pg_dump failed");
+    console.error("pg_dump failed for the attested schema-backup target");
     process.exit(1);
   }
 

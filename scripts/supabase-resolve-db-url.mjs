@@ -8,6 +8,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
 import { isLocalDatabaseUrl } from "./lib/migration-journal.mjs";
+import {
+  assertDatabaseTarget,
+  resolveTrustedSupabaseProjectRef,
+} from "./lib/database-target-attestation.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -78,9 +82,28 @@ async function tryConnect(connectionString, timeoutMs = 8000) {
   }
 }
 
-export async function resolveSupabaseDatabaseUrl(connectionString) {
+export async function resolveSupabaseDatabaseUrl(
+  connectionString,
+  {
+    expectedProjectRef = resolveTrustedSupabaseProjectRef(process.env),
+    allowLocal = false,
+    purpose = "Supabase database resolution",
+  } = {},
+) {
+  const attested = assertDatabaseTarget({
+    connectionString,
+    expectedProjectRef,
+    allowLocal,
+    purpose,
+  });
+  connectionString = attested.connectionString;
+
   if (await tryConnect(connectionString)) {
     return connectionString;
+  }
+
+  if (attested.diagnostics.local) {
+    throw new Error("Could not connect to the attested local database target");
   }
 
   const parsed = parseDirectUrl(connectionString);
@@ -89,6 +112,11 @@ export async function resolveSupabaseDatabaseUrl(connectionString) {
   }
 
   const transactionUrl = `postgresql://${encodeURIComponent("postgres")}:${encodeURIComponent(parsed.password)}@db.${parsed.projectRef}.supabase.co:6543/${parsed.database}`;
+  assertDatabaseTarget({
+    connectionString: transactionUrl,
+    expectedProjectRef,
+    purpose,
+  });
   if (await tryConnect(transactionUrl)) {
     return transactionUrl;
   }
@@ -99,6 +127,7 @@ export async function resolveSupabaseDatabaseUrl(connectionString) {
         const host = `${prefix}-${region}.pooler.supabase.com`;
         const user = `postgres.${parsed.projectRef}`;
         const candidate = `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(parsed.password)}@${host}:${port}/${parsed.database}`;
+        assertDatabaseTarget({ connectionString: candidate, expectedProjectRef, purpose });
         if (await tryConnect(candidate)) {
           return candidate;
         }
@@ -116,7 +145,9 @@ async function main() {
   const direct = process.env.DATABASE_URL?.trim();
   if (!direct) throw new Error("DATABASE_URL missing");
 
-  const resolved = await resolveSupabaseDatabaseUrl(direct);
+  const resolved = await resolveSupabaseDatabaseUrl(direct, {
+    expectedProjectRef: resolveTrustedSupabaseProjectRef(process.env),
+  });
   if (resolved === direct) {
     console.log("DATABASE_URL: direct connection ok");
   } else {

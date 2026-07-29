@@ -28,6 +28,10 @@ const quick = () => {
   run("Release evidence contracts", "node", [
     "--test",
     "scripts/lib/commercial-catalog-smoke.test.mjs",
+    "scripts/lib/database-backup.test.mjs",
+    "scripts/lib/database-target-attestation.test.mjs",
+    "scripts/lib/direct-postgres-tools-contract.test.mjs",
+    "scripts/lib/migration-journal.test.mjs",
     "scripts/lib/ops-report-evidence.test.mjs",
   ]);
 };

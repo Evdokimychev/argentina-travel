@@ -27,6 +27,7 @@ import { fileURLToPath } from "node:url";
 import pg from "pg";
 import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
 import { SERVICE_ROLE_ONLY_TABLES } from "./lib/rls-audit-config.mjs";
+import { resolveDatabaseUrl } from "./resolve-database-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -143,7 +144,18 @@ function listMigrationFiles() {
 }
 
 async function checkDatabaseMigrations(fileCount, latestId) {
-  const connectionString = process.env.DATABASE_URL?.trim();
+  let connectionString;
+  try {
+    connectionString = resolveDatabaseUrl(process.env, { purpose: "production readiness evidence" });
+  } catch {
+    return {
+      id: "migrations:db-count",
+      label: "Целевая БД",
+      status: "fail",
+      message: "PostgreSQL target не подтверждён каноническим Supabase project ref",
+      category: "database",
+    };
+  }
   if (!connectionString) {
     return {
       id: "migrations:db-count",

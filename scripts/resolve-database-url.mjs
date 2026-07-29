@@ -1,31 +1,21 @@
 /**
  * Shared Postgres URL resolver for Node scripts (mirrors src/lib/database-url.ts).
  */
-export function resolveDatabaseUrl() {
-  const candidates = [
-    process.env.DATABASE_URL,
-    process.env.POSTGRES_URL_NON_POOLING,
-    process.env.POSTGRES_URL,
-    process.env.POSTGRES_PRISMA_URL,
-  ];
+import {
+  resolveAttestedDatabaseUrl,
+  resolveTrustedSupabaseProjectRef,
+} from "./lib/database-target-attestation.mjs";
 
-  for (const value of candidates) {
-    const trimmed = value?.trim();
-    if (trimmed) return preferPgSessionPoolerUrl(trimmed);
-  }
-
-  return null;
+export function resolveDatabaseConnection(env = process.env, options = {}) {
+  const expectedProjectRef =
+    options.expectedProjectRef ?? resolveTrustedSupabaseProjectRef(env);
+  return resolveAttestedDatabaseUrl(env, {
+    expectedProjectRef,
+    purpose: options.purpose ?? "operational script",
+    allowLocal: options.allowLocal ?? false,
+  });
 }
 
-function preferPgSessionPoolerUrl(url) {
-  try {
-    const parsed = new URL(url);
-    if (parsed.port === "6543" && parsed.hostname.includes("pooler.supabase.com")) {
-      parsed.port = "5432";
-      return parsed.toString();
-    }
-  } catch {
-    // keep original
-  }
-  return url;
+export function resolveDatabaseUrl(env = process.env, options = {}) {
+  return resolveDatabaseConnection(env, options)?.connectionString ?? null;
 }

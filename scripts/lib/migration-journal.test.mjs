@@ -27,9 +27,21 @@ test("project refs are derived without exposing credentials", () => {
 });
 
 test("migration targets fail closed around production", () => {
+  const stagingEnv = {
+    MIGRATION_TARGET_ENVIRONMENT: "staging",
+    MIGRATION_TARGET_PROJECT_REF: stagingRef,
+  };
   assert.throws(() => assertMigrationTarget({}, stagingUrl), /MIGRATION_TARGET_ENVIRONMENT/);
+  assert.deepEqual(assertMigrationTarget(stagingEnv, stagingUrl), {
+    environment: "staging",
+    projectRef: stagingRef,
+  });
   assert.throws(
-    () => assertMigrationTarget({ MIGRATION_TARGET_ENVIRONMENT: "staging" }, productionUrl),
+    () => assertMigrationTarget({ ...stagingEnv, MIGRATION_TARGET_PROJECT_REF: "zzzzzzzzzzzzzzzzzzzz" }, stagingUrl),
+    /explicitly trusted project ref/,
+  );
+  assert.throws(
+    () => assertMigrationTarget({ ...stagingEnv }, productionUrl),
     /production Supabase project/,
   );
   assert.throws(

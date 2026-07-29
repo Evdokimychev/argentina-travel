@@ -201,7 +201,10 @@ async function main() {
     throw new Error("Baseline inspection must target the canonical production project");
   }
   const migrations = loadMigrations();
-  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString);
+  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString, {
+    expectedProjectRef: PRODUCTION_PROJECT_REF,
+    purpose: "production migration baseline",
+  });
   const client = new pg.Client({
     connectionString: resolvedUrl,
     ssl: isLocalDatabaseUrl(resolvedUrl) ? false : { rejectUnauthorized: false },

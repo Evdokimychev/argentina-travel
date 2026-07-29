@@ -60,7 +60,11 @@ async function main() {
 
   const target = assertMigrationTarget(process.env, connectionString);
 
-  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString);
+  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString, {
+    expectedProjectRef: target.projectRef,
+    allowLocal: target.environment === "local",
+    purpose: `${target.environment} migration runner`,
+  });
   if (resolvedUrl !== connectionString) {
     console.log("Using Supabase Session pooler (direct host unreachable)…");
   }

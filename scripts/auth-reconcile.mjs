@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import pg from "pg";
+import { resolveDatabaseUrl } from "./resolve-database-url.mjs";
 
 const execute = process.argv.includes("--execute");
 const emailArg = process.argv.find((arg) => arg.startsWith("--email="));
@@ -7,10 +8,11 @@ const email = emailArg?.slice("--email=".length).trim().toLowerCase();
 if (!email || !email.includes("@")) {
   throw new Error("Usage: npm run auth:reconcile -- --email=user@example.com [--execute]");
 }
-if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
+const connectionString = resolveDatabaseUrl(process.env, { purpose: "auth profile reconciliation" });
+if (!connectionString) throw new Error("An attested PostgreSQL target is required");
 
 const client = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
   ssl: { rejectUnauthorized: false },
 });
 const quote = (value) => `"${value.replaceAll('"', '""')}"`;

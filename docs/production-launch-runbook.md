@@ -44,6 +44,7 @@ npm run publish:verify:pre-deploy   # code-ready: build + stale /map на prod �
 | `NEXT_PUBLIC_SUPABASE_URL` | Production Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role (только server) |
+| `SUPABASE_PROJECT_REF` | Canonical ref; должен совпадать с public URL и database URL |
 | `DATABASE_URL` | Postgres connection string |
 | `DEPLOY_ENV` | `production` |
 | `CRON_SECRET` | Случайная строка ≥32 символов |

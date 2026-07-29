@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { Client } from "basic-ftp";
 import pg from "pg";
 import { createClient } from "@supabase/supabase-js";
+import { resolveDatabaseUrl } from "./resolve-database-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -215,9 +216,9 @@ async function uploadSupabaseBucket(client, supabase, bucket, remotePrefix = "")
 }
 
 async function rewriteDatabaseUrlsPg() {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = resolveDatabaseUrl(process.env, { purpose: "media URL rewrite" });
   if (!databaseUrl) {
-    throw new Error("DATABASE_URL is required for --rewrite-db");
+    throw new Error("An attested PostgreSQL target is required for --rewrite-db");
   }
 
   const client = new pg.Client({ connectionString: databaseUrl });

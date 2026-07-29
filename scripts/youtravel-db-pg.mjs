@@ -1,11 +1,12 @@
 import pg from "pg";
+import { resolveDatabaseUrl } from "./resolve-database-url.mjs";
 
 const { Client } = pg;
 
 export function createPgClientFromEnv() {
-  const connectionString = process.env.DATABASE_URL?.trim();
+  const connectionString = resolveDatabaseUrl(process.env, { purpose: "YouTravel sync" });
   if (!connectionString) {
-    throw new Error("DATABASE_URL is required for YouTravel sync");
+    throw new Error("An attested PostgreSQL target is required for YouTravel sync");
   }
   return new Client({ connectionString, ssl: { rejectUnauthorized: false } });
 }

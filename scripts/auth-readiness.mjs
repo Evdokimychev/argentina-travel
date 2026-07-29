@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
+import {
+  parseSupabaseDatabaseTarget,
+  supabaseProjectRefFromUrl,
+} from "./lib/database-target-attestation.mjs";
 
 function loadEnvFile(filename) {
   if (!fs.existsSync(filename)) return;
@@ -20,21 +24,14 @@ loadEnvFile(path.resolve(".env.local"));
 const canonicalSiteUrl = "https://www.goargentina.ru";
 const expectedProjectRef = process.env.EXPECTED_SUPABASE_PROJECT_REF ?? "uooxrypocahomoqzdvzy";
 
-const refFromUrl = (value) => {
-  try { return new URL(value).hostname.split(".")[0]; } catch { return null; }
-};
+const refFromUrl = (value) => supabaseProjectRefFromUrl(value);
 const refFromJwt = (value) => {
   try {
     const payload = JSON.parse(Buffer.from(value.split(".")[1], "base64url"));
     return payload.ref ?? refFromUrl(payload.iss);
   } catch { return null; }
 };
-const refFromDatabase = (value) => {
-  try {
-    const host = new URL(value).hostname;
-    return host.match(/(?:db\.)?([a-z]{20})\.supabase\.(?:co|com)/)?.[1] ?? null;
-  } catch { return null; }
-};
+const refFromDatabase = (value) => parseSupabaseDatabaseTarget(value).projectRef;
 
 const refs = {
   publicUrl: refFromUrl(process.env.NEXT_PUBLIC_SUPABASE_URL),
