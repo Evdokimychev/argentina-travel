@@ -14,7 +14,7 @@ warnings:
   - "Для самостоятельно составленных билетов проверяйте правила транзита, получение багажа и запас времени между сегментами."
 recommendations:
   - "Сравнивайте полное время от первого вылета до прилёта, число билетов, багаж и условия изменения — не только цену."
-last_verified: "2026-07-20"
+last_verified: "2026-08-11"
 confidence: high
 provenance:
   schema_version: 1
@@ -28,14 +28,14 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-03"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-25"
 claims:
   - id: current-bookable-connecting-route
     text: "На дату проверки Turkish Airlines публикует для продажи маршрут Москва — Буэнос-Айрес; доступность и цена зависят от даты."
     sensitive: true
     source_ids: [turkish-moscow-buenos-aires]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

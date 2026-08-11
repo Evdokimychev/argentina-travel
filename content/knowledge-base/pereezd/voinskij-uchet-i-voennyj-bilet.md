@@ -15,7 +15,7 @@ warnings:
   - "Если в отношении вас сформирована повестка или ограничение, не полагайтесь на общий гид: получите индивидуальную юридическую оценку до поездки."
 recommendations:
   - "До отъезда проверьте свои сведения и уведомления, сохраните подтверждения обращений и отделяйте российскую обязанность от аргентинского комплекта DNM."
-last_verified: "2026-07-20"
+last_verified: "2026-08-11"
 confidence: high
 provenance:
   schema_version: 1
@@ -29,8 +29,8 @@ sources:
     type: legal
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-03"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-25"
   - id: rf-military-registration-regulation
     title: "Положение о воинском учёте № 719 — общие положения"
     url: "https://www.consultant.ru/document/cons_doc_LAW_64215/c7f1745fcd71700e47f519dcd477fae2dd8a7712/"
@@ -38,8 +38,8 @@ sources:
     type: legal
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-03"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-25"
   - id: rf-law-53-article-7-1
     title: "Федеральный закон № 53-ФЗ — статья 7.1, временные меры"
     url: "https://www.consultant.ru/document/cons_doc_LAW_18260/dc940acbd42ce7edc1bdb8be8fcb13e3bd02820d/"
@@ -47,8 +47,8 @@ sources:
     type: legal
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-03"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-25"
   - id: dnm-residences-hub
     title: "Migraciones — Residencias"
     url: "https://www.argentina.gob.ar/migraciones/residencias"
@@ -56,32 +56,32 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-03"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-25"
 claims:
   - id: notify-long-departure
     text: "Статья 10 закона № 53-ФЗ требует сообщить в военкомат или уполномоченный орган о выезде из России более чем на шесть месяцев либо въезде в Россию в двухнедельный срок, если данные не обновились автоматически."
     sensitive: true
     source_ids: [rf-law-53-article-10]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: permanent-abroad-exclusion
     text: "Текущее Положение № 719 относит постоянно проживающих за пределами России к лицам, не подлежащим воинскому учёту."
     sensitive: true
     source_ids: [rf-military-registration-regulation]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: summons-exit-restriction
     text: "Статья 7.1 закона № 53-ФЗ предусматривает запрет на выезд со дня размещения повестки в общедоступном реестре для гражданина, подлежащего призыву."
     sensitive: true
     source_ids: [rf-law-53-article-7-1]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: argentina-category-specific-list
     text: "Аргентинская DNM публикует документы по конкретной категории резиденции; российские обязанности не формируют универсальный аргентинский комплект."
     sensitive: true
     source_ids: [dnm-residences-hub]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

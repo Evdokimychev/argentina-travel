@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24 00:00",
+  "generated_at": "2026-08-11 00:00",
   "total_entities": 691,
   "editorial_readiness": {
     "provenance_schema_version": 1,
@@ -328,8 +328,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20",
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10",
           "note": "Подтверждает снятие ограничений на покупку валюты физическими лицами с апреля 2025 года."
         },
         {
@@ -340,8 +340,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20",
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10",
           "note": "BCRA указывает, что операции проводят банки и уполномоченные обменные дома и что их нельзя передавать посредникам."
         },
         {
@@ -352,8 +352,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-07-31",
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-18",
           "note": "Официальная ежедневная точка сравнения; конкретная котировка намеренно не зашита в текст."
         }
       ],
@@ -365,7 +365,7 @@
           "source_ids": [
             "bcra-phase-3-currency-liberalization"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -378,7 +378,7 @@
           "source_ids": [
             "bcra-authorized-currency-entities"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -393,13 +393,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -61723,8 +61723,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-07-31"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-18"
         },
         {
           "id": "argentina-national-parks-fees",
@@ -61734,8 +61734,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10"
         },
         {
           "id": "aerolineas-live-search-budget",
@@ -61745,8 +61745,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10"
         }
       ],
       "claims": [
@@ -61757,7 +61757,7 @@
           "source_ids": [
             "bna-live-exchange-budget"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61770,7 +61770,7 @@
           "source_ids": [
             "argentina-national-parks-fees"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61783,7 +61783,7 @@
           "source_ids": [
             "aerolineas-live-search-budget"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61798,13 +61798,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -61980,8 +61980,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-03"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-25"
         }
       ],
       "claims": [
@@ -61992,7 +61992,7 @@
           "source_ids": [
             "turkish-moscow-buenos-aires"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62007,13 +62007,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-11",
       "seo_slug": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
@@ -62351,8 +62351,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10"
         },
         {
           "id": "indec-consumer-price-index",
@@ -62362,8 +62362,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-09-10"
         },
         {
           "id": "bna-exchange-reference-living",
@@ -62373,8 +62373,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-24",
-          "expires_at": "2026-07-31"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-18"
         }
       ],
       "claims": [
@@ -62385,7 +62385,7 @@
           "source_ids": [
             "caba-consumption-baskets"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62398,7 +62398,7 @@
           "source_ids": [
             "indec-consumer-price-index"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62411,7 +62411,7 @@
           "source_ids": [
             "bna-exchange-reference-living"
           ],
-          "verified_at": "2026-07-24",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62426,13 +62426,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -72850,8 +72850,8 @@
           "type": "legal",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-03"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-25"
         },
         {
           "id": "rf-military-registration-regulation",
@@ -72861,8 +72861,8 @@
           "type": "legal",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-03"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-25"
         },
         {
           "id": "rf-law-53-article-7-1",
@@ -72872,8 +72872,8 @@
           "type": "legal",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-03"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-25"
         },
         {
           "id": "dnm-residences-hub",
@@ -72883,8 +72883,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-03"
+          "checked_at": "2026-08-11",
+          "expires_at": "2026-08-25"
         }
       ],
       "claims": [
@@ -72895,7 +72895,7 @@
           "source_ids": [
             "rf-law-53-article-10"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72908,7 +72908,7 @@
           "source_ids": [
             "rf-military-registration-regulation"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72921,7 +72921,7 @@
           "source_ids": [
             "rf-law-53-article-7-1"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72934,7 +72934,7 @@
           "source_ids": [
             "dnm-residences-hub"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-11",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72949,13 +72949,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-11",
       "seo_slug": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,

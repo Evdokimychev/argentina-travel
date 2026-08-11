@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24 00:00",
+  "generated_at": "2026-08-11 00:00",
   "total_entities": 691,
   "editorial_readiness": {
     "provenance_schema_version": 1,
@@ -209,14 +209,14 @@
         "puteshestviya-po-argentine"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -38070,14 +38070,14 @@
         "puteshestviya-po-argentine"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -38206,14 +38206,14 @@
         "pereezd-v-argentinu"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-11",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
@@ -38370,14 +38370,14 @@
         "zhizn-v-strane"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-24",
+      "last_verified": "2026-08-11",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-07",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -44868,14 +44868,14 @@
         "pereezd-v-argentinu"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-11",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-09-25",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,

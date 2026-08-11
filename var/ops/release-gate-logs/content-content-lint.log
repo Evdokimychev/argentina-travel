@@ -3,11 +3,11 @@
 > node scripts/content-audit.mjs
 
 {
-  "total": 689,
-  "critical": 398,
-  "high": 67,
+  "total": 691,
+  "critical": 0,
+  "high": 0,
   "medium": 0,
   "low": 0,
-  "none": 224,
-  "notIndexable": 465
+  "none": 691,
+  "notIndexable": 448
 }

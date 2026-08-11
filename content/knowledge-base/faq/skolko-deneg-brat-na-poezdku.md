@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [бюджетно, деньги, планирование]
 related: [byudzhet-poezdki, stoimost-zhizni-ba]
-last_verified: "2026-07-24"
+last_verified: "2026-08-11"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-24"
-    expires_at: "2026-07-31"
+    checked_at: "2026-08-11"
+    expires_at: "2026-08-18"
   - id: argentina-national-parks-fees
     title: "Administración de Parques Nacionales — билеты и тарифы"
     url: "https://www.argentina.gob.ar/interior/ambiente/parquesnacionales/tarifas"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-24"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-11"
+    expires_at: "2026-09-10"
   - id: aerolineas-live-search-budget
     title: "Aerolíneas Argentinas — поиск перелётов"
     url: "https://www.aerolineas.com/"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-24"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-11"
+    expires_at: "2026-09-10"
 claims:
   - id: official-rate-is-time-sensitive
     text: "Для перевода бюджета между песо и иностранной валютой нужно использовать датированную текущую котировку, а не курс из старой статьи."
     sensitive: true
     source_ids: [bna-live-exchange-budget]
-    verified_at: "2026-07-24"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: park-fees-must-be-quoted-live
     text: "Стоимость входа в национальные парки следует проверять в официальном тарифе для конкретного парка и категории посетителя."
     sensitive: true
     source_ids: [argentina-national-parks-fees]
-    verified_at: "2026-07-24"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: domestic-flight-budget-live
     text: "Стоимость внутреннего перелёта зависит от маршрута, дат, тарифа и включённых услуг и должна браться из актуального расчёта перевозчика."
     sensitive: true
     source_ids: [aerolineas-live-search-budget]
-    verified_at: "2026-07-24"
+    verified_at: "2026-08-11"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

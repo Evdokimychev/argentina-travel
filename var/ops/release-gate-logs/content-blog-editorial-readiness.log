@@ -3,8 +3,8 @@
 > tsx scripts/blog-editorial-readiness.ts --strict
 
 {
-  "total": 75,
-  "passed": 75,
+  "total": 76,
+  "passed": 76,
   "failed": 0,
   "sensitive": 9,
   "sensitivePassed": 9
