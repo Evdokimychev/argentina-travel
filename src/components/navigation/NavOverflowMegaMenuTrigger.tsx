@@ -9,7 +9,10 @@ import {
   megaMenuWidthClass,
 } from "@/components/navigation/mega-menu-section-content";
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
-import { navOverflowTriggerClassName } from "@/components/navigation/nav-mega-menu-trigger-styles";
+import {
+  navMegaMenuChevronClassName,
+  navOverflowTriggerClassName,
+} from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { getSiteNavSectionIcon } from "@/data/site-nav-mobile";
 import { useMegaMenuHoverIntent } from "@/hooks/useMegaMenuHoverIntent";
 import { cn } from "@/lib/cn";
@@ -266,18 +269,15 @@ export function NavOverflowMegaMenuTrigger({
             : "text-foreground/70 hover:bg-surface-muted/80 hover:text-sky",
         )}
       >
-        <span className="shrink-0 font-semibold">{label}</span>
+        <span className="shrink-0 font-semibold leading-none">{label}</span>
         <span
-          className="inline-flex h-5 min-w-[1.25rem] shrink-0 items-center justify-center rounded-full bg-surface-muted px-1.5 text-[10px] font-semibold tabular-nums text-slate"
+          className="inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-surface-muted px-1 text-[10px] font-semibold leading-none tabular-nums text-slate"
           aria-hidden
         >
           {sections.length}
         </span>
         <ChevronDown
-          className={cn(
-            "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
-            open && "rotate-180",
-          )}
+          className={cn(navMegaMenuChevronClassName, open && "rotate-180 opacity-70")}
           aria-hidden
         />
       </button>

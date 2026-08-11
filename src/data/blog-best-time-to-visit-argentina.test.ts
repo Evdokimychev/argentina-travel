@@ -35,6 +35,8 @@ describe("best-time-to-visit-argentina rebuild", () => {
       showAffiliate: false,
       showDestinationGallery: false,
       autoLinkDestinations: false,
+      showAutoSectionImages: false,
+      showSidebarFresh: false,
     });
     expect(post!.sections?.some((s) => s.title.includes("Источники и дата проверки"))).toBe(true);
     expect(
@@ -63,12 +65,14 @@ describe("best-time-to-visit-argentina rebuild", () => {
   it("season matrix has no Uruguay and uses Russian season labels", () => {
     expect(ARGENTINA_SEASON_MATRIX.some((row) => /уругв/i.test(row.name))).toBe(false);
     expect(Object.values(SEASON_SCORE_LABELS)).toEqual([
-      "Только для конкретной цели/при проверке условий",
-      "Хорошо с оговорками",
-      "Основной сезон",
+      "Только для специальной цели",
+      "Подходит с оговорками",
+      "Лучшее окно",
     ]);
+    expect(ARGENTINA_SEASON_MATRIX.every((row) => row.mark.trim().length > 0)).toBe(true);
     const valdes = ARGENTINA_SEASON_MATRIX.find((row) => row.id === "valdes");
     expect(valdes?.summary).toMatch(/июня до начала декабря/i);
     expect(valdes?.summary).toMatch(/середины сентября/i);
+    expect(valdes?.mark).toBe("🐋");
   });
 });

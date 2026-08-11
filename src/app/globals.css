@@ -161,15 +161,39 @@ html[data-site-heading-font="system"] {
 }
 
 html[data-site-typography-scale="compact"] {
+  --token-text-2xs: 0.5625rem;
+  --token-text-xs: 0.625rem;
+  --token-text-sm: 0.75rem;
+  --token-text-base: 0.8125rem;
+  --token-text-lg: 0.9375rem;
+  --token-text-xl: 1.0625rem;
+  --token-text-2xl: 1.25rem;
+  --token-text-3xl: 1.5rem;
+  --token-text-4xl: 1.875rem;
+}
+
+html[data-site-typography-scale="balanced"] {
+  --token-text-2xs: 0.625rem;
+  --token-text-xs: 0.6875rem;
   --token-text-sm: 0.8125rem;
-  --token-text-base: 0.9375rem;
-  --token-text-lg: 1.0625rem;
+  --token-text-base: 0.875rem;
+  --token-text-lg: 1rem;
+  --token-text-xl: 1.125rem;
+  --token-text-2xl: 1.375rem;
+  --token-text-3xl: 1.625rem;
+  --token-text-4xl: 2rem;
 }
 
 html[data-site-typography-scale="editorial"] {
-  --token-text-sm: 0.9375rem;
-  --token-text-base: 1.0625rem;
-  --token-text-lg: 1.1875rem;
+  --token-text-2xs: 0.6875rem;
+  --token-text-xs: 0.75rem;
+  --token-text-sm: 0.875rem;
+  --token-text-base: 0.9375rem;
+  --token-text-lg: 1.0625rem;
+  --token-text-xl: 1.1875rem;
+  --token-text-2xl: 1.5rem;
+  --token-text-3xl: 1.75rem;
+  --token-text-4xl: 2.125rem;
 }
 
 html[data-site-corner-style="soft"] {
@@ -1298,14 +1322,14 @@ body {
 .content-reading-prose {
   max-width: 65ch;
   color: var(--color-slate);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: var(--token-text-base);
+  line-height: 1.65;
 }
 
 .content-reading-prose h2 {
-  margin-top: 2rem;
+  margin-top: 1.75rem;
   font-family: var(--font-body);
-  font-size: 1.375rem;
+  font-size: var(--token-text-xl);
   font-weight: 700;
   line-height: 1.35;
   color: var(--color-charcoal);
@@ -1316,9 +1340,9 @@ body {
 }
 
 .content-reading-prose h3 {
-  margin-top: 1.25rem;
+  margin-top: 1.1rem;
   font-family: var(--font-body);
-  font-size: 1.125rem;
+  font-size: var(--token-text-lg);
   font-weight: 600;
   line-height: 1.4;
   color: var(--color-charcoal);
@@ -1362,7 +1386,7 @@ body {
 }
 
 .content-reading-prose table {
-  font-size: 0.9375rem;
+  font-size: var(--token-text-sm);
 }
 
 .rich-text-editor-content table,
@@ -1385,12 +1409,12 @@ body {
 
 @media (max-width: 640px) {
   .content-reading-prose {
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: var(--token-text-base);
+    line-height: 1.65;
   }
 
   .content-reading-prose h2 {
-    font-size: 1.25rem;
+    font-size: var(--token-text-xl);
   }
 }
 

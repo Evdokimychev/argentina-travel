@@ -150,7 +150,7 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationGlobal = {
 export const DEFAULT_SITE_DESIGN: SiteDesignGlobal = {
   palettePreset: "argentina",
   headingFont: "unbounded",
-  typographyScale: "balanced",
+  typographyScale: "compact",
   cornerStyle: "rounded",
   headerVariant: "floating",
   footerVariant: "light",

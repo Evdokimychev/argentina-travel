@@ -260,6 +260,31 @@ describe("parseBlogSectionBody — FAQ sections", () => {
       ],
     });
   });
+
+  it("parses numbered bold FAQ without leaking markers or next index", () => {
+    const blocks = parseBlogSectionBody(
+      "**1. Чем знаменита Мендоса?**\nЭто винная столица Аргентины.\n\n**2. Какие винные зоны выбрать?**\nМайпу, Лухан-де-Куйо и Долина Уко.",
+      "Часто задаваемые вопросы",
+    );
+
+    expect(blocks[0]).toMatchObject({
+      type: "faq",
+      items: [
+        {
+          question: "Чем знаменита Мендоса?",
+          answer: "Это винная столица Аргентины.",
+        },
+        {
+          question: "Какие винные зоны выбрать?",
+          answer: "Майпу, Лухан-де-Куйо и Долина Уко.",
+        },
+      ],
+    });
+
+    const serialized = JSON.stringify(blocks);
+    expect(serialized).not.toContain("**");
+    expect(serialized).not.toMatch(/пейзажами\. 2\.|Аргентины\. 2\./);
+  });
 });
 
 describe("parseBlogSectionBody — mistakes sections", () => {

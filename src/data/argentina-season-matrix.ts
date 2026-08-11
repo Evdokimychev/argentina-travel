@@ -2,9 +2,16 @@
 export type SeasonScore = 0 | 1 | 2;
 
 export const SEASON_SCORE_LABELS: Record<SeasonScore, string> = {
-  2: "Основной сезон",
-  1: "Хорошо с оговорками",
-  0: "Только для конкретной цели/при проверке условий",
+  2: "Лучшее окно",
+  1: "Подходит с оговорками",
+  0: "Только для специальной цели",
+};
+
+/** Полные пояснения для aria-label и развёрнутой легенды. */
+export const SEASON_SCORE_LABELS_FULL: Record<SeasonScore, string> = {
+  2: "Основной сезон / лучшее окно для большинства путешественников",
+  1: "Хорошо подходит с оговорками по погоде, спросу или логистике",
+  0: "Только для специальной цели или после проверки актуальных условий",
 };
 
 export const SEASON_MONTH_LABELS = [
@@ -44,6 +51,8 @@ export type SeasonMatrixRow = {
   name: string;
   href: string;
   tag?: string;
+  /** Короткий отличительный знак направления (эмодзи) для сканирования матрицы */
+  mark: string;
   /** Индекс 0 = январь */
   scores: SeasonScore[];
   /** Подсказки по месяцам (если есть — показываются в tooltip) */
@@ -61,6 +70,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Буэнос-Айрес",
     href: "/destinations/ba",
     tag: "Столица",
+    mark: "🏙️",
     summary: "Комфортнее весна и осень; летом жарко и влажно, зимой прохладно, но город не «закрывается».",
     scores: [1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1],
     tips: {
@@ -75,6 +85,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Игуасу",
     href: "/destinations/iguazu",
     tag: "Водопады",
+    mark: "💧",
     summary: "Парк доступен круглый год; комфортнее в более прохладные месяцы. Уровень воды зависит от осадков.",
     scores: [1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1],
     tips: {
@@ -88,6 +99,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Эль-Калафате и Эль-Чальтен",
     href: "/destinations/calafate",
     tag: "Патагония",
+    mark: "🧊",
     summary: "Основное окно для ледников и треккинга — ноябрь–март. Ветер и закрытие троп возможны в любой сезон.",
     scores: [2, 2, 2, 1, 0, 0, 0, 0, 0, 1, 2, 2],
     tips: {
@@ -101,6 +113,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Ушуая",
     href: "/destinations/ushuaia",
     tag: "Огненная Земля",
+    mark: "❄️",
     summary: "Удобнее конец октября–апрель. Зимой возможны закрытия дорог и троп, зато доступны снежные активности.",
     scores: [2, 2, 1, 1, 0, 0, 0, 0, 0, 1, 2, 2],
     tips: {
@@ -114,6 +127,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Барилоче и Озёрный край",
     href: "/destinations/bariloche",
     tag: "Озёра",
+    mark: "🏔️",
     summary: "Летом — озёра и прогулки; зимой — снег. Фактическая работа трасс зависит от снегопадов.",
     scores: [2, 2, 1, 1, 0, 1, 2, 2, 1, 1, 2, 2],
     tips: {
@@ -127,6 +141,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Мендоса",
     href: "/destinations/mendoza",
     tag: "Вино",
+    mark: "🍷",
     summary: "Комфортнее март–апрель и октябрь–ноябрь. Вендимия требует раннего бронирования.",
     scores: [1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1],
     tips: {
@@ -140,6 +155,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Сальта и Хухуй",
     href: "/destinations/salta",
     tag: "Северо-запад",
+    mark: "🌄",
     summary: "Для автомаршрута чаще удобнее май–октябрь. Летом регион живой, но ливни могут осложнять дороги.",
     scores: [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1],
     tips: {
@@ -153,6 +169,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Полуостров Вальдес",
     href: "/places/valdes-peninsula",
     tag: "Киты",
+    mark: "🐋",
     summary: "Киты — с июня до начала декабря; пингвины — примерно с середины сентября до середины апреля.",
     scores: [1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 1],
     tips: {
@@ -167,6 +184,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Атлантическое побережье",
     href: "/places/mar-del-plata",
     tag: "Пляжи",
+    mark: "🏖️",
     summary: "Основной пляжный период — декабрь–февраль. Январь — пик спроса.",
     scores: [2, 2, 1, 0, 0, 0, 0, 0, 0, 1, 1, 2],
     tips: {
@@ -180,6 +198,7 @@ export const ARGENTINA_SEASON_MATRIX: SeasonMatrixRow[] = [
     name: "Лыжи и снег",
     href: "/destinations/bariloche",
     tag: "Цель",
+    mark: "⛷️",
     summary: "Ориентир — июль–август. Сроки зависят от фактического снега и работы подъёмников.",
     scores: [0, 0, 0, 0, 0, 1, 2, 2, 1, 0, 0, 0],
     tips: {

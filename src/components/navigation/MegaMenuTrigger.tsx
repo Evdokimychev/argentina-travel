@@ -10,6 +10,8 @@ import {
 } from "@/components/navigation/mega-menu-section-content";
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
 import {
+  navMegaMenuChevronButtonClassName,
+  navMegaMenuChevronClassName,
   navMegaMenuIndexClassName,
   navMegaMenuTriggerClassName,
 } from "@/components/navigation/nav-mega-menu-trigger-styles";
@@ -98,7 +100,11 @@ export function MegaMenuTrigger({
         )}
       >
         <span className="truncate">{label}</span>
-        {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
+        {showIndex ? (
+          <span className={indexClassName} aria-hidden>
+            {num}
+          </span>
+        ) : null}
       </Link>
     );
   }
@@ -114,6 +120,13 @@ export function MegaMenuTrigger({
     rememberPointer(event.clientX, event.clientY);
     scheduleClose();
   };
+
+  const chevron = (
+    <ChevronDown
+      className={cn(navMegaMenuChevronClassName, open && "rotate-180 opacity-70")}
+      aria-hidden
+    />
+  );
 
   return (
     <div
@@ -131,10 +144,14 @@ export function MegaMenuTrigger({
         >
           <Link
             href={section.href!}
-            className="inline-flex min-w-0 items-baseline gap-0.5 truncate transition-colors hover:text-sky"
+            className="inline-flex min-w-0 items-center gap-1 truncate transition-colors hover:text-sky"
           >
             <span className="truncate">{label}</span>
-            {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
+            {showIndex ? (
+              <span className={indexClassName} aria-hidden>
+                {num}
+              </span>
+            ) : null}
           </Link>
           {section.badge ? <NavBadge badge={section.badge} /> : null}
           <button
@@ -145,15 +162,9 @@ export function MegaMenuTrigger({
             aria-controls={panelId}
             aria-label={`${label}: подменю`}
             onClick={() => (open ? closeMenu() : openFromControl())}
-            className="-mr-1 rounded-lg p-1.5 transition-colors hover:bg-sky/10 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className={navMegaMenuChevronButtonClassName}
           >
-            <ChevronDown
-              className={cn(
-                "h-3.5 w-3.5 transition-transform duration-200",
-                open && "rotate-180",
-              )}
-              aria-hidden
-            />
+            {chevron}
           </button>
         </div>
       ) : (
@@ -170,15 +181,13 @@ export function MegaMenuTrigger({
           )}
         >
           <span className="truncate">{label}</span>
+          {showIndex ? (
+            <span className={indexClassName} aria-hidden>
+              {num}
+            </span>
+          ) : null}
           {section.badge ? <NavBadge badge={section.badge} /> : null}
-          <ChevronDown
-            className={cn(
-              "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
-              open && "rotate-180",
-            )}
-            aria-hidden
-          />
-          {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
+          {chevron}
         </button>
       )}
 

@@ -129,11 +129,11 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         label: "Масштаб типографики",
         type: "select",
         options: [
-          { label: "Компактный", value: "compact" },
+          { label: "Компактный (по умолчанию)", value: "compact" },
           { label: "Сбалансированный", value: "balanced" },
-          { label: "Редакционный", value: "editorial" },
+          { label: "Крупный / редакционный", value: "editorial" },
         ],
-        hint: "Меняет плотность базового текста без ручной настройки десятков размеров.",
+        hint: "Меняет плотность базового текста. Компактный — спокойнее для глаз на длинных страницах.",
       },
       {
         name: "cornerStyle",

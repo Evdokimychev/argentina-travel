@@ -22,6 +22,7 @@ import {
 import { getBlogStartHerePostsFromCatalog } from "@/lib/blog-index-payload";
 import { BLOG_HERO_VARIANT_KEY, type BlogHeroVariant } from "@/lib/blog-hero-variant";
 import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
+import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { BlogPost, TourListing } from "@/types";
@@ -53,6 +54,10 @@ export default function BlogIndexView({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  // Синхронизирует высоту sticky-панели фильтров в --site-section-nav-height,
+  // чтобы sticky-сайдбар каталога знал, на сколько опуститься и не оказаться под ней.
+  useSyncSiteSectionNavHeight(toolbarRef);
 
   const catalogPosts = useMemo(
     () => filterIndexableBlogPosts(sortBlogPostsByDate(posts)),
@@ -254,7 +259,7 @@ export default function BlogIndexView({
             ]}
           />
 
-          <div className="blog-index-toolbar mt-4">
+          <div ref={toolbarRef} className="blog-index-toolbar mt-4">
             <BlogSearchFilters
               variant="spotlight"
               query={query}

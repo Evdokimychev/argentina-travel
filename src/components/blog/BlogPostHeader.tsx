@@ -92,7 +92,7 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
             </div>
 
             <ul className="mt-4 flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
+              {post.tags.slice(0, 3).map((tag) => (
                 <li
                   key={tag}
                   className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate"
