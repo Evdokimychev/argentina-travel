@@ -61,6 +61,10 @@ const requestedRuns = Number(process.env.LIGHTHOUSE_RUNS_PER_PATH ?? 1);
 const RUNS_PER_PATH = Number.isFinite(requestedRuns)
   ? Math.max(1, Math.min(5, Math.floor(requestedRuns)))
   : 1;
+const requestedRunTimeoutMs = Number(process.env.LIGHTHOUSE_RUN_TIMEOUT_MS ?? 180_000);
+const RUN_TIMEOUT_MS = Number.isFinite(requestedRunTimeoutMs)
+  ? Math.max(30_000, Math.min(600_000, Math.floor(requestedRunTimeoutMs)))
+  : 180_000;
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -134,12 +138,22 @@ for (const samplePath of SAMPLE_PATHS) {
         "--output=json",
         `--output-path=${outFile}`,
       ],
-      { stdio: "inherit", cwd: root, env: process.env },
+      {
+        stdio: "inherit",
+        cwd: root,
+        env: process.env,
+        timeout: RUN_TIMEOUT_MS,
+        killSignal: "SIGKILL",
+      },
     );
 
     if (lh.status !== 0 || !fs.existsSync(outFile)) {
       executionFailed = true;
-      results.push({ path: samplePath, url, run, error: "lighthouse failed", pass: false });
+      const timedOut = lh.error?.code === "ETIMEDOUT";
+      const error = timedOut
+        ? `lighthouse timed out after ${RUN_TIMEOUT_MS}ms`
+        : "lighthouse failed";
+      results.push({ path: samplePath, url, run, error, pass: false });
       continue;
     }
 
