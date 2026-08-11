@@ -65,8 +65,9 @@ function MetaRow({ post, className, showAuthor = false }: { post: BlogPost; clas
 }
 
 function TagList({ tags, limit = 3 }: { tags: string[]; limit?: number }) {
-  const visible = tags.slice(0, limit);
-  const overflow = tags.length - limit;
+  const uniqueTags = Array.from(new Set(tags));
+  const visible = uniqueTags.slice(0, limit);
+  const overflow = uniqueTags.length - limit;
   return (
     <ul className="flex flex-wrap items-center gap-1.5">
       {visible.map((tag) => (

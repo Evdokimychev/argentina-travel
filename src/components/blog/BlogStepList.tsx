@@ -24,7 +24,7 @@ export default function BlogStepList({ items, title, className }: BlogStepListPr
         </li>
       ) : null}
       {items.map((item, index) => (
-        <li key={item.slice(0, 48)} className="flex gap-3 text-sm leading-relaxed text-slate">
+        <li key={`${index}-${item}`} className="flex gap-3 text-sm leading-relaxed text-slate">
           <span
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky/10 text-xs font-bold text-sky-dark"
             aria-hidden

@@ -131,9 +131,9 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
     case "paragraphs":
       return (
         <div className="space-y-4">
-          {block.items.map((paragraph) => (
+          {block.items.map((paragraph, index) => (
             <LinkifiedText
-              key={paragraph.slice(0, 48)}
+              key={`${index}-${paragraph}`}
               text={paragraph}
               className="leading-relaxed text-slate"
             />
@@ -167,8 +167,8 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
             <h3 className="mb-2 font-heading text-base font-semibold text-charcoal">{block.title}</h3>
           ) : null}
           <ul className="list-disc space-y-2 pl-5 text-slate">
-            {block.items.map((item) => (
-              <li key={item.slice(0, 48)} className="leading-relaxed">
+            {block.items.map((item, index) => (
+              <li key={`${index}-${item}`} className="leading-relaxed">
                 <LinkifiedText text={item} as="span" className="leading-relaxed text-slate" />
               </li>
             ))}
@@ -191,7 +191,7 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
         >
           <ol className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
             {block.items.map((item, index) => (
-              <li key={item.slice(0, 40)} className="flex gap-3 text-sm leading-relaxed text-slate">
+              <li key={`${index}-${item}`} className="flex gap-3 text-sm leading-relaxed text-slate">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky/10 text-xs font-bold text-sky">
                   {index + 1}
                 </span>
@@ -264,8 +264,11 @@ export default function BlogRichArticle({
             <p data-speakable="lede" className="text-base leading-relaxed text-charcoal">
               {article.lede}
             </p>
-            {article.intro?.map((paragraph) => (
-              <p key={paragraph.slice(0, 48)} className="mt-4 text-base leading-relaxed text-charcoal">
+            {article.intro?.map((paragraph, index) => (
+              <p
+                key={`${index}-${paragraph}`}
+                className="mt-4 text-base leading-relaxed text-charcoal"
+              >
                 {paragraph}
               </p>
             ))}

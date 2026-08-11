@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  observeMarketplaceCatalogInBackground,
   resolveMarketplaceCatalogWithinDeadline,
   resolveMarketplaceSourceResults,
 } from "@/data/marketplace-tours-server";
@@ -59,6 +60,22 @@ describe("marketplace catalog deadline", () => {
     await vi.advanceTimersByTimeAsync(2_500);
     await rejection;
     vi.useRealTimers();
+  });
+
+  it("observes a late source rejection before a deadline fallback can reject", async () => {
+    let rejectCatalog!: (reason: Error) => void;
+    const catalogPromise = new Promise<TourListing[]>((_, reject) => {
+      rejectCatalog = reject;
+    });
+    const report = vi.fn();
+
+    observeMarketplaceCatalogInBackground(catalogPromise, report);
+    rejectCatalog(new Error("late_catalog_failure"));
+    await catalogPromise.catch(() => undefined);
+
+    expect(report).toHaveBeenCalledWith("catalog", expect.objectContaining({
+      message: "late_catalog_failure",
+    }));
   });
 });
 

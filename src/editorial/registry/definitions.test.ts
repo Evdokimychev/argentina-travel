@@ -18,6 +18,8 @@ describe("editorialBlockRegistry", () => {
     expect(editorialBlockRegistry.sources?.status).toBe("new");
     expect(editorialBlockRegistry.phrasebook?.status).toBe("new");
     expect(editorialBlockRegistry.faq?.status).toBe("stable");
+    expect(editorialBlockRegistry["link-chips"]?.status).toBe("stable");
+    expect(editorialBlockRegistry["story-deck"]?.status).toBe("stable");
   });
 
   it("lists unique types", () => {

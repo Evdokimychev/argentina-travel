@@ -88,8 +88,12 @@ describe("optional blog tour catalog", () => {
 
     expect(index).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
     expect(hub).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
-    expect(article).toContain("pickBlogPostTourCandidates(tours, post.tourEmbeds ?? [])");
-    expect(author).toContain("pickBlogPostTourCandidates(tours, post.tourEmbeds ?? [])");
+    expect(article).toContain("pickBlogPostTourCandidates(tours, tourEmbeds)");
+    expect(article).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
+    expect(article).toContain("tourEmbeds.length === 0");
+    expect(author).toContain("pickBlogPostTourCandidates(tours, tourEmbeds)");
+    expect(author).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
+    expect(author).toContain("tourEmbeds.length === 0");
     expect(article).not.toContain("await fetchMarketplaceTours()");
     expect(author).not.toContain("await fetchMarketplaceTours()");
   });

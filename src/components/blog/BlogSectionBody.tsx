@@ -97,8 +97,11 @@ function renderLegacyBlock(
         // stacking a shadow on top of the section it already lives inside
         // (see BlogStepList / BlogCallout for the same flattened pattern).
         <ul key={index} className="m-0 list-none space-y-2 rounded-2xl border border-gray-100 bg-surface-muted/20 px-4 py-3 sm:px-5 sm:py-4">
-          {block.items.map((item) => (
-            <li key={item.slice(0, 48)} className="flex gap-2.5 text-sm leading-relaxed text-slate">
+          {block.items.map((item, itemIndex) => (
+            <li
+              key={`${itemIndex}-${item}`}
+              className="flex gap-2.5 text-sm leading-relaxed text-slate"
+            >
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
               <span>
                 <BlogInlineText text={item} linkify={linkifyText} rules={linkifyRules} />

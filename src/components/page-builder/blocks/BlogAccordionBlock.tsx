@@ -27,13 +27,13 @@ function AccordionBody({ text }: { text: string }) {
 
   return (
     <div className="space-y-3 border-t border-gray-100 px-4 py-3 text-sm leading-relaxed text-slate">
-      {chunks.map((chunk) => {
+      {chunks.map((chunk, chunkIndex) => {
         const lines = chunk.split("\n").map((line) => line.trim()).filter(Boolean);
         if (isBulletList(lines)) {
           return (
-            <ul key={chunk.slice(0, 48)} className="m-0 list-none space-y-1.5">
-              {lines.map((line) => (
-                <li key={line.slice(0, 48)} className="flex gap-2">
+            <ul key={`${chunkIndex}-${chunk}`} className="m-0 list-none space-y-1.5">
+              {lines.map((line, lineIndex) => (
+                <li key={`${lineIndex}-${line}`} className="flex gap-2">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
                   <span>
                     <LinkifiedText text={line.replace(/^\*\s+/, "")} as="span" />
@@ -44,7 +44,7 @@ function AccordionBody({ text }: { text: string }) {
           );
         }
         return (
-          <p key={chunk.slice(0, 48)} className="m-0">
+          <p key={`${chunkIndex}-${chunk}`} className="m-0">
             <LinkifiedText text={chunk} as="span" />
           </p>
         );

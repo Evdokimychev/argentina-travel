@@ -178,8 +178,11 @@ export default function ArticleStoryDeck({
                   </p>
                   {slide.bullets?.length ? (
                     <ul className="mt-3 space-y-1.5">
-                      {slide.bullets.map((item) => (
-                        <li key={item} className="flex gap-2 text-sm leading-relaxed text-slate">
+                      {slide.bullets.map((item, itemIndex) => (
+                        <li
+                          key={`${itemIndex}-${item}`}
+                          className="flex gap-2 text-sm leading-relaxed text-slate"
+                        >
                           <span
                             className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky"
                             aria-hidden

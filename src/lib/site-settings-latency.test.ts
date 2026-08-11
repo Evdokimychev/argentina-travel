@@ -176,7 +176,9 @@ describe("public site settings latency guard", () => {
     expect(resolver).toContain("CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500");
     expect(resolver.match(/\.retry\(false\)/g)?.length).toBeGreaterThanOrEqual(4);
     expect(resolver).toContain("const localizedDocuments = await Promise.all(");
-    expect(blogPage).toContain("pickBlogPostTourCandidates(tours, post.tourEmbeds ?? [])");
+    expect(blogPage).toContain("pickBlogPostTourCandidates(tours, tourEmbeds)");
+    expect(blogPage).toContain("resolveOptionalBlogTourCatalog(fetchMarketplaceTours())");
+    expect(blogPage).toContain("tourEmbeds.length === 0");
     expect(blogPage).toContain(".then(filterToursWithResolvedPublicDetail)");
     expect(blogPage).not.toContain("await fetchMarketplaceTours()");
     expect(blogView).toContain("<Suspense fallback={null}>");

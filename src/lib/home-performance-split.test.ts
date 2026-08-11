@@ -50,6 +50,10 @@ describe("homepage client bundle boundaries", () => {
     expect(nextConfig).toContain("qualities: [60, 75]");
     expect(hero.match(/<h1/g)).toHaveLength(1);
     expect(home).not.toContain("<h1");
+    expect(page).toContain("catalogUnavailable: true");
+    expect(page).toContain('fallback: "non_commercial_home_modules"');
+    expect(home).toContain("Предложения временно обновляются");
+    expect(home).toContain("!catalogUnavailable");
   });
 
   it("does not make the default tour search wait for excursion cities", () => {

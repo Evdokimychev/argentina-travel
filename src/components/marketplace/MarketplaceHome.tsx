@@ -76,6 +76,7 @@ export interface MarketplaceHomeCatalogData {
   showHomepageRecommendationsV2: boolean;
   personalizedTours: TourListing[];
   personalizedActive: boolean;
+  catalogUnavailable: boolean;
 }
 
 interface MarketplaceHomeProps {
@@ -154,6 +155,7 @@ function MarketplaceHomeBody({
     showHomepageRecommendationsV2,
     personalizedTours,
     personalizedActive,
+    catalogUnavailable,
   } = use(catalogData);
   const navigation = use(navigationPromise);
   const testimonials = use(testimonialsPromise);
@@ -238,6 +240,30 @@ function MarketplaceHomeBody({
           ? travelPrepStrip
           : null;
       case "tours-lead":
+        if (navigation.showTours && catalogUnavailable) {
+          return (
+            <SectionShell
+              reveal
+              tone="muted"
+              eyebrow="Каталог"
+              title="Предложения временно обновляются"
+              subtitle="Путеводитель и материалы сайта доступны. Мы не показываем непроверенный или неполный каталог и уже повторяем загрузку."
+              className="border-b border-gray-100 py-10"
+            >
+              <div
+                className="rounded-2xl border border-sky/20 bg-white px-5 py-4 text-sm leading-relaxed text-slate"
+                role="status"
+              >
+                Попробуйте обновить страницу чуть позже или напишите нам, если нужна помощь с маршрутом.
+                <div className="mt-3">
+                  <Link href="/contacts" className="font-semibold text-sky-ink hover:underline">
+                    Связаться с нами →
+                  </Link>
+                </div>
+              </div>
+            </SectionShell>
+          );
+        }
         if (navigation.showTours && hasActiveSearch) {
           return (
             <section
@@ -339,7 +365,7 @@ function MarketplaceHomeBody({
         }
         return null;
       case "platform-stats":
-        return navigation.showTours && !hasActiveSearch ? (
+        return navigation.showTours && !hasActiveSearch && !catalogUnavailable ? (
           <PlatformStatsBlock initialStats={platformStats} />
         ) : null;
       case "geography":
@@ -430,7 +456,7 @@ function MarketplaceHomeBody({
           </SectionShell>
         ) : null;
       case "offers":
-        return navigation.showTours && !hasActiveSearch ? (
+        return navigation.showTours && !hasActiveSearch && !catalogUnavailable ? (
           <section className="border-y border-gray-100 bg-white py-12 md:py-14">
             <div className={siteContainerClass}>
               <TourGrid

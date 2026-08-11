@@ -63,6 +63,16 @@ async function loadMarketplaceHomeCatalogData(
   actorPromise: Promise<InteractionActor>,
   toursPromise: Promise<TourListing[]>,
 ): Promise<MarketplaceHomeCatalogData> {
+  const catalogPromise = toursPromise.then(
+    (tours) => ({ tours, catalogUnavailable: false }),
+    (error) => {
+      console.warn("[home_marketplace_catalog_unavailable]", {
+        errorClass: error instanceof Error ? error.message : "unknown",
+        fallback: "non_commercial_home_modules",
+      });
+      return { tours: [], catalogUnavailable: true };
+    },
+  );
   const flagPromise = actorPromise.then((actor) => {
     const actorId = actor.userId ?? actor.anonymousId ?? null;
     return getFlag("homepage_recommendations_v2", actorId);
@@ -70,16 +80,17 @@ async function loadMarketplaceHomeCatalogData(
 
   const recommendationsPromise = Promise.all([
     actorPromise,
-    toursPromise,
+    catalogPromise,
     flagPromise,
-  ]).then(([actor, tours, enabled]) =>
+  ]).then(([actor, catalog, enabled]) =>
     enabled
-      ? getRecommendedTours({ ...actor, limit: 6, allTours: tours })
+      ? getRecommendedTours({ ...actor, limit: 6, allTours: catalog.tours })
       : { tours: [], personalized: false },
   );
 
-  const [tours, homepageRecommendationsV2Enabled, recommendedTours] =
-    await Promise.all([toursPromise, flagPromise, recommendationsPromise]);
+  const [catalog, homepageRecommendationsV2Enabled, recommendedTours] =
+    await Promise.all([catalogPromise, flagPromise, recommendationsPromise]);
+  const { tours, catalogUnavailable } = catalog;
 
   const platformStats = getPlatformStatsFromMarketplace(tours);
   const homeTours = selectHomeTourPayload(tours, recommendedTours.tours);
@@ -90,6 +101,7 @@ async function loadMarketplaceHomeCatalogData(
     showHomepageRecommendationsV2: homepageRecommendationsV2Enabled,
     personalizedTours: recommendedTours.tours,
     personalizedActive: recommendedTours.personalized,
+    catalogUnavailable,
   };
 }
 

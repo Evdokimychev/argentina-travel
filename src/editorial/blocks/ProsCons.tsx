@@ -86,8 +86,11 @@ function SideCard({
         {title}
       </p>
       <ul className="mt-2 space-y-2">
-        {items.map((item) => (
-          <li key={item.slice(0, 48)} className="flex gap-2 text-sm leading-relaxed text-slate dark:text-muted">
+        {items.map((item, index) => (
+          <li
+            key={`${index}-${item}`}
+            className="flex gap-2 text-sm leading-relaxed text-slate dark:text-muted"
+          >
             <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-50" />
             <span>{item}</span>
           </li>

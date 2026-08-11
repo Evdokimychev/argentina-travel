@@ -178,9 +178,20 @@ function loadMarketplaceToursInBackground(): Promise<TourListing[]> {
   return marketplaceToursInFlight;
 }
 
+export function observeMarketplaceCatalogInBackground(
+  catalogPromise: Promise<TourListing[]>,
+  report: (source: string, error: unknown) => void = reportMarketplaceSourceError,
+): void {
+  void catalogPromise.catch((error) => report("catalog", error));
+}
+
 /** Cross-request catalog cache + dedupe внутри одного RSC-запроса. */
 export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
   const catalogPromise = loadMarketplaceToursInBackground();
+  // Attach the rejection observer before awaiting the deadline. When the
+  // fallback itself rejects, control never reaches code placed after await,
+  // while the still-running source promise may reject later.
+  observeMarketplaceCatalogInBackground(catalogPromise);
   const tours = await resolveMarketplaceCatalogWithinDeadline(
     catalogPromise,
     () => {
@@ -189,8 +200,5 @@ export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
     },
   );
 
-  // Observe a late rejection after the response deadline so it cannot become an
-  // unhandled promise rejection. The next request still retries the source.
-  void catalogPromise.catch((error) => reportMarketplaceSourceError("catalog", error));
   return tours;
 });
