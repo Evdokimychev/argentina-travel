@@ -1,26 +1,12 @@
 {
   "schemaVersion": 1,
-  "exceptionId": "P1-GA-019",
-  "expiresOn": "2026-08-12",
-  "allowedAdvisorySources": [1124334],
-  "allowedSeverities": ["high"],
-  "allowedPackages": [
-    "@eslint/config-array",
-    "@eslint/eslintrc",
-    "brace-expansion",
-    "eslint",
-    "eslint-config-next",
-    "eslint-plugin-import",
-    "eslint-plugin-jsx-a11y",
-    "eslint-plugin-react",
-    "minimatch"
-  ],
-  "directDevRoots": [
-    "@eslint/eslintrc",
-    "eslint",
-    "eslint-config-next"
-  ],
+  "exceptionId": null,
+  "expiresOn": null,
+  "allowedAdvisorySources": [],
+  "allowedSeverities": [],
+  "allowedPackages": [],
+  "directDevRoots": [],
   "requiredProductionVulnerabilityCount": 0,
-  "reason": "No supported upstream graph is available yet: the latest Next ESLint plugins still require minimatch 3, while patched brace-expansion 5 has an incompatible CommonJS API. The affected tools run only during development and CI with repository-controlled patterns.",
-  "removalTrigger": "Remove this exception as soon as upstream ESLint plugins use patched minimatch/brace-expansion, or before the expiry date. Do not extend it without new registry, audit and compatibility evidence."
+  "reason": "The dependency graph is clean; no production or development vulnerability exception is active.",
+  "removalTrigger": "Any future exception must include new registry, audit and compatibility evidence and a finite expiry date."
 }

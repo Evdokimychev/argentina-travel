@@ -40,9 +40,12 @@ export function evaluateDependencyAuditPolicy({
   const reasons = [];
   if (policy?.schemaVersion !== 1) reasons.push("unsupported policy schema");
 
-  const expiry = parseExpiry(policy?.expiresOn);
-  if (!expiry) reasons.push("invalid exception expiry");
-  else if (now.getTime() > expiry.getTime()) reasons.push(`exception expired on ${policy.expiresOn}`);
+  const hasBoundedException = typeof policy?.exceptionId === "string" && policy.exceptionId.length > 0;
+  if (hasBoundedException) {
+    const expiry = parseExpiry(policy?.expiresOn);
+    if (!expiry) reasons.push("invalid exception expiry");
+    else if (now.getTime() > expiry.getTime()) reasons.push(`exception expired on ${policy.expiresOn}`);
+  }
 
   if (fullAudit?.error) reasons.push("full npm audit returned an error payload");
   if (productionAudit?.error) reasons.push("production npm audit returned an error payload");
@@ -63,8 +66,11 @@ export function evaluateDependencyAuditPolicy({
   const packages = Object.keys(vulnerabilities);
   const fullTotal = vulnerabilityCount(fullAudit);
   if (!Number.isFinite(fullTotal)) reasons.push("full audit metadata is missing");
-  if (packages.length === 0 || fullTotal === 0) {
+  if (hasBoundedException && (packages.length === 0 || fullTotal === 0)) {
     reasons.push("bounded exception is stale because the full audit is clean");
+  }
+  if (!hasBoundedException && (packages.length !== 0 || fullTotal !== 0)) {
+    reasons.push("full dependency audit must be clean when no bounded exception is active");
   }
   if (!sameSet(packages, policy?.allowedPackages ?? [])) {
     reasons.push(

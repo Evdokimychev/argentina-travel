@@ -104,6 +104,25 @@ test("fails when upstream remediation makes the exception stale", () => {
   assert.match(outcome.reasons.join("\n"), /exception is stale/);
 });
 
+test("accepts a fully clean graph without an active exception and fails closed on regression", () => {
+  const cleanPolicy = {
+    ...policy,
+    exceptionId: null,
+    expiresOn: null,
+    allowedAdvisorySources: [],
+    allowedSeverities: [],
+    allowedPackages: [],
+    directDevRoots: [],
+  };
+  const cleanAudit = { vulnerabilities: {}, metadata: { vulnerabilities: { total: 0 } } };
+  const clean = evaluate({ fullAudit: cleanAudit, policy: cleanPolicy });
+  assert.equal(clean.status, "passed");
+
+  const regression = evaluate({ fullAudit: audit(["unexpected-package"]), policy: cleanPolicy });
+  assert.equal(regression.status, "failed");
+  assert.match(regression.reasons.join("\n"), /must be clean/);
+});
+
 test("fails after expiry or when a direct root crosses into production", () => {
   const expired = evaluate({ now: new Date("2026-08-13T00:00:00Z") });
   assert.equal(expired.status, "failed");

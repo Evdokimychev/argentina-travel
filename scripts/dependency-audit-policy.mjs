@@ -45,9 +45,13 @@ try {
     process.exit(1);
   }
 
-  console.log(
-    `Dependency audit policy passed: production=0; ${outcome.exceptionId} bounds ${outcome.developmentPackages.length} dev-only packages to advisory ${outcome.advisorySources.join(", ")} until ${outcome.expiresOn}.`,
-  );
+  if (outcome.exceptionId) {
+    console.log(
+      `Dependency audit policy passed: production=0; ${outcome.exceptionId} bounds ${outcome.developmentPackages.length} dev-only packages to advisory ${outcome.advisorySources.join(", ")} until ${outcome.expiresOn}.`,
+    );
+  } else {
+    console.log("Dependency audit policy passed: production=0; development=0; no exception active.");
+  }
 } catch (error) {
   console.error(
     `Dependency audit policy failed: ${error instanceof Error ? error.message : "unknown error"}`,
