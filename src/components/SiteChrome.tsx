@@ -96,7 +96,11 @@ export default function SiteChrome({
           showPublicMobileNav && publicMobileNavInsetClass,
         )}
       >
-        <main id="main-content" className="relative z-0 flex-1 bg-surface-elevated" tabIndex={-1}>
+        <main
+          id="main-content"
+          className="relative z-0 min-h-[calc(100vh-var(--site-header-full-height,72px))] flex-1 bg-surface-elevated"
+          tabIndex={-1}
+        >
           {children}
         </main>
         <Footer

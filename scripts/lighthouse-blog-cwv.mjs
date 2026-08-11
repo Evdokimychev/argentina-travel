@@ -19,6 +19,7 @@
  */
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -71,6 +72,10 @@ const requestedRunTimeoutMs = Number(process.env.LIGHTHOUSE_RUN_TIMEOUT_MS ?? 24
 const RUN_TIMEOUT_MS = Number.isFinite(requestedRunTimeoutMs)
   ? Math.max(30_000, Math.min(600_000, Math.floor(requestedRunTimeoutMs)))
   : 240_000;
+const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS ?? 1_000);
+const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
+  ? Math.max(0, Math.min(10_000, Math.floor(requestedCleanupDelayMs)))
+  : 1_000;
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -119,6 +124,16 @@ function runLighthouse(args) {
     let settled = false;
     let timedOut = false;
 
+    const stopProcessGroup = () => {
+      try {
+        if (detached && child.pid) process.kill(-child.pid, "SIGKILL");
+        else child.kill("SIGKILL");
+      } catch {
+        // The Lighthouse CLI normally terminates Chrome itself. A missing
+        // process group simply means that shutdown has already completed.
+      }
+    };
+
     const finish = (result) => {
       if (settled) return;
       settled = true;
@@ -128,22 +143,37 @@ function runLighthouse(args) {
 
     const timer = setTimeout(() => {
       timedOut = true;
-      try {
-        if (detached && child.pid) process.kill(-child.pid, "SIGKILL");
-        else child.kill("SIGKILL");
-      } catch {
-        child.kill("SIGKILL");
-      }
+      stopProcessGroup();
     }, RUN_TIMEOUT_MS);
 
     child.once("error", (error) => finish({ status: null, error }));
-    child.once("exit", (status) =>
+    child.once("close", (status) => {
+      // `exit` can fire before descendants have released their resources.
+      // Waiting for `close` and clearing the per-run process group prevents
+      // Chromium remnants from accumulating across the 21 cold CI samples.
+      if (!timedOut) stopProcessGroup();
       finish({
         status,
         error: timedOut ? Object.assign(new Error("Lighthouse timed out"), { code: "ETIMEDOUT" }) : null,
-      }),
-    );
+      });
+    });
   });
+}
+
+function escapeProcessPattern(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function cleanupChromeProfile(profileDir) {
+  // Chrome Launcher starts Chrome in its own process group. On macOS and
+  // hosted Linux runners this can outlive the CLI process, so target the
+  // unique per-run profile rather than risking any user browser process.
+  if (process.platform !== "win32") {
+    spawnSync("pkill", ["-TERM", "-f", escapeProcessPattern(profileDir)], {
+      stdio: "ignore",
+    });
+  }
+  fs.rmSync(profileDir, { recursive: true, force: true, maxRetries: 2 });
 }
 
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
@@ -168,11 +198,12 @@ for (const samplePath of SAMPLE_PATHS) {
 
     console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
     fs.rmSync(outFile, { force: true });
+    const chromeProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), "goargentina-lighthouse-"));
 
     const lh = await runLighthouse([
         url,
         "--quiet",
-        "--chrome-flags=--headless --no-sandbox --disable-gpu --disable-dev-shm-usage",
+        `--chrome-flags=--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --user-data-dir=${chromeProfileDir}`,
         // Every invocation launches a new temporary Chrome profile, so the run
         // is already cold. Skipping the redundant reset also avoids Chromium
         // protocol stalls in Storage.getUsageAndQuota on hosted CI runners.
@@ -185,6 +216,15 @@ for (const samplePath of SAMPLE_PATHS) {
         "--output=json",
         `--output-path=${outFile}`,
       ]);
+
+    cleanupChromeProfile(chromeProfileDir);
+
+    // Chrome exits asynchronously on constrained CI runners. Starting the
+    // next *cold* run immediately can race that cleanup and strand the
+    // debugger connection. This does not reuse a browser or warm any cache.
+    if (CHROME_CLEANUP_DELAY_MS > 0) {
+      await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
+    }
 
     if (lh.status !== 0 || !fs.existsSync(outFile)) {
       executionFailed = true;
