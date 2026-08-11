@@ -19,6 +19,7 @@ export default function ToursCatalogRouteError({
       homeLabel="На главную"
       secondaryHref="/excursions"
       secondaryLabel="Экскурсии"
+      className="min-h-[100svh]"
     />
   );
 }
