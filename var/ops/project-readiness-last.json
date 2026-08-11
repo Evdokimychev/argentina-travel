@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-29T02:23:22.759Z",
-  "ranAt": "2026-07-29T02:23:22.759Z",
+  "generatedAt": "2026-08-11T05:02:15.988Z",
+  "ranAt": "2026-08-11T05:02:15.988Z",
   "baseUrl": "https://www.goargentina.ru",
   "gitSha": "993e82fb7a6d59b47260387856acce68bb52b651",
   "overall": 0,
@@ -19,7 +19,7 @@
     },
     "production": {
       "score": 0,
-      "note": "https://www.goargentina.ru: HTTP 503, status=down"
+      "note": "https://www.goargentina.ru: HTTP 503, status=degraded"
     },
     "analytics": {
       "score": null,
@@ -33,7 +33,7 @@
     }
   },
   "blockers": [
-    "production health is down",
+    "production health is degraded",
     "publish evidence rejected: missing-generated-at, stale-report, missing-git-sha",
     "analytics evidence rejected: missing-generated-at, stale-report, missing-git-sha",
     "cms evidence rejected: missing-generated-at, stale-report",
@@ -52,7 +52,7 @@
       "reachable": true,
       "ok": false,
       "httpStatus": 503,
-      "status": "down",
+      "status": "degraded",
       "gitSha": "993e82fb7a6d59b47260387856acce68bb52b651"
     },
     "reports": {
