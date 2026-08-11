@@ -1066,25 +1066,6 @@
         "localPath": "media/blog/mendoza-vinnyj-gid/hero.jpg"
       }
     },
-    "hero:tango dancers Buenos Aires milonga Argentina": {
-      "key": "hero:tango dancers Buenos Aires milonga Argentina",
-      "resolvedAt": "2026-06-21T03:45:17.145Z",
-      "query": "tango dancers Buenos Aires milonga Argentina",
-      "role": "hero",
-      "resolved": {
-        "src": "/media/blog/tango-beginners-guide/hero.jpg",
-        "alt": "Танго для начинающих в Буэнос-Айресе",
-        "title": "Танго для начинающих в Буэнос-Айресе",
-        "attribution": {
-          "authorName": "Leonardo Delsabio",
-          "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-          "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-          "license": "Pexels License"
-        },
-        "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-        "localPath": "media/blog/tango-beginners-guide/hero.jpg"
-      }
-    },
     "gallery:Iguazu Falls panorama wide view Argentina waterfall": {
       "key": "gallery:Iguazu Falls panorama wide view Argentina waterfall",
       "resolvedAt": "2026-06-21T03:45:17.145Z",
@@ -2489,25 +2470,6 @@
         },
         "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@mariana-la-regina-831745137\">Mariana La Regina</a> / <a href=\"https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/\">Pexels</a>",
         "localPath": "media/blog/mendoza-vinnyj-gid/section-1.jpg"
-      }
-    },
-    "section:tango couple dance floor Buenos Aires milonga night": {
-      "key": "section:tango couple dance floor Buenos Aires milonga night",
-      "resolvedAt": "2026-06-21T03:45:17.146Z",
-      "query": "tango couple dance floor Buenos Aires milonga night",
-      "role": "section",
-      "resolved": {
-        "src": "/media/blog/tango-beginners-guide/section-1.jpg",
-        "alt": "Пара танцует танго на милонге в Буэнос-Айресе",
-        "title": "Пара танцует танго на милонге в Буэнос-Айресе",
-        "attribution": {
-          "authorName": "Leonardo Delsabio",
-          "authorProfileUrl": "https://www.pexels.com/@leonardo-delsabio-2150529415",
-          "sourceUrl": "https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/",
-          "license": "Pexels License"
-        },
-        "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@leonardo-delsabio-2150529415\">Leonardo Delsabio</a> / <a href=\"https://www.pexels.com/photo/elegant-tango-performance-in-mar-del-plata-33731265/\">Pexels</a>",
-        "localPath": "media/blog/tango-beginners-guide/section-1.jpg"
       }
     },
     "section:Perito Moreno glacier panoramic Patagonia Argentina": {

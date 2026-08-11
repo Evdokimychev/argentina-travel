@@ -73,7 +73,6 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
   ],
   patagonia: [
     "/media/blog/patagonia-packing-list/hero.jpg",
-    "/media/places/el-chalten/hero.jpg",
     "/media/places/perito-moreno-glacier/hero.jpg",
     "/media/places/el-calafate/hero.jpg",
     "/media/places/fitz-roy/hero.jpg",
@@ -102,7 +101,6 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
   northwest: [
     "/media/blog/salta-i-severo-zapad-marshrut/hero.jpg",
     "/media/places/salta/hero.jpg",
-    "/media/places/purmamarca/hero.jpg",
     "/media/places/cerro-de-los-7-colores/hero.jpg",
     "/media/blog/northwest-za-5-dney/hero.jpg",
     "/media/blog/ruta-40-sem-ozer/hero.jpg",
@@ -125,7 +123,6 @@ const TOPIC_IMAGE_POOLS: Record<BlogImageTopic, readonly string[]> = {
   trekking: [
     "/media/blog/el-chalten-i-fitts-roy/hero.jpg",
     "/media/places/fitz-roy/hero.jpg",
-    "/media/places/el-chalten/hero.jpg",
     "/media/blog/patagonia-mini-trekking/hero.jpg",
   ],
   wine: [
