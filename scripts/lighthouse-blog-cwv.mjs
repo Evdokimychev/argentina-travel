@@ -76,6 +76,8 @@ const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DEL
 const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
   ? Math.max(0, Math.min(10_000, Math.floor(requestedCleanupDelayMs)))
   : 1_000;
+const sharedChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
+const USE_SHARED_CHROME = Number.isInteger(sharedChromePort) && sharedChromePort > 0;
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -173,7 +175,14 @@ function cleanupChromeProfile(profileDir) {
       stdio: "ignore",
     });
   }
-  fs.rmSync(profileDir, { recursive: true, force: true, maxRetries: 2 });
+  try {
+    fs.rmSync(profileDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+  } catch (error) {
+    // A killed Chromium process may release a nested profile file a little
+    // later. The unique directory is disposable; it must not invalidate the
+    // audit result after the browser itself has been stopped.
+    console.warn(`Could not immediately remove temporary Chrome profile: ${error.code ?? error.message}`);
+  }
 }
 
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
@@ -198,16 +207,22 @@ for (const samplePath of SAMPLE_PATHS) {
 
     console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
     fs.rmSync(outFile, { force: true });
-    const chromeProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), "goargentina-lighthouse-"));
+    const chromeProfileDir = USE_SHARED_CHROME
+      ? null
+      : fs.mkdtempSync(path.join(os.tmpdir(), "goargentina-lighthouse-"));
+    const chromeConnectionArgs = USE_SHARED_CHROME
+      ? [`--port=${sharedChromePort}`]
+      : [
+          `--chrome-flags=--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --user-data-dir=${chromeProfileDir}`,
+          // Direct invocations launch a fresh profile. Skipping the redundant
+          // reset avoids Chromium protocol stalls in that one-shot mode.
+          "--disable-storage-reset",
+        ];
 
     const lh = await runLighthouse([
         url,
         "--quiet",
-        `--chrome-flags=--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --user-data-dir=${chromeProfileDir}`,
-        // Every invocation launches a new temporary Chrome profile, so the run
-        // is already cold. Skipping the redundant reset also avoids Chromium
-        // protocol stalls in Storage.getUsageAndQuota on hosted CI runners.
-        "--disable-storage-reset",
+        ...chromeConnectionArgs,
         "--only-categories=" + CATEGORIES.join(","),
         "--form-factor=mobile",
         "--screenEmulation.mobile=true",
@@ -217,11 +232,11 @@ for (const samplePath of SAMPLE_PATHS) {
         `--output-path=${outFile}`,
       ]);
 
-    cleanupChromeProfile(chromeProfileDir);
+    if (chromeProfileDir) cleanupChromeProfile(chromeProfileDir);
 
-    // Chrome exits asynchronously on constrained CI runners. Starting the
-    // next *cold* run immediately can race that cleanup and strand the
-    // debugger connection. This does not reuse a browser or warm any cache.
+    // Direct one-shot Chrome exits asynchronously on constrained runners.
+    // The shared CI browser is kept alive deliberately, while Lighthouse
+    // clears its origin storage before every measured navigation.
     if (CHROME_CLEANUP_DELAY_MS > 0) {
       await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
     }
