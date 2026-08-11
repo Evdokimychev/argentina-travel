@@ -5,6 +5,7 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { withCmsPublicFallback } from "@/lib/cms/public-read-result";
 import {
   listPublishedLandingSlugs,
   resolveLandingPage,
@@ -15,8 +16,17 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+// Landing documents are CMS-only and locale-aware. A temporary CMS outage must
+// not make the whole application impossible to build; dynamic requests still
+// resolve against the live CMS once it is available.
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
-  const slugs = await listPublishedLandingSlugs();
+  const slugs = await withCmsPublicFallback(
+    "landing:static-params",
+    [],
+    () => listPublishedLandingSlugs(),
+  );
   return slugs.map((slug) => ({ slug }));
 }
 
