@@ -15,7 +15,6 @@
 import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { launch as launchChrome } from "chrome-launcher";
 import { resolveLighthouseStartTimeout } from "./lib/lighthouse-runtime.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -96,7 +95,6 @@ function runAudit() {
 
 let auditStatus = 1;
 let server = null;
-let chrome = null;
 let serverLog = "";
 
 if (process.env.SKIP_LIGHTHOUSE === "1") {
@@ -136,17 +134,9 @@ try {
       process.exit(1);
     }
 
-    // Reusing one isolated browser keeps Chrome's debugging protocol stable
-    // across 21 serial measurements. Lighthouse clears origin storage before
-    // each navigation, so every sample still starts from cold page data.
-    chrome = await launchChrome({
-      chromeFlags: ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
-    });
-    process.env.LIGHTHOUSE_CHROME_PORT = String(chrome.port);
     auditStatus = runAudit();
   }
 } finally {
-  chrome?.kill();
   server?.kill("SIGTERM");
 }
 

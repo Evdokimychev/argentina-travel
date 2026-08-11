@@ -19,9 +19,9 @@
  */
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { launch as launchChrome } from "chrome-launcher";
 import {
   captureCandidateContext,
   finalizeCandidateEvidence,
@@ -76,8 +76,8 @@ const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DEL
 const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
   ? Math.max(0, Math.min(10_000, Math.floor(requestedCleanupDelayMs)))
   : 1_000;
-const sharedChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
-const USE_SHARED_CHROME = Number.isInteger(sharedChromePort) && sharedChromePort > 0;
+const configuredChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
+const USE_CONFIGURED_CHROME = Number.isInteger(configuredChromePort) && configuredChromePort > 0;
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -162,29 +162,6 @@ function runLighthouse(args) {
   });
 }
 
-function escapeProcessPattern(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function cleanupChromeProfile(profileDir) {
-  // Chrome Launcher starts Chrome in its own process group. On macOS and
-  // hosted Linux runners this can outlive the CLI process, so target the
-  // unique per-run profile rather than risking any user browser process.
-  if (process.platform !== "win32") {
-    spawnSync("pkill", ["-TERM", "-f", escapeProcessPattern(profileDir)], {
-      stdio: "ignore",
-    });
-  }
-  try {
-    fs.rmSync(profileDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
-  } catch (error) {
-    // A killed Chromium process may release a nested profile file a little
-    // later. The unique directory is disposable; it must not invalidate the
-    // audit result after the browser itself has been stopped.
-    console.warn(`Could not immediately remove temporary Chrome profile: ${error.code ?? error.message}`);
-  }
-}
-
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
   console.error(
     `Cannot reach ${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"} — start the server first (npm run build && npm run start).`,
@@ -198,7 +175,20 @@ const results = [];
 let executionFailed = false;
 
 for (const samplePath of SAMPLE_PATHS) {
-  for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
+  // A Chrome instance can reliably serve a small group of cold runs, but the
+  // GitHub runner's debugging connection becomes unstable after a long series
+  // of Lighthouse navigations. Restarting it between routes keeps the three
+  // samples for a route comparable without letting one failed connection spoil
+  // the remaining evidence.
+  const routeChrome = USE_CONFIGURED_CHROME
+    ? null
+    : await launchChrome({
+        chromeFlags: ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
+      });
+  const routeChromePort = USE_CONFIGURED_CHROME ? configuredChromePort : routeChrome.port;
+
+  try {
+    for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
     const url = `${BASE_URL}${samplePath}`;
     const outFile = path.join(
       reportDir,
@@ -207,17 +197,7 @@ for (const samplePath of SAMPLE_PATHS) {
 
     console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
     fs.rmSync(outFile, { force: true });
-    const chromeProfileDir = USE_SHARED_CHROME
-      ? null
-      : fs.mkdtempSync(path.join(os.tmpdir(), "goargentina-lighthouse-"));
-    const chromeConnectionArgs = USE_SHARED_CHROME
-      ? [`--port=${sharedChromePort}`]
-      : [
-          `--chrome-flags=--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --user-data-dir=${chromeProfileDir}`,
-          // Direct invocations launch a fresh profile. Skipping the redundant
-          // reset avoids Chromium protocol stalls in that one-shot mode.
-          "--disable-storage-reset",
-        ];
+    const chromeConnectionArgs = [`--port=${routeChromePort}`];
 
     const lh = await runLighthouse([
         url,
@@ -232,11 +212,8 @@ for (const samplePath of SAMPLE_PATHS) {
         `--output-path=${outFile}`,
       ]);
 
-    if (chromeProfileDir) cleanupChromeProfile(chromeProfileDir);
-
-    // Direct one-shot Chrome exits asynchronously on constrained runners.
-    // The shared CI browser is kept alive deliberately, while Lighthouse
-    // clears its origin storage before every measured navigation.
+    // Lighthouse clears origin storage before every measured navigation; the
+    // browser remains alive only for the three samples of this one route.
     if (CHROME_CLEANUP_DELAY_MS > 0) {
       await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
     }
@@ -319,7 +296,9 @@ for (const samplePath of SAMPLE_PATHS) {
         ` scripts=${Math.round(row.scriptTransferBytes / 1024)}KB` +
         (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
     );
-
+    }
+  } finally {
+    routeChrome?.kill();
   }
 }
 
