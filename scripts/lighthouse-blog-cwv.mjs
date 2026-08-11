@@ -38,6 +38,12 @@ const reportFile = path.join(
   reportDir,
   process.env.LIGHTHOUSE_REPORT_FILE ?? "lighthouse-blog-cwv-last.json",
 );
+const lighthouseBin = path.join(
+  root,
+  "node_modules",
+  ".bin",
+  process.platform === "win32" ? "lighthouse.cmd" : "lighthouse",
+);
 
 const BASE_URL = (process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 const localBase = isLocalLighthouseBase(BASE_URL);
@@ -124,13 +130,15 @@ for (const samplePath of SAMPLE_PATHS) {
     console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
 
     const lh = spawnSync(
-      "npx",
+      lighthouseBin,
       [
-        "--yes",
-        "lighthouse",
         url,
         "--quiet",
         "--chrome-flags=--headless --no-sandbox --disable-gpu",
+        // Every invocation launches a new temporary Chrome profile, so the run
+        // is already cold. Skipping the redundant reset also avoids Chromium
+        // protocol stalls in Storage.getUsageAndQuota on hosted CI runners.
+        "--disable-storage-reset",
         "--only-categories=" + CATEGORIES.join(","),
         "--form-factor=mobile",
         "--screenEmulation.mobile=true",
