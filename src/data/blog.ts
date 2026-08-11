@@ -2493,10 +2493,6 @@ const quarantinedLegacyManualSlugs = new Set<string>([
 ]);
 
 const legacyManualOfficialSources: Record<string, string> = {
-  "tango-beginners-guide":
-    "Проверено 17.07.2026. Расписание конкретной милонги перепроверяйте перед визитом.\n\n* [Официальный список милонг Буэнос-Айреса](https://turismo.buenosaires.gob.ar/es/tango/milongas)\n* [Официальный туристический портал — занятия танго](https://turismo.buenosaires.gob.ar/en/atractivo/700pm-tango-classes)",
-  "patagonia-packing-list":
-    "Проверено 17.07.2026. Состояние троп и требования к снаряжению уточняйте у администрации конкретного парка.\n\n* [Национальные парки Аргентины — рекомендации для Лос-Гласьярес](https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/recomendaciones-para-visitar-el-parque-nacional-los-glaciares)\n* [Национальные парки Аргентины — правила для треккинга](https://www.argentina.gob.ar/parquesnacionales/experiencias-del-turismo-de-naturaleza/senderismo-y-trekking)",
   "patagonia-penguins":
     "Проверено 17.07.2026. Календарь животных зависит от природных условий.\n\n* [Официальный туристический портал Аргентины — Пунта-Томбо](https://www.argentina.gob.ar/node/466975)\n* [Официальный туристический портал Чубута — сезон пингвинов](https://chubutpatagonia.gob.ar/experiencia/punta-tombo/)",
   "iguazu-garganta-del-diablo":

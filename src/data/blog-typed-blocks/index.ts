@@ -1,6 +1,5 @@
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 import { ARGENTINIAN_STEAK_GUIDE_TYPED_BLOCKS } from "@/data/editorial/argentinian-steak-guide-blocks";
-import { BEST_TIME_TYPED_BLOCKS } from "@/data/editorial/best-time-typed-blocks";
 import { DNI_CUIL_TYPED_BLOCKS } from "@/data/editorial/dni-cuil-typed-blocks";
 
 /** Data-only typed blocks keyed by post slug → section title */
@@ -39,7 +38,6 @@ const TYPED_BLOCKS_BY_SLUG: Record<string, Record<string, BlogBodyBlock[]>> = {
       },
     ],
   },
-  "best-time-to-visit-argentina": BEST_TIME_TYPED_BLOCKS,
   "argentinian-steak-guide": ARGENTINIAN_STEAK_GUIDE_TYPED_BLOCKS,
   "dni-cuil-argentina": DNI_CUIL_TYPED_BLOCKS,
 };
