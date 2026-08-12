@@ -17,11 +17,12 @@
  *
  * Writes: var/ops/lighthouse-blog-cwv-last.json
  */
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { launch as launchChrome } from "chrome-launcher";
+import lighthouse from "lighthouse";
 import {
   captureCandidateContext,
   finalizeCandidateEvidence,
@@ -39,13 +40,6 @@ const reportFile = path.join(
   reportDir,
   process.env.LIGHTHOUSE_REPORT_FILE ?? "lighthouse-blog-cwv-last.json",
 );
-const lighthouseBin = path.join(
-  root,
-  "node_modules",
-  ".bin",
-  process.platform === "win32" ? "lighthouse.cmd" : "lighthouse",
-);
-
 const BASE_URL = (process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 const localBase = isLocalLighthouseBase(BASE_URL);
 const evidenceScope = process.env.LIGHTHOUSE_EVIDENCE_SCOPE ?? "candidate";
@@ -114,52 +108,27 @@ function probe(url) {
   }
 }
 
-function runLighthouse(args) {
-  return new Promise((resolve) => {
-    const detached = process.platform !== "win32";
-    const child = spawn(lighthouseBin, args, {
-      stdio: "inherit",
-      cwd: root,
-      env: process.env,
-      detached,
+async function runLighthouse(url, port) {
+  let timer;
+  try {
+    const timedOut = new Promise((resolve) => {
+      timer = setTimeout(() => resolve({ timedOut: true }), RUN_TIMEOUT_MS);
     });
-    let settled = false;
-    let timedOut = false;
-
-    const stopProcessGroup = () => {
-      try {
-        if (detached && child.pid) process.kill(-child.pid, "SIGKILL");
-        else child.kill("SIGKILL");
-      } catch {
-        // The Lighthouse CLI normally terminates Chrome itself. A missing
-        // process group simply means that shutdown has already completed.
-      }
-    };
-
-    const finish = (result) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      resolve(result);
-    };
-
-    const timer = setTimeout(() => {
-      timedOut = true;
-      stopProcessGroup();
-    }, RUN_TIMEOUT_MS);
-
-    child.once("error", (error) => finish({ status: null, error }));
-    child.once("close", (status) => {
-      // `exit` can fire before descendants have released their resources.
-      // Waiting for `close` and clearing the per-run process group prevents
-      // Chromium remnants from accumulating across the 21 cold CI samples.
-      if (!timedOut) stopProcessGroup();
-      finish({
-        status,
-        error: timedOut ? Object.assign(new Error("Lighthouse timed out"), { code: "ETIMEDOUT" }) : null,
-      });
-    });
-  });
+    const audit = lighthouse(url, {
+      port,
+      onlyCategories: CATEGORIES,
+      formFactor: "mobile",
+      screenEmulation: { mobile: true },
+      throttlingMethod: "simulate",
+      maxWaitForLoad: 30_000,
+      logLevel: "silent",
+    })
+      .then(({ lhr }) => ({ lhr }))
+      .catch((error) => ({ error }));
+    return await Promise.race([audit, timedOut]);
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
@@ -197,20 +166,7 @@ for (const samplePath of SAMPLE_PATHS) {
 
     console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
     fs.rmSync(outFile, { force: true });
-    const chromeConnectionArgs = [`--port=${routeChromePort}`];
-
-    const lh = await runLighthouse([
-        url,
-        "--quiet",
-        ...chromeConnectionArgs,
-        "--only-categories=" + CATEGORIES.join(","),
-        "--form-factor=mobile",
-        "--screenEmulation.mobile=true",
-        "--throttling-method=simulate",
-        "--max-wait-for-load=30000",
-        "--output=json",
-        `--output-path=${outFile}`,
-      ]);
+    const lh = await runLighthouse(url, routeChromePort);
 
     // Lighthouse clears origin storage before every measured navigation; the
     // browser remains alive only for the three samples of this one route.
@@ -218,9 +174,9 @@ for (const samplePath of SAMPLE_PATHS) {
       await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
     }
 
-    if (lh.status !== 0 || !fs.existsSync(outFile)) {
+    if (!lh.lhr) {
       executionFailed = true;
-      const timedOut = lh.error?.code === "ETIMEDOUT";
+      const timedOut = lh.timedOut === true;
       const error = timedOut
         ? `lighthouse timed out after ${RUN_TIMEOUT_MS}ms`
         : "lighthouse failed";
@@ -228,7 +184,8 @@ for (const samplePath of SAMPLE_PATHS) {
       continue;
     }
 
-    const report = JSON.parse(fs.readFileSync(outFile, "utf8"));
+    const report = lh.lhr;
+    fs.writeFileSync(outFile, JSON.stringify(report));
     const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
     const a11yScore = CATEGORIES.includes("accessibility")
       ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
