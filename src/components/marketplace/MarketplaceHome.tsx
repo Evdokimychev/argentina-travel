@@ -398,6 +398,7 @@ function MarketplaceHomeBody({
                       src={homeDestinationCardImage(dest.image)}
                       alt={dest.imageAlt ?? dest.name}
                       fill
+                      loading="lazy"
                       className="editorial-media-zoom object-cover"
                       sizes={
                         index < 2

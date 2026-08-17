@@ -46,6 +46,10 @@ describe("homepage client bundle boundaries", () => {
     expect(home).toContain('className="min-h-screen border-b border-gray-100 bg-surface-elevated"');
     expect(hero).toContain("Static first-screen frame");
     expect(collage).toContain('const MOBILE_HERO_SRC = "/media/home/hero-mobile.webp"');
+    expect(collage).toContain('decoding="sync"');
+    expect(collage).toContain("width={HERO_WIDTH}");
+    expect(collage).toContain("sizes={HERO_SIZES}");
+    expect(home).toContain('loading="lazy"');
     expect(hero.match(/prefetch=\{false\}/g)).toHaveLength(2);
     expect(nextConfig).toContain("qualities: [60, 75]");
     expect(hero.match(/<h1/g)).toHaveLength(1);

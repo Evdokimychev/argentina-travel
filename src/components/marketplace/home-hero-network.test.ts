@@ -18,8 +18,17 @@ describe("home hero network contract", () => {
     expect(home).not.toContain("heroBackdropSrc");
     expect(collage.match(/src=\{heroSrc\}/g)).toHaveLength(1);
     expect(collage).toContain('const MOBILE_HERO_SRC = "/media/home/hero-mobile.webp"');
-    expect(collage).toContain('<source media="(max-width: 1023px)" srcSet={MOBILE_HERO_SRC} />');
+    expect(collage).toContain('srcSet={`${MOBILE_HERO_SRC} 640w`}');
+    expect(collage).toContain('type="image/webp"');
+    expect(collage).toContain("width={HERO_WIDTH}");
+    expect(collage).toContain("height={HERO_HEIGHT}");
+    expect(collage).toContain("sizes={HERO_SIZES}");
+    expect(collage).toContain('decoding="sync"');
     expect(collage).toContain('fetchPriority="high"');
     expect(collage).toContain('loading="eager"');
+    expect(collage).toContain('media="(max-width: 1023px)"');
+    expect(collage).toContain('media="(min-width: 1024px)"');
+    expect(collage).toContain('rel="preload"');
+    expect(collage).toContain("as=\"image\"");
   });
 });
