@@ -22,7 +22,7 @@ const LIGHTHOUSE_PHASE2_PATHS = [
   "/tours",
   "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  "/blog/patagonia-packing-list",
+  "/blog/natsionalnyy-park-iguasu",
   "/mapa-argentina",
   "/contacts",
   "/destinations/patagonia",

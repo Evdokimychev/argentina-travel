@@ -145,10 +145,10 @@ async function runLighthouse(url, port, options = {}) {
       });
     const outcome = await Promise.race([audit, timedOut]);
     if (outcome?.timedOut && typeof options.onTimeout === "function") {
-      // Kill the debugger target immediately so the orphaned Lighthouse gather
-      // cannot throw Target closed into the next cold run.
+      // Kill the debugger target immediately. Do not await the orphaned gather:
+      // after Chrome dies some Lighthouse versions never settle, which left the
+      // top-level CI script hanging until Node aborted with exit 13.
       await options.onTimeout();
-      await audit;
     }
     return outcome;
   } finally {
