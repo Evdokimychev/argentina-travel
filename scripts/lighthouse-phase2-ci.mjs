@@ -35,11 +35,9 @@ export const LIGHTHOUSE_PHASE2_PATHS = [
   "/tours",
   "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  // Keep the blocking editorial sample on a content page that finishes cold
-  // mobile gathers on GitHub runners within the run timeout. Heavier SSOT
-  // articles (season matrix / packing widgets) remain in lighthouse:blog and
-  // production baselines.
-  "/blog/natsionalnyy-park-iguasu",
+  // Heavy editorial article details are covered by `lighthouse:blog` and
+  // production baselines. On GitHub-hosted runners their post-load a11y/DOM
+  // gather routinely exceeds the cold-run timeout and destabilizes Chrome.
   "/mapa-argentina",
   "/contacts",
   "/destinations/patagonia",

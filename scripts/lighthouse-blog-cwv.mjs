@@ -93,6 +93,22 @@ if (process.env.SKIP_LIGHTHOUSE === "1") {
   process.exit(0);
 }
 
+// Intentionally killed Chrome targets can still emit late protocol rejections.
+// Those must not abort the remaining cold runs mid-suite.
+process.on("unhandledRejection", (reason) => {
+  const message = reason instanceof Error ? reason.message : String(reason ?? "");
+  if (
+    message.includes("Target closed") ||
+    message.includes("Protocol error") ||
+    message.includes("Browser disconnected")
+  ) {
+    console.warn(`Ignoring post-kill CDP rejection: ${message}`);
+    return;
+  }
+  console.error("Unhandled rejection in Lighthouse harness:", reason);
+  process.exitCode = 1;
+});
+
 function probe(url) {
   try {
     const res = spawnSync(

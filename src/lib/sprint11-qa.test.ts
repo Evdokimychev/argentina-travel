@@ -22,7 +22,6 @@ const LIGHTHOUSE_PHASE2_PATHS = [
   "/tours",
   "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  "/blog/natsionalnyy-park-iguasu",
   "/mapa-argentina",
   "/contacts",
   "/destinations/patagonia",
@@ -135,7 +134,7 @@ describe("Sprint 11 — final QA gate (S5–S10 regression)", () => {
     expect(script).toContain("LIGHTHOUSE_PHASE2_PATHS");
     expect(script).toContain("performance,accessibility");
     expect(script).toContain('LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3"');
-    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(8);
+    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(7);
     for (const path of LIGHTHOUSE_PHASE2_PATHS) {
       expect(script).toContain(path);
     }
