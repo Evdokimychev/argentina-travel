@@ -180,6 +180,21 @@ export function generateBlogPostFromPlan(
     const sections = override.sections;
     const content = editorialSectionsToContent(sections);
     const readTimeMinutes = estimateReadMinutesFromSections(sections);
+    const canonicalTarget = resolveBlogCanonicalTarget(item.slug);
+    // Class-B / mapped twins stay noindex even when the override text is ready.
+    // Otherwise ready templates become indexable peers of pillars.
+    const noIndex =
+      Boolean(canonicalTarget) || !isEditorialOverridePublicationReady(override);
+    const sectionsWithCanonical =
+      canonicalTarget && sections.length > 0
+        ? [
+            {
+              ...sections[0],
+              body: `${buildCanonicalCtaParagraph(canonicalTarget)} ${sections[0].body}`,
+            },
+            ...sections.slice(1),
+          ]
+        : sections;
 
     return {
       id: `plan-${item.slug}`,
@@ -187,8 +202,10 @@ export function generateBlogPostFromPlan(
       title: override.title ?? item.title,
       seoTitle: override.seoTitle ?? item.seoTitle,
       excerpt: override.excerpt ?? item.metaDescription,
-      content,
-      sections,
+      content: canonicalTarget
+        ? `${buildCanonicalCtaParagraph(canonicalTarget)} ${content}`
+        : content,
+      sections: sectionsWithCanonical,
       author: author.name,
       authorBio: author.bio,
       date: staggerDate(index),
@@ -202,9 +219,10 @@ export function generateBlogPostFromPlan(
         override.relatedResources,
       ),
       editorialReviewed: true,
-      noIndex: !isEditorialOverridePublicationReady(override),
+      noIndex,
       dateModified: override.dateModified ?? "2026-06-21",
       tourEmbeds: getBlogTourEmbeds(item.slug),
+      ...(canonicalTarget ? { canonicalSlug: canonicalTarget.canonicalSlug } : {}),
     };
   }
 

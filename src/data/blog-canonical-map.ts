@@ -29,9 +29,13 @@ export const BLOG_CANONICAL_BY_SLUG: Record<string, BlogCanonicalTarget> = {
     canonicalSlug: "patagoniya-marshrut-14-dney",
     canonicalTitle: "Патагония за 14 дней: ледники, Фицрой и Ушуая",
   },
+  "patagonia-чек-лист": {
+    canonicalSlug: "patagonia-packing-list",
+    canonicalTitle: "Что взять в Патагонию: полный список вещей для путешествия",
+  },
 };
 
-/** Префикс slug → канон (районы BA, северо-запад) */
+/** Префикс slug → канон (районы BA, северо-запад, duration Class-B) */
 const BLOG_CANONICAL_PREFIXES: Array<{ prefix: string } & BlogCanonicalTarget> = [
   {
     prefix: "ba-district-",
@@ -42,6 +46,11 @@ const BLOG_CANONICAL_PREFIXES: Array<{ prefix: string } & BlogCanonicalTarget> =
     prefix: "northwest-",
     canonicalSlug: "salta-i-severo-zapad-marshrut",
     canonicalTitle: "Сальта и северо-запад: маршрут на 5–7 дней",
+  },
+  {
+    prefix: "patagonia-за-",
+    canonicalSlug: "patagoniya-marshrut-14-dney",
+    canonicalTitle: "Патагония за 14 дней: ледники, Фицрой и Ушуая",
   },
 ];
 
