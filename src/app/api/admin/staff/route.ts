@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clientIpFromRequest } from "@/lib/admin/audit";
+import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/audit";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import {
   assertStaffTargetMutationAllowed,
@@ -176,6 +176,25 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Не удалось назначить доступ. Состав команды не изменён." },
       { status: 409 },
+    );
+  }
+
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "staff.role_change",
+    entityType: "admin_staff",
+    entityId: userId,
+    payload: {
+      mutation: "assign",
+      preset: assignment.preset,
+      capabilityCount: assignment.capabilities.length,
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
     );
   }
 

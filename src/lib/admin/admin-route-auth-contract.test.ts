@@ -32,4 +32,11 @@ describe("admin API authentication boundary", () => {
       );
     }
   });
+
+  it("keeps admin refund prepare responses private and body-limited", () => {
+    const source = readFileSync("src/app/api/admin/payments/refund/route.ts", "utf8");
+    expect(source).toContain("rejectOversizedJsonBody");
+    expect(source).toContain('"Cache-Control": "private, no-store"');
+    expect(source).toContain("writeCriticalAdminAuditLog");
+  });
 });

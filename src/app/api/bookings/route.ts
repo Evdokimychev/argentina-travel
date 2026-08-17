@@ -19,11 +19,18 @@ import { notifyBookingCreatedEmail } from "@/lib/bookings-notify";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import { publicBookingError } from "@/lib/partner-booking/public-errors";
+import {
+  BOOKING_JSON_BODY_MAX_BYTES,
+  rejectOversizedJsonBody,
+} from "@/lib/security/request-body-limit";
 
 async function postBooking(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
     return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), { status: 503 });
   }
+
+  const oversized = rejectOversizedJsonBody(request, BOOKING_JSON_BODY_MAX_BYTES);
+  if (oversized) return oversized;
 
   try {
     const body = (await request.json()) as {
@@ -145,6 +152,7 @@ export const POST = withRateLimit(postBooking, {
   keyPrefix: "bookings:create",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток бронирования. Повторите позже.",
+  policy: "security_critical",
 });
 
 export async function GET() {

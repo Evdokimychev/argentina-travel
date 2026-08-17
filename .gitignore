@@ -46,6 +46,10 @@ yarn-error.log*
 /var/ops/backup-last.json
 /var/ops/cron-last.json
 /var/ops/old-database-url.txt
+/var/ops/attack-surface.json
+/var/ops/api-security-matrix.json
+/var/ops/migration-parity.json
+/var/ops/rls-live-evidence.json
 /var/media-upload.log
 /var/reg-ru-media-bundle.tar
 

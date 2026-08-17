@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/audit";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { approveRefundRequest } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -43,6 +44,24 @@ export async function POST(
       );
     }
     return NextResponse.json({ error: result.error, code: result.code }, { status: 409 });
+  }
+
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "finance.refund.approve",
+    entityType: "payment_transaction",
+    entityId: id,
+    payload: {
+      providerExecuted: result.providerExecuted,
+      hasAdminNotes: Boolean(body.adminNotes?.trim()),
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
+    );
   }
 
   return NextResponse.json({

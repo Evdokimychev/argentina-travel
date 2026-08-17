@@ -395,6 +395,10 @@ export async function loadSessionUserFromSupabase(
     .maybeSingle();
 
   if (!profile) return null;
+  if (profile.is_blocked) {
+    setSentryUserContext(null);
+    return null;
+  }
   const sessionUser = profileToSessionUser(profile, activeRole);
   setSentryUserContext({
     id: sessionUser.id,

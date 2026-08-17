@@ -28,7 +28,7 @@ const MODERATION_ACTIONS = new Set<ModerationResolveAction>([
 
 function resolveModerationActorId(
   request: Request,
-  auth: { actorId: string; via: "session" | "service_role" }
+  auth: { actorId: string; via: "session" | "automation" }
 ) {
   if (auth.via === "session") return auth.actorId;
   const delegatedActorId = request.headers.get("x-admin-actor-id")?.trim() ?? "";

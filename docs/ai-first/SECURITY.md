@@ -26,6 +26,57 @@ npm run rls-audit
 - Supabase Auth JWT на server
 - Organizer/admin routes — role verification
 - RBAC: см. organizer middleware
+- Organizer tour mutations — ownership check (`assertOrganizerTourOwnership`)
+
+## CSRF / cookie-session mutations
+
+Primary control: session cookies use **SameSite=Lax** (middleware + client setters),
+so classic cross-site POSTs do not attach the auth cookie.
+
+Defense in depth for **admin cookie-session** mutating methods
+(`POST`/`PUT`/`PATCH`/`DELETE`):
+
+- `evaluateBrowserMutationOrigin` rejects `Sec-Fetch-Site: cross-site`
+- Rejects `Origin` that does not match the request URL origin
+- Automation Bearer (`ADMIN_AUTOMATION_SECRET`) skips browser-origin checks
+- Missing Origin/Sec-Fetch-Site is allowed (non-browser clients / unit tests);
+  SameSite remains the primary control
+
+See `src/lib/security/browser-mutation-origin.ts` and
+`authorizeAdminRequest` session path.
+
+## Payload limits
+
+High-risk JSON mutations should check `Content-Length` (and/or stream caps):
+
+- `rejectOversizedJsonBody` — admin finance / booking create
+- `readLimitedJson` — lead capture
+- Organizer draft / mobility / analytics routes keep local ceilings
+
+Static matrix notes: `npm run security:api-matrix` → `payloadNotes` /
+`bodyLimitDetected`.
+
+## Cache privacy
+
+Authenticated admin/organizer responses that may contain PII should set
+`Cache-Control: private, no-store`. Matrix flag: `cachePrivacyNotes`.
+
+## PII / Sentry
+
+- `sendDefaultPii: false`
+- User context: **id + role tags only** (email never set)
+- Breadcrumbs/extras pass through `scrubMonitoringData`
+- Admin audit payloads redact secret/token keys
+
+## Controlled failure injection (code-side)
+
+```bash
+npm run security:failure-injection -- --list
+npm run security:failure-injection -- --mode=upstash-down
+npm run security:failure-injection -- --mode=webhook-replay --run-tests
+```
+
+Does not require live DB/Vercel. Live provider/DB replay remains EXTERNAL_BLOCKER.
 
 ## XSS
 

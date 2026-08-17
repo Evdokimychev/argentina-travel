@@ -62,6 +62,7 @@ function createBookingDb(
   let readCalls = 0;
   let updateCalls = 0;
   let fromCalls = 0;
+  let updateGate = Promise.resolve();
 
   const readQuery = {
     eq() {
@@ -92,19 +93,28 @@ function createBookingDb(
               return this;
             },
             async maybeSingle() {
-              updateCalls += 1;
-              if (conflicts > 0) {
-                conflicts -= 1;
-                return { data: null, error: null };
-              }
-              if (
-                filters.get("id") !== row.id ||
-                filters.get("updated_at") !== row.updated_at
-              ) {
-                return { data: null, error: null };
-              }
-              row = { ...row, ...structuredClone(values) };
-              return { data: { id: row.id }, error: null };
+              const run = async () => {
+                updateCalls += 1;
+                if (conflicts > 0) {
+                  conflicts -= 1;
+                  return { data: null, error: null };
+                }
+                if (
+                  filters.get("id") !== row.id ||
+                  filters.get("updated_at") !== row.updated_at
+                ) {
+                  return { data: null, error: null };
+                }
+                row = { ...row, ...structuredClone(values) };
+                return { data: { id: row.id }, error: null };
+              };
+              // Serialize CAS writes so concurrent deliveries exercise replay, not lost updates.
+              const pending = updateGate.then(run, run);
+              updateGate = pending.then(
+                () => undefined,
+                () => undefined,
+              );
+              return pending;
             },
           };
         },
@@ -276,6 +286,24 @@ describe("payment webhook application", () => {
     expect(state.readCalls).toBe(2);
     expect(state.updateCalls).toBe(2);
     expect(state.row.payload).toMatchObject({ processedPaymentEventIds: ["evt-1"] });
+  });
+
+  it("serializes concurrent same-event delivery so only one write sticks", async () => {
+    const state = createBookingDb();
+    const patch = mapWebhookToBookingPaymentUpdate(paymentEvent({ eventId: "evt-race" }), true);
+
+    const outcomes = await Promise.all([
+      applyPaymentWebhookPatchDetailed(state.db as never, "booking-1", patch),
+      applyPaymentWebhookPatchDetailed(state.db as never, "booking-1", patch),
+    ]);
+
+    const kinds = outcomes.map((outcome) => outcome.kind).sort();
+    expect(kinds).toContain("applied");
+    expect(kinds).toContain("event_replay");
+    expect(state.row.payload).toMatchObject({ processedPaymentEventIds: ["evt-race"] });
+    expect(
+      (state.row.payload as { processedPaymentEventIds: string[] }).processedPaymentEventIds,
+    ).toHaveLength(1);
   });
 
   it("returns a retryable outcome after exhausting optimistic-lock retries", async () => {

@@ -437,3 +437,33 @@ Master Goal V6 принят как главный норматив проект�
 1. Owner/ops + engineering: снять Supabase `exceed_egress_quota`, восстановить canonical verified runtime connectivity и сразу выполнить read-only 107 migrations/journal/checksums, RLS/grants и backup/PITR reconciliation; до parity не применять DDL.
 2. Engineering WP-027: инструментировать и локализовать 15-second commercial detail latency в degraded REST-quota режиме; сохранить genuine-link/fail-closed semantics и вернуть штатный recovery smoke в зелёное состояние без увеличения default timeout.
 3. Engineering/tooling: мониторить upstream ESLint plugin graph и удалить policy P1-GA-019 при совместимой remediation, обязательно до 2026-08-12; не продлевать без нового registry/audit/compatibility evidence.
+
+## Sprint 6 — Platform Security (code status vs live evidence)
+
+Обновлено: **2026-08-17**. Ветка `cursor/sprint6-security-resilience-5475` (поверх Sprint 5 + S4 tip `8a79297c`).
+
+### CODE COMPLETE (локальный candidate)
+
+- `ADMIN_AUTOMATION_SECRET` вместо service-role Bearer (legacy только с `ALLOW_SERVICE_ROLE_ADMIN_BEARER=1`).
+- `security_critical` rate limit: fail-closed при сбое Upstash, если Redis настроен.
+- `writeCriticalAdminAuditLog` для refunds / staff / privacy decision+export / user block-unblock.
+- Attack-surface + API security matrix generators (`scripts/security/*` → `var/ops/`).
+- Migration parity dry-run и RLS live harness: явный `EXTERNAL_BLOCKER` без credentials (не fake PASS).
+- Partner-image proxy: allowlist + manual redirect revalidation (SSRF hardening).
+- Backup restore preflight: документированы `BACKUP_MANIFEST_PATH` и disposable target env.
+- Webhook replay/idempotency: усилены unit/route tests (Stripe/Mercado concurrent + YouTravel secret); business payment logic не менялась.
+- Booking concurrency: negative tests на `BOOKING_SLOT_CAPACITY` / idempotency double-submit / serialized created flag.
+- CSRF/origin: `evaluateBrowserMutationOrigin` на cookie-session admin mutations + SameSite=Lax documented.
+- Payload limits: shared `rejectOversizedJsonBody` на admin refund + booking create; matrix `payloadNotes`.
+- PII/Sentry scrub: breadcrumb/extra scrub + audit sanitize tests; email не уходит в Sentry user.
+- Cache privacy: `private, no-store` на admin refund + organizer availability; matrix `cachePrivacyNotes`.
+- CI `permissions: contents: read` (least privilege).
+- Failure injection rehearsal: `npm run security:failure-injection`.
+- Organizer IDOR: shared `assertOrganizerTourOwnership` + negative capability tests.
+
+### LIVE EVIDENCE BLOCKED
+
+- Canonical production DB / migration journal / live RLS / restore rehearsal против disposable target.
+- Vercel immutable preview / production same-artifact promotion.
+- Live provider webhook delivery / Upstash production fail-closed drill.
+- Не заявлять PASS по live security/recovery до снятия EXTERNAL_BLOCKER.

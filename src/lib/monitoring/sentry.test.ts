@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { getSentryEnvironment, getSentryRelease } from "@/lib/monitoring/sentry";
+import { scrubMonitoringData } from "@/lib/security/monitoring-scrub";
 
 describe("Sentry runtime metadata", () => {
   afterEach(() => {
@@ -24,5 +27,28 @@ describe("Sentry runtime metadata", () => {
     vi.stubEnv("VERCEL_ENV", "preview");
 
     expect(getSentryEnvironment()).toBe("production-ar");
+  });
+});
+
+describe("Sentry PII boundary helpers", () => {
+  it("keeps sendDefaultPii disabled and scrubs breadcrumb/extra payloads", () => {
+    const source = readFileSync(path.join("src/lib/monitoring/sentry.ts"), "utf8");
+    expect(source).toContain("sendDefaultPii: false");
+    expect(source).toContain("scrubMonitoringData");
+    expect(source).toMatch(/Intentionally omit email/);
+  });
+
+  it("scrubs breadcrumb-shaped extras before they would reach Sentry", () => {
+    expect(
+      scrubMonitoringData({
+        paymentToken: "tok_123",
+        contactEmail: "a@b.co",
+        bookingId: "b1",
+      }),
+    ).toEqual({
+      paymentToken: "[redacted]",
+      contactEmail: "[redacted]",
+      bookingId: "b1",
+    });
   });
 });
