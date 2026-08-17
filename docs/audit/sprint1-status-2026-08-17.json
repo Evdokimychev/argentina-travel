@@ -1,0 +1,31 @@
+{
+  "sprint": 1,
+  "verdict": "PARTIAL",
+  "mainSha": "4785ef1cddef4ba7e9d09190846f70416b8fe7b2",
+  "ciVerifyGreenRun": "https://github.com/Evdokimychev/argentina-travel/actions/runs/32006854290",
+  "ciVerifyGreenTip": "0197d1434674509a6c42591960bba8441f174764",
+  "mergedStrategy": "fast-forward main (no merge commits; branch protection)",
+  "closedPrs": [16, 19, 20, 21, 22, 23, 24],
+  "production": {
+    "www": "200",
+    "apexRedirect": "308",
+    "legacyVercelApp": "402 DEPLOYMENT_DISABLED",
+    "liveGitSha": "993e82fb7a6d59b47260387856acce68bb52b651",
+    "liveEqualsMain": false,
+    "apiHealth": "503 dependency_unavailable",
+    "githubProductionDeploymentLatest": "8d7eec67ad8e9c3eb285fed2fdc39a501838b692",
+    "githubPreviewForMainTip": "5941333847 Preview – argentina-travel"
+  },
+  "supabase": {
+    "projectRefExpected": "uooxrypocahomoqzdvzy",
+    "repoLatestMigration": "20260811040455_final_explicit_data_api_grants",
+    "productionReportedMigration": "20260720230600_final_explicit_data_api_grants"
+  },
+  "blockers": [
+    "Vercel Production not updated to main tip (only Preview created; www still 993e82fb)",
+    "Supabase/database dependency_unavailable on /api/health",
+    "Legacy argentina-travel.vercel.app still HTTP 402",
+    "Agent lacks VERCEL_TOKEN / SUPABASE_ACCESS_TOKEN for cutover"
+  ],
+  "decision": "NO-GO — сначала необходимо исправить: promote main 4785ef1c to Vercel Production + restore Supabase health"
+}
