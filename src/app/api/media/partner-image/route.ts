@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
-import { isAllowedPartnerImageUrl } from "@/lib/media/partner-image-proxy";
+import {
+  fetchAllowedPartnerImage,
+  isAllowedPartnerImageUrl,
+} from "@/lib/media/partner-image-proxy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,15 +26,15 @@ export async function GET(request: NextRequest) {
   const quality = boundedNumber(request.nextUrl.searchParams.get("q"), 80, 55, 90);
 
   try {
-    const response = await fetch(sourceUrl, {
-      redirect: "follow",
+    const fetched = await fetchAllowedPartnerImage(sourceUrl, {
       signal: AbortSignal.timeout(12_000),
       headers: { Accept: "image/avif,image/webp,image/jpeg,image/*" },
     });
-    if (!response.ok || !isAllowedPartnerImageUrl(response.url)) {
+    if (!fetched.ok) {
       return NextResponse.json({ error: "Partner image unavailable" }, { status: 502 });
     }
 
+    const { response } = fetched;
     const contentType = response.headers.get("content-type") ?? "";
     const contentLength = Number(response.headers.get("content-length") ?? 0);
     if (!contentType.startsWith("image/") || contentLength > MAX_SOURCE_BYTES) {

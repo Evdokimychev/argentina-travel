@@ -1,4 +1,30 @@
 #!/usr/bin/env node
+/**
+ * Disposable restore rehearsal verifier.
+ *
+ * Modes:
+ *   --preflight  Validate BACKUP_MANIFEST_PATH + BACKUP_ENCRYPTED_PATH against a
+ *                disposable restore target. Does NOT restore data.
+ *   --verify     Compare restored disposable target evidence to the manifest.
+ *
+ * Required environment (both modes):
+ *   BACKUP_MANIFEST_PATH              Path to backup manifest JSON
+ *   BACKUP_ENCRYPTED_PATH             Matching age-encrypted dump artifact
+ *   RESTORE_TARGET_DATABASE_URL       Disposable target only (never production)
+ *   RESTORE_TARGET_PROJECT_REF        Disposable project ref (or local-*)
+ *   PRODUCTION_SUPABASE_PROJECT_REF   Known production ref used as a deny-list
+ *   RESTORE_DISPOSABLE_CONFIRMATION   Must equal YES_DISPOSABLE_TARGET_ONLY
+ *   RESTORE_EXTERNAL_WRITES_DISABLED  Must equal "true"
+ *
+ * Optional:
+ *   RESTORE_EVIDENCE_OUTPUT           Where --verify writes comparison JSON
+ *                                     (default: var/restore-rehearsal/verification-*.json)
+ *
+ * Safety:
+ *   - Production/source project refs are rejected as restore targets.
+ *   - Preflight never executes restore; it only attests artifacts + target shape.
+ *   - A green preflight is not evidence that production backups are healthy.
+ */
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -56,6 +82,15 @@ async function main() {
         manifestSha256,
         encryptedArtifactVerified: true,
         restoreExecuted: false,
+        requiredEnvDocumented: [
+          "BACKUP_MANIFEST_PATH",
+          "BACKUP_ENCRYPTED_PATH",
+          "RESTORE_TARGET_DATABASE_URL",
+          "RESTORE_TARGET_PROJECT_REF",
+          "PRODUCTION_SUPABASE_PROJECT_REF",
+          "RESTORE_DISPOSABLE_CONFIRMATION=YES_DISPOSABLE_TARGET_ONLY",
+          "RESTORE_EXTERNAL_WRITES_DISABLED=true",
+        ],
       }),
     );
     return;
