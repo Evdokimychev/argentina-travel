@@ -19,6 +19,11 @@ import { entryHref } from "./urls";
 interface RenderOptions {
   /** id существующих (опубликованных) записей — для резолва [[вики-ссылок]]. */
   validIds: Set<string>;
+  /**
+   * Архивные id → опубликованный redirect_to.
+   * Если задан, [[archived|label]] ведёт на каноническую публичную запись.
+   */
+  wikilinkRedirects?: Map<string, string>;
   /** Строгая публичная цепочка источников; диагностические данные сюда не попадают. */
   provenance?: KbPublicProvenance | null;
 }
@@ -40,6 +45,7 @@ const KNOWN_SECTION_TITLES = [
   "Логистика",
   "Бюджет",
   "Бюджет на человека (14 дней, без межконтинентального перелёта)",
+  "Когда ехать и сколько времени",
   "Когда ехать",
   "Как выбрать между вариантами",
   "Варианты маршрута",
@@ -58,6 +64,7 @@ const KNOWN_SECTION_TITLES = [
   "К чему ведёт",
   "Деньги за учёбу",
   "Практическая информация",
+  "Практические советы",
   "Факты",
   "Рекомендации",
   "Предупреждения",
@@ -66,10 +73,12 @@ const KNOWN_SECTION_TITLES = [
   "Текст",
 ];
 
+/** Longer titles first so «Когда ехать и сколько времени» wins over «Когда ехать». */
 const KNOWN_SECTION_RE = new RegExp(
-  `(^|\\n|\\s)(#{2,3})\\s+(${KNOWN_SECTION_TITLES.map((title) =>
-    title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-  ).join("|")})(?=\\s+\\S)`,
+  `(^|\\n|\\s)(#{2,3})\\s+(${[...KNOWN_SECTION_TITLES]
+    .sort((a, b) => b.length - a.length)
+    .map((title) => title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|")})(?=\\s+\\S)`,
   "g",
 );
 
@@ -109,7 +118,23 @@ export function stripRedundantSections(body: string): string {
 const INLINE_RE =
   /(\[\[[^\]]+\]\])|(\[[^\]]+\]\([^)]+\))|(\*\*[^*]+\*\*)|(`[^`]+`)|(\*[^*\s][^*]*\*)/g;
 
-function renderInline(text: string, validIds: Set<string>): ReactNode[] {
+function resolveWikilinkTarget(
+  id: string,
+  validIds: Set<string>,
+  redirects?: Map<string, string>,
+): string | undefined {
+  const trimmed = id.trim();
+  if (validIds.has(trimmed)) return trimmed;
+  const redirected = redirects?.get(trimmed)?.trim();
+  if (redirected && validIds.has(redirected)) return redirected;
+  return undefined;
+}
+
+function renderInline(
+  text: string,
+  validIds: Set<string>,
+  redirects?: Map<string, string>,
+): ReactNode[] {
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
   let key = 0;
@@ -124,11 +149,12 @@ function renderInline(text: string, validIds: Set<string>): ReactNode[] {
       const inner = token.slice(2, -2);
       const [id, label] = inner.split("|");
       const display = (label ?? id).trim();
-      if (validIds.has(id.trim())) {
+      const targetId = resolveWikilinkTarget(id, validIds, redirects);
+      if (targetId) {
         nodes.push(
           <Link
             key={key++}
-            href={entryHref(id.trim())}
+            href={entryHref(targetId)}
             className="text-sky-ink underline decoration-sky/40 underline-offset-2 hover:decoration-sky-ink"
           >
             {display}
@@ -211,7 +237,12 @@ export function extractHeadings(body: string): { id: string; text: string }[] {
   return result;
 }
 
-function renderTable(rows: string[], validIds: Set<string>, key: number): ReactNode {
+function renderTable(
+  rows: string[],
+  validIds: Set<string>,
+  key: number,
+  redirects?: Map<string, string>,
+): ReactNode {
   const parseRow = (row: string) =>
     row
       .trim()
@@ -231,7 +262,7 @@ function renderTable(rows: string[], validIds: Set<string>, key: number): ReactN
                 key={i}
                 className="px-3 py-2 text-left font-semibold text-foreground"
               >
-                {renderInline(cell, validIds)}
+                {renderInline(cell, validIds, redirects)}
               </th>
             ))}
           </tr>
@@ -241,7 +272,7 @@ function renderTable(rows: string[], validIds: Set<string>, key: number): ReactN
             <tr key={r} className="border-b border-border-subtle align-top">
               {cells.map((cell, c) => (
                 <td key={c} className="px-3 py-2 text-muted">
-                  {renderInline(cell, validIds)}
+                  {renderInline(cell, validIds, redirects)}
                 </td>
               ))}
             </tr>
@@ -254,12 +285,13 @@ function renderTable(rows: string[], validIds: Set<string>, key: number): ReactN
 
 /** Основной рендер тела статьи. */
 export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
-  const { validIds, provenance } = opts;
+  const { validIds, provenance, wikilinkRedirects } = opts;
   const clean = stripRedundantSections(body);
   const lines = clean.split("\n");
   const blocks: ReactNode[] = [];
   let i = 0;
   let key = 0;
+  const inline = (text: string) => renderInline(text, validIds, wikilinkRedirects);
 
   while (i < lines.length) {
     const line = lines[i];
@@ -280,7 +312,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
           id={slugifyHeading(h2[1])}
           className="mt-8 mb-3 scroll-mt-24 text-xl font-semibold text-foreground"
         >
-          {renderInline(h2[1], validIds)}
+          {inline(h2[1])}
         </h2>,
       );
       i++;
@@ -289,7 +321,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
     if (h3) {
       blocks.push(
         <h3 key={key++} className="mt-6 mb-2 text-lg font-semibold text-foreground">
-          {renderInline(h3[1], validIds)}
+          {inline(h3[1])}
         </h3>,
       );
       i++;
@@ -303,13 +335,13 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
         rows.push(lines[i]);
         i++;
       }
-      blocks.push(renderTable(rows, validIds, key++));
+      blocks.push(renderTable(rows, validIds, key++, wikilinkRedirects));
       continue;
     }
     if (trimmed.startsWith("|")) {
       blocks.push(
         <p key={key++} className="my-3 leading-relaxed text-muted">
-          {renderInline(trimmed, validIds)}
+          {inline(trimmed)}
         </p>,
       );
       i++;
@@ -328,7 +360,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
           key={key++}
           className="my-4 rounded-r-lg border-l-4 border-sun bg-sun/10 px-4 py-3 text-sm text-foreground"
         >
-          {renderInline(quoteLines.join(" "), validIds)}
+          {inline(quoteLines.join(" "))}
         </blockquote>,
       );
       continue;
@@ -345,7 +377,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
         <ul key={key++} className="my-4 list-disc space-y-1.5 pl-5 text-muted">
           {items.map((item, idx) => (
             <li key={idx}>
-              {renderInline(item, validIds)}
+              {inline(item)}
               {provenance?.claimsByText.get(normalizeKbClaimText(item)) ? (
                 <KbClaimSourceMarkers
                   claim={provenance.claimsByText.get(normalizeKbClaimText(item))!}
@@ -369,7 +401,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
         <ol key={key++} className="my-4 list-decimal space-y-1.5 pl-5 text-muted">
           {items.map((item, idx) => (
             <li key={idx}>
-              {renderInline(item, validIds)}
+              {inline(item)}
               {provenance?.claimsByText.get(normalizeKbClaimText(item)) ? (
                 <KbClaimSourceMarkers
                   claim={provenance.claimsByText.get(normalizeKbClaimText(item))!}
@@ -395,7 +427,7 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
     if (paraLines.length > 0) {
       blocks.push(
         <p key={key++} className="my-3 leading-relaxed text-muted">
-          {renderInline(paraLines.join(" "), validIds)}
+          {inline(paraLines.join(" "))}
         </p>,
       );
     }

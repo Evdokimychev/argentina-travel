@@ -33,7 +33,8 @@ Canonical owner зависит от family:
 | Homepage / landings | CMS landing / site globals where configured | landing resolver + site globals |
 
 Canonical public block schema: **`BlogBodyBlock`** (`src/types/blog-content-blocks.ts`).  
-`BlogRichBlock` — legacy/source format; bridge via `src/editorial/adapters/blog-body.ts` (`adaptRichBlockToBody`).  
+`BlogRichBlock` — legacy/source format; bridge via `src/editorial/adapters/blog-body.ts` (`adaptRichBlockToBody` / `adaptRichArticleToBlogSections`).  
+Public render path for `richArticleId` posts: adapt → `BlogPostSectionView` / `BlogBodyBlock` (Rich renderer is compatibility UI for gallery/lede only).  
 Page Builder / CMS body использует `BlogBodyBlock` (`PageBuilderBlock` alias).
 
 ### Layer C — Derived projections

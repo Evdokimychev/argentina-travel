@@ -9,7 +9,7 @@ site_ready: true
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu, puteshestviya-po-argentine]
 applies_to: both
 tags: [документы, вождение, транспорт, релокация, туризм]
-related: [voditelskie-prava, arenda-avto-i-vozhdenie, pokupka-avtomobilya, dni-cuil, apostil-i-perevod-dokumentov, certificado-de-legalidad-prav]
+related: [arenda-avto-i-vozhdenie, pokupka-avtomobilya, dni-cuil, apostil-i-perevod-dokumentov, mozhno-li-ezdit-po-inostrannym-pravam, mozhno-li-vodit-po-rossijskim-pravam]
 warnings:
   - "Россия не указана в опубликованном ANSV перечне соглашений об обмене. Российские права нельзя считать автоматически обмениваемыми без экзаменов."
   - "Порядок выдачи местной лицензии зависит от юрисдикции проживания. Требования CABA нельзя автоматически применять в другой провинции или муниципалитете."

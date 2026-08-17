@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  adaptRichArticleToBlogSections,
   adaptRichBlockToBody,
   migrateLegacyBlogBodyBlock,
 } from "@/editorial/adapters/blog-body";
@@ -31,6 +32,32 @@ describe("editorial adapters", () => {
     expect(blocks[0]).toMatchObject({
       type: "gallery",
       items: [{ src: "/a.jpg", alt: "A", caption: "Caption" }],
+    });
+  });
+
+  it("projects a rich article into Body sections with stable anchors", () => {
+    const sections = adaptRichArticleToBlogSections({
+      id: "demo-park",
+      lede: "Короткий обзор.",
+      sections: [
+        {
+          id: "how-to-get",
+          title: "Как добраться",
+          blocks: [{ type: "paragraphs", items: ["Самолёт до Игуасу."] }],
+        },
+      ],
+      faq: [{ question: "Нужен ли билет?", answer: "Да, заранее." }],
+    });
+    expect(sections).toHaveLength(2);
+    expect(sections[0]).toMatchObject({
+      title: "Как добраться",
+      anchorId: "how-to-get",
+      blocks: [{ type: "paragraph", text: "Самолёт до Игуасу." }],
+    });
+    expect(sections[1]).toMatchObject({
+      title: "Частые вопросы",
+      blockType: "faq",
+      anchorId: "faq",
     });
   });
 });

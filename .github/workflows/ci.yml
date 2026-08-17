@@ -126,8 +126,10 @@ jobs:
 
       - name: Wait for matching production deployment
         run: |
+          # Health may return HTTP 503 while still exposing gitSha when DB is down.
+          # Do not use curl --fail: we need the JSON body to verify the deployed SHA.
           for attempt in {1..30}; do
-            deployed_sha="$(curl --fail --silent --show-error https://www.goargentina.ru/api/health | jq --raw-output '.gitSha // empty' || true)"
+            deployed_sha="$(curl --silent --show-error https://www.goargentina.ru/api/health | jq --raw-output '.gitSha // empty' || true)"
             if [[ "$deployed_sha" == "$GITHUB_SHA" ]]; then
               echo "Production is serving $deployed_sha"
               exit 0

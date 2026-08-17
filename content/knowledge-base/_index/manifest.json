@@ -1005,7 +1005,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 684,
+        "word_count": 685,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -6458,8 +6458,8 @@
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": false,
-      "redirect_to": "arenda-avto-i-vozhdenie",
-      "archive_reason": "Частный документ для водителя объединён с проверенным руководством по вождению и аренде автомобиля.",
+      "redirect_to": "kak-poluchit-prava-v-argentine",
+      "archive_reason": "Частный документ для водителя объединён с руководством по получению и обмену водительских прав.",
       "editorial": {
         "sensitive": true,
         "policy_days": 45,

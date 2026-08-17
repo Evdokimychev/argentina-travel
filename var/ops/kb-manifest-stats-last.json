@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-08-17T10:39:22.988Z",
+  "manifestGeneratedAt": "2026-08-17 00:00",
+  "totalEntities": 691,
+  "entitiesCounted": 691,
+  "byStatus": {
+    "published": 243,
+    "archived": 448
+  },
+  "bySiteReady": {
+    "true": 209,
+    "false": 448,
+    "null": 34
+  },
+  "editorialReadiness": {
+    "provenance_schema_version": 1,
+    "validation_mode": "diagnostic",
+    "published_sensitive_count": 91,
+    "release_candidate_sensitive_count": 91,
+    "strict_ready_release_candidate_count": 91,
+    "strict_ready": true,
+    "issue_counts": {}
+  },
+  "siteIdMap": {
+    "generated": "2026-07-07",
+    "placeToKbCount": 92
+  },
+  "note": "Numbers are derived from content/knowledge-base/_index/manifest.json. Do not hand-edit this snapshot."
+}

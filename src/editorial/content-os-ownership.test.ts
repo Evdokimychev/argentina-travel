@@ -30,5 +30,15 @@ describe("Content OS ownership contract", () => {
     );
     expect(adapter).toContain("adaptRichBlockToBody");
     expect(adapter).toContain("adaptRichBlocksToBody");
+    expect(adapter).toContain("adaptRichArticleToBlogSections");
+  });
+
+  it("renders Rich park guides through Body sections, not a parallel Rich SSOT path", () => {
+    const view = fs.readFileSync(
+      path.join(root, "src/components/blog/BlogPostView.tsx"),
+      "utf8",
+    );
+    expect(view).toContain("adaptRichArticleToBlogSections");
+    expect(view).not.toMatch(/import BlogRichArticle from/);
   });
 });
