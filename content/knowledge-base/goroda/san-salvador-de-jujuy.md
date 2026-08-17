@@ -74,7 +74,7 @@ sources:
   url: https://www.argentina.travel/actividades/san-salvador-de-jujuy
   lang: es
   type: official
-  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+  note: INPROTUR; фото с официального CDN — атрибуция argentina.travel
 title_en: San Salvador de Jujuy
 ---
 

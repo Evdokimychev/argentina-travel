@@ -3,7 +3,7 @@
   "total_entities": 691,
   "editorial_readiness": {
     "provenance_schema_version": 1,
-    "validation_mode": "strict",
+    "validation_mode": "diagnostic",
     "published_sensitive_count": 91,
     "release_candidate_sensitive_count": 91,
     "strict_ready_release_candidate_count": 91,
@@ -1487,7 +1487,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 603,
+        "word_count": 620,
         "needs_attention": false
       },
       "path": "kultura/asado.md"
@@ -2967,7 +2967,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 901,
+        "word_count": 900,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -3720,7 +3720,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 803,
+        "word_count": 806,
         "needs_attention": false
       },
       "path": "regiony/caba.md"
@@ -11737,7 +11737,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
-        "word_count": 626,
+        "word_count": 622,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -14088,7 +14088,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 700,
+        "word_count": 701,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -14144,7 +14144,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 734,
+        "word_count": 741,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -14295,7 +14295,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 623,
+        "word_count": 629,
         "needs_attention": false
       },
       "path": "transport/gid-po-transportu.md"
@@ -14336,7 +14336,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 609,
+        "word_count": 617,
         "needs_attention": false
       },
       "path": "zhile/gid-po-zhilyu.md"
@@ -14375,7 +14375,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 712,
+        "word_count": 703,
         "needs_attention": false
       },
       "path": "puteshestvie/gid-puteshestvennika.md"
@@ -15383,7 +15383,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 533,
+        "word_count": 521,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/iguasu.md"
@@ -16839,7 +16839,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
-        "word_count": 769,
+        "word_count": 767,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -21167,7 +21167,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 506,
+        "word_count": 616,
         "needs_attention": false
       },
       "path": "goroda/mendoza.md"
@@ -21303,7 +21303,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
-        "word_count": 1895,
+        "word_count": 1892,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -35665,7 +35665,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 500,
+        "word_count": 508,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -38605,7 +38605,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 714,
+        "word_count": 715,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -38758,7 +38758,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 976,
+        "word_count": 975,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -44564,7 +44564,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 623,
+        "word_count": 618,
         "needs_attention": false,
         "provenance": {
           "schema_version": 1,
@@ -44822,8 +44822,8 @@
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": false,
-      "redirect_to": "mozhno-li-vodit-po-rossijskim-pravam",
-      "archive_reason": "Материал объединён с проверенным ответом о вождении по иностранным правам.",
+      "redirect_to": "kak-poluchit-prava-v-argentine",
+      "archive_reason": "Материал объединён с опубликованным гидом о иностранных правах, обмене и получении аргентинской лицензии.",
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
