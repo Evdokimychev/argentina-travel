@@ -19,6 +19,8 @@ import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
+import { getStoredConversionContext } from "@/lib/attribution/conversion-context";
 import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { requiredField, validateEmail } from "@/lib/form-validation";
@@ -100,6 +102,9 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
             product_title: formContext.productTitle,
             service_title: formContext.serviceTitle,
             topic: formContext.topic,
+            placement: "contacts_form",
+            first_touch: getStoredFirstTouchAttribution(),
+            conversion_context: getStoredConversionContext(),
           },
           pageUrl: typeof window !== "undefined" ? window.location.href : null,
           captchaToken,

@@ -5,7 +5,10 @@ import {
 } from "@/lib/cookie-consent";
 import {
   GTM_EVENTS,
+  GTM_EVENT_LEGACY_ALIASES,
+  normalizeBookingErrorClass,
   pushDataLayer,
+  trackBookingError,
   trackBookingSubmit,
   trackGtmEvent,
   trackLocaleSwitch,
@@ -38,18 +41,17 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
     "placement",
     "booking_mode",
   ],
-  booking_error: ["product_type", "product_id", "item_id", "source", "error_message", "outcome"],
+  booking_error: ["product_type", "product_id", "item_id", "source", "error_class", "outcome"],
   contact_form_submit: ["form_name", "source", "tour_slug", "product_slug", "service_slug"],
   newsletter_subscribe: ["form_name", "source"],
-  whatsapp_click: ["link_url", "link_text", "channel"],
-  telegram_click: ["link_url", "link_text", "channel"],
+  whatsapp_click: ["link_url", "placement", "channel"],
+  telegram_click: ["link_url", "placement", "channel"],
   tour_booking_click: ["product_type", "product_id", "item_id", "item_name", "booking_action", "placement", "source", "booking_mode", "outcome"],
   excursion_booking_click: ["product_type", "product_id", "item_id", "item_name", "booking_action", "placement", "source", "booking_mode", "outcome"],
   partner_checkout_click: ["product_type", "product_id", "item_id", "item_name", "booking_action", "placement", "booking_mode", "outcome"],
   tour_card_impression: ["product_type", "product_id", "item_id", "item_name", "placement"],
   tour_card_click: ["product_type", "product_id", "item_id", "item_name", "placement"],
   tour_view: ["product_type", "product_id", "item_id", "item_name", "item_category", "value", "currency", "organizer_id"],
-  tour_detail_view: ["product_type", "product_id", "item_id", "item_name", "item_category", "value", "currency", "organizer_id"],
   tour_date_select: ["product_type", "product_id", "item_id", "date_id"],
   tour_people_change: ["product_type", "product_id", "item_id", "guests"],
   excursion_view: ["product_type", "product_id", "item_id", "item_name", "item_category", "partner", "city_name"],
@@ -61,7 +63,6 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   blog_comment_post: ["item_id", "item_name"],
   blog_affiliate_embed_view: ["item_id", "affiliate_service"],
   locale_switch: ["locale_from", "locale_to", "page_path"],
-  locale_change: ["locale_from", "locale_to", "page_path"],
   currency_change: ["currency_from", "currency_to", "page_path"],
   search_submit: ["search_query_length", "results_count", "search_source", "search_kind"],
   search_result_click: ["search_query_length", "item_id", "item_kind", "position", "search_source"],
@@ -105,11 +106,14 @@ describe("gtm-events", () => {
   it("GTM_EVENTS values are unique snake_case strings", () => {
     const values = Object.values(GTM_EVENTS);
     expect(new Set(values).size).toBe(values.length);
+    expect(values).toHaveLength(30);
     for (const value of values) {
       expect(value).toMatch(/^[a-z0-9_]+$/);
     }
     expect(Object.keys(GTM_EVENT_PARAM_SHAPE).sort()).toEqual(values.slice().sort());
     expect(values).not.toContain("page_view");
+    expect(values).not.toContain(GTM_EVENT_LEGACY_ALIASES.tourDetailView);
+    expect(values).not.toContain(GTM_EVENT_LEGACY_ALIASES.localeChange);
   });
 
   it("pushDataLayer appends to window.dataLayer", () => {
@@ -128,8 +132,9 @@ describe("gtm-events", () => {
     });
   });
 
-  it("trackTourView includes tour metadata", () => {
+  it("trackTourView emits a single canonical tour_view", () => {
     trackTourView({ slug: "patagonia-14", title: "Патагония 14 дней", priceUsd: 1200 });
+    expect(window.dataLayer).toHaveLength(1);
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.tourView,
       item_id: "patagonia-14",
@@ -202,8 +207,24 @@ describe("gtm-events", () => {
     ]);
   });
 
-  it("trackLocaleSwitch sends locale_switch after consent", () => {
+  it("trackBookingError uses error_class instead of free-text message", () => {
+    trackBookingError({
+      productType: "tour",
+      slug: "x",
+      message: "user@example.com failed checkout redirect",
+    });
+    expect(window.dataLayer?.[0]).toMatchObject({
+      event: GTM_EVENTS.bookingError,
+      error_class: "CHECKOUT_TARGET_INVALID",
+      outcome: "error",
+    });
+    expect(window.dataLayer?.[0]).not.toHaveProperty("error_message");
+    expect(normalizeBookingErrorClass("rate limit exceeded")).toBe("RATE_LIMITED");
+  });
+
+  it("trackLocaleSwitch emits a single locale_switch", () => {
     trackLocaleSwitch({ from: "ru", to: "en", path: "/tours/patagonia" });
+    expect(window.dataLayer).toHaveLength(1);
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.localeSwitch,
       locale_from: "ru",

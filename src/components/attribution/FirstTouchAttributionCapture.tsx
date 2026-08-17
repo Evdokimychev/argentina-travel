@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import {
   captureFirstTouchFromLocation,
   clearFirstTouchAttribution,
+  rememberPendingFirstTouch,
 } from "@/lib/attribution/first-touch";
 import {
   COOKIE_CONSENT_CHANGED_EVENT,
@@ -17,10 +18,13 @@ export default function FirstTouchAttributionCapture() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
     const sync = () => {
       if (hasPersonalizationConsent()) {
-        captureFirstTouchFromLocation(new URLSearchParams(searchParams.toString()));
+        captureFirstTouchFromLocation(params);
       } else {
+        // Keep a pending landing snapshot so late consent still restores first-touch.
+        rememberPendingFirstTouch(params);
         clearFirstTouchAttribution();
       }
     };

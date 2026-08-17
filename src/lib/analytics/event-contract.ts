@@ -108,8 +108,36 @@ export function createAnalyticsEnvelope(): AnalyticsEnvelope {
 export function createAnalyticsEventPayload(
   params: Record<string, unknown> = {},
 ): AnalyticsEnvelope & Record<string, AnalyticsScalar> {
+  const trafficType = resolveAnalyticsTrafficType();
   return {
     ...sanitizeAnalyticsParams(params),
     ...createAnalyticsEnvelope(),
+    ...(trafficType ? { traffic_type: trafficType } : {}),
   };
+}
+
+/** Marks synthetic/preview/automation traffic so KPI queries can exclude it. */
+export function resolveAnalyticsTrafficType(): "synthetic" | "preview" | undefined {
+  if (typeof window === "undefined") {
+    if (process.env.VERCEL_ENV === "preview") return "preview";
+    if (process.env.ANALYTICS_TRAFFIC_TYPE === "synthetic") return "synthetic";
+    return undefined;
+  }
+  try {
+    const flagged = window.sessionStorage.getItem("goargentina-analytics-traffic-type");
+    if (flagged === "synthetic" || flagged === "preview") return flagged;
+  } catch {
+    /* ignore */
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "preview") return "preview";
+  return undefined;
+}
+
+export function markSyntheticAnalyticsTraffic(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem("goargentina-analytics-traffic-type", "synthetic");
+  } catch {
+    /* ignore */
+  }
 }

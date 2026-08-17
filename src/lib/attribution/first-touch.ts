@@ -2,6 +2,8 @@ import type { BookingAttribution } from "@/types/booking-attribution";
 
 export const FIRST_TOUCH_COOKIE = "pva_ft_attribution";
 export const FIRST_TOUCH_STORAGE_KEY = "pva_ft_attribution";
+/** Ephemeral pre-consent landing snapshot (UTM/path only) — promoted after personalization consent. */
+export const FIRST_TOUCH_PENDING_STORAGE_KEY = "pva_ft_pending";
 
 const COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 90;
 const MAX_COOKIE_VALUE_LENGTH = 4_096;
@@ -15,6 +17,8 @@ export type FirstTouchAttributionInput = {
   utmSource?: string | null;
   utmMedium?: string | null;
   utmCampaign?: string | null;
+  /** Privacy-safe campaign creative slot — no free-text PII. */
+  utmContent?: string | null;
   referrer?: string | null;
   landingPath?: string | null;
   apiKeyId?: string | null;
@@ -101,6 +105,7 @@ export function buildFirstTouchAttribution(
     utmSource: normalizeText(input.utmSource, MAX_UTM_LENGTH),
     utmMedium: normalizeText(input.utmMedium, MAX_UTM_LENGTH),
     utmCampaign: normalizeText(input.utmCampaign, MAX_CAMPAIGN_LENGTH),
+    utmContent: normalizeText(input.utmContent, MAX_UTM_LENGTH),
     referrer: normalizeReferrer(input.referrer),
     landingPath: normalizeText(input.landingPath, MAX_LANDING_PATH_LENGTH),
     apiKeyId: normalizeApiKeyId(input.apiKeyId),
@@ -111,6 +116,7 @@ export function buildFirstTouchAttribution(
     attribution.utmSource ||
     attribution.utmMedium ||
     attribution.utmCampaign ||
+    attribution.utmContent ||
     attribution.referrer ||
     attribution.landingPath ||
     attribution.apiKeyId;
@@ -131,6 +137,7 @@ export function parseFirstTouchAttribution(raw: string | null | undefined): Book
       utmSource: parsed.utmSource,
       utmMedium: parsed.utmMedium,
       utmCampaign: parsed.utmCampaign,
+      utmContent: parsed.utmContent,
       referrer: parsed.referrer,
       landingPath: parsed.landingPath,
       apiKeyId: parsed.apiKeyId,
@@ -174,6 +181,50 @@ export function clearFirstTouchAttribution(): void {
   document.cookie = `${FIRST_TOUCH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
 }
 
+/** Snapshot landing UTMs before consent so late grant does not lose first-touch. */
+export function rememberPendingFirstTouch(searchParams: URLSearchParams): void {
+  if (typeof window === "undefined") return;
+  if (getStoredFirstTouchAttribution()) return;
+  const attribution = buildFirstTouchAttribution({
+    utmSource: searchParams.get("utm_source"),
+    utmMedium: searchParams.get("utm_medium"),
+    utmCampaign: searchParams.get("utm_campaign"),
+    utmContent: searchParams.get("utm_content"),
+    referrer: document.referrer,
+    landingPath: `${window.location.pathname}${window.location.search}`,
+    apiKeyId: searchParams.get("api_key_id") ?? searchParams.get("partner_key"),
+  });
+  if (!attribution) return;
+  try {
+    window.sessionStorage.setItem(
+      FIRST_TOUCH_PENDING_STORAGE_KEY,
+      serializeFirstTouchAttribution(attribution),
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+export function consumePendingFirstTouch(): BookingAttribution | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(FIRST_TOUCH_PENDING_STORAGE_KEY);
+    window.sessionStorage.removeItem(FIRST_TOUCH_PENDING_STORAGE_KEY);
+    return parseFirstTouchAttribution(raw);
+  } catch {
+    return null;
+  }
+}
+
+export function clearPendingFirstTouch(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(FIRST_TOUCH_PENDING_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 /** Read stored first-touch (sessionStorage first, then cookie). */
 export function getStoredFirstTouchAttribution(): BookingAttribution | null {
   return readFirstTouchFromStorage() ?? readFirstTouchFromDocumentCookie();
@@ -185,15 +236,23 @@ export function captureFirstTouchFromLocation(searchParams: URLSearchParams): Bo
   const existing = getStoredFirstTouchAttribution();
   if (existing) return existing;
 
+  const pending = consumePendingFirstTouch();
+  if (pending) {
+    persistFirstTouchAttribution(pending);
+    return pending;
+  }
+
   const utmSource = searchParams.get("utm_source");
   const utmMedium = searchParams.get("utm_medium");
   const utmCampaign = searchParams.get("utm_campaign");
+  const utmContent = searchParams.get("utm_content");
   const apiKeyId = searchParams.get("api_key_id") ?? searchParams.get("partner_key");
 
   const attribution = buildFirstTouchAttribution({
     utmSource,
     utmMedium,
     utmCampaign,
+    utmContent,
     referrer: document.referrer,
     landingPath: `${window.location.pathname}${window.location.search}`,
     apiKeyId,
@@ -225,6 +284,7 @@ export function buildFirstTouchFromSearchParams(
     utmSource: searchParams.get("utm_source"),
     utmMedium: searchParams.get("utm_medium"),
     utmCampaign: searchParams.get("utm_campaign"),
+    utmContent: searchParams.get("utm_content"),
     referrer: referrer ?? undefined,
     landingPath,
     apiKeyId: searchParams.get("api_key_id") ?? searchParams.get("partner_key"),

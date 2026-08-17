@@ -26,7 +26,7 @@
 | Шаг | Текущее событие | Обязательные измерения | Интерпретация |
 |---|---|---|---|
 | Discovery | landing/session source в GA4 | `session_id`, acquisition source | Вход на сайт; отдельное custom `page_view` приложение не отправляет. |
-| Detail | `tour_view`, `excursion_view` | `product_id`, `product_type`, `session_id` | Уникальный просмотр предложения. |
+| Detail | `tour_view`, `excursion_view` | `product_id`, `product_type`, `session_id` | Уникальный просмотр предложения. Legacy alias `tour_detail_view` **не** dual-fired. |
 | Booking start | `tour_booking_click`, `excursion_booking_click` | `product_id`, `booking_mode`, `source`, `outcome=started` | Пользователь начал доступный на странице путь. |
 | Native request persisted | `booking_submit` | `booking_mode=native_request`, `outcome=native_success` | API/DB вернули созданную заявку; это ещё не подтверждённая поездка. |
 | Partner handoff | `booking_submit` | `booking_mode=partner_external`, `outcome=partner_redirect`, `partner` | Получен partner checkout и выполнен handoff. |
@@ -39,11 +39,10 @@
 ## Остальные события по возможностям продукта
 
 - Контент: `blog_article_view`, `blog_article_save`, `blog_article_feedback`, `blog_comment_post`, `blog_affiliate_click`, `blog_affiliate_embed_view`, `blog_inline_related_click`, а также продуктовые `article_opened`, `article_depth`, `related_content_clicked`.
-- Поиск и карта: `search_submit`, `search_result_click`, `site_search_started`, `site_search_completed`, `site_search_zero_results`, `map_opened`, `map_marker_selected`, `map_filter_changed`, `map_zero_results`.
-- Перелёты: `airport_selected`, `airport_route_selected`, `flights_search_started`, `flights_widget_ready`, `flights_widget_error`, `flights_results_opened`.
-- Аккаунт/турист: `signup_started`, `signup_completed`, `profile_completed`, `favorite_added`, `itinerary_started`, `review_submitted`.
-- Организатор/admin: события onboarding, draft, submit, publish, moderation, booking response, payout и operational tasks из `PRODUCT_EVENT_NAMES`.
-- Лиды: `contact_form_submit`, `newsletter_subscribe`, `whatsapp_click`, `telegram_click`.
+- Поиск и карта: `search_submit`, `search_result_click`, `site_search_started`, `site_search_completed`, `site_search_zero_results`, `map_opened`, `map_marker_selected`, `map_filter_changed`, `map_zero_results`. Поиск отправляет `search_query_length`, **не** raw `search_term`. Map → commerce: `tour_card_click` с `placement=map_tour_list`.
+- Ошибки бронирования: `booking_error` с `error_class` (не free-text `error_message`).
+- Legacy aliases (docs only): `tour_detail_view`, `locale_change` — см. `GTM_EVENT_LEGACY_ALIASES`.
+- Canonical GTM custom events count: **30**.
 
 ## Контракт page_view
 

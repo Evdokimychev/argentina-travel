@@ -49,8 +49,10 @@ npm run gtm-events:audit
 - **Trigger:** Custom Event — regex:
 
 ```
-(booking_submit|booking_start|booking_error|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|partner_checkout_click|tour_card_impression|tour_card_click|tour_view|tour_detail_view|tour_date_select|tour_people_change|excursion_view|blog_article_save|blog_affiliate_click|blog_inline_related_click|blog_article_view|blog_article_feedback|blog_comment_post|blog_affiliate_embed_view|locale_switch|locale_change|currency_change|search_submit|search_result_click|search_zero_results|public_404|public_503)
+(booking_submit|booking_start|booking_error|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|partner_checkout_click|tour_card_impression|tour_card_click|tour_view|tour_date_select|tour_people_change|excursion_view|blog_article_save|blog_affiliate_click|blog_inline_related_click|blog_article_view|blog_article_feedback|blog_comment_post|blog_affiliate_embed_view|locale_switch|currency_change|search_submit|search_result_click|search_zero_results|public_404|public_503)
 ```
+
+> Sprint 5: canonical set is **30** events. Legacy aliases `tour_detail_view` / `locale_change` are documented below for historical GA4 reports only — the app no longer dual-fires them.
 
 Дополнительно создайте **GA4 Conversions** в интерфейсе GA4 для:
 
@@ -170,18 +172,18 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 | `blog_comment_post` | Отправка комментария | `item_id`, `item_name` |
 | `blog_affiliate_embed_view` | Показ affiliate-блока (in-view) | `item_id`, `affiliate_service` |
 | `locale_switch` | Смена языка в переключателе | `locale_from`, `locale_to`, `page_path` |
-| `search_submit` | Отправка запроса в поиске по сайту (⌘K) | `search_term`, `results_count`, `search_source`, `search_kind` |
-| `search_result_click` | Клик по результату поиска | `search_term`, `item_id`, `item_kind`, `position`, `search_source` |
+| `search_submit` | Отправка запроса в поиске по сайту (⌘K) | `search_query_length`, `results_count`, `search_source`, `search_kind` |
+| `search_result_click` | Клик по результату поиска | `search_query_length`, `item_id`, `item_kind`, `position`, `search_source` |
 | `tour_card_impression` | Карточка тура попала в viewport | `item_id`, `item_name`, `placement` |
 | `tour_card_click` | Клик по карточке тура | `item_id`, `item_name`, `placement` |
-| `tour_detail_view` | Просмотр detail (alias `tour_view`) | `item_id`, `item_name`, `item_category` |
+| `tour_detail_view` | **Legacy alias** — не отправляется приложением | — |
 | `tour_date_select` | Выбор даты на карточке тура | `item_id`, `date_id` |
 | `tour_people_change` | Изменение числа туристов | `item_id`, `guests` |
 | `partner_checkout_click` | Старт партнёрского checkout | `item_id`, `booking_action`, `placement` |
 | `booking_start` | Старт сценария бронирования | `item_id`, `booking_mode`, `placement` |
-| `booking_error` | Ошибка отправки заявки | `item_id`, `source`, `error_message` |
+| `booking_error` | Ошибка отправки заявки | `item_id`, `source`, `error_class` |
 | `search_zero_results` | Поиск без результатов | `results_count`, `search_source` |
-| `locale_change` | Смена языка (alias `locale_switch`) | `locale_from`, `locale_to`, `page_path` |
+| `locale_change` | **Legacy alias** — не отправляется приложением | — |
 | `currency_change` | Смена валюты | `currency_from`, `currency_to`, `page_path` |
 | `public_404` | Публичная страница 404 | `page_path` |
 | `public_503` | Soft unavailable / outage UI | `page_path`, `product_id`, `error_class` |

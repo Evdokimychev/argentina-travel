@@ -66,6 +66,20 @@
 3. Перед retry определить идемпотентность и размер партии; сначала staging или одна запись.
 4. Не отправлять тестовые письма реальным пользователям.
 
+### Lead delivery
+
+1. Detect: admin leads empty while public form returns 200, or outbox exhausted / notify failure.
+2. User sees: form success or soft error — never invent confirmation of manager contact if store failed.
+3. Disable: temporary feature flag / site forms toggle if abuse; keep rate limits.
+4. Verify recovery: controlled synthetic lead → DB row → CRM visibility → outbox attempt → cleanup.
+
+### Analytics down
+
+1. Detect: no controlled events, GTM/consent failures, admin funnel `trustedForKpi=false` / unavailable.
+2. User sees: site continues; analytics is non-blocking.
+3. Disable: do not bypass consent to “fix” tracking; do not dual-fire legacy aliases.
+4. Verify: consent denied → no analytics requests; consent granted → dataLayer + controlled ingest; withdrawal stops future collection.
+
 ### Платежи
 
 1. Остановить новый checkout, если webhook или reconciliation недостоверны.
