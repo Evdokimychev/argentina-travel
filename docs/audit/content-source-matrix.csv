@@ -1,0 +1,591 @@
+family,path,slug,entityType,currentSource,overrides,canonicalOwner,indexable,action,notes
+homepage,/,,homepage,hybrid,no,CMS landing / site globals (Layer B),yes,KEEP,Tier-1 hub; composition from App Router + site globals
+destinations,/destinations,,destination_hub,file,no,Product content owner / Destination editor,yes,KEEP,Tier-1 hub
+destinations,/destinations/ba,ba,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/bariloche,bariloche,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/calafate,calafate,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/ushuaia,ushuaia,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/iguazu,iguazu,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/mendoza,mendoza,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/salta,salta,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+destinations,/destinations/patagonia,patagonia,destination,hybrid,no,KB entity + destination file/CMS document,yes,KEEP,from DESTINATION_CONTENT / POPULAR_DESTINATIONS
+places,/places,,place_hub,hybrid,no,Destination editor (places repository / seed),yes,KEEP,Tier-1 hub
+places,/places/buenos-aires,buenos-aires,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/ushuaia,ushuaia,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/el-calafate,el-calafate,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/el-chalten,el-chalten,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/bariloche,bariloche,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/mendoza,mendoza,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/maipu,maipu,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/lujan-de-cuyo,lujan-de-cuyo,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/uco-valley,uco-valley,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/potrerillos,potrerillos,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/puerto-madryn,puerto-madryn,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/salta,salta,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/purmamarca,purmamarca,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/iguazu-falls,iguazu-falls,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/perito-moreno-glacier,perito-moreno-glacier,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/fitz-roy,fitz-roy,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/los-glaciares-national-park,los-glaciares-national-park,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/nahuel-huapi-national-park,nahuel-huapi-national-park,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/valdes-peninsula,valdes-peninsula,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/cerro-de-los-7-colores,cerro-de-los-7-colores,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tren-de-las-nubes,tren-de-las-nubes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/cueva-de-las-manos,cueva-de-las-manos,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/mar-del-plata,mar-del-plata,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tierra-del-fuego-national-park,tierra-del-fuego-national-park,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/cordoba,cordoba,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/estero-ibera,estero-ibera,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/talampaya,talampaya,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/cafayate,cafayate,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tilcara,tilcara,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/quebrada-de-humahuaca,quebrada-de-humahuaca,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/salinas-grandes,salinas-grandes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-martin-de-los-andes,san-martin-de-los-andes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/villa-la-angostura,villa-la-angostura,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/rosario,rosario,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/la-plata,la-plata,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tucuman,tucuman,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-salvador-de-jujuy,san-salvador-de-jujuy,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/neuquen,neuquen,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-juan,san-juan,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/corrientes,corrientes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/posadas,posadas,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/bahia-blanca,bahia-blanca,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/rio-gallegos,rio-gallegos,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/trelew,trelew,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/esquel,esquel,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/aconcagua,aconcagua,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/ischigualasto,ischigualasto,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/los-alerces-national-park,los-alerces-national-park,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/trevelin,trevelin,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/quebrada-de-las-conchas,quebrada-de-las-conchas,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/puente-del-inca,puente-del-inca,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/lujan,lujan,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/pilar,pilar,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/zarate,zarate,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/cementerio-de-la-chacarita,cementerio-de-la-chacarita,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/mar-de-las-pampas,mar-de-las-pampas,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/necochea,necochea,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/pinamar,pinamar,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-antonio-de-areco,san-antonio-de-areco,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/sierra-de-la-ventana,sierra-de-la-ventana,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tandil,tandil,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/villa-gesell,villa-gesell,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/barreal,barreal,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/la-rioja,la-rioja,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/las-lenas,las-lenas,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/merlo,merlo,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-luis,san-luis,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-rafael,san-rafael,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/sierra-de-las-quijadas,sierra-de-las-quijadas,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/villavicencio,villavicencio,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/banado-la-estrella,banado-la-estrella,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/colon-entre-rios,colon-entre-rios,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/federacion,federacion,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/formosa,formosa,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/gualeguaychu,gualeguaychu,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/mercedes-corrientes,mercedes-corrientes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/parana,parana,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/parque-nacional-chaco,parque-nacional-chaco,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/parque-nacional-el-palmar,parque-nacional-el-palmar,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/parque-nacional-rio-pilcomayo,parque-nacional-rio-pilcomayo,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/saltos-del-mocona,saltos-del-mocona,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/san-ignacio-mini,san-ignacio-mini,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/catamarca,catamarca,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/iruya,iruya,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/kachi,kachi,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/los-cardones,los-cardones,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/ruinas-de-quilmes,ruinas-de-quilmes,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/santiago-del-estero,santiago-del-estero,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/susques,susques,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/tafi-del-valle,tafi-del-valle,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/termas-de-rio-hondo,termas-de-rio-hondo,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/la-cumbrecita,la-cumbrecita,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/lihue-calel,lihue-calel,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/santa-fe,santa-fe,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/santa-rosa,santa-rosa,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/bosque-petrificado,bosque-petrificado,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/el-bolson,el-bolson,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/lanin,lanin,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/los-antiguos,los-antiguos,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/patagonia-park,patagonia-park,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/puerto-deseado,puerto-deseado,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/punta-tombo,punta-tombo,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/patagonia-highlights,patagonia-highlights,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/northwest-colors,northwest-colors,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/unesco-heritage,unesco-heritage,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/wine-mendoza,wine-mendoza,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-glaciers,best-glaciers,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-waterfalls,best-waterfalls,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-national-parks,best-national-parks,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-trekking,best-trekking,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-for-photographers,best-for-photographers,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/wildlife-argentina,wildlife-argentina,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/week-in-argentina,week-in-argentina,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/two-weeks-argentina,two-weeks-argentina,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/best-patagonia,best-patagonia,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/lake-district,lake-district,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/patagonia-classic-10-days,patagonia-classic-10-days,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/northwest-7-days,northwest-7-days,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+places,/places/buenos-aires-iguazu-5-days,buenos-aires-iguazu-5-days,place,hybrid,no,CMS place resolver with places-seed fallback,yes,KEEP,from PLACES_SEED
+kb,/baza-znaniy,,kb_hub,kb,no,Content editor (Layer A knowledge-base),yes,KEEP,Tier-1 hub
+kb,/baza-znaniy/razdel/puteshestviya,puteshestviya,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/goroda-i-regiony,goroda-i-regiony,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/zhizn-v-strane,zhizn-v-strane,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/pereezd,pereezd,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/dokumenty,dokumenty,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/finansy,finansy,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/razdel/lichnyy-opyt,lichnyy-opyt,kb_section,kb,no,Content editor (Layer A),yes,KEEP,from KB_SECTIONS
+kb,/baza-znaniy/aconcagua-provincial-park,aconcagua-provincial-park,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/aeroporty,aeroporty,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/aktualen-li-blue-dollar,aktualen-li-blue-dollar,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes,amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/arenda-avto-i-vozhdenie,arenda-avto-i-vozhdenie,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/argentina-10-dney,argentina-10-dney,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/argentina-2-nedeli,argentina-2-nedeli,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/argentina-3-nedeli,argentina-3-nedeli,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/argentina-vs-drugie-strany,argentina-vs-drugie-strany,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/asado,asado,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/aves-del-chaco,aves-del-chaco,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/bahia-blanca,bahia-blanca,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/banado-la-estrella,banado-la-estrella,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/banki-i-perevody,banki-i-perevody,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/bariloche,bariloche,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/besplatna-li-medicina-dlya-turista,besplatna-li-medicina-dlya-turista,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/bezopasno-li-odnoj-zhenshchine,bezopasno-li-odnoj-zhenshchine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/bezopasno-li-v-argentine,bezopasno-li-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/bezopasnost-argentina,bezopasnost-argentina,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/bienal-internacional-de-esculturas-en-resistencia,bienal-internacional-de-esculturas-en-resistencia,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/buenos-aires,buenos-aires,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/buenos-aires-province,buenos-aires-province,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/byt-i-zhilyo,byt-i-zhilyo,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/byudzhet-poezdki,byudzhet-poezdki,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/caba,caba,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/cafayate,cafayate,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/campo-del-cielo,campo-del-cielo,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/casa-historica-tucuman,casa-historica-tucuman,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/catamarca,catamarca,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/caucete-san-juan,caucete-san-juan,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chek-list-pereezda,chek-list-pereezda,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chto-delat-krome-dostoprimechatelnostej,chto-delat-krome-dostoprimechatelnostej,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chto-est-vegetariancu,chto-est-vegetariancu,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chto-stoit-deneg-prioritety,chto-stoit-deneg-prioritety,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chto-takoe-dni-i-cuil,chto-takoe-dni-i-cuil,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/chto-takoe-mep,chto-takoe-mep,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/chto-takoe-prekariya,chto-takoe-prekariya,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/chto-takoe-sube,chto-takoe-sube,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/circuito-callejero-de-potrero-de-los-funes,circuito-callejero-de-potrero-de-los-funes,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/circuito-cultural-en-formosa,circuito-cultural-en-formosa,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/circuito-de-cervecerias-en-rosario,circuito-de-cervecerias-en-rosario,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/circuito-gastronomico-en-el-rio-parana,circuito-gastronomico-en-el-rio-parana,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/colon-entre-rios,colon-entre-rios,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/cueva-de-las-manos,cueva-de-las-manos,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/cuyo,cuyo,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/dni-cuil-cuit-putanitsa,dni-cuil-cuit-putanitsa,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/dostupnaya-sreda-i-invalidnost,dostupnaya-sreda-i-invalidnost,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/el-bolson,el-bolson,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/el-calafate,el-calafate,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/el-chalten,el-chalten,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/esim-i-svyaz,esim-i-svyaz,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/esquel,esquel,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/falshivye-policejskie-i-obmenniki,falshivye-policejskie-i-obmenniki,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/formosa,formosa,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/futbol,futbol,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/futbol-kak-popast-bez-skama,futbol-kak-popast-bez-skama,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gastronomia-de-chaco,gastronomia-de-chaco,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gde-luchshiy-karnaval-v-argentine,gde-luchshiy-karnaval-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/gid-po-dengam,gid-po-dengam,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-po-dokumentam,gid-po-dokumentam,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-po-kulture,gid-po-kulture,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-po-medicine,gid-po-medicine,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-po-transportu,gid-po-transportu,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-po-zhilyu,gid-po-zhilyu,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-puteshestvennika,gid-puteshestvennika,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gid-relokanta,gid-relokanta,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/gosudarstvennye-prilozheniya,gosudarstvennye-prilozheniya,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/govoryat-li-v-argentine-po-anglijski,govoryat-li-v-argentine-po-anglijski,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/grazhdanstvo,grazhdanstvo,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/hornocal,hornocal,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ibera,ibera,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ibera-rassvet-i-tihie-portaly,ibera-rassvet-i-tihie-portaly,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/iguasu,iguasu,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ischigualasto,ischigualasto,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ispanskij-dlya-puteshestvennika,ispanskij-dlya-puteshestvennika,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/iz-esejsy-v-ba,iz-esejsy-v-ba,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kachi,kachi,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kak-menyat-valyutu,kak-menyat-valyutu,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kak-oplatit-tur-i-zhilyo-zaranee,kak-oplatit-tur-i-zhilyo-zaranee,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kak-perevezti-kota-ili-sobaku,kak-perevezti-kota-ili-sobaku,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kak-platit-esli-karta-rf-ne-rabotaet,kak-platit-esli-karta-rf-ne-rabotaet,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kak-poluchit-grazhdanstvo-za-2-goda,kak-poluchit-grazhdanstvo-za-2-goda,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kak-poluchit-prava-v-argentine,kak-poluchit-prava-v-argentine,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kak-snyat-kvartiru-bez-garanta,kak-snyat-kvartiru-bez-garanta,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kakie-dokumenty-vezti-s-soboj,kakie-dokumenty-vezti-s-soboj,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kakie-privivki-nuzhny-dlya-argentiny,kakie-privivki-nuzhny-dlya-argentiny,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kakie-rajony-ba-izbegat,kakie-rajony-ba-izbegat,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kakie-rozetki-v-argentine,kakie-rozetki-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kakoj-dohod-nuzhen-dlya-rantye,kakoj-dohod-nuzhen-dlya-rantye,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kakoj-mesyats-kuda-ehat,kakoj-mesyats-kuda-ehat,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kaminito-la-boka,kaminito-la-boka,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kanal-bigl-i-poezd-na-kray-sveta,kanal-bigl-i-poezd-na-kray-sveta,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kladbische-recoleta,kladbische-recoleta,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/klimat-po-regionam,klimat-po-regionam,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kogda-smotret-kitov-v-argentine,kogda-smotret-kitov-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/kogda-uchebnyj-god-v-argentine,kogda-uchebnyj-god-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kordova,kordova,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/korrientes,korrientes,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kovorkingi-i-rabota-nomada,kovorkingi-i-rabota-nomada,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/kuhnya,kuhnya,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/la-plata,la-plata,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/la-rioja,la-rioja,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/lanin,lanin,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/las-lenas,las-lenas,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/lgbt-travel,lgbt-travel,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/lihue-calel,lihue-calel,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/litoral,litoral,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/los-alerces,los-alerces,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/los-cardones,los-cardones,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/los-glasiares,los-glasiares,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/los-glasiares-ritm-dvuh-baz,los-glasiares-ritm-dvuh-baz,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/lujan,lujan,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/lyubimoe-mesto-ne-iz-putevoditelej,lyubimoe-mesto-ne-iz-putevoditelej,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/mar-de-las-pampas,mar-de-las-pampas,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mar-del-plata,mar-del-plata,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mate,mate,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/medicina-i-strahovka,medicina-i-strahovka,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mendoza,mendoza,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mentalitet-i-etiket,mentalitet-i-etiket,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/merlo,merlo,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mezhgorodnie-avtobusy,mezhgorodnie-avtobusy,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mify-ob-argentine,mify-ob-argentine,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-delat-vizaran,mozhno-li-delat-vizaran,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-doehat-do-ushuaji-na-mashine,mozhno-li-doehat-do-ushuaji-na-mashine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/mozhno-li-ezdit-po-inostrannym-pravam,mozhno-li-ezdit-po-inostrannym-pravam,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-otkryt-schet-nerezidentu,mozhno-li-otkryt-schet-nerezidentu,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/mozhno-li-pit-vodu-iz-krana,mozhno-li-pit-vodu-iz-krana,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-rabotat-na-mestnuyu-kompaniyu,mozhno-li-rabotat-na-mestnuyu-kompaniyu,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-snimat-dronom,mozhno-li-snimat-dronom,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/mozhno-li-uchitsya-v-universitete-besplatno,mozhno-li-uchitsya-v-universitete-besplatno,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/mozhno-li-vodit-po-rossijskim-pravam,mozhno-li-vodit-po-rossijskim-pravam,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/nalogi-i-monotributo,nalogi-i-monotributo,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/nauel-uapi,nauel-uapi,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/necochea,necochea,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/neuken,neuken,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/noa,noa,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/noa-kolco,noa-kolco,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/nuzhen-li-permit-na-akonkagua,nuzhen-li-permit-na-akonkagua,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/nuzhna-li-strahovka-dlya-vezda,nuzhna-li-strahovka-dlya-vezda,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/nuzhna-li-viza-cifrovomu-kochevniku,nuzhna-li-viza-cifrovomu-kochevniku,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/nuzhno-li-ostavlyat-chaevye,nuzhno-li-ostavlyat-chaevye,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/nuzhno-li-otkazyvatsya-ot-grazhdanstva,nuzhno-li-otkazyvatsya-ot-grazhdanstva,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/ognennaya-zemlya,ognennaya-zemlya,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/oshibka-s-dokumentami,oshibka-s-dokumentami,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/oshibka-s-zhilyom,oshibka-s-zhilyom,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/otkrytie-biznesa,otkrytie-biznesa,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pampa,pampa,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parana,parana,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-aconquija,parque-nacional-aconquija,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-baritu,parque-nacional-baritu,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-calilegua,parque-nacional-calilegua,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-chaco,parque-nacional-chaco,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-ciervo-de-los-pantanos,parque-nacional-ciervo-de-los-pantanos,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-el-palmar,parque-nacional-el-palmar,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-el-rey,parque-nacional-el-rey,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-lago-puelo,parque-nacional-lago-puelo,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-los-arrayanes,parque-nacional-los-arrayanes,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-perito-moreno,parque-nacional-perito-moreno,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/parque-nacional-pre-delta,parque-nacional-pre-delta,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/patagonia,patagonia,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/patagonia-park,patagonia-park,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/patagonia-yug,patagonia-yug,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/peninsula-valdes,peninsula-valdes,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pereezd-s-minimalnym-byudzhetom,pereezd-s-minimalnym-byudzhetom,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/perito-moreno,perito-moreno,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pervye-tramites,pervye-tramites,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pervyj-mesyac-v-argentine,pervyj-mesyac-v-argentine,kb_author_tip,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/pinamar,pinamar,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pokupka-avtomobilya,pokupka-avtomobilya,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/pokupka-nedvizhimosti,pokupka-nedvizhimosti,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/poleznye-prilozheniya,poleznye-prilozheniya,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/posle-dtp,posle-dtp,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/prazdniki-i-traditsii,prazdniki-i-traditsii,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/provoz-lekarstv,provoz-lekarstv,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/puerto-madryn,puerto-madryn,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/punta-tombo,punta-tombo,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/purmamarka,purmamarka,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/quebrada-de-humahuaca,quebrada-de-humahuaca,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/rabota-i-poisk-raboty,rabota-i-poisk-raboty,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/resistencia,resistencia,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/rody-i-beremennost,rody-i-beremennost,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/rody-v-argentine,rody-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/rosario,rosario,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/rossiya-vs-argentina,rossiya-vs-argentina,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ruinas-de-quilmes,ruinas-de-quilmes,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ruta-40-sem-ozer,ruta-40-sem-ozer,kb_route,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/s-detmi-po-argentine,s-detmi-po-argentine,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/salinas-grandes,salinas-grandes,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/salta,salta,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/saltos-del-mocona,saltos-del-mocona,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-huan,san-huan,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-ignacio-mini,san-ignacio-mini,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-luis,san-luis,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-martin-de-los-andes,san-martin-de-los-andes,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-miguel-de-tucuman,san-miguel-de-tucuman,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/san-salvador-de-jujuy,san-salvador-de-jujuy,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/santa-fe,santa-fe,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/santa-rosa,santa-rosa,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/santiago-del-estero,santiago-del-estero,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/shkola-dlya-detey,shkola-dlya-detey,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/sierra-de-la-ventana,sierra-de-la-ventana,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/sistema-zdravoohraneniya,sistema-zdravoohraneniya,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/skam-s-falshivoj-policiej,skam-s-falshivoj-policiej,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/skolko-deneg-brat-na-poezdku,skolko-deneg-brat-na-poezdku,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/skolko-letet-iz-rossii,skolko-letet-iz-rossii,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/skolko-nalichnyh-mozhno-vvezti,skolko-nalichnyh-mozhno-vvezti,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/skolko-stoit-oformit-vnzh,skolko-stoit-oformit-vnzh,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/skolko-stoit-zhizn-v-buenos-ajrese,skolko-stoit-zhizn-v-buenos-ajrese,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/sladkoe-dulce-de-leche,sladkoe-dulce-de-leche,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/status-expediente-migraciones,status-expediente-migraciones,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/stoimost-zhizni-ba,stoimost-zhizni-ba,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/stoimost-zhizni-semya-i-para,stoimost-zhizni-semya-i-para,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/stoit-li-ehat-na-poezde-v-oblaka,stoit-li-ehat-na-poezde-v-oblaka,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/stoit-li-ehat-v-argentinu,stoit-li-ehat-v-argentinu,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/studencheskaya-zhizn,studencheskaya-zhizn,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/susques,susques,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/tafi-del-valle,tafi-del-valle,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/talampaya,talampaya,kb_national_park,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/tandil,tandil,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/teatr-kolon,teatr-kolon,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/termas-de-rio-hondo,termas-de-rio-hondo,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/tierra-del-fuego,tierra-del-fuego,kb_region,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/tigre-i-delta,tigre-i-delta,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/tilkara,tilkara,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/turismo-aventura-en-chaco,turismo-aventura-en-chaco,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/udalyonnaya-rabota-i-oplata,udalyonnaya-rabota-i-oplata,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/ushuaia,ushuaia,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/villa-gesell,villa-gesell,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/villa-la-angostura,villa-la-angostura,kb_city,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/villavicencio,villavicencio,kb_attraction,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/viza-cifrovogo-kochevnika-chto-daet,viza-cifrovogo-kochevnika-chto-daet,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/viza-i-granica-dlya-rossiyan,viza-i-granica-dlya-rossiyan,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/viza-rf-v-argentinu,viza-rf-v-argentinu,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/viza-v-braziliyu-dlya-iguasu,viza-v-braziliyu-dlya-iguasu,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/vnutrennie-aviabilety,vnutrennie-aviabilety,kb_transport,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/vnzh-argentina,vnzh-argentina,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/vo-skolko-uzhinayut-v-argentine,vo-skolko-uzhinayut-v-argentine,kb_faq,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,published
+kb,/baza-znaniy/voinskij-uchet-i-voennyj-bilet,voinskij-uchet-i-voennyj-bilet,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/vysokogorye-na-avto,vysokogorye-na-avto,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/zashchita-nakoplenij-ot-inflyacii,zashchita-nakoplenij-ot-inflyacii,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/zhile-dlya-turistov,zhile-dlya-turistov,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/zhile-i-arenda,zhile-i-arenda,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+kb,/baza-znaniy/zhizn-na-pensii,zhizn-na-pensii,kb_guide,kb,no,content/knowledge-base/** (Layer A),yes,KEEP,site_ready
+immigration,/immigration,,immigration_hub,file,no,Product content owner,no,KEEP,Tier-1 hub; publication-registry prefix noindex
+immigration,/immigration/zhizn-v-strane,zhizn-v-strane,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/protsess-immigratsii,protsess-immigratsii,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/rody-v-argentine,rody-v-argentine,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/grazhdanstvo,grazhdanstvo,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/vnzh-i-pmzh,vnzh-i-pmzh,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/vozmozhnosti,vozmozhnosti,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/poleznye-ssylki,poleznye-ssylki,immigration_topic,file,no,src/data/immigration-* (content pages),no,KEEP,from IMMIGRATION_TOPIC_ORDER
+immigration,/immigration/vizy-dlya-turistov,vizy-dlya-turistov,immigration_page,file,no,src/data/immigration-content.ts,no,KEEP,from IMMIGRATION_PAGES
+immigration,/immigration/obzor-vnzh,obzor-vnzh,immigration_page,file,no,src/data/immigration-content.ts,no,KEEP,from IMMIGRATION_PAGES
+immigration,/immigration/dokumenty-dlya-vyezda,dokumenty-dlya-vyezda,immigration_page,file,no,src/data/immigration-content.ts,no,KEEP,from IMMIGRATION_PAGES
+immigration,/immigration/prodlenie-turisticheskogo-vizita,prodlenie-turisticheskogo-vizita,immigration_page,file,no,src/data/immigration-content.ts,no,KEEP,from IMMIGRATION_PAGES
+guides,/guide,,guide_hub,hybrid,no,Guide editor (CMS guide resolver + src/data),yes,KEEP,Tier-1 hub
+guides,/guide/ob-argentine,ob-argentine,guide_pillar,file,no,src/data/guide-about-argentina.ts,yes,KEEP,GUIDE_ABOUT_ARGENTINA_PATH
+guides,/guide/kak-dobratsya,kak-dobratsya,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/gde-zhit,gde-zhit,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/transport,transport,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/turistskie-regiony,turistskie-regiony,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/dostoprimechatelnosti,dostoprimechatelnosti,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/pogoda-i-sezonnost,pogoda-i-sezonnost,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/yazyk,yazyk,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/kultura,kultura,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/istoriya,istoriya,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/kukhnya,kukhnya,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/svyaz,svyaz,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/ekonomika-i-dengi,ekonomika-i-dengi,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/shopping,shopping,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/bezopasnost,bezopasnost,guide_topic,hybrid,no,Guide editor / CMS guide resolver,yes,KEEP,from GUIDE_TOPICS
+guides,/guide/sezony-i-klimat,sezony-i-klimat,guide_page,file,no,src/data/guide-content.ts,yes,KEEP,from GUIDE_PAGES
+guides,/guide/gastronomiya-i-asado,gastronomiya-i-asado,guide_page,file,no,src/data/guide-content.ts,yes,KEEP,from GUIDE_PAGES
+guides,/guide/tango-i-kultura-ba,tango-i-kultura-ba,guide_page,file,no,src/data/guide-content.ts,yes,KEEP,from GUIDE_PAGES
+guides,/guide/patagoniya-s-chego-nachat,patagoniya-s-chego-nachat,guide_page,file,no,src/data/guide-content.ts,yes,KEEP,from GUIDE_PAGES
+guides,/guide/bronirovanie-i-oplata,bronirovanie-i-oplata,guide_page,file,no,src/data/guide-content.ts,yes,KEEP,from GUIDE_PAGES
+blog,/blog,,blog_hub,hybrid,no,Blog editor (file catalog ∪ CMS merge),yes,KEEP,Tier-1 hub; see CONTENT_OWNERSHIP_CONTRACT blog precedence
+blog,/blog/hub/national-parks,national-parks,blog_hub_page,file,no,src/data/blog-hubs.ts (blogHubPath),yes,KEEP,from BLOG_HUBS
+blog,/blog/hub/putevoditel,putevoditel,blog_hub_page,file,no,src/data/blog-hubs.ts (blogHubPath),yes,KEEP,from BLOG_HUBS
+blog,/blog/hub/patagonia,patagonia,blog_hub_page,file,no,src/data/blog-hubs.ts (blogHubPath),yes,KEEP,from BLOG_HUBS
+blog,/blog/hub/sever-i-salta,sever-i-salta,blog_hub_page,file,no,src/data/blog-hubs.ts (blogHubPath),yes,KEEP,from BLOG_HUBS
+blog,/blog/patagonia-советы-новичкам,patagonia-советы-новичкам,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-за-7-дней,patagonia-за-7-дней,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-ветер,patagonia-ветер,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-самостоятельно,patagonia-самостоятельно,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-зимой,patagonia-зимой,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-за-14-дней,patagonia-за-14-дней,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-советы-новичкам,buenos-aires-советы-новичкам,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-за-3-дня,buenos-aires-за-3-дня,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-с-гидом,buenos-aires-с-гидом,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-бюджет,buenos-aires-бюджет,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-за-5-дней,northwest-за-5-дней,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-сезон-дождей,northwest-сезон-дождей,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-бюджет,northwest-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-самостоятельно,northwest-самостоятельно,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-garganta-del-diablo,iguazu-garganta-del-diablo,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-за-3-дня,iguazu-за-3-дня,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-советы-новичкам,iguazu-советы-новичкам,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-circuito-chico,national-park-circuito-chico,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-laguna-de-los-tres,national-park-laguna-de-los-tres,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-за-7-дней,national-park-за-7-дней,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-laguna-de-los-tres,trekking-laguna-de-los-tres,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-mini-trekking,trekking-mini-trekking,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-чек-лист,trekking-чек-лист,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-с-гидом,trekking-с-гидом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wine-malbec,wine-malbec,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wine-bodega-tour,wine-bodega-tour,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wine-за-3-дня,wine-за-3-дня,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-whale-watching,wildlife-whale-watching,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-penguins,wildlife-penguins,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-condors,wildlife-condors,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-guanaco,wildlife-guanaco,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-asado,food-asado,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-empanadas,food-empanadas,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-mate,food-mate,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-malbec,food-malbec,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-авиабилеты,transport-авиабилеты,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-автобусы,transport-автобусы,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-аренда-авто,transport-аренда-авто,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-поезда,transport-поезда,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-наличные,money-наличные,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-карты,money-карты,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-страховка,money-страховка,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-чек-лист,safety-чек-лист,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-ошибки,safety-ошибки,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/internet-sim-карта,internet-sim-карта,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/internet-советы-новичкам,internet-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/ba-district-palermo,ba-district-palermo,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/ba-district-recoleta,ba-district-recoleta,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/ba-district-san-telmo,ba-district-san-telmo,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/ba-district-puerto-madero,ba-district-puerto-madero,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-open-jaw,itinerary-open-jaw,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-за-14-дней,itinerary-за-14-дней,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-бюджет,itinerary-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-за-10-дней,itinerary-за-10-дней,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-90-дней,relocation-90-дней,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-visa-free,relocation-visa-free,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-медстраховка,relocation-медстраховка,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-продление,relocation-продление,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-советы-новичкам,relocation-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-бюджет,relocation-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-наличные,relocation-наличные,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/relocation-карты,relocation-карты,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-советы-новичкам,safety-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-бюджет,safety-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-с-ребёнком,safety-с-ребёнком,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/safety-летом,safety-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-бюджет,money-бюджет,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-советы-новичкам,money-советы-новичкам,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/money-90-дней,money-90-дней,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/internet-бюджет,internet-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/internet-за-3-дня,internet-за-3-дня,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-летом,buenos-aires-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-осенью,buenos-aires-осенью,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-зимой,buenos-aires-зимой,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/buenos-aires-весной,buenos-aires-весной,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-летом,patagonia-летом,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-бюджет,patagonia-бюджет,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-фото,patagonia-фото,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-camping,patagonia-camping,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-осенью,patagonia-осенью,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/patagonia-весной,patagonia-весной,blog_post,hybrid,EDITORIAL_OVERRIDES,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-бюджет,iguazu-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-летом,iguazu-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-с-ребёнком,iguazu-с-ребёнком,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-фото,iguazu-фото,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/iguazu-сезон-дождей,iguazu-сезон-дождей,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-летом,northwest-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-весной,northwest-весной,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-фото,northwest-фото,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-с-ребёнком,northwest-с-ребёнком,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/northwest-за-7-дней,northwest-за-7-дней,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-летом,national-park-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-camping,national-park-camping,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-фото,national-park-фото,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/national-park-советы-новичкам,national-park-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/ba-district-microcentro,ba-district-microcentro,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-за-7-дней,itinerary-за-7-дней,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-за-5-дней,itinerary-за-5-дней,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-летом,itinerary-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-с-ребёнком,itinerary-с-ребёнком,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-стоповер,itinerary-стоповер,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/itinerary-с-чем-совмещать,itinerary-с-чем-совмещать,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-бюджет,food-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-советы-новичкам,food-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/food-с-ребёнком,food-с-ребёнком,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-бюджет,trekking-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/trekking-летом,trekking-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wine-бюджет,wine-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wine-летом,wine-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-летом,wildlife-летом,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/wildlife-фото,wildlife-фото,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-бюджет,transport-бюджет,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/transport-советы-новичкам,transport-советы-новичкам,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,BLOG_PUBLISHED_SLUGS
+blog,/blog/all-argentina-national-parks,all-argentina-national-parks,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/banado-la-estrella,banado-la-estrella,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/ibera-national-park,ibera-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/iguazu-national-park,iguazu-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/ischigualasto-valley-of-the-moon,ischigualasto-valley-of-the-moon,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/lanin-national-park,lanin-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/los-alerces-national-park,los-alerces-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/los-cardones-national-park,los-cardones-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/los-glaciares-national-park,los-glaciares-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/nahuel-huapi-national-park,nahuel-huapi-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/patagonia-national-park,patagonia-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/talampaya-national-park,talampaya-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/tierra-del-fuego-national-park,tierra-del-fuego-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/valdes-peninsula-national-park,valdes-peninsula-national-park,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/argentina-10-dnej-3-nedeli,argentina-10-dnej-3-nedeli,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/argentina-2-nedeli-marshrut,argentina-2-nedeli-marshrut,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/bankovskij-schet-argentina,bankovskij-schet-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/buenos-aires-rajony,buenos-aires-rajony,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/byudzhet-poezdki-argentina,byudzhet-poezdki-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/dni-cuil-argentina,dni-cuil-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/grazhdanstvo-argentiny,grazhdanstvo-argentiny,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/kak-dobratsya-v-argentinu,kak-dobratsya-v-argentinu,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/kak-menyat-dengi-argentina,kak-menyat-dengi-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/mendoza-vinnyj-gid,mendoza-vinnyj-gid,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/ruta-40-sem-ozer,ruta-40-sem-ozer,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/stoimost-zhizni-buenos-aires,stoimost-zhizni-buenos-aires,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/viza-cifrovogo-kochevnika-argentina,viza-cifrovogo-kochevnika-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/vnutrennie-aviabilety-argentina,vnutrennie-aviabilety-argentina,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/vnzh-argentina-rezidenciya,vnzh-argentina-rezidenciya,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/patagonia-авиабилеты,patagonia-авиабилеты,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/patagonia-penguins,patagonia-penguins,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/patagonia-whale-watching,patagonia-whale-watching,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/blue-dollar-argentina-2026,blue-dollar-argentina-2026,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/argentina-tourist-visa-2026,argentina-tourist-visa-2026,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/salta-i-severo-zapad-marshrut,salta-i-severo-zapad-marshrut,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/uco-valley-vino-i-gory,uco-valley-vino-i-gory,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/el-chalten-i-fitts-roy,el-chalten-i-fitts-roy,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/patagoniya-marshrut-14-dney,patagoniya-marshrut-14-dney,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/itinerary-ошибки,itinerary-ошибки,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/itinerary-чек-лист,itinerary-чек-лист,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-tierra-del-fuego,natsionalnyy-park-tierra-del-fuego,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-nauel-uapi,natsionalnyy-park-nauel-uapi,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-los-glasiares,natsionalnyy-park-los-glasiares,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-iguasu,natsionalnyy-park-iguasu,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-poluostrov-valdes,natsionalnyy-park-poluostrov-valdes,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnye-parki-argentiny,natsionalnye-parki-argentiny,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-ibera,natsionalnyy-park-ibera,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-lanin,natsionalnyy-park-lanin,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-los-alerses,natsionalnyy-park-los-alerses,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-los-cardones,natsionalnyy-park-los-cardones,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-patagonia,natsionalnyy-park-patagonia,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/natsionalnyy-park-talampaya,natsionalnyy-park-talampaya,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/wildlife-с-гидом,wildlife-с-гидом,blog_post,hybrid,legacyManual*,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+blog,/blog/ischigualasto-valle-de-la-luna,ischigualasto-valle-de-la-luna,blog_post,hybrid,no,Blog file representation → CMS override when cutover/complete,yes,KEEP,file module / legacyManual
+faq,/faq,,faq_hub,file,no,Product content owner (src/data/faq.ts),yes,KEEP,Tier-1 hub; 17 FAQ_ITEMS on one page (no separate routes)
+landings,/tours/region/patagonia,region/patagonia,commercial_landing,file,no,Marketplace / SEO (STABLE_TOUR_LANDING_PATHS),yes,KEEP,stable tour landing; not CMS /landing/*
+landings,/tours/region/iguazu,region/iguazu,commercial_landing,file,no,Marketplace / SEO (STABLE_TOUR_LANDING_PATHS),yes,KEEP,stable tour landing; not CMS /landing/*
+landings,/landing/[slug],[slug],cms_landing_shell,cms,no,"CMS landing documents (cmsOnly, no TS catalog)",unknown,KEEP,CMS-only family — slug list requires live Supabase; not invented offline
