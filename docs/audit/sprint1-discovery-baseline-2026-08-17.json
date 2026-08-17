@@ -1,0 +1,95 @@
+{
+  "at": "2026-08-17T03:42:33.119255Z",
+  "main": "8d7eec67ad8e9c3eb285fed2fdc39a501838b692",
+  "candidate": "4a51bc94",
+  "production_live_sha": "993e82fb7a6d59b47260387856acce68bb52b651",
+  "production_health": "503 dependency_unavailable",
+  "deployment_disabled_current": false,
+  "supabase_project_ref": "uooxrypocahomoqzdvzy",
+  "branches": [
+    {
+      "branch_pr": "codex/integrate-all-open-branches (#23)",
+      "unique": "full release candidate ~105 commits",
+      "in_candidate": "IS candidate",
+      "action": "stabilize + merge"
+    },
+    {
+      "branch_pr": "cursor/sprint1-production-recovery-5475 (#24)",
+      "unique": "LH Chrome lifecycle + season-matrix DOM fix",
+      "in_candidate": "pushed to #23 tip",
+      "action": "canonical Sprint1 PR"
+    },
+    {
+      "branch_pr": "feat/blog-patagonia-packing-list (#22)",
+      "unique": "cherry-picked into #23 (files present)",
+      "in_candidate": "yes",
+      "action": "close superseded after merge"
+    },
+    {
+      "branch_pr": "cursor/editorial-design-system-0a63 (#21)",
+      "unique": "page builder files present in #23",
+      "in_candidate": "yes",
+      "action": "close superseded after merge"
+    },
+    {
+      "branch_pr": "feat/blog-argentinian-steak-guide (#20)",
+      "unique": "cherry-picked into #23",
+      "in_candidate": "yes",
+      "action": "close superseded after merge"
+    },
+    {
+      "branch_pr": "fix/blog-gfm-table-rendering (#19)",
+      "unique": "cherry-picked into #23",
+      "in_candidate": "yes",
+      "action": "close superseded after merge"
+    },
+    {
+      "branch_pr": "docs/editorial-article-rewrite-workflow (#16)",
+      "unique": "patch included",
+      "in_candidate": "yes",
+      "action": "close superseded after merge"
+    },
+    {
+      "branch_pr": "codex/master-goal-release-candidate",
+      "unique": "0 unique vs candidate",
+      "in_candidate": "yes",
+      "action": "delete after merge"
+    },
+    {
+      "branch_pr": "codex/master-goal-wave1-catalog-fail-closed",
+      "unique": "wave1 content in #23",
+      "in_candidate": "yes",
+      "action": "delete after merge"
+    },
+    {
+      "branch_pr": "docs/article-system-audit",
+      "unique": "0 unique",
+      "in_candidate": "yes",
+      "action": "delete after merge"
+    }
+  ],
+  "updatedAt": "2026-08-17T04:15:54.785738+00:00",
+  "vercel": {
+    "go_argentina_project": "prj_Xjbr4awgjc56swIgwUEmybVd69PP",
+    "go_argentina_team": "team_yWNX34oFl2Yk6lrllqiulis0",
+    "go_argentina_host": "argentina-travel-go-argentina.vercel.app",
+    "go_argentina_status": "serves live www (SHA 993e82fb); NEW deploys blocked: Account is blocked",
+    "legacy_host": "argentina-travel.vercel.app",
+    "legacy_status": "HTTP 402 DEPLOYMENT_DISABLED",
+    "www_alias_matches_go_argentina_sha": true
+  },
+  "supabase": {
+    "project_ref": "uooxrypocahomoqzdvzy",
+    "rest_edge": "alive (401 on invalid key)",
+    "production_health": "503 dependency_unavailable",
+    "candidate_latest_migration": "20260811040455_final_explicit_data_api_grants",
+    "production_reported_migration": "20260720230600_final_explicit_data_api_grants"
+  },
+  "local_lh_smoke": {
+    "article": "/blog/best-time-to-visit-argentina",
+    "perf": 62,
+    "lcpMs": 6825,
+    "pass": true,
+    "evidenceScope": "candidate"
+  }
+}
