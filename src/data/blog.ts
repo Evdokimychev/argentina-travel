@@ -1394,7 +1394,6 @@ const legacyManualReplacementSections: Record<
   string,
   Array<{ title: string; body: string }>
 > = {
-
   "wildlife-с-гидом": [
     {
       title: "Правила задаёт территория",
