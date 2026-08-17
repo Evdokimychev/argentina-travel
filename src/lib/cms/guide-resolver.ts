@@ -90,7 +90,7 @@ export async function resolveGuidePage(slug: string, locale = "ru"): Promise<Con
   const translationStatusPromise = supabase
     ? fetchCmsTranslationStatusForSlug(supabase, "guide", slug, {
         ruFallbackComplete: cutover.guide ? false : Boolean(fallback),
-      })
+      }).catch(() => buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback)))
     : Promise.resolve(buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback)));
 
   let resolvedSeo: CmsDocument["seo"] | undefined;
@@ -168,6 +168,11 @@ export async function resolveGuideTopic(
 ): Promise<GuideTopicPage | null> {
   const topic = getGuideTopicBySlug(slug);
   if (!topic) return null;
-  const cmsPage = await resolveGuidePage(slug, locale);
-  return mergeGuideTopicWithCmsPage(topic, cmsPage);
+  try {
+    const cmsPage = await resolveGuidePage(slug, locale);
+    return mergeGuideTopicWithCmsPage(topic, cmsPage);
+  } catch {
+    // File topic + pillar remain public when CMS/network is down.
+    return topic;
+  }
 }

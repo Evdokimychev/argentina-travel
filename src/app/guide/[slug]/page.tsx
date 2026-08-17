@@ -91,13 +91,13 @@ export default async function GuideSlugPage({ params }: PageProps) {
     if (!topic) notFound();
     if (slug === "kak-dobratsya") {
       if (topic.cmsPage && topic.pillarPage) {
-        const initialTours = loadGuidePillarInitialTours(topic.pillarPage);
+        const initialTours = await loadGuidePillarInitialTours(topic.pillarPage);
         return <GuidePillarView topic={topic} initialTours={initialTours} />;
       }
       return <KakDobratsyaHubView topic={topic} />;
     }
     if (topic.pillarPage) {
-      const initialTours = loadGuidePillarInitialTours(topic.pillarPage);
+      const initialTours = await loadGuidePillarInitialTours(topic.pillarPage);
       return <GuidePillarView topic={topic} initialTours={initialTours} />;
     }
     return <GuideTopicView topic={topic} />;
