@@ -1,0 +1,45 @@
+{
+  "sprint": "1",
+  "ciRun": "https://github.com/Evdokimychev/argentina-travel/actions/runs/32006854290",
+  "headSha": "0197d1434674509a6c42591960bba8441f174764",
+  "githubPullRequestMergeShaInEvidence": "768298aaaecd138f7a27b9765c6cca63d1979e1f",
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "pass": true,
+  "device": "Lighthouse mobile / simulated throttling / shared Chrome + storage-reset cold navigations",
+  "pathSummaries": [
+    [
+      "/",
+      true,
+      "3/3"
+    ],
+    [
+      "/tours",
+      true,
+      "3/3"
+    ],
+    [
+      "/blog",
+      true,
+      "3/3"
+    ],
+    [
+      "/contacts",
+      true,
+      "3/3"
+    ],
+    [
+      "/destinations/patagonia",
+      true,
+      "3/3"
+    ],
+    [
+      "/mapa-argentina",
+      true,
+      "3/3"
+    ]
+  ]
+}
