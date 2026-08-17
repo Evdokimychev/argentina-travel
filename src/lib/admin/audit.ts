@@ -61,6 +61,13 @@ export async function writeAdminAuditLog(input: AuditLogInput): Promise<void> {
   }
 }
 
+/** Test/ops helper — same redaction used before durable audit insert. */
+export function sanitizeAdminAuditPayloadForTest(
+  payload: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  return sanitizeAuditPayload(payload);
+}
+
 export type CriticalAuditResult =
   | { ok: true }
   | { ok: false; error: string };

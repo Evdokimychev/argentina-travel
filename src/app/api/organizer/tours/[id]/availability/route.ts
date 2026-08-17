@@ -3,6 +3,7 @@ import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { assertOrganizerTourOwnership } from "@/lib/organizer/tour-ownership";
 import { userHasAccountRole } from "@/types/user";
 import {
   fetchTourAvailabilityByTourId,
@@ -40,40 +41,16 @@ async function requireOrganizer() {
   };
 }
 
-async function assertTourOwnership(
-  admin: ReturnType<typeof createSupabaseAdminClient>,
-  tourId: string,
-  organizerId: string
-): Promise<{ ok: true } | { ok: false; response: NextResponse }> {
-  const { data: row, error } = await admin
-    .from("tours")
-    .select("id, owner_user_id")
-    .eq("id", tourId)
-    .maybeSingle();
-
-  if (error) {
-    return { ok: false, response: NextResponse.json({ error: error.message }, { status: 500 }) };
-  }
-  if (!row) {
-    return { ok: false, response: NextResponse.json({ error: "Тур не найден" }, { status: 404 }) };
-  }
-  if (row.owner_user_id !== organizerId) {
-    return { ok: false, response: NextResponse.json({ error: "Доступ запрещён" }, { status: 403 }) };
-  }
-
-  return { ok: true };
-}
-
 export async function GET(_request: Request, context: RouteContext) {
   const auth = await requireOrganizer();
   if (!auth.ok) return auth.response;
 
   const { id } = await context.params;
-  const ownership = await assertTourOwnership(auth.admin, id, auth.sessionUser.id);
+  const ownership = await assertOrganizerTourOwnership(auth.admin, id, auth.sessionUser.id);
   if (!ownership.ok) return ownership.response;
 
   const slots = await fetchTourAvailabilityByTourId(auth.admin, id);
-  return NextResponse.json({ slots });
+  return NextResponse.json({ slots }, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function PUT(request: Request, context: RouteContext) {
@@ -81,7 +58,7 @@ export async function PUT(request: Request, context: RouteContext) {
   if (!auth.ok) return auth.response;
 
   const { id } = await context.params;
-  const ownership = await assertTourOwnership(auth.admin, id, auth.sessionUser.id);
+  const ownership = await assertOrganizerTourOwnership(auth.admin, id, auth.sessionUser.id);
   if (!ownership.ok) return ownership.response;
 
   const body = (await request.json()) as UpsertBody;
@@ -99,5 +76,8 @@ export async function PUT(request: Request, context: RouteContext) {
   }
 
   const nextSlots = await fetchTourAvailabilityByTourId(auth.admin, id);
-  return NextResponse.json({ ok: true, slots: nextSlots });
+  return NextResponse.json(
+    { ok: true, slots: nextSlots },
+    { headers: { "Cache-Control": "private, no-store" } },
+  );
 }

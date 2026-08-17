@@ -1,3 +1,5 @@
+import { scrubMonitoringData } from "@/lib/security/monitoring-scrub";
+
 type SentryModule = typeof import("@sentry/nextjs");
 type SentryBreadcrumbLevel = "fatal" | "error" | "warning" | "log" | "info" | "debug";
 type SentryUserLike = {
@@ -100,7 +102,8 @@ export function captureException(error: unknown, context?: CaptureContext): void
       for (const [key, value] of Object.entries(context.tags ?? {})) {
         scope.setTag(key, value);
       }
-      for (const [key, value] of Object.entries(context.extra ?? {})) {
+      const scrubbedExtra = scrubMonitoringData(context.extra);
+      for (const [key, value] of Object.entries(scrubbedExtra ?? {})) {
         scope.setExtra(key, value);
       }
       Sentry.captureException(error);
@@ -122,6 +125,7 @@ export function setSentryUserContext(user: SentryUserLike | null): void {
     const role = user.role?.trim();
     const roles = user.roles?.filter(Boolean) ?? [];
 
+    // Intentionally omit email and other PII even if callers pass them.
     Sentry.setUser({
       id: id || undefined,
     });
@@ -148,7 +152,7 @@ export function addBreadcrumb(input: {
       category: input.category,
       message: input.message,
       level: input.level ?? "info",
-      data: input.data,
+      data: scrubMonitoringData(input.data),
     });
   });
 }

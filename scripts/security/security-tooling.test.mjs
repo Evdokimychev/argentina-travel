@@ -82,3 +82,16 @@ test("security CLI scripts execute without throwing (exit codes allowed)", () =>
     assert.equal(payload.status, "EXTERNAL_BLOCKER");
   }
 });
+
+test("failure-injection rehearsal lists modes without secrets", () => {
+  const stdout = execFileSync(
+    process.execPath,
+    [path.join(ROOT, "scripts/security/failure-injection-rehearsal.mjs"), "--list"],
+    { cwd: ROOT, encoding: "utf8" },
+  );
+  const payload = JSON.parse(stdout);
+  assert.equal(payload.status, "ok");
+  assert.ok(payload.modes.includes("upstash-down"));
+  assert.ok(payload.modes.includes("webhook-replay"));
+  assert.equal(String(stdout).includes("sk_"), false);
+});

@@ -54,9 +54,14 @@ function detectSignals(source) {
     checkSecurityRateLimit: /checkSecurityRateLimit\s*\(/.test(source),
     securityCriticalPolicy: /policy\s*:\s*["']security_critical["']/.test(source),
     cronSecret: /CRON_SECRET|x-cron-secret|authorizeCron/i.test(source),
-    csrfNotes: /SameSite|csrf|origin\s*check|sec-fetch-site/i.test(source)
+    csrfNotes: /SameSite|csrf|origin\s*check|sec-fetch-site|evaluateBrowserMutationOrigin/i.test(
+      source,
+    )
       ? "explicit_csrf_or_origin_markers"
       : "cookie_session_same_site_assumed_for_browser_mutations",
+    bodyLimit:
+      /content-length|rejectOversizedJsonBody|readLimitedJson|MAX_.*BYTES/i.test(source),
+    privateNoStore: /Cache-Control["'`:\s]*private,\s*no-store/i.test(source),
     writeCriticalAdminAuditLog: /writeCriticalAdminAuditLog\s*\(/.test(source),
     writeAdminAuditLog: /writeAdminAuditLog\s*\(/.test(source),
   };

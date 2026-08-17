@@ -54,4 +54,41 @@ describe("authorizeAdminRequest service-role boundary", () => {
       expect(result.actorId).toBe("admin-automation");
     }
   });
+
+  it("rejects cookie-session mutations from a cross-site Origin", async () => {
+    process.env.ADMIN_AUTOMATION_SECRET = "automation-secret-value";
+    vi.doMock("@/lib/supabase/env", () => ({ isSupabaseConfigured: () => true }));
+    vi.doMock("@/lib/supabase/server", () => ({
+      createSupabaseServerClient: async () => ({}),
+    }));
+    vi.doMock("@/lib/supabase-auth-provider", () => ({
+      loadSessionUserFromSupabase: async () => ({
+        id: "admin-1",
+        email: "admin@example.com",
+        role: "admin",
+        roles: ["admin"],
+      }),
+    }));
+    vi.doMock("@/lib/admin/staff", () => ({
+      resolveAdminCapabilitiesFromSession: async () => ({
+        userId: "admin-1",
+        capabilities: ["*"],
+      }),
+    }));
+    vi.doMock("@/lib/monitoring/sentry", () => ({ setSentryUserContext: () => undefined }));
+
+    const { authorizeAdminRequest } = await import("@/lib/admin/authorize-request");
+    const result = await authorizeAdminRequest(
+      new Request("https://www.goargentina.ru/api/admin/payments/refund", {
+        method: "POST",
+        headers: { origin: "https://evil.example" },
+      }),
+      "finance.refunds.prepare",
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.response.status).toBe(403);
+      await expect(result.response.json()).resolves.toMatchObject({ code: "ORIGIN_REJECTED" });
+    }
+  });
 });

@@ -68,6 +68,7 @@ export function buildApiSecurityMatrix(root = ROOT) {
   const inventory = buildAttackSurfaceInventory(root);
   const rows = inventory.routes.map((route) => {
     const risk = riskTier(route);
+    const mutating = route.methods.some((m) => ["POST", "PUT", "PATCH", "DELETE"].includes(m));
     return {
       route: route.route,
       sourceFile: route.sourceFile,
@@ -77,8 +78,20 @@ export function buildApiSecurityMatrix(root = ROOT) {
       authPattern: authPattern(route),
       rateLimit: rateLimitPattern(route),
       csrfNotes: route.signals.csrfNotes,
+      bodyLimitDetected: route.signals.bodyLimit,
+      privateNoStoreDetected: route.signals.privateNoStore,
       criticalAudit: route.signals.writeCriticalAdminAuditLog,
       bestEffortAudit: route.signals.writeAdminAuditLog,
+      payloadNotes: route.signals.bodyLimit
+        ? "content_length_or_limited_json_guard"
+        : mutating
+          ? "no_explicit_body_limit_detected"
+          : "n_a_read_only",
+      cachePrivacyNotes: route.signals.privateNoStore
+        ? "private_no_store_header"
+        : route.route.startsWith("/api/admin/") || route.route.startsWith("/api/organizer/")
+          ? "review_authenticated_cache_headers"
+          : "public_or_mixed",
     };
   });
 

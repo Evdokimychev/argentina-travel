@@ -451,9 +451,19 @@ Master Goal V6 принят как главный норматив проект�
 - Migration parity dry-run и RLS live harness: явный `EXTERNAL_BLOCKER` без credentials (не fake PASS).
 - Partner-image proxy: allowlist + manual redirect revalidation (SSRF hardening).
 - Backup restore preflight: документированы `BACKUP_MANIFEST_PATH` и disposable target env.
+- Webhook replay/idempotency: усилены unit/route tests (Stripe/Mercado concurrent + YouTravel secret); business payment logic не менялась.
+- Booking concurrency: negative tests на `BOOKING_SLOT_CAPACITY` / idempotency double-submit / serialized created flag.
+- CSRF/origin: `evaluateBrowserMutationOrigin` на cookie-session admin mutations + SameSite=Lax documented.
+- Payload limits: shared `rejectOversizedJsonBody` на admin refund + booking create; matrix `payloadNotes`.
+- PII/Sentry scrub: breadcrumb/extra scrub + audit sanitize tests; email не уходит в Sentry user.
+- Cache privacy: `private, no-store` на admin refund + organizer availability; matrix `cachePrivacyNotes`.
+- CI `permissions: contents: read` (least privilege).
+- Failure injection rehearsal: `npm run security:failure-injection`.
+- Organizer IDOR: shared `assertOrganizerTourOwnership` + negative capability tests.
 
 ### LIVE EVIDENCE BLOCKED
 
 - Canonical production DB / migration journal / live RLS / restore rehearsal против disposable target.
 - Vercel immutable preview / production same-artifact promotion.
+- Live provider webhook delivery / Upstash production fail-closed drill.
 - Не заявлять PASS по live security/recovery до снятия EXTERNAL_BLOCKER.

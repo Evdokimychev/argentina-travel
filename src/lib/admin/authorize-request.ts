@@ -3,6 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 import { hasAdminCapability } from "@/lib/admin/capabilities";
 import { resolveAdminCapabilitiesFromSession } from "@/lib/admin/staff";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
+import { evaluateBrowserMutationOrigin } from "@/lib/security/browser-mutation-origin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -96,9 +97,19 @@ export async function authorizeAdminRequest(
     if (sessionUser) {
       const staff = await resolveAdminCapabilitiesFromSession(sessionUser, supabase);
       if (staff) {
+        const mutationOrigin = evaluateBrowserMutationOrigin(request);
+        if (!mutationOrigin.ok) {
+          return {
+            ok: false,
+            response: NextResponse.json(
+              { error: "Недопустимый источник запроса", code: "ORIGIN_REJECTED" },
+              { status: 403 },
+            ),
+          };
+        }
+        // Never pass email into Sentry — id/role only (sendDefaultPii: false).
         setSentryUserContext({
           id: sessionUser.id,
-          email: sessionUser.email,
           role: sessionUser.role,
           roles: sessionUser.roles,
         });

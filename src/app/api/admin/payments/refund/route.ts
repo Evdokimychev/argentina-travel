@@ -6,6 +6,10 @@ import { fetchBookingById } from "@/lib/bookings-server";
 import {
   createRefundRequest,
 } from "@/lib/payments/transaction-server";
+import {
+  HIGH_RISK_JSON_BODY_MAX_BYTES,
+  rejectOversizedJsonBody,
+} from "@/lib/security/request-body-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isUuid } from "@/lib/admin/user-identity-management";
 
@@ -20,36 +24,56 @@ type PostBody = {
   sourceTransactionId?: string;
 };
 
+const PRIVATE_NO_STORE = { "Cache-Control": "private, no-store" };
+
 export async function POST(request: Request) {
+  const oversized = rejectOversizedJsonBody(request, HIGH_RISK_JSON_BODY_MAX_BYTES);
+  if (oversized) return oversized;
+
   const auth = await authorizeAdminRequest(request, "finance.refunds.prepare");
   if (!auth.ok) return auth.response;
   if (auth.via !== "session" || !isUuid(auth.actorId)) {
-    return NextResponse.json({ error: "Финансовые операции требуют личную сессию" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Финансовые операции требуют личную сессию" },
+      { status: 403, headers: PRIVATE_NO_STORE },
+    );
   }
 
   const body = (await request.json().catch(() => ({}))) as PostBody;
   const bookingId = body.bookingId?.trim();
   if (!bookingId) {
-    return NextResponse.json({ error: "Укажите идентификатор бронирования" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Укажите идентификатор бронирования" },
+      { status: 400, headers: PRIVATE_NO_STORE },
+    );
   }
   if (!isUuid(body.operationId)) {
-    return NextResponse.json({ error: "Некорректный идентификатор операции" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Некорректный идентификатор операции" },
+      { status: 400, headers: PRIVATE_NO_STORE },
+    );
   }
   if (body.sourceTransactionId && !isUuid(body.sourceTransactionId)) {
-    return NextResponse.json({ error: "Некорректное исходное списание" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Некорректное исходное списание" },
+      { status: 400, headers: PRIVATE_NO_STORE },
+    );
   }
 
   const supabase = createSupabaseAdminClient();
   const booking = await fetchBookingById(supabase, bookingId);
   if (!booking) {
-    return NextResponse.json({ error: "Бронирование не найдено" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Бронирование не найдено" },
+      { status: 404, headers: PRIVATE_NO_STORE },
+    );
   }
 
   const paymentStatus = resolveBookingPaymentStatus(booking);
   if (paymentStatus !== "paid" && paymentStatus !== "partial") {
     return NextResponse.json(
       { error: "Возврат можно запросить только для оплаченной заявки" },
-      { status: 400 }
+      { status: 400, headers: PRIVATE_NO_STORE },
     );
   }
 
@@ -72,7 +96,10 @@ export async function POST(request: Request) {
   });
 
   if ("error" in created) {
-    return NextResponse.json({ error: created.error }, { status: 400 });
+    return NextResponse.json(
+      { error: created.error },
+      { status: 400, headers: PRIVATE_NO_STORE },
+    );
   }
 
   const audit = await writeCriticalAdminAuditLog({
@@ -91,7 +118,7 @@ export async function POST(request: Request) {
   if (!audit.ok) {
     return NextResponse.json(
       { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
-      { status: 503 },
+      { status: 503, headers: PRIVATE_NO_STORE },
     );
   }
 
@@ -100,6 +127,6 @@ export async function POST(request: Request) {
       transaction: created.transaction,
       nextStep: "approval_required",
     },
-    { status: 201 }
+    { status: 201, headers: PRIVATE_NO_STORE },
   );
 }

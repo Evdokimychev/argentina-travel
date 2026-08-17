@@ -25,6 +25,7 @@
     "security:api-matrix": "node scripts/security/api-security-matrix.mjs",
     "security:migration-parity": "node scripts/security/migration-parity.mjs --dry-run",
     "security:rls-live": "node scripts/security/rls-live-evidence.mjs",
+    "security:failure-injection": "node scripts/security/failure-injection-rehearsal.mjs",
     "production-readiness": "node scripts/production-readiness.mjs",
     "runtime-text:audit": "node scripts/runtime-text-audit.mjs",
     "production-smoke": "node scripts/production-smoke.mjs",
