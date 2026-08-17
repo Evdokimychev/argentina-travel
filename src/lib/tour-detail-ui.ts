@@ -43,9 +43,9 @@ export const tourDetailGalleryMobileAspectClass = "aspect-[4/3] sm:aspect-[16/10
 export const tourDetailStickyPanelClass =
   "lg:sticky lg:z-30 lg:self-start lg:overflow-y-auto";
 
-/** Нижняя панель бронирования (мобильные) */
+/** Нижняя панель бронирования (мобильные): над cookie + public mobile nav. */
 export const tourDetailMobileBarClass =
-  "fixed [bottom:var(--cookie-consent-offset,0px)] left-0 right-0 z-40 max-h-[min(82dvh,42rem)] overflow-y-auto overscroll-contain border-t border-border-subtle bg-surface-elevated shadow-elevated pb-[env(safe-area-inset-bottom,0px)] transition-[bottom] duration-200 lg:hidden";
+  "fixed [bottom:calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))] left-0 right-0 z-40 max-h-[min(82dvh,42rem)] overflow-y-auto overscroll-contain border-t border-border-subtle bg-surface-elevated shadow-elevated pb-[env(safe-area-inset-bottom,0px)] transition-[bottom] duration-200 lg:hidden";
 
 /** Вертикальный ритм между секциями страницы */
 export const tourDetailSectionStackClass = "space-y-6 md:space-y-8";

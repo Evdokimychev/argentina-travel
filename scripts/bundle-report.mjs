@@ -65,6 +65,67 @@ const maplibreBytes = maplibreRows.reduce((sum, row) => sum + row.bytes, 0);
 const organizerRows = rows.filter((row) => /\/app\/organizer\//.test(row.file));
 const organizerBytes = organizerRows.reduce((sum, row) => sum + row.bytes, 0);
 
+/** Representative public routes for first-load JS accounting (Sprint 4). */
+const ROUTE_FIRST_LOAD_PROBE = [
+  "/",
+  "/tours",
+  "/blog",
+  "/destinations/patagonia",
+  "/baza-znaniy",
+  "/mapa-argentina",
+];
+
+function readJsonSafe(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function collectRouteFirstLoadJs() {
+  const buildManifest = readJsonSafe(path.join(root, ".next/app-build-manifest.json"));
+  const staticDir = path.join(root, ".next/static");
+  if (!buildManifest?.pages || !fs.existsSync(staticDir)) return [];
+
+  const pageMap = buildManifest.pages;
+  return ROUTE_FIRST_LOAD_PROBE.map((route) => {
+    const keys = Object.keys(pageMap).filter(
+      (key) => key === route || key === `${route}/page` || key.endsWith(`${route}/page`),
+    );
+    const files = new Set();
+    for (const key of keys) {
+      for (const file of pageMap[key] ?? []) {
+        if (typeof file === "string" && file.endsWith(".js")) files.add(file.replace(/^\//, ""));
+      }
+    }
+    // Shared root layout often listed under `/` — include for every route as shared baseline.
+    for (const file of pageMap["/"] ?? []) {
+      if (typeof file === "string" && file.endsWith(".js")) files.add(file.replace(/^\//, ""));
+    }
+
+    let bytes = 0;
+    const resolved = [];
+    for (const rel of files) {
+      const abs = path.join(root, ".next", rel);
+      const alt = path.join(staticDir, rel.replace(/^_next\/static\//, "").replace(/^static\//, ""));
+      const candidate = fs.existsSync(abs) ? abs : fs.existsSync(alt) ? alt : null;
+      if (!candidate) continue;
+      const size = fs.statSync(candidate).size;
+      bytes += size;
+      resolved.push({ file: path.relative(root, candidate), bytes: size });
+    }
+
+    return {
+      route,
+      bytes,
+      files: resolved.sort((a, b) => b.bytes - a.bytes).slice(0, 8),
+    };
+  });
+}
+
+const routeFirstLoad = collectRouteFirstLoadJs();
+
 const publicKb = publicBytes / 1024;
 const trimTargetKb = SPRINT10_BASELINE_TOTAL_KB * SPRINT10_TRIM_TARGET_RATIO;
 const trimDeltaPct = ((publicKb - SPRINT10_BASELINE_TOTAL_KB) / SPRINT10_BASELINE_TOTAL_KB) * 100;
@@ -91,6 +152,29 @@ const lines = [
   `- Target (−15 %): **${trimTargetKb.toFixed(1)} KB** public-surface total`,
   `- Current public-surface: **${publicKb.toFixed(1)} KB** (${trimDeltaPct >= 0 ? "+" : ""}${trimDeltaPct.toFixed(1)} % vs baseline)`,
   `- Trim target: ${trimPass ? "✅ pass" : "⚠️ manual follow-up — run ANALYZE=true npm run build"}`,
+  "",
+  "## Route first-load JS (evidence)",
+  "",
+  "Estimated from `.next/app-build-manifest.json` for representative public routes.",
+  "This is **not** a weakened Lighthouse gate — script transfer floors stay in phase2 CI.",
+  "",
+  "| Route | First-load JS | Top chunks |",
+  "|-------|---------------|------------|",
+  ...(routeFirstLoad.length
+    ? routeFirstLoad.map((entry) => {
+        const top = entry.files
+          .slice(0, 3)
+          .map((file) => `${formatKb(file.bytes)} \`${file.file}\``)
+          .join("; ");
+        return `| \`${entry.route}\` | **${formatKb(entry.bytes)}** | ${top || "—"} |`;
+      })
+    : ["| _(unavailable)_ | build manifest missing | — |"]),
+  "",
+  `- MapLibre present only in map-related chunks: ${
+    maplibreBytes === 0
+      ? "none detected in walk (lazy/isolated or not built)"
+      : formatKb(maplibreBytes)
+  }`,
   "",
   "## Top 20 client chunks",
   "",

@@ -148,6 +148,8 @@
   --token-z-cookie: 80;
   --token-z-floating-widget: 88;
   --token-z-scroll-rail: 85;
+  --token-z-cursor-ring: 86;
+  --token-z-cursor: 87;
   --token-z-lightbox: 100;
   --token-z-popover: 110;
   --token-z-dialog: 115;

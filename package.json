@@ -25,10 +25,12 @@
     "runtime-text:audit": "node scripts/runtime-text-audit.mjs",
     "production-smoke": "node scripts/production-smoke.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts tests/e2e/mobile-readiness.spec.ts",
+    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts tests/e2e/mobile-readiness.spec.ts tests/e2e/public-journeys.spec.ts",
     "test:e2e:visual": "playwright test tests/e2e/visual-smoke.spec.ts",
     "test:e2e:stage2-visual": "playwright test -c playwright.stage2-visual.config.ts",
     "test:e2e:ux-audit": "playwright test -c playwright.ux-audit.config.ts",
+    "test:e2e:a11y": "playwright test -c playwright.a11y.config.ts",
+    "test:e2e:a11y:prod": "SMOKE_BASE_URL=https://www.goargentina.ru playwright test -c playwright.a11y.config.ts",
     "staging:acceptance:preflight": "tsx scripts/staging-acceptance.ts --preflight",
     "test:e2e:staging-acceptance": "tsx scripts/staging-acceptance.ts",
     "seo-audit": "node scripts/seo-audit.mjs",
@@ -226,6 +228,7 @@
     "youtubei.js": "^17.2.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
     "@eslint/eslintrc": "^3.3.1",
     "@next/bundle-analyzer": "^16.2.9",
     "@playwright/test": "^1.61.0",

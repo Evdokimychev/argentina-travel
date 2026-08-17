@@ -91,7 +91,7 @@ export default function SiteDesignPreview({ values }: SiteDesignPreviewProps) {
   const footerVariant = readPreset(designValues, "footerVariant", ["light", "mist"], "light");
   const showUtilityBar = readBoolean(designValues, "showUtilityBar", false);
   const showHeaderMapButton = readBoolean(designValues, "showHeaderMapButton", true);
-  const showThemeToggle = readBoolean(designValues, "showThemeToggle", true);
+  const showThemeToggle = readBoolean(designValues, "showThemeToggle", false);
   const showFooterNewsletter = readBoolean(designValues, "showFooterNewsletter", true);
   const showFooterRouteCta = readBoolean(designValues, "showFooterRouteCta", true);
   const palette = PALETTES[palettePreset];

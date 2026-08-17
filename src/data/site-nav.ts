@@ -35,15 +35,6 @@ export const SITE_NAV_UTILITY_LINKS: SiteNavLink[] = [
   },
 ];
 
-const REGION_LINKS: SiteNavLink[] = [
-  { id: "region-patagonia", label: "Патагония", href: "/destinations/patagonia" },
-  { id: "region-ba", label: "Буэнос-Айрес", href: "/destinations/ba" },
-  { id: "region-misiones", label: "Игуасу и Misiones", href: "/destinations/iguazu" },
-  { id: "region-salta", label: "Сальта и северо-запад", href: "/destinations/salta" },
-  { id: "region-mendoza", label: "Мендоса и винодельни", href: "/destinations/mendoza" },
-  { id: "region-tierra", label: "Огненная Земля", href: "/destinations/ushuaia" },
-];
-
 /** Compact service links — footer strip in every mega-menu dropdown. */
 export const NAV_FOOTER_SERVICE_LINKS: SiteNavLink[] = [
   {
@@ -63,12 +54,6 @@ export const NAV_FOOTER_SERVICE_LINKS: SiteNavLink[] = [
     label: "Страховка",
     labelKey: "nav.insurance",
     href: "/insurance",
-  },
-  {
-    id: "footer-car-rental",
-    label: "Аренда авто",
-    labelKey: "nav.carRental",
-    href: "/car-rental",
   },
   {
     id: "footer-audio-guides",
@@ -303,7 +288,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             href: "/itineraries",
             description: "Готовые планы поездок",
           },
-          ...REGION_LINKS.slice(0, 4),
+          // Regions live in geo-regions (SITE_NAV_POPULAR_DESTINATIONS) — avoid duplicate hrefs here.
           ...SITE_NAV_PLANNING_SEARCH_LINKS,
         ],
       },

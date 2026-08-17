@@ -96,6 +96,7 @@ const groups = {
   ],
   journeys: [
     ["playwright-critical", "npm", ["run", "test:e2e:smoke"], true],
+    ["playwright-a11y-public", "npm", ["run", "test:e2e:a11y"], true],
   ],
   production: [
     ["production-build", "npm", ["run", "build"], true],
