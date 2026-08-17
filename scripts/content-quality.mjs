@@ -20,6 +20,7 @@ const outPath = path.join(root, "var/ops/content-quality-last.json");
 const checks = [
   { id: "ownership-contract-present", command: "node", args: ["-e", "require('fs').accessSync('docs/editorial/CONTENT_OWNERSHIP_CONTRACT.md')"], blocking: true },
   { id: "kb-manifest-stats", command: "node", args: ["scripts/kb-manifest-stats.mjs"], blocking: true },
+  { id: "kb-quarantine-report", command: "node", args: ["scripts/kb-quarantine-report.mjs"], blocking: true },
   { id: "sync-rich-articles", command: "npm", args: ["run", "sync-rich-articles:check"], blocking: true },
   { id: "sync-manual-posts", command: "npm", args: ["run", "sync-manual-posts:check"], blocking: true },
   { id: "blog-editorial-readiness", command: "npm", args: ["run", "blog:editorial-readiness:check"], blocking: true },

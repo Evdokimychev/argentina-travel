@@ -20,6 +20,7 @@ describe("Content OS ownership contract", () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
     expect(pkg.scripts["content:quality"]).toContain("content-quality.mjs");
     expect(pkg.scripts["kb:manifest-stats"]).toContain("kb-manifest-stats.mjs");
+    expect(pkg.scripts["kb:quarantine-report"]).toContain("kb-quarantine-report.mjs");
     expect(pkg.scripts["content:source-matrix"]).toContain("content-source-matrix.mjs");
   });
 

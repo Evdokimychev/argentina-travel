@@ -39219,8 +39219,8 @@
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": false,
-      "redirect_to": "mentalitet-i-etiket",
-      "archive_reason": "Краткая культурная карточка объединена с проверенным материалом о культурных нормах страны.",
+      "redirect_to": "gid-po-kulture",
+      "archive_reason": "Тема танго покрыта культурным гидом и блог-материалом /blog/tango-beginners-guide; отдельная карточка архивирована без потери канонического маршрута.",
       "editorial": {
         "sensitive": false,
         "policy_days": 180,
@@ -39293,8 +39293,8 @@
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": false,
-      "redirect_to": "mentalitet-i-etiket",
-      "archive_reason": "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива.",
+      "redirect_to": "gid-po-kulture",
+      "archive_reason": "Импортная карточка танго архивирована; канонический маршрут — культурный гид KB и блог /blog/tango-beginners-guide.",
       "editorial": {
         "sensitive": false,
         "policy_days": 90,
