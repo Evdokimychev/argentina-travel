@@ -57,7 +57,14 @@ test.describe("Sprint 4 public journeys", () => {
   test("E: blog hub → article → related destinations stay navigable", async ({ page }) => {
     await gotoReady(page, "/blog");
     await expect(page.locator("h1")).toBeVisible();
-    const article = page.locator('a[href^="/blog/"]').filter({ hasNot: page.locator('[href="/blog"]') }).first();
+    // Prefer catalog/card links — the mobile «С чего начать» strip is lg:hidden and is
+    // often the first matching href in DOM order on desktop Playwright viewports.
+    const article = page
+      .locator(
+        'article a[href^="/blog/"], a.blog-card[href^="/blog/"], main a[href^="/blog/"]:not(.blog-index-start-strip__link)',
+      )
+      .filter({ hasNot: page.locator('[href="/blog"]') })
+      .first();
     await expect(article).toBeVisible();
     await article.click();
     await expect(page).toHaveURL(/\/blog\/.+/);

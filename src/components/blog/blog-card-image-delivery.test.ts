@@ -42,6 +42,10 @@ describe("blog card image delivery", () => {
     );
     expect(blogCardListingImage(BLOG_EDITORIAL_AVATAR_LEGACY_SRC)).toBe(BLOG_EDITORIAL_AVATAR_SRC);
     expect(blogAuthorAvatarImage(BLOG_EDITORIAL_AVATAR_LEGACY_SRC)).toBe(BLOG_EDITORIAL_AVATAR_SRC);
+    expect(blogAuthorAvatarImage(BLOG_EDITORIAL_AVATAR_SRC)).toBe(BLOG_EDITORIAL_AVATAR_SRC);
+    expect(blogAuthorAvatarImage("/media/blog/editorial-avatar.webp")).toBe(
+      "/media/blog/editorial-avatar.webp",
+    );
   });
 
   it("keeps BlogCard/index/hub contracts on lazy catalog covers and listing derivatives", () => {

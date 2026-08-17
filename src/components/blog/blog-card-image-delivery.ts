@@ -22,8 +22,11 @@ export const BLOG_EDITORIAL_AVATAR_LEGACY_SRC = "/media/blog/grazhdanstvo-argent
 export function blogCardListingImage(src: string): string {
   const trimmed = src.trim();
   if (!trimmed) return trimmed;
-  if (trimmed === BLOG_EDITORIAL_AVATAR_LEGACY_SRC) return BLOG_EDITORIAL_AVATAR_SRC;
+  if (trimmed === BLOG_EDITORIAL_AVATAR_LEGACY_SRC || trimmed === BLOG_EDITORIAL_AVATAR_SRC) {
+    return BLOG_EDITORIAL_AVATAR_SRC;
+  }
   if (ALREADY_DERIVATIVE.test(trimmed)) return trimmed;
+  if (/avatar(?:-[a-z0-9]+)?\.(?:avif|webp|jpe?g)$/i.test(trimmed)) return trimmed;
   if (!/\.(?:jpe?g|png|webp)$/i.test(trimmed)) return trimmed;
   return trimmed.replace(/\.(?:jpe?g|png|webp)$/i, "-card.webp");
 }
@@ -33,6 +36,12 @@ export function blogAuthorAvatarImage(src: string | undefined | null): string | 
   if (!src) return undefined;
   const trimmed = src.trim();
   if (!trimmed) return undefined;
-  if (trimmed === BLOG_EDITORIAL_AVATAR_LEGACY_SRC) return BLOG_EDITORIAL_AVATAR_SRC;
+  if (trimmed === BLOG_EDITORIAL_AVATAR_LEGACY_SRC || trimmed === BLOG_EDITORIAL_AVATAR_SRC) {
+    return BLOG_EDITORIAL_AVATAR_SRC;
+  }
+  // Compact avatar files must not be rewritten to missing *-card.webp derivatives.
+  if (/avatar(?:-[a-z0-9]+)?\.(?:avif|webp|jpe?g)$/i.test(trimmed)) {
+    return trimmed;
+  }
   return blogCardListingImage(trimmed);
 }
