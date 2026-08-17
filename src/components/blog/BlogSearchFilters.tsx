@@ -259,7 +259,7 @@ function CategoryChip({
       className={cn(
         "inline-flex shrink-0 items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:text-xs sm:px-2.5 sm:py-1.5",
         active
-          ? "border-sky bg-sky text-white shadow-sm"
+          ? "border-sky-ink bg-sky-ink text-white shadow-sm"
           : "border-transparent bg-surface-muted/70 text-charcoal hover:bg-sky/8 hover:text-sky",
       )}
     >

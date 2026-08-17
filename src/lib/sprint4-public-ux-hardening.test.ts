@@ -58,6 +58,21 @@ describe("Sprint 4 mobile bottom-layer collision contract", () => {
     expect(staticFooter).not.toContain('href: "/car-rental"');
   });
 
+  it("maps text-sky to accessible sky-ink while keeping bg-sky brand blue", () => {
+    const globals = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
+    const tokens = readFileSync(join(process.cwd(), "src/styles/tokens.css"), "utf8");
+    expect(globals).toContain(".text-sky");
+    expect(globals).toContain("var(--token-color-sky-ink)");
+    expect(tokens).toContain("--token-color-sky: #74acdf");
+    expect(tokens).toContain("--token-color-sky-ink: #35699f");
+  });
+
+  it("uses sky-ink for selected section-nav chips", () => {
+    const sectionNav = readFileSync(join(process.cwd(), "src/lib/section-nav-ui.ts"), "utf8");
+    expect(sectionNav).toContain("bg-sky-ink text-white");
+    expect(sectionNav).not.toContain("bg-sky text-white");
+  });
+
   it("keeps dark theme toggle off by default while DARK_THEME_ENABLED is false", () => {
     const normalize = readFileSync(
       join(process.cwd(), "src/lib/cms/site-globals/normalize.ts"),

@@ -262,7 +262,7 @@ export default function ToursCatalog({
               {subtitle}
             </p>
           </div>
-          <div className="editorial-media-frame group relative hidden aspect-[4/3] overflow-hidden rounded-[1.5rem] border md:block">
+          <div className="editorial-media-frame group relative hidden aspect-[4/3] overflow-hidden rounded-panel border md:block">
             <Image
               src="/media/destinations/patagonia/cover.jpg"
               alt={heroImageAlt}

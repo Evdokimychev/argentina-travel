@@ -374,6 +374,15 @@ body {
 
 /* WCAG 2.1 AA — consistent keyboard focus ring (components may override with ring utilities) */
 @layer base {
+  /**
+   * Sprint 4 a11y — brand sky (#74acdf) fails WCAG AA as small text on light surfaces (~2.4:1).
+   * Keep `bg-sky` / borders on the flag blue; force readable `text-sky` onto sky-ink (≥5.7:1).
+   * Prefer `text-sky-ink` in new code; this bridge clears historical `text-sky` debt.
+   */
+  .text-sky {
+    color: var(--token-color-sky-ink);
+  }
+
   :where(
     a,
     button,

@@ -56,7 +56,7 @@ function MobileNavLinkRow({
         <span
           className={cn(
             "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-            active ? "bg-sky text-white" : "bg-sky/10 text-sky",
+            active ? "bg-sky-ink text-white" : "bg-sky/10 text-sky-ink",
           )}
           aria-hidden
         >
@@ -246,7 +246,7 @@ function MobileNavSectionRow({
       <span
         className={cn(
           "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors",
-          active ? "bg-sky text-white" : "bg-sky/10 text-sky group-hover:bg-sky/15",
+          active ? "bg-sky-ink text-white" : "bg-sky/10 text-sky-ink group-hover:bg-sky/15",
         )}
         aria-hidden
       >

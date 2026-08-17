@@ -53,7 +53,7 @@ function renderInlineMarkdownSegment(text: string, keyPrefix: string): ReactNode
 }
 
 const linkClassName =
-  "font-medium text-sky underline decoration-sky/30 underline-offset-2 hover:decoration-sky";
+  "font-medium text-sky-ink underline decoration-sky/30 underline-offset-2 hover:decoration-sky-ink";
 
 function BlogSegmentLink({ href, label }: { href: string; label: string }) {
   if (isExternalBlogHref(href)) {

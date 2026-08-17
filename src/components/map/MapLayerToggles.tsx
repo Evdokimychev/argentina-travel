@@ -39,7 +39,7 @@ export default function MapLayerToggles({
             className={cn(
               "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
               active
-                ? "bg-brand text-white shadow-sm"
+                ? "bg-brand-dark text-white shadow-sm"
                 : "border border-gray-200 bg-white text-charcoal hover:border-sky/40 hover:bg-sky/5"
             )}
           >

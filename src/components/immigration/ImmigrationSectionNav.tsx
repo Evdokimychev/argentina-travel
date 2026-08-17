@@ -61,7 +61,7 @@ export default function ImmigrationSectionNav() {
                             "border-sky/35 bg-gradient-to-br from-sky/12 via-sky/5 to-white text-charcoal hover:border-sky/45 hover:from-sky/18",
                           isHub &&
                             active &&
-                            "border-sky bg-sky text-white shadow-md ring-sky/30",
+                            "border-sky-ink bg-sky-ink text-white shadow-md ring-sky/30",
                           !isHub &&
                             active &&
                             "border-sky/30 bg-sky/10 text-sky",

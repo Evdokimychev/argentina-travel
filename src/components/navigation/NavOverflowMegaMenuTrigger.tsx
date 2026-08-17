@@ -105,7 +105,7 @@ function OverflowMegaMenuPanel({
                 className={cn(
                   "shrink-0 rounded-xl px-3 py-2.5 text-left transition-colors lg:w-full",
                   selected
-                    ? "bg-sky text-white shadow-sm"
+                    ? "bg-sky-ink text-white shadow-sm"
                     : sectionActive
                       ? "bg-sky/8 text-sky ring-1 ring-sky/20"
                       : "text-charcoal hover:bg-sky/5 hover:text-sky",
