@@ -9,13 +9,23 @@ describe("Sprint 4 mobile bottom-layer collision contract", () => {
       "utf8",
     );
     const tourUi = readFileSync(join(process.cwd(), "src/lib/tour-detail-ui.ts"), "utf8");
-
-    expect(excursionBar).toContain(
-      "calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))",
+    const podbor = readFileSync(
+      join(process.cwd(), "src/components/podbor/PodborQuestionScreen.tsx"),
+      "utf8",
     );
+    const toasts = readFileSync(
+      join(process.cwd(), "src/components/feedback/SiteToastHost.tsx"),
+      "utf8",
+    );
+
+    expect(excursionBar).toContain("tourDetailMobileBarClass");
     expect(tourUi).toContain(
       "calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))",
     );
+    expect(podbor).toContain(
+      "calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))",
+    );
+    expect(toasts).toContain("var(--public-mobile-nav-height,0px)");
   });
 
   it("stops custom cursor permanent rAF when idle", () => {

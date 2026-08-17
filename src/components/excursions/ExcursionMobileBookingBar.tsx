@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
+import { tourDetailMobileBarClass } from "@/lib/tour-detail-ui";
 
 type ExcursionMobileBookingBarProps = {
   prefersAffiliate: boolean;
@@ -55,7 +56,7 @@ export default function ExcursionMobileBookingBar({
   }
 
   return (
-    <div className="fixed [bottom:calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))] left-0 right-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom,0px)] shadow-lg backdrop-blur-sm transition-[bottom] duration-200 lg:hidden">
+    <div className={cn(tourDetailMobileBarClass, "max-h-none overflow-visible")}>
       <div className={cn(siteContainerClass, "flex items-center justify-between gap-3 py-2.5")}>
         <div className="min-w-0">
           {bookingPrice ? (

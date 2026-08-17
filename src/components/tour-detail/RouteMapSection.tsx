@@ -223,7 +223,7 @@ export default function RouteMapSection({
           <button
             type="button"
             onClick={isMapFullscreen ? closeMapFullscreen : openMapFullscreen}
-            className="absolute right-3 top-3 z-[500] inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200/90 bg-white/95 text-charcoal shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+            className="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-elevated/95 text-charcoal shadow-sm backdrop-blur-sm transition-colors hover:bg-surface-elevated"
             aria-label={isMapFullscreen ? "Свернуть карту" : "Развернуть карту на весь экран"}
           >
             {isMapFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}

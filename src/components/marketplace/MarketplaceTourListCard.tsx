@@ -20,7 +20,7 @@ import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatNights, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
-import { tourCardShellClass } from "@/lib/tour-card-shell";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
@@ -101,7 +101,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const partnerBadge = resolvePartnerTourBadge(tour);
 
   return (
-    <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
+    <article className={cn("group", tourCardShellClass, tourCardShellInteractiveClass)}>
       <div className="flex flex-col lg:flex-row">
         {/* Image */}
         <Link

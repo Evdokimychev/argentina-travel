@@ -172,14 +172,14 @@ export default function CustomCursor() {
         ref={dotRef}
         aria-hidden
         className={cn(
-          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor,9990)] h-1 w-1 rounded-full bg-sky opacity-0 will-change-transform",
+          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor,87)] h-1 w-1 rounded-full bg-sky opacity-0 will-change-transform",
         )}
       />
       <div
         ref={ringRef}
         aria-hidden
         className={cn(
-          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor-ring,9989)] h-5 w-5 rounded-full border border-sky/70 opacity-0 will-change-transform",
+          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor-ring,86)] h-5 w-5 rounded-full border border-sky/70 opacity-0 will-change-transform",
         )}
       />
     </>
