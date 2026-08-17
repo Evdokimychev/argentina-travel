@@ -57,6 +57,7 @@ describe("YouTravel partner pipeline regressions", () => {
         tourId: 1,
         offers: [offer],
         fallbackPriceUsd: 1000,
+        now: new Date("2026-02-01T12:00:00Z"),
       });
 
       expect(dates).toHaveLength(1);
@@ -86,6 +87,7 @@ describe("YouTravel partner pipeline regressions", () => {
           fallbackPriceUsd,
           fallbackCurrency: offer.currency,
           fallbackPriceValue: offer.priceValue,
+          now: new Date("2026-02-01T12:00:00Z"),
         });
 
         expect(dates).toHaveLength(1);

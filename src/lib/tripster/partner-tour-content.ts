@@ -22,6 +22,7 @@ import {
 } from "@/lib/tripster/partner-tour-accommodation";
 import type { PartnerTourExperienceRow } from "@/lib/tripster/partner-tour-mapper";
 import type { TourDatePrice, TourItineraryDay } from "@/types";
+import { filterFutureDepartures, filterFutureTourDates, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
 
 type PartnerPhotoInput =
   | string
@@ -540,10 +541,12 @@ export function resolveScheduleSlotSpotsLeft(
 export function mapScheduleToAvailableDates(
   schedule: TripsterScheduleResponse,
   durationDays: number,
+  now: Date = new Date(),
 ): import("@/types").TourDate[] {
   const byStart = new Map<string, number>();
 
   for (const startDate of Object.keys(schedule.schedule ?? {}).sort()) {
+    if (!isFutureOrTodayYmd(startDate, now)) continue;
     const slots = schedule.schedule?.[startDate] ?? [];
     let bestSpots = 0;
     for (const slot of slots) {
@@ -552,7 +555,7 @@ export function mapScheduleToAvailableDates(
     byStart.set(startDate, bestSpots);
   }
 
-  return [...byStart.entries()].map(([start, spotsLeft]) => {
+  const dates = [...byStart.entries()].map(([start, spotsLeft]) => {
     let end = start;
     try {
       end = format(addDays(parseISO(start), Math.max(1, durationDays) - 1), "yyyy-MM-dd");
@@ -561,6 +564,8 @@ export function mapScheduleToAvailableDates(
     }
     return { start, end, spotsLeft };
   });
+
+  return filterFutureTourDates(dates, now);
 }
 
 export function mapScheduleToPartnerDates(
@@ -568,12 +573,14 @@ export function mapScheduleToPartnerDates(
   durationDays: number,
   priceCurrency?: string | null,
   seatsTotal?: number | null,
+  now: Date = new Date(),
 ): TourDatePrice[] {
   const dates: TourDatePrice[] = [];
   const scheduleMap = schedule.schedule ?? {};
   const currency = priceCurrency?.trim().toUpperCase() || undefined;
 
   for (const startDate of Object.keys(scheduleMap).sort()) {
+    if (!isFutureOrTodayYmd(startDate, now)) continue;
     const slots = scheduleMap[startDate] ?? [];
     for (const slot of slots) {
       const time = slot.time?.trim() || slot.time_start?.trim() || "08:00";
@@ -585,7 +592,7 @@ export function mapScheduleToPartnerDates(
       }
 
       const slotValue = slot.price?.price_value;
-      const hasSlotPrice = slotValue != null && Number.isFinite(slotValue);
+      const hasSlotPrice = slotValue != null && Number.isFinite(slotValue) && slotValue > 0;
 
       dates.push({
         id: `tripster-${startDate}-${time}`,
@@ -593,14 +600,15 @@ export function mapScheduleToPartnerDates(
         endDate,
         spotsLeft: resolveScheduleSlotSpotsLeft(slot, schedule.defaults),
         seatsTotal: seatsTotal != null && seatsTotal > 0 ? seatsTotal : undefined,
-        priceUsd: hasSlotPrice && currency === "USD" ? slotValue : 0,
+        // Never invent $0 — unknown currency amounts stay on partner fields only.
+        priceUsd: hasSlotPrice && currency === "USD" ? slotValue! : 0,
         partnerPriceValue: hasSlotPrice ? slotValue : undefined,
         partnerPriceCurrency: hasSlotPrice ? currency : undefined,
       });
     }
   }
 
-  return dates;
+  return filterFutureDepartures(dates, now);
 }
 
 export function buildPartnerImportantInfo(content: PartnerTourContent): string[] {

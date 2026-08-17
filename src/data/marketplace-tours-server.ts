@@ -2,6 +2,7 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import type { TourListing } from "@/types";
 import { mergeMarketplaceTourListings } from "@/lib/tripster/partner-tour-utils";
+import { filterBookableMarketplaceListings } from "@/lib/partner-tours/offer-quality";
 
 /** Каталог меняется редко; 5 мин — баланс свежести и TTFB для роботов и cold start. */
 export const MARKETPLACE_CATALOG_REVALIDATE_SEC = 300;
@@ -122,18 +123,22 @@ export function resolveMarketplaceSourceResults(
   failedSourceCount: number,
   lastKnownGood: TourListing[] | null,
 ): TourListing[] {
-  const merged = mergeMarketplaceTourListings(platform, tripster, youtravel);
+  const merged = filterBookableMarketplaceListings(
+    mergeMarketplaceTourListings(platform, tripster, youtravel),
+  );
   if (merged.length > 0 || failedSourceCount === 0) return merged;
 
   // Не превращаем временный сбой хотя бы одного источника в «успешный» пустой
   // каталог: иначе unstable_cache запомнит деградацию на весь TTL.
-  if (lastKnownGood?.length) return lastKnownGood;
+  if (lastKnownGood?.length) {
+    return filterBookableMarketplaceListings(lastKnownGood);
+  }
   throw new Error("marketplace_catalog_sources_unavailable");
 }
 
 const cachedMarketplaceTours = unstable_cache(
   loadMarketplaceToursUncached,
-  ["marketplace-tours-catalog-v3"],
+  ["marketplace-tours-catalog-v4"],
   {
     revalidate: MARKETPLACE_CATALOG_REVALIDATE_SEC,
     tags: ["marketplace-catalog"],

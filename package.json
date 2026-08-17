@@ -113,6 +113,8 @@
     "release:public-production": "node scripts/release-public-production.mjs",
     "promotion:gate": "node scripts/promotion-gate.mjs",
     "crawl:public-tour-details": "node scripts/public-card-detail-crawl.mjs",
+    "marketplace:quality": "node scripts/marketplace-quality.mjs",
+    "marketplace:quality:prod": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/marketplace-quality.mjs",
     "crawl:sitemap-canonical": "node scripts/sitemap-canonical-crawl.mjs",
     "media:integrity": "node scripts/media-manifest-integrity.mjs",
     "media:integrity:prod": "node scripts/media-manifest-integrity.mjs --prod",
@@ -164,7 +166,7 @@
     "test": "vitest run",
     "geo:audit-tours": "tsx scripts/audit-tour-locations.ts",
     "test:watch": "vitest",
-    "test:partner-regression": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts"
+    "test:partner-regression": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts src/lib/partner-tours/offer-quality.test.ts src/lib/partner-tours/duplicate-detection.test.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

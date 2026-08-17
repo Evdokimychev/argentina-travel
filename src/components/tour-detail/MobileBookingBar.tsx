@@ -28,7 +28,8 @@ function formatMobileDateSummary(
   dates: TourDetail["dates"],
   dateMode: ReturnType<typeof useTourBooking>["dateMode"],
   selectedDateId: string,
-  customDate: Date | null
+  customDate: Date | null,
+  options?: { partnerScheduled?: boolean },
 ): string {
   if (dateMode === "custom") {
     if (customDate) {
@@ -45,7 +46,10 @@ function formatMobileDateSummary(
     return formatDateRange(selected.startDate, selected.endDate);
   }
 
-  return dates.length > 0 ? "Выберите дату" : "Даты по запросу";
+  if (dates.length > 0) return "Выберите дату";
+  // Partner scheduled tours without future dates are not "on request".
+  if (options?.partnerScheduled) return "Нет доступных дат";
+  return "Даты по запросу";
 }
 
 export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
@@ -121,8 +125,12 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       : undefined;
 
   const dateSummary = useMemo(
-    () => formatMobileDateSummary(availableDates, dateMode, selectedDateId, customDate),
-    [availableDates, dateMode, selectedDateId, customDate]
+    () =>
+      formatMobileDateSummary(availableDates, dateMode, selectedDateId, customDate, {
+        partnerScheduled:
+          isPartnerTour && (tour.bookingMode ?? "scheduled") === "scheduled",
+      }),
+    [availableDates, dateMode, selectedDateId, customDate, isPartnerTour, tour.bookingMode],
   );
 
   const bookingValidationError =

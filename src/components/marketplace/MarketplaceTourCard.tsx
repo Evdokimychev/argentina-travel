@@ -244,7 +244,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
             ) : null}
           </div>
 
-          {schedule?.type === "individual" ? (
+          {schedule?.type === "individual" || schedule?.type === "notice" ? (
             <p className="mt-2 text-xs text-slate">{schedule.label}</p>
           ) : schedule?.type === "dates" ? (
             <TourCardDepartureSchedule

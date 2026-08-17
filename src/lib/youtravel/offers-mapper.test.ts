@@ -86,9 +86,12 @@ describe("resolveYouTravelListingPriceFromOffers", () => {
 });
 
 describe("mapYouTravelOffersToTourDates", () => {
+  const now = new Date("2026-02-01T12:00:00Z");
+
   it("maps departure discount to original and current partner prices", () => {
     const dates = mapYouTravelOffersToTourDates({
       tourId: 52537,
+      now,
       offers: [
         {
           id: 1,
@@ -112,6 +115,7 @@ describe("mapYouTravelOffersToTourDates", () => {
   it("reads price_discount_value snake_case field", () => {
     const dates = mapYouTravelOffersToTourDates({
       tourId: 1,
+      now,
       offers: [
         {
           id: 2,
@@ -131,6 +135,7 @@ describe("mapYouTravelOffersToTourDates", () => {
   it("omits original price when discount equals current price", () => {
     const dates = mapYouTravelOffersToTourDates({
       tourId: 1,
+      now,
       offers: [
         {
           id: 3,
@@ -150,6 +155,7 @@ describe("mapYouTravelOffersToTourDates", () => {
   it("maps travelers going count from offer", () => {
     const dates = mapYouTravelOffersToTourDates({
       tourId: 55478,
+      now,
       offers: [
         {
           id: 10,
@@ -173,6 +179,7 @@ describe("mapYouTravelOffersToTourDates", () => {
   it("ignores capacity fields misread as booked when all seats are free", () => {
     const dates = mapYouTravelOffersToTourDates({
       tourId: 55478,
+      now,
       offers: [
         {
           id: 11,

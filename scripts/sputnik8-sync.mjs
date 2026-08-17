@@ -474,6 +474,20 @@ async function main() {
       }
     }
 
+    if (pendingLinks.length === 0) {
+      throw new Error(
+        "zero_products_discovered: refusing to treat empty Sputnik8 response as authoritative catalog wipe",
+      );
+    }
+
+    // Sharp drop vs existing catalog: temporary empty/partial API must not look like success.
+    const existingCount = existingById.size;
+    if (existingCount >= 20 && pendingLinks.length < Math.max(5, Math.floor(existingCount * 0.25))) {
+      throw new Error(
+        `suspicious_product_drop: discovered=${pendingLinks.length} existing=${existingCount}`,
+      );
+    }
+
     const skipAffiliateLinks = process.env.SPUTNIK8_SKIP_AFFILIATE_LINKS === "true";
     const syncReviews = process.env.SPUTNIK8_SYNC_REVIEWS !== "false";
 

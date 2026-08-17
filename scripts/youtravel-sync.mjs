@@ -274,6 +274,23 @@ async function main() {
       );
     }
 
+    const existingCountResult = await pg.query(
+      "select count(*)::int as c from public.youtravel_tours",
+    );
+    const existingCount = existingCountResult.rows?.[0]?.c ?? 0;
+    if (existingCount >= 20 && discovered.size < Math.max(5, Math.floor(existingCount * 0.25))) {
+      await pgFinishSyncRun(pg, runId, {
+        status: "error",
+        toursFetched: discovered.size,
+        toursUpserted: 0,
+        offersUpserted: 0,
+        errorMessage: `suspicious_tour_drop:discovered=${discovered.size}:existing=${existingCount}`,
+      });
+      throw new Error(
+        `YouTravel sync suspicious drop: discovered=${discovered.size} existing=${existingCount}`,
+      );
+    }
+
     const rows = [];
     let offersUpserted = 0;
 

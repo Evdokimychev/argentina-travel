@@ -11,6 +11,7 @@ import {
   resolveOfferSeatsTotal,
   resolveTravelersGoingFromOffer,
 } from "@/lib/youtravel/partner-offer-occupancy";
+import { filterFutureDepartures, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
 
 /** USD/EUR amounts at/above this are RUB-scale values with a wrong currency label. */
 const YOUTRAVEL_MISLABELED_RUB_SCALE_THRESHOLD = 30000;
@@ -195,13 +196,22 @@ export function resolveYouTravelListingPriceFromOffers(
     priceCurrency?: string | null;
     priceUsd: number;
   },
+  options?: { now?: Date },
 ): YouTravelListingPriceFromOffers {
   let best:
     | (YouTravelListingPriceFromOffers & { sortPriceUsd: number })
     | null = null;
+  const now = options?.now ?? new Date();
 
   for (const row of offers) {
     const payload = (row.payload ?? {}) as YouTravelOffer;
+    const start =
+      parseYouTravelOfferDate(
+        payload.startDate ?? payload.dateFrom ?? payload.date ?? null,
+      ) ?? null;
+    // Catalog "from" price must come from a still-bookable departure when dates exist.
+    if (start && !isFutureOrTodayYmd(start, now)) continue;
+
     const rawValue =
       row.price_value ??
       payload.priceValue ??
@@ -273,13 +283,18 @@ export function mapYouTravelOffersToTourDates(input: {
   fallbackPriceUsd: number;
   fallbackCurrency?: string | null;
   fallbackPriceValue?: number | null;
+  /** Override clock in tests. */
+  now?: Date;
 }): TourDatePrice[] {
   const mapped: TourDatePrice[] = [];
+  const now = input.now ?? new Date();
 
   input.offers.forEach((offer, index) => {
     const start =
       parseYouTravelOfferDate(offer.startDate ?? offer.dateFrom ?? offer.date) ?? null;
     if (!start) return;
+    // Past departures are never bookable commercial choices.
+    if (!isFutureOrTodayYmd(start, now)) return;
 
     const end =
       parseYouTravelOfferDate(offer.endDate ?? offer.dateTo ?? offer.startDate ?? offer.dateFrom) ??
@@ -311,7 +326,7 @@ export function mapYouTravelOffersToTourDates(input: {
     });
   });
 
-  return mapped.sort((a, b) => a.startDate.localeCompare(b.startDate));
+  return filterFutureDepartures(mapped, now).sort((a, b) => a.startDate.localeCompare(b.startDate));
 }
 
 export function formatYouTravelListedPrice(

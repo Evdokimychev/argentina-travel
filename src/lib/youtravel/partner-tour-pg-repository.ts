@@ -7,6 +7,7 @@ import {
   rowToListing,
   type YouTravelTourRow,
 } from "@/lib/youtravel/partner-tour-repository";
+import { filterFutureTourDates, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
 import type { TourDate, TourDetail, TourListing } from "@/types";
 
 const LISTING_COLUMNS = `
@@ -42,13 +43,29 @@ export async function pgFetchYouTravelTourListings(): Promise<TourListing[]> {
       if (!Number.isFinite(tourId)) continue;
 
       if (offer.start_date) {
-        const list = offersByTour.get(tourId) ?? [];
-        list.push({
-          start: String(offer.start_date).slice(0, 10),
-          end: String(offer.end_date ?? offer.start_date).slice(0, 10),
-          spotsLeft: Math.max(Number(offer.seats_available ?? 0), 0),
-        });
-        offersByTour.set(tourId, list);
+        const start = String(offer.start_date).slice(0, 10);
+        if (isFutureOrTodayYmd(start)) {
+          const list = offersByTour.get(tourId) ?? [];
+          list.push({
+            start,
+            end: String(offer.end_date ?? offer.start_date).slice(0, 10),
+            spotsLeft: Math.max(Number(offer.seats_available ?? 0), 0),
+          });
+          offersByTour.set(tourId, list);
+
+          const priceRows = offerPriceRowsByTour.get(tourId) ?? [];
+          priceRows.push({
+            price_value: offer.price_value != null ? Number(offer.price_value) : null,
+            price_currency: offer.price_currency ?? null,
+            payload: {
+              ...(offer.payload as object),
+              startDate: start,
+              dateFrom: start,
+            } as YouTravelOfferListingRow["payload"],
+          });
+          offerPriceRowsByTour.set(tourId, priceRows);
+          continue;
+        }
       }
 
       const priceRows = offerPriceRowsByTour.get(tourId) ?? [];
@@ -62,7 +79,7 @@ export async function pgFetchYouTravelTourListings(): Promise<TourListing[]> {
 
     return tours.map((row) => {
       const listing = rowToListing(row);
-      listing.availableDates = offersByTour.get(row.id) ?? [];
+      listing.availableDates = filterFutureTourDates(offersByTour.get(row.id) ?? []);
       return applyYouTravelOfferPricesToListing(
         listing,
         offerPriceRowsByTour.get(row.id) ?? [],
