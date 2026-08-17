@@ -4,6 +4,7 @@ import BlogHubCatalog from "@/components/blog/BlogHubCatalog";
 import BlogHubPinnedNav from "@/components/blog/BlogHubPinnedNav";
 import BlogRecommendedTours from "@/components/blog/BlogRecommendedTours";
 import BlogTrendingDestinations from "@/components/blog/BlogTrendingDestinations";
+import { blogCardListingImage } from "@/components/blog/blog-card-image-delivery";
 import HubHero from "@/components/guide/hub/HubHero";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
@@ -46,7 +47,7 @@ export default function BlogHubView({
       <HubHero
         title={hub.title}
         subtitle={hub.description}
-        image={hub.image}
+        image={blogCardListingImage(hub.image)}
         eyebrow={{ label: "Блог", href: "/blog" }}
         ctas={[
           ...(hub.cta

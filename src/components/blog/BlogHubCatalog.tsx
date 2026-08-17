@@ -125,7 +125,7 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
             const spanWide = variant === "featured" || (index === 0 && post.richArticleId);
             return (
               <li key={post.id} id={`hub-post-${post.slug}`} className={spanWide ? "sm:col-span-2 scroll-mt-28" : "scroll-mt-28"}>
-                <BlogCard post={post} variant={variant} priority={index === 0 && variant === "featured"} />
+                <BlogCard post={post} variant={variant} priority={false} />
               </li>
             );
           })}

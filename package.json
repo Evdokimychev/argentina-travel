@@ -122,6 +122,7 @@
     "media:integrity:prod": "node scripts/media-manifest-integrity.mjs --prod",
     "media:critical:check": "node scripts/critical-public-media-check.mjs",
     "media:critical:optimize": "node scripts/optimize-critical-public-media.mjs && node scripts/critical-public-media-check.mjs",
+    "media:blog-cards": "node scripts/generate-blog-card-derivatives.mjs",
     "media:rights:audit": "tsx scripts/media-rights-readiness.ts",
     "media:rights:check": "tsx scripts/media-rights-readiness.ts --changed --check",
     "setup:git-hooks": "node scripts/setup-git-hooks.mjs",

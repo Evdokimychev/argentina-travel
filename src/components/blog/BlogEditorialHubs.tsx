@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import BlogCard from "@/components/blog/BlogCard";
+import { blogCardListingImage } from "@/components/blog/blog-card-image-delivery";
 import {
   BLOG_HUBS,
   blogHubPath,
@@ -43,12 +44,13 @@ export default function BlogEditorialHubs({ posts, className }: BlogEditorialHub
             >
               <div className="relative flex min-h-[120px] items-end overflow-hidden sm:min-h-[140px]">
                 <Image
-                  src={hub.image}
+                  src={blogCardListingImage(hub.image)}
                   alt=""
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   loading="lazy"
+                  fetchPriority="low"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/35 to-transparent" />
                 <div className="relative w-full p-4 sm:p-5">
