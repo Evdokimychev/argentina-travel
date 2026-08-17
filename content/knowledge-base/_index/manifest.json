@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11 00:00",
+  "generated_at": "2026-08-17 00:00",
   "total_entities": 691,
   "editorial_readiness": {
     "provenance_schema_version": 1,
@@ -30256,8 +30256,11 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 0,
-          "issue_codes": [],
+          "issue_count": 3,
+          "issue_codes": [
+            "stale_sensitive_claim",
+            "stale_source_url_check"
+          ],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 4,
@@ -33831,14 +33834,14 @@
         "zhizn-v-strane"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-17",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-01",
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
@@ -37961,14 +37964,14 @@
         "pereezd-v-argentinu"
       ],
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-17",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-01",
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
@@ -38489,15 +38492,18 @@
         "missing_sources": false,
         "source_count": 1,
         "word_count": 304,
-        "needs_attention": false,
+        "needs_attention": true,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": true,
-          "issue_count": 0,
-          "issue_codes": [],
+          "strict_ready": false,
+          "issue_count": 2,
+          "issue_codes": [
+            "stale_sensitive_claim",
+            "stale_source_url_check"
+          ],
           "source_count": 1,
           "identified_source_count": 1,
           "claim_count": 1,

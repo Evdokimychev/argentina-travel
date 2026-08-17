@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11 00:00",
+  "generated_at": "2026-08-17 00:00",
   "total_entities": 691,
   "editorial_readiness": {
     "provenance_schema_version": 1,
@@ -49903,8 +49903,11 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 0,
-          "issue_codes": [],
+          "issue_count": 3,
+          "issue_codes": [
+            "stale_sensitive_claim",
+            "stale_source_url_check"
+          ],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 4,
@@ -54933,8 +54936,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Определяет гражданство родившихся на территории Аргентины с дипломатическим исключением."
         },
         {
@@ -54945,8 +54948,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Официальный навигатор регистрации рождения и документов ребёнка."
         },
         {
@@ -54957,8 +54960,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Актуальные правила доступа иностранцев к экстренной и плановой медицинской помощи и миграционные изменения."
         },
         {
@@ -54969,8 +54972,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         },
         {
           "id": "argentina-respected-birth",
@@ -54980,8 +54983,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         },
         {
           "id": "argentina-permanent-residence-current",
@@ -54991,8 +54994,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         }
       ],
       "claims": [
@@ -55003,7 +55006,7 @@
           "source_ids": [
             "argentina-citizenship-law-346"
           ],
-          "verified_at": "2026-07-17",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -55016,7 +55019,7 @@
           "source_ids": [
             "argentina-newborn-registration"
           ],
-          "verified_at": "2026-07-17",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -55029,7 +55032,7 @@
           "source_ids": [
             "argentina-prenatal-control"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -55043,7 +55046,7 @@
             "argentina-permanent-residence-current",
             "argentina-decree-366-2025"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -55058,13 +55061,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-17",
       "seo_slug": "rody-i-beremennost-v-argentine",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-01",
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
@@ -61371,8 +61374,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Различает экстренную и плановую помощь иностранцам и положение постоянных резидентов."
         },
         {
@@ -61383,8 +61386,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Регулятор национальных obras sociales и entidades de medicina prepaga."
         },
         {
@@ -61395,8 +61398,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-17",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16",
           "note": "Национальный 911 и территориальные пояснения к медицинскому номеру 107."
         },
         {
@@ -61407,8 +61410,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         },
         {
           "id": "argentina-prepagas",
@@ -61418,8 +61421,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         },
         {
           "id": "argentina-health-user-claims",
@@ -61429,8 +61432,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-17",
+          "expires_at": "2026-09-16"
         }
       ],
       "claims": [
@@ -61441,7 +61444,7 @@
           "source_ids": [
             "argentina-decree-366-2025-health"
           ],
-          "verified_at": "2026-07-17",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61454,7 +61457,7 @@
           "source_ids": [
             "argentina-health-services-regulator"
           ],
-          "verified_at": "2026-07-17",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61467,7 +61470,7 @@
           "source_ids": [
             "argentina-emergency-numbers"
           ],
-          "verified_at": "2026-07-17",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61480,7 +61483,7 @@
           "source_ids": [
             "argentina-national-obras-sociales"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61493,7 +61496,7 @@
           "source_ids": [
             "argentina-prepagas"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-17",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61508,13 +61511,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-17",
       "seo_slug": "sistema-zdravoohraneniya-argentiny",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-01",
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
@@ -62645,15 +62648,18 @@
         "missing_sources": false,
         "source_count": 1,
         "word_count": 304,
-        "needs_attention": false,
+        "needs_attention": true,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": true,
-          "issue_count": 0,
-          "issue_codes": [],
+          "strict_ready": false,
+          "issue_count": 2,
+          "issue_codes": [
+            "stale_sensitive_claim",
+            "stale_source_url_check"
+          ],
           "source_count": 1,
           "identified_source_count": 1,
           "claim_count": 1,

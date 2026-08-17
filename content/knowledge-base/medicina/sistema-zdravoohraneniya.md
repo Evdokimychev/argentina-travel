@@ -16,7 +16,7 @@ warnings:
 recommendations:
   - "Перед плановым обращением уточняйте стоимость, направление, сеть и предварительное согласование у учреждения и страховщика."
   - "При экстренной ситуации обращайтесь за помощью независимо от миграционного статуса."
-last_verified: "2026-07-20"
+last_verified: "2026-08-17"
 confidence: high
 seo_slug: "sistema-zdravoohraneniya-argentiny"
 provenance:
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Различает экстренную и плановую помощь иностранцам и положение постоянных резидентов."
   - id: argentina-health-services-regulator
     title: "Superintendencia de Servicios de Salud"
@@ -41,8 +41,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Регулятор национальных obras sociales и entidades de medicina prepaga."
   - id: argentina-emergency-numbers
     title: "Argentina.gob.ar — экстренные номера"
@@ -51,8 +51,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Национальный 911 и территориальные пояснения к медицинскому номеру 107."
   - id: argentina-national-obras-sociales
     title: "SSSalud — Qué son las Obras Sociales Nacionales"
@@ -61,8 +61,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
   - id: argentina-prepagas
     title: "SSSalud — Qué son las Entidades de Medicina Prepaga"
     url: "https://www.argentina.gob.ar/node/423540"
@@ -70,8 +70,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
   - id: argentina-health-user-claims
     title: "SSSalud — Usuarios y reclamos"
     url: "https://www.argentina.gob.ar/sssalud/usuarios"
@@ -79,38 +79,38 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
 claims:
   - id: emergency-care-cannot-be-refused
     text: "Decreto 366/2025 запрещает отказывать иностранцу в экстренной медицинской помощи независимо от миграционного статуса."
     sensitive: true
     source_ids: [argentina-decree-366-2025-health]
-    verified_at: "2026-07-17"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: sssalud-regulates-national-insurers
     text: "Superintendencia de Servicios de Salud контролирует национальные obras sociales и организации частной медицины prepaga."
     sensitive: true
     source_ids: [argentina-health-services-regulator]
-    verified_at: "2026-07-17"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: emergency-number-107-location-dependent
     text: "Официальный справочник указывает 911 как центральный экстренный номер, а 107 — как медицинский номер для CABA и отдельных населённых пунктов."
     sensitive: true
     source_ids: [argentina-emergency-numbers]
-    verified_at: "2026-07-17"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: national-obras-sociales-pmo
     text: "Национальные obras sociales финансируются обязательными взносами и должны обеспечивать как минимум Programa Médico Obligatorio."
     sensitive: true
     source_ids: [argentina-national-obras-sociales]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: prepagas-voluntary-plans
     text: "Частные prepagas продают добровольные планы напрямую или принимают направленные страховые взносы; конкретная сеть зависит от выбранного плана."
     sensitive: true
     source_ids: [argentina-prepagas]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

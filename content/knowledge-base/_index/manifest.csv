@@ -461,7 +461,7 @@ posle-dtp,guide,transport,Что делать после ДТП в Аргент�
 prava-passazhira-otmena-reisa,guide,transport,Права пассажира при отмене или задержке рейса в Аргентине,archived,,medium,2026-07-12,False,2026-10-10,False,348,,,transport/prava-passazhira-otmena-reisa.md
 prazdniki-i-traditsii,guide,culture,"Праздники, традиции и этикет Аргентины",published,,high,2026-07-20,False,2027-01-16,False,617,,,kultura/prazdniki-i-traditsii.md
 priznanie-diploma,guide,immigration,Как признать иностранный диплом в Аргентине,archived,,high,2026-07-17,True,2026-08-31,False,169,True,0,pereezd/priznanie-diploma.md
-provoz-lekarstv,guide,health,Ввоз лекарств в Аргентину для личного использования,published,,high,2026-07-20,False,2027-01-16,False,822,False,0,medicina/provoz-lekarstv.md
+provoz-lekarstv,guide,health,Ввоз лекарств в Аргентину для личного использования,published,,high,2026-07-20,False,2027-01-16,False,822,False,3,medicina/provoz-lekarstv.md
 pueblos-de-la-provincia-de-buenos-aires,attraction,,Городки провинции Буэнос-Айрес,archived,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,80,,,dostoprimechatelnosti/pueblos-de-la-provincia-de-buenos-aires.md
 pueblos-galeses-y-comunidades-originarias,attraction,,Валлийские поселения и коренные народы Чубута,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,61,,,dostoprimechatelnosti/pueblos-galeses-y-comunidades-originarias.md
 pueblos-pintorescos-de-cordoba,attraction,,Живописные городки Кордовы,archived,pampa,medium,2026-07-07,False,2026-10-05,False,70,,,dostoprimechatelnosti/pueblos-pintorescos-de-cordoba.md
@@ -512,7 +512,7 @@ ria-de-bahia-blanca,attraction,,Bahía Blanca ria,archived,buenos-aires-province
 rio-gallegos,attraction,,Рио-Гальегос,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,78,,,dostoprimechatelnosti/rio-gallegos.md
 rio-grande,attraction,,Рио-Гранде,archived,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,73,,,dostoprimechatelnosti/rio-grande.md
 rio-parana,attraction,,Река Парана,archived,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,72,,,dostoprimechatelnosti/rio-parana.md
-rody-i-beremennost,guide,health,Беременность и роды в Аргентине: медицина и документы,published,,high,2026-07-20,True,2026-09-03,False,840,True,0,medicina/rody-i-beremennost.md
+rody-i-beremennost,guide,health,Беременность и роды в Аргентине: медицина и документы,published,,high,2026-08-17,True,2026-10-01,False,840,True,0,medicina/rody-i-beremennost.md
 rody-v-argentine,faq,,,published,,high,2026-07-17,True,2026-08-31,False,147,True,0,faq/rody-v-argentine.md
 roque-saenz-pena,attraction,,Roque Sáenz Peña,archived,litoral,medium,2026-07-07,False,2026-10-05,False,63,,,dostoprimechatelnosti/roque-saenz-pena.md
 rosario,city,,Росарио,published,pampa,high,2026-07-03,False,2026-12-30,False,504,,,goroda/rosario.md
@@ -572,7 +572,7 @@ sierra-de-las-quijadas,national_park,,Национальный парк Сьер
 sierras-cordobesas,attraction,,Сьерры Кордовы,archived,pampa,medium,2026-07-07,False,2026-10-05,False,78,,,dostoprimechatelnosti/sierras-cordobesas.md
 sierras-de-la-provincia-de-buenos-aires,attraction,,Сьерры провинции Буэнос-Айрес,archived,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,82,,,dostoprimechatelnosti/sierras-de-la-provincia-de-buenos-aires.md
 sierras-de-sumampa,attraction,,Сьерры Сумампа,archived,noa,medium,2026-07-07,False,2026-10-05,False,76,,,dostoprimechatelnosti/sierras-de-sumampa.md
-sistema-zdravoohraneniya,guide,health,"Система здравоохранения Аргентины: público, obra social и prepaga",published,,high,2026-07-20,True,2026-09-03,False,826,True,0,medicina/sistema-zdravoohraneniya.md
+sistema-zdravoohraneniya,guide,health,"Система здравоохранения Аргентины: público, obra social и prepaga",published,,high,2026-08-17,True,2026-10-01,False,826,True,0,medicina/sistema-zdravoohraneniya.md
 skam-s-falshivoj-policiej,faq,,,published,,medium,2026-07-20,True,2026-09-03,False,288,True,0,faq/skam-s-falshivoj-policiej.md
 skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-08-11,True,2026-09-25,False,293,True,0,faq/skolko-deneg-brat-na-poezdku.md
 skolko-dnej-na-marshrut-2-nedeli,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,90,,,faq/skolko-dnej-na-marshrut-2-nedeli.md
@@ -582,7 +582,7 @@ skolko-nalichnyh-mozhno-vvezti,faq,,,published,,high,2026-07-17,True,2026-08-31,
 skolko-stoit-oformit-vnzh,faq,,,published,,high,2026-07-20,True,2026-09-03,False,251,True,0,faq/skolko-stoit-oformit-vnzh.md
 skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-08-11,True,2026-09-25,False,282,True,0,faq/skolko-stoit-zhizn-v-buenos-ajrese.md
 sladkoe-dulce-de-leche,guide,culture,"Сладкое: дульсе-де-лече, альфахорес и фактурас",published,,high,2026-07-20,False,2027-01-16,False,731,,,kultura/sladkoe-dulce-de-leche.md
-soobshestvo-i-adaptaciya,guide,immigration,Где найти своих и как устроить адаптацию в Аргентине,archived,,medium,2026-07-17,True,2026-08-31,False,304,True,0,pereezd/soobshestvo-i-adaptaciya.md
+soobshestvo-i-adaptaciya,guide,immigration,Где найти своих и как устроить адаптацию в Аргентине,archived,,medium,2026-07-17,True,2026-08-31,True,304,False,2,pereezd/soobshestvo-i-adaptaciya.md
 status-expediente-migraciones,guide,immigration,Как проверить статус дела в Migraciones,published,,high,2026-07-20,True,2026-09-03,False,681,True,0,pereezd/status-expediente-migraciones.md
 stoimost-zhizni-ba,guide,finance,Как рассчитать стоимость жизни в Буэнос-Айресе,published,,high,2026-07-20,True,2026-09-03,False,714,True,0,dengi/stoimost-zhizni-ba.md
 stoimost-zhizni-semya-i-para,guide,finance,Стоимость жизни для пары и семьи: как собрать свой сценарий,published,,high,2026-07-20,True,2026-09-03,False,747,True,0,dengi/stoimost-zhizni-semya-i-para.md

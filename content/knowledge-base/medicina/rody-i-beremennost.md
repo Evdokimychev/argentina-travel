@@ -16,7 +16,7 @@ warnings:
 recommendations:
   - "До поездки выберите врача и учреждение, передайте медицинскую историю и согласуйте действия при осложнениях."
   - "Миграционный маршрут семьи проверяйте у DNM после рождения по фактическим документам."
-last_verified: "2026-07-20"
+last_verified: "2026-08-17"
 confidence: high
 seo_slug: "rody-i-beremennost-v-argentine"
 provenance:
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Определяет гражданство родившихся на территории Аргентины с дипломатическим исключением."
   - id: argentina-newborn-registration
     title: "Argentina.gob.ar — nacimiento de un bebé"
@@ -41,8 +41,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Официальный навигатор регистрации рождения и документов ребёнка."
   - id: argentina-decree-366-2025
     title: "Decreto 366/2025"
@@ -51,8 +51,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
     note: "Актуальные правила доступа иностранцев к экстренной и плановой медицинской помощи и миграционные изменения."
   - id: argentina-prenatal-control
     title: "Ministerio de Salud — El control del embarazo"
@@ -61,8 +61,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
   - id: argentina-respected-birth
     title: "Argentina.gob.ar — Parto respetado, Ley 25.929"
     url: "https://www.argentina.gob.ar/derechoshumanos/parto-respetado-ley-ndeg-25929"
@@ -70,8 +70,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
   - id: argentina-permanent-residence-current
     title: "DNM — Radicaciones Residencia Permanente"
     url: "https://www.argentina.gob.ar/servicio/radicaciones-residencia-permanente"
@@ -79,32 +79,32 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-17"
+    expires_at: "2026-09-16"
 claims:
   - id: argentina-birth-citizenship-rule
     text: "Ley 346 относит к аргентинцам родившихся на территории страны, кроме детей иностранных дипломатов и членов их миссий."
     sensitive: true
     source_ids: [argentina-citizenship-law-346]
-    verified_at: "2026-07-17"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: newborn-registration-required
     text: "После рождения ребёнка необходимо зарегистрировать рождение и оформить документы по процедурам Registro Civil и RENAPER."
     sensitive: true
     source_ids: [argentina-newborn-registration]
-    verified_at: "2026-07-17"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: prenatal-control-and-card
     text: "Официальный маршрут Минздрава предусматривает раннее наблюдение беременности и ведение перинатальной карты, которую нужно брать на приёмы и в роддом."
     sensitive: true
     source_ids: [argentina-prenatal-control]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: parents-residence-not-automatic
     text: "Рождение ребёнка не оформляет родителям резиденцию автоматически; применимый маршрут нужно заново проверять по действующим категориям DNM."
     sensitive: true
     source_ids: [argentina-permanent-residence-current, argentina-decree-366-2025]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-17"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
