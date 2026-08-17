@@ -16,7 +16,7 @@ npm run audit-blog-heroes -- --strict
 ## После build (локально, optional)
 
 ```bash
-npm run lighthouse:phase2          # 8 URLs, perf + a11y median
+npm run lighthouse:phase2          # 7 URLs, perf + a11y median
 npm run test:e2e:visual            # baseline screenshots (первый run: --update-snapshots)
 npm run production-smoke           # 15 public pages
 npm run test:e2e:smoke
@@ -39,7 +39,7 @@ npm run lighthouse:phase2          # с LIGHTHOUSE_BASE_URL на prod URL (manua
 | Collections hero + карточки | `/collections` |
 | Patagonia — оговорка Чили в шапке | `/tours/patagonia-glaciers` |
 | Immigration grazhdanstvo DNU 366/2025 | `/immigration/grazhdanstvo` |
-| Lighthouse median Perf ≥ 90 (8 URLs) | `var/ops/lighthouse-phase2-sample-last.json` |
+| Lighthouse median Perf ≥ 90 (7 URLs) | `var/ops/lighthouse-phase2-sample-last.json` |
 | Lighthouse median A11y ≥ 95 | то же |
 | GTM + GSC | см. sprint5-deploy-checklist |
 | etap-1 P0/P1 open | 0 открытых пунктов |
