@@ -13,7 +13,7 @@ export type AdminAuthResult =
       ok: true;
       actorId: string;
       capabilities: AdminCapability[];
-      via: "session" | "service_role";
+      via: "session" | "automation";
     }
   | { ok: false; response: NextResponse };
 
@@ -41,7 +41,14 @@ function compareSecret(input: string, secret: string): boolean {
   return timingSafeEqual(left, right);
 }
 
-/** Authorize admin API request via Supabase session + capabilities. */
+/**
+ * Authorize admin API request via Supabase session + capabilities.
+ *
+ * Machine automation must use ADMIN_AUTOMATION_SECRET (scoped HTTP credential).
+ * SUPABASE_SERVICE_ROLE_KEY is for DB access only and is NOT accepted as a
+ * general admin Bearer password unless ALLOW_SERVICE_ROLE_ADMIN_BEARER=1
+ * (temporary migration escape hatch — remove after consumers rotate).
+ */
 export async function authorizeAdminRequest(
   request: Request,
   requiredCapability?: AdminCapability
@@ -53,15 +60,32 @@ export async function authorizeAdminRequest(
     };
   }
 
-  const serviceRoleToken = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   const bearerToken = parseBearerToken(request);
-  if (serviceRoleToken && bearerToken && compareSecret(bearerToken, serviceRoleToken)) {
-    setSentryUserContext({ id: "service-role", role: "service_role" });
+  const automationSecret = process.env.ADMIN_AUTOMATION_SECRET?.trim();
+  if (automationSecret && bearerToken && compareSecret(bearerToken, automationSecret)) {
+    setSentryUserContext({ id: "admin-automation", role: "automation" });
     return {
       ok: true,
-      actorId: "service-role",
+      actorId: "admin-automation",
       capabilities: ["*"],
-      via: "service_role",
+      via: "automation",
+    };
+  }
+
+  const allowLegacyServiceRole = process.env.ALLOW_SERVICE_ROLE_ADMIN_BEARER === "1";
+  const serviceRoleToken = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (
+    allowLegacyServiceRole &&
+    serviceRoleToken &&
+    bearerToken &&
+    compareSecret(bearerToken, serviceRoleToken)
+  ) {
+    setSentryUserContext({ id: "service-role-legacy", role: "service_role_legacy" });
+    return {
+      ok: true,
+      actorId: "service-role-legacy",
+      capabilities: ["*"],
+      via: "automation",
     };
   }
 

@@ -5,9 +5,12 @@
  * Required env:
  * - SMOKE_ADMIN_COOKIE=<full Cookie header from logged-in admin session>
  *   OR
- * - SMOKE_ADMIN_BEARER=<admin bearer token> (e.g. service role key)
- *   OR
- * - SUPABASE_SERVICE_ROLE_KEY=<service role key used as Bearer token>
+ * - SMOKE_ADMIN_BEARER=<scoped ADMIN_AUTOMATION_SECRET value>
+ *   OR (temporary migration only)
+ * - ALLOW_SERVICE_ROLE_ADMIN_BEARER=1 + SUPABASE_SERVICE_ROLE_KEY
+ *
+ * Do NOT treat SUPABASE_SERVICE_ROLE_KEY as a normal HTTP admin password.
+ * Prefer ADMIN_AUTOMATION_SECRET or a real admin session cookie.
  *
  * Optional env:
  * - SMOKE_BASE_URL=http://127.0.0.1:3000
@@ -55,12 +58,18 @@ function truncate(text, max = 280) {
 function buildAuthHeaders() {
   const headers = { Accept: "application/json" };
   const cookie = process.env.SMOKE_ADMIN_COOKIE?.trim();
-  const bearer =
-    process.env.SMOKE_ADMIN_BEARER?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || "";
+  const automationBearer =
+    process.env.SMOKE_ADMIN_BEARER?.trim() ||
+    process.env.ADMIN_AUTOMATION_SECRET?.trim() ||
+    "";
+  const legacyServiceRoleAllowed = process.env.ALLOW_SERVICE_ROLE_ADMIN_BEARER === "1";
+  const legacyBearer =
+    legacyServiceRoleAllowed ? process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || "" : "";
+  const bearer = automationBearer || legacyBearer;
 
   if (!cookie && !bearer) {
     throw new Error(
-      "Missing admin auth env. Set SMOKE_ADMIN_COOKIE or SMOKE_ADMIN_BEARER or SUPABASE_SERVICE_ROLE_KEY."
+      "Missing admin auth env. Set SMOKE_ADMIN_COOKIE or SMOKE_ADMIN_BEARER/ADMIN_AUTOMATION_SECRET (or temporary ALLOW_SERVICE_ROLE_ADMIN_BEARER=1 + SUPABASE_SERVICE_ROLE_KEY).",
     );
   }
 

@@ -140,26 +140,46 @@ return {1, 0}
 
 /**
  * Sliding-window limiter backed by Upstash Redis REST API when configured.
- * Falls back to process in-memory limits when UPSTASH_REDIS_REST_URL is not set
- * or when Redis is temporarily unavailable.
+ *
+ * Policy:
+ * - Upstash unset → process in-memory (dev / single instance).
+ * - Upstash configured + healthy → distributed sliding window.
+ * - Upstash configured + error + policy "standard" → in-memory fallback (reads/low risk).
+ * - Upstash configured + error + policy "security_critical" → FAIL CLOSED (429).
  */
+export type RateLimitPolicy = "standard" | "security_critical";
+
 export async function checkRateLimit(
   key: string,
   limit: number,
-  windowMs: number
+  windowMs: number,
+  policy: RateLimitPolicy = "standard",
 ): Promise<RateLimitResult> {
   const safeLimit = sanitizeLimitValue(limit, 1);
   const safeWindow = sanitizeLimitValue(windowMs, 60_000);
+  const upstashConfigured = Boolean(process.env.UPSTASH_REDIS_REST_URL?.trim());
 
   try {
     return await evaluateUpstashSlidingWindow(key, safeLimit, safeWindow);
   } catch (error) {
     if (!hasLoggedUpstashError) {
       hasLoggedUpstashError = true;
-      console.error("[rate-limit] Upstash unavailable, using in-memory fallback.", error);
+      console.error("[rate-limit] Upstash unavailable.", error);
+    }
+    if (upstashConfigured && policy === "security_critical") {
+      return { ok: false, retryAfterSec: 30 };
     }
     return checkRateLimitInMemory(key, safeLimit, safeWindow);
   }
+}
+
+/** High-risk mutations: auth abuse, booking, leads, privacy, payments, admin automation. */
+export async function checkSecurityRateLimit(
+  key: string,
+  limit: number,
+  windowMs: number,
+): Promise<RateLimitResult> {
+  return checkRateLimit(key, limit, windowMs, "security_critical");
 }
 
 export function rateLimitErrorResponse(retryAfterSec: number, message = DEFAULT_RATE_LIMIT_MESSAGE) {
@@ -204,11 +224,11 @@ async function resolveRateLimitKey(
  */
 export function withRateLimit<T extends RateLimitedHandler>(
   handler: T,
-  options: WithRateLimitOptions
+  options: WithRateLimitOptions & { policy?: RateLimitPolicy }
 ): T {
   return (async (request: Request, ...args: unknown[]) => {
     const key = await resolveRateLimitKey(request, options, args);
-    const check = await checkRateLimit(key, options.limit, options.window);
+    const check = await checkRateLimit(key, options.limit, options.window, options.policy);
     if (check.ok === false) {
       return rateLimitErrorResponse(check.retryAfterSec, options.message);
     }
@@ -216,15 +236,29 @@ export function withRateLimit<T extends RateLimitedHandler>(
   }) as T;
 }
 
+/**
+ * Client IP for abuse mitigation only — never authentication identity.
+ * Prefer platform-attested headers on Vercel; avoid trusting a raw spoofable
+ * first X-Forwarded-For hop when a platform header exists.
+ */
 export function getClientIp(request: Request): string {
+  const vercelForwarded = request.headers.get("x-vercel-forwarded-for")?.trim();
+  if (vercelForwarded) {
+    return vercelForwarded.split(",")[0]?.trim() || "unknown";
+  }
+
   const cfConnectingIp = request.headers.get("cf-connecting-ip")?.trim();
   if (cfConnectingIp) return cfConnectingIp;
 
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
-    return forwarded.split(",")[0]?.trim() ?? "unknown";
+    // Prefer the right-most public hop when multiple are present (closer to edge).
+    const parts = forwarded.split(",").map((part) => part.trim()).filter(Boolean);
+    return parts[parts.length - 1] || "unknown";
   }
 
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  return realIp || "unknown";
+  return "unknown";
 }

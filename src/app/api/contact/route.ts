@@ -5,7 +5,7 @@ import {
   submitContact,
 } from "@/lib/lead-capture";
 import { fetchSiteFeatures, fetchSiteForms } from "@/lib/site-settings-server";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkSecurityRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { ContactSubmissionKind } from "@/types/database";
 import {
   CONTACT_REQUEST_MAX_BYTES,
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   }
 
   const ip = getClientIp(request);
-  const limit = await checkRateLimit(`contact:ip:${ip}`, 10, 60_000);
+  const limit = await checkSecurityRateLimit(`contact:ip:${ip}`, 10, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте позже." },

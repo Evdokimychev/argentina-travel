@@ -145,6 +145,7 @@ export const POST = withRateLimit(postBooking, {
   keyPrefix: "bookings:create",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток бронирования. Повторите позже.",
+  policy: "security_critical",
 });
 
 export async function GET() {
