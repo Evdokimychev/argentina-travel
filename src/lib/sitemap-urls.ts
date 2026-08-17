@@ -220,6 +220,17 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
 
+  const safeCmsSlugs = async (loader: () => Promise<string[]>): Promise<string[]> => {
+    try {
+      return await loader();
+    } catch (error) {
+      console.error("[sitemap_cms_slugs_unavailable]", {
+        message: error instanceof Error ? error.message : String(error),
+      });
+      return [];
+    }
+  };
+
   const [
     tourPaths,
     excursionPaths,
@@ -235,10 +246,10 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     collectExcursionSitemapPaths(),
     collectPlacesSitemapPaths(),
     collectApartmentSitemapPaths(),
-    listPublishedGuideSlugs(),
-    listPublishedLandingSlugs(),
-    listPublishedDestinationSlugs(),
-    listPublishedLegalSlugs(),
+    safeCmsSlugs(() => listPublishedGuideSlugs()),
+    safeCmsSlugs(() => listPublishedLandingSlugs()),
+    safeCmsSlugs(() => listPublishedDestinationSlugs()),
+    safeCmsSlugs(() => listPublishedLegalSlugs()),
     collectKnowledgeBaseSitemapPaths(),
   ]);
 

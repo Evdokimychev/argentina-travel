@@ -135,8 +135,8 @@ export default function PartnerFeedHealthPanel() {
             </tbody>
           </table>
           <p className="mt-3 text-xs text-slate">
-            Обновлено: {formatSyncAt(data.generatedAt)}. Аудит публикации:{" "}
-            <code className="rounded bg-surface-muted px-1 py-0.5">npm run marketplace:quality</code>
+            Обновлено: {formatSyncAt(data.generatedAt)}. Повторный аудит публикации каталога —
+            команда marketplace:quality в репозитории.
           </p>
         </div>
       ) : null}
