@@ -10,7 +10,7 @@ import {
   killPort,
   readProductionBuildLock,
   removeProductionBuildLock,
-} from "./dev-utils.mjs";
+} from "../dev-utils.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
