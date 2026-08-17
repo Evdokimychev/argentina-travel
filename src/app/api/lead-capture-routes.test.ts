@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/rate-limit", () => ({
   getClientIp: () => "127.0.0.1",
   checkRateLimit: vi.fn().mockResolvedValue({ ok: true }),
+  checkSecurityRateLimit: vi.fn().mockResolvedValue({ ok: true }),
 }));
 vi.mock("@/lib/site-settings-server", () => ({
   fetchSiteFeatures: vi.fn().mockResolvedValue({ allowOrganizerSignup: true }),
