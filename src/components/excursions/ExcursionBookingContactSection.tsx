@@ -38,6 +38,8 @@ import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import { resolvePublicBookingErrorMessage } from "@/lib/partner-booking/public-errors";
 import type { AuthUser } from "@/types/auth";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
+import { getStoredConversionContext, persistConversionContext } from "@/lib/attribution/conversion-context";
 import {
   partnerTransitionMessage,
   type PartnerTransitionOutcome,
@@ -319,9 +321,17 @@ export default function ExcursionBookingContactSection() {
                 fillTravelersLater: true,
               },
             },
+            attribution: getStoredFirstTouchAttribution() ?? undefined,
+            conversionContext: getStoredConversionContext() ?? undefined,
             captchaToken,
             company,
           }),
+        });
+        persistConversionContext({
+          placement: "excursion_booking_form",
+          productId: excursion.slug,
+          productType: "excursion",
+          source: "excursion_detail",
         });
         const data = (await response.json().catch(() => ({}))) as {
           booking?: { id: string };

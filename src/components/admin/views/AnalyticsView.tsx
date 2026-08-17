@@ -39,7 +39,7 @@ export default function AnalyticsView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Аналитика"
-          subtitle="Динамика, выручка и воронка за выбранный период"
+          subtitle="Что произошло, откуда пришли, что конвертировалось, что сломано — только trusted KPI"
           actions={
             <NativeSelect
               value={period}
@@ -54,6 +54,13 @@ export default function AnalyticsView() {
             </NativeSelect>
           }
         />
+
+        <p className="text-sm text-slate">
+          Partner handoff ≠ sale. Lead ≠ won. Отсутствующие данные показываются как «Нет данных», не как 0.{" "}
+          <Link href="/admin/analytics/funnels" className="text-sky hover:underline">
+            Воронки
+          </Link>
+        </p>
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {analytics?.dataQuality.status === "partial" ? (
@@ -216,7 +223,11 @@ export default function AnalyticsView() {
                 <div key={item.label} className={cabinetStatCardClass}>
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
                   <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
-                    {loading ? "…" : (item.value ?? 0)}
+                    {loading
+                      ? "…"
+                      : item.value == null
+                        ? "Данные недоступны"
+                        : item.value}
                   </p>
                 </div>
               ))}

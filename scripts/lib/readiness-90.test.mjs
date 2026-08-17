@@ -89,13 +89,46 @@ test("missing evidence cannot be scored as ready", () => {
   const result = evaluateReadiness90({});
   assert.equal(result.ready, false);
   assert.equal(result.overall, 0);
-  assert.ok(result.roles.every((role) => role.score < 90));
+  assert.ok(
+    result.roles
+      .filter((role) => role.applicable !== false)
+      .every((role) => role.score < 90),
+  );
+  const payments = result.roles.find((role) => role.id === "payments");
+  assert.equal(payments.applicable, false);
+  assert.equal(payments.ready, true);
 });
 
-test("complete reproducible evidence scores every role above target", () => {
+test("complete reproducible evidence scores every applicable role above target", () => {
   const result = evaluateReadiness90(completeEvidence());
   assert.equal(result.ready, true);
-  assert.ok(result.roles.every((role) => role.score >= 90));
+  assert.ok(
+    result.roles
+      .filter((role) => role.applicable !== false)
+      .every((role) => role.score >= 90),
+  );
+});
+
+test("local-contract commercial funnel cannot satisfy live claim ratios", () => {
+  const evidence = completeEvidence();
+  evidence.commercialFunnel = {
+    status: "passed",
+    evidenceLevel: "local-contract",
+    events: true,
+    dashboard: true,
+    conversionProof: true,
+    leadCapture: true,
+    deduplication: true,
+    revenueAttribution: true,
+  };
+  const result = evaluateReadiness90(evidence);
+  const affiliate = result.roles.find((role) => role.id === "affiliate");
+  const leads = result.roles.find((role) => role.id === "leads");
+  const analytics = result.roles.find((role) => role.id === "analytics");
+  assert.equal(affiliate.evidence.find((item) => item.id === "funnel").earned, 0);
+  assert.equal(leads.evidence.find((item) => item.id === "funnel").earned, 0);
+  assert.equal(analytics.evidence.find((item) => item.id === "funnel").earned, 0);
+  assert.equal(result.ready, false);
 });
 
 test("a passed Lighthouse flag cannot hide slow pages", () => {

@@ -20,7 +20,6 @@ export const GTM_EVENTS = {
   tourCardImpression: "tour_card_impression",
   tourCardClick: "tour_card_click",
   tourView: "tour_view",
-  tourDetailView: "tour_detail_view",
   tourDateSelect: "tour_date_select",
   tourPeopleChange: "tour_people_change",
   excursionView: "excursion_view",
@@ -32,7 +31,6 @@ export const GTM_EVENTS = {
   blogCommentPost: "blog_comment_post",
   blogAffiliateEmbedView: "blog_affiliate_embed_view",
   localeSwitch: "locale_switch",
-  localeChange: "locale_change",
   currencyChange: "currency_change",
   searchSubmit: "search_submit",
   searchResultClick: "search_result_click",
@@ -41,7 +39,44 @@ export const GTM_EVENTS = {
   public503: "public_503",
 } as const;
 
+/**
+ * Legacy GTM/GA4 aliases retained for historical reports only.
+ * Canonical emitters must not dual-fire these names.
+ */
+export const GTM_EVENT_LEGACY_ALIASES = {
+  tourDetailView: "tour_detail_view",
+  localeChange: "locale_change",
+} as const;
+
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
+
+/** Normalized booking/commercial error classes — never free-text user input. */
+export type BookingErrorClass =
+  | "VALIDATION_ERROR"
+  | "PARTNER_UNAVAILABLE"
+  | "NO_AVAILABILITY"
+  | "CHECKOUT_TARGET_INVALID"
+  | "NETWORK_ERROR"
+  | "RATE_LIMITED"
+  | "SERVER_ERROR"
+  | "UNKNOWN_ERROR";
+
+export function normalizeBookingErrorClass(
+  message?: string | null,
+  explicit?: BookingErrorClass | null,
+): BookingErrorClass {
+  if (explicit) return explicit;
+  const raw = (message ?? "").toLowerCase();
+  if (!raw) return "UNKNOWN_ERROR";
+  if (/(valid|required|invalid|форма)/.test(raw)) return "VALIDATION_ERROR";
+  if (/(unavailable|partner|tripster|sputnik|youtravel)/.test(raw)) return "PARTNER_UNAVAILABLE";
+  if (/(availability|sold.?out|нет мест)/.test(raw)) return "NO_AVAILABILITY";
+  if (/(checkout|target|redirect|url)/.test(raw)) return "CHECKOUT_TARGET_INVALID";
+  if (/(network|fetch|timeout|offline)/.test(raw)) return "NETWORK_ERROR";
+  if (/(rate.?limit|429|слишком много)/.test(raw)) return "RATE_LIMITED";
+  if (/(server|500|503|internal)/.test(raw)) return "SERVER_ERROR";
+  return "UNKNOWN_ERROR";
+}
 
 declare global {
   interface Window {
@@ -174,7 +209,7 @@ export function trackMessengerClick(input: {
     input.channel === "whatsapp" ? GTM_EVENTS.whatsappClick : GTM_EVENTS.telegramClick;
   trackGtmEvent(event, {
     link_url: input.href,
-    link_text: input.label,
+    placement: input.label?.trim() ? "labeled" : "unlabeled",
     channel: input.channel,
   });
 }
@@ -275,11 +310,12 @@ export function trackExcursionBookingClick(input: {
   title?: string;
   action?: "preview" | "affiliate";
   placement?: string;
+  partner?: string;
 }): void {
   const bookingMode: BookingMode =
     input.action === "affiliate" ? "affiliate_redirect" : "partner_external";
-  trackGtmEvent(GTM_EVENTS.excursionBookingClick, {
-    product_type: "excursion",
+  const params = {
+    product_type: "excursion" as const,
     product_id: input.slug,
     item_id: input.slug,
     item_name: input.title,
@@ -287,7 +323,60 @@ export function trackExcursionBookingClick(input: {
     placement: input.placement,
     source: input.placement,
     booking_mode: bookingMode,
+    outcome: "started" as const,
+    partner: input.partner,
+  };
+  trackGtmEvent(GTM_EVENTS.excursionBookingClick, params);
+  const startPayload = createAnalyticsEventPayload(params);
+  trackGtmEvent(GTM_EVENTS.bookingStart, {
+    product_type: "excursion",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    booking_action: input.action ?? "preview",
+    placement: input.placement,
+    booking_mode: bookingMode,
+  });
+  postControlledAnalyticsEvent({
+    eventType: "booking_start",
+    eventId: typeof startPayload.event_id === "string" ? startPayload.event_id : undefined,
+    sessionId: typeof startPayload.session_id === "string" ? startPayload.session_id : undefined,
+    slug: input.slug,
+    metadata: {
+      product_type: "excursion",
+      source: input.placement ?? "excursion_booking",
+      booking_mode: bookingMode,
+      partner: input.partner,
+      handoff: true,
+    },
+  });
+  const partnerPayload = createAnalyticsEventPayload({
+    ...params,
     outcome: "started",
+  });
+  trackGtmEvent(GTM_EVENTS.partnerCheckoutClick, {
+    product_type: "excursion",
+    product_id: input.slug,
+    item_id: input.slug,
+    item_name: input.title,
+    booking_action: input.action ?? "preview",
+    placement: input.placement,
+    booking_mode: bookingMode,
+    outcome: "started",
+  });
+  postControlledAnalyticsEvent({
+    eventType: "partner_checkout_click",
+    eventId: typeof partnerPayload.event_id === "string" ? partnerPayload.event_id : undefined,
+    sessionId:
+      typeof partnerPayload.session_id === "string" ? partnerPayload.session_id : undefined,
+    slug: input.slug,
+    metadata: {
+      product_type: "excursion",
+      source: input.placement ?? "partner_checkout",
+      booking_mode: bookingMode,
+      partner: input.partner,
+      handoff: true,
+    },
   });
 }
 
@@ -308,8 +397,8 @@ export function trackTourView(input: {
     currency: "USD",
     organizer_id: input.organizerId,
   });
+  // Canonical business event only — legacy tour_detail_view is documented alias, not dual-fired.
   pushDataLayer({ ...payload, event: GTM_EVENTS.tourView });
-  pushDataLayer({ ...payload, event: GTM_EVENTS.tourDetailView });
   postControlledAnalyticsEvent({
     eventType: "tour_view",
     eventId: typeof payload.event_id === "string" ? payload.event_id : undefined,
@@ -426,13 +515,11 @@ export function trackLocaleSwitch(input: {
   to: string;
   path: string;
 }): void {
-  const params = {
+  trackGtmEvent(GTM_EVENTS.localeSwitch, {
     locale_from: input.from,
     locale_to: input.to,
     page_path: input.path,
-  };
-  trackGtmEvent(GTM_EVENTS.localeSwitch, params);
-  trackGtmEvent(GTM_EVENTS.localeChange, params);
+  });
 }
 
 export function trackCurrencyChange(input: {
@@ -559,13 +646,14 @@ export function trackBookingError(input: {
   slug: string;
   source?: string;
   message?: string;
+  errorClass?: BookingErrorClass;
 }): void {
   trackGtmEvent(GTM_EVENTS.bookingError, {
     product_type: input.productType,
     product_id: input.slug,
     item_id: input.slug,
     source: input.source,
-    error_message: input.message?.slice(0, 120),
+    error_class: normalizeBookingErrorClass(input.message, input.errorClass),
     outcome: "error",
   });
 }

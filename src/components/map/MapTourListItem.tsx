@@ -7,6 +7,8 @@ import type { MapTourPoint } from "@/lib/map-types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { cn } from "@/lib/cn";
 import { formatDays } from "@/lib/pluralize";
+import { trackTourCardClick } from "@/lib/analytics/gtm-events";
+import { persistConversionContext } from "@/lib/attribution/conversion-context";
 
 interface MapTourListItemProps {
   tour: MapTourPoint;
@@ -21,6 +23,21 @@ export default function MapTourListItem({
   onSelect,
   listItemRef,
 }: MapTourListItemProps) {
+  const trackMapCommerceIntent = () => {
+    trackTourCardClick({
+      slug: tour.slug,
+      title: tour.title,
+      placement: "map_tour_list",
+    });
+    persistConversionContext({
+      placement: "map_tour_list",
+      productId: tour.slug,
+      productType: "tour",
+      source: "map",
+      entryPath: typeof window !== "undefined" ? window.location.pathname : undefined,
+    });
+  };
+
   return (
     <li ref={listItemRef} data-tour-id={tour.id}>
       <article
@@ -29,7 +46,14 @@ export default function MapTourListItem({
           selected ? "bg-brand-light/40 ring-1 ring-sky/20" : "hover:bg-surface-muted/80"
         )}
       >
-        <button type="button" onClick={onSelect} className="flex min-w-0 flex-1 gap-3 text-left">
+        <button
+          type="button"
+          onClick={() => {
+            trackMapCommerceIntent();
+            onSelect();
+          }}
+          className="flex min-w-0 flex-1 gap-3 text-left"
+        >
           <div className="relative h-[72px] w-[88px] shrink-0 overflow-hidden rounded-xl">
             <Image src={tour.image} alt="" fill className="object-cover" sizes="88px" />
           </div>
@@ -56,6 +80,7 @@ export default function MapTourListItem({
           <Link
             href={`/tours/${tour.slug}`}
             className="text-xs font-medium text-brand hover:underline"
+            onClick={trackMapCommerceIntent}
           >
             Подробнее
           </Link>

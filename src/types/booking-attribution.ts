@@ -3,6 +3,8 @@ export type BookingAttribution = {
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
+  /** Privacy-safe creative/placement slot from utm_content when present. */
+  utmContent?: string;
   referrer?: string;
   landingPath?: string;
   apiKeyId?: string;
@@ -53,6 +55,7 @@ export function hasAttributionData(
     attribution.utmSource?.trim() ||
       attribution.utmMedium?.trim() ||
       attribution.utmCampaign?.trim() ||
+      attribution.utmContent?.trim() ||
       attribution.referrer?.trim() ||
       attribution.landingPath?.trim() ||
       attribution.apiKeyId?.trim()

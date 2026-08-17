@@ -9,6 +9,8 @@ import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackNewsletterSubscribe } from "@/lib/analytics/gtm-events";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
+import { getStoredConversionContext } from "@/lib/attribution/conversion-context";
 import { tokenCardSurfaceClass } from "@/lib/design-tokens";
 import { cn } from "@/lib/cn";
 import { validateEmail } from "@/lib/form-validation";
@@ -52,7 +54,15 @@ export default function FooterNewsletter() {
       }
 
       setSubmitted(true);
-      trackNewsletterSubscribe({ source: "footer" });
+      const firstTouch = getStoredFirstTouchAttribution();
+      const conversion = getStoredConversionContext();
+      trackNewsletterSubscribe({
+        source: firstTouch?.utmSource
+          ? `footer:${firstTouch.utmSource}`
+          : conversion?.placement
+            ? `footer:${conversion.placement}`
+            : "footer",
+      });
       feedback.success({
         title: "Подписка оформлена",
         description: "Мы будем присылать новости о турах и советы по Аргентине.",

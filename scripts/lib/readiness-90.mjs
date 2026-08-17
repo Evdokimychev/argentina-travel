@@ -123,9 +123,22 @@ function stagingJourneyRatio(report, ids) {
   return passed / ids.length;
 }
 
+const LIVE_COMMERCIAL_CLAIM_KEYS = new Set([
+  "events",
+  "dashboard",
+  "conversionProof",
+  "leadCapture",
+  "deduplication",
+  "revenueAttribution",
+]);
+
 function artifactRatio(report, required = []) {
   if (!report || statusRatio(report) === 0) return 0;
   if (!required.length) return 1;
+  // Local contracts must never satisfy live commercial claims — even if JSON is hand-edited.
+  if (report.evidenceLevel === "local-contract") {
+    if (required.some((key) => LIVE_COMMERCIAL_CLAIM_KEYS.has(key))) return 0;
+  }
   return required.filter((key) => report[key] === true).length / required.length;
 }
 
@@ -141,7 +154,20 @@ function analyticsRatio(report) {
   return automated * 0.5 + live * 0.5;
 }
 
-function role(id, label, items) {
+function role(id, label, items, { applicable = true, deferredReason = null } = {}) {
+  if (!applicable) {
+    return {
+      id,
+      label,
+      score: 100,
+      target: READINESS_TARGET,
+      ready: true,
+      applicable: false,
+      deferredReason,
+      evidence: [],
+      blockers: [],
+    };
+  }
   const rawScore = Math.round(items.reduce((sum, item) => sum + item.earned, 0) * 10) / 10;
   const hasWeakEvidence = items.some((item) => item.ratio < READINESS_TARGET / 100);
   const score = hasWeakEvidence ? Math.min(rawScore, READINESS_TARGET - 0.1) : rawScore;
@@ -151,10 +177,24 @@ function role(id, label, items) {
     score,
     target: READINESS_TARGET,
     ready: score > READINESS_TARGET,
+    applicable: true,
+    deferredReason: null,
     evidence: items,
     blockers: items.filter((item) => item.ratio < 0.9).map((item) => `${item.label}: ${item.reason}`),
   };
 }
+
+/**
+ * Current production commercial modes (mirrors src/lib/commerce/business-model.ts).
+ * Keep in sync — intentional own_payment=false must not block overall readiness.
+ */
+const PRODUCTION_COMMERCIAL_MODES = Object.freeze({
+  own_lead: true,
+  partner_redirect: true,
+  affiliate: true,
+  own_booking: true,
+  own_payment: false,
+});
 
 export function evaluateReadiness90(evidence) {
   const portal = role("portal", "Туристический портал и путеводитель", [
@@ -189,12 +229,21 @@ export function evaluateReadiness90(evidence) {
     contribution("production", "Production health", 10, productionRatio(evidence), "нужен воспроизводимый release evidence"),
   ]);
 
-  const payments = role("payments", "Онлайн-оплата и возвраты", [
-    contribution("journey", "Staging journey J22", 40, stagingJourneyRatio(evidence.staging, ["J22"]), "нужен sandbox payment journey с signed webhook"),
-    contribution("provider", "Выбранный платёжный провайдер", 30, artifactRatio(evidence.paymentProvider, ["ownerApproval", "sandboxPayment", "signedWebhook", "reconciliation"]), "финальный этап: Т-Банк или Mercado Pago после решения владельца"),
-    contribution("refund", "Возвраты и споры", 15, artifactRatio(evidence.paymentProvider, ["refundProof", "disputeProcess", "idempotency"]), "нужны refund, dispute и idempotency evidence"),
-    contribution("compliance", "Чеки, налоги и договоры", 15, artifactRatio(evidence.paymentProvider, ["legalReview", "receiptPolicy", "merchantContract"]), "нужны юридическая проверка, чеки и договор эквайринга"),
-  ]);
+  const payments = role(
+    "payments",
+    "Онлайн-оплата и возвраты",
+    [
+      contribution("journey", "Staging journey J22", 40, stagingJourneyRatio(evidence.staging, ["J22"]), "нужен sandbox payment journey с signed webhook"),
+      contribution("provider", "Выбранный платёжный провайдер", 30, artifactRatio(evidence.paymentProvider, ["ownerApproval", "sandboxPayment", "signedWebhook", "reconciliation"]), "финальный этап: Т-Банк или Mercado Pago после решения владельца"),
+      contribution("refund", "Возвраты и споры", 15, artifactRatio(evidence.paymentProvider, ["refundProof", "disputeProcess", "idempotency"]), "нужны refund, dispute и idempotency evidence"),
+      contribution("compliance", "Чеки, налоги и договоры", 15, artifactRatio(evidence.paymentProvider, ["legalReview", "receiptPolicy", "merchantContract"]), "нужны юридическая проверка, чеки и договор эквайринга"),
+    ],
+    {
+      applicable: PRODUCTION_COMMERCIAL_MODES.own_payment === true,
+      deferredReason:
+        "OWN_PAYMENT intentionally disabled in current production business model; partner handoff + own leads are the active modes",
+    },
+  );
 
   const analytics = role("analytics", "Маркетинг и измерение выручки", [
     contribution("live-analytics", "Live analytics readiness", 50, analyticsRatio(evidence.analytics), "нужны GTM, Consent Mode, dataLayer и verification"),
@@ -204,13 +253,18 @@ export function evaluateReadiness90(evidence) {
   ]);
 
   const roles = [portal, affiliate, leads, booking, payments, analytics];
-  const overall = Math.round((roles.reduce((sum, item) => sum + item.score, 0) / roles.length) * 10) / 10;
+  const scoredRoles = roles.filter((item) => item.applicable !== false);
+  const overall =
+    Math.round((scoredRoles.reduce((sum, item) => sum + item.score, 0) / scoredRoles.length) * 10) / 10;
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     target: READINESS_TARGET,
     overall,
-    ready: overall > READINESS_TARGET && roles.every((item) => item.ready),
+    ready: overall > READINESS_TARGET && scoredRoles.every((item) => item.ready),
+    commercialModes: PRODUCTION_COMMERCIAL_MODES,
     roles,
-    blockers: roles.filter((item) => !item.ready).map((item) => `${item.label}: ${item.score}%`),
+    blockers: scoredRoles
+      .filter((item) => !item.ready)
+      .map((item) => `${item.label}: ${item.score}%`),
   };
 }
