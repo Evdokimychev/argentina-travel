@@ -19,7 +19,7 @@ recommendations:
   - "В CABA certificado de legalidad иностранной лицензии помогает подтвердить предыдущую habilitación и избежать автоматического статуса начинающего водителя."
 last_verified: "2026-07-20"
 confidence: high
-seo_slug: "kak-poluchit-voditelskie-prava-v-argentine"
+seo_slug: "kak-poluchit-prava-v-argentine"
 provenance:
   schema_version: 1
   mode: strict
