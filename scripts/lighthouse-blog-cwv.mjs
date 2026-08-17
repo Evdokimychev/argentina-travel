@@ -16,11 +16,19 @@
  *   SKIP_LIGHTHOUSE=1 — exit 0 without running (CI without server)
  *
  * Writes: var/ops/lighthouse-blog-cwv-last.json
+ *
+ * Cold-run model on CI: one long-lived headless Chrome for the suite, with
+ * Lighthouse storage reset between navigations. Fresh Chrome process-per-run
+ * exhausted GitHub-hosted runners after ~10 launches and then every later
+ * sample timed out. Workers still isolate CDP in a child process so a hung
+ * gather cannot wedge the parent; Chrome itself is owned by the parent and
+ * only relaunched after a hard timeout.
  */
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { launch as launchChrome } from "chrome-launcher";
 import {
   captureCandidateContext,
   finalizeCandidateEvidence,
@@ -64,13 +72,18 @@ const requestedRunTimeoutMs = Number(process.env.LIGHTHOUSE_RUN_TIMEOUT_MS ?? 24
 const RUN_TIMEOUT_MS = Number.isFinite(requestedRunTimeoutMs)
   ? Math.max(30_000, Math.min(600_000, Math.floor(requestedRunTimeoutMs)))
   : 240_000;
-const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS ?? 1_500);
+const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS ?? 2_000);
 const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
-  ? Math.max(0, Math.min(10_000, Math.floor(requestedCleanupDelayMs)))
-  : 1_500;
+  ? Math.max(0, Math.min(15_000, Math.floor(requestedCleanupDelayMs)))
+  : 2_000;
 const configuredChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
 const USE_CONFIGURED_CHROME = Number.isInteger(configuredChromePort) && configuredChromePort > 0;
 const SINGLE_RUN_WORKER = path.join(__dirname, "lib/lighthouse-single-run.mjs");
+const CHROME_FLAGS = ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"];
+const reuseChrome =
+  process.env.LIGHTHOUSE_REUSE_CHROME === "0"
+    ? false
+    : process.env.LIGHTHOUSE_REUSE_CHROME === "1" || !USE_CONFIGURED_CHROME;
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -121,7 +134,6 @@ function describeLighthouseFailure(lh) {
 function killProcessTree(pid) {
   if (!Number.isInteger(pid) || pid <= 0) return;
   try {
-    // Negative PID targets the process group started with detached:true.
     process.kill(-pid, "SIGKILL");
   } catch {
     try {
@@ -133,8 +145,6 @@ function killProcessTree(pid) {
 }
 
 function sweepOrphanedChrome() {
-  // Best-effort reclaim of headless Chrome left after a hard timeout kill.
-  // Scoped flags avoid touching unrelated desktop Chromium sessions.
   spawnSync(
     "pkill",
     ["-9", "-f", "chrome.*--headless.*--remote-debugging-port"],
@@ -142,16 +152,32 @@ function sweepOrphanedChrome() {
   );
   spawnSync(
     "pkill",
-    ["-9", "-f", "chromedriver|chrome-headless-shell"],
+    ["-9", "-f", "chrome-headless-shell"],
     { stdio: "ignore" },
   );
 }
 
+async function startSharedChrome() {
+  return launchChrome({ chromeFlags: CHROME_FLAGS });
+}
+
+async function stopSharedChrome(chrome) {
+  if (!chrome) return;
+  try {
+    chrome.kill();
+  } catch {
+    // Already dead.
+  }
+  sweepOrphanedChrome();
+  await sleep(CHROME_CLEANUP_DELAY_MS);
+}
+
 /**
- * Run one cold Lighthouse sample in an isolated child process + process group.
- * Parent never holds a CDP session, so a hung gather cannot wedge later runs.
+ * Run one Lighthouse sample in an isolated child process.
+ * When chromePort is set, the worker attaches to the shared browser instead of
+ * launching a fresh Chrome (avoids runner exhaustion after many cold launches).
  */
-function runIsolatedColdAudit(url, outFile) {
+function runIsolatedColdAudit(url, outFile, chromePort) {
   return new Promise((resolve) => {
     fs.rmSync(outFile, { force: true });
     const child = spawn(process.execPath, [SINGLE_RUN_WORKER], {
@@ -161,9 +187,7 @@ function runIsolatedColdAudit(url, outFile) {
         LIGHTHOUSE_SINGLE_URL: url,
         LIGHTHOUSE_SINGLE_OUT: outFile,
         LIGHTHOUSE_CATEGORIES: CATEGORIES.join(","),
-        ...(USE_CONFIGURED_CHROME
-          ? { LIGHTHOUSE_CHROME_PORT: String(configuredChromePort) }
-          : {}),
+        ...(chromePort ? { LIGHTHOUSE_CHROME_PORT: String(chromePort) } : {}),
       },
       stdio: ["ignore", "pipe", "pipe"],
       detached: true,
@@ -181,7 +205,6 @@ function runIsolatedColdAudit(url, outFile) {
 
     const timer = setTimeout(() => {
       killProcessTree(child.pid);
-      sweepOrphanedChrome();
       fs.rmSync(outFile, { force: true });
       finish({ timedOut: true });
     }, RUN_TIMEOUT_MS);
@@ -241,8 +264,17 @@ fs.rmSync(reportFile, { force: true });
 const results = [];
 let executionFailed = false;
 let exitCode = 1;
+/** @type {Awaited<ReturnType<typeof startSharedChrome>> | null} */
+let sharedChrome = null;
 
 try {
+  if (reuseChrome && !USE_CONFIGURED_CHROME) {
+    sharedChrome = await startSharedChrome();
+    console.log(
+      `Shared Chrome on debugging port ${sharedChrome.port} (storage reset between cold navigations)`,
+    );
+  }
+
   for (const samplePath of SAMPLE_PATHS) {
     for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
       const url = `${BASE_URL}${samplePath}`;
@@ -252,24 +284,29 @@ try {
       );
 
       console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
-      fs.rmSync(outFile, { force: true });
+      if (!probe(url)) {
+        executionFailed = true;
+        const message = `target not reachable before run: ${url}`;
+        results.push({ path: samplePath, url, run, error: message, pass: false });
+        console.log(`  FAIL error=${message}`);
+        continue;
+      }
 
+      const chromePort = USE_CONFIGURED_CHROME
+        ? configuredChromePort
+        : sharedChrome?.port;
       let lh;
       try {
-        // True cold run in an isolated worker process group. In-process Chrome
-        // relaunches previously poisoned later CDP sessions after the first
-        // timeout kill on GitHub-hosted runners.
-        lh = await runIsolatedColdAudit(url, outFile);
-        if (lh?.timedOut || lh?.error) {
-          await sleep(CHROME_CLEANUP_DELAY_MS);
-        } else if (CHROME_CLEANUP_DELAY_MS > 0) {
-          await sleep(Math.min(CHROME_CLEANUP_DELAY_MS, 500));
-        }
+        lh = await runIsolatedColdAudit(url, outFile, chromePort);
       } catch (error) {
         executionFailed = true;
         const message = error instanceof Error ? error.message : String(error);
         results.push({ path: samplePath, url, run, error: message, pass: false });
         console.log(`  FAIL error=${message}`);
+        if (sharedChrome) {
+          await stopSharedChrome(sharedChrome);
+          sharedChrome = await startSharedChrome();
+        }
         continue;
       }
 
@@ -278,11 +315,16 @@ try {
         const error = describeLighthouseFailure(lh);
         results.push({ path: samplePath, url, run, error, pass: false });
         console.log(`  FAIL error=${error}`);
+        if (sharedChrome) {
+          // Hung gather leaves the shared browser unusable; recycle it before
+          // the next sample so later routes are not stuck behind a dead CDP.
+          await stopSharedChrome(sharedChrome);
+          sharedChrome = await startSharedChrome();
+        }
         continue;
       }
 
       const report = lh.lhr;
-      // outFile already written by the worker; keep a stable copy path.
       const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
       const a11yScore = CATEGORIES.includes("accessibility")
         ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
@@ -407,7 +449,9 @@ try {
     baseUrl: BASE_URL,
     categories: CATEGORIES,
     runsPerPath: RUNS_PER_PATH,
-    device: "Lighthouse mobile / simulated throttling / isolated cold Chrome worker per run",
+    device: reuseChrome
+      ? "Lighthouse mobile / simulated throttling / shared Chrome + storage-reset cold navigations"
+      : "Lighthouse mobile / simulated throttling / isolated cold Chrome worker per run",
     budget: BUDGET,
     medianPerformance: medianPerf,
     medianAccessibility: medianA11y || null,
@@ -459,6 +503,9 @@ try {
   };
   writeSummaryReport(fallback);
   exitCode = 1;
+} finally {
+  await stopSharedChrome(sharedChrome);
+  sharedChrome = null;
 }
 
 process.exit(exitCode);

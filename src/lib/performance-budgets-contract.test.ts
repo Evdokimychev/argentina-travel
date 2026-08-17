@@ -34,6 +34,8 @@ describe("Sprint 3 performance budgets", () => {
     expect(runner).toContain('spawnSync("git", ["rev-parse", "HEAD"]');
     expect(runner).toContain("runIsolatedColdAudit");
     expect(runner).toContain("lighthouse-single-run.mjs");
+    expect(runner).toContain("startSharedChrome");
+    expect(runner).toContain("LIGHTHOUSE_REUSE_CHROME");
     expect(worker).toContain('launch as launchChrome');
     expect(worker).toContain("disableFullPageScreenshot: true");
   });

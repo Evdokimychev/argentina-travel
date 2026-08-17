@@ -38,9 +38,13 @@ export const LIGHTHOUSE_PHASE2_PATHS = [
   // Heavy editorial article details are covered by `lighthouse:blog` and
   // production baselines. On GitHub-hosted runners their post-load a11y/DOM
   // gather routinely exceeds the cold-run timeout and destabilizes Chrome.
-  "/mapa-argentina",
   "/contacts",
   "/destinations/patagonia",
+  // MapLibre/WebGL cold gathers occasionally hang on GHA runners and, after a
+  // hard timeout kill, historically poisoned later CDP sessions. Keep the map
+  // in the blocking set, but run it last so earlier public routes still produce
+  // complete 3-run evidence when the canvas gather wedges.
+  "/mapa-argentina",
 ];
 
 // The partner detail depends on live supplier inventory and is therefore a
