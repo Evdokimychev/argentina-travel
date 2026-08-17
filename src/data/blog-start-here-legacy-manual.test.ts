@@ -76,6 +76,34 @@ describe("start-here / REWRITE_QUEUE pillars vs legacyManual* maps", () => {
 const HIGH_IMPACT_TYPED_SLUGS = [
   "argentina-tourist-visa-2026",
   "patagoniya-marshrut-14-dney",
+  "itinerary-за-14-дней",
+  "itinerary-за-10-дней",
+  "itinerary-чек-лист",
+  "itinerary-ошибки",
+  "iguazu-за-3-дня",
+  "patagonia-авиабилеты",
+] as const;
+
+const HIGH_IMPACT_TYPED_POST_CONSTANTS = [
+  "ARGENTINA_TOURIST_VISA_2026_POST",
+  "PATAGONIYA_MARSHRUT_14_DNEY_POST",
+  "ITINERARY_ZA_14_DNEY_POST",
+  "ITINERARY_ZA_10_DNEY_POST",
+  "ITINERARY_CHEK_LIST_POST",
+  "ITINERARY_OSHIBKI_POST",
+  "IGUAZU_ZA_3_DNYA_POST",
+  "PATAGONIA_AVIABILETY_POST",
+] as const;
+
+const HIGH_IMPACT_REMOVED_INLINE_IDS = [
+  'id: "6"',
+  'id: "blog-patagonia-14"',
+  'id: "blog-itinerary-14-days"',
+  'id: "blog-itinerary-10-days"',
+  'id: "blog-itinerary-checklist"',
+  'id: "blog-itinerary-mistakes"',
+  'id: "blog-iguazu-za-3-dnya"',
+  'id: "blog-patagonia-flights"',
 ] as const;
 
 describe("high-impact typed blog modules vs legacyManual* maps", () => {
@@ -106,10 +134,12 @@ describe("high-impact typed blog modules vs legacyManual* maps", () => {
     },
   );
 
-  it("visa and patagonia-14 wire through typed modules, not inline legacy corpus bodies", () => {
-    expect(blogTs).toContain("ARGENTINA_TOURIST_VISA_2026_POST");
-    expect(blogTs).toContain("PATAGONIYA_MARSHRUT_14_DNEY_POST");
-    expect(blogTs).not.toContain('id: "6"');
-    expect(blogTs).not.toContain('id: "blog-patagonia-14"');
+  it("high-impact batch wires through typed modules, not inline legacy corpus bodies", () => {
+    for (const constName of HIGH_IMPACT_TYPED_POST_CONSTANTS) {
+      expect(blogTs).toContain(constName);
+    }
+    for (const inlineId of HIGH_IMPACT_REMOVED_INLINE_IDS) {
+      expect(blogTs).not.toContain(inlineId);
+    }
   });
 });

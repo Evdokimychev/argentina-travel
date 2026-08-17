@@ -10,9 +10,9 @@ Invisible third-layer edits must not remain the long-term SSOT.
 | Override map | Approx. size | Action | Notes |
 |--------------|-------------:|--------|-------|
 | `legacyManualBlogPosts` in `src/data/blog.ts` | large inline corpus | MIGRATE | Move to MD/typed modules via existing sync pipelines; keep URL/slug |
-| `legacyManualOfficialSources` | ~11 slugs | MIGRATE | Fold into article `sources` / KB claims; visa + patagonia-14 cleared |
-| `legacyManualExcerptOverrides` | ~7 slugs | MIGRATE | Fold into post excerpt in canonical doc |
-| `legacyManualReplacementSections` | itinerary batch | MIGRATE then REMOVE | Visa + patagonia-14 migrated to typed modules |
+| `legacyManualOfficialSources` | ~5 slugs | MIGRATE | Fold into article `sources` / KB claims; itinerary/visa/iguazu/flights batch cleared |
+| `legacyManualExcerptOverrides` | ~1 slug | MIGRATE | Fold into post excerpt in canonical doc; wildlife remains |
+| `legacyManualReplacementSections` | wildlife only | MIGRATE then REMOVE | Itinerary + iguazu-3d + flights migrated to typed modules |
 | `legacyManualSectionOverrides` | ~4 slugs | MIGRATE then REMOVE | Salta pillar migrated to typed module |
 | `legacyManualRemovedSections` | ~2 slugs | KEEP TEMPORARILY | Explicit removals until source cleaned |
 | `EDITORIAL_OVERRIDES` (`src/data/blog-editorial`) | ~38 | KEEP TEMPORARILY → MIGRATE | Typed polish for Class B; canonical map now forces noindex + `canonicalSlug` even when `publicationReady` |
