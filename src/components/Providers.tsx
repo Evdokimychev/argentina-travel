@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import type { LocaleCode } from "@/types/locale";
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
@@ -31,6 +31,39 @@ const GuideAssistantWidget = dynamic(() => import("@/components/guide/GuideAssis
   ssr: false,
 });
 
+function IdleMount({
+  children,
+  delayMs = 2500,
+}: {
+  children: React.ReactNode;
+  delayMs?: number;
+}) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let timeoutId: number | null = null;
+    const arm = () => {
+      if (cancelled) return;
+      setReady(true);
+    };
+
+    const ric = window.requestIdleCallback?.(arm, { timeout: delayMs });
+    if (ric == null) {
+      timeoutId = window.setTimeout(arm, delayMs);
+    }
+
+    return () => {
+      cancelled = true;
+      if (ric != null) window.cancelIdleCallback?.(ric);
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+    };
+  }, [delayMs]);
+
+  if (!ready) return null;
+  return <>{children}</>;
+}
+
 export default function Providers({
   children,
   locale,
@@ -59,11 +92,17 @@ export default function Providers({
                   {siteDesign?.showRouteProgress !== false ? <RouteProgressBar /> : null}
                   <SiteHashScroll />
                   {children}
-                  {!isWorkspace && siteDesign?.showCustomCursor !== false ? <CustomCursor /> : null}
+                  {!isWorkspace && siteDesign?.showCustomCursor !== false ? (
+                    <IdleMount delayMs={1200}>
+                      <CustomCursor />
+                    </IdleMount>
+                  ) : null}
                   {!isWorkspace && siteDesign?.showScrollToTop !== false ? (
-                    <ScrollNavigationRail
-                      showOnMobile={siteDesign?.showScrollToTopMobile === true}
-                    />
+                    <IdleMount delayMs={1800}>
+                      <ScrollNavigationRail
+                        showOnMobile={siteDesign?.showScrollToTopMobile === true}
+                      />
+                    </IdleMount>
                   ) : null}
                   {!isWorkspace ? (
                     <OnDemandPublicDialogs
@@ -71,13 +110,21 @@ export default function Providers({
                     />
                   ) : null}
                   <CookieConsentBanner />
-                  {!isWorkspace ? <PwaShell /> : null}
+                  {!isWorkspace ? (
+                    <IdleMount delayMs={3500}>
+                      <PwaShell />
+                    </IdleMount>
+                  ) : null}
                   {!isWorkspace ? (
                     <Suspense fallback={null}>
                       <FirstTouchAttributionCapture />
                     </Suspense>
                   ) : null}
-                  {!isWorkspace ? <GuideAssistantWidget /> : null}
+                  {!isWorkspace ? (
+                    <IdleMount delayMs={4000}>
+                      <GuideAssistantWidget />
+                    </IdleMount>
+                  ) : null}
                   <SiteAnalytics />
                   <SiteToastHost />
                 </InteractionTrackingProvider>

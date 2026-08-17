@@ -110,8 +110,16 @@ export function ContentCardMedia({
         ? "from-charcoal/30 via-charcoal/5 to-transparent"
         : null;
 
+  // Media must not intercept the stretch overlay link (z-0). Nested interactive
+  // chrome re-enables hits via pointer-events-auto (badges stay none).
   return (
-    <div className={cn("relative overflow-hidden bg-surface-muted", aspectClass, className)}>
+    <div
+      className={cn(
+        "pointer-events-none relative overflow-hidden bg-surface-muted",
+        aspectClass,
+        className,
+      )}
+    >
       {children}
       {gradientClass ? (
         <div

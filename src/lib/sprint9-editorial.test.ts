@@ -73,8 +73,11 @@ describe("Sprint 9 — editorial content hubs", () => {
 
   it("guide pillar pages export per-page OG and Twitter metadata", () => {
     const page = readFileSync(join(root, "app/guide/[slug]/page.tsx"), "utf8");
-    expect(page).toContain("buildPublicPageMetadata");
-    expect(page).toContain("getGuideTopicHeroImage");
+    expect(page).toContain("buildGuideSlugPageMetadata");
+    const metadataHelper = readFileSync(join(root, "lib/cms/guide-slug-metadata.ts"), "utf8");
+    expect(metadataHelper).toContain("buildPublicPageMetadata");
+    expect(metadataHelper).toContain("getGuideTopicHeroImage");
+    expect(metadataHelper).toContain("getGuideTopicMetadata");
     const meta = buildPublicPageMetadata({
       title: "Экономика и деньги",
       description: "Тест",

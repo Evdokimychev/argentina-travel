@@ -96,7 +96,7 @@ export default function MapStyleLayersControl({
         className={cn(
           "relative flex h-10 w-10 items-center justify-center rounded-xl border shadow-md backdrop-blur-md transition",
           open
-            ? "border-sky/40 bg-sky text-white"
+            ? "border-sky/40 bg-sky-ink text-white"
             : "border-white/60 bg-white/92 text-charcoal hover:border-sky/40 hover:text-sky"
         )}
         title="Стиль карты и слои"
@@ -163,7 +163,7 @@ export default function MapStyleLayersControl({
                   className={cn(
                     "flex items-center gap-2 rounded-lg border px-2 py-2 text-left transition",
                     active
-                      ? "border-sky/40 bg-sky text-white shadow-sm"
+                      ? "border-sky/40 bg-sky-ink text-white shadow-sm"
                       : "border-gray-200/80 bg-white text-charcoal hover:border-sky/40 hover:text-sky"
                   )}
                   aria-pressed={active}

@@ -215,7 +215,9 @@ export default function BlogIndexView({
                   <BlogCard
                     post={post}
                     variant={hasActiveFilters ? "standard" : variant}
-                    priority={index === 0 && variant === "featured" && !hasActiveFilters}
+                    // Index LCP is HubHero (`hero-mobile.webp`). Catalog covers stay lazy
+                    // so they never compete for fetchpriority on the first paint.
+                    priority={false}
                   />
                 </li>
               );

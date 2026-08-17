@@ -157,7 +157,8 @@ export const DEFAULT_SITE_DESIGN: SiteDesignGlobal = {
   showUtilityBar: false,
   showHeaderMapButton: true,
   showSiteSearch: true,
-  showThemeToggle: true,
+  // Dark theme is not production-ready (`DARK_THEME_ENABLED`); keep toggle off by default.
+  showThemeToggle: false,
   showCustomCursor: true,
   showScrollToTop: true,
   showScrollToTopMobile: false,

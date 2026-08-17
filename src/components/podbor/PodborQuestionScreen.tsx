@@ -125,8 +125,8 @@ export default function PodborQuestionScreen({
         </div>
         )}
 
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-100 bg-white/95 backdrop-blur-md">
-          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
+        <div className="fixed inset-x-0 z-40 border-t border-border-subtle bg-surface-elevated/95 backdrop-blur-md transition-[bottom] duration-200 [bottom:calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px))]">
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:px-6">
             <Button
               type="button"
               variant="ghost"

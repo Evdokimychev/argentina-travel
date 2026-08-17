@@ -125,7 +125,7 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
             const spanWide = variant === "featured" || (index === 0 && post.richArticleId);
             return (
               <li key={post.id} id={`hub-post-${post.slug}`} className={spanWide ? "sm:col-span-2 scroll-mt-28" : "scroll-mt-28"}>
-                <BlogCard post={post} variant={variant} priority={index === 0 && variant === "featured"} />
+                <BlogCard post={post} variant={variant} priority={false} />
               </li>
             );
           })}
@@ -156,7 +156,7 @@ function FilterChip({
       className={cn(
         "blog-touch-target inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
         active
-          ? "border-sky bg-sky text-white shadow-sm"
+          ? "border-sky-ink bg-sky-ink text-white shadow-sm"
           : "border-gray-200 bg-white text-charcoal hover:border-sky/30 hover:bg-sky/5",
       )}
     >

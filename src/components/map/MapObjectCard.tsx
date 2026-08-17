@@ -270,7 +270,7 @@ export default function MapObjectCard({
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-semibold transition",
                     selectedDestinationIata === dest.iata
-                      ? "border-sky bg-sky text-white shadow-sm"
+                      ? "border-sky-ink bg-sky-ink text-white shadow-sm"
                       : "border-sky/20 bg-surface-elevated text-charcoal hover:border-sky hover:text-sky-ink",
                   )}
                 >

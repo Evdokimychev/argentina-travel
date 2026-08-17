@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
@@ -9,7 +10,6 @@ import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileMenu from "@/components/auth/ProfileMenu";
 import DesktopSiteNav from "@/components/navigation/DesktopSiteNav";
-import { SiteNavFullScreenOverlay } from "@/components/navigation/SiteNavDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
@@ -36,6 +36,12 @@ import type {
 } from "@/types/site-globals";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 import { filterPublicLinks, filterSiteNavSections } from "@/lib/public-module-visibility";
+
+const SiteNavFullScreenOverlay = dynamic(
+  () =>
+    import("@/components/navigation/SiteNavDrawer").then((mod) => mod.SiteNavFullScreenOverlay),
+  { ssr: false },
+);
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -105,6 +111,7 @@ export default function Header({
   const pathname = usePathname();
   const canGoBack = useCanGoBack();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [openMegaMenuId, setOpenMegaMenuId] = useState<string | null>(null);
   const [headerScrolled, setHeaderScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -117,7 +124,7 @@ export default function Header({
   const showUtilityBarMobile = showAnnouncement && marketing?.announcementOnMobile === true;
   const showMapButton = design?.showHeaderMapButton !== false;
   const showSiteSearch = design?.showSiteSearch !== false;
-  const showThemeToggle = design?.showThemeToggle !== false;
+  const showThemeToggle = design?.showThemeToggle === true;
 
   const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
   const overlayLocked = useSiteHeaderOverlayLocked();
@@ -300,7 +307,10 @@ export default function Header({
             ariaLabel={t("nav.menu")}
             ariaExpanded={mobileMenuOpen}
             ariaControls="site-nav-overlay"
-            onClick={() => setMobileMenuOpen((open) => !open)}
+            onClick={() => {
+              setMobileMenuMounted(true);
+              setMobileMenuOpen((open) => !open);
+            }}
             className="xl:hidden"
           >
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -354,17 +364,19 @@ export default function Header({
         </div>
       </div>
 
-      <SiteNavFullScreenOverlay
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        title={t("nav.menu")}
-        sections={mobileNavSections}
-        pathname={pathname}
-        t={t}
-        returnFocusRef={mobileMenuTriggerRef}
-        headerActions={mobileMenuHeaderActions}
-        footer={mobileMenuFooter}
-      />
+      {mobileMenuMounted ? (
+        <SiteNavFullScreenOverlay
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+          title={t("nav.menu")}
+          sections={mobileNavSections}
+          pathname={pathname}
+          t={t}
+          returnFocusRef={mobileMenuTriggerRef}
+          headerActions={mobileMenuHeaderActions}
+          footer={mobileMenuFooter}
+        />
+      ) : null}
     </header>
   );
 }

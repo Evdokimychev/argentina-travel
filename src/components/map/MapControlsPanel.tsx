@@ -126,7 +126,7 @@ export default function MapControlsPanel({
           <button
             type="button"
             onClick={() => setMobileSheetOpen(true)}
-            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky text-white shadow-sm transition-colors hover:bg-sky-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-ink text-white shadow-sm transition-colors hover:bg-sky-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Поиск и фильтры карты"
             aria-haspopup="dialog"
           >

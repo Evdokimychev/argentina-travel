@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * @deprecated Sprint 4 — orphan legacy card. Prefer MarketplaceTourCard / ContentCard.
+ * Kept only as a reference shell; do not wire into public catalogs.
+ */
 import Image from "next/image";
 import Link from "next/link";
 import { Tour } from "@/types";

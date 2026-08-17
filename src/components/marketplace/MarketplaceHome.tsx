@@ -386,7 +386,7 @@ function MarketplaceHomeBody({
                     key={dest.id}
                     href={destinationHref(dest.id)}
                     className={cn(
-                      "group relative block h-44 overflow-hidden rounded-[1.35rem] ring-1 ring-gray-100 transition-shadow hover:shadow-elevated",
+                      "group relative block h-44 overflow-hidden rounded-card ring-1 ring-border-subtle transition-shadow hover:shadow-elevated",
                       index === 0
                         ? "col-span-2 h-64 sm:col-span-7 sm:h-72"
                         : index === 1

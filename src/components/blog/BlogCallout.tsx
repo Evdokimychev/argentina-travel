@@ -19,8 +19,8 @@ const CALLOUT_CONFIG: Record<
     border: "border-sky/30",
     bg: "bg-sky/[0.09]",
     icon: Info,
-    iconClass: "text-[#3d6a99]",
-    labelClass: "text-[#2d5478]",
+    iconClass: "text-sky-ink",
+    labelClass: "text-sky-dark",
   },
   tip: {
     border: "border-emerald-200/80",

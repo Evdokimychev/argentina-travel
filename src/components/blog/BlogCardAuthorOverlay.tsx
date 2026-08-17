@@ -1,5 +1,6 @@
 "use client";
 
+import { blogAuthorAvatarImage } from "@/components/blog/blog-card-image-delivery";
 import { SafeImage } from "@/components/ui/safe-image";
 import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { cn } from "@/lib/cn";
@@ -13,7 +14,9 @@ type BlogCardAuthorOverlayProps = {
 
 export function BlogCardAuthorOverlay({ post, featured = false }: BlogCardAuthorOverlayProps) {
   const isEditorial = post.author === BLOG_EDITORIAL.name || post.author.includes("Редакция");
-  const avatar = isEditorial ? (post.authorAvatar ?? BLOG_EDITORIAL.avatar) : post.authorAvatar;
+  const avatar = blogAuthorAvatarImage(
+    isEditorial ? (post.authorAvatar ?? BLOG_EDITORIAL.avatar) : post.authorAvatar,
+  );
   const bio = post.authorBio ?? (isEditorial ? BLOG_EDITORIAL.bio : undefined);
   const parts = post.author.trim().split(/\s+/).filter(Boolean);
   const initial =
@@ -58,6 +61,8 @@ export function BlogCardAuthorOverlay({ post, featured = false }: BlogCardAuthor
                 fill
                 className="object-cover"
                 sizes={featured ? "56px" : "44px"}
+                loading="lazy"
+                fetchPriority="low"
                 placeholderVariant="avatar"
                 placeholderCompact
                 blurPlaceholder={false}

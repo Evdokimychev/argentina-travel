@@ -11,6 +11,10 @@ const TEXT_FIELD_SELECTOR =
 
 const DOT_SCALE_IDLE = 1;
 const DOT_SCALE_HOVER = 3.5;
+/** Hit-test at most this often — elementFromPoint is expensive on every mousemove. */
+const HIT_TEST_INTERVAL_MS = 80;
+/** Stop the rAF loop shortly after the pointer stops moving. */
+const IDLE_STOP_MS = 140;
 
 function isFinePointerDevice() {
   if (typeof window === "undefined") return false;
@@ -43,6 +47,10 @@ function isOverInteractive(x: number, y: number): boolean {
   return !target.matches(":disabled, [aria-disabled='true']");
 }
 
+/**
+ * Decorative desktop cursor. Idle-stopped rAF + throttled hit-testing so the
+ * main thread is not taxed when the pointer is still.
+ */
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -50,10 +58,12 @@ export default function CustomCursor() {
   const ringRefPos = useRef({ x: -100, y: -100 });
   const dotScaleRef = useRef(DOT_SCALE_IDLE);
   const overInteractiveRef = useRef(false);
+  const overTextFieldRef = useRef(false);
+  const visibleRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+  const idleTimerRef = useRef<number | null>(null);
+  const lastHitTestAtRef = useRef(0);
   const [enabled, setEnabled] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [overTextField, setOverTextField] = useState(false);
 
   useEffect(() => {
     if (
@@ -70,6 +80,20 @@ export default function CustomCursor() {
     const lerp = (current: number, target: number, amount: number) =>
       current + (target - current) * amount;
 
+    const applyVisibility = () => {
+      const hide = !visibleRef.current || overTextFieldRef.current;
+      const opacity = hide ? "0" : "1";
+      if (dotRef.current) dotRef.current.style.opacity = opacity;
+      if (ringRef.current) ringRef.current.style.opacity = opacity;
+    };
+
+    const stopLoop = () => {
+      if (rafRef.current != null) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
     const animate = () => {
       const dot = dotRef.current;
       const ring = ringRef.current;
@@ -84,7 +108,7 @@ export default function CustomCursor() {
       dotScaleRef.current = lerp(
         dotScaleRef.current,
         overInteractive ? DOT_SCALE_HOVER : DOT_SCALE_IDLE,
-        0.22
+        0.22,
       );
 
       if (dot) {
@@ -98,20 +122,35 @@ export default function CustomCursor() {
       rafRef.current = window.requestAnimationFrame(animate);
     };
 
-    rafRef.current = window.requestAnimationFrame(animate);
+    const ensureLoop = () => {
+      if (rafRef.current == null) {
+        rafRef.current = window.requestAnimationFrame(animate);
+      }
+      if (idleTimerRef.current != null) window.clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = window.setTimeout(stopLoop, IDLE_STOP_MS);
+    };
 
     function handleMove(event: MouseEvent) {
       mouseRef.current = { x: event.clientX, y: event.clientY };
-      setVisible(true);
+      visibleRef.current = true;
 
-      const hit = document.elementFromPoint(event.clientX, event.clientY);
-      setOverTextField(Boolean(hit?.closest(TEXT_FIELD_SELECTOR)));
-      overInteractiveRef.current = isOverInteractive(event.clientX, event.clientY);
+      const now = performance.now();
+      if (now - lastHitTestAtRef.current >= HIT_TEST_INTERVAL_MS) {
+        lastHitTestAtRef.current = now;
+        const hit = document.elementFromPoint(event.clientX, event.clientY);
+        overTextFieldRef.current = Boolean(hit?.closest(TEXT_FIELD_SELECTOR));
+        overInteractiveRef.current = isOverInteractive(event.clientX, event.clientY);
+        applyVisibility();
+      }
+
+      ensureLoop();
     }
 
     function handleLeave() {
-      setVisible(false);
+      visibleRef.current = false;
       overInteractiveRef.current = false;
+      applyVisibility();
+      stopLoop();
     }
 
     window.addEventListener("mousemove", handleMove, { passive: true });
@@ -120,7 +159,8 @@ export default function CustomCursor() {
     return () => {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("mouseleave", handleLeave);
-      if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);
+      if (idleTimerRef.current != null) window.clearTimeout(idleTimerRef.current);
+      stopLoop();
     };
   }, []);
 
@@ -132,16 +172,14 @@ export default function CustomCursor() {
         ref={dotRef}
         aria-hidden
         className={cn(
-          "pointer-events-none fixed left-0 top-0 z-[9999] h-1 w-1 rounded-full bg-sky will-change-transform",
-          (!visible || overTextField) && "opacity-0"
+          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor,87)] h-1 w-1 rounded-full bg-sky opacity-0 will-change-transform",
         )}
       />
       <div
         ref={ringRef}
         aria-hidden
         className={cn(
-          "pointer-events-none fixed left-0 top-0 z-[9998] h-5 w-5 rounded-full border border-sky/70 will-change-transform",
-          (!visible || overTextField) && "opacity-0"
+          "pointer-events-none fixed left-0 top-0 z-[var(--token-z-cursor-ring,86)] h-5 w-5 rounded-full border border-sky/70 opacity-0 will-change-transform",
         )}
       />
     </>

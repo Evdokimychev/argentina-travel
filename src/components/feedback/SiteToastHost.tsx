@@ -33,7 +33,7 @@ export default function SiteToastHost() {
     <div
       aria-live="polite"
       aria-relevant="additions"
-      className="pointer-events-none fixed inset-x-0 bottom-[max(1rem,var(--cookie-consent-offset,0px))] z-toast site-toast-host flex max-h-[calc(100dvh-2rem)] flex-col items-center gap-2 overflow-y-auto px-4 sm:inset-x-auto sm:bottom-[max(1.5rem,var(--cookie-consent-offset,0px))] sm:right-6 sm:items-end sm:px-0"
+      className="pointer-events-none fixed inset-x-0 bottom-[max(1rem,calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px)))] z-toast site-toast-host flex max-h-[calc(100dvh-2rem)] flex-col items-center gap-2 overflow-y-auto px-4 sm:inset-x-auto sm:bottom-[max(1.5rem,calc(var(--cookie-consent-offset,0px)+var(--public-mobile-nav-height,0px)))] sm:right-6 sm:items-end sm:px-0"
     >
       {toasts.map((toast) => {
         const { Icon, className: iconClassName } = iconByVariant[toast.variant];
