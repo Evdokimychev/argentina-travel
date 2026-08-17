@@ -116,8 +116,9 @@ function describeLighthouseFailure(lh) {
   return "lighthouse failed";
 }
 
-async function runLighthouse(url, port) {
+async function runLighthouse(url, port, options = {}) {
   let timer;
+  let settled = false;
   try {
     const timedOut = new Promise((resolve) => {
       timer = setTimeout(() => resolve({ timedOut: true }), RUN_TIMEOUT_MS);
@@ -134,27 +135,44 @@ async function runLighthouse(url, port) {
       disableFullPageScreenshot: true,
       logLevel: "silent",
     })
-      .then(({ lhr }) => ({ lhr }))
-      .catch((error) => ({ error }));
-    return await Promise.race([audit, timedOut]);
+      .then(({ lhr }) => {
+        settled = true;
+        return { lhr };
+      })
+      .catch((error) => {
+        settled = true;
+        return { error };
+      });
+    const outcome = await Promise.race([audit, timedOut]);
+    if (outcome?.timedOut && typeof options.onTimeout === "function") {
+      // Kill the debugger target immediately so the orphaned Lighthouse gather
+      // cannot throw Target closed into the next cold run.
+      await options.onTimeout();
+      await audit;
+    }
+    return outcome;
   } finally {
     clearTimeout(timer);
+    void settled;
   }
 }
 
 async function withColdChrome(run) {
   if (USE_CONFIGURED_CHROME) {
-    return run(configuredChromePort, null);
+    return run(configuredChromePort, async () => {});
   }
   const chrome = await launchChrome({ chromeFlags: CHROME_FLAGS });
-  try {
-    return await run(chrome.port, chrome);
-  } finally {
+  const killChrome = async () => {
     try {
       chrome.kill();
     } catch {
       // Chrome may already be dead after a protocol crash.
     }
+  };
+  try {
+    return await run(chrome.port, killChrome);
+  } finally {
+    await killChrome();
   }
 }
 
@@ -196,8 +214,8 @@ try {
       try {
         // True cold run: fresh Chrome per sample. Reusing a wedged debugger
         // connection after timeouts previously crashed CI with Target closed.
-        lh = await withColdChrome(async (port) => {
-          const outcome = await runLighthouse(url, port);
+        lh = await withColdChrome(async (port, onTimeout) => {
+          const outcome = await runLighthouse(url, port, { onTimeout });
           if (CHROME_CLEANUP_DELAY_MS > 0) {
             await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
           }

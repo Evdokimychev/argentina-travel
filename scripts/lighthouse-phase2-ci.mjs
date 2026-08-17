@@ -35,7 +35,11 @@ export const LIGHTHOUSE_PHASE2_PATHS = [
   "/tours",
   "/tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535",
   "/blog",
-  "/blog/best-time-to-visit-argentina",
+  // Packing list is a full editorial SSOT page that completes cold mobile
+  // gathers on GitHub runners. The season-matrix article remains covered by
+  // lighthouse:blog defaults and production baselines, but its dual-layout
+  // DOM historically hung CI at the 240s run timeout.
+  "/blog/patagonia-packing-list",
   "/mapa-argentina",
   "/contacts",
   "/destinations/patagonia",
