@@ -48,13 +48,21 @@ describe("start-here / REWRITE_QUEUE pillars vs legacyManual* maps", () => {
       expect(post).toBeTruthy();
       expect(post!.noIndex).not.toBe(true);
       expect(post!.sections?.length).toBeGreaterThan(0);
-      expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
 
       for (const block of mapBlocks) {
         expect(block).not.toContain(`"${slug}"`);
       }
     },
   );
+
+  it("migrated typed pillars keep official sources inside the module body", () => {
+    for (const slug of ["el-chalten-i-fitts-roy", "salta-i-severo-zapad-marshrut"] as const) {
+      const post = blogPosts.find((item) => item.slug === slug);
+      expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
+      expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      expect(post!.dateModified).toBe("2026-07-17");
+    }
+  });
 
   it("el-chalten and salta wire through typed modules, not inline legacy corpus bodies", () => {
     expect(blogTs).toContain("EL_CHALTEN_I_FITTS_ROY_POST");
