@@ -1,28 +1,24 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ContentPageView from "@/components/content/ContentPageView";
 import KakDobratsyaHubView from "@/components/guide/hub/KakDobratsyaHubView";
 import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
-import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import {
   listPublishedGuideSlugs,
   resolveGuidePage,
   resolveGuideTopic,
 } from "@/lib/cms/guide-resolver";
-import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { buildGuideSlugPageMetadata } from "@/lib/cms/guide-slug-metadata";
+import { isCmsPublicContentUnavailableError } from "@/lib/cms/public-read-result";
 import {
   getAllGuideTopics,
-  getGuideTopicMetadata,
   isGuideTopicSlug,
 } from "@/lib/guide-topics";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
-import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
-import { getGuideTopicHeroImage } from "@/lib/media-resolver";
-import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 import { loadGuidePillarInitialTours } from "@/lib/guide-pillar-tour-data";
 
 type PageProps = {
@@ -38,48 +34,28 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getServerI18nLocale();
+  return buildGuideSlugPageMetadata(slug, locale);
+}
 
-  const topicMeta = getGuideTopicMetadata(slug);
-  if (topicMeta) {
-    const resolvedTopic = await resolveGuideTopic(slug, locale);
-    const path = `/guide/${slug}`;
-    if (slug === "kak-dobratsya") {
-      return {
-        ...buildPublicPageMetadata({
-          title: resolvedTopic?.cmsPage?.title ?? KAK_DOBRATSYA_HUB.heroTitle,
-          description: resolvedTopic?.cmsPage?.description ?? KAK_DOBRATSYA_HUB.heroSubtitle,
-          path,
-          image: getGuideTopicHeroImage(slug),
-        }),
-        alternates: buildHreflangAlternates(path),
-      };
-    }
-    return {
-      ...buildPublicPageMetadata({
-        title: resolvedTopic?.cmsPage?.title
-          ? `${resolvedTopic.cmsPage.title} — Путеводитель`
-          : topicMeta.title,
-        description:
-          resolvedTopic?.cmsPage?.description ??
-          resolvedTopic?.pillarPage?.heroSubtitle ??
-          topicMeta.description,
-        path,
-        image: getGuideTopicHeroImage(slug),
-      }),
-      alternates: buildHreflangAlternates(path),
-    };
-  }
-
-  const page = await resolveGuidePage(slug, locale);
-  if (!page) return { title: "Путеводитель" };
-  const alternates = await buildCmsContentHreflangAlternates("guide", slug, locale);
-  return buildCmsPageMetadata({
-    content: page,
-    title: page.title,
-    description: page.description,
-    path: `/guide/${slug}`,
-    alternates,
-  });
+function GuideCmsUnavailableView() {
+  return (
+    <main className="mx-auto w-full max-w-screen-md px-4 py-16 sm:px-6 lg:px-8">
+      <p className="text-sm font-medium text-sky-ink">Путеводитель</p>
+      <h1 className="mt-2 font-heading text-3xl font-bold text-foreground">
+        Материал временно недоступен
+      </h1>
+      <p className="mt-3 text-base leading-relaxed text-slate">
+        Сейчас не удалось загрузить страницу из CMS. Это не значит, что тема удалена —
+        обновите страницу чуть позже или вернитесь к списку тем.
+      </p>
+      <Link
+        href="/guide"
+        className="mt-8 inline-flex h-11 items-center justify-center rounded-button bg-sky-ink px-5 text-sm font-semibold text-white hover:bg-sky-ink/90"
+      >
+        Все темы путеводителя
+      </Link>
+    </main>
+  );
 }
 
 export default async function GuideSlugPage({ params }: PageProps) {
@@ -103,15 +79,22 @@ export default async function GuideSlugPage({ params }: PageProps) {
     return <GuideTopicView topic={topic} />;
   }
 
-  const page = await resolveGuidePage(slug, await getServerI18nLocale());
-  if (!page) notFound();
-  const cmsMetadata = getCmsResolverMetadata(page);
-  return (
-    <>
-      {cmsMetadata?.showTranslationBanner ? (
-        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
-      ) : null}
-      <ContentPageView page={page} />
-    </>
-  );
+  try {
+    const page = await resolveGuidePage(slug, await getServerI18nLocale());
+    if (!page) notFound();
+    const cmsMetadata = getCmsResolverMetadata(page);
+    return (
+      <>
+        {cmsMetadata?.showTranslationBanner ? (
+          <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+        ) : null}
+        <ContentPageView page={page} />
+      </>
+    );
+  } catch (error) {
+    if (isCmsPublicContentUnavailableError(error)) {
+      return <GuideCmsUnavailableView />;
+    }
+    throw error;
+  }
 }
