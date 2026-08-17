@@ -38,9 +38,14 @@ export async function loadGuidePillarInitialTours(
 ): Promise<TourListing[]> {
   if (!guidePillarNeedsMarketplaceTours(pillar)) return [];
 
-  const loaders = dependencies ?? (await loadDefaultDependencies());
-  const marketplaceTours = await loaders.fetchMarketplaceTours();
-  return loaders.filterToursForOptionalEmbed(marketplaceTours);
+  try {
+    const loaders = dependencies ?? (await loadDefaultDependencies());
+    const marketplaceTours = await loaders.fetchMarketplaceTours();
+    return await loaders.filterToursForOptionalEmbed(marketplaceTours);
+  } catch {
+    // Optional embeds must not take down the guide page when catalog/DB is unavailable.
+    return [];
+  }
 }
 
 export async function resolveGuideTourEmbedState(

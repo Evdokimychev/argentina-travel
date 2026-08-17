@@ -1,0 +1,165 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import { blogPosts, getBlogStartHerePosts } from "@/data/blog";
+import { BLOG_START_HERE_SLUGS } from "@/data/blog-canonical-map";
+
+/** Sprint 3 priority pillars: must not remain editable SSOT in legacyManual* maps. */
+const PILLAR_SLUGS_FREE_OF_LEGACY_MAPS = [
+  "el-chalten-i-fitts-roy",
+  "salta-i-severo-zapad-marshrut",
+  "best-time-to-visit-argentina",
+  "buenos-aires-rajony",
+  "argentinian-steak-guide",
+  "mendoza-vinnyj-gid",
+  "tango-beginners-guide",
+  "patagonia-packing-list",
+] as const;
+
+function extractConstBlock(raw: string, constName: string): string {
+  const start = raw.indexOf(`const ${constName}`);
+  expect(start).toBeGreaterThanOrEqual(0);
+  const after = raw.slice(start);
+  const end = after.indexOf("\n};");
+  expect(end).toBeGreaterThan(0);
+  return after.slice(0, end + 3);
+}
+
+describe("start-here / REWRITE_QUEUE pillars vs legacyManual* maps", () => {
+  const blogTs = readFileSync(join(process.cwd(), "src/data/blog.ts"), "utf8");
+
+  const mapBlocks = [
+    extractConstBlock(blogTs, "legacyManualOfficialSources"),
+    extractConstBlock(blogTs, "legacyManualExcerptOverrides"),
+    extractConstBlock(blogTs, "legacyManualReplacementSections"),
+    extractConstBlock(blogTs, "legacyManualSectionOverrides"),
+    extractConstBlock(blogTs, "legacyManualRemovedSections"),
+  ];
+
+  it("covers the fixed start-here collection", () => {
+    expect([...BLOG_START_HERE_SLUGS].sort()).toEqual([...PILLAR_SLUGS_FREE_OF_LEGACY_MAPS].sort());
+    expect(getBlogStartHerePosts()).toHaveLength(BLOG_START_HERE_SLUGS.length);
+  });
+
+  it.each(PILLAR_SLUGS_FREE_OF_LEGACY_MAPS)(
+    "%s is published without legacyManual override map keys",
+    (slug) => {
+      const post = blogPosts.find((item) => item.slug === slug);
+      expect(post).toBeTruthy();
+      expect(post!.noIndex).not.toBe(true);
+      expect(post!.sections?.length).toBeGreaterThan(0);
+
+      for (const block of mapBlocks) {
+        expect(block).not.toContain(`"${slug}"`);
+      }
+    },
+  );
+
+  it("migrated typed pillars keep official sources inside the module body", () => {
+    for (const slug of ["el-chalten-i-fitts-roy", "salta-i-severo-zapad-marshrut"] as const) {
+      const post = blogPosts.find((item) => item.slug === slug);
+      expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
+      expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      expect(post!.dateModified).toBe("2026-07-17");
+    }
+  });
+
+  it("el-chalten and salta wire through typed modules, not inline legacy corpus bodies", () => {
+    expect(blogTs).toContain("EL_CHALTEN_I_FITTS_ROY_POST");
+    expect(blogTs).toContain("SALTA_I_SEVERO_ZAPAD_MARSHRUT_POST");
+    expect(blogTs).not.toContain('id: "blog-el-chalten"');
+    expect(blogTs).not.toContain('id: "blog-salta-nw-route"');
+  });
+});
+
+/** High-impact itinerary/visa batch migrated off legacyManual* maps (not start-here set). */
+const HIGH_IMPACT_TYPED_SLUGS = [
+  "argentina-tourist-visa-2026",
+  "patagoniya-marshrut-14-dney",
+  "itinerary-за-14-дней",
+  "itinerary-за-10-дней",
+  "itinerary-чек-лист",
+  "itinerary-ошибки",
+  "iguazu-за-3-дня",
+  "patagonia-авиабилеты",
+  "wildlife-с-гидом",
+  "patagonia-penguins",
+  "patagonia-whale-watching",
+  "iguazu-garganta-del-diablo",
+  "uco-valley-vino-i-gory",
+] as const;
+
+const HIGH_IMPACT_TYPED_POST_CONSTANTS = [
+  "ARGENTINA_TOURIST_VISA_2026_POST",
+  "PATAGONIYA_MARSHRUT_14_DNEY_POST",
+  "ITINERARY_ZA_14_DNEY_POST",
+  "ITINERARY_ZA_10_DNEY_POST",
+  "ITINERARY_CHEK_LIST_POST",
+  "ITINERARY_OSHIBKI_POST",
+  "IGUAZU_ZA_3_DNYA_POST",
+  "PATAGONIA_AVIABILETY_POST",
+  "WILDLIFE_S_GIDOM_POST",
+  "PATAGONIA_PENGUINS_POST",
+  "PATAGONIA_WHALE_WATCHING_POST",
+  "IGUAZU_GARGANTA_DEL_DIABLO_POST",
+  "UCO_VALLEY_VINO_I_GORY_POST",
+] as const;
+
+const HIGH_IMPACT_REMOVED_INLINE_IDS = [
+  'id: "6"',
+  'id: "blog-patagonia-14"',
+  'id: "blog-itinerary-14-days"',
+  'id: "blog-itinerary-10-days"',
+  'id: "blog-itinerary-checklist"',
+  'id: "blog-itinerary-mistakes"',
+  'id: "blog-iguazu-za-3-dnya"',
+  'id: "blog-patagonia-flights"',
+  'id: "blog-patagonia-penguins"',
+  'id: "blog-iguazu-garganta-del-diablo"',
+  'id: "blog-patagonia-whale-watching"',
+  'id: "blog-uco-valley"',
+  'id: "blog-wildlife-guide"',
+] as const;
+
+describe("high-impact typed blog modules vs legacyManual* maps", () => {
+  const blogTs = readFileSync(join(process.cwd(), "src/data/blog.ts"), "utf8");
+
+  const mapBlocks = [
+    extractConstBlock(blogTs, "legacyManualOfficialSources"),
+    extractConstBlock(blogTs, "legacyManualExcerptOverrides"),
+    extractConstBlock(blogTs, "legacyManualReplacementSections"),
+    extractConstBlock(blogTs, "legacyManualSectionOverrides"),
+    extractConstBlock(blogTs, "legacyManualRemovedSections"),
+  ];
+
+  it.each(HIGH_IMPACT_TYPED_SLUGS)(
+    "%s has no legacyManual override map keys and keeps official sources in body",
+    (slug) => {
+      const post = blogPosts.find((item) => item.slug === slug);
+      expect(post).toBeTruthy();
+      expect(post!.noIndex).not.toBe(true);
+      expect(post!.sections?.length).toBeGreaterThan(0);
+      expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
+      expect(post!.content).toMatch(/Проверено 17\.07\.2026/);
+      if (slug === "uco-valley-vino-i-gory") {
+        expect(post!.content).toMatch(/mendoza\.gov\.ar/i);
+      } else {
+        expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      }
+      expect(post!.dateModified).toBe("2026-07-17");
+
+      for (const block of mapBlocks) {
+        expect(block).not.toContain(`"${slug}"`);
+      }
+    },
+  );
+
+  it("high-impact batch wires through typed modules, not inline legacy corpus bodies", () => {
+    for (const constName of HIGH_IMPACT_TYPED_POST_CONSTANTS) {
+      expect(blogTs).toContain(constName);
+    }
+    for (const inlineId of HIGH_IMPACT_REMOVED_INLINE_IDS) {
+      expect(blogTs).not.toContain(inlineId);
+    }
+  });
+});

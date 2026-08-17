@@ -73,6 +73,36 @@ export function getEntry(id: string): KbEntry | undefined {
   return byIdCache?.get(id);
 }
 
+/**
+ * Resolves an id to a public catalog entry, following archive redirect_to when present.
+ * Used for [[wikilinks]] and related panels so archived neighbours are not dead ends.
+ */
+export function resolvePublicKbId(id: string): string | undefined {
+  loadEntries();
+  if (byIdCache?.has(id)) return id;
+  const archived = loadAllEntries().find((entry) => entry.id === id);
+  const target = archived?.redirect_to?.trim();
+  if (target && byIdCache?.has(target)) return target;
+  return undefined;
+}
+
+/** Identity + archive→canonical map for markdown [[wikilinks]]. */
+export function buildKbWikilinkTargets(): Map<string, string> {
+  loadEntries();
+  const map = new Map<string, string>();
+  for (const id of byIdCache?.keys() ?? []) {
+    map.set(id, id);
+  }
+  for (const entry of loadAllEntries()) {
+    if (entry.status !== "archived") continue;
+    const target = entry.redirect_to?.trim();
+    if (target && byIdCache?.has(target)) {
+      map.set(entry.id, target);
+    }
+  }
+  return map;
+}
+
 export function getAllEntryIds(): string[] {
   return loadEntries().map((entry) => entry.id);
 }
@@ -217,9 +247,11 @@ export function getRelated(entry: KbEntry, limit = 6): KbEntry[] {
   const result: KbEntry[] = [];
   for (const id of entry.related ?? []) {
     if (seen.has(id)) continue;
-    const target = byIdCache?.get(id);
+    const resolvedId = resolvePublicKbId(id);
+    const target = resolvedId ? byIdCache?.get(resolvedId) : undefined;
     if (target) {
       result.push(target);
+      seen.add(target.id);
       seen.add(id);
     }
     if (result.length >= limit) break;

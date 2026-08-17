@@ -73,7 +73,7 @@ sources:
   url: https://www.argentina.travel/actividades/bariloche
   lang: es
   type: official
-  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+  note: INPROTUR; фото с официального CDN — атрибуция argentina.travel
 title_en: Bariloche
 ---
 

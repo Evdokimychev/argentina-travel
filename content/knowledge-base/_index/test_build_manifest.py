@@ -135,8 +135,9 @@ class ProvenanceValidationTest(unittest.TestCase):
     def test_release_scope_excludes_intentional_quarantine(self):
         entry = valid_sensitive_entry()
         entry.update({"status": "published", "type": "guide", "site_ready": True})
+        # guide minimum in publication gate is 600 words; stay above that baseline.
         meta = BUILD_MANIFEST.build_editorial_meta(
-            entry, word_count=180, today=date(2026, 7, 17)
+            entry, word_count=600, today=date(2026, 7, 17)
         )
         self.assertTrue(BUILD_MANIFEST.is_release_candidate_sensitive(entry, meta))
 
@@ -145,9 +146,18 @@ class ProvenanceValidationTest(unittest.TestCase):
         entry["site_ready"] = True
         meta["word_count"] = 80
         self.assertFalse(BUILD_MANIFEST.is_release_candidate_sensitive(entry, meta))
-        meta["word_count"] = 180
+        meta["word_count"] = 600
         meta["missing_sources"] = True
         self.assertFalse(BUILD_MANIFEST.is_release_candidate_sensitive(entry, meta))
+
+    def test_written_editorial_readiness_mode_is_invocation_stable(self):
+        """Release-gate --strict-provenance must not flip committed validation_mode."""
+        source = Path(__file__).with_name("build_manifest.py").read_text(encoding="utf8")
+        self.assertIn('"validation_mode": "diagnostic"', source)
+        self.assertNotIn(
+            '"validation_mode": "strict" if strict_provenance_gate else "diagnostic"',
+            source,
+        )
 
 
 if __name__ == "__main__":

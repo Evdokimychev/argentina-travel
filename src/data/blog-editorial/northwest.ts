@@ -4,7 +4,10 @@ import { editorialArticle, type EditorialOverride } from "./types";
 type OfficialSource = { label: string; url: string };
 
 const GUIDE = guideResource("turistskie-regiony", "Туристические регионы");
-const SALTA = blogResource("northwest-за-5-дней", "Северо-запад за 5 дней");
+const SALTA = blogResource(
+  "salta-i-severo-zapad-marshrut",
+  "Сальта и северо-запад: маршрут на 5–7 дней",
+);
 const VERIFIED_AT = "2026-07-17";
 
 const SALTA_CONCHAS: OfficialSource = {

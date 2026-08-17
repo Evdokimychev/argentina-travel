@@ -1,5 +1,10 @@
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
-import type { BlogRichBlock, BlogRichCalloutVariant } from "@/types/blog-rich-article";
+import type {
+  BlogRichArticle,
+  BlogRichBlock,
+  BlogRichCalloutVariant,
+} from "@/types/blog-rich-article";
+import type { BlogPostSection } from "@/types";
 
 /** Map deprecated / alias block shapes onto canonical BlogBodyBlock types. */
 export function migrateLegacyBlogBodyBlock(block: BlogBodyBlock): BlogBodyBlock {
@@ -169,4 +174,30 @@ export function adaptRichBlockToBody(block: BlogRichBlock): BlogBodyBlock[] {
 
 export function adaptRichBlocksToBody(blocks: BlogRichBlock[]): BlogBodyBlock[] {
   return blocks.flatMap(adaptRichBlockToBody);
+}
+
+/** Project a Rich article onto canonical BlogPostSection + BlogBodyBlock sections.
+ * Lede/intro stay in the view layer for speakable markup; FAQ is appended as Body blocks.
+ */
+export function adaptRichArticleToBlogSections(
+  article: BlogRichArticle,
+): Array<BlogPostSection & { anchorId?: string }> {
+  const sections: Array<BlogPostSection & { anchorId?: string }> = article.sections.map(
+    (section) => ({
+      title: section.title,
+      body: "",
+      anchorId: section.id,
+      blocks: adaptRichBlocksToBody(section.blocks),
+    }),
+  );
+  if (article.faq?.length) {
+    sections.push({
+      title: "Частые вопросы",
+      body: "",
+      blockType: "faq",
+      anchorId: "faq",
+      blocks: [{ type: "faq", items: article.faq }],
+    });
+  }
+  return sections;
 }

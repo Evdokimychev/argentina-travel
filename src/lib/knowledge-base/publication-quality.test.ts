@@ -73,6 +73,15 @@ describe("KB publication quarantine", () => {
     expect(isPublicKbEntry(entry)).toBe(false);
   });
 
+  it("does not quarantine legitimate multi-word park season headings", () => {
+    const entry = {
+      ...validEntry,
+      body: "## Когда ехать и сколько времени\n\nЛучше всего с апреля по июнь.\n\n## Практические советы\n\nБерите дождевик.",
+    };
+    expect(getPublicationIssues(entry)).not.toContain("malformed_markdown_heading");
+    expect(isPublicKbEntry(entry)).toBe(true);
+  });
+
   it("keeps a complete archive tombstone outside publication without quality debt", () => {
     const entry: KbEntry = {
       ...validEntry,

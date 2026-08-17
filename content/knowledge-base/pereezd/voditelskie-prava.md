@@ -6,8 +6,8 @@ title: "Иностранные водительские права и арген
 summary: "Возможность водить по иностранным правам зависит от международных соглашений и срока после въезда; резиденту нужна местная лицензия по правилам своей юрисдикции."
 status: archived
 site_ready: false
-redirect_to: mozhno-li-vodit-po-rossijskim-pravam
-archive_reason: "Материал объединён с проверенным ответом о вождении по иностранным правам."
+redirect_to: kak-poluchit-prava-v-argentine
+archive_reason: "Материал объединён с опубликованным гидом о иностранных правах, обмене и получении аргентинской лицензии."
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: both
 tags: [водительские права, автомобиль, документы, безопасность]

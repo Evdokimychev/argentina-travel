@@ -14,8 +14,13 @@ const TODO_MARKER_RE = /\bTODO\b/;
 const MACHINE_TRANSLATION_MARKER_RE = /текст\s+автоперевед[её]н|требует редакторской вычитки/i;
 const INTERNAL_EDITORIAL_MARKER_RE =
   /См\.\s*`?(?:recommendations|warnings)`?\s*в метаданных|Архивный лонгрид|в корне проекта/i;
+/**
+ * Keep in sync with src/lib/knowledge-base/publication-quality.ts.
+ * Do not treat legitimate multi-word titles like «Когда ехать и сколько времени»
+ * as malformed — those are prefixes of common park/city templates.
+ */
 const MALFORMED_HEADING_RE =
-  /(?:^|\n)#{1,6}\s+[^\n]+?[ \t]+#{1,6}\s+\S|(?:^|\n)##\s+(?:Описание|Факты|Источники|Рекомендации|Предупреждения|Рекомендации \/ Предупреждения|Связанные объекты|Как добраться|Когда ехать)[ \t]+\S/m;
+  /(?:^|\n)#{1,6}\s+[^\n]+?[ \t]+#{1,6}\s+\S|(?:^|\n)##\s+(?:Описание|Факты|Источники|Рекомендации|Предупреждения|Рекомендации \/ Предупреждения|Связанные объекты)[ \t]+\S/m;
 const MIN_WORDS_BY_TYPE = {
   attraction: 500,
   national_park: 500,

@@ -218,6 +218,9 @@ claims:
    публичного gate не готов по новой модели. Намеренно изолированные материалы
    (`site_ready: false`, статья без источников или короткая редакционная заготовка)
    остаются в диагностике, но не делают релизный критерий недостижимым.
+   Флаг влияет только на код выхода и stdout: записанные `manifest.json` /
+   `content.json` / `validation-report.md` всегда хранят `validation_mode: "diagnostic"`,
+   чтобы релизный gate не оставлял грязное git-дерево кандидата.
 
 `manifest.json` и `content.json` содержат корневой `editorial_readiness`, а каждая
 запись — `editorial.provenance`. Полные `claims` и расширенные `sources` присутствуют

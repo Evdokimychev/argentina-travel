@@ -19,6 +19,7 @@ import ContentArticleJsonLd from "@/components/seo/ContentArticleJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   getAllEntryIds,
+  buildKbWikilinkTargets,
   getBreadcrumbs,
   getEntrySection,
   getRelated,
@@ -105,6 +106,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
   if (!entry) notFound();
 
   const validIds = new Set([...getAllEntryIds(), entry.id]);
+  const wikilinkTargets = buildKbWikilinkTargets();
+  const wikilinkRedirects = new Map(
+    [...wikilinkTargets.entries()].filter(([from, to]) => from !== to),
+  );
   const headings = extractHeadings(entry.body);
   const related = getRelated(entry, 6);
   const { prev, next } = getSectionNeighbours(entry);
@@ -230,7 +235,11 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
             <KbCallout variant="recommendation" items={entry.recommendations} />
 
             <div className="mt-4 text-base">
-              {renderMarkdown(entry.body, { validIds, provenance: publicProvenance })}
+              {renderMarkdown(entry.body, {
+                validIds,
+                wikilinkRedirects,
+                provenance: publicProvenance,
+              })}
             </div>
 
             <KbProvenance data={publicProvenance} />

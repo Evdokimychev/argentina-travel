@@ -103,6 +103,44 @@ describe("public blog catalog", () => {
     expect(getEditorialOverride("money-карты")?.publicationBlockReason).toBeTruthy();
   });
 
+  it("applies canonical map to publication-ready editorial overrides", () => {
+    const item = BLOG_CONTENT_PLAN.find(
+      (candidate) => candidate.slug === "patagonia-за-14-дней",
+    );
+    expect(item).toBeTruthy();
+    if (!item) return;
+
+    const generated = generateBlogPostFromPlan(item, 0);
+    expect(generated.noIndex).toBe(true);
+    expect(generated.canonicalSlug).toBe("patagoniya-marshrut-14-dney");
+    expect(generated.content).toContain("/blog/patagoniya-marshrut-14-dney");
+  });
+
+  it("applies northwest prefix canonical even when override is ready", () => {
+    const item = BLOG_CONTENT_PLAN.find(
+      (candidate) => candidate.slug === "northwest-за-5-дней",
+    );
+    expect(item).toBeTruthy();
+    if (!item) return;
+
+    const generated = generateBlogPostFromPlan(item, 0);
+    expect(generated.noIndex).toBe(true);
+    expect(generated.canonicalSlug).toBe("salta-i-severo-zapad-marshrut");
+  });
+
+  it("excludes foreign-canonical posts from the public/indexable catalog", () => {
+    const item = BLOG_CONTENT_PLAN.find(
+      (candidate) => candidate.slug === "patagonia-за-7-дней",
+    );
+    expect(item).toBeTruthy();
+    if (!item) return;
+
+    const generated = generateBlogPostFromPlan(item, 0);
+    expect(generated.canonicalSlug).toBe("patagoniya-marshrut-14-dney");
+    expect(filterIndexableBlogPosts([generated])).toHaveLength(0);
+    expect(filterPublicBlogCatalog([generated])).toHaveLength(0);
+  });
+
   it("never assigns a post-cutover publication date to generated editorial posts", () => {
     const lastItem = BLOG_CONTENT_PLAN.at(-1);
     expect(lastItem).toBeTruthy();

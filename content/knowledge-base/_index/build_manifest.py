@@ -778,9 +778,12 @@ def main():
         for eid in release_candidate_sensitive_ids
         for code in editorial_meta_by_id[eid]["provenance"]["issue_codes"]
     )
+    # validation_mode in written artifacts is always the corpus snapshot label.
+    # CLI --strict-provenance only affects the process exit code / stdout, so
+    # release-gate does not dirty the candidate tree by flipping this field.
     editorial_readiness = {
         "provenance_schema_version": PROVENANCE_SCHEMA_VERSION,
-        "validation_mode": "strict" if strict_provenance_gate else "diagnostic",
+        "validation_mode": "diagnostic",
         "published_sensitive_count": len(published_sensitive_ids),
         "release_candidate_sensitive_count": len(release_candidate_sensitive_ids),
         "strict_ready_release_candidate_count": len(strict_ready_release_candidate_ids),
@@ -1019,10 +1022,9 @@ def main():
 
     report_lines.append("## Claim-level происхождение фактов\n")
     report_lines.append(
-        "Генератор работает в режиме `strict` и завершится ошибкой при редакционном долге."
-        if strict_provenance_gate
-        else "Текущий запуск диагностический: публичный корпус не снимается с публикации автоматически. "
-             "Для обязательной проверки используйте `--strict-provenance`."
+        "Снимок корпуса диагностический: публичный набор не снимается с публикации автоматически. "
+        "Релизный gate: `python3 content/knowledge-base/_index/build_manifest.py --strict-provenance` "
+        "(завершится ошибкой при редакционном долге)."
     )
     report_lines.append("")
     if provenance_issue_counts:
@@ -1135,6 +1137,11 @@ def main():
 
     print(report)
     print(f"\nmanifest.json и manifest.csv сохранены в {out_dir}")
+    if strict_provenance_gate:
+        print(
+            "\n[strict-provenance] OK: claim-level gate passed; "
+            "written indexes keep validation_mode=diagnostic so CI candidate trees stay clean."
+        )
 
 
 if __name__ == "__main__":

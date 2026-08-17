@@ -53,8 +53,8 @@ sources:
   lang: es
   type: official
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
-redirect_to: mentalitet-i-etiket
-archive_reason: "Неотредактированная однотемная карточка импорта объединена с каноническим русскоязычным региональным материалом; исходник и атрибуция сохранены для редакционного архива."
+redirect_to: gid-po-kulture
+archive_reason: "Импортная карточка танго архивирована; канонический маршрут — культурный гид KB и блог /blog/tango-beginners-guide."
 
 ---
 

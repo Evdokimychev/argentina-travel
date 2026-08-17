@@ -19,7 +19,7 @@ cost:
 best_time: ["март-май", "сентябрь-ноябрь"]
 duration: "3-5 дней (минимум 3 для центра, San Telmo, Recoleta, Palermo)"
 how_to_get_there: "Международный аэропорт Ezeiza (EZE) — рейсы из Европы и других континентов; Aeroparque (AEP) — внутренние рейсы. Между аэропортами — около часа на такси."
-related: [tango, istoriya-argentiny, lgbt-travel, mendoza, stoimost-zhizni-ba, argentina-2-nedeli, bezopasnost-argentina, vnzh-argentina, kladbische-recoleta, kaminito-la-boka, restorany-i-kak-est, razvlecheniya-i-nochnaya-zhizn, poleznye-prilozheniya, aeroporty, tigre-i-delta, chto-delat-krome-dostoprimechatelnostej, dostupnaya-sreda-i-invalidnost, lujan]
+related: [gid-po-kulture, istoriya-argentiny, lgbt-travel, mendoza, stoimost-zhizni-ba, argentina-2-nedeli, bezopasnost-argentina, vnzh-argentina, kladbische-recoleta, kaminito-la-boka, restorany-i-kak-est, poleznye-prilozheniya, aeroporty, tigre-i-delta, chto-delat-krome-dostoprimechatelnostej, dostupnaya-sreda-i-invalidnost, lujan]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg/1920px-193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg"
@@ -147,9 +147,7 @@ sources:
 
 Лучшее время — южные осень (март-май) и весна (сентябрь-ноябрь): мягкая погода, цветущие жакаранды в ноябре, комфортные прогулки. Январь-февраль — жара и влажность, город частично «разъезжается» в отпуска; зима (июнь-август) мягкая, без снега, но сырая. Город работает круглый год — сезонность влияет на комфорт, а не на доступность.
 
-## Транспорт
-
-и аэропорты
+## Транспорт и аэропорты
 
 - **Ezeiza (EZE)** — международный хаб в ~35 км от центра: рейсы из Европы и других континентов. В город — официальные такси/приложения или автобусные шаттлы.
 - **Aeroparque (AEP)** — городской аэропорт у реки, в 15-20 минутах от Палермо: внутренние рейсы и ближние международные. Между EZE и AEP — около часа на такси; при стыковке закладывайте запас.
