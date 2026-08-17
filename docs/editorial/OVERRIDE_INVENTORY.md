@@ -15,7 +15,7 @@ Invisible third-layer edits must not remain the long-term SSOT.
 | `legacyManualReplacementSections` | few slugs | MIGRATE then REMOVE | Temporary body patches |
 | `legacyManualSectionOverrides` | ~5 slugs | MIGRATE then REMOVE | Prefer typed blocks / CMS body |
 | `legacyManualRemovedSections` | ~2 slugs | KEEP TEMPORARILY | Explicit removals until source cleaned |
-| `EDITORIAL_OVERRIDES` (`src/data/blog-editorial`) | ~1 | MIGRATE | Typed polish → document blocks |
+| `EDITORIAL_OVERRIDES` (`src/data/blog-editorial`) | ~38 | KEEP TEMPORARILY → MIGRATE | Typed polish for Class B; canonical map now forces noindex + `canonicalSlug` even when `publicationReady` |
 
 ## Precedence reminder
 
