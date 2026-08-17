@@ -1,5 +1,8 @@
 # План миграции редакционной системы
 
+См. канонический контракт: [CONTENT_OWNERSHIP_CONTRACT.md](./CONTENT_OWNERSHIP_CONTRACT.md).
+
+
 ## Этап 1 — Registry и обёртки (сделано)
 
 - `src/editorial/registry` с метаданными блоков
