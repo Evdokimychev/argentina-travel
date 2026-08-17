@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
+import { classifyFeedFreshness } from "@/lib/partner-tours/freshness";
 import pg from "pg";
 
 type PartnerProbe = {
@@ -8,6 +9,7 @@ type PartnerProbe = {
   count: number | null;
   lastSyncStatus: string | null;
   lastSyncAt: string | null;
+  freshness: ReturnType<typeof classifyFeedFreshness>;
 };
 
 async function countViaPg(table: string): Promise<number> {
@@ -27,6 +29,13 @@ async function countViaPg(table: string): Promise<number> {
   } finally {
     await client.end().catch(() => undefined);
   }
+}
+
+function withFreshness(probe: Omit<PartnerProbe, "freshness">): PartnerProbe {
+  return {
+    ...probe,
+    freshness: classifyFeedFreshness({ syncedAt: probe.lastSyncAt }),
+  };
 }
 
 async function probeTripster(): Promise<PartnerProbe> {
@@ -54,28 +63,28 @@ async function probeTripster(): Promise<PartnerProbe> {
     const failedZero =
       lastSyncStatus === "success" && experiencesSynced === 0 && (count ?? 0) === 0;
 
-    return {
+    return withFreshness({
       status: failedZero || lastSyncStatus === "failed" ? "degraded" : "ok",
       count: count ?? 0,
       lastSyncStatus,
       lastSyncAt: sync.data?.finished_at ?? null,
-    };
+    });
   } catch {
     try {
       const count = await countViaPg("tripster_experiences");
-      return {
+      return withFreshness({
         status: "degraded",
         count,
         lastSyncStatus: null,
         lastSyncAt: null,
-      };
+      });
     } catch {
-      return {
+      return withFreshness({
         status: "down",
         count: null,
         lastSyncStatus: null,
         lastSyncAt: null,
-      };
+      });
     }
   }
 }
@@ -101,37 +110,92 @@ async function probeYouTravel(): Promise<PartnerProbe> {
     const failedZero =
       lastSyncStatus === "success" && toursFetched === 0 && (count ?? 0) === 0;
 
-    return {
+    return withFreshness({
       status: failedZero || lastSyncStatus === "error" || lastSyncStatus === "failed"
         ? "degraded"
         : "ok",
       count: count ?? 0,
       lastSyncStatus,
       lastSyncAt: sync.data?.finished_at ?? null,
-    };
+    });
   } catch {
     try {
       const count = await countViaPg("youtravel_tours");
-      return {
+      return withFreshness({
         status: "degraded",
         count,
         lastSyncStatus: null,
         lastSyncAt: null,
-      };
+      });
     } catch {
-      return {
+      return withFreshness({
         status: "down",
         count: null,
         lastSyncStatus: null,
         lastSyncAt: null,
-      };
+      });
+    }
+  }
+}
+
+async function probeSputnik8(): Promise<PartnerProbe> {
+  try {
+    const supabase = createSupabaseAdminClient();
+    const [{ count, error }, sync] = await Promise.all([
+      supabase.from("sputnik8_products").select("*", { count: "exact", head: true }),
+      supabase
+        .from("sputnik8_sync_runs")
+        .select("status, finished_at, experiences_synced")
+        .order("started_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
+
+    if (error) throw error;
+
+    const lastSyncStatus = sync.data?.status ?? null;
+    const productsSynced =
+      typeof sync.data?.experiences_synced === "number"
+        ? sync.data.experiences_synced
+        : null;
+    const failedZero =
+      lastSyncStatus === "success" && productsSynced === 0 && (count ?? 0) === 0;
+
+    return withFreshness({
+      status: failedZero || lastSyncStatus === "failed" || lastSyncStatus === "error"
+        ? "degraded"
+        : "ok",
+      count: count ?? 0,
+      lastSyncStatus,
+      lastSyncAt: sync.data?.finished_at ?? null,
+    });
+  } catch {
+    try {
+      const count = await countViaPg("sputnik8_products");
+      return withFreshness({
+        status: "degraded",
+        count,
+        lastSyncStatus: null,
+        lastSyncAt: null,
+      });
+    } catch {
+      return withFreshness({
+        status: "down",
+        count: null,
+        lastSyncStatus: null,
+        lastSyncAt: null,
+      });
     }
   }
 }
 
 export async function GET() {
-  const [tripster, youtravel] = await Promise.all([probeTripster(), probeYouTravel()]);
-  const statuses = [tripster.status, youtravel.status];
+  const [tripster, youtravel, sputnik8] = await Promise.all([
+    probeTripster(),
+    probeYouTravel(),
+    probeSputnik8(),
+  ]);
+  const statuses = [tripster.status, youtravel.status, sputnik8.status];
   const status = statuses.every((value) => value === "ok")
     ? "ok"
     : statuses.every((value) => value === "down")
@@ -142,7 +206,7 @@ export async function GET() {
     {
       status,
       generatedAt: new Date().toISOString(),
-      partners: { tripster, youtravel },
+      partners: { tripster, youtravel, sputnik8 },
     },
     {
       status: status === "down" ? 503 : 200,

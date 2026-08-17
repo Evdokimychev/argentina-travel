@@ -9,6 +9,7 @@
 | **Travelpayouts** | [travelpayouts.md](./travelpayouts.md) | Партнёрские ссылки (Tripster, YouTravel, Sputnik8), whitelabel авиа/страхование |
 | **YouTravel.me** | [youtravel.md](./youtravel.md) | Партнёрские туры, booking API, Affise-статистика |
 | **Sputnik8** | [sputnik8.md](./sputnik8.md) | Экскурсии (affiliate-only в текущем UX) |
+| **Marketplace quality** | [marketplace-quality.md](./marketplace-quality.md) | Public Offer Quality Gate, freshness, audit |
 | **Argentina Knowledge Collector** | [knowledge-collector.md](./knowledge-collector.md) | Отбор материалов и импорт CMS-черновиков |
 | **Контент-завод и соцсети** | [content-factory-social.md](./content-factory-social.md) | Telegram, Instagram, WhatsApp, очередь и вебхуки |
 

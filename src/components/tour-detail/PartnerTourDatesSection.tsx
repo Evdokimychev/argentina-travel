@@ -44,7 +44,19 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
     setError(null);
   }, [guests, selectedDateId]);
 
-  if (!dates.length && !scheduleLoading) return null;
+  if (!dates.length && !scheduleLoading) {
+    return (
+      <TourSection
+        id="dates"
+        title="Ближайшие даты"
+        subtitle="Актуальные заезды сейчас недоступны"
+      >
+        <p className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-slate">
+          Нет доступных дат для бронирования. Расписание обновляется по данным партнёра.
+        </p>
+      </TourSection>
+    );
+  }
 
   const bookingHref =
     externalBookingHref ??

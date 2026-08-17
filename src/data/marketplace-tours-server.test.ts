@@ -6,7 +6,39 @@ import {
 } from "@/data/marketplace-tours-server";
 import type { TourListing } from "@/types";
 
-const listing = (slug: string) => ({ slug }) as TourListing;
+const listing = (slug: string): TourListing =>
+  ({
+    id: `tour-${slug}`,
+    slug,
+    title: slug,
+    shortDescription: "Тестовый тур для каталога marketplace.",
+    image: "/media/tours/cover.jpg",
+    gallery: [],
+    destination: "Патагония",
+    region: "Патагония",
+    country: "Аргентина",
+    activityType: "Пешие туры",
+    durationDays: 5,
+    durationNights: 4,
+    durationBucket: "4–7 дней",
+    priceUsd: 900,
+    accommodationType: "Отель",
+    comfortLevel: "Стандарт",
+    difficultyLevel: "Умеренная",
+    language: ["Русский"],
+    childrenAllowed: "От 12 лет",
+    minimumAge: 12,
+    groupSizeMin: 1,
+    groupSizeMax: 12,
+    groupSizeBucket: "До 12 человек",
+    availableDates: [{ start: "2027-09-01", end: "2027-09-08", spotsLeft: 4 }],
+    latitude: -50,
+    longitude: -72,
+    rating: 4.5,
+    reviewCount: 1,
+    organizer: { name: "Org", avatar: "" },
+    badges: [],
+  }) as TourListing;
 
 describe("marketplace catalog deadline", () => {
   it("returns the exact catalog when it resolves before the deadline", async () => {
@@ -88,8 +120,8 @@ describe("marketplace catalog source failures", () => {
 
   it("preserves the last-known-good catalog during a partial outage", () => {
     const stale = [listing("stale")];
-
-    expect(resolveMarketplaceSourceResults([], [], [], 1, stale)).toBe(stale);
+    const recovered = resolveMarketplaceSourceResults([], [], [], 1, stale);
+    expect(recovered.map((row) => row.slug)).toEqual(["stale"]);
   });
 
   it("allows a confirmed empty catalog when every source responds", () => {

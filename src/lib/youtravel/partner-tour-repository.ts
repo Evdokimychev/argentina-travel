@@ -40,6 +40,7 @@ import {
 } from "@/lib/youtravel/partner-tour-details";
 import { resolveYouTravelGroupSize } from "@/lib/youtravel/partner-tour-group-size";
 import { resolveYouTravelThematicTags } from "@/lib/youtravel/partner-tour-tags";
+import { filterFutureTourDates, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -287,9 +288,11 @@ export async function fetchYouTravelTourListings(supabase: DbClient): Promise<To
   const offerPriceRowsByTour = new Map<number, YouTravelOfferListingRow[]>();
   for (const offer of offerRows ?? []) {
     if (!offer.start_date) continue;
+    const start = offer.start_date.slice(0, 10);
+    if (!isFutureOrTodayYmd(start)) continue;
     const list = offersByTour.get(offer.tour_id) ?? [];
     list.push({
-      start: offer.start_date.slice(0, 10),
+      start,
       end: (offer.end_date ?? offer.start_date).slice(0, 10),
       spotsLeft: Math.max(offer.seats_available ?? 0, 0),
     });
@@ -299,14 +302,18 @@ export async function fetchYouTravelTourListings(supabase: DbClient): Promise<To
     priceRows.push({
       price_value: offer.price_value,
       price_currency: offer.price_currency,
-      payload: offer.payload as YouTravelOfferListingRow["payload"],
+      payload: {
+        ...(offer.payload as object),
+        startDate: start,
+        dateFrom: start,
+      } as YouTravelOfferListingRow["payload"],
     });
     offerPriceRowsByTour.set(offer.tour_id, priceRows);
   }
 
   return data.map((row) => {
     const listing = rowToListing(row as YouTravelTourRow);
-    listing.availableDates = offersByTour.get(row.id) ?? [];
+    listing.availableDates = filterFutureTourDates(offersByTour.get(row.id) ?? []);
     return applyYouTravelOfferPricesToListing(
       listing,
       offerPriceRowsByTour.get(row.id) ?? [],

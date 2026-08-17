@@ -151,7 +151,8 @@ export function hasTermsListContent(items: string[]): boolean {
 
 export type TourCardScheduleDisplay =
   | { type: "dates"; start: string; end: string; moreDates: number; spotsLeft: number }
-  | { type: "individual"; label: string };
+  | { type: "individual"; label: string }
+  | { type: "notice"; label: string };
 
 /** Подпись под ценой в карточке каталога: даты набора или индивидуальный формат. */
 export function resolveTourCardScheduleDisplay(
@@ -159,12 +160,16 @@ export function resolveTourCardScheduleDisplay(
 ): TourCardScheduleDisplay | null {
   const mode = tour.bookingMode ?? "scheduled";
   const nextDate = tour.availableDates[0];
+  const isPartner = Boolean(tour.partnerSource);
 
   if (mode === "on_request") {
     return { type: "individual", label: "Тур проводится индивидуально" };
   }
 
   if (nextDate) {
+    if (isPartner && nextDate.spotsLeft <= 0) {
+      return { type: "notice", label: "Мест на ближайшие даты нет" };
+    }
     return {
       type: "dates",
       start: nextDate.start,
@@ -176,6 +181,11 @@ export function resolveTourCardScheduleDisplay(
 
   if (mode === "both") {
     return { type: "individual", label: "Индивидуальные даты" };
+  }
+
+  // Partner scheduled offer without future dates must not look like "on request".
+  if (isPartner && mode === "scheduled") {
+    return { type: "notice", label: "Нет доступных дат" };
   }
 
   return null;

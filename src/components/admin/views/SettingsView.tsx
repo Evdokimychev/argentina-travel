@@ -20,6 +20,7 @@ import SiteDesignPreview from "@/components/admin/cms/SiteDesignPreview";
 import SiteCompositionPreview from "@/components/admin/cms/SiteCompositionPreview";
 import TravelModulesPreview from "@/components/admin/cms/TravelModulesPreview";
 import IntegrationReadinessPanel from "@/components/admin/cms/IntegrationReadinessPanel";
+import PartnerFeedHealthPanel from "@/components/admin/cms/PartnerFeedHealthPanel";
 import CommunicationsSettingsPreview from "@/components/admin/cms/CommunicationsSettingsPreview";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
@@ -749,6 +750,7 @@ export default function SettingsView() {
 
           {tab === "operations" ? (
             <>
+              <PartnerFeedHealthPanel />
               <CmsOpsPanel
                 cmsOps={data?.cmsOps}
                 cronHealth={data?.cronHealth}
