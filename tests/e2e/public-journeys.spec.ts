@@ -66,6 +66,7 @@ test.describe("Sprint 4 public journeys", () => {
       .filter({ hasNot: page.locator('[href="/blog"]') })
       .first();
     await expect(article).toBeVisible();
+    // Card media uses pointer-events-none so the stretch overlay link receives the click.
     await article.click();
     await expect(page).toHaveURL(/\/blog\/.+/);
     await expect(page.locator("h1")).toBeVisible();

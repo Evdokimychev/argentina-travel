@@ -151,7 +151,7 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
           className="absolute inset-0 z-0 rounded-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
           aria-label={post.title}
         />
-        <div className="relative aspect-[16/10] min-h-[220px] md:min-h-[320px] md:aspect-auto">
+        <div className="pointer-events-none relative aspect-[16/10] min-h-[220px] md:min-h-[320px] md:aspect-auto">
           <SafeImage
             src={listingImage}
             alt={post.title}
