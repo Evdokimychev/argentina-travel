@@ -71,3 +71,45 @@ describe("start-here / REWRITE_QUEUE pillars vs legacyManual* maps", () => {
     expect(blogTs).not.toContain('id: "blog-salta-nw-route"');
   });
 });
+
+/** High-impact itinerary/visa batch migrated off legacyManual* maps (not start-here set). */
+const HIGH_IMPACT_TYPED_SLUGS = [
+  "argentina-tourist-visa-2026",
+  "patagoniya-marshrut-14-dney",
+] as const;
+
+describe("high-impact typed blog modules vs legacyManual* maps", () => {
+  const blogTs = readFileSync(join(process.cwd(), "src/data/blog.ts"), "utf8");
+
+  const mapBlocks = [
+    extractConstBlock(blogTs, "legacyManualOfficialSources"),
+    extractConstBlock(blogTs, "legacyManualExcerptOverrides"),
+    extractConstBlock(blogTs, "legacyManualReplacementSections"),
+    extractConstBlock(blogTs, "legacyManualSectionOverrides"),
+    extractConstBlock(blogTs, "legacyManualRemovedSections"),
+  ];
+
+  it.each(HIGH_IMPACT_TYPED_SLUGS)(
+    "%s has no legacyManual override map keys and keeps official sources in body",
+    (slug) => {
+      const post = blogPosts.find((item) => item.slug === slug);
+      expect(post).toBeTruthy();
+      expect(post!.noIndex).not.toBe(true);
+      expect(post!.sections?.length).toBeGreaterThan(0);
+      expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
+      expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      expect(post!.dateModified).toBe("2026-07-17");
+
+      for (const block of mapBlocks) {
+        expect(block).not.toContain(`"${slug}"`);
+      }
+    },
+  );
+
+  it("visa and patagonia-14 wire through typed modules, not inline legacy corpus bodies", () => {
+    expect(blogTs).toContain("ARGENTINA_TOURIST_VISA_2026_POST");
+    expect(blogTs).toContain("PATAGONIYA_MARSHRUT_14_DNEY_POST");
+    expect(blogTs).not.toContain('id: "6"');
+    expect(blogTs).not.toContain('id: "blog-patagonia-14"');
+  });
+});
