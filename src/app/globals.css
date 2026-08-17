@@ -6,10 +6,15 @@
 
 @theme {
   /* E49 — palette mapped from tokens (legacy class names preserved) */
-  --color-sky: var(--token-color-sky);
+  /*
+   * Sprint 4 a11y: expose accessible blue as `sky` for text-sky / solid fills
+   * (WCAG AA on white). Keep flag blue as `sky-flag` for decorative washes/brand chrome.
+   */
+  --color-sky: var(--token-color-sky-ink);
+  --color-sky-flag: var(--token-color-sky);
   --color-sky-dark: var(--token-color-sky-dark);
   --color-sky-ink: var(--token-color-sky-ink);
-  --color-primary: var(--token-color-primary);
+  --color-primary: var(--token-color-sky-ink);
   --color-primary-dark: var(--token-color-primary-dark);
 
   --color-sun: var(--token-color-sun);
@@ -372,17 +377,7 @@ body {
   max-width: 100%;
 }
 
-/* WCAG 2.1 AA — consistent keyboard focus ring (components may override with ring utilities) */
 @layer base {
-  /**
-   * Sprint 4 a11y — brand sky (#74acdf) fails WCAG AA as small text on light surfaces (~2.4:1).
-   * Keep `bg-sky` / borders on the flag blue; force readable `text-sky` onto sky-ink (≥5.7:1).
-   * Prefer `text-sky-ink` in new code; this bridge clears historical `text-sky` debt.
-   */
-  .text-sky {
-    color: var(--token-color-sky-ink);
-  }
-
   :where(
     a,
     button,
