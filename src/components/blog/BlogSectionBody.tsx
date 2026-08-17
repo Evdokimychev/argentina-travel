@@ -7,7 +7,8 @@ import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import BlogMapBlock from "@/components/blog/BlogMapBlock";
 import { BlogInlineText, LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
-import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
+import dynamic from "next/dynamic";
+import { ArgentinaSeasonMatrixSkeleton } from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import ArticleStoryDeck from "@/components/blog/ArticleStoryDeck";
@@ -37,6 +38,11 @@ import { headingToAnchorId } from "@/lib/content-heading-id";
 import type { BlogInternalLinkRule } from "@/lib/blog-internal-links";
 import type { BlogPostSection } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+
+const ArgentinaSeasonMatrix = dynamic(
+  () => import("@/components/travel/ArgentinaSeasonMatrix"),
+  { loading: () => <ArgentinaSeasonMatrixSkeleton />, ssr: true },
+);
 
 type BlogSectionBodyProps = {
   section: BlogPostSection;

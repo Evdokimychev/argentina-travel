@@ -72,6 +72,7 @@ const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
   : 1_000;
 const configuredChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
 const USE_CONFIGURED_CHROME = Number.isInteger(configuredChromePort) && configuredChromePort > 0;
+const CHROME_FLAGS = ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"];
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -108,6 +109,13 @@ function probe(url) {
   }
 }
 
+function describeLighthouseFailure(lh) {
+  if (lh?.timedOut) return `lighthouse timed out after ${RUN_TIMEOUT_MS}ms`;
+  if (lh?.error instanceof Error) return lh.error.message;
+  if (typeof lh?.error === "string" && lh.error.trim()) return lh.error;
+  return "lighthouse failed";
+}
+
 async function runLighthouse(url, port) {
   let timer;
   try {
@@ -120,7 +128,10 @@ async function runLighthouse(url, port) {
       formFactor: "mobile",
       screenEmulation: { mobile: true },
       throttlingMethod: "simulate",
-      maxWaitForLoad: 30_000,
+      maxWaitForLoad: 45_000,
+      // Tall editorial pages can stall forever on full-page screenshots without
+      // changing performance/a11y scoring budgets.
+      disableFullPageScreenshot: true,
       logLevel: "silent",
     })
       .then(({ lhr }) => ({ lhr }))
@@ -131,6 +142,28 @@ async function runLighthouse(url, port) {
   }
 }
 
+async function withColdChrome(run) {
+  if (USE_CONFIGURED_CHROME) {
+    return run(configuredChromePort, null);
+  }
+  const chrome = await launchChrome({ chromeFlags: CHROME_FLAGS });
+  try {
+    return await run(chrome.port, chrome);
+  } finally {
+    try {
+      chrome.kill();
+    } catch {
+      // Chrome may already be dead after a protocol crash.
+    }
+  }
+}
+
+function writeSummaryReport(summary) {
+  fs.mkdirSync(reportDir, { recursive: true });
+  fs.writeFileSync(reportFile, JSON.stringify(summary, null, 2));
+  console.log(`\nReport: ${path.relative(root, reportFile)}`);
+}
+
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
   console.error(
     `Cannot reach ${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"} — start the server first (npm run build && npm run start).`,
@@ -139,212 +172,231 @@ if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
   process.exit(1);
 }
 
+// Never let a previous invalid-candidate artifact be uploaded as "this run".
+fs.rmSync(reportFile, { force: true });
+
 /** @type {Array<Record<string, any>>} */
 const results = [];
 let executionFailed = false;
+let exitCode = 1;
 
-for (const samplePath of SAMPLE_PATHS) {
-  // A Chrome instance can reliably serve a small group of cold runs, but the
-  // GitHub runner's debugging connection becomes unstable after a long series
-  // of Lighthouse navigations. Restarting it between routes keeps the three
-  // samples for a route comparable without letting one failed connection spoil
-  // the remaining evidence.
-  const routeChrome = USE_CONFIGURED_CHROME
-    ? null
-    : await launchChrome({
-        chromeFlags: ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
-      });
-  const routeChromePort = USE_CONFIGURED_CHROME ? configuredChromePort : routeChrome.port;
-
-  try {
+try {
+  for (const samplePath of SAMPLE_PATHS) {
     for (let run = 1; run <= RUNS_PER_PATH; run += 1) {
-    const url = `${BASE_URL}${samplePath}`;
-    const outFile = path.join(
-      reportDir,
-      `lh-${samplePath.replace(/\//g, "_")}-run-${run}.json`,
-    );
+      const url = `${BASE_URL}${samplePath}`;
+      const outFile = path.join(
+        reportDir,
+        `lh-${samplePath.replace(/\//g, "_")}-run-${run}.json`,
+      );
 
-    console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
-    fs.rmSync(outFile, { force: true });
-    const lh = await runLighthouse(url, routeChromePort);
+      console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
+      fs.rmSync(outFile, { force: true });
 
-    // Lighthouse clears origin storage before every measured navigation; the
-    // browser remains alive only for the three samples of this one route.
-    if (CHROME_CLEANUP_DELAY_MS > 0) {
-      await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
+      let lh;
+      try {
+        // True cold run: fresh Chrome per sample. Reusing a wedged debugger
+        // connection after timeouts previously crashed CI with Target closed.
+        lh = await withColdChrome(async (port) => {
+          const outcome = await runLighthouse(url, port);
+          if (CHROME_CLEANUP_DELAY_MS > 0) {
+            await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
+          }
+          return outcome;
+        });
+      } catch (error) {
+        executionFailed = true;
+        const message = error instanceof Error ? error.message : String(error);
+        results.push({ path: samplePath, url, run, error: message, pass: false });
+        console.log(`  FAIL error=${message}`);
+        continue;
+      }
+
+      if (!lh?.lhr) {
+        executionFailed = true;
+        const error = describeLighthouseFailure(lh);
+        results.push({ path: samplePath, url, run, error, pass: false });
+        console.log(`  FAIL error=${error}`);
+        continue;
+      }
+
+      const report = lh.lhr;
+      fs.writeFileSync(outFile, JSON.stringify(report));
+      const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
+      const a11yScore = CATEGORIES.includes("accessibility")
+        ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
+        : null;
+      const seoScore = CATEGORIES.includes("seo")
+        ? Math.round((report.categories?.seo?.score ?? 0) * 100)
+        : null;
+      const audits = report.audits ?? {};
+
+      const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? Infinity;
+      const cls = audits["cumulative-layout-shift"]?.numericValue ?? Infinity;
+      const tbtMs = audits["total-blocking-time"]?.numericValue ?? Infinity;
+      const transferBytes = audits["total-byte-weight"]?.numericValue ?? Infinity;
+      const scriptTransferBytes = Array.isArray(audits["network-requests"]?.details?.items)
+        ? audits["network-requests"].details.items
+            .filter((item) => item.resourceType === "Script")
+            .reduce((sum, item) => sum + Number(item.transferSize ?? 0), 0)
+        : Infinity;
+      const routeBudget = lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase });
+      const transferBudget = routeBudget.transferBytes;
+      const inpMs =
+        audits["interaction-to-next-paint"]?.numericValue ??
+        audits["experimental-interaction-to-next-paint"]?.numericValue ??
+        null;
+
+      const perfPass =
+        !CATEGORIES.includes("performance") ||
+        (perfScore >= routeBudget.performance &&
+          lcpMs <= routeBudget.lcpMs &&
+          cls <= routeBudget.cls &&
+          tbtMs <= routeBudget.tbtMs &&
+          transferBytes <= transferBudget &&
+          scriptTransferBytes <= routeBudget.scriptTransferBytes &&
+          (inpMs == null || inpMs <= routeBudget.inpMs));
+      const a11yPass = a11yScore == null || a11yScore >= routeBudget.accessibility;
+      const seoPass = seoScore == null || seoScore >= routeBudget.seo;
+
+      const row = {
+        path: samplePath,
+        url,
+        run,
+        performance: CATEGORIES.includes("performance") ? perfScore : null,
+        accessibility: a11yScore,
+        seo: seoScore,
+        lcpMs: Math.round(lcpMs),
+        cls: Number(cls.toFixed(3)),
+        tbtMs: Math.round(tbtMs),
+        transferBytes: Math.round(transferBytes),
+        transferBudgetBytes: transferBudget,
+        scriptTransferBytes: Math.round(scriptTransferBytes),
+        inpMs: inpMs != null ? Math.round(inpMs) : null,
+        pass: perfPass && a11yPass && seoPass,
+      };
+
+      results.push(row);
+
+      const status = row.pass ? "PASS" : "FAIL";
+      console.log(
+        `  ${status}` +
+          (row.performance != null ? ` perf=${row.performance}` : "") +
+          (row.accessibility != null ? ` a11y=${row.accessibility}` : "") +
+          (row.seo != null ? ` seo=${row.seo}` : "") +
+          ` LCP=${row.lcpMs}ms CLS=${row.cls} TBT=${row.tbtMs}ms` +
+          ` transfer=${Math.round(row.transferBytes / 1024)}KB` +
+          ` scripts=${Math.round(row.scriptTransferBytes / 1024)}KB` +
+          (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
+      );
     }
-
-    if (!lh.lhr) {
-      executionFailed = true;
-      const timedOut = lh.timedOut === true;
-      const error = timedOut
-        ? `lighthouse timed out after ${RUN_TIMEOUT_MS}ms`
-        : "lighthouse failed";
-      results.push({ path: samplePath, url, run, error, pass: false });
-      continue;
-    }
-
-    const report = lh.lhr;
-    fs.writeFileSync(outFile, JSON.stringify(report));
-    const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
-    const a11yScore = CATEGORIES.includes("accessibility")
-      ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
-      : null;
-    const seoScore = CATEGORIES.includes("seo")
-      ? Math.round((report.categories?.seo?.score ?? 0) * 100)
-      : null;
-    const audits = report.audits ?? {};
-
-    const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? Infinity;
-    const cls = audits["cumulative-layout-shift"]?.numericValue ?? Infinity;
-    const tbtMs = audits["total-blocking-time"]?.numericValue ?? Infinity;
-    const transferBytes = audits["total-byte-weight"]?.numericValue ?? Infinity;
-    const scriptTransferBytes = Array.isArray(audits["network-requests"]?.details?.items)
-      ? audits["network-requests"].details.items
-          .filter((item) => item.resourceType === "Script")
-          .reduce((sum, item) => sum + Number(item.transferSize ?? 0), 0)
-      : Infinity;
-    const routeBudget = lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase });
-    const transferBudget = routeBudget.transferBytes;
-    const inpMs =
-      audits["interaction-to-next-paint"]?.numericValue ??
-      audits["experimental-interaction-to-next-paint"]?.numericValue ??
-      null;
-
-    const perfPass =
-      !CATEGORIES.includes("performance") ||
-      (perfScore >= routeBudget.performance &&
-        lcpMs <= routeBudget.lcpMs &&
-        cls <= routeBudget.cls &&
-        tbtMs <= routeBudget.tbtMs &&
-        transferBytes <= transferBudget &&
-        scriptTransferBytes <= routeBudget.scriptTransferBytes &&
-        (inpMs == null || inpMs <= routeBudget.inpMs));
-    const a11yPass = a11yScore == null || a11yScore >= routeBudget.accessibility;
-    const seoPass = seoScore == null || seoScore >= routeBudget.seo;
-
-    const row = {
-      path: samplePath,
-      url,
-      run,
-      performance: CATEGORIES.includes("performance") ? perfScore : null,
-      accessibility: a11yScore,
-      seo: seoScore,
-      lcpMs: Math.round(lcpMs),
-      cls: Number(cls.toFixed(3)),
-      tbtMs: Math.round(tbtMs),
-      transferBytes: Math.round(transferBytes),
-      transferBudgetBytes: transferBudget,
-      scriptTransferBytes: Math.round(scriptTransferBytes),
-      inpMs: inpMs != null ? Math.round(inpMs) : null,
-      pass: perfPass && a11yPass && seoPass,
-    };
-
-    results.push(row);
-
-    const status = row.pass ? "PASS" : "FAIL";
-    console.log(
-      `  ${status}` +
-        (row.performance != null ? ` perf=${row.performance}` : "") +
-        (row.accessibility != null ? ` a11y=${row.accessibility}` : "") +
-        (row.seo != null ? ` seo=${row.seo}` : "") +
-        ` LCP=${row.lcpMs}ms CLS=${row.cls} TBT=${row.tbtMs}ms` +
-        ` transfer=${Math.round(row.transferBytes / 1024)}KB` +
-        ` scripts=${Math.round(row.scriptTransferBytes / 1024)}KB` +
-        (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
-    );
-    }
-  } finally {
-    routeChrome?.kill();
   }
-}
 
-const seoBlocking = CATEGORIES.includes("seo") && !localBase;
-const pathSummaries = SAMPLE_PATHS.map((samplePath) =>
-  summarizeLighthousePathRuns({
-    path: samplePath,
-    runs: results.filter((row) => row.path === samplePath),
-    requiredRuns: RUNS_PER_PATH,
-    budget: lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase }),
-    seoBlocking,
-  }),
-);
+  const seoBlocking = CATEGORIES.includes("seo") && !localBase;
+  const pathSummaries = SAMPLE_PATHS.map((samplePath) =>
+    summarizeLighthousePathRuns({
+      path: samplePath,
+      runs: results.filter((row) => row.path === samplePath),
+      requiredRuns: RUNS_PER_PATH,
+      budget: lighthouseBudgetForPath(BUDGET, samplePath, { local: localBase }),
+      seoBlocking,
+    }),
+  );
 
-const perfScores = results
-  .filter((r) => typeof r.performance === "number")
-  .map((r) => r.performance);
-const a11yScores = results
-  .filter((r) => typeof r.accessibility === "number")
-  .map((r) => r.accessibility);
-const seoScores = results
-  .filter((r) => typeof r.seo === "number")
-  .map((r) => r.seo);
+  const perfScores = results
+    .filter((r) => typeof r.performance === "number")
+    .map((r) => r.performance);
+  const a11yScores = results
+    .filter((r) => typeof r.accessibility === "number")
+    .map((r) => r.accessibility);
+  const seoScores = results
+    .filter((r) => typeof r.seo === "number")
+    .map((r) => r.seo);
 
-function median(values) {
-  if (values.length === 0) return 0;
-  const sorted = [...values].sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)];
-}
+  function median(values) {
+    if (values.length === 0) return 0;
+    const sorted = [...values].sort((a, b) => a - b);
+    return sorted[Math.floor(sorted.length / 2)];
+  }
 
-const medianPerf = median(perfScores);
-const medianA11y = median(a11yScores);
-const medianSeo = median(seoScores);
-const gitSha =
-  process.env.GIT_SHA?.trim() ||
-  spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout?.trim() ||
-  null;
-const gitStatus = spawnSync("git", ["status", "--porcelain"], {
-  cwd: root,
-  encoding: "utf8",
-}).stdout?.trim();
-const dirty = Boolean(gitStatus);
+  const medianPerf = median(perfScores);
+  const medianA11y = median(a11yScores);
+  const medianSeo = median(seoScores);
+  const gitSha =
+    process.env.GIT_SHA?.trim() ||
+    spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout?.trim() ||
+    null;
+  const gitStatus = spawnSync("git", ["status", "--porcelain"], {
+    cwd: root,
+    encoding: "utf8",
+  }).stdout?.trim();
+  const dirty = Boolean(gitStatus);
 
-const summary = {
-  at: new Date().toISOString(),
-  gitSha,
-  dirty,
-  evidenceScope,
-  evidenceEnvironment:
-    process.env.EVIDENCE_ENVIRONMENT ??
-    (evidenceScope === "candidate" ? "local-production" : "production-baseline"),
-  evidenceBaseUrl: BASE_URL,
-  deploymentId: process.env.EVIDENCE_DEPLOYMENT_ID ?? null,
-  deployedTree: process.env.EVIDENCE_DEPLOYED_TREE ?? null,
-  baseUrl: BASE_URL,
-  categories: CATEGORIES,
-  runsPerPath: RUNS_PER_PATH,
-  device: "Lighthouse mobile / simulated throttling / cold Chrome process per run",
-  budget: BUDGET,
-  medianPerformance: medianPerf,
-  medianAccessibility: medianA11y || null,
-  medianSeo: medianSeo || null,
-  results,
-  aggregation: "per-route median across complete cold runs",
-  seoBlocking,
-  pathSummaries,
-  pass:
-    !executionFailed && pathSummaries.every((pathSummary) => pathSummary.pass),
-};
-if (candidateContext) {
-  const evidence = finalizeCandidateEvidence(root, candidateContext, {
-    environment: summary.evidenceEnvironment,
+  const summary = {
+    at: new Date().toISOString(),
+    gitSha,
+    dirty,
+    evidenceScope,
+    evidenceEnvironment:
+      process.env.EVIDENCE_ENVIRONMENT ??
+      (evidenceScope === "candidate" ? "local-production" : "production-baseline"),
+    evidenceBaseUrl: BASE_URL,
+    deploymentId: process.env.EVIDENCE_DEPLOYMENT_ID ?? null,
+    deployedTree: process.env.EVIDENCE_DEPLOYED_TREE ?? null,
     baseUrl: BASE_URL,
-  });
-  Object.assign(summary, evidence);
-  if (evidence.evidenceIntegrity.status !== "passed") summary.pass = false;
+    categories: CATEGORIES,
+    runsPerPath: RUNS_PER_PATH,
+    device: "Lighthouse mobile / simulated throttling / cold Chrome process per run",
+    budget: BUDGET,
+    medianPerformance: medianPerf,
+    medianAccessibility: medianA11y || null,
+    medianSeo: medianSeo || null,
+    results,
+    aggregation: "per-route median across complete cold runs",
+    seoBlocking,
+    pathSummaries,
+    pass:
+      !executionFailed && pathSummaries.every((pathSummary) => pathSummary.pass),
+  };
+  if (candidateContext) {
+    const evidence = finalizeCandidateEvidence(root, candidateContext, {
+      environment: summary.evidenceEnvironment,
+      baseUrl: BASE_URL,
+    });
+    Object.assign(summary, evidence);
+    if (evidence.evidenceIntegrity.status !== "passed") summary.pass = false;
+  }
+
+  writeSummaryReport(summary);
+  if (perfScores.length) {
+    console.log(`Median Performance: ${medianPerf} (budget ≥ ${BUDGET.performance})`);
+  }
+  if (a11yScores.length) {
+    console.log(`Median Accessibility: ${medianA11y} (budget ≥ ${BUDGET.accessibility})`);
+  }
+  if (seoScores.length) {
+    console.log(`Median SEO: ${medianSeo} (budget ≥ ${BUDGET.seo})`);
+  }
+
+  exitCode = summary.pass ? 0 : 1;
+} catch (error) {
+  executionFailed = true;
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Lighthouse harness crashed: ${message}`);
+  const fallback = {
+    at: new Date().toISOString(),
+    gitSha: process.env.GIT_SHA?.trim() || null,
+    dirty: true,
+    evidenceScope: "invalid-candidate",
+    evidenceEnvironment:
+      process.env.EVIDENCE_ENVIRONMENT ??
+      (evidenceScope === "candidate" ? "local-production" : "production-baseline"),
+    evidenceBaseUrl: BASE_URL,
+    results,
+    pass: false,
+    error: message,
+  };
+  writeSummaryReport(fallback);
+  exitCode = 1;
 }
 
-fs.mkdirSync(reportDir, { recursive: true });
-fs.writeFileSync(reportFile, JSON.stringify(summary, null, 2));
-console.log(`\nReport: ${path.relative(root, reportFile)}`);
-if (perfScores.length) {
-  console.log(`Median Performance: ${medianPerf} (budget ≥ ${BUDGET.performance})`);
-}
-if (a11yScores.length) {
-  console.log(`Median Accessibility: ${medianA11y} (budget ≥ ${BUDGET.accessibility})`);
-}
-if (seoScores.length) {
-  console.log(`Median SEO: ${medianSeo} (budget ≥ ${BUDGET.seo})`);
-}
-
-process.exit(!summary.pass ? 1 : 0);
+process.exit(exitCode);

@@ -189,7 +189,7 @@ export function BlogRichGalleryCarousel({
                     className="object-cover transition-transform duration-500 group-hover/carousel:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none"
                     sizes="(max-width: 768px) 100vw, 720px"
                     loading={index === 0 ? undefined : "lazy"}
-                    priority={index === 0}
+                    priority={false}
                     placeholderVariant="destination"
                     blurPlaceholder={!image.thumbSrc}
                   />

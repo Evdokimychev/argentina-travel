@@ -1,6 +1,14 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import type { KeyboardEvent } from "react";
 import Link from "next/link";
 import { CalendarDays, ChevronDown, ChevronRight, Info, Star } from "lucide-react";
@@ -34,6 +42,22 @@ type CellRef = { rowId: string; monthIndex: number };
 const UI = ARGENTINA_SEASON_MATRIX_UI;
 
 const GRID_MONTH_COUNT = 12;
+const DESKTOP_MQ = "(min-width: 768px)";
+
+function subscribeDesktopMd(onStoreChange: () => void) {
+  const media = window.matchMedia(DESKTOP_MQ);
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
+
+function getDesktopMdSnapshot() {
+  return window.matchMedia(DESKTOP_MQ).matches;
+}
+
+/** SSR and first paint assume mobile so only one interactive tree ships in HTML. */
+function useIsDesktopMd() {
+  return useSyncExternalStore(subscribeDesktopMd, getDesktopMdSnapshot, () => false);
+}
 
 const MARK_TINT: Record<string, string> = {
   ba: "bg-sky/10",
@@ -202,6 +226,7 @@ export default function ArgentinaSeasonMatrix({
   });
   const [showAllMobile, setShowAllMobile] = useState(false);
   const cellRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const isDesktop = useIsDesktopMd();
 
   useEffect(() => {
     setCurrentMonth(getBuenosAiresMonthIndex());
@@ -329,8 +354,9 @@ export default function ArgentinaSeasonMatrix({
         </div>
       </div>
 
-      {/* Mobile: month chips, quick scenarios before selection, destination cards after */}
-      <div className="space-y-3 p-3 md:hidden">
+      {/* One interactive tree only — CSS dual-mount doubled DOM and stalled Lighthouse gather. */}
+      {!isDesktop ? (
+      <div className="space-y-3 p-3">
         <div
           className="flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="listbox"
@@ -447,9 +473,8 @@ export default function ArgentinaSeasonMatrix({
           </>
         )}
       </div>
-
-      {/* Desktop: compact table with roving-tabindex score grid */}
-      <div className="hidden overflow-x-auto md:block">
+      ) : (
+      <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50/80">
@@ -544,6 +569,7 @@ export default function ArgentinaSeasonMatrix({
           </tbody>
         </table>
       </div>
+      )}
 
       <div className="grid gap-3 border-t border-gray-100 px-3 py-3 sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] sm:px-5 sm:py-3.5">
         <div>
