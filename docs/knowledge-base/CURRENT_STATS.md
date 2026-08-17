@@ -1,6 +1,6 @@
 # KB current stats (generated)
 
-Generated: `2026-08-17T09:55:27.090Z`  
+Generated: `2026-08-17T10:09:46.506Z`  
 Manifest `generated_at`: `2026-08-17 00:00`
 
 | Metric | Value |

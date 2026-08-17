@@ -2,6 +2,8 @@
 
 См. канонический контракт: [CONTENT_OWNERSHIP_CONTRACT.md](./CONTENT_OWNERSHIP_CONTRACT.md).
 
+Инвентарь overrides: [OVERRIDE_INVENTORY.md](./OVERRIDE_INVENTORY.md).
+
 
 ## Этап 1 — Registry и обёртки (сделано)
 
