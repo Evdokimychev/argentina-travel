@@ -38,6 +38,11 @@ import {
   lighthouseBudgetForPath,
   summarizeLighthousePathRuns,
 } from "./lib/lighthouse-budget-policy.mjs";
+import {
+  parseLocalPort,
+  startManagedServer,
+  stopManagedServer,
+} from "./lib/lighthouse-managed-server.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -84,6 +89,11 @@ const reuseChrome =
   process.env.LIGHTHOUSE_REUSE_CHROME === "0"
     ? false
     : process.env.LIGHTHOUSE_REUSE_CHROME === "1" || !USE_CONFIGURED_CHROME;
+const manageServer =
+  localBase &&
+  process.env.LIGHTHOUSE_MANAGE_SERVER !== "0" &&
+  (process.env.LIGHTHOUSE_MANAGE_SERVER === "1" || process.env.CI === "true");
+const managedServerPort = parseLocalPort(BASE_URL, Number(process.env.LIGHTHOUSE_PORT ?? 3000));
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -249,12 +259,31 @@ function writeSummaryReport(summary) {
   console.log(`\nReport: ${path.relative(root, reportFile)}`);
 }
 
+/** @type {import("node:child_process").ChildProcess | null} */
+let managedServer = null;
+
+async function ensureManagedServer(reason) {
+  if (!manageServer) return false;
+  console.warn(`Recovering local Next server on :${managedServerPort} (${reason})`);
+  managedServer = await startManagedServer(managedServerPort, process.env);
+  return true;
+}
+
 if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
-  console.error(
-    `Cannot reach ${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"} — start the server first (npm run build && npm run start).`,
-  );
-  console.error("Set SKIP_LIGHTHOUSE=1 to skip in CI without a running server.");
-  process.exit(1);
+  if (manageServer) {
+    try {
+      await ensureManagedServer("initial-start");
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  } else {
+    console.error(
+      `Cannot reach ${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"} — start the server first (npm run build && npm run start).`,
+    );
+    console.error("Set SKIP_LIGHTHOUSE=1 to skip in CI without a running server.");
+    process.exit(1);
+  }
 }
 
 // Never let a previous invalid-candidate artifact be uploaded as "this run".
@@ -285,11 +314,23 @@ try {
 
       console.log(`\nLighthouse (mobile, cold run ${run}/${RUNS_PER_PATH}): ${url}`);
       if (!probe(url)) {
-        executionFailed = true;
-        const message = `target not reachable before run: ${url}`;
-        results.push({ path: samplePath, url, run, error: message, pass: false });
-        console.log(`  FAIL error=${message}`);
-        continue;
+        let recovered = false;
+        try {
+          recovered = await ensureManagedServer(`unreachable:${samplePath}`);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          executionFailed = true;
+          results.push({ path: samplePath, url, run, error: message, pass: false });
+          console.log(`  FAIL error=${message}`);
+          continue;
+        }
+        if (!recovered || !probe(url)) {
+          executionFailed = true;
+          const message = `target not reachable before run: ${url}`;
+          results.push({ path: samplePath, url, run, error: message, pass: false });
+          console.log(`  FAIL error=${message}`);
+          continue;
+        }
       }
 
       const chromePort = USE_CONFIGURED_CHROME
@@ -298,6 +339,25 @@ try {
       let lh;
       try {
         lh = await runIsolatedColdAudit(url, outFile, chromePort);
+        // One automatic retry after recycling Chrome / local server. Hung gathers
+        // on GHA often kill the Next process; a single rerun restores evidence.
+        if (!lh?.lhr) {
+          if (sharedChrome) {
+            await stopSharedChrome(sharedChrome);
+            sharedChrome = await startSharedChrome();
+          }
+          if (!probe(url) && manageServer) {
+            await ensureManagedServer(`after-timeout:${samplePath}`);
+          }
+          if (probe(url)) {
+            console.warn(`  retrying cold run ${run}/${RUNS_PER_PATH} after harness recovery`);
+            lh = await runIsolatedColdAudit(
+              url,
+              outFile,
+              USE_CONFIGURED_CHROME ? configuredChromePort : sharedChrome?.port,
+            );
+          }
+        }
       } catch (error) {
         executionFailed = true;
         const message = error instanceof Error ? error.message : String(error);
@@ -506,6 +566,10 @@ try {
 } finally {
   await stopSharedChrome(sharedChrome);
   sharedChrome = null;
+  if (manageServer) {
+    stopManagedServer(managedServer, managedServerPort);
+    managedServer = null;
+  }
 }
 
 process.exit(exitCode);

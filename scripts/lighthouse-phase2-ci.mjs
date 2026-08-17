@@ -12,10 +12,11 @@
  *   LIGHTHOUSE_BASE_URL=https://www.goargentina.ru node scripts/lighthouse-phase2-ci.mjs
  *   npm run lighthouse:phase2:prod
  */
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveLighthouseStartTimeout } from "./lib/lighthouse-runtime.mjs";
+import { waitForLocalUrl } from "./lib/lighthouse-managed-server.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -54,24 +55,6 @@ const samplePaths = isExternalBase
   ? LIGHTHOUSE_PHASE2_PATHS
   : LIGHTHOUSE_PHASE2_PATHS.filter((samplePath) => !samplePath.startsWith("/tours/"));
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function waitForServer(url) {
-  const started = Date.now();
-  while (Date.now() - started < START_TIMEOUT_MS) {
-    try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-      if (res.ok) return true;
-    } catch {
-      // retry
-    }
-    await sleep(1500);
-  }
-  return false;
-}
-
 function runAudit() {
   return spawnSync("node", ["scripts/lighthouse-blog-cwv.mjs"], {
     cwd: root,
@@ -79,6 +62,10 @@ function runAudit() {
     env: {
       ...process.env,
       LIGHTHOUSE_BASE_URL: BASE_URL,
+      LIGHTHOUSE_PORT: String(PORT),
+      // Candidate CI owns the Next server inside the CWV harness so a hung
+      // gather / OOM can restart :PORT and continue remaining cold runs.
+      LIGHTHOUSE_MANAGE_SERVER: isExternalBase ? "0" : "1",
       LIGHTHOUSE_SAMPLE_PATHS: samplePaths.join(","),
       LIGHTHOUSE_RUNS_PER_PATH: process.env.LIGHTHOUSE_RUNS_PER_PATH ?? "3",
       // A local candidate is deliberately noindex. SEO is blocking only on the
@@ -99,51 +86,18 @@ function runAudit() {
   }).status ?? 1;
 }
 
-let auditStatus = 1;
-let server = null;
-let serverLog = "";
-
 if (process.env.SKIP_LIGHTHOUSE === "1") {
   console.log("SKIP_LIGHTHOUSE=1 — skipping Lighthouse phase2 audit.");
   process.exit(0);
 }
 
-try {
-  if (isExternalBase) {
-    console.log(`Lighthouse phase2 against ${BASE_URL} (external, no local server)`);
-    const ready = await waitForServer(`${BASE_URL}/`);
-    if (!ready) {
-      console.error(`Target not reachable: ${BASE_URL}/`);
-      process.exit(1);
-    }
-    auditStatus = runAudit();
-  } else {
-    server = spawn("npm", ["run", "start", "--", "-p", String(PORT)], {
-      cwd: root,
-      stdio: ["ignore", "pipe", "pipe"],
-      env: { ...process.env, PORT: String(PORT) },
-    });
-    server.stdout?.on("data", (chunk) => {
-      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
-    });
-    server.stderr?.on("data", (chunk) => {
-      serverLog = `${serverLog}${chunk.toString()}`.slice(-12_000);
-    });
-
-    const ready = await waitForServer(`${BASE_URL}/`);
-    if (!ready) {
-      console.error(`Server did not become ready at ${BASE_URL}/ within ${START_TIMEOUT_MS}ms`);
-      if (serverLog.trim()) {
-        console.error("--- next start log (tail) ---");
-        console.error(serverLog.trim());
-      }
-      process.exit(1);
-    }
-
-    auditStatus = runAudit();
+if (isExternalBase) {
+  console.log(`Lighthouse phase2 against ${BASE_URL} (external, no local server)`);
+  const ready = await waitForLocalUrl(`${BASE_URL}/`, START_TIMEOUT_MS);
+  if (!ready) {
+    console.error(`Target not reachable: ${BASE_URL}/`);
+    process.exit(1);
   }
-} finally {
-  server?.kill("SIGTERM");
 }
 
-process.exit(auditStatus);
+process.exit(runAudit());

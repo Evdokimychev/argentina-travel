@@ -36,6 +36,8 @@ describe("Sprint 3 performance budgets", () => {
     expect(runner).toContain("lighthouse-single-run.mjs");
     expect(runner).toContain("startSharedChrome");
     expect(runner).toContain("LIGHTHOUSE_REUSE_CHROME");
+    expect(runner).toContain("LIGHTHOUSE_MANAGE_SERVER");
+    expect(runner).toContain("ensureManagedServer");
     expect(worker).toContain('launch as launchChrome');
     expect(worker).toContain("disableFullPageScreenshot: true");
   });
