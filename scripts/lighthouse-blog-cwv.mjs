@@ -17,12 +17,10 @@
  *
  * Writes: var/ops/lighthouse-blog-cwv-last.json
  */
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { launch as launchChrome } from "chrome-launcher";
-import lighthouse from "lighthouse";
 import {
   captureCandidateContext,
   finalizeCandidateEvidence,
@@ -66,13 +64,13 @@ const requestedRunTimeoutMs = Number(process.env.LIGHTHOUSE_RUN_TIMEOUT_MS ?? 24
 const RUN_TIMEOUT_MS = Number.isFinite(requestedRunTimeoutMs)
   ? Math.max(30_000, Math.min(600_000, Math.floor(requestedRunTimeoutMs)))
   : 240_000;
-const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS ?? 1_000);
+const requestedCleanupDelayMs = Number(process.env.LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS ?? 1_500);
 const CHROME_CLEANUP_DELAY_MS = Number.isFinite(requestedCleanupDelayMs)
   ? Math.max(0, Math.min(10_000, Math.floor(requestedCleanupDelayMs)))
-  : 1_000;
+  : 1_500;
 const configuredChromePort = Number(process.env.LIGHTHOUSE_CHROME_PORT);
 const USE_CONFIGURED_CHROME = Number.isInteger(configuredChromePort) && configuredChromePort > 0;
-const CHROME_FLAGS = ["--headless", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"];
+const SINGLE_RUN_WORKER = path.join(__dirname, "lib/lighthouse-single-run.mjs");
 
 /** Blocking public mobile budgets. Every cold run must complete; route medians gate CI. */
 const BUDGET = {
@@ -93,22 +91,6 @@ if (process.env.SKIP_LIGHTHOUSE === "1") {
   process.exit(0);
 }
 
-// Intentionally killed Chrome targets can still emit late protocol rejections.
-// Those must not abort the remaining cold runs mid-suite.
-process.on("unhandledRejection", (reason) => {
-  const message = reason instanceof Error ? reason.message : String(reason ?? "");
-  if (
-    message.includes("Target closed") ||
-    message.includes("Protocol error") ||
-    message.includes("Browser disconnected")
-  ) {
-    console.warn(`Ignoring post-kill CDP rejection: ${message}`);
-    return;
-  }
-  console.error("Unhandled rejection in Lighthouse harness:", reason);
-  process.exitCode = 1;
-});
-
 function probe(url) {
   try {
     const res = spawnSync(
@@ -125,6 +107,10 @@ function probe(url) {
   }
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function describeLighthouseFailure(lh) {
   if (lh?.timedOut) return `lighthouse timed out after ${RUN_TIMEOUT_MS}ms`;
   if (lh?.error instanceof Error) return lh.error.message;
@@ -132,64 +118,106 @@ function describeLighthouseFailure(lh) {
   return "lighthouse failed";
 }
 
-async function runLighthouse(url, port, options = {}) {
-  let timer;
-  let settled = false;
+function killProcessTree(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return;
   try {
-    const timedOut = new Promise((resolve) => {
-      timer = setTimeout(() => resolve({ timedOut: true }), RUN_TIMEOUT_MS);
-    });
-    const audit = lighthouse(url, {
-      port,
-      onlyCategories: CATEGORIES,
-      formFactor: "mobile",
-      screenEmulation: { mobile: true },
-      throttlingMethod: "simulate",
-      maxWaitForLoad: 45_000,
-      // Tall editorial pages can stall forever on full-page screenshots without
-      // changing performance/a11y scoring budgets.
-      disableFullPageScreenshot: true,
-      logLevel: "silent",
-    })
-      .then(({ lhr }) => {
-        settled = true;
-        return { lhr };
-      })
-      .catch((error) => {
-        settled = true;
-        return { error };
-      });
-    const outcome = await Promise.race([audit, timedOut]);
-    if (outcome?.timedOut && typeof options.onTimeout === "function") {
-      // Kill the debugger target immediately. Do not await the orphaned gather:
-      // after Chrome dies some Lighthouse versions never settle, which left the
-      // top-level CI script hanging until Node aborted with exit 13.
-      await options.onTimeout();
+    // Negative PID targets the process group started with detached:true.
+    process.kill(-pid, "SIGKILL");
+  } catch {
+    try {
+      process.kill(pid, "SIGKILL");
+    } catch {
+      // Already exited.
     }
-    return outcome;
-  } finally {
-    clearTimeout(timer);
-    void settled;
   }
 }
 
-async function withColdChrome(run) {
-  if (USE_CONFIGURED_CHROME) {
-    return run(configuredChromePort, async () => {});
-  }
-  const chrome = await launchChrome({ chromeFlags: CHROME_FLAGS });
-  const killChrome = async () => {
-    try {
-      chrome.kill();
-    } catch {
-      // Chrome may already be dead after a protocol crash.
-    }
-  };
-  try {
-    return await run(chrome.port, killChrome);
-  } finally {
-    await killChrome();
-  }
+function sweepOrphanedChrome() {
+  // Best-effort reclaim of headless Chrome left after a hard timeout kill.
+  // Scoped flags avoid touching unrelated desktop Chromium sessions.
+  spawnSync(
+    "pkill",
+    ["-9", "-f", "chrome.*--headless.*--remote-debugging-port"],
+    { stdio: "ignore" },
+  );
+  spawnSync(
+    "pkill",
+    ["-9", "-f", "chromedriver|chrome-headless-shell"],
+    { stdio: "ignore" },
+  );
+}
+
+/**
+ * Run one cold Lighthouse sample in an isolated child process + process group.
+ * Parent never holds a CDP session, so a hung gather cannot wedge later runs.
+ */
+function runIsolatedColdAudit(url, outFile) {
+  return new Promise((resolve) => {
+    fs.rmSync(outFile, { force: true });
+    const child = spawn(process.execPath, [SINGLE_RUN_WORKER], {
+      cwd: root,
+      env: {
+        ...process.env,
+        LIGHTHOUSE_SINGLE_URL: url,
+        LIGHTHOUSE_SINGLE_OUT: outFile,
+        LIGHTHOUSE_CATEGORIES: CATEGORIES.join(","),
+        ...(USE_CONFIGURED_CHROME
+          ? { LIGHTHOUSE_CHROME_PORT: String(configuredChromePort) }
+          : {}),
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+      detached: true,
+    });
+
+    let stdout = "";
+    let stderr = "";
+    let settled = false;
+    const finish = (outcome) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(outcome);
+    };
+
+    const timer = setTimeout(() => {
+      killProcessTree(child.pid);
+      sweepOrphanedChrome();
+      fs.rmSync(outFile, { force: true });
+      finish({ timedOut: true });
+    }, RUN_TIMEOUT_MS);
+
+    child.stdout.on("data", (chunk) => {
+      stdout += chunk.toString();
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+    child.on("error", (error) => {
+      finish({ error });
+    });
+    child.on("exit", (code, signal) => {
+      if (fs.existsSync(outFile)) {
+        try {
+          const lhr = JSON.parse(fs.readFileSync(outFile, "utf8"));
+          finish({ lhr, workerStdout: stdout.trim() });
+          return;
+        } catch (error) {
+          finish({ error });
+          return;
+        }
+      }
+      if (signal) {
+        finish({ error: `worker killed by ${signal}` });
+        return;
+      }
+      finish({
+        error:
+          stderr.trim() ||
+          stdout.trim() ||
+          `lighthouse worker exited with code ${code ?? "unknown"}`,
+      });
+    });
+  });
 }
 
 function writeSummaryReport(summary) {
@@ -228,15 +256,15 @@ try {
 
       let lh;
       try {
-        // True cold run: fresh Chrome per sample. Reusing a wedged debugger
-        // connection after timeouts previously crashed CI with Target closed.
-        lh = await withColdChrome(async (port, onTimeout) => {
-          const outcome = await runLighthouse(url, port, { onTimeout });
-          if (CHROME_CLEANUP_DELAY_MS > 0) {
-            await new Promise((resolve) => setTimeout(resolve, CHROME_CLEANUP_DELAY_MS));
-          }
-          return outcome;
-        });
+        // True cold run in an isolated worker process group. In-process Chrome
+        // relaunches previously poisoned later CDP sessions after the first
+        // timeout kill on GitHub-hosted runners.
+        lh = await runIsolatedColdAudit(url, outFile);
+        if (lh?.timedOut || lh?.error) {
+          await sleep(CHROME_CLEANUP_DELAY_MS);
+        } else if (CHROME_CLEANUP_DELAY_MS > 0) {
+          await sleep(Math.min(CHROME_CLEANUP_DELAY_MS, 500));
+        }
       } catch (error) {
         executionFailed = true;
         const message = error instanceof Error ? error.message : String(error);
@@ -254,7 +282,7 @@ try {
       }
 
       const report = lh.lhr;
-      fs.writeFileSync(outFile, JSON.stringify(report));
+      // outFile already written by the worker; keep a stable copy path.
       const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
       const a11yScore = CATEGORIES.includes("accessibility")
         ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
@@ -379,7 +407,7 @@ try {
     baseUrl: BASE_URL,
     categories: CATEGORIES,
     runsPerPath: RUNS_PER_PATH,
-    device: "Lighthouse mobile / simulated throttling / cold Chrome process per run",
+    device: "Lighthouse mobile / simulated throttling / isolated cold Chrome worker per run",
     budget: BUDGET,
     medianPerformance: medianPerf,
     medianAccessibility: medianA11y || null,

@@ -78,7 +78,9 @@ jobs:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
           LIGHTHOUSE_START_TIMEOUT_MS: 180000
           LIGHTHOUSE_RUNS_PER_PATH: "3"
-          LIGHTHOUSE_RUN_TIMEOUT_MS: "120000"
+          # Isolated worker + process-group kill; keep below GHA step budget.
+          LIGHTHOUSE_RUN_TIMEOUT_MS: "150000"
+          LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS: "2000"
         run: node scripts/lighthouse-phase2-ci.mjs
 
       - name: Upload performance evidence

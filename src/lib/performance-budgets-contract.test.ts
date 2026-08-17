@@ -20,6 +20,10 @@ describe("Sprint 3 performance budgets", () => {
       path.join(process.cwd(), "scripts/lighthouse-blog-cwv.mjs"),
       "utf8",
     );
+    const worker = fs.readFileSync(
+      path.join(process.cwd(), "scripts/lib/lighthouse-single-run.mjs"),
+      "utf8",
+    );
 
     expect(runner).toContain("LIGHTHOUSE_LCP_BUDGET_MS");
     expect(runner).toContain("LIGHTHOUSE_CLS_BUDGET");
@@ -28,6 +32,10 @@ describe("Sprint 3 performance budgets", () => {
     expect(runner).toContain("LIGHTHOUSE_CONTENT_TRANSFER_BUDGET_BYTES");
     expect(runner).toContain("LIGHTHOUSE_SCRIPT_TRANSFER_BUDGET_BYTES");
     expect(runner).toContain('spawnSync("git", ["rev-parse", "HEAD"]');
+    expect(runner).toContain("runIsolatedColdAudit");
+    expect(runner).toContain("lighthouse-single-run.mjs");
+    expect(worker).toContain('launch as launchChrome');
+    expect(worker).toContain("disableFullPageScreenshot: true");
   });
 
   it("keeps the CI budget job blocking and uploads evidence", () => {
