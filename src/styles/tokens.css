@@ -36,7 +36,8 @@
   --token-color-wine: #722f37;
   --token-color-wine-light: #8b3a44;
 
-  --token-color-brand: #d4533b;
+  /* Brand solid + white text must clear WCAG AA (≥4.5:1). #d4533b was ~4.1:1. */
+  --token-color-brand: #c94a34;
   --token-color-brand-dark: #b8432e;
   --token-color-brand-light: #fef3f0;
 

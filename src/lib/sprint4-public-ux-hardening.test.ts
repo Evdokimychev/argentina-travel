@@ -62,9 +62,11 @@ describe("Sprint 4 mobile bottom-layer collision contract", () => {
     const globals = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
     const tokens = readFileSync(join(process.cwd(), "src/styles/tokens.css"), "utf8");
     expect(globals).toMatch(/--color-sky:\s*var\(--token-color-sky-ink\)/);
+    expect(globals).toMatch(/--color-sky-dark:\s*var\(--token-color-sky-ink\)/);
     expect(globals).toMatch(/--color-sky-flag:\s*var\(--token-color-sky\)/);
     expect(tokens).toContain("--token-color-sky: #74acdf");
     expect(tokens).toContain("--token-color-sky-ink: #35699f");
+    expect(tokens).toContain("--token-color-brand: #c94a34");
   });
 
   it("uses sky-ink for selected section-nav chips", () => {

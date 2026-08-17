@@ -12,10 +12,11 @@
    */
   --color-sky: var(--token-color-sky-ink);
   --color-sky-flag: var(--token-color-sky);
-  --color-sky-dark: var(--token-color-sky-dark);
+  /* Mid sky-dark (#5a8fc4) fails AA on white (~3.4:1); text-sky-dark uses ink. */
+  --color-sky-dark: var(--token-color-sky-ink);
   --color-sky-ink: var(--token-color-sky-ink);
   --color-primary: var(--token-color-sky-ink);
-  --color-primary-dark: var(--token-color-primary-dark);
+  --color-primary-dark: var(--token-color-sky-ink);
 
   --color-sun: var(--token-color-sun);
   --color-sun-dark: var(--token-color-sun-dark);
