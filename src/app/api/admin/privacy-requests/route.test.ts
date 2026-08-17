@@ -19,6 +19,7 @@ vi.mock("@/lib/admin/authorize-request", () => ({
 vi.mock("@/lib/admin/audit", () => ({
   clientIpFromRequest: () => "127.0.0.1",
   writeAdminAuditLog: mocks.audit,
+  writeCriticalAdminAuditLog: mocks.audit,
 }));
 
 vi.mock("@/lib/supabase/admin", () => ({
@@ -44,7 +45,7 @@ describe("PATCH /api/admin/privacy-requests", () => {
       via: "session",
       actorId: "8df63e78-5184-4f49-b75c-60c2f2897f15",
     });
-    mocks.audit.mockReset().mockResolvedValue(undefined);
+    mocks.audit.mockReset().mockResolvedValue({ ok: true });
     mocks.existing = {
       id: "request-1",
       user_id: "user-1",
@@ -103,8 +104,9 @@ describe("PATCH /api/admin/privacy-requests", () => {
     }));
     expect(mocks.from).not.toHaveBeenCalledWith("profiles");
     expect(mocks.audit).toHaveBeenCalledWith(expect.objectContaining({
-      action: "privacy_request.approve",
+      action: "privacy.decision",
       entityId: "request-1",
+      payload: expect.objectContaining({ decision: "approve", legacyAction: "privacy_request.approve" }),
     }));
   });
 

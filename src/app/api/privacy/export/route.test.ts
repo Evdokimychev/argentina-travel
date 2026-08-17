@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   sessionUser: null as null | Record<string, unknown>,
   loadSessionUser: vi.fn(),
   buildExport: vi.fn(),
+  audit: vi.fn(),
   supabase: { source: "session-client" },
 }));
 
@@ -16,6 +17,10 @@ vi.mock("@/lib/supabase-auth-provider", () => ({
 }));
 vi.mock("@/lib/privacy/export-user-data", () => ({
   buildUserPrivacyExport: mocks.buildExport,
+}));
+vi.mock("@/lib/admin/audit", () => ({
+  clientIpFromRequest: () => "127.0.0.1",
+  writeCriticalAdminAuditLog: mocks.audit,
 }));
 
 import { POST } from "@/app/api/privacy/export/route";
@@ -38,13 +43,18 @@ describe("POST /api/privacy/export", () => {
       reviews: [],
       messages: [],
     });
+    mocks.audit.mockReset().mockResolvedValue({ ok: true });
   });
 
   it("scopes the export to the authenticated session user", async () => {
-    const response = await POST();
+    const response = await POST(new Request("https://example.test/api/privacy/export", { method: "POST" }));
 
     expect(response.status).toBe(200);
     expect(mocks.buildExport).toHaveBeenCalledWith(mocks.supabase, mocks.sessionUser);
+    expect(mocks.audit).toHaveBeenCalledWith(expect.objectContaining({
+      action: "privacy.export",
+      entityId: "user-1",
+    }));
     expect(response.headers.get("content-disposition")).toBe(
       'attachment; filename="privacy-export-user-1.json"',
     );
@@ -54,9 +64,10 @@ describe("POST /api/privacy/export", () => {
   it("does not assemble an export without a session user", async () => {
     mocks.sessionUser = null;
 
-    const response = await POST();
+    const response = await POST(new Request("https://example.test/api/privacy/export", { method: "POST" }));
 
     expect(response.status).toBe(401);
     expect(mocks.buildExport).not.toHaveBeenCalled();
+    expect(mocks.audit).not.toHaveBeenCalled();
   });
 });

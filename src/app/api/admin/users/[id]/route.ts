@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest } from "@/lib/admin/audit";
+import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/audit";
 import {
   guardUserIdentityTarget,
   isUuid,
@@ -200,6 +200,24 @@ export async function PATCH(
       conflict || approvalMissing ? 409 : 503,
       conflict ? "PROFILE_UPDATE_CONFLICT" : approvalMissing ? "ORGANIZER_APPROVAL_REQUIRED" : "PROFILE_UPDATE_FAILED",
     );
+  }
+
+  if (authBlockChanged) {
+    const audit = await writeCriticalAdminAuditLog({
+      actorUserId: auth.actorId,
+      action: body.isBlocked ? "users.block" : "users.unblock",
+      entityType: "profile",
+      entityId: id,
+      payload: { isBlocked: Boolean(body.isBlocked) },
+      ipAddress: clientIpFromRequest(request),
+    });
+    if (!audit.ok) {
+      return errorResponse(
+        "Не удалось записать журнал безопасности. Повторите позже.",
+        503,
+        "AUDIT_WRITE_FAILED",
+      );
+    }
   }
 
   return NextResponse.json({ ok: true });

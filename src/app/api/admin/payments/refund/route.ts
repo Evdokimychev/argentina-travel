@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/audit";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById } from "@/lib/bookings-server";
@@ -72,6 +73,26 @@ export async function POST(request: Request) {
 
   if ("error" in created) {
     return NextResponse.json({ error: created.error }, { status: 400 });
+  }
+
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "finance.refund.prepare",
+    entityType: "payment_transaction",
+    entityId: created.transaction.id,
+    payload: {
+      bookingId,
+      amount: created.transaction.amount,
+      currency: created.transaction.currency,
+      operationId: body.operationId,
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
+    );
   }
 
   return NextResponse.json(

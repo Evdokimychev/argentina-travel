@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   authorize: vi.fn(),
   approve: vi.fn(),
+  audit: vi.fn(),
 }));
 
 vi.mock("@/lib/admin/authorize-request", () => ({
@@ -13,6 +14,10 @@ vi.mock("@/lib/payments/transaction-server", () => ({
 }));
 vi.mock("@/lib/supabase/admin", () => ({
   createSupabaseAdminClient: () => ({ kind: "admin-client" }),
+}));
+vi.mock("@/lib/admin/audit", () => ({
+  clientIpFromRequest: () => "127.0.0.1",
+  writeCriticalAdminAuditLog: mocks.audit,
 }));
 
 import { POST } from "@/app/api/admin/payments/refunds/[id]/approve/route";
@@ -36,6 +41,7 @@ describe("POST /api/admin/payments/refunds/[id]/approve", () => {
       transaction: { id: "refund-1", status: "completed" },
       providerExecuted: false,
     });
+    mocks.audit.mockReset().mockResolvedValue({ ok: true });
   });
 
   it("requires the approval capability and passes the personal session actor", async () => {

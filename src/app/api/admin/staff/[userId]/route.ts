@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clientIpFromRequest } from "@/lib/admin/audit";
+import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/audit";
 import {
   assertStaffTargetMutationAllowed,
   authorizeStaffManagementRequest,
@@ -133,6 +133,26 @@ export async function PATCH(
   });
   if (error) return mutationError(error);
 
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: body.capabilities !== undefined ? "staff.capability_change" : "staff.role_change",
+    entityType: "admin_staff",
+    entityId: userId,
+    payload: {
+      mutation: "update",
+      preset: nextPreset,
+      isActive: nextIsActive,
+      capabilityCount: nextCapabilities.length,
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
+    );
+  }
+
   return NextResponse.json({ ok: true });
 }
 
@@ -164,6 +184,21 @@ export async function DELETE(
     p_ip_address: clientIpFromRequest(request),
   });
   if (error) return mutationError(error);
+
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "staff.role_change",
+    entityType: "admin_staff",
+    entityId: userId,
+    payload: { mutation: "remove", previousPreset: current.preset },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

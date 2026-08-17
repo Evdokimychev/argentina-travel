@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { writeAdminAuditLog, clientIpFromRequest } from "@/lib/admin/audit";
+import { writeCriticalAdminAuditLog, clientIpFromRequest } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database, Json } from "@/types/database";
 import type { PrivacyRequestStatus } from "@/types/privacy";
@@ -220,8 +220,8 @@ export async function PATCH(request: Request) {
     metadata: mergeMetadata(existing.metadata, {
       ...(action === "approve" ? { approvedAt: now } : { rejectedAt: now }),
       ...(action === "approve"
-        ? { approvedBy: auth.via === "session" ? auth.actorId : "service-role" }
-        : { rejectedBy: auth.via === "session" ? auth.actorId : "service-role" }),
+        ? { approvedBy: auth.via === "session" ? auth.actorId : "admin-automation" }
+        : { rejectedBy: auth.via === "session" ? auth.actorId : "admin-automation" }),
     }),
   };
 
@@ -248,15 +248,24 @@ export async function PATCH(request: Request) {
     );
   }
 
-  if (auth.via === "session") {
-    await writeAdminAuditLog({
-      actorUserId: auth.actorId,
-      action: action === "approve" ? "privacy_request.approve" : "privacy_request.reject",
-      entityType: "privacy_request",
-      entityId: id,
-      payload: { status: nextStatus, notes: notes ?? null },
-      ipAddress: clientIpFromRequest(request),
-    });
+  const audit = await writeCriticalAdminAuditLog({
+    actorUserId: auth.via === "session" ? auth.actorId : null,
+    action: "privacy.decision",
+    entityType: "privacy_request",
+    entityId: id,
+    payload: {
+      decision: action,
+      status: nextStatus,
+      notes: notes ?? null,
+      legacyAction: action === "approve" ? "privacy_request.approve" : "privacy_request.reject",
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+  if (!audit.ok) {
+    return NextResponse.json(
+      { error: "Не удалось записать журнал безопасности. Повторите позже.", code: "AUDIT_WRITE_FAILED" },
+      { status: 503 },
+    );
   }
 
   return NextResponse.json({ ok: true, request: data });
