@@ -25,11 +25,11 @@ export default function HomeHeroCollage({
       className={cn("relative h-full w-full lg:mx-0 lg:h-auto lg:max-w-none", className)}
     >
       <div
-        className="pointer-events-none absolute -bottom-5 -left-5 hidden h-[calc(100%-1rem)] w-[calc(100%-1rem)] rounded-[2rem] border border-[var(--editorial-line)] lg:block"
+        className="pointer-events-none absolute -bottom-5 -left-5 hidden h-[calc(100%-1rem)] w-[calc(100%-1rem)] rounded-panel border border-[var(--editorial-line)] lg:block"
         aria-hidden
       />
       <div className="grid h-full grid-cols-12 items-stretch gap-2.5 sm:gap-3 lg:h-auto">
-        <figure className="editorial-media-frame group relative col-span-12 h-full overflow-hidden border-0 bg-charcoal/5 lg:h-auto lg:rounded-[1.75rem] lg:border sm:col-span-12 lg:col-span-8">
+        <figure className="editorial-media-frame group relative col-span-12 h-full overflow-hidden border-0 bg-charcoal/5 lg:h-auto lg:rounded-panel lg:border sm:col-span-12 lg:col-span-8">
           <div className="relative h-full w-full lg:aspect-square lg:h-auto">
             <picture>
               <source media="(max-width: 1023px)" srcSet={MOBILE_HERO_SRC} />
@@ -67,7 +67,7 @@ export default function HomeHeroCollage({
           {secondary.map((image, index) => (
             <figure
               key={image.src}
-              className="editorial-media-frame group relative min-h-0 overflow-hidden rounded-[1.35rem] border bg-charcoal/5"
+              className="editorial-media-frame group relative min-h-0 overflow-hidden rounded-card border bg-charcoal/5"
             >
               <div className="relative h-full min-h-[10rem] w-full">
                 <SafeImage
