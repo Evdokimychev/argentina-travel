@@ -10,6 +10,11 @@ const MIGRATED_SLUGS = [
   "itinerary-ошибки",
   "iguazu-за-3-дня",
   "patagonia-авиабилеты",
+  "wildlife-с-гидом",
+  "patagonia-penguins",
+  "patagonia-whale-watching",
+  "iguazu-garganta-del-diablo",
+  "uco-valley-vino-i-gory",
 ] as const;
 
 function extractConstBlock(raw: string, constName: string): string {
@@ -48,7 +53,24 @@ describe("itinerary / logistics pillars vs legacyManual* maps", () => {
     expect(blogTs).toContain("ITINERARY_OSHIBKI_POST");
     expect(blogTs).toContain("IGUAZU_ZA_3_DNYA_POST");
     expect(blogTs).toContain("PATAGONIA_AVIABILETY_POST");
+    expect(blogTs).toContain("WILDLIFE_S_GIDOM_POST");
+    expect(blogTs).toContain("PATAGONIA_PENGUINS_POST");
+    expect(blogTs).toContain("PATAGONIA_WHALE_WATCHING_POST");
+    expect(blogTs).toContain("IGUAZU_GARGANTA_DEL_DIABLO_POST");
+    expect(blogTs).toContain("UCO_VALLEY_VINO_I_GORY_POST");
     expect(blogTs).not.toContain('id: "blog-itinerary-14-days"');
     expect(blogTs).not.toContain('id: "blog-patagonia-flights"');
+    expect(blogTs).not.toContain('id: "blog-patagonia-penguins"');
+    expect(blogTs).not.toContain('id: "blog-iguazu-garganta-del-diablo"');
+    expect(blogTs).not.toContain('id: "blog-patagonia-whale-watching"');
+    expect(blogTs).not.toContain('id: "blog-uco-valley"');
+    expect(blogTs).not.toContain('id: "blog-wildlife-guide"');
+  });
+
+  it("legacyManual override maps are empty after wildlife / nature batch", () => {
+    for (const block of mapBlocks) {
+      expect(block).toMatch(/=\s*\{\s*\};?\s*$/);
+      expect(block).not.toMatch(/"[^"]+":/);
+    }
   });
 });

@@ -10,11 +10,11 @@ Invisible third-layer edits must not remain the long-term SSOT.
 | Override map | Approx. size | Action | Notes |
 |--------------|-------------:|--------|-------|
 | `legacyManualBlogPosts` in `src/data/blog.ts` | large inline corpus | MIGRATE | Move to MD/typed modules via existing sync pipelines; keep URL/slug |
-| `legacyManualOfficialSources` | ~5 slugs | MIGRATE | Fold into article `sources` / KB claims; itinerary/visa/iguazu/flights batch cleared |
-| `legacyManualExcerptOverrides` | ~1 slug | MIGRATE | Fold into post excerpt in canonical doc; wildlife remains |
-| `legacyManualReplacementSections` | wildlife only | MIGRATE then REMOVE | Itinerary + iguazu-3d + flights migrated to typed modules |
-| `legacyManualSectionOverrides` | ~4 slugs | MIGRATE then REMOVE | Salta pillar migrated to typed module |
-| `legacyManualRemovedSections` | ~2 slugs | KEEP TEMPORARILY | Explicit removals until source cleaned |
+| `legacyManualOfficialSources` | 0 | REMOVE-ready | Wildlife/nature batch migrated; maps empty |
+| `legacyManualExcerptOverrides` | 0 | REMOVE-ready | Wildlife excerpt folded into typed module |
+| `legacyManualReplacementSections` | 0 | REMOVE-ready | Itinerary + iguazu-3d + flights + wildlife migrated |
+| `legacyManualSectionOverrides` | 0 | REMOVE-ready | Penguins, whale-watching, Garganta, Uco Valley migrated |
+| `legacyManualRemovedSections` | 0 | REMOVE-ready | Month-section removals folded into typed modules |
 | `EDITORIAL_OVERRIDES` (`src/data/blog-editorial`) | ~38 | KEEP TEMPORARILY → MIGRATE | Typed polish for Class B; canonical map now forces noindex + `canonicalSlug` even when `publicationReady` |
 
 ## Precedence reminder

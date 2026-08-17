@@ -82,6 +82,11 @@ const HIGH_IMPACT_TYPED_SLUGS = [
   "itinerary-ошибки",
   "iguazu-за-3-дня",
   "patagonia-авиабилеты",
+  "wildlife-с-гидом",
+  "patagonia-penguins",
+  "patagonia-whale-watching",
+  "iguazu-garganta-del-diablo",
+  "uco-valley-vino-i-gory",
 ] as const;
 
 const HIGH_IMPACT_TYPED_POST_CONSTANTS = [
@@ -93,6 +98,11 @@ const HIGH_IMPACT_TYPED_POST_CONSTANTS = [
   "ITINERARY_OSHIBKI_POST",
   "IGUAZU_ZA_3_DNYA_POST",
   "PATAGONIA_AVIABILETY_POST",
+  "WILDLIFE_S_GIDOM_POST",
+  "PATAGONIA_PENGUINS_POST",
+  "PATAGONIA_WHALE_WATCHING_POST",
+  "IGUAZU_GARGANTA_DEL_DIABLO_POST",
+  "UCO_VALLEY_VINO_I_GORY_POST",
 ] as const;
 
 const HIGH_IMPACT_REMOVED_INLINE_IDS = [
@@ -104,6 +114,11 @@ const HIGH_IMPACT_REMOVED_INLINE_IDS = [
   'id: "blog-itinerary-mistakes"',
   'id: "blog-iguazu-za-3-dnya"',
   'id: "blog-patagonia-flights"',
+  'id: "blog-patagonia-penguins"',
+  'id: "blog-iguazu-garganta-del-diablo"',
+  'id: "blog-patagonia-whale-watching"',
+  'id: "blog-uco-valley"',
+  'id: "blog-wildlife-guide"',
 ] as const;
 
 describe("high-impact typed blog modules vs legacyManual* maps", () => {
@@ -125,7 +140,12 @@ describe("high-impact typed blog modules vs legacyManual* maps", () => {
       expect(post!.noIndex).not.toBe(true);
       expect(post!.sections?.length).toBeGreaterThan(0);
       expect(post!.sections?.some((section) => section.title.includes("Источники"))).toBe(true);
-      expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      expect(post!.content).toMatch(/Проверено 17\.07\.2026/);
+      if (slug === "uco-valley-vino-i-gory") {
+        expect(post!.content).toMatch(/mendoza\.gov\.ar/i);
+      } else {
+        expect(post!.content).toMatch(/argentina\.gob\.ar/i);
+      }
       expect(post!.dateModified).toBe("2026-07-17");
 
       for (const block of mapBlocks) {
