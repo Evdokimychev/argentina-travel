@@ -1,8 +1,11 @@
 # PROJECT_STATE — GoArgentina / «Пора в Аргентину»
 
-Последняя проверка: **2026-07-29 18:56 ART / 2026-07-29 21:56 UTC**
-Статус: **NOT READY**
-Фаза: **Wave 1 P0/P1 recovery**
+> **CURRENT FACTS:** see [`CURRENT_STATE.md`](./CURRENT_STATE.md) first.  
+> Content below is **historical evidence / incident archive** — do not treat archived SHAs as live production truth.
+
+Последняя проверка (архив): **2026-07-29 18:56 ART / 2026-07-29 21:56 UTC**
+Статус (архив): **NOT READY**
+Фаза (архив): **Wave 1 P0/P1 recovery**
 
 ## Конституция
 

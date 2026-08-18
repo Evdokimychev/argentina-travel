@@ -1,8 +1,13 @@
 # RISK_REGISTER
 
+> Status column reflects **current main** when last reconciled (Sprint 7 / 2026-08-18).  
+> Historical candidate SHAs in Evidence are archival; see `CURRENT_STATE.md` for live facts.
+
 | ID | Risk | Likelihood | Impact | Evidence | Mitigation | Trigger/owner | State |
 |---|---|---:|---:|---|---|---|---|
-| R-001 | Production REST and direct PG remain unavailable | high | critical | health 503/down | owner incident diagnosis; restore access; validate credentials/billing/network; bounded rollback | any health 503 / owner+ops | active P0 |
+| R-038 | Dormant shop/forum APIs still accept traffic while UI is launch-clamped | medium | medium | Quarantine used raw CMS; fixed to launch-guarded control plane + fail-closed on settings outage | retain rejectIfPublicModuleQuarantined(control plane) on forum/shop public APIs | unexpected 200 from /api/forum\|/api/shop while unpublished / security | MITIGATED_CODE |
+| R-039 | Own-payment checkout APIs reachable while commercial mode productionEnabled=false | medium | high | Sprint 7 own-payment-gate on create_payment_link + Stripe/MP session; sandbox ANDs with gate; webhooks retained | keep gate until provider chosen; never skip webhooks | new payment link while own_payment disabled / commerce | MITIGATED_CODE |
+| R-001 | Production REST and direct PG remain unavailable | high | critical | health 503/down (probed 2026-08-18; gitSha matches main tip) | owner incident diagnosis; restore access; validate credentials/billing/network; bounded rollback | any health 503 / owner+ops | BLOCKED_EXTERNAL P0 |
 | R-002 | Outage is cached/rendered as empty or 404 | medium | high | production still runs old false-empty artifact; candidate contracts pass | typed resolution, no cache poison, route/fault tests, 503 analytics | public_404/public_503 spike / engineering | mitigated in candidate; active in production |
 | R-003 | Production data cannot be restored | medium | critical | PITR unconfirmed, rehearsal not_run | encrypted logical backup, offline keys, disposable restore rehearsal | backup failure / owner | active P1 |
 | R-004 | Wrong Supabase/Vercel account is used as evidence | high | high | canonical targets absent/403 | never use proxy project; record ref/scope/time; restore read-only OAuth | connector mismatch / owner | active |
