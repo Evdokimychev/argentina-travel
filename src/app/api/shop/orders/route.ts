@@ -13,9 +13,8 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isValidBookingOperationKey } from "@/lib/partner-booking/idempotency";
-import { isPublicPathEnabled } from "@/lib/public-module-visibility";
+import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
-import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import type { ShopOrder } from "@/types/shop-order";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 
@@ -35,10 +34,8 @@ function isSameShopOrderRequest(existing: ShopOrder, requested: ShopOrder): bool
 }
 
 async function postShopOrder(request: Request) {
-  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
-  if (!isPublicPathEnabled("/shop", navigation, modules)) {
-    return NextResponse.json({ error: "Магазин отключён" }, { status: 404 });
-  }
+  const quarantined = await rejectIfPublicModuleQuarantined("/shop", { labelRu: "Магазин" });
+  if (quarantined) return quarantined;
 
   if (!isSupabaseShopEnabled()) {
     return NextResponse.json({ error: "Shop API unavailable" }, { status: 503 });
@@ -153,6 +150,9 @@ export const POST = withRateLimit(postShopOrder, {
 });
 
 export async function GET() {
+  const quarantined = await rejectIfPublicModuleQuarantined("/shop", { labelRu: "Магазин" });
+  if (quarantined) return quarantined;
+
   if (!isSupabaseShopEnabled()) {
     return NextResponse.json({ error: "Shop API unavailable" }, { status: 503 });
   }
