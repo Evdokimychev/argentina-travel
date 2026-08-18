@@ -17,6 +17,14 @@ describe("Sprint 7 content ownership + lifecycle", () => {
     expect(byId.forum.businessStatus).toBe("DORMANT");
     expect(byId.shop.businessStatus).toBe("DORMANT");
     expect(byId.tours.businessStatus).toBe("CORE");
-    expect(MODULE_LIFECYCLE.every((row) => row.businessStatus !== "UNKNOWN")).toBe(true);
+    const allowed = new Set([
+      "CORE",
+      "SUPPORTING",
+      "EXPERIMENTAL",
+      "POST_LAUNCH",
+      "DORMANT",
+      "LEGACY",
+    ]);
+    expect(MODULE_LIFECYCLE.every((row) => allowed.has(row.businessStatus))).toBe(true);
   });
 });

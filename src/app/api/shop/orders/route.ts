@@ -150,9 +150,6 @@ export const POST = withRateLimit(postShopOrder, {
 });
 
 export async function GET() {
-  const quarantined = await rejectIfPublicModuleQuarantined("/shop", { labelRu: "Магазин" });
-  if (quarantined) return quarantined;
-
   if (!isSupabaseShopEnabled()) {
     return NextResponse.json({ error: "Shop API unavailable" }, { status: 503 });
   }

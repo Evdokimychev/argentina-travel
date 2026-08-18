@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
-import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { canAccessShopOrder, fetchShopOrderById } from "@/lib/shop-order-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
+/** Authenticated order history — continuity read when shop is dormant. */
 export async function GET(_request: Request, context: RouteContext) {
-  const quarantined = await rejectIfPublicModuleQuarantined("/shop", { labelRu: "Магазин" });
-  if (quarantined) return quarantined;
-
   if (!isSupabaseShopEnabled()) {
     return NextResponse.json({ error: "Shop API unavailable" }, { status: 503 });
   }
