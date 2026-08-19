@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   fetchOrganizerInbox,
   markOrganizerInboxRead,
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
 
     const url = new URL(request.url);
     const filter = parseFilter(url.searchParams.get("filter"));
-    const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+    const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
     const { items, unreadCount } = await fetchOrganizerInbox(
       supabase,
       sessionUser.id,
@@ -72,7 +72,7 @@ export async function PATCH(request: Request) {
     };
 
     if (body.markAll) {
-      const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+      const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
       const { items } = await fetchOrganizerInbox(supabase, sessionUser.id, slugs, {
         filter: "unread",
         limit: 500,

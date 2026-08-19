@@ -63,4 +63,5 @@ export const POST = withRateLimit(postSignInPhone, {
   keyPrefix: "auth:sign-in-phone",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток. Попробуйте позже.",
+  policy: "security_critical",
 });

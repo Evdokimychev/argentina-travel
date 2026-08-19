@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [бюджетно, деньги, планирование]
 related: [byudzhet-poezdki, stoimost-zhizni-ba]
-last_verified: "2026-08-11"
+last_verified: "2026-08-19"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-08-18"
+    checked_at: "2026-08-19"
+    expires_at: "2026-08-26"
   - id: argentina-national-parks-fees
     title: "Administración de Parques Nacionales — билеты и тарифы"
     url: "https://www.argentina.gob.ar/interior/ambiente/parquesnacionales/tarifas"

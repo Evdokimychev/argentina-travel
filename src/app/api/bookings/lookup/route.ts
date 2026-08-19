@@ -7,7 +7,7 @@ import {
   normalizeLookupEmail,
 } from "@/lib/booking-lookup-security";
 import { sendBookingLookupCodeEmail } from "@/lib/notifications/email-delivery";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkSecurityRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const NEUTRAL_MESSAGE = "Если для этого адреса есть заявки, мы отправили код доступа.";
@@ -23,7 +23,7 @@ async function audit(challengeId: string | null, event: string, ip: string) {
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const ipLimit = await checkRateLimit(`bookings-lookup:request:ip:${ip}`, 8, 10 * 60_000);
+  const ipLimit = await checkSecurityRateLimit(`bookings-lookup:request:ip:${ip}`, 8, 10 * 60_000);
   if (!ipLimit.ok) {
     return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE }, { status: 202 });
   }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
   }
 
   const emailHash = hashLookupValue("email", email);
-  const emailLimit = await checkRateLimit(`bookings-lookup:request:email:${emailHash}`, 3, 15 * 60_000);
+  const emailLimit = await checkSecurityRateLimit(`bookings-lookup:request:email:${emailHash}`, 3, 15 * 60_000);
   if (!emailLimit.ok) {
     return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE }, { status: 202 });
   }

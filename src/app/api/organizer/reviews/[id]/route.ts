@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import { updateOrganizerReviewReply } from "@/lib/reviews-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
@@ -34,7 +34,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Поле replyText обязательно" }, { status: 400 });
   }
 
-  const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+  const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
   const result = await updateOrganizerReviewReply(supabase, {
     reviewId: id,
     organizerUserId: sessionUser.id,

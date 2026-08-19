@@ -79,4 +79,5 @@ export const POST = withRateLimit(postEnsureProfile, {
   keyPrefix: "auth:ensure-profile",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много запросов. Повторите позже.",
+  policy: "security_critical",
 });

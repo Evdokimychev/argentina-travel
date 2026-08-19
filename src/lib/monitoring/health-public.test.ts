@@ -79,6 +79,40 @@ describe("public health snapshot", () => {
     expect(JSON.stringify(snapshot)).not.toContain("credentials must not be public");
   });
 
+  it("classifies egress quota without exposing provider text", async () => {
+    const snapshot = await fetchPublicHealthSnapshotForTest(
+      {},
+      dependencies({
+        pingSupabase: async () => {
+          throw Object.assign(new Error("Service restricted due to exceed_egress_quota"), {
+            status: 402,
+          });
+        },
+      }),
+    );
+
+    expect(snapshot.ok).toBe(false);
+    expect(snapshot.status).toBe("degraded");
+    expect(snapshot.checks.database.error).toBe("dependency_quota");
+    expect(JSON.stringify(snapshot)).not.toContain("exceed_egress");
+  });
+
+  it("classifies IPv6-only Postgres as unreachable instead of a generic miss", async () => {
+    const snapshot = await fetchPublicHealthSnapshotForTest(
+      {},
+      dependencies({
+        pingPostgresDirect: async () => {
+          const error = new Error("connect ENETUNREACH 2600:1f14::1:5432");
+          (error as Error & { code?: string }).code = "ENETUNREACH";
+          throw error;
+        },
+      }),
+    );
+
+    expect(snapshot.checks.postgresDirect.error).toBe("dependency_unreachable");
+    expect(JSON.stringify(snapshot)).not.toContain("2600:1f14");
+  });
+
   it("reports down when all required database paths are unavailable", async () => {
     const snapshot = await fetchPublicHealthSnapshotForTest(
       {},

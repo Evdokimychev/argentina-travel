@@ -65,6 +65,25 @@ async function countLeadsLast24Hours(supabase: DbClient): Promise<number> {
   return (newsletterRes.count ?? 0) + (contactsRes.count ?? 0) + (organizerApplicationsRes.count ?? 0);
 }
 
+async function fetchCmsQueueSummary(
+  supabase: DbClient
+): Promise<AdminOperationsSummary["cms"]> {
+  const [drafts, scheduled] = await Promise.all([
+    supabase
+      .from("content_documents")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "draft"),
+    supabase
+      .from("content_documents")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "scheduled"),
+  ]);
+  return {
+    draftCount: drafts.count ?? 0,
+    scheduledCount: scheduled.count ?? 0,
+  };
+}
+
 async function countPendingOrPartialPayments(supabase: DbClient): Promise<number> {
   const payments = await fetchAdminPaymentOverview(supabase, { period: "all", status: "all" });
   const stats = summarizeAdminPaymentOverview(payments);
@@ -74,7 +93,7 @@ async function countPendingOrPartialPayments(supabase: DbClient): Promise<number
 export async function fetchAdminOperationsSummary(
   supabase: DbClient
 ): Promise<AdminOperationsSummary> {
-  const [moderation, newLeads24h, unreadCount, pendingPaymentCount, pendingApplications, health] =
+  const [moderation, newLeads24h, unreadCount, pendingPaymentCount, pendingApplications, health, cms] =
     await Promise.all([
       fetchModerationSummary(supabase),
       countLeadsLast24Hours(supabase),
@@ -82,7 +101,11 @@ export async function fetchAdminOperationsSummary(
       countPendingOrPartialPayments(supabase),
       countPendingOrganizerApplications(supabase),
       fetchAdminHealthSnapshot(supabase),
+      fetchCmsQueueSummary(supabase),
     ]);
+
+  const staleOrDownCount =
+    (health.checks.sync.tripster.ok ? 0 : 1) + (health.checks.sync.sputnik8.ok ? 0 : 1);
 
   return {
     generatedAt: new Date().toISOString(),
@@ -98,6 +121,10 @@ export async function fetchAdminOperationsSummary(
     },
     organizerApplications: {
       pendingCount: pendingApplications,
+    },
+    cms,
+    partners: {
+      staleOrDownCount,
     },
     health: {
       ok: health.ok,

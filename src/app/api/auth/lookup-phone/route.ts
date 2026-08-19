@@ -32,4 +32,5 @@ export const POST = withRateLimit(postLookupPhone, {
   keyPrefix: "auth:lookup-phone",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много запросов. Повторите позже.",
+  policy: "security_critical",
 });

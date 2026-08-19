@@ -3519,12 +3519,6 @@
           "title": "Въезд в Аргентину для граждан России"
         },
         {
-          "id": "viza-rf-v-argentinu",
-          "type": "faq",
-          "subtype": null,
-          "title": "Нужна ли виза в Аргентину гражданам России?"
-        },
-        {
           "id": "viza-v-braziliyu-dlya-iguasu",
           "type": "faq",
           "subtype": null,
@@ -7666,12 +7660,6 @@
           "title": "Статус цифрового кочевника — не автоматический путь к ВНЖ"
         },
         {
-          "id": "viza-rf-v-argentinu",
-          "type": "faq",
-          "subtype": null,
-          "title": "Нужна ли виза в Аргентину гражданам России?"
-        },
-        {
           "id": "vnzh-argentina",
           "type": "guide",
           "subtype": "immigration",
@@ -8083,12 +8071,6 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Въезд в Аргентину для граждан России"
-        },
-        {
-          "id": "viza-rf-v-argentinu",
-          "type": "faq",
-          "subtype": null,
-          "title": "Нужна ли виза в Аргентину гражданам России?"
         },
         {
           "id": "vnzh-argentina",

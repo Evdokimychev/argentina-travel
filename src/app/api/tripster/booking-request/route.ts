@@ -596,6 +596,7 @@ export const POST = withRateLimit(postTripsterBookingRequest, {
   keyPrefix: "tripster-booking:create",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток бронирования. Повторите позже.",
+  policy: "security_critical",
 });
 
 export async function GET() {

@@ -13,7 +13,7 @@ archive_reason: "Короткий чек-лист объединён с пров
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: tourist
 tags: [подготовка, чек-лист, планирование, сборы, поездка]
-related: [stoit-li-ehat-v-argentinu, viza-rf-v-argentinu, medicina-i-strahovka]
+related: [stoit-li-ehat-v-argentinu, viza-i-granica-dlya-rossiyan, medicina-i-strahovka]
 warnings:
   - "Правила въезда проверяйте перед вылетом по гражданству, цели и длительности поездки, а также по требованиям транзитных стран."
   - "После Decreto 366/2025 при въезде декларируется наличие медицинской страховки. Старые советы о том, что полис только желателен, устарели."
