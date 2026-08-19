@@ -48,8 +48,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prepare release gate evidence workspace
+        run: node scripts/prepare-release-gate-evidence.mjs
+
       - name: Contracts release gate (static + contracts + security + commerce)
         run: npm run release:gate -- --group static,contracts,security,commerce
+
+      - name: Stage contracts gate evidence
+        if: always()
+        run: node scripts/stage-release-gate-artifact.mjs --group static-contracts-security-commerce
 
       - name: Upload contracts gate report
         if: always()
@@ -57,9 +64,7 @@ jobs:
         with:
           name: release-gate-contracts-${{ github.sha }}
           path: |
-            var/ops/release-gate-report.json
-            var/ops/release-gate-*-last.json
-            var/ops/release-gate-logs/
+            var/ops/ci/${{ github.run_id }}/${{ github.sha }}/
           if-no-files-found: error
 
   verify-release:
@@ -89,6 +94,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prepare release gate evidence workspace
+        run: node scripts/prepare-release-gate-evidence.mjs
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
@@ -96,10 +104,15 @@ jobs:
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
+        timeout-minutes: 10
+        run: npx playwright install chromium
 
       - name: Release gate (content + production + journeys)
         run: npm run release:gate -- --group content,production,journeys
+
+      - name: Stage release gate evidence
+        if: always()
+        run: node scripts/stage-release-gate-artifact.mjs --group content-production-journeys
 
       - name: Upload release gate report
         if: always()
@@ -107,9 +120,7 @@ jobs:
         with:
           name: release-gate-release-${{ github.sha }}
           path: |
-            var/ops/release-gate-report.json
-            var/ops/release-gate-*-last.json
-            var/ops/release-gate-logs/
+            var/ops/ci/${{ github.run_id }}/${{ github.sha }}/
           if-no-files-found: error
 
       - name: Bundle size report
@@ -180,7 +191,8 @@ jobs:
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
+        timeout-minutes: 10
+        run: npx playwright install chromium
 
       - name: Wait for matching production deployment
         run: |

@@ -7,11 +7,13 @@ import {
   captureCandidateContext,
   finalizeCandidateEvidence,
 } from "./lib/candidate-evidence.mjs";
+import { cleanStaleReleaseGateArtifacts } from "./lib/release-gate-artifact.mjs";
 import { releaseGateCheckEnv } from "./lib/release-gate-env.mjs";
 import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
 
 const root = process.cwd();
 nextEnv.loadEnvConfig(root, false);
+cleanStaleReleaseGateArtifacts(root);
 const canonicalReportPath = path.join(root, "var/ops/release-gate-report.json");
 const logsDir = path.join(root, "var/ops/release-gate-logs");
 const requestedGroupRaw = process.argv.includes("--group")
@@ -41,6 +43,7 @@ const groups = {
         "scripts/lib/lighthouse-budget-policy.test.mjs",
         "scripts/lib/migration-journal.test.mjs",
         "scripts/lib/ops-report-evidence.test.mjs",
+        "scripts/lib/release-gate-artifact.test.mjs",
         "scripts/kb-source-health.test.mjs",
         "scripts/lib/release-gate-content-contract.test.mjs",
         "scripts/lib/release-gate-env.test.mjs",
@@ -194,14 +197,19 @@ if (candidateEvidence.evidenceIntegrity.status !== "passed") {
     reasons: candidateEvidence.evidenceIntegrity.reasons,
   });
 }
+const ciRunId = process.env.GITHUB_RUN_ID?.trim() || null;
 const report = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   ...candidateEvidence,
   commitSha: sourceFingerprint.commitSha,
   commitShaSource: sourceFingerprint.source,
+  ciRunId,
+  runId: ciRunId,
   sourceFingerprint,
   timestamp: new Date().toISOString(),
+  generatedAt: new Date().toISOString(),
   environment: process.env.VERCEL_ENV ?? process.env.DEPLOY_ENV ?? "local-production",
+  evidenceLevel: process.env.CI ? "STATIC_PASS" : "LOCAL_INTEGRATION_PASS",
   requestedGroup: requestedGroups?.join(",") ?? "all",
   status: blocked ? "failed" : "passed",
   checks,

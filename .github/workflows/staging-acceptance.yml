@@ -64,7 +64,9 @@ jobs:
         run: npm run staging:acceptance:preflight
 
       - name: Install acceptance browsers
-        run: npx playwright install --with-deps chromium webkit
+        timeout-minutes: 15
+        run: |
+          npx playwright install chromium webkit
 
       - name: Run staging acceptance
         run: npm run test:e2e:staging-acceptance

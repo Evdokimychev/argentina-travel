@@ -1,4 +1,5 @@
 import { getAirportByIata, getCountryFlag } from "./airports";
+import { resolveTourCountryLabel } from "./cross-border-cities";
 import { resolveLocation, resolveMacroRegion } from "./locations";
 import type { GeoCountryCode, GeoLocation, TourLocationInput } from "./types";
 
@@ -116,7 +117,7 @@ export function resolveTourPrimaryLocation(input: TourLocationInput): {
   locationCount: number;
   macroRegion?: string;
 } {
-  const country = input.country?.trim() || "Аргентина";
+  const country = resolveTourCountryLabel(input);
   const locations = resolveUniqueLocations(input);
   const macroFromRegion = resolveMacroRegion(input.region);
   const macroFromTitle = input.title ? resolveMacroRegion(input.title) : undefined;

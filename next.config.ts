@@ -3,6 +3,7 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
 import path from "node:path";
 import { loadKnowledgeArchiveRedirects } from "./src/lib/seo/knowledge-archive-redirects";
+import { LEGACY_WP_TOUR_REDIRECTS } from "./src/lib/seo/legacy-tour-redirects";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -109,6 +110,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...knowledgeArchiveRedirects,
+      ...LEGACY_WP_TOUR_REDIRECTS,
       {
         source: "/st_tour/:path*",
         destination: "/tours",

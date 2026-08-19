@@ -139,7 +139,9 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     resolveYouTravelMediaUrl(row.cover_image) ??
     photos[0] ??
     PARTNER_TOUR_FALLBACK_IMAGE;
-  const destination = row.city?.trim() || row.region?.trim() || row.country?.trim() || "Аргентина";
+  const resolvedCountry = row.country?.trim() || undefined;
+  const destination =
+    row.city?.trim() || row.region?.trim() || resolvedCountry || "Аргентина";
   const listingId = youtravelTourListingId(row.id);
   const rawPriceValue =
     row.price_value ??
@@ -197,8 +199,8 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     image,
     gallery: photos.length ? photos : [image],
     destination,
-    region: row.region?.trim() || row.country?.trim() || "Аргентина",
-    country: row.country?.trim() || undefined,
+    region: row.region?.trim() || resolvedCountry || destination,
+    country: resolvedCountry,
     activityType: resolveActivityType(row),
     durationDays,
     durationNights,
