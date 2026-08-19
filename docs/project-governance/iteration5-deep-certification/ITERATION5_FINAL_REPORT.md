@@ -113,7 +113,7 @@ Same as I4: quota, IPv4 pooler, Vercel unblock, backup secrets + restore, then l
 
 ## 19. Final SHA
 
-I5 candidate after certification commits: see branch tip (`8b23901a` plus inventory/docs stamp). Production remains `81055b13`.
+I5 candidate: `3edefcc4793dcf522c582ff7be531f38da99ac39` on `cursor/iteration5-deep-certification-5475` (PR `#34`). Production remains `81055b13`.
 
 ## 20. Final production state
 

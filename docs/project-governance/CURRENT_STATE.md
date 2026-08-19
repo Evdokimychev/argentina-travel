@@ -9,7 +9,7 @@
 | Launch verdict | **NO-GO** (I4, reconfirmed I5) |
 | `origin/main` tip | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production `gitSha` | `81055b1387e0062301ca9c0ae7468cbf782e2511` (matches main; **not** I4/I5 candidates) |
-| I5 candidate | `cursor/iteration5-deep-certification-5475` PR `#34` (I4 lineage + I5 hardening) |
+| I5 candidate | `3edefcc4` on `cursor/iteration5-deep-certification-5475` PR `#34` |
 | `audit:quick` on I5 | 498 files / 2448 tests PASS |
 | Production URL | https://www.goargentina.ru (apex 308 → www) |
 | Production health | **DOWN** — 503; DB `dependency_unavailable`; REST **402 exceed_egress_quota**; direct PG **IPv6-only ENETUNREACH** |
