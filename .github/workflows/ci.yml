@@ -14,23 +14,56 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  verify:
-    runs-on: ubuntu-latest
-    env:
-      GIT_SHA: ${{ github.sha }}
-      DEPLOY_ENV: preview
-      NEXT_PUBLIC_APP_MODE: production
-      NEXT_PUBLIC_ENABLE_DEMO_SEED: "false"
-      # CI deliberately has no Supabase credentials. Keep the required public
-      # configuration non-empty, but point it at a closed local port so server
-      # fallbacks fail immediately instead of waiting on a fake external host.
-      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:9
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
-      NEXT_PUBLIC_SUPABASE_AUTH: "true"
-      NEXT_PUBLIC_TOURS_SOURCE: supabase
-      NEXT_PUBLIC_SITE_URL: https://www.goargentina.ru
+env:
+  GIT_SHA: ${{ github.sha }}
+  DEPLOY_ENV: preview
+  NEXT_PUBLIC_APP_MODE: production
+  NEXT_PUBLIC_ENABLE_DEMO_SEED: "false"
+  # CI deliberately has no Supabase credentials. Keep the required public
+  # configuration non-empty, but point it at a closed local port so server
+  # fallbacks fail immediately instead of waiting on a fake external host.
+  NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:9
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+  NEXT_PUBLIC_SUPABASE_AUTH: "true"
+  NEXT_PUBLIC_TOURS_SOURCE: supabase
+  NEXT_PUBLIC_SITE_URL: https://www.goargentina.ru
 
+jobs:
+  # Sprint 7: parallel CI — same evidence groups as before, wall-clock reduced.
+  # Contracts path does not install Playwright; release path owns build/journeys/LH.
+  verify-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Contracts release gate (static + contracts + security + commerce)
+        run: npm run release:gate -- --group static,contracts,security,commerce
+
+      - name: Upload contracts gate report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-gate-contracts-${{ github.sha }}
+          path: |
+            var/ops/release-gate-report.json
+            var/ops/release-gate-*-last.json
+            var/ops/release-gate-logs/
+          if-no-files-found: error
+
+  verify-release:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,19 +89,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Mandatory release gate
-        run: npm run release:gate
+      - name: Release gate (content + production + journeys)
+        run: npm run release:gate -- --group content,production,journeys
 
       - name: Upload release gate report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: release-gate-${{ github.sha }}
+          name: release-gate-release-${{ github.sha }}
           path: |
             var/ops/release-gate-report.json
+            var/ops/release-gate-*-last.json
             var/ops/release-gate-logs/
           if-no-files-found: error
 
@@ -83,7 +123,6 @@ jobs:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
           LIGHTHOUSE_START_TIMEOUT_MS: 180000
           LIGHTHOUSE_RUNS_PER_PATH: "3"
-          # Isolated worker + process-group kill; keep below GHA step budget.
           LIGHTHOUSE_RUN_TIMEOUT_MS: "90000"
           LIGHTHOUSE_CHROME_CLEANUP_DELAY_MS: "2000"
           LIGHTHOUSE_MANAGE_SERVER: "1"
@@ -102,6 +141,14 @@ jobs:
       - name: E2E UX audit
         run: npm run test:e2e:ux-audit
         continue-on-error: true
+
+  # Compatibility alias: GitHub branch protection / dashboards expecting "verify"
+  verify:
+    runs-on: ubuntu-latest
+    needs: [verify-contracts, verify-release]
+    steps:
+      - name: Confirm parallel gates
+        run: echo "verify-contracts + verify-release both green"
 
   production-acceptance:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -125,6 +172,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium

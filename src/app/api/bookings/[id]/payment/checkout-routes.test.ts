@@ -29,6 +29,9 @@ vi.mock("@/lib/monitoring/sentry", () => ({
   addPaymentBreadcrumb: mocks.breadcrumb,
   captureException: mocks.captureException,
 }));
+vi.mock("@/lib/commerce/business-model", () => ({
+  isCommercialModeEnabled: (id: string) => id === "own_payment",
+}));
 
 import { POST as createMercadoPagoPreference } from "@/app/api/bookings/[id]/payment/preference/route";
 import { POST as createStripeSession } from "@/app/api/bookings/[id]/payment/stripe/session/route";

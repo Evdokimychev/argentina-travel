@@ -27,6 +27,7 @@ import {
   isBookingPaymentLinkExpired,
 } from "@/lib/booking-payment-link";
 import { canIssuePaymentLinkForBookingStatus } from "@/lib/payments/payment-integrity";
+import { rejectIfOwnPaymentDisabled } from "@/lib/payments/own-payment-gate";
 
 type PatchBody = {
   action?: "update_status" | "add_comment" | "cancel" | "create_payment_link";
@@ -273,6 +274,9 @@ export async function PATCH(
     }
 
     if (body.action === "create_payment_link") {
+      const ownPaymentBlocked = rejectIfOwnPaymentDisabled();
+      if (ownPaymentBlocked) return ownPaymentBlocked;
+
       const allowed = assertBookingMutationAllowed(current, sessionUser, "manage");
       if ("error" in allowed) {
         return NextResponse.json({ error: allowed.error }, { status: 403 });

@@ -4,6 +4,7 @@ import {
   DEFAULT_SITE_MODULES,
   DEFAULT_SITE_NAVIGATION,
 } from "@/lib/cms/site-globals/normalize";
+import { applyPublicLaunchGuards } from "@/lib/cms/site-globals/public-launch-guards";
 import {
   filterPublicLinks,
   filterPublicPaths,
@@ -204,5 +205,41 @@ describe("public module visibility", () => {
         (section) => section.id === "community",
       ),
     ).toBe(false);
+  });
+
+  it("launch clamp keeps shop/forum unpublished even if CMS advertises them", () => {
+    const cmsPublished = {
+      ...DEFAULT_SITE_MODULES,
+      publicModules: {
+        ...DEFAULT_SITE_MODULES.publicModules,
+        shop: {
+          activated: true,
+          published: true,
+          includeInSearch: true,
+          includeInSitemap: true,
+        },
+        forum: {
+          activated: true,
+          published: true,
+          includeInSearch: true,
+          includeInSitemap: true,
+        },
+      },
+    };
+    const cmsNav = {
+      ...DEFAULT_SITE_NAVIGATION,
+      showShop: true,
+      showForum: true,
+    };
+    const { navigation, modules } = applyPublicLaunchGuards(cmsNav, cmsPublished);
+
+    expect(navigation.showShop).toBe(false);
+    expect(navigation.showForum).toBe(false);
+    expect(isPublicPathEnabled("/shop", navigation, modules)).toBe(false);
+    expect(isPublicPathEnabled("/forum", navigation, modules)).toBe(false);
+    expect(isPublicPathIncludedInSitemap("/shop", navigation, modules)).toBe(false);
+    expect(isPublicPathIncludedInSearch("/forum", navigation, modules)).toBe(false);
+    expect(modules.carRentalMode).toBe("disabled");
+    expect(modules.transfersMode).toBe("disabled");
   });
 });

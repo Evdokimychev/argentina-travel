@@ -7,7 +7,7 @@ import type {
 } from "@/types/podbor";
 import type { PodborAnswers } from "@/types/podbor";
 
-/** Шаблонное описание маршрута (заменяется OpenAI в `/api/podbor/narrative`). */
+/** Шаблонное описание маршрута (клиентский quiz; `/api/podbor/narrative` заморожен в Sprint 7). */
 export function buildPodborNarrative(result: PodborMatchResult): string {
   const topNames = result.regions.map((r) => r.name);
   const lead = topNames[0] ?? "Аргентина";
