@@ -1,8 +1,8 @@
 # RISK_REGISTER
 
-> Status column reflects **current main + Iteration 4 probe (2026-08-19)**.  
+> Status column reflects **current main + Iteration 5 probe (2026-08-19)**.  
 > Historical candidate SHAs in Evidence are archival; see `CURRENT_STATE.md` for live facts.  
-> Launch verdict: **NO-GO**. I4 code is on PR `#33`, not production.
+> Launch verdict: **NO-GO / NOT CERTIFIED**. I5 is on `cursor/iteration5-deep-certification-5475`.
 
 | ID | Risk | Likelihood | Impact | Evidence | Mitigation | Trigger/owner | State |
 |---|---|---:|---:|---|---|---|---|
@@ -48,3 +48,5 @@
 | R-036 | High-risk admin mutations lose durable security audit or use service-role as HTTP admin password | medium | critical | Sprint 6 code: ADMIN_AUTOMATION_SECRET preferred; security_critical rate limit fail-closed; writeCriticalAdminAuditLog wired for refunds/staff/privacy/users; live DB/Vercel evidence blocked | retain critical-audit fail path; rotate consumers off service-role Bearer; prove live journal/RLS after DB recovery | missing audit row or automation abuse / security+ops | code mitigated on Sprint 6 branch; live evidence EXTERNAL_BLOCKER |
 | R-037 | Partner image proxy can be abused for SSRF via redirect | low | high | Sprint 6 hardens allowlist + manual redirect revalidation on YouTravel hosts; unit tests cover metadata IP redirect refusal | keep allowlist-only fetch; never auto-follow off-allowlist redirects; exact preview after deploy | SSRF probe via /api/media/partner-image / security | code mitigated; live exploit proof not claimed |
 | R-038 | Cookie-session admin CSRF or authenticated response cache leakage | low | high | Sprint 6: SameSite=Lax + evaluateBrowserMutationOrigin on admin session mutations; private no-store on refund/availability; matrix payload/cache notes | retain origin reject + no-store on new auth surfaces; live browser CSRF drill after preview | admin CSRF / CDN cache of PII / security | code mitigated on Sprint 6 branch; live EXTERNAL_BLOCKER |
+| R-043 | Search treats catalogue outage as zero tours/excursions or 500-empty | high | high | Live `/api/search` 500 empty body on `81055b13`; I1–I4 typed `/tours`/`/excursions` but search swallowed excursions as `[]` and let tours throw | I5: unavailable vs confirmed-empty; keep index hits; SiteSearch notice; unit + source contract | search 500 or empty commercial set during health 503 / engineering | mitigated in I5 candidate; active on production |
+| R-044 | Unexpected API 500 serializes Error.message to clients | medium | high | I4 closed provider logs and rate limits; CORE routes still returned raw messages | `unexpectedPublicApiError()` + source contract on CORE families | stack/SQL/path in JSON / security | mitigated in I5 candidate for CORE; dormant forum/shop residual |

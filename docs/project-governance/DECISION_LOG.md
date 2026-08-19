@@ -346,3 +346,11 @@
 - Decision: treat `uooxrypocahomoqzdvzy` + Vercel team `go-argentina` / project `argentina-travel` as the only production pair. REST 402 `exceed_egress_quota` and IPv6-only direct Postgres are separate root causes. Prefer a verified same-ref session pooler over `db.<ref>.supabase.co` for serverless IPv4. Do not switch to another Supabase project because it answers.
 - Evidence: production health SHA = `origin/main` `81055b13`; public JWT `ref`; DNS AAAA-only on direct host; pooler IPv4 TCP open; anon REST 402.
 - Consequence: live RLS/migration/restore remain NOT_PROVEN until owner clears quota and adds pooler URL.
+
+## D-052 — Iteration 5 independent certification is NOT CERTIFIED
+
+- Date: 2026-08-19
+- Decision: after a multi-pass inventory, negative tests, and candidate fixes, declare **NOT CERTIFIED**. Do not treat Iteration 4 NO-GO as sufficient cover, and do not invent CERTIFIED WITH CONDITIONS while P0 data-plane and deploy blockers remain.
+- Reason: I5 found launch-relevant defects I1–I4 missed (search empty-as-outage, CORE `error.message`, organizer empty-on-error) and fixed them in candidate only. Production SHA is still `81055b13`.
+- Evidence: `docs/project-governance/iteration5-deep-certification/ITERATION5_FINAL_REPORT.md`
+- Consequence: no paid traffic; merge I5 after I4 lineage only as further hardening, not as a launch flip.
