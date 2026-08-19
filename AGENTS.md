@@ -5,7 +5,7 @@
 ## Точка входа (порядок чтения)
 
 1. Конституция: `docs/project-governance/GOARGENTINA_MASTER_GOAL_V6_28.07.2026.md`
-2. **Текущее состояние:** `docs/project-governance/CURRENT_STATE.md`
+2. **Текущее состояние:** `docs/project-governance/CURRENT_STATE.md` (Iteration 1 report: `docs/project-governance/iteration1-production-truth/ITERATION1_REPORT.md`)
 3. Модули: `docs/project-governance/module-lifecycle-registry.json` + `src/lib/modules/business-lifecycle.ts`
 4. Команды: `docs/project-governance/GOLDEN_PATH.md`
 5. Архитектура: `docs/ai-first/ARCHITECTURE.md` · `npm run architecture:check`
