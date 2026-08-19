@@ -41,12 +41,20 @@ test("content release gate blocks on strict knowledge provenance before publicat
   );
 });
 
-test("CI installs the pinned knowledge validator dependency before the release gate", () => {
-  const setupPython = ciWorkflowSource.indexOf("actions/setup-python@v5");
-  const installRequirements = ciWorkflowSource.indexOf("requirements-content.txt");
-  const releaseGate = ciWorkflowSource.indexOf("npm run release:gate");
+test("CI installs the pinned knowledge validator before the content release gate", () => {
+  const verifyRelease = ciWorkflowSource.indexOf("verify-release:");
+  const setupPython = ciWorkflowSource.indexOf("actions/setup-python@v5", verifyRelease);
+  const installRequirements = ciWorkflowSource.indexOf("requirements-content.txt", setupPython);
+  const contentReleaseGate = ciWorkflowSource.indexOf(
+    "npm run release:gate -- --group content",
+    installRequirements,
+  );
 
-  assert.ok(setupPython >= 0, "CI Python setup is missing");
+  assert.ok(verifyRelease >= 0, "verify-release job is missing");
+  assert.ok(setupPython > verifyRelease, "CI Python setup is missing from verify-release");
   assert.ok(installRequirements > setupPython, "pinned Python requirements are not installed");
-  assert.ok(releaseGate > installRequirements, "requirements must be installed before release gate");
+  assert.ok(
+    contentReleaseGate > installRequirements,
+    "requirements must be installed before the content release gate",
+  );
 });
