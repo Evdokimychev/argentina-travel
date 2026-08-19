@@ -331,3 +331,10 @@
 - Decision: partner failures may retain raw text only inside the result used for classification and the unchanged fallback/persistence flow. Structured logs accept a compile-time allowlisted source and emit only `source`, normalized `errorClass` and `retryable`; compatibility exceptions contain only `<source>_unavailable:<errorClass>`. External Orders follows the same boundary. Checkout URL, affiliate wrapping, idempotency, persistence and public error behavior are unchanged.
 - Evidence: before WP-026, the shared logger serialized `result.message`, Tripster/YouTravel wrappers rethrew it, and External Orders logged `error.details`. Exact `966be464` passes 33 focused tests, 2 135 full tests, 31 evidence contracts and a 929/929 protected build. Real quota faults during data collection, prerender and local runtime expose only bounded fields; secret-marker tests reject token/email/password transit. Browser QA covers real YouTravel and Tripster details without overlay or console errors.
 - Consequence: P1-GA-022/R-034 are mitigated on the local exact candidate, not production-closed. Vercel rejected the SHA with `Account is blocked`, old production retains the legacy logger, and same-artifact remote proof remains required. Two default recovery-smoke timeouts are tracked separately as P1-GA-023/WP-027; a 60-second diagnostic pass does not justify relaxing the 15-second gate.
+
+## D-050 — Canonical topology and two-part data-plane outage (Iteration 1)
+
+- Date: 2026-08-19
+- Decision: treat `uooxrypocahomoqzdvzy` + Vercel team `go-argentina` / project `argentina-travel` as the only production pair. REST 402 `exceed_egress_quota` and IPv6-only direct Postgres are separate root causes. Prefer a verified same-ref session pooler over `db.<ref>.supabase.co` for serverless IPv4. Do not switch to another Supabase project because it answers.
+- Evidence: production health SHA = `origin/main` `81055b13`; public JWT `ref`; DNS AAAA-only on direct host; pooler IPv4 TCP open; anon REST 402.
+- Consequence: live RLS/migration/restore remain NOT_PROVEN until owner clears quota and adds pooler URL.

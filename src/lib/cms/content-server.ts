@@ -18,6 +18,7 @@ import {
   getCmsKnowledgePublicationIssues,
 } from "@/lib/cms/knowledge-resolver";
 import { syncCmsDocumentToSearchIndex } from "@/lib/search/cms-search-sync";
+import { revalidateCmsPublicSurfaces } from "@/lib/cms/cms-public-revalidate";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -116,6 +117,10 @@ function documentFromRpc(value: Json | undefined): CmsDocument | null {
   return rowToCmsDocument(
     document as Database["public"]["Tables"]["content_documents"]["Row"]
   );
+}
+
+function settleCmsPublicCache(document: CmsDocument): void {
+  revalidateCmsPublicSurfaces({ docType: document.docType, slug: document.slug });
 }
 
 async function settleCmsSearchIntent(
@@ -294,7 +299,10 @@ export async function createCmsDocument(
   if (error) return cmsFailure(error);
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать созданный документ", code: "FAILED" };
-  if (document.status === "published") await settleCmsSearchIntent(supabase, document);
+  if (document.status === "published") {
+    await settleCmsSearchIntent(supabase, document);
+    settleCmsPublicCache(document);
+  }
   return { document };
 }
 
@@ -343,7 +351,36 @@ export async function updateCmsDocument(
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать документ", code: "FAILED" };
   await settleCmsSearchIntent(supabase, document);
+  settleCmsPublicCache(document);
   return { document };
+}
+
+export async function unpublishCmsDocument(
+  supabase: DbClient,
+  id: string,
+  input: { actorId: string; expectedVersion: number; ipAddress?: string | null }
+): Promise<{ document: CmsDocument } | CmsMutationFailure> {
+  return updateCmsDocument(supabase, id, {
+    status: "draft",
+    actorId: input.actorId,
+    expectedVersion: input.expectedVersion,
+    allowPublish: true,
+    ipAddress: input.ipAddress,
+  });
+}
+
+export async function archiveCmsDocument(
+  supabase: DbClient,
+  id: string,
+  input: { actorId: string; expectedVersion: number; ipAddress?: string | null }
+): Promise<{ document: CmsDocument } | CmsMutationFailure> {
+  return updateCmsDocument(supabase, id, {
+    status: "archived",
+    actorId: input.actorId,
+    expectedVersion: input.expectedVersion,
+    allowPublish: true,
+    ipAddress: input.ipAddress,
+  });
 }
 
 export async function publishCmsDocument(
@@ -371,6 +408,7 @@ export async function publishCmsDocument(
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать документ", code: "FAILED" };
   await settleCmsSearchIntent(supabase, document);
+  settleCmsPublicCache(document);
   return { document };
 }
 
@@ -418,6 +456,7 @@ export async function scheduleCmsDocument(
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать документ", code: "FAILED" };
   await settleCmsSearchIntent(supabase, document);
+  settleCmsPublicCache(document);
   return { document };
 }
 
@@ -438,6 +477,7 @@ export async function cancelCmsDocumentSchedule(
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать документ", code: "FAILED" };
   await settleCmsSearchIntent(supabase, document);
+  settleCmsPublicCache(document);
   return { document };
 }
 
@@ -492,6 +532,7 @@ export async function publishDueScheduledCmsDocuments(
     }
     publishedIds.push(document.id);
     await settleCmsSearchIntent(supabase, document);
+    settleCmsPublicCache(document);
   }
   await processPendingCmsSearchIntents(supabase);
   return { publishedIds, failed };
@@ -501,8 +542,10 @@ export async function deleteCmsDocument(
   supabase: DbClient,
   id: string
 ): Promise<{ ok: true } | { error: string }> {
+  const current = await getCmsDocumentById(supabase, id);
   const { error } = await supabase.from("content_documents").delete().eq("id", id);
   if (error) return { error: error.message };
+  if (current) settleCmsPublicCache(current);
   return { ok: true };
 }
 
@@ -639,5 +682,6 @@ export async function restoreCmsDocumentFromRevision(
   const document = documentFromRpc(data);
   if (!document) return { error: "Не удалось прочитать документ", code: "FAILED" };
   await settleCmsSearchIntent(supabase, document);
+  settleCmsPublicCache(document);
   return { document, restoredRevision: revision };
 }

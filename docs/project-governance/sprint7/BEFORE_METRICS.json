@@ -1,0 +1,335 @@
+{
+  "measuredAt": "2026-08-18T00:22:00Z",
+  "branch": "cursor/sprint7-architecture-simplify-5475",
+  "mainSha": "81055b1387e0062301ca9c0ae7468cbf782e2511",
+  "method": "filesystem recount + docs/audit/route-inventory.csv (inventory:generate) + source defaults",
+  "sources": [
+    "docs/audit/architecture-current.md",
+    "docs/audit/route-inventory.csv",
+    "docs/audit/feature-inventory.md",
+    "scripts/generate-product-surface-inventory.ts",
+    "src/lib/commerce/business-model.ts",
+    "src/lib/cms/site-globals/normalize.ts",
+    "src/lib/cms/site-globals/public-launch-guards.ts",
+    "scripts/promotion-gate.mjs",
+    "scripts/readiness-90.mjs",
+    "package.json",
+    "prisma/schema.prisma"
+  ],
+  "inventory": {
+    "pages": 159,
+    "pagesGlob": "src/app/**/page.tsx",
+    "apiRouteHandlers": 307,
+    "apiRouteHandlersGlob": "src/app/api/**/route.ts",
+    "allRouteTsFiles": 311,
+    "inventoryRouteHandlers": 312,
+    "inventoryRouteHandlersNote": "docs/audit/route-inventory.csv kind=route_handler includes non-api route.ts and src/app/api/tours/[slug]/program.pdf/route.tsx",
+    "nonApiRouteHandlers": [
+      "src/app/auth/callback/route.ts",
+      "src/app/auth/confirm/route.ts",
+      "src/app/blog/feed.xml/route.ts",
+      "src/app/robots.txt/route.ts"
+    ],
+    "metadataRoutes": 1,
+    "metadataRouteFile": "src/app/sitemap.ts",
+    "middlewareMatchers": 1,
+    "topLevelAppDomains": 46,
+    "topLevelAppDomainNames": [
+      "about",
+      "account",
+      "admin",
+      "apartments",
+      "audio-guides",
+      "auth",
+      "baza-znaniy",
+      "blog",
+      "booking",
+      "car-rental",
+      "collections",
+      "contacts",
+      "destinations",
+      "dev",
+      "embed",
+      "esim",
+      "excursions",
+      "experts",
+      "faq",
+      "flights",
+      "forum",
+      "gallery",
+      "guide",
+      "immigration",
+      "insurance",
+      "itineraries",
+      "join",
+      "landing",
+      "legal",
+      "maintenance",
+      "map",
+      "mapa-argentina",
+      "mobility",
+      "organizer",
+      "organizers",
+      "page.tsx",
+      "places",
+      "podbor",
+      "profile",
+      "services",
+      "shop",
+      "tours",
+      "transfers",
+      "trip",
+      "trip-prep",
+      "yandex-verification"
+    ],
+    "topLevelAppDomainsNote": "First segments under src/app excluding api and robots.txt; root page counted as page.tsx. robots.txt/ exists as route handler dir but excluded from domain count for parity with prior snapshot.",
+    "topLevelApiDomains": 55,
+    "topLevelApiDomainNames": [
+      "acceptance",
+      "admin",
+      "affiliate",
+      "ai",
+      "analytics",
+      "apartments",
+      "assistant",
+      "audio-guides",
+      "auth",
+      "blog",
+      "bookings",
+      "cms",
+      "contact",
+      "conversations",
+      "cron",
+      "esim",
+      "exchange-rates",
+      "excursions",
+      "experts",
+      "favorites",
+      "feature-flags",
+      "flights",
+      "forum",
+      "group-trips",
+      "health",
+      "interactions",
+      "map",
+      "media",
+      "mobility",
+      "newsletter",
+      "notifications",
+      "organizer",
+      "organizer-applications",
+      "partner-tours",
+      "payments",
+      "places",
+      "podbor",
+      "privacy",
+      "public-detail-exists",
+      "quick-explore",
+      "recommendations",
+      "reviews",
+      "saved-articles",
+      "search",
+      "shop",
+      "site",
+      "social-feed",
+      "tours",
+      "transfers",
+      "travelpayouts",
+      "trip-prep",
+      "tripster",
+      "v1",
+      "webhooks",
+      "youtravel"
+    ],
+    "httpMethods": {
+      "GET": 211,
+      "POST": 139,
+      "PUT": 8,
+      "PATCH": 39,
+      "DELETE": 19,
+      "HEAD": 1,
+      "OPTIONS": 5
+    },
+    "httpMethodsSource": "docs/audit/route-inventory.csv aggregated over kind=route_handler",
+    "httpMethodsSum": 422,
+    "useClientFiles": 779,
+    "useClientScope": "src/**/*.{ts,tsx,js,jsx} with leading \"use client\"",
+    "npmScripts": 177,
+    "dependencies": 41,
+    "devDependencies": 20,
+    "pageCountsByTopSegment": {
+      "admin": 51,
+      "organizer": 20,
+      "profile": 10,
+      "baza-znaniy": 6,
+      "blog": 6,
+      "booking": 4,
+      "excursions": 4,
+      "tours": 4,
+      "forum": 3,
+      "guide": 3
+    },
+    "apiRouteCountsByTopSegmentTop10": {
+      "admin": 112,
+      "organizer": 35,
+      "cron": 22,
+      "bookings": 14,
+      "auth": 11,
+      "excursions": 7,
+      "affiliate": 6,
+      "conversations": 5,
+      "forum": 5,
+      "v1": 5
+    }
+  },
+  "priorInventorySnapshots": {
+    "architectureCurrentDigest": "06d3a7f5b7c62a89",
+    "architectureCurrentPages": 159,
+    "architectureCurrentRouteHandlers": 312,
+    "productAuditAfter_2026_07_15": {
+      "path": "var/ops/product-audit-after.json",
+      "pages": 133,
+      "apiRoutes": 235,
+      "routes": 368,
+      "note": "Historical; superseded by AST inventory"
+    }
+  },
+  "businessModel": {
+    "source": "src/lib/commerce/business-model.ts",
+    "productionEnabled": {
+      "own_lead": true,
+      "partner_redirect": true,
+      "affiliate": true,
+      "own_booking": true,
+      "own_payment": false
+    },
+    "readinessRolesForEnabledModes": [
+      "portal",
+      "analytics",
+      "affiliate",
+      "leads",
+      "booking"
+    ],
+    "ownPaymentNote": "Intentionally disabled until owner selects production payment provider"
+  },
+  "cmsCutoverDefaults": {
+    "source": "src/lib/cms/site-globals/normalize.ts DEFAULT_SITE_FEATURES",
+    "cmsBlogCutover": false,
+    "cmsGuideCutover": false,
+    "cmsDestinationCutover": false,
+    "cmsPlaceCutover": false,
+    "note": "Defaults only; live site_settings may differ. Cutover helpers in src/lib/cms/cms-cutover.ts."
+  },
+  "publicModuleDefaults": {
+    "source": "DEFAULT_SITE_MODULES + DEFAULT_SITE_NAVIGATION + applyPublicLaunchGuards",
+    "apartmentsMode": "request",
+    "carRentalMode": "disabled",
+    "transfersMode": "disabled",
+    "hotelsMode": "planned",
+    "navHiddenByDefault": [
+      "immigration",
+      "forum",
+      "shop"
+    ],
+    "fullyHiddenByDefault": [
+      "shop",
+      "forum"
+    ],
+    "launchGuardsForceOff": [
+      "showShop",
+      "showForum",
+      "showImmigration",
+      "carRentalMode=disabled",
+      "transfersMode=disabled"
+    ],
+    "launchGuardOverrideEnv": "PUBLIC_LAUNCH_SHOW_UNFINISHED=1"
+  },
+  "readinessTooling": {
+    "readiness90Script": "scripts/readiness-90.mjs",
+    "readiness90Npm": "readiness:90",
+    "promotionGateScript": "scripts/promotion-gate.mjs",
+    "promotionGateNpm": "promotion:gate",
+    "promotionGateSeparates": [
+      "TECHNICAL PROMOTION READINESS",
+      "COMMERCIAL PROOF READINESS",
+      "PAID TRAFFIC DECISION"
+    ]
+  },
+  "prisma": {
+    "schemaFiles": [
+      "prisma/schema.prisma"
+    ],
+    "clientEntry": "src/lib/prisma.ts",
+    "runtimeImportFiles": [
+      "src/lib/prisma.ts",
+      "src/lib/places-repository.ts",
+      "src/lib/places-mapper.ts"
+    ],
+    "gate": "PLACES_USE_DB=true && attested DATABASE_URL",
+    "architectureCurrentPrismaRouteSignals": 12,
+    "architectureCurrentSupabaseRouteSignals": 358,
+    "conclusion": "Supabase is the primary application data plane (auth, bookings, CMS, CRM, messaging, analytics). Prisma is a narrow optional places DB adapter, not the system of record."
+  },
+  "routeOverlaps": [
+    {
+      "pair": ["/map", "/mapa-argentina"],
+      "relation": "legacy_redirect",
+      "evidence": [
+        "next.config.ts permanent redirect /map → /mapa-argentina",
+        "src/app/map/page.tsx runtime redirect fallback",
+        "src/app/mapa-argentina/page.tsx canonical map UI"
+      ]
+    },
+    {
+      "pair": ["/organizer", "/organizers"],
+      "relation": "different_surfaces_similar_names",
+      "evidence": [
+        "src/app/organizer/** organizer cabinet (20 pages)",
+        "src/app/organizers/[slug]/page.tsx public organizer profile"
+      ]
+    },
+    {
+      "pair": ["/trip", "/trip-prep"],
+      "relation": "different_surfaces_similar_names",
+      "evidence": [
+        "src/app/trip/[token]/page.tsx tokenized client trip portal (noindex)",
+        "src/app/trip-prep/page.tsx public trip checklist landing"
+      ]
+    },
+    {
+      "pair": ["/contact", "/contacts"],
+      "relation": "legacy_redirect",
+      "evidence": ["next.config.ts /contact → /contacts"]
+    },
+    {
+      "pair": ["/migration*", "/immigration"],
+      "relation": "legacy_redirect",
+      "evidence": [
+        "next.config.ts /migration, /migratsiya, /migraciya, /pereezd → /immigration"
+      ]
+    },
+    {
+      "pair": ["/st_tour/*", "/tours"],
+      "relation": "legacy_redirect",
+      "evidence": ["next.config.ts /st_tour/:path* → /tours"]
+    },
+    {
+      "pair": ["/st_activity/*", "/excursions"],
+      "relation": "legacy_redirect",
+      "evidence": ["next.config.ts /st_activity/:path* → /excursions"]
+    }
+  ],
+  "dataSourceSignalsFromArchitectureCurrent": {
+    "supabase": 358,
+    "external_http": 373,
+    "static_data": 278,
+    "cms": 147,
+    "tripster": 69,
+    "filesystem": 48,
+    "youtravel": 44,
+    "sputnik8": 24,
+    "travelpayouts": 22,
+    "prisma": 12,
+    "airalo": 3
+  }
+}

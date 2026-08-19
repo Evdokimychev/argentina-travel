@@ -10,6 +10,7 @@ import { getAppVersion, getGitSha } from "@/lib/monitoring/build-info";
 import pg from "pg";
 import { getDeployEnvironment } from "@/lib/ops/deploy-env";
 import { getLatestMigrationId, getMigrationFileCount } from "@/lib/ops/migrations-version";
+import { classifyCmsPublicReadError } from "@/lib/cms/public-read-result";
 
 export type PublicHealthStatus = "ok" | "degraded" | "down";
 export type PublicHealthError =
@@ -17,7 +18,9 @@ export type PublicHealthError =
   | "target_unverified"
   | "target_mismatch"
   | "dependency_unavailable"
-  | "dependency_timeout";
+  | "dependency_timeout"
+  | "dependency_quota"
+  | "dependency_unreachable";
 
 type DependencyCheck = {
   required: boolean;
@@ -69,6 +72,23 @@ const HEALTH_TIMEOUT_MS = 5_000;
 function dependencyError(error: unknown): PublicHealthError {
   if (error instanceof Error && error.name === "HealthProbeTimeoutError") {
     return "dependency_timeout";
+  }
+  if (classifyCmsPublicReadError(error) === "quota") {
+    return "dependency_quota";
+  }
+  const text = [
+    error instanceof Error ? error.message : "",
+    error instanceof Error ? error.name : "",
+    typeof error === "object" && error && "code" in error
+      ? String((error as { code?: unknown }).code)
+      : "",
+  ]
+    .join(" ")
+    .toLowerCase();
+  if (
+    /enetunreach|ehostunreach|network is unreachable|eafnosupport/.test(text)
+  ) {
+    return "dependency_unreachable";
   }
   return "dependency_unavailable";
 }
@@ -132,7 +152,7 @@ function resolveOverallHealth(checks: DependencyCheck[]): {
 async function defaultPingSupabase(): Promise<void> {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from("profiles").select("id").limit(1);
-  if (error) throw new Error("Supabase health probe failed");
+  if (error) throw error;
 }
 
 async function defaultCountSearchDocuments(): Promise<number> {

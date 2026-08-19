@@ -40,6 +40,8 @@ export const ROBOTS_DISALLOW_PATHS = [
   "/auth/",
   "/embed/",
   "/dev/",
+  "/baza-znaniy/poisk",
+  "/api/",
 ] as const;
 
 /**

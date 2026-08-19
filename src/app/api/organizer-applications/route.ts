@@ -15,6 +15,49 @@ function trimInput(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+export async function GET() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return NextResponse.json(
+      { error: "Войдите в аккаунт, чтобы увидеть статус заявки." },
+      { status: 401 }
+    );
+  }
+
+  const admin = createSupabaseAdminClient();
+  const { data: application, error } = await admin
+    .from("organizer_applications")
+    .select("id, status, company_name, created_at, reviewed_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    return NextResponse.json(
+      { error: "Не удалось загрузить заявку." },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({
+    application: application
+      ? {
+          id: application.id,
+          status: application.status,
+          companyName: application.company_name,
+          createdAt: application.created_at,
+          reviewedAt: application.reviewed_at,
+        }
+      : null,
+  });
+}
+
 export async function POST(request: Request) {
   const ip = getClientIp(request);
   const limit = await checkRateLimit(`organizer-application:ip:${ip}`, 5, 60_000);
@@ -110,8 +153,14 @@ export async function POST(request: Request) {
       .single();
 
     if (insertError || !application) {
+      if (insertError?.code === "23505") {
+        return NextResponse.json(
+          { error: "У вас уже есть заявка на рассмотрении." },
+          { status: 409 }
+        );
+      }
       return NextResponse.json(
-        { error: insertError?.message ?? "Не удалось отправить заявку." },
+        { error: "Не удалось отправить заявку." },
         { status: 500 }
       );
     }

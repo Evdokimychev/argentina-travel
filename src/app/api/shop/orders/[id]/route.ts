@@ -6,6 +6,7 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
+/** Authenticated order history — continuity read when shop is dormant. */
 export async function GET(_request: Request, context: RouteContext) {
   if (!isSupabaseShopEnabled()) {
     return NextResponse.json({ error: "Shop API unavailable" }, { status: 503 });

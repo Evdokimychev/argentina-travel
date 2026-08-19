@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
+import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { assertContactStatusTransition } from "@/lib/admin/lead-crm-transitions";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { ContactSubmissionStatus } from "@/types/database";
 
@@ -88,6 +90,22 @@ export async function PATCH(request: Request) {
   if (body.status !== undefined && !STATUSES.includes(body.status)) {
     return NextResponse.json({ error: "Некорректный статус обращения" }, { status: 400 });
   }
+  const supabase = createSupabaseAdminClient();
+  const { data: current, error: currentError } = await supabase
+    .from("contact_submissions")
+    .select("id, status, admin_notes, next_action_at")
+    .eq("id", body.id)
+    .maybeSingle();
+  if (currentError) return NextResponse.json({ error: currentError.message }, { status: 500 });
+  if (!current) return NextResponse.json({ error: "Обращение не найдено" }, { status: 404 });
+
+  if (body.status !== undefined) {
+    const transition = assertContactStatusTransition(current.status, body.status);
+    if (!transition.ok) {
+      return NextResponse.json({ error: transition.error, code: "INVALID_STATUS_TRANSITION" }, { status: 409 });
+    }
+  }
+
   const patch: {
     status?: ContactSubmissionStatus;
     admin_notes?: string;
@@ -104,7 +122,7 @@ export async function PATCH(request: Request) {
   if (!Object.keys(patch).length) {
     return NextResponse.json({ error: "Нет изменений" }, { status: 400 });
   }
-  const { data, error } = await createSupabaseAdminClient()
+  const { data, error } = await supabase
     .from("contact_submissions")
     .update(patch)
     .eq("id", body.id)
@@ -112,5 +130,20 @@ export async function PATCH(request: Request) {
     .maybeSingle();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Обращение не найдено" }, { status: 404 });
+
+  await writeAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "crm.lead.update",
+    entityType: "contact_submission",
+    entityId: data.id,
+    payload: {
+      fromStatus: current.status,
+      toStatus: data.status,
+      notesChanged: body.adminNotes !== undefined,
+      nextActionChanged: body.nextActionAt !== undefined,
+    },
+    ipAddress: clientIpFromRequest(request),
+  });
+
   return NextResponse.json({ contact: data });
 }

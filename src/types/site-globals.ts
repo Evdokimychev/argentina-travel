@@ -210,6 +210,14 @@ export type SiteMarketingGlobal = {
   announcementOnMobile: boolean;
 };
 
+/**
+ * Apartments mode semantics (intentional — not a bug):
+ * - `disabled` — no apartments surface
+ * - `request` — services hub card → `/contacts?service=apartment-rental` (lead only);
+ *   `/apartments` catalog stays 404 via `isTravelModulePathEnabled`
+ * - `preparing_native` — admin preview / prep; public catalog still off
+ * - `native_request` — public `/apartments` catalog + `POST /api/apartments/.../inquiries`
+ */
 export type ApartmentsModuleMode = "disabled" | "request" | "preparing_native" | "native_request";
 export type CarRentalModuleMode = "disabled" | "partner" | "preparing_hybrid";
 export type TransfersModuleMode = "disabled" | "request" | "partner" | "preparing_hybrid";

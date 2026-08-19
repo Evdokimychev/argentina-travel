@@ -4,7 +4,7 @@ import {
   resolveContactKind,
   submitContact,
 } from "@/lib/lead-capture";
-import { fetchSiteFeatures, fetchSiteForms } from "@/lib/site-settings-server";
+import { fetchSiteForms } from "@/lib/site-settings-server";
 import { checkSecurityRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { ContactSubmissionKind } from "@/types/database";
 import {
@@ -67,13 +67,13 @@ export async function POST(request: Request) {
       inferredKind === "general" ? body.kind ?? "general" : inferredKind;
 
     if (kind === "organizer_application") {
-      const features = await fetchSiteFeatures();
-      if (!features.allowOrganizerSignup) {
-        return NextResponse.json(
-          { error: "Приём заявок организаторов временно приостановлен." },
-          { status: 403 }
-        );
-      }
+      return NextResponse.json(
+        {
+          error: "Заявку организатора отправьте через кабинет, а не через форму обратной связи.",
+          code: "USE_ORGANIZER_APPLICATIONS",
+        },
+        { status: 400 },
+      );
     }
 
     const context = {

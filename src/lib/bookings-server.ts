@@ -8,8 +8,6 @@ import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
 import { bookingToRow, rowToBooking, rowsToBookings } from "@/lib/bookings-db-mapper";
 import { normalizeBooking } from "@/lib/bookings-store";
-import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
 import { canManageBooking, canCancelOwnBooking } from "@/lib/permissions";
 import { userHasAccountRole } from "@/types/user";
 
@@ -88,13 +86,9 @@ export async function fetchOrganizerBookings(
 export function organizerCanAccessBooking(
   booking: Booking,
   organizerUserId: string,
-  tourSlugs: string[] = getOrganizerCatalogSlugs(organizerUserId)
+  tourSlugs: readonly string[] = []
 ): boolean {
   if (booking.organizerUserId === organizerUserId) return true;
-  if (booking.organizerTourId) {
-    const tourOwnerUserId = getOrganizerTourOwnerId(booking.organizerTourId);
-    if (tourOwnerUserId === organizerUserId) return true;
-  }
   return tourSlugs.includes(booking.tourSlug);
 }
 
@@ -295,11 +289,7 @@ export function assertBookingMutationAllowed(
     return { ok: true };
   }
 
-  const tourOwnerUserId = booking.organizerTourId
-    ? getOrganizerTourOwnerId(booking.organizerTourId)
-    : undefined;
-
-  if (!canManageBooking(actor, { tourOwnerUserId, bookingUserId: booking.userId })) {
+  if (!canManageBooking(actor, { bookingUserId: booking.userId })) {
     return { error: "Нет доступа" };
   }
 

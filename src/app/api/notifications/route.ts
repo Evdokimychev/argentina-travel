@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   fetchOrganizerInbox,
   markOrganizerInboxRead,
@@ -87,7 +87,7 @@ export async function PATCH(request: Request) {
 
       let markedInbox = 0;
       if (scope === "organizer" && userHasAccountRole(sessionUser, "organizer")) {
-        const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+        const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
         const { items } = await fetchOrganizerInbox(supabase, sessionUser.id, slugs, {
           filter: "unread",
           limit: 500,
