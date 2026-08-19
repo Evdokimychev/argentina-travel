@@ -4,7 +4,7 @@ Date: 2026-08-19
 Canonical production: https://www.goargentina.ru  
 `origin/main`: `81055b1387e0062301ca9c0ae7468cbf782e2511`  
 Production `gitSha`: `81055b1387e0062301ca9c0ae7468cbf782e2511`  
-Iteration 4 candidate: branch `cursor/iteration4-final-release-5475` (PR `#33`)
+Iteration 4 candidate: `412b7b5b94c39db4eaaebe25de91f10d6538f4e9` on `cursor/iteration4-final-release-5475` (PR `#33`)
 
 This is not a style verdict. Production health is **503 down**. The Data API
 returns quota failure, direct Postgres is IPv6-only from IPv4 runtimes, and
