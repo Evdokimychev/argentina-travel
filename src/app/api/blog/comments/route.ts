@@ -9,8 +9,8 @@ import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import {
 import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
+import {
   CMS_PUBLIC_RETRY_AFTER_SECONDS,
   CmsPublicContentUnavailableError,
   classifyCmsPublicReadError,
