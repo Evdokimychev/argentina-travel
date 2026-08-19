@@ -11,7 +11,7 @@ import {
   organizerCanAccessBooking,
 } from "@/lib/bookings-server";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import { TYPING_PRESENCE_TTL_SECONDS } from "@/lib/messaging/constants";
 import type {
   ConversationMessage,
@@ -203,8 +203,9 @@ export async function getOrCreateConversationThreadForBooking(
 
   let touristUserId = resolveTouristUserIdForBooking(booking, actor, profileEmail);
 
+  const ownedSlugs = await getOrganizerOwnedCatalogSlugs(supabase, actor.id);
   const isOrganizerParticipant =
-    organizerCanAccessBooking(booking, actor.id, getOrganizerCatalogSlugs(actor.id)) ||
+    organizerCanAccessBooking(booking, actor.id, ownedSlugs) ||
     actor.id === organizerUserId;
 
   if (!touristUserId && isOrganizerParticipant) {

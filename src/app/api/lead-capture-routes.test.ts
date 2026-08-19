@@ -39,6 +39,26 @@ describe("public lead capture routes", () => {
     mocks.submitNewsletter.mockReset().mockResolvedValue(undefined);
   });
 
+  it("rejects organizer applications on the contact inbox", async () => {
+    const response = await postContact(
+      new Request("https://www.goargentina.ru/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "organizer_application",
+          name: "Анна",
+          email: "anna@example.com",
+          message: "Хочу публиковать туры по Патагонии и вести группу.",
+        }),
+      })
+    );
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "USE_ORGANIZER_APPLICATIONS",
+    });
+    expect(mocks.submitContact).not.toHaveBeenCalled();
+  });
+
   it("rejects an invalid contact kind before persistence", async () => {
     const response = await postContact(
       new Request("https://www.goargentina.ru/api/contact", {

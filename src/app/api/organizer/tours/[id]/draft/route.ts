@@ -215,12 +215,8 @@ export async function GET(_request: Request, context: RouteContext) {
     );
   }
 
-  if (!data) {
-    return NextResponse.json({ updatedAt: null, tour: null, draft: null });
-  }
-
-  if (data.owner_user_id !== auth.sessionUser.id) {
-    return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+  if (!data || data.owner_user_id !== auth.sessionUser.id) {
+    return NextResponse.json({ error: "Предложение не найдено" }, { status: 404 });
   }
 
   return NextResponse.json({
@@ -320,7 +316,7 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   if (existingRow && existingRow.owner_user_id !== auth.sessionUser.id) {
-    return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+    return NextResponse.json({ error: "Предложение не найдено" }, { status: 404 });
   }
 
   if (existingRow && existingRow.product_type !== productType) {
@@ -331,7 +327,7 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   if (!existingRow && draft.ownerUserId && draft.ownerUserId !== auth.sessionUser.id) {
-    return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+    return NextResponse.json({ error: "Предложение не найдено" }, { status: 404 });
   }
 
   if (existingRow && !isSameRevision(existingRow.updated_at, expectedUpdatedAt)) {
@@ -465,7 +461,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return NextResponse.json({ ok: true });
   }
   if (existing.owner_user_id !== auth.sessionUser.id) {
-    return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+    return NextResponse.json({ error: "Предложение не найдено" }, { status: 404 });
   }
 
   const { error } = await auth.supabase

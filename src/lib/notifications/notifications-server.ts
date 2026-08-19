@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import { isGuestUserId } from "@/lib/guest-booking";
 import type { Database, Json } from "@/types/database";
 import type {
@@ -206,7 +206,7 @@ export async function fetchUnifiedNotifications(
     return { items: filteredSystem.slice(0, limit), unreadCount };
   }
 
-  const slugs = getOrganizerCatalogSlugs(userId);
+  const slugs = await getOrganizerOwnedCatalogSlugs(supabase, userId);
   const { fetchOrganizerInbox } = await import("@/lib/organizer/inbox-server");
   const { items: inboxItems } = await fetchOrganizerInbox(supabase, userId, slugs, {
     filter: "all",
