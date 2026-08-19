@@ -147,6 +147,7 @@ export const POST = withRateLimit(postShopOrder, {
   window: 60_000,
   keyPrefix: "shop:orders:create",
   key: (request) => `ip:${getClientIp(request)}`,
+  policy: "security_critical",
 });
 
 export async function GET() {

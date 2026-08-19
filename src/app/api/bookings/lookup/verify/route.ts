@@ -5,14 +5,14 @@ import {
   generateLookupSessionToken,
   hashLookupValue,
 } from "@/lib/booking-lookup-security";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkSecurityRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const INVALID_MESSAGE = "Код неверен или истёк. Запросите новый код.";
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = await checkRateLimit(`bookings-lookup:verify:ip:${ip}`, 15, 10 * 60_000);
+  const limit = await checkSecurityRateLimit(`bookings-lookup:verify:ip:${ip}`, 15, 10 * 60_000);
   if (!limit.ok) return NextResponse.json({ error: INVALID_MESSAGE }, { status: 400 });
 
   let requestId = "";

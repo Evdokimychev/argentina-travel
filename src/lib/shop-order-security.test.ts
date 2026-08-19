@@ -11,6 +11,7 @@ describe("shop order creation security", () => {
     expect(route).toContain('request.headers.get("idempotency-key")');
     expect(route).toContain("isValidBookingOperationKey");
     expect(route).toContain("withRateLimit");
+    expect(route).toContain('policy: "security_critical"');
     expect(route).toContain("createSupabaseAdminClient");
     expect(route).toContain("X-Idempotent-Replay");
   });

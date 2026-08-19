@@ -418,6 +418,7 @@ export const POST = withRateLimit(postYouTravelBookingRequest, {
   keyPrefix: "youtravel-booking:create",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток бронирования. Повторите позже.",
+  policy: "security_critical",
 });
 
 export async function GET() {

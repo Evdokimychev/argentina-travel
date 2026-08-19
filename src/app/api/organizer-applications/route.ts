@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp, checkSecurityRateLimit } from "@/lib/rate-limit";
 import { notifyLeadCaptured } from "@/lib/leads-notify";
 import { escapeHtml } from "@/lib/notifications/email-templates";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
@@ -60,7 +60,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = await checkRateLimit(`organizer-application:ip:${ip}`, 5, 60_000);
+  const limit = await checkSecurityRateLimit(`organizer-application:ip:${ip}`, 5, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте позже." },
