@@ -200,6 +200,13 @@ export interface AdminOperationsSummary {
   organizerApplications: {
     pendingCount: number;
   };
+  cms: {
+    draftCount: number;
+    scheduledCount: number;
+  };
+  partners: {
+    staleOrDownCount: number;
+  };
   health: AdminHealthSnippet;
 }
 

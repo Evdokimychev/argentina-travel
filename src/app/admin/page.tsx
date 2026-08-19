@@ -124,6 +124,42 @@ export default function AdminDashboardPage() {
           icon: CreditCard,
         }]
       : []),
+    ...(operations?.leads.newLast24h
+      ? [{
+          id: "leads",
+          title: `${operations.leads.newLast24h} новых обращений за сутки`,
+          description: "Проверьте источник и статус в CRM, чтобы заявка не потерялась.",
+          href: "/admin/operations/leads",
+          label: "Открыть CRM",
+          priority: "high" as const,
+          count: operations.leads.newLast24h,
+          icon: BellRing,
+        }]
+      : []),
+    ...(operations?.cms.draftCount || operations?.cms.scheduledCount
+      ? [{
+          id: "cms",
+          title: `${operations.cms.draftCount} черновиков и ${operations.cms.scheduledCount} отложенных публикаций`,
+          description: "Материалы ждут проверки или времени публикации.",
+          href: "/admin/content/documents",
+          label: "Открыть CMS",
+          priority: "medium" as const,
+          count: operations.cms.draftCount + operations.cms.scheduledCount,
+          icon: FileCheck2,
+        }]
+      : []),
+    ...(operations?.partners.staleOrDownCount
+      ? [{
+          id: "partners",
+          title: `${operations.partners.staleOrDownCount} партнёрских лент требуют внимания`,
+          description: "Синхронизация устарела или недоступна — проверьте карантин и свежесть.",
+          href: "/admin/system/settings",
+          label: "Проверить ленты",
+          priority: "medium" as const,
+          count: operations.partners.staleOrDownCount,
+          icon: HeartPulse,
+        }]
+      : []),
     ...(operations?.notifications.unreadCount
       ? [{
           id: "notifications",
