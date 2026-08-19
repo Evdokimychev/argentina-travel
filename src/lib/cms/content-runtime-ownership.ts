@@ -68,3 +68,42 @@ export function contentOwnershipFor(family: ContentFamilyId): ContentRuntimeOwne
   if (!row) throw new Error(`Unknown content family: ${family}`);
   return row;
 }
+
+/**
+ * Editorial families without a cutover flag. Do not add flags here —
+ * the four cutover switches stay the only runtime toggles.
+ */
+export type EditorialOverlayFamilyId = "knowledge" | "landing";
+
+export type EditorialOverlayOwnership = {
+  family: EditorialOverlayFamilyId;
+  canonicalStore: "markdown_or_typed_with_cms_overlay";
+  writer: "cms_overlay_plus_repo_files";
+  publicReader: "resolver_overlay_then_static";
+  cutover: "none_do_not_mass_flip";
+  reason: string;
+  owner: string;
+};
+
+export const EDITORIAL_OVERLAY_OWNERSHIP: readonly EditorialOverlayOwnership[] = [
+  {
+    family: "knowledge",
+    canonicalStore: "markdown_or_typed_with_cms_overlay",
+    writer: "cms_overlay_plus_repo_files",
+    publicReader: "resolver_overlay_then_static",
+    cutover: "none_do_not_mass_flip",
+    reason:
+      "KB public pages still resolve markdown/content.json first; CMS overlay enriches drafts and metadata. Archive redirects live in knowledge-archive-redirects, not CMS archived status.",
+    owner: "content-os",
+  },
+  {
+    family: "landing",
+    canonicalStore: "markdown_or_typed_with_cms_overlay",
+    writer: "cms_overlay_plus_repo_files",
+    publicReader: "resolver_overlay_then_static",
+    cutover: "none_do_not_mass_flip",
+    reason:
+      "Landing pages are typed/file-led. CMS documents exist for editorial overlays only; no cutover flag.",
+    owner: "content-os",
+  },
+];
