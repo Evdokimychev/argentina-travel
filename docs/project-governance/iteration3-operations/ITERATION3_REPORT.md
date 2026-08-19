@@ -2,6 +2,7 @@
 
 Generated: 2026-08-19  
 Agent branch: `cursor/iteration3-operations-5475`  
+Candidate SHA: `f68910c2d8aa5e4e1b83beb9abf95f222baeb6f4`  
 Canonical production: https://www.goargentina.ru
 
 ## 1. Executive verdict
