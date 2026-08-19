@@ -25,12 +25,18 @@ export type SearchHit = {
 
 export type SearchSource = "meilisearch" | "postgres" | "static";
 
+export type PublicCatalogAvailabilityStatus = "ok" | "unavailable";
+
 export type SearchResponse = {
   results: SearchHit[];
   source: SearchSource;
   query: string;
   kind?: string;
   tookMs?: number;
+  catalog?: {
+    tours: PublicCatalogAvailabilityStatus;
+    excursions: PublicCatalogAvailabilityStatus;
+  };
 };
 
 export type ReindexResult = {
