@@ -102,6 +102,7 @@ function MaskedContact({ label }: { label: string }) {
 export default function OrganizerBookingDetailView({ bookingId }: { bookingId: string }) {
   const { user } = useAuth();
   const [booking, setBooking] = useState<Booking | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [statusError, setStatusError] = useState<string | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -114,8 +115,13 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
     function refresh() {
       if (isRemoteBookingsMode()) {
         void apiFetchBookingById(bookingId)
-          .then(setBooking)
-          .catch(() => setBooking(null));
+          .then((row) => {
+            setLoadError(null);
+            setBooking(row);
+          })
+          .catch(() => {
+            setLoadError("Не удалось загрузить заявку. Обновите страницу.");
+          });
         return;
       }
       refreshLocal();
@@ -129,7 +135,9 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   if (!booking) {
     return (
       <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-sm text-slate">Заявка не найдена</p>
+        <p className="text-sm text-slate" role={loadError ? "alert" : undefined}>
+          {loadError ?? "Заявка не найдена"}
+        </p>
         <Link
           href="/organizer/bookings"
           className="mt-4 inline-block text-sm font-medium text-brand hover:underline"

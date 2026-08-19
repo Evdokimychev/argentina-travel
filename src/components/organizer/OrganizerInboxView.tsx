@@ -73,6 +73,7 @@ export default function OrganizerInboxView({ compact = false }: OrganizerInboxVi
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [markingAll, setMarkingAll] = useState(false);
+  const [remoteLoadError, setRemoteLoadError] = useState<string | null>(null);
   const remoteEnabled = isSupabaseBookingsEnabled();
 
   const refresh = useCallback(async () => {
@@ -81,11 +82,14 @@ export default function OrganizerInboxView({ compact = false }: OrganizerInboxVi
     if (remoteEnabled) {
       try {
         const data = await apiFetchOrganizerInbox(filter);
+        setRemoteLoadError(null);
         setItems(data.items);
         setUnreadCount(data.unreadCount);
         return;
       } catch {
-        // fallback to local
+        setRemoteLoadError(
+          "Не удалось загрузить уведомления с сервера. Показаны локальные данные, если они есть.",
+        );
       }
     }
 
@@ -183,9 +187,11 @@ export default function OrganizerInboxView({ compact = false }: OrganizerInboxVi
           <div>
             <h2 className="font-heading text-lg font-bold text-charcoal">Входящие</h2>
             <p className="text-xs text-slate">
-              {unreadCount > 0
-                ? `${unreadCount} непрочитанных`
-                : "Нет новых событий"}
+              {remoteLoadError
+                ? "Сервер недоступен"
+                : unreadCount > 0
+                  ? `${unreadCount} непрочитанных`
+                  : "Нет новых событий"}
             </p>
           </div>
         </div>
@@ -201,6 +207,14 @@ export default function OrganizerInboxView({ compact = false }: OrganizerInboxVi
           </Button>
         ) : null}
       </div>
+      {remoteLoadError ? (
+        <p
+          role="alert"
+          className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+        >
+          {remoteLoadError}
+        </p>
+      ) : null}
 
       <div className="mt-4 flex flex-wrap gap-2">
         {FILTERS.map((entry) => (
