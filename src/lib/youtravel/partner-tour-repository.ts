@@ -41,6 +41,7 @@ import {
 import { resolveYouTravelGroupSize } from "@/lib/youtravel/partner-tour-group-size";
 import { resolveYouTravelThematicTags } from "@/lib/youtravel/partner-tour-tags";
 import { filterFutureTourDates, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
+import { resolvePartnerPublicCardText } from "@/lib/partner-tours/content-quality";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -184,12 +185,14 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     slug: row.slug,
     title: row.title,
     shortDescription:
-      plainTextFromRichContent(
-        payload.preview_text ||
-          payload.previewText ||
-          payload.shortDescription ||
-          payload.subtitle ||
-          payload.annotation,
+      resolvePartnerPublicCardText(
+        plainTextFromRichContent(
+          payload.preview_text ||
+            payload.previewText ||
+            payload.shortDescription ||
+            payload.subtitle ||
+            payload.annotation,
+        ),
       ) || row.title,
     image,
     gallery: photos.length ? photos : [image],

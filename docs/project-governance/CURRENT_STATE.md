@@ -4,9 +4,9 @@
 
 | Field | Value |
 |-------|--------|
-| Generated | 2026-08-19 (Iteration 1) |
+| Generated | 2026-08-19 (Iteration 2) |
 | `origin/main` tip | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
-| Sprint ancestry | S1…S3 → `#27` S4 → `#28` S5 → `#29` S6 on main; Sprint 7 in PR `#30` |
+| Sprint ancestry | S1…S6 on main; Sprint 7 in PR `#30`; Iteration 2 public hardening on `cursor/iteration2-public-product-5475` |
 | Production URL | https://www.goargentina.ru (apex 308 → www) |
 | Production `gitSha` | `81055b1387e0062301ca9c0ae7468cbf782e2511` (**matches main**) |
 | Production health | **DOWN** — REST **402 exceed_egress_quota**; direct PG **IPv6-only ENETUNREACH** |
@@ -37,10 +37,11 @@ Public HTML shells currently return 200 from static/typed fallbacks. That is **n
 
 1. Constitution: `docs/project-governance/GOARGENTINA_MASTER_GOAL_V6_28.07.2026.md`
 2. **This file** — current facts
-3. Iteration 1 report: `docs/project-governance/iteration1-production-truth/ITERATION1_REPORT.md`
-4. Module lifecycle: `docs/project-governance/module-lifecycle-registry.json` + `src/lib/modules/business-lifecycle.ts`
-5. Commands: `docs/project-governance/GOLDEN_PATH.md`
-6. Architecture: `docs/ai-first/ARCHITECTURE.md` + `npm run architecture:check`
+3. Iteration 2 report: `docs/project-governance/iteration2-public-product/ITERATION2_REPORT.md`
+4. Iteration 1 report: `docs/project-governance/iteration1-production-truth/ITERATION1_REPORT.md`
+5. Module lifecycle: `docs/project-governance/module-lifecycle-registry.json` + `src/lib/modules/business-lifecycle.ts`
+6. Commands: `docs/project-governance/GOLDEN_PATH.md`
+7. Architecture: `docs/ai-first/ARCHITECTURE.md` + `npm run architecture:check`
 
 ## Golden commands
 

@@ -21,6 +21,7 @@ export {
 } from "@/lib/partner-tours/calendar-date";
 import {
   assessPartnerContentQuality,
+  resolvePartnerPublicCardText,
   type PartnerContentQualityResult,
 } from "@/lib/partner-tours/content-quality";
 import {
@@ -419,20 +420,25 @@ export function filterBookableMarketplaceListings(
   return listings.flatMap((listing) => {
     if (!listing?.id || !listing?.slug) return [];
 
-    const decision = isPartnerTourListing(listing)
-      ? evaluateOfferQuality({
-          listing,
-          syncedAt: options?.syncedAtById?.get(listing.id) ?? null,
-          now,
-        })
-      : null;
+    const futureDates = filterFutureTourDates(listing.availableDates ?? [], now);
+    const hadDates = (listing.availableDates ?? []).length > 0;
+    // Platform and partner cards must not advertise a past departure as current.
+    if (hadDates && futureDates.length === 0) return [];
 
-    if (decision && !decision.showAsBookable) return [];
+    if (isPartnerTourListing(listing)) {
+      const decision = evaluateOfferQuality({
+        listing,
+        syncedAt: options?.syncedAtById?.get(listing.id) ?? null,
+        now,
+      });
+      if (!decision.showAsBookable) return [];
+    }
 
     return [
       {
         ...listing,
-        availableDates: filterFutureTourDates(listing.availableDates ?? [], now),
+        shortDescription: resolvePartnerPublicCardText(listing.shortDescription),
+        availableDates: futureDates,
       },
     ];
   });
