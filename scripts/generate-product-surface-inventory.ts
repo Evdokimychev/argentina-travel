@@ -298,7 +298,7 @@ function accessSignals(text: string): string {
     ["authenticated", /(?:getUser\(|requireAuth|auth\.getSession|currentUser)/],
     ["cron_secret", /(?:CRON_SECRET|verifyCron|authorization)/i],
     ["webhook_signature", /(?:signature|webhookSecret|verifyWebhook)/i],
-    ["rate_limit", /(?:rateLimit|checkRateLimit)/],
+    ["rate_limit", /(?:rateLimit|checkRateLimit|checkSecurityRateLimit|withRateLimit)/],
   ]);
 }
 
