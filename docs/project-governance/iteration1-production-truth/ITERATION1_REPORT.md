@@ -47,7 +47,7 @@ Sprint 7 CI (run 32085798961) failed for two **harness** reasons, now fixed in t
 | `goargentina.ru` | 308 → `https://www.goargentina.ru/...` |
 | Health `gitSha` | `81055b1387e0062301ca9c0ae7468cbf782e2511` = `origin/main` |
 | CLI / env inventory | **BLOCKED_EXTERNAL** — no Vercel token in this agent |
-| “Account is blocked” | Not observed on current production or Sprint 7 preview deploys (both `success`) |
+| “Account is blocked” | **Current on new PR deploys** (2026-08-19 `Vercel – argentina-travel` status → knowledge/why-is-my-account-deployment-blocked). Earlier Sprint 7 preview `5954183712` and production `5949169997` were `success`. Production artifact `81055b13` still serves. |
 
 ### Vercel project classification
 

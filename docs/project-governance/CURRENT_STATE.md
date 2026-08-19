@@ -11,6 +11,7 @@
 | Production `gitSha` | `81055b1387e0062301ca9c0ae7468cbf782e2511` (**matches main**) |
 | Production health | **DOWN** — REST **402 exceed_egress_quota**; direct PG **IPv6-only ENETUNREACH** |
 | Canonical Vercel | team `go-argentina` / project `argentina-travel` / env `Production – argentina-travel` |
+| Vercel new deploys (2026-08-19) | **Account is blocked** on latest PR preview status — production SHA `81055b13` still serves |
 | Canonical Supabase | `uooxrypocahomoqzdvzy` (config.toml + production public JWT `ref` + health) |
 | Paid traffic / product release | **NO-GO** |
 
@@ -55,4 +56,5 @@ npm run production-smoke
 
 1. Clear Supabase `exceed_egress_quota` on `uooxrypocahomoqzdvzy` (plan / spend cap).
 2. Add same-ref IPv4 session pooler URL on Vercel (`*.pooler.supabase.com:5432`). Direct `db.<ref>.supabase.co` has no A record.
-3. Then: live RLS, migration journal parity, backup + disposable restore.
+3. Unblock Vercel account for team `go-argentina` so new production/preview deploys can land (status currently “Account is blocked”).
+4. Then: live RLS, migration journal parity, backup + disposable restore.
