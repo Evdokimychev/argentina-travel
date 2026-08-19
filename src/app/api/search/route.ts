@@ -22,20 +22,30 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
   }
 
-  const [payload, controlPlane, tours, excursionsResult] = await Promise.all([
+  const [payload, controlPlane, toursSlice, excursionsSlice] = await Promise.all([
     executeSiteSearch(q, {
       kind,
       limit: Number.isFinite(limit) ? limit : undefined,
     }),
     fetchSiteControlPlaneEdge(),
-    fetchMarketplaceTours(),
-    fetchExcursionsServer({ pageSize: 500 }).catch(() => ({ items: [], cities: [] })),
+    fetchMarketplaceTours()
+      .then((tours) => ({
+        status: "ok" as const,
+        paths: new Set(tours.map((tour) => `/tours/${tour.slug}`)),
+      }))
+      .catch(() => ({ status: "unavailable" as const })),
+    fetchExcursionsServer({ pageSize: 500 })
+      .then((excursionsResult) => ({
+        status: "ok" as const,
+        paths: new Set(
+          excursionsResult.items.map((excursion) => `/excursions/${excursion.slug}`),
+        ),
+      }))
+      .catch(() => ({ status: "unavailable" as const })),
   ]);
   const currentCatalogResults = filterSearchHitsByPublicCatalog(payload.results, {
-    tours: new Set(tours.map((tour) => `/tours/${tour.slug}`)),
-    excursions: new Set(
-      excursionsResult.items.map((excursion) => `/excursions/${excursion.slug}`),
-    ),
+    tours: toursSlice,
+    excursions: excursionsSlice,
   });
   const visiblePayload = {
     ...payload,
@@ -51,7 +61,14 @@ export async function GET(request: Request) {
   const tookMs = payload.tookMs ?? Date.now() - startedAt;
 
   return NextResponse.json(
-    { ...visiblePayload, tookMs },
+    {
+      ...visiblePayload,
+      tookMs,
+      catalog: {
+        tours: toursSlice.status,
+        excursions: excursionsSlice.status,
+      },
+    },
     {
       headers: {
         "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120",

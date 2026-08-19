@@ -32,6 +32,7 @@ import type {
 } from "@/types/cms-content";
 import { parseCmsDocumentId } from "@/types/cms-content";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
+import CmsGovernancePanel from "@/components/admin/CmsGovernancePanel";
 import CmsSectionEditor from "@/components/admin/cms/CmsSectionEditor";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
 import BlogInternalLinksPreview from "@/components/admin/cms/BlogInternalLinksPreview";
@@ -687,6 +688,30 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     }
   }
 
+  async function unpublish() {
+    if (!canPublish || !doc) return;
+    if (!window.confirm("Снять материал с публикации? Страница перестанет быть доступна на сайте.")) {
+      return;
+    }
+    setSaving(true);
+    try {
+      const saved = await persistContent();
+      if (!saved) throw new Error("Не удалось сохранить изменения перед снятием с публикации");
+      const res = await fetch(`/api/admin/content/documents/${encodedId}/unpublish`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expectedVersion: saved.rowVersion }),
+      });
+      const json = (await res.json()) as DocumentResponse;
+      if (!res.ok) throw new Error(json.error ?? "Не удалось снять материал с публикации");
+      await load();
+    } catch (unpublishError) {
+      alert(unpublishError instanceof Error ? unpublishError.message : "Ошибка");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function publish() {
     if (!canPublish || !doc) return;
     if (!window.confirm("Опубликовать текущую редакцию на сайте?")) return;
@@ -873,9 +898,18 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <Button variant="outline" disabled={saving} onClick={() => void saveDraft()}>
                 Сохранить черновик
               </Button>
-              {canPublish ? (
+              {canPublish && status !== "published" ? (
                 <Button disabled={saving || isScheduled} onClick={() => void publish()}>
                   Опубликовать
+                </Button>
+              ) : null}
+              {canPublish && status === "published" ? (
+                <Button
+                  variant="outline"
+                  disabled={saving}
+                  onClick={() => void unpublish()}
+                >
+                  Снять с публикации
                 </Button>
               ) : null}
               <Button type="button" variant="outline" disabled={saving} onClick={openLivePreview}>
@@ -1395,6 +1429,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               publicPath={publicHref}
               documentStatus={status}
             />
+
+            {isKnowledge ? <CmsGovernancePanel document={doc} /> : null}
 
             <section className={`${cabinetCardClass} p-4`}>
               <h2 className="font-heading text-sm font-bold text-charcoal">Ревизии</h2>

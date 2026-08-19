@@ -44427,7 +44427,7 @@
       "subtype": null,
       "title": null,
       "summary": null,
-      "status": "published",
+      "status": "archived",
       "region_id": null,
       "province": null,
       "coordinates": null,
@@ -44449,7 +44449,7 @@
       "last_verified": "2026-07-20",
       "long_form_source": null,
       "site_id_map": null,
-      "site_ready": null,
+      "site_ready": false,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
@@ -44474,7 +44474,8 @@
           "stale_after_days": 30
         }
       },
-      "path": "faq/viza-rf-v-argentinu.md"
+      "path": "faq/viza-rf-v-argentinu.md",
+      "redirect_to": "viza-i-granica-dlya-rossiyan"
     },
     {
       "id": "viza-v-braziliyu-dlya-iguasu",

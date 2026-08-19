@@ -9,6 +9,7 @@ import {
 } from "@/lib/group-trips-server";
 import type { CreateGroupTripListingInput } from "@/types/group-trips";
 import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -61,11 +62,8 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({ listings });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -96,10 +94,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ listing: result.listing });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

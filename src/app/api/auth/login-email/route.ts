@@ -15,4 +15,5 @@ export const POST = withRateLimit(postLoginEmail, {
   keyPrefix: "auth:login-email",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток входа. Повторите позже.",
+  policy: "security_critical",
 });

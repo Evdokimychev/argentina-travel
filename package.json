@@ -148,7 +148,6 @@
     "editorial:audit:strict": "tsx scripts/editorial-audit.ts --strict",
     "guide:editorial-readiness": "tsx scripts/guide-editorial-readiness.ts",
     "guide:editorial-readiness:check": "tsx scripts/guide-editorial-readiness.ts --strict",
-    "content:crawl": "node scripts/content-audit.mjs",
     "content:audit": "node scripts/content-audit.mjs",
     "content:inventory": "tsx scripts/content-overhaul-inventory.ts",
     "content:governance": "node scripts/content-governance-audit.mjs",
@@ -162,13 +161,10 @@
     "content:source-matrix": "node scripts/content-source-matrix.mjs",
     "content:links": "node scripts/kb-link-check.mjs --strict",
     "content:links:all": "node scripts/kb-link-check.mjs --all",
-    "content:fix": "node scripts/content-audit.mjs",
     "content:verify-production": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/production-smoke.mjs && node scripts/content-audit.mjs",
     "product:audit": "node scripts/product-audit.mjs",
     "inventory:generate": "tsx scripts/generate-product-surface-inventory.ts",
     "inventory:check": "tsx scripts/generate-product-surface-inventory.ts --check",
-    "sync:instagram-feed": "node scripts/import-instagram-queue.mjs",
-    "sync:instagram-feed:dry": "node scripts/import-instagram-queue.mjs --dry-run",
     "media:import-instagram": "node scripts/import-instagram-queue.mjs",
     "media:import-instagram:dry": "node scripts/import-instagram-queue.mjs --dry-run",
     "prune-legacy-blog-media": "node scripts/prune-legacy-blog-media.mjs",
@@ -179,7 +175,11 @@
     "test": "vitest run",
     "geo:audit-tours": "tsx scripts/audit-tour-locations.ts",
     "test:watch": "vitest",
-    "test:partner-regression": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts src/lib/partner-tours/offer-quality.test.ts src/lib/partner-tours/duplicate-detection.test.ts"
+    "test:partner-regression": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts src/lib/partner-tours/offer-quality.test.ts src/lib/partner-tours/duplicate-detection.test.ts",
+    "architecture:check": "node scripts/architecture-boundaries.mjs",
+    "commands:registry": "node scripts/generate-command-registry.mjs",
+    "modules:lifecycle": "node scripts/generate-module-lifecycle.mjs",
+    "devex:golden": "node scripts/generate-command-registry.mjs && node scripts/generate-module-lifecycle.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

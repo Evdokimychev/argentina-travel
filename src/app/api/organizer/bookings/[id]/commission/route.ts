@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { fetchBookingById, organizerCanAccessBooking } from "@/lib/bookings-server";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   getCommissionRuleForBooking,
   listCommissionSnapshotsForBooking,
@@ -32,7 +33,8 @@ export async function GET(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    if (!organizerCanAccessBooking(booking, sessionUser.id)) {
+    const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
+    if (!organizerCanAccessBooking(booking, sessionUser.id, slugs)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

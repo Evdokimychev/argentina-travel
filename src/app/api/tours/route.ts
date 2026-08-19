@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { fetchPublishedListingsResultServer } from "@/lib/tour-content-server";
 
 export async function GET() {
@@ -19,10 +20,7 @@ export async function GET() {
       );
     }
     return NextResponse.json({ tours: result.data });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

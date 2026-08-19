@@ -4,7 +4,10 @@ type: faq
 question: "Нужна ли виза в Аргентину гражданам России?"
 short_answer: "Для краткой туристической поездки по обычному действующему российскому загранпаспорту виза не нужна: соглашение разрешает до 90 дней в каждом 180-дневном периоде. Безвиз не гарантирует въезд и не разрешает оплачиваемую работу; цель поездки, документы и страховку нужно подтвердить по запросу контроля."
 topic: visa
-status: published
+status: archived
+site_ready: false
+redirect_to: viza-i-granica-dlya-rossiyan
+archive_reason: "Короткий FAQ объединён с канонической статьёй о визе и границе для россиян."
 site_sections: [pereezd-v-argentinu, puteshestviya-po-argentine, dokumenty-i-legalizatsiya]
 tags: [визы, документы, граждане России]
 related: [kak-dobratsya-iz-rossii, vnzh-argentina, viza-i-granica-dlya-rossiyan]

@@ -121,8 +121,25 @@ describe("offer quality gate", () => {
       ],
       { now },
     );
-    expect(result.map((row) => row.slug)).toEqual(["ok-yt1", "platform-patagonia"]);
+    expect(result.map((row) => row.slug)).toEqual(["ok-yt1"]);
     expect(result[0]?.availableDates[0]?.start).toBe("2026-09-01");
+  });
+
+  it("strips garbage partner copy instead of publishing it", () => {
+    const now = new Date("2026-08-19T12:00:00Z");
+    const result = filterBookableMarketplaceListings(
+      [
+        listing({
+          id: "youtravel-pan",
+          slug: "pan-yt",
+          shortDescription: "Откройте для себя потрясающую аргентинскую сторону на сковороде",
+          availableDates: [{ start: "2026-09-01", end: "2026-09-08", spotsLeft: 2 }],
+        }),
+      ],
+      { now },
+    );
+    expect(result).toHaveLength(1);
+    expect(result[0]?.shortDescription).toBe("");
   });
 
   it("classifies neighboring-only partner tours as irrelevant for default catalog", () => {
@@ -176,5 +193,16 @@ describe("partner content quality", () => {
       "Недельный маршрут по Патагонии включает треккинг к леднику Перито-Морено и прогулки вокруг озера Архентино.",
     );
     expect(good.ok).toBe(true);
+  });
+
+  it("rejects the frying-pan machine translation and similar nonsense", () => {
+    const pan = assessPartnerContentQuality(
+      "Откройте для себя потрясающую аргентинскую сторону на сковороде",
+    );
+    expect(pan.ok).toBe(false);
+    expect(pan.reasons).toEqual(
+      expect.arrayContaining(["nonsense_translation"]),
+    );
+    expect(pan.sanitizedPlain).toBe("");
   });
 });

@@ -19,4 +19,12 @@ describe("unified server search index", () => {
     const index = await buildStaticSearchIndexServer();
     expect(index.some((item) => item.href === "/baza-znaniy/aep-eze-stykovka")).toBe(false);
   });
+
+  it("indexes the canonical visa article instead of the archived FAQ slug", async () => {
+    const index = await buildStaticSearchIndexServer();
+    expect(index.some((item) => item.href === "/baza-znaniy/viza-rf-v-argentinu")).toBe(false);
+    expect(index.some((item) => item.href === "/baza-znaniy/viza-i-granica-dlya-rossiyan")).toBe(
+      true,
+    );
+  });
 });

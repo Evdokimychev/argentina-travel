@@ -1,0 +1,1108 @@
+{
+  "generatedAt": "2026-08-18T00:39:50.313Z",
+  "scriptCount": 177,
+  "goldenPath": [
+    "audit:quick",
+    "dev",
+    "dev:clean",
+    "devex:golden",
+    "release:gate"
+  ],
+  "byClass": {
+    "DIAGNOSTIC": [
+      "airalo:download-feed",
+      "analytics-readiness",
+      "analytics:go-live",
+      "auth:readiness",
+      "auth:reconcile",
+      "backup:full",
+      "backup:restore:preflight",
+      "backup:schema",
+      "blog:editorial-readiness",
+      "blog:editorial-readiness:check",
+      "bootstrap-cornerstone-heroes",
+      "build",
+      "build:demo",
+      "bundle:report",
+      "cms-media:deploy-check",
+      "cms:archive-orphan-blog-slugs",
+      "cms:readiness",
+      "commands:registry",
+      "content:audit",
+      "content:governance",
+      "content:governance:strict",
+      "content:inventory",
+      "content:links",
+      "content:links:all",
+      "content:lint",
+      "content:public-editorial",
+      "content:quality",
+      "content:quality:strict",
+      "content:source-matrix",
+      "crawl:public-tour-details",
+      "crawl:sitemap-canonical",
+      "db:generate",
+      "db:push",
+      "db:seed",
+      "fetch-stock-media",
+      "gtm:go-live-checklist",
+      "guide:editorial-readiness",
+      "guide:editorial-readiness:check",
+      "inventory:generate",
+      "kb:integrate-argentina-travel",
+      "kb:integrate-argentina-travel:editorial",
+      "kb:integrate-argentina-travel:media",
+      "kb:manifest-stats",
+      "kb:quarantine-report",
+      "kb:source-health",
+      "kb:source-health:check",
+      "lighthouse:blog",
+      "lighthouse:blog:ci",
+      "lighthouse:phase2",
+      "lighthouse:phase2:prod",
+      "lint",
+      "map:build-routes",
+      "map:build-static",
+      "map:build-thematic",
+      "map:fetch-geodata",
+      "marketplace:quality",
+      "marketplace:quality:prod",
+      "media:blog-cards",
+      "media:cleanup-supabase",
+      "media:critical:check",
+      "media:critical:optimize",
+      "media:import-instagram",
+      "media:import-instagram:dry",
+      "media:integrity",
+      "media:integrity:prod",
+      "media:rights:check",
+      "modules:lifecycle",
+      "postinstall",
+      "prebuild",
+      "preview:production",
+      "production-readiness",
+      "project:readiness",
+      "prune-legacy-blog-media",
+      "prune-legacy-blog-media:check",
+      "readiness:90",
+      "readiness:90:strict",
+      "readiness:commercial:local",
+      "readiness:local-contracts",
+      "readiness:operations:local",
+      "readiness:payments:local",
+      "register-cornerstone-media",
+      "register-cornerstone-media:check",
+      "release:public-production",
+      "search:readiness",
+      "security:api-matrix",
+      "security:attack-surface",
+      "security:failure-injection",
+      "security:migration-parity",
+      "security:rls-live",
+      "setup:git-hooks",
+      "staging:acceptance:preflight",
+      "start",
+      "supabase:baseline:apply",
+      "supabase:baseline:inspect",
+      "supabase:purge-auth",
+      "supabase:resolve-db",
+      "supabase:seed-cms",
+      "supabase:seed-cms-locales",
+      "supabase:seed-tours",
+      "test",
+      "tripster:affiliate-links",
+      "warm-image-cache"
+    ],
+    "CI": [
+      "architecture:check",
+      "audit-blog-heroes",
+      "audit-images",
+      "audit:deps:policy",
+      "audit:deps:production",
+      "audit:perf",
+      "audit:security",
+      "blog-image-perf-audit",
+      "editorial:audit",
+      "editorial:audit:strict",
+      "geo:audit-tours",
+      "gtm-events:audit",
+      "inventory:check",
+      "kb:sync-argentina-travel:audit",
+      "media:rights:audit",
+      "page-image-audit",
+      "product:audit",
+      "quality:commerce",
+      "quality:content",
+      "quality:contracts",
+      "quality:journeys",
+      "quality:production",
+      "quality:security",
+      "quality:static",
+      "rls-audit",
+      "runtime-text:audit",
+      "seo-audit",
+      "test:e2e",
+      "test:e2e:a11y",
+      "test:e2e:a11y:prod",
+      "test:e2e:smoke",
+      "test:e2e:stage2-visual",
+      "test:e2e:staging-acceptance",
+      "test:e2e:ux-audit",
+      "test:e2e:visual",
+      "test:partner-regression",
+      "test:watch"
+    ],
+    "RELEASE": [
+      "audit",
+      "backup:restore:verify",
+      "content:verify-production",
+      "production-smoke",
+      "promotion:gate",
+      "publish:verify",
+      "publish:verify:full",
+      "publish:verify:pre-deploy",
+      "smoke",
+      "sputnik8:verify",
+      "supabase:baseline:verify",
+      "supabase:verify",
+      "tripster:verify",
+      "youtravel:verify"
+    ],
+    "GOLDEN_PATH": [
+      "audit:quick",
+      "dev",
+      "dev:clean",
+      "devex:golden",
+      "release:gate"
+    ],
+    "MIGRATION": [
+      "cms:cutover-enable",
+      "db:migrate",
+      "kb:migrate-collector",
+      "kb:migrate-collector:dry",
+      "kb:sync-argentina-travel",
+      "kb:sync-argentina-travel:dry",
+      "media:migrate-reg-ru",
+      "sputnik8:sync",
+      "supabase:migrate",
+      "sync-cms-media-manifest",
+      "sync-content-plan-redirects",
+      "sync-content-plan-redirects:check",
+      "sync-manual-posts",
+      "sync-manual-posts:check",
+      "sync-rich-articles",
+      "sync-rich-articles:check",
+      "sync:blog-semantic-heroes",
+      "tripster:sync",
+      "youtravel:sync"
+    ]
+  },
+  "aliases": [
+    {
+      "keep": "content:audit",
+      "also": [
+        "content:crawl",
+        "content:fix"
+      ]
+    },
+    {
+      "keep": "release:gate",
+      "also": [
+        "quality:static",
+        "quality:contracts",
+        "quality:content",
+        "quality:security",
+        "quality:commerce",
+        "quality:journeys",
+        "quality:production"
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "name": "airalo:download-feed",
+      "command": "node scripts/airalo-download-feed.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "analytics-readiness",
+      "command": "node scripts/analytics-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "analytics:go-live",
+      "command": "npm run gtm-events:audit && npm run analytics-readiness",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "architecture:check",
+      "command": "node scripts/architecture-boundaries.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "audit",
+      "command": "node scripts/audit.mjs --full",
+      "class": "RELEASE"
+    },
+    {
+      "name": "audit-blog-heroes",
+      "command": "node scripts/audit-blog-heroes.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "audit-images",
+      "command": "node scripts/audit-images.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "audit:deps:policy",
+      "command": "node scripts/dependency-audit-policy.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "audit:deps:production",
+      "command": "npm audit --omit=dev",
+      "class": "CI"
+    },
+    {
+      "name": "audit:perf",
+      "command": "node scripts/audit.mjs --perf",
+      "class": "CI"
+    },
+    {
+      "name": "audit:quick",
+      "command": "node scripts/audit.mjs --quick",
+      "class": "GOLDEN_PATH"
+    },
+    {
+      "name": "audit:security",
+      "command": "node scripts/audit.mjs --security",
+      "class": "CI"
+    },
+    {
+      "name": "auth:readiness",
+      "command": "node scripts/auth-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "auth:reconcile",
+      "command": "node scripts/auth-reconcile.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "backup:full",
+      "command": "node scripts/supabase-full-backup.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "backup:restore:preflight",
+      "command": "node scripts/supabase-restore-rehearsal.mjs --preflight",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "backup:restore:verify",
+      "command": "node scripts/supabase-restore-rehearsal.mjs --verify",
+      "class": "RELEASE"
+    },
+    {
+      "name": "backup:schema",
+      "command": "node scripts/backup-supabase-schema.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "blog-image-perf-audit",
+      "command": "node scripts/blog-image-perf-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "blog:editorial-readiness",
+      "command": "tsx scripts/blog-editorial-readiness.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "blog:editorial-readiness:check",
+      "command": "tsx scripts/blog-editorial-readiness.ts --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "bootstrap-cornerstone-heroes",
+      "command": "node scripts/bootstrap-cornerstone-blog-heroes.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "build",
+      "command": "node scripts/build.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "build:demo",
+      "command": "NEXT_PUBLIC_APP_MODE=demo DEMO_DEPLOYMENT=true node scripts/build.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "bundle:report",
+      "command": "node scripts/bundle-report.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "cms-media:deploy-check",
+      "command": "node scripts/cms-media-deploy-check.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "cms:archive-orphan-blog-slugs",
+      "command": "tsx scripts/archive-cms-orphan-blog-slugs.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "cms:cutover-enable",
+      "command": "tsx scripts/cms-cutover-enable.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "cms:readiness",
+      "command": "tsx scripts/cms-cutover-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "commands:registry",
+      "command": "node scripts/generate-command-registry.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:audit",
+      "command": "node scripts/content-audit.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:governance",
+      "command": "node scripts/content-governance-audit.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:governance:strict",
+      "command": "node scripts/content-governance-audit.mjs --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:inventory",
+      "command": "tsx scripts/content-overhaul-inventory.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:links",
+      "command": "node scripts/kb-link-check.mjs --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:links:all",
+      "command": "node scripts/kb-link-check.mjs --all",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:lint",
+      "command": "node scripts/content-audit.mjs --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:public-editorial",
+      "command": "tsx scripts/public-editorial-audit.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:quality",
+      "command": "node scripts/content-quality.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:quality:strict",
+      "command": "node scripts/content-quality.mjs --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:source-matrix",
+      "command": "node scripts/content-source-matrix.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "content:verify-production",
+      "command": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/production-smoke.mjs && node scripts/content-audit.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "crawl:public-tour-details",
+      "command": "node scripts/public-card-detail-crawl.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "crawl:sitemap-canonical",
+      "command": "node scripts/sitemap-canonical-crawl.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "db:generate",
+      "command": "prisma generate",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "db:migrate",
+      "command": "prisma migrate dev",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "db:push",
+      "command": "prisma db push",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "db:seed",
+      "command": "tsx prisma/seed.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "dev",
+      "command": "node scripts/dev.mjs",
+      "class": "GOLDEN_PATH"
+    },
+    {
+      "name": "dev:clean",
+      "command": "node scripts/dev-clean.mjs",
+      "class": "GOLDEN_PATH"
+    },
+    {
+      "name": "devex:golden",
+      "command": "node scripts/generate-command-registry.mjs && node scripts/generate-module-lifecycle.mjs",
+      "class": "GOLDEN_PATH"
+    },
+    {
+      "name": "editorial:audit",
+      "command": "tsx scripts/editorial-audit.ts",
+      "class": "CI"
+    },
+    {
+      "name": "editorial:audit:strict",
+      "command": "tsx scripts/editorial-audit.ts --strict",
+      "class": "CI"
+    },
+    {
+      "name": "fetch-stock-media",
+      "command": "node scripts/fetch-stock-media.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "geo:audit-tours",
+      "command": "tsx scripts/audit-tour-locations.ts",
+      "class": "CI"
+    },
+    {
+      "name": "gtm-events:audit",
+      "command": "node scripts/gtm-events-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "gtm:go-live-checklist",
+      "command": "node scripts/gtm-go-live-checklist.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "guide:editorial-readiness",
+      "command": "tsx scripts/guide-editorial-readiness.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "guide:editorial-readiness:check",
+      "command": "tsx scripts/guide-editorial-readiness.ts --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "inventory:check",
+      "command": "tsx scripts/generate-product-surface-inventory.ts --check",
+      "class": "CI"
+    },
+    {
+      "name": "inventory:generate",
+      "command": "tsx scripts/generate-product-surface-inventory.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:integrate-argentina-travel",
+      "command": "node scripts/integrate-argentina-travel.mjs --all --rebuild-index",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:integrate-argentina-travel:editorial",
+      "command": "node scripts/integrate-argentina-travel.mjs --editorial --retranslate --rebuild-index",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:integrate-argentina-travel:media",
+      "command": "node scripts/integrate-argentina-travel.mjs --sync-media --expand-place-map",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:manifest-stats",
+      "command": "node scripts/kb-manifest-stats.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:migrate-collector",
+      "command": "tsx scripts/migrate-argentina-knowledge.ts --apply",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "kb:migrate-collector:dry",
+      "command": "tsx scripts/migrate-argentina-knowledge.ts",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "kb:quarantine-report",
+      "command": "node scripts/kb-quarantine-report.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:source-health",
+      "command": "node scripts/kb-source-health.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:source-health:check",
+      "command": "node scripts/kb-source-health.mjs --check",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "kb:sync-argentina-travel",
+      "command": "node scripts/sync-argentina-travel-kb.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "kb:sync-argentina-travel:audit",
+      "command": "node scripts/sync-argentina-travel-kb.mjs --audit",
+      "class": "CI"
+    },
+    {
+      "name": "kb:sync-argentina-travel:dry",
+      "command": "node scripts/sync-argentina-travel-kb.mjs --dry-run",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "lighthouse:blog",
+      "command": "node scripts/lighthouse-blog-cwv.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "lighthouse:blog:ci",
+      "command": "node scripts/lighthouse-ci.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "lighthouse:phase2",
+      "command": "node scripts/lighthouse-phase2-ci.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "lighthouse:phase2:prod",
+      "command": "LIGHTHOUSE_BASE_URL=https://www.goargentina.ru node scripts/lighthouse-phase2-ci.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "lint",
+      "command": "next lint",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "map:build-routes",
+      "command": "node scripts/build-route-geodata.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "map:build-static",
+      "command": "node scripts/build-static-map-geodata.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "map:build-thematic",
+      "command": "node scripts/build-static-map-geodata.mjs && node scripts/build-route-geodata.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "map:fetch-geodata",
+      "command": "node scripts/fetch-map-geodata.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "marketplace:quality",
+      "command": "node scripts/marketplace-quality.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "marketplace:quality:prod",
+      "command": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/marketplace-quality.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:blog-cards",
+      "command": "node scripts/generate-blog-card-derivatives.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:cleanup-supabase",
+      "command": "node scripts/cleanup-supabase-storage.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:critical:check",
+      "command": "node scripts/critical-public-media-check.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:critical:optimize",
+      "command": "node scripts/optimize-critical-public-media.mjs && node scripts/critical-public-media-check.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:import-instagram",
+      "command": "node scripts/import-instagram-queue.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:import-instagram:dry",
+      "command": "node scripts/import-instagram-queue.mjs --dry-run",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:integrity",
+      "command": "node scripts/media-manifest-integrity.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:integrity:prod",
+      "command": "node scripts/media-manifest-integrity.mjs --prod",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "media:migrate-reg-ru",
+      "command": "node scripts/migrate-media-to-reg-ru.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "media:rights:audit",
+      "command": "tsx scripts/media-rights-readiness.ts",
+      "class": "CI"
+    },
+    {
+      "name": "media:rights:check",
+      "command": "tsx scripts/media-rights-readiness.ts --changed --check",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "modules:lifecycle",
+      "command": "node scripts/generate-module-lifecycle.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "page-image-audit",
+      "command": "node scripts/page-image-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "postinstall",
+      "command": "prisma generate",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "prebuild",
+      "command": "node scripts/runtime-text-audit.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "preview:production",
+      "command": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false node scripts/start.mjs --build",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "product:audit",
+      "command": "node scripts/product-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "production-readiness",
+      "command": "node scripts/production-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "production-smoke",
+      "command": "node scripts/production-smoke.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "project:readiness",
+      "command": "node scripts/project-readiness-score.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "promotion:gate",
+      "command": "node scripts/promotion-gate.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "prune-legacy-blog-media",
+      "command": "node scripts/prune-legacy-blog-media.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "prune-legacy-blog-media:check",
+      "command": "node scripts/prune-legacy-blog-media.mjs --check",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "publish:verify",
+      "command": "node scripts/publish-turnkey.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "publish:verify:full",
+      "command": "node scripts/publish-turnkey.mjs -- --full",
+      "class": "RELEASE"
+    },
+    {
+      "name": "publish:verify:pre-deploy",
+      "command": "node scripts/publish-turnkey.mjs -- --full --pre-deploy",
+      "class": "RELEASE"
+    },
+    {
+      "name": "quality:commerce",
+      "command": "node scripts/release-gate.mjs --group commerce",
+      "class": "CI"
+    },
+    {
+      "name": "quality:content",
+      "command": "node scripts/release-gate.mjs --group content",
+      "class": "CI"
+    },
+    {
+      "name": "quality:contracts",
+      "command": "node scripts/release-gate.mjs --group contracts",
+      "class": "CI"
+    },
+    {
+      "name": "quality:journeys",
+      "command": "node scripts/release-gate.mjs --group journeys",
+      "class": "CI"
+    },
+    {
+      "name": "quality:production",
+      "command": "node scripts/release-gate.mjs --group production",
+      "class": "CI"
+    },
+    {
+      "name": "quality:security",
+      "command": "node scripts/release-gate.mjs --group security",
+      "class": "CI"
+    },
+    {
+      "name": "quality:static",
+      "command": "node scripts/release-gate.mjs --group static",
+      "class": "CI"
+    },
+    {
+      "name": "readiness:90",
+      "command": "node scripts/readiness-90.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "readiness:90:strict",
+      "command": "node scripts/readiness-90.mjs --strict",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "readiness:commercial:local",
+      "command": "node scripts/commercial-funnel-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "readiness:local-contracts",
+      "command": "npm run readiness:commercial:local && npm run readiness:operations:local && npm run readiness:payments:local",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "readiness:operations:local",
+      "command": "node scripts/operations-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "readiness:payments:local",
+      "command": "node scripts/payment-provider-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "register-cornerstone-media",
+      "command": "node scripts/register-cornerstone-blog-media.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "register-cornerstone-media:check",
+      "command": "node scripts/register-cornerstone-blog-media.mjs --check",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "release:gate",
+      "command": "node scripts/release-gate.mjs",
+      "class": "GOLDEN_PATH"
+    },
+    {
+      "name": "release:public-production",
+      "command": "node scripts/release-public-production.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "rls-audit",
+      "command": "node scripts/rls-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "runtime-text:audit",
+      "command": "node scripts/runtime-text-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "search:readiness",
+      "command": "node scripts/search-readiness.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "security:api-matrix",
+      "command": "node scripts/security/api-security-matrix.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "security:attack-surface",
+      "command": "node scripts/security/attack-surface.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "security:failure-injection",
+      "command": "node scripts/security/failure-injection-rehearsal.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "security:migration-parity",
+      "command": "node scripts/security/migration-parity.mjs --dry-run",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "security:rls-live",
+      "command": "node scripts/security/rls-live-evidence.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "seo-audit",
+      "command": "node scripts/seo-audit.mjs",
+      "class": "CI"
+    },
+    {
+      "name": "setup:git-hooks",
+      "command": "node scripts/setup-git-hooks.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "smoke",
+      "command": "node scripts/smoke-test.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "sputnik8:sync",
+      "command": "node scripts/sputnik8-sync.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sputnik8:verify",
+      "command": "node scripts/sputnik8-verify.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "staging:acceptance:preflight",
+      "command": "tsx scripts/staging-acceptance.ts --preflight",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "start",
+      "command": "node scripts/start.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:baseline:apply",
+      "command": "node scripts/supabase-baseline-migrations.mjs --apply",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:baseline:inspect",
+      "command": "node scripts/supabase-baseline-migrations.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:baseline:verify",
+      "command": "node scripts/supabase-baseline-migrations.mjs --verify",
+      "class": "RELEASE"
+    },
+    {
+      "name": "supabase:migrate",
+      "command": "node scripts/supabase-apply-migration.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "supabase:purge-auth",
+      "command": "node scripts/supabase-purge-auth-users.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:resolve-db",
+      "command": "node scripts/supabase-resolve-db-url.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:seed-cms",
+      "command": "tsx scripts/seed-cms-from-ts.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:seed-cms-locales",
+      "command": "tsx scripts/seed-cms-locales.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:seed-tours",
+      "command": "tsx scripts/supabase-seed-tours.ts",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "supabase:verify",
+      "command": "node scripts/supabase-verify.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "sync-cms-media-manifest",
+      "command": "node scripts/sync-cms-media-manifest.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-content-plan-redirects",
+      "command": "tsx scripts/sync-content-plan-redirects.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-content-plan-redirects:check",
+      "command": "tsx scripts/sync-content-plan-redirects.mjs --check",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-manual-posts",
+      "command": "node scripts/sync-blog-manual-posts-from-md.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-manual-posts:check",
+      "command": "node scripts/sync-blog-manual-posts-from-md.mjs --check",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-rich-articles",
+      "command": "node scripts/sync-blog-rich-articles-from-md.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync-rich-articles:check",
+      "command": "node scripts/sync-blog-rich-articles-from-md.mjs --check",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "sync:blog-semantic-heroes",
+      "command": "tsx scripts/sync-blog-semantic-heroes.ts",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "test",
+      "command": "vitest run",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "test:e2e",
+      "command": "playwright test",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:a11y",
+      "command": "playwright test -c playwright.a11y.config.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:a11y:prod",
+      "command": "SMOKE_BASE_URL=https://www.goargentina.ru playwright test -c playwright.a11y.config.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:smoke",
+      "command": "playwright test tests/e2e/smoke.spec.ts tests/e2e/mobile-readiness.spec.ts tests/e2e/public-journeys.spec.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:stage2-visual",
+      "command": "playwright test -c playwright.stage2-visual.config.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:staging-acceptance",
+      "command": "tsx scripts/staging-acceptance.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:ux-audit",
+      "command": "playwright test -c playwright.ux-audit.config.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:e2e:visual",
+      "command": "playwright test tests/e2e/visual-smoke.spec.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:partner-regression",
+      "command": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts src/lib/partner-tours/offer-quality.test.ts src/lib/partner-tours/duplicate-detection.test.ts",
+      "class": "CI"
+    },
+    {
+      "name": "test:watch",
+      "command": "vitest",
+      "class": "CI"
+    },
+    {
+      "name": "tripster:affiliate-links",
+      "command": "node scripts/tripster-affiliate-links.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "tripster:sync",
+      "command": "node scripts/tripster-sync.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "tripster:verify",
+      "command": "node scripts/tripster-verify.mjs",
+      "class": "RELEASE"
+    },
+    {
+      "name": "warm-image-cache",
+      "command": "node scripts/warm-image-cache.mjs",
+      "class": "DIAGNOSTIC"
+    },
+    {
+      "name": "youtravel:sync",
+      "command": "node scripts/youtravel-sync.mjs",
+      "class": "MIGRATION"
+    },
+    {
+      "name": "youtravel:verify",
+      "command": "node scripts/youtravel-verify.mjs",
+      "class": "RELEASE"
+    }
+  ]
+}

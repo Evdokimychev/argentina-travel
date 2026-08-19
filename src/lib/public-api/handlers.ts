@@ -6,6 +6,7 @@ import {
 import { requirePublicApiScope, resolvePublicApiKey } from "@/lib/public-api/auth";
 import { logPublicApiKeyUsage } from "@/lib/public-api/usage-log";
 import { checkRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import type { PublicApiScope } from "@/types/public-api";
 
 type PublicApiHandler = (
@@ -64,11 +65,8 @@ export async function handlePublicApiRequest(
       status: response.status,
     });
     return applyPublicApiCorsHeaders(response, request, corsOptions);
-  } catch (error) {
-    const response = NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    const response = NextResponse.json(unexpectedPublicApiError(), { status: 500 });
     void logPublicApiKeyUsage({
       keyId: auth.key.id,
       endpoint,

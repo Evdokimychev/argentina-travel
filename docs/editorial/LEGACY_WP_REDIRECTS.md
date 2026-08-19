@@ -6,8 +6,9 @@
 
 | Source | Destination | Notes |
 |--------|-------------|-------|
-| `/st_tour/:path*` | `/tours` | Catch-all catalog hub (308) |
-| `/st_activity/:path*` | `/excursions` | Catch-all catalog hub (308) |
+| `/st_tour/:path*` | `/tours` | Catch-all catalog hub (308), not homepage |
+| `/st_activity/:path*` | `/excursions` | Catch-all catalog hub (308), not homepage |
+| `/st_location/:path*` | `/places` | Catch-all geography hub (308), not homepage |
 
 Exact `OLD → detail` redirects are **not** implementable from repository data alone: there is no WordPress CPT ID ↔ current partner slug inventory in-repo.
 

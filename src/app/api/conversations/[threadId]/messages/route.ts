@@ -9,6 +9,7 @@ import {
 import { notifyConversationMessageCreated } from "@/lib/notifications/messaging-notify";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(
   _request: Request,
@@ -35,11 +36,8 @@ export async function GET(
       sessionUser?.id
     );
     return NextResponse.json({ messages });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -97,10 +95,7 @@ export async function POST(
     });
 
     return NextResponse.json({ message: result.message });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

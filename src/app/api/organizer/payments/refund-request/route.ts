@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById, organizerCanAccessBooking } from "@/lib/bookings-server";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   createRefundRequest,
 } from "@/lib/payments/transaction-server";
@@ -43,7 +44,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
   }
 
-  if (!organizerCanAccessBooking(booking, sessionUser.id)) {
+  const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
+  if (!organizerCanAccessBooking(booking, sessionUser.id, slugs)) {
     return NextResponse.json({ error: "Нет доступа к заявке" }, { status: 403 });
   }
 

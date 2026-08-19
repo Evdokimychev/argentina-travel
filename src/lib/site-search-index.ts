@@ -10,7 +10,8 @@ import {
 import { DESTINATION_PAGES } from "@/data/destination-pages";
 import { getAllPlaceListings } from "@/data/places-seed";
 import { placeHref } from "@/lib/places-urls";
-import { SHOP_PRODUCTS } from "@/data/shop-products";
+import { DEFAULT_SITE_MODULES, DEFAULT_SITE_NAVIGATION } from "@/lib/cms/site-globals/normalize";
+import { isPublicLinkEnabled } from "@/lib/public-module-visibility";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { buildContentSearchItems, buildGuideSearchItems, buildImmigrationSearchItems } from "@/lib/content-pages";
 import { searchLabelToHref } from "@/lib/geography-links";
@@ -145,14 +146,6 @@ const STATIC_PAGES: SearchIndexItem[] = [
     keywords: ["фото", "галерея", "патагония", "снимки"],
   },
   {
-    id: "page-shop",
-    type: "page",
-    title: "Магазин гидов",
-    description: "PDF-путеводители и чеклисты для подготовки к поездке.",
-    href: "/shop",
-    keywords: ["гид", "pdf", "чеклист", "путеводитель"],
-  },
-  {
     id: "page-services",
     type: "page",
     title: "Сервисы для поездки",
@@ -237,7 +230,7 @@ export function buildStaticSearchIndex(
     .filter((link) => {
       if (seenNav.has(link.href)) return false;
       seenNav.add(link.href);
-      return true;
+      return isPublicLinkEnabled(link.href, DEFAULT_SITE_NAVIGATION, DEFAULT_SITE_MODULES);
     })
     .map((link) => ({
       id: `nav-${link.id}-${encodeURIComponent(link.href)}`,
@@ -248,7 +241,9 @@ export function buildStaticSearchIndex(
       keywords: [link.sectionLabel, link.columnTitle].filter(Boolean) as string[],
     }));
 
-  const footerNavItems: SearchIndexItem[] = SITE_FOOTER_NAV.map((link) => ({
+  const footerNavItems: SearchIndexItem[] = SITE_FOOTER_NAV.filter((link) =>
+    isPublicLinkEnabled(link.href, DEFAULT_SITE_NAVIGATION, DEFAULT_SITE_MODULES),
+  ).map((link) => ({
     id: `footer-${link.href}`,
     type: "page" as const,
     title: link.label,
@@ -336,15 +331,6 @@ export function buildStaticSearchIndex(
     : buildContentSearchItems();
   const guideTopicItems = buildGuideTopicSearchItems();
 
-  const shopItems: SearchIndexItem[] = SHOP_PRODUCTS.map((product) => ({
-    id: `shop-${product.slug}`,
-    type: "page" as const,
-    title: product.title,
-    description: product.description,
-    href: `/shop/${product.slug}`,
-    keywords: ["магазин", "pdf", product.format],
-  }));
-
   const serviceItems: SearchIndexItem[] = SERVICE_CATEGORIES.flatMap((category) =>
     category.items
       .filter((item) => !item.external)
@@ -367,23 +353,26 @@ export function buildStaticSearchIndex(
     keywords: [place.region, place.province, place.city, ...place.tags].filter(Boolean) as string[],
   }));
 
-  return dedupeSearchIndex([
-    ...STATIC_PAGES,
-    ...navItems,
-    ...footerNavItems,
-    ...contactItems,
-    ...blogItems,
-    ...faqItems,
-    ...legalItems,
-    ...destinationPageItems,
-    ...destinationItems,
-    ...contentItems,
-    ...guideTopicItems,
-    ...buildImmigrationTopicSearchItems(),
-    ...shopItems,
-    ...serviceItems,
-    ...placeItems,
-  ]);
+  return dedupeSearchIndex(
+    [
+      ...STATIC_PAGES,
+      ...navItems,
+      ...footerNavItems,
+      ...contactItems,
+      ...blogItems,
+      ...faqItems,
+      ...legalItems,
+      ...destinationPageItems,
+      ...destinationItems,
+      ...contentItems,
+      ...guideTopicItems,
+      ...buildImmigrationTopicSearchItems(),
+      ...serviceItems,
+      ...placeItems,
+    ].filter((item) =>
+      isPublicLinkEnabled(item.href, DEFAULT_SITE_NAVIGATION, DEFAULT_SITE_MODULES),
+    ),
+  );
 }
 
 export function buildFullSearchIndex(tours: TourListing[]): SearchIndexItem[] {

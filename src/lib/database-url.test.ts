@@ -131,4 +131,20 @@ describe("resolveDatabaseUrl", () => {
     expect(JSON.stringify(diagnostics)).not.toContain("super-secret");
     expect(JSON.stringify(diagnostics)).not.toContain("aws-0-sa-east-1");
   });
+
+  it("prefers a verified IPv4 session pooler over IPv6-only direct when both exist", () => {
+    clearDatabaseEnvironment();
+    process.env.POSTGRES_URL_NON_POOLING =
+      `postgresql://postgres:pass@db.${EXPECTED_REF}.supabase.co:5432/postgres`;
+    process.env.DATABASE_URL =
+      `postgresql://postgres.${EXPECTED_REF}:pass@aws-0-sa-east-1.pooler.supabase.com:5432/postgres`;
+
+    expect(resolveDatabaseUrl()).toBe(process.env.DATABASE_URL);
+    expect(resolveDatabaseConnectionDiagnostics()).toMatchObject({
+      source: "DATABASE_URL",
+      mode: "supabase_session_pooler",
+      port: 5432,
+      targetStatus: "verified",
+    });
+  });
 });

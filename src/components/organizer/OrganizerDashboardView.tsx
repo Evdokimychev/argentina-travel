@@ -43,9 +43,11 @@ export default function OrganizerDashboardView() {
   const [analytics, setAnalytics] = useState<OrganizerAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookingsLoadError, setBookingsLoadError] = useState<string | null>(null);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const hasAnyTours = (analytics?.publishedToursCount ?? 0) + (analytics?.draftToursCount ?? 0) > 0;
-  const showOnboardingEmptyState = !hasAnyTours && bookings.length === 0;
+  const showOnboardingEmptyState =
+    !bookingsLoadError && !hasAnyTours && bookings.length === 0;
 
   useEffect(() => {
     if (!user) return;
@@ -53,8 +55,15 @@ export default function OrganizerDashboardView() {
     function refreshBookings() {
       if (isRemoteBookingsMode()) {
         return apiFetchOrganizerBookings()
-          .then(setBookings)
-          .catch(() => setBookings([]));
+          .then((rows) => {
+            setBookingsLoadError(null);
+            setBookings(rows);
+          })
+          .catch(() => {
+            setBookingsLoadError(
+              "Не удалось загрузить заявки. Список может быть неполным — обновите страницу.",
+            );
+          });
       }
       setBookings(getOrganizerBookingsForCabinet(user!.id));
       return Promise.resolve();
@@ -144,6 +153,14 @@ export default function OrganizerDashboardView() {
         <p className="mt-2 text-sm text-slate">
           Новые бронирования, сообщения и заявки, требующие вашего внимания.
         </p>
+        {bookingsLoadError ? (
+          <p
+            role="alert"
+            className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+          >
+            {bookingsLoadError}
+          </p>
+        ) : null}
         <div className="mt-4 flex flex-wrap gap-2">
           {bookingStats.activeInboxCount > 0 ? (
             <Link
