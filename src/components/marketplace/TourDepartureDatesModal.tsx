@@ -16,6 +16,7 @@ import {
   formatMonthName,
 } from "@/lib/utils";
 import { TOUR_PRICE_ON_REQUEST_LABEL } from "@/lib/tour-price-public";
+import { isFutureOrTodayYmd } from "@/lib/partner-tours/calendar-date";
 
 interface TourDepartureDatesModalProps {
   tour: TourListing;
@@ -94,7 +95,10 @@ export default function TourDepartureDatesModal({
   open,
   onOpenChange,
 }: TourDepartureDatesModalProps) {
-  const dateGroups = useMemo(() => groupDatesByYear(tour.availableDates), [tour.availableDates]);
+  const dateGroups = useMemo(
+    () => groupDatesByYear(tour.availableDates.filter((date) => isFutureOrTodayYmd(date.start))),
+    [tour.availableDates],
+  );
   const currentYear = new Date().getFullYear();
 
   return (

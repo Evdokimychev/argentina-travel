@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 import { isSupabaseForumEnabled } from "@/lib/auth-mode";
 import { submitForumPostReport } from "@/lib/forum/forum-server";
 import { FORUM_REPORT_REASONS, type ForumReportReason } from "@/lib/forum/forum-types";
-import { isPublicPathEnabled } from "@/lib/public-module-visibility";
+import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteModules, fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type PostBody = {
@@ -16,10 +15,8 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ postId: string }> }
 ) {
-  const [navigation, modules] = await Promise.all([fetchSiteNavigation(), fetchSiteModules()]);
-  if (!isPublicPathEnabled("/forum", navigation, modules)) {
-    return NextResponse.json({ error: "Форум отключён" }, { status: 404 });
-  }
+  const quarantined = await rejectIfPublicModuleQuarantined("/forum", { labelRu: "Форум" });
+  if (quarantined) return quarantined;
 
   if (!isSupabaseForumEnabled()) {
     return NextResponse.json({ error: "Форум недоступен" }, { status: 503 });

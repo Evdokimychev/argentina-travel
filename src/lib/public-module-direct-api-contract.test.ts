@@ -21,11 +21,13 @@ describe("direct API module kill-switch", () => {
       "getClientIp(request)",
     );
     expectGuardBefore("src/app/api/ai/tour-match/route.ts", "tours", "let body: TourMatchRequest");
-    expectGuardBefore(
-      "src/app/api/podbor/narrative/route.ts",
-      "tours",
-      "let payload: PodborAiNarrativeRequest",
-    );
+  });
+
+  it("freezes unused podbor narrative API (Sprint 7)", () => {
+    const route = source("src/app/api/podbor/narrative/route.ts");
+    expect(route).toContain("API_FROZEN");
+    expect(route).toContain("status: 410");
+    expect(route).not.toContain("fetchMarketplaceTours");
   });
 
   it("guards public group discovery, creation and joining but keeps continuity actions", () => {

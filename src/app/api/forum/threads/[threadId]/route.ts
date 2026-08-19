@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { isSupabaseForumEnabled } from "@/lib/auth-mode";
 import { fetchForumThreadDetail } from "@/lib/forum/forum-server";
+import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(
   request: Request,
   context: { params: Promise<{ threadId: string }> }
 ) {
+  const quarantined = await rejectIfPublicModuleQuarantined("/forum", { labelRu: "Форум" });
+  if (quarantined) return quarantined;
+
   if (!isSupabaseForumEnabled()) {
     return NextResponse.json({ error: "Форум недоступен" }, { status: 503 });
   }

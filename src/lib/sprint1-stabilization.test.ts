@@ -31,6 +31,18 @@ describe("Sprint 1 stabilization", () => {
     }
   });
 
+  it("does not leak dormant shop or forum routes into public search", () => {
+    const items = buildStaticSearchIndex();
+    expect(items.some((item) => item.href === "/shop" || item.href.startsWith("/shop/"))).toBe(
+      false,
+    );
+    expect(items.some((item) => item.href === "/forum" || item.href.startsWith("/forum/"))).toBe(
+      false,
+    );
+    expect(items.some((item) => item.href.startsWith("/car-rental"))).toBe(false);
+    expect(items.some((item) => item.href.startsWith("/transfers"))).toBe(false);
+  });
+
   it("describes the destination catalog without calling cities regions", () => {
     const items = buildStaticSearchIndex();
     const destinationIndexes = items.filter(

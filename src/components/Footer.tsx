@@ -18,6 +18,7 @@ import { siteContainerClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
 import { COOKIE_CONSENT_OPEN_EVENT } from "@/lib/cookie-consent";
 import { filterPublicLinks, isPublicLinkEnabled } from "@/lib/public-module-visibility";
+import { DEFAULT_SITE_NAVIGATION } from "@/lib/cms/site-globals/normalize";
 import type {
   SiteBrandingGlobalResolved,
   SiteDesignGlobal,
@@ -109,12 +110,11 @@ export default function Footer({
   const footerInfo = siteFooter ?? siteLegal;
   const socialLinks =
     footerInfo?.socialLinks?.length ? footerInfo.socialLinks : [...SITE_SOCIAL_LINKS];
-  const footerNavigation = navigation
-    ? filterPublicLinks(SITE_FOOTER_NAV, navigation, modules)
-    : SITE_FOOTER_NAV;
+  const effectiveNavigation = navigation ?? DEFAULT_SITE_NAVIGATION;
+  const footerNavigation = filterPublicLinks(SITE_FOOTER_NAV, effectiveNavigation, modules);
   const showRouteCta =
     design?.showFooterRouteCta !== false &&
-    (!navigation || isPublicLinkEnabled("/podbor", navigation, modules));
+    isPublicLinkEnabled("/podbor", effectiveNavigation, modules);
   const navMid = Math.ceil(footerNavigation.length / 2);
   const navPrimary = footerNavigation.slice(0, navMid);
   const navSecondary = footerNavigation.slice(navMid);

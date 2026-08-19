@@ -27,7 +27,7 @@ import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
-import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { resolveTourCardScheduleDisplay, resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
@@ -87,8 +87,9 @@ function StatCell({ label, children }: { label: string; children: React.ReactNod
 
 export default function MarketplaceTourListCard({ tour }: { tour: TourListing }) {
   const [datesModalOpen, setDatesModalOpen] = useState(false);
-  const nextDate = tour.availableDates[0];
-  const moreDates = tour.availableDates.length - 1;
+  const schedule = resolveTourCardScheduleDisplay(tour);
+  const nextDate = schedule?.type === "dates" ? schedule : null;
+  const moreDates = nextDate?.moreDates ?? 0;
   const ratingDisplay = resolveTourRatingLabel(tour);
   const comfortLevel = resolveListingComfortLevel(tour);
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;

@@ -20,6 +20,7 @@ import type { TripsterTourPlanDay } from "@/lib/tripster/types";
 import { mapTripsterReviewRow, type TripsterReviewRow } from "@/lib/tripster/review-mapper";
 import type { TripsterExperience } from "@/lib/tripster/types";
 import { htmlToPlainText, sanitizeHtml } from "@/lib/rich-text";
+import { resolvePartnerPublicCardText } from "@/lib/partner-tours/content-quality";
 import type {
   AccommodationType,
   ActivityType,
@@ -373,9 +374,9 @@ export function partnerTourRowToListing(
     slug: row.slug,
     title: row.title,
     shortDescription:
-      row.tagline?.trim() ||
-      row.annotation?.trim()?.slice(0, 220) ||
-      "Авторский многодневный тур от партнёра Tripster.",
+      resolvePartnerPublicCardText(
+        row.tagline?.trim() || row.annotation?.trim()?.slice(0, 220) || "",
+      ) || "Авторский многодневный тур от партнёра Tripster.",
     image: cover,
     gallery: gallery.length ? gallery : cover ? [cover] : [],
     destination: cityName,
