@@ -80,7 +80,7 @@ No blind Server Component rewrite. Marketplace catalog still 300s revalidate; la
 |------|-------|
 | `origin/main` | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production SHA | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
-| Candidate | `0c60fcfe` + follow-up inventory/KB count commits on `cursor/iteration2-public-product-5475` |
+| Candidate | `ad6752d31dfe93f7f765793d7494c66f6ab6d749` |
 | Health | 503 down |
 | Deploy | **BLOCKED_EXTERNAL** — Vercel “Account is blocked” |
 
