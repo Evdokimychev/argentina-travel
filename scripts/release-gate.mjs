@@ -7,15 +7,20 @@ import {
   captureCandidateContext,
   finalizeCandidateEvidence,
 } from "./lib/candidate-evidence.mjs";
+import { cleanStaleReleaseGateArtifacts } from "./lib/release-gate-artifact.mjs";
 import { releaseGateCheckEnv } from "./lib/release-gate-env.mjs";
 import { buildReleaseFingerprint } from "./lib/release-fingerprint.mjs";
 
 const root = process.cwd();
 nextEnv.loadEnvConfig(root, false);
+cleanStaleReleaseGateArtifacts(root);
 const canonicalReportPath = path.join(root, "var/ops/release-gate-report.json");
 const logsDir = path.join(root, "var/ops/release-gate-logs");
-const requestedGroup = process.argv.includes("--group")
+const requestedGroupRaw = process.argv.includes("--group")
   ? process.argv[process.argv.indexOf("--group") + 1]
+  : null;
+const requestedGroups = requestedGroupRaw
+  ? requestedGroupRaw.split(",").map((value) => value.trim()).filter(Boolean)
   : null;
 const candidateContext = captureCandidateContext(root);
 const sourceFingerprint = buildReleaseFingerprint(root, process.env);
@@ -38,6 +43,7 @@ const groups = {
         "scripts/lib/lighthouse-budget-policy.test.mjs",
         "scripts/lib/migration-journal.test.mjs",
         "scripts/lib/ops-report-evidence.test.mjs",
+        "scripts/lib/release-gate-artifact.test.mjs",
         "scripts/kb-source-health.test.mjs",
         "scripts/lib/release-gate-content-contract.test.mjs",
         "scripts/lib/release-gate-env.test.mjs",
@@ -48,6 +54,7 @@ const groups = {
     ["typescript", "npx", ["tsc", "--noEmit"], true],
     ["lint", "npm", ["run", "lint"], true],
     ["product-surface-inventory", "npm", ["run", "inventory:check"], true],
+    ["architecture-boundaries", "node", ["scripts/architecture-boundaries.mjs"], true],
   ],
   contracts: [
     ["unit-integration-contracts", "npm", ["test"], true],
@@ -104,14 +111,18 @@ const groups = {
   ],
 };
 
-if (requestedGroup && !groups[requestedGroup]) {
-  console.error(`Unknown quality group: ${requestedGroup}`);
-  process.exit(2);
+if (requestedGroups) {
+  for (const group of requestedGroups) {
+    if (!groups[group]) {
+      console.error(`Unknown quality group: ${group}`);
+      process.exit(2);
+    }
+  }
 }
 
 fs.mkdirSync(logsDir, { recursive: true });
-const groupNames = requestedGroup
-  ? [requestedGroup]
+const groupNames = requestedGroups?.length
+  ? requestedGroups
   : ["static", "contracts", "content", "security", "commerce", "production", "journeys"];
 const checks = [];
 let blocked = false;
@@ -143,9 +154,7 @@ for (const group of groupNames) {
         ...(process.env.PLAYWRIGHT_BASE_URL
           ? { PLAYWRIGHT_BASE_URL: process.env.PLAYWRIGHT_BASE_URL }
           : {}),
-        ...(group === "journeys" && !requestedGroup
-          ? { PLAYWRIGHT_RELEASE_GATE: "true" }
-          : {}),
+        ...(group === "journeys" ? { PLAYWRIGHT_RELEASE_GATE: "true" } : {}),
       },
       encoding: "utf8",
       maxBuffer: 100 * 1024 * 1024,
@@ -188,20 +197,25 @@ if (candidateEvidence.evidenceIntegrity.status !== "passed") {
     reasons: candidateEvidence.evidenceIntegrity.reasons,
   });
 }
+const ciRunId = process.env.GITHUB_RUN_ID?.trim() || null;
 const report = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   ...candidateEvidence,
   commitSha: sourceFingerprint.commitSha,
   commitShaSource: sourceFingerprint.source,
+  ciRunId,
+  runId: ciRunId,
   sourceFingerprint,
   timestamp: new Date().toISOString(),
+  generatedAt: new Date().toISOString(),
   environment: process.env.VERCEL_ENV ?? process.env.DEPLOY_ENV ?? "local-production",
-  requestedGroup: requestedGroup ?? "all",
+  evidenceLevel: process.env.CI ? "STATIC_PASS" : "LOCAL_INTEGRATION_PASS",
+  requestedGroup: requestedGroups?.join(",") ?? "all",
   status: blocked ? "failed" : "passed",
   checks,
 };
-const reportPath = requestedGroup
-  ? path.join(root, "var/ops", `release-gate-${requestedGroup}-last.json`)
+const reportPath = requestedGroups?.length
+  ? path.join(root, "var/ops", `release-gate-${requestedGroups.join("-")}-last.json`)
   : canonicalReportPath;
 fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");

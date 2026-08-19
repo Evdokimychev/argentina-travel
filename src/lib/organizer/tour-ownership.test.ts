@@ -31,7 +31,7 @@ describe("organizer tour ownership (IDOR guard)", () => {
     expect(result.ok).toBe(true);
   });
 
-  it("rejects a foreign organizer with 403 (negative capability)", async () => {
+  it("rejects a foreign organizer with 404 so the tour is not enumerable", async () => {
     const result = await assertOrganizerTourOwnership(
       adminClient({ id: "tour-1", owner_user_id: "org-owner" }) as never,
       "tour-1",
@@ -39,8 +39,8 @@ describe("organizer tour ownership (IDOR guard)", () => {
     );
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.response.status).toBe(403);
-      await expect(result.response.json()).resolves.toEqual({ error: "Доступ запрещён" });
+      expect(result.response.status).toBe(404);
+      await expect(result.response.json()).resolves.toEqual({ error: "Предложение не найдено" });
     }
   });
 

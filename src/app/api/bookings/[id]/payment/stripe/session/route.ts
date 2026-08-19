@@ -13,6 +13,7 @@ import {
 } from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { publicApiError } from "@/lib/public-api/safe-error";
+import { rejectIfOwnPaymentDisabled } from "@/lib/payments/own-payment-gate";
 
 type CreateSessionBody = {
   paymentLinkToken?: string;
@@ -25,6 +26,9 @@ export async function POST(
   if (!isSupabaseBookingsEnabled()) {
     return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
   }
+
+  const ownPaymentBlocked = rejectIfOwnPaymentDisabled();
+  if (ownPaymentBlocked) return ownPaymentBlocked;
 
   const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
   if (!secretKey || !isStripeConfigured()) {

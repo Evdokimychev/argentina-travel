@@ -5,7 +5,7 @@ import {
   organizerCanAccessBooking,
 } from "@/lib/bookings-server";
 import { fetchOrganizerTripPrepSummary } from "@/lib/trip-prep-server";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { userHasAccountRole } from "@/types/user";
@@ -31,7 +31,7 @@ export async function GET(
     return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
   }
 
-  const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+  const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
   if (!organizerCanAccessBooking(booking, sessionUser.id, slugs)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

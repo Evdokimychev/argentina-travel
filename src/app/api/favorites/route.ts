@@ -10,6 +10,7 @@ import {
   upsertUserFavoriteRows,
   type FavoriteItemInput,
 } from "@/lib/favorites-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type FavoriteRequestBody = {
   itemType?: unknown;
@@ -60,11 +61,8 @@ export async function GET() {
     const rows = await listUserFavoriteRows(supabase, sessionUser.id);
     const favorites = await hydrateUserFavorites(rows);
     return NextResponse.json({ favorites });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -91,11 +89,8 @@ export async function POST(request: Request) {
 
     await upsertUserFavoriteRows(supabase, sessionUser.id, items);
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -126,10 +121,7 @@ export async function DELETE(request: Request) {
     });
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

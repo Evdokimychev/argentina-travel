@@ -20,6 +20,8 @@ const COUNTRY_FLAGS: Record<GeoCountryCode, string> = {
   US: "🇺🇸",
   CL: "🇨🇱",
   PE: "🇵🇪",
+  UY: "🇺🇾",
+  PY: "🇵🇾",
 };
 
 export function getCountryFlag(countryCode: GeoCountryCode): string {

@@ -22,6 +22,7 @@ import {
   resolveYouTravelStartCity,
   normalizeYouTravelArrivalCityLabel,
 } from "@/lib/youtravel/partner-tour-locations";
+import { resolvePartnerPublicCardText } from "@/lib/partner-tours/content-quality";
 
 function toHtml(value: string | undefined | null): string | undefined {
   const trimmed = value?.trim();
@@ -436,14 +437,15 @@ export function buildYouTravelPartnerContent(
     price_display?: string | null;
   }
 ): PartnerTourContent {
-  const summary =
+  const summary = resolvePartnerPublicCardText(
     plainTextFromRichContent(
       payload.shortDescription ||
         payload.preview_text ||
         payload.previewText ||
         payload.subtitle ||
         payload.annotation,
-    ) || htmlToPlainText(payload.description ?? "").slice(0, 280);
+    ) || htmlToPlainText(payload.description ?? "").slice(0, 280),
+  );
 
   const includedItems = toStringList(payload.included);
   const excludedItems = toStringList(payload.notIncluded ?? payload.not_included);

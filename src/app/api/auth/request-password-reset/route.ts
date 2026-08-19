@@ -6,7 +6,7 @@ import {
   normalizeAuthEmail,
   parseRetryAfterSeconds,
 } from "@/lib/auth-flow";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkSecurityRateLimit, getClientIp } from "@/lib/rate-limit";
 import { hashRateLimitIdentifier } from "@/lib/rate-limit-identifier";
 import { authRedirectUrl } from "@/lib/site-url";
 
@@ -28,7 +28,7 @@ function rateLimitedResponse(retryAfter: number) {
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const ipLimit = await checkRateLimit(`auth:password-reset:ip:${ip}`, 5, 10 * 60_000);
+  const ipLimit = await checkSecurityRateLimit(`auth:password-reset:ip:${ip}`, 5, 10 * 60_000);
   if (!ipLimit.ok) {
     return rateLimitedResponse(ipLimit.retryAfterSec);
   }
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     }
 
     const emailHash = hashRateLimitIdentifier("auth-password-reset", email);
-    const emailLimit = await checkRateLimit(
+    const emailLimit = await checkSecurityRateLimit(
       `auth:password-reset:email:${emailHash}`,
       3,
       15 * 60_000,

@@ -5,6 +5,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { userHasAccountRole } from "@/types/user";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET() {
   if (!isSupabaseToursEnabled()) {
@@ -18,10 +19,7 @@ export async function GET() {
     }
     const entries = await fetchOrganizerWaitlist(createSupabaseAdminClient(), user.id);
     return NextResponse.json({ entries });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Не удалось загрузить лист ожидания" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

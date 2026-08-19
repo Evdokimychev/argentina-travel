@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { userHasAccountRole } from "@/types/user";
 
 type DeleteRequestBody = {
@@ -86,10 +87,7 @@ export async function POST(request: Request) {
       status: data.status,
       requestedAt: data.requested_at,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

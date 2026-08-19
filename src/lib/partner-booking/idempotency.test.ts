@@ -43,7 +43,7 @@ describe("partner booking idempotency", () => {
     expect(source).toContain('request.headers.get("idempotency-key")');
     expect(source).toContain("claimPartnerBookingOperation");
     expect(source).toContain("completePartnerBookingOperation");
-    expect(source).toContain("checkRateLimit(");
+    expect(source).toContain("checkSecurityRateLimit(");
     expect(source).toContain("excursions:partner-booking:ip:");
     expect(source).toContain("affiliate_only");
     expect(source).not.toContain("createSputnik8Order");

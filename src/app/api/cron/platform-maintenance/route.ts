@@ -12,7 +12,11 @@ type Subtask = {
   when?: (now: Date) => boolean;
 };
 
-/** Subtasks for the daily Hobby cron (vercel.json: once per day). Manual POST still works anytime. */
+/**
+ * Subtasks for the daily Hobby cron (vercel.json: `0 3 * * *` UTC).
+ * Manual GET with CRON_SECRET still works anytime.
+ * Do not document this orchestrator as hourly — Vercel Hobby is daily.
+ */
 const SUBTASKS: Subtask[] = [
   { key: "typing", path: "/api/cron/messaging/cleanup-typing" },
   { key: "privacyProcess", path: "/api/cron/privacy/process" },

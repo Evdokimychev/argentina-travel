@@ -77,4 +77,5 @@ export const POST = withRateLimit(postRegister, {
   keyPrefix: "auth:register",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток регистрации. Попробуйте позже.",
+  policy: "security_critical",
 });

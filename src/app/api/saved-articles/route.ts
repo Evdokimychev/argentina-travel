@@ -9,6 +9,7 @@ import {
   rowsToSavedArticles,
   upsertSavedArticleRow,
 } from "@/lib/saved-articles-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET() {
   if (!isSupabaseAuthEnabled()) {
@@ -24,11 +25,8 @@ export async function GET() {
 
     const rows = await listUserSavedArticleRows(supabase, sessionUser.id);
     return NextResponse.json({ articles: rowsToSavedArticles(rows) });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -52,11 +50,8 @@ export async function POST(request: Request) {
 
     await upsertSavedArticleRow(supabase, sessionUser.id, article);
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -80,10 +75,7 @@ export async function DELETE(request: Request) {
 
     await deleteSavedArticleRow(supabase, sessionUser.id, slug);
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

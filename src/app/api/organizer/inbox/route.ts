@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   fetchOrganizerInbox,
   markOrganizerInboxRead,
@@ -9,6 +9,7 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { OrganizerInboxFilter } from "@/types/organizer-inbox";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { userHasAccountRole } from "@/types/user";
 
 const FILTERS: OrganizerInboxFilter[] = ["all", "unread", "bookings", "reviews", "payments"];
@@ -35,7 +36,7 @@ export async function GET(request: Request) {
 
     const url = new URL(request.url);
     const filter = parseFilter(url.searchParams.get("filter"));
-    const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+    const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
     const { items, unreadCount } = await fetchOrganizerInbox(
       supabase,
       sessionUser.id,
@@ -44,11 +45,8 @@ export async function GET(request: Request) {
     );
 
     return NextResponse.json({ items, unreadCount });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -72,7 +70,7 @@ export async function PATCH(request: Request) {
     };
 
     if (body.markAll) {
-      const slugs = getOrganizerCatalogSlugs(sessionUser.id);
+      const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
       const { items } = await fetchOrganizerInbox(supabase, sessionUser.id, slugs, {
         filter: "unread",
         limit: 500,
@@ -103,10 +101,7 @@ export async function PATCH(request: Request) {
     }
 
     return NextResponse.json({ error: "Укажите itemKey или itemKeys" }, { status: 400 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

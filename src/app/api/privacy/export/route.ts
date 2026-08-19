@@ -3,6 +3,7 @@ import { clientIpFromRequest, writeCriticalAdminAuditLog } from "@/lib/admin/aud
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { buildUserPrivacyExport } from "@/lib/privacy/export-user-data";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 
 export async function POST(request: Request) {
@@ -40,10 +41,7 @@ export async function POST(request: Request) {
         "Content-Disposition": `attachment; filename="privacy-export-${sessionUser.id}.json"`,
       },
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

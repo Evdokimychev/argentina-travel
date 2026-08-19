@@ -16,6 +16,7 @@ import { notifyBookingStatusChanged } from "@/lib/bookings-notify";
 import type { BookingStatus } from "@/types/tourist";
 import { normalizeBooking, createStatusChange } from "@/lib/bookings-store";
 import { bookingToRow } from "@/lib/bookings-db-mapper";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 import {
   dispatchPartnerBookingWebhookEvent,
   resolvePartnerWebhookEventByStatus,
@@ -27,6 +28,7 @@ import {
   isBookingPaymentLinkExpired,
 } from "@/lib/booking-payment-link";
 import { canIssuePaymentLinkForBookingStatus } from "@/lib/payments/payment-integrity";
+import { rejectIfOwnPaymentDisabled } from "@/lib/payments/own-payment-gate";
 
 type PatchBody = {
   action?: "update_status" | "add_comment" | "cancel" | "create_payment_link";
@@ -59,11 +61,10 @@ export async function GET(
     }
 
     return NextResponse.json({ booking });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), {
+      status: 503,
+    });
   }
 }
 
@@ -273,6 +274,9 @@ export async function PATCH(
     }
 
     if (body.action === "create_payment_link") {
+      const ownPaymentBlocked = rejectIfOwnPaymentDisabled();
+      if (ownPaymentBlocked) return ownPaymentBlocked;
+
       const allowed = assertBookingMutationAllowed(current, sessionUser, "manage");
       if ("error" in allowed) {
         return NextResponse.json({ error: allowed.error }, { status: 403 });
@@ -335,9 +339,8 @@ export async function PATCH(
       error: error instanceof Error ? error.message : "Unexpected error",
     });
     captureException(error, { tags: { area: "booking", action: "patch" }, extra: { bookingId: id } });
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+    return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), {
+      status: 503,
+    });
   }
 }

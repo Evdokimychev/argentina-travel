@@ -331,3 +331,26 @@
 - Decision: partner failures may retain raw text only inside the result used for classification and the unchanged fallback/persistence flow. Structured logs accept a compile-time allowlisted source and emit only `source`, normalized `errorClass` and `retryable`; compatibility exceptions contain only `<source>_unavailable:<errorClass>`. External Orders follows the same boundary. Checkout URL, affiliate wrapping, idempotency, persistence and public error behavior are unchanged.
 - Evidence: before WP-026, the shared logger serialized `result.message`, Tripster/YouTravel wrappers rethrew it, and External Orders logged `error.details`. Exact `966be464` passes 33 focused tests, 2 135 full tests, 31 evidence contracts and a 929/929 protected build. Real quota faults during data collection, prerender and local runtime expose only bounded fields; secret-marker tests reject token/email/password transit. Browser QA covers real YouTravel and Tripster details without overlay or console errors.
 - Consequence: P1-GA-022/R-034 are mitigated on the local exact candidate, not production-closed. Vercel rejected the SHA with `Account is blocked`, old production retains the legacy logger, and same-artifact remote proof remains required. Two default recovery-smoke timeouts are tracked separately as P1-GA-023/WP-027; a 60-second diagnostic pass does not justify relaxing the 15-second gate.
+
+## D-051 — Iteration 4 launch verdict is NO-GO
+
+- Date: 2026-08-19
+- Decision: after the four-iteration series, declare **NO-GO**. Do not relabel as CONDITIONAL GO while production health is 503, backup restore is unproven, and main/RC/production SHAs cannot be unified.
+- Reason: GO criteria require healthy production+DB, proven critical persist journeys, live RLS, and a restore path. Those remain external.
+- Evidence: `docs/project-governance/iteration4-final-release/FINAL_LAUNCH_DECISION.md`; live health SHA `81055b13`; backup run 32110333785 failed on empty secrets.
+- Consequence: no paid traffic; keep I4 RC as the merge lineage after owner clears quota, pooler, Vercel, and backup.
+
+## D-050 — Canonical topology and two-part data-plane outage (Iteration 1)
+
+- Date: 2026-08-19
+- Decision: treat `uooxrypocahomoqzdvzy` + Vercel team `go-argentina` / project `argentina-travel` as the only production pair. REST 402 `exceed_egress_quota` and IPv6-only direct Postgres are separate root causes. Prefer a verified same-ref session pooler over `db.<ref>.supabase.co` for serverless IPv4. Do not switch to another Supabase project because it answers.
+- Evidence: production health SHA = `origin/main` `81055b13`; public JWT `ref`; DNS AAAA-only on direct host; pooler IPv4 TCP open; anon REST 402.
+- Consequence: live RLS/migration/restore remain NOT_PROVEN until owner clears quota and adds pooler URL.
+
+## D-052 — Iteration 5 independent certification is NOT CERTIFIED
+
+- Date: 2026-08-19
+- Decision: after a multi-pass inventory, negative tests, and candidate fixes, declare **NOT CERTIFIED**. Do not treat Iteration 4 NO-GO as sufficient cover, and do not invent CERTIFIED WITH CONDITIONS while P0 data-plane and deploy blockers remain.
+- Reason: I5 found launch-relevant defects I1–I4 missed (search empty-as-outage, CORE `error.message`, organizer empty-on-error) and fixed them in candidate only. Production SHA is still `81055b13`.
+- Evidence: `docs/project-governance/iteration5-deep-certification/ITERATION5_FINAL_REPORT.md`
+- Consequence: no paid traffic; merge I5 after I4 lineage only as further hardening, not as a launch flip.
