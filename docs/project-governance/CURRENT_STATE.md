@@ -8,7 +8,7 @@
 | Launch verdict | **NO-GO** — `docs/project-governance/iteration4-final-release/FINAL_LAUNCH_DECISION.md` |
 | `origin/main` tip | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production `gitSha` | `81055b1387e0062301ca9c0ae7468cbf782e2511` (**matches main, not I4 RC**) |
-| I4 RC | `cursor/iteration4-final-release-5475` PR `#33` (contains I1⊂I2⊂I3⊂I4) |
+| I4 RC | `689a28db3c1bdf7397a14666bd3653f9c0783be8` on `cursor/iteration4-final-release-5475` PR `#33` (contains I1⊂I2⊂I3⊂I4) |
 | Production URL | https://www.goargentina.ru (apex 308 → www) |
 | Production health | **DOWN** — 503; DB `dependency_unavailable`; REST **402 exceed_egress_quota**; direct PG **IPv6-only ENETUNREACH** |
 | Canonical Vercel | team `go-argentina` / project `argentina-travel` / env `Production – argentina-travel` |

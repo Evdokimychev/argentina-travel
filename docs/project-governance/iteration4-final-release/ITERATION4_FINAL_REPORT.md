@@ -31,7 +31,7 @@ I3 leftover that I4 fixed: three money FAQs failed `--strict-provenance` (`expir
 |------|-----|
 | `origin/main` | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production health `gitSha` | same |
-| I4 RC | this branch HEAD (not main) |
+| I4 RC |  (not main) |
 
 Prompt asked for one SHA everywhere. That reconciliation is **impossible**
 without merging and a Vercel production deploy. Doing either from this agent
