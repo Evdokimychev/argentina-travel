@@ -11,4 +11,8 @@ npm run production-smoke # against SMOKE_BASE_URL / production
 
 Domain deep-dives stay available as `npm run quality:<group>` (aliases into `release:gate --group`).
 
-Generated: 2026-08-18T00:39:50.313Z
+Launch status: **NO-GO**. Read `CURRENT_STATE.md` and `iteration4-final-release/FINAL_LAUNCH_DECISION.md` before claiming production-ready.
+
+Incident / release: `docs/project-governance/RELEASE_RUNBOOK.md`.
+
+Generated: 2026-08-19T04:45:00Z

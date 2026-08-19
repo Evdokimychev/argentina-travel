@@ -332,6 +332,14 @@
 - Evidence: before WP-026, the shared logger serialized `result.message`, Tripster/YouTravel wrappers rethrew it, and External Orders logged `error.details`. Exact `966be464` passes 33 focused tests, 2 135 full tests, 31 evidence contracts and a 929/929 protected build. Real quota faults during data collection, prerender and local runtime expose only bounded fields; secret-marker tests reject token/email/password transit. Browser QA covers real YouTravel and Tripster details without overlay or console errors.
 - Consequence: P1-GA-022/R-034 are mitigated on the local exact candidate, not production-closed. Vercel rejected the SHA with `Account is blocked`, old production retains the legacy logger, and same-artifact remote proof remains required. Two default recovery-smoke timeouts are tracked separately as P1-GA-023/WP-027; a 60-second diagnostic pass does not justify relaxing the 15-second gate.
 
+## D-051 — Iteration 4 launch verdict is NO-GO
+
+- Date: 2026-08-19
+- Decision: after the four-iteration series, declare **NO-GO**. Do not relabel as CONDITIONAL GO while production health is 503, backup restore is unproven, and main/RC/production SHAs cannot be unified.
+- Reason: GO criteria require healthy production+DB, proven critical persist journeys, live RLS, and a restore path. Those remain external.
+- Evidence: `docs/project-governance/iteration4-final-release/FINAL_LAUNCH_DECISION.md`; live health SHA `81055b13`; backup run 32110333785 failed on empty secrets.
+- Consequence: no paid traffic; keep I4 RC as the merge lineage after owner clears quota, pooler, Vercel, and backup.
+
 ## D-050 — Canonical topology and two-part data-plane outage (Iteration 1)
 
 - Date: 2026-08-19

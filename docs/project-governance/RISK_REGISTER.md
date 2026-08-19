@@ -1,10 +1,12 @@
 # RISK_REGISTER
 
-> Status column reflects **current main + Iteration 1 probe (2026-08-19)**.  
-> Historical candidate SHAs in Evidence are archival; see `CURRENT_STATE.md` for live facts.
+> Status column reflects **current main + Iteration 4 probe (2026-08-19)**.  
+> Historical candidate SHAs in Evidence are archival; see `CURRENT_STATE.md` for live facts.  
+> Launch verdict: **NO-GO**. I4 code is on PR `#33`, not production.
 
 | ID | Risk | Likelihood | Impact | Evidence | Mitigation | Trigger/owner | State |
 |---|---|---:|---:|---|---|---|---|
+| R-042 | Launch declared GO/CONDITIONAL GO while data plane or restore is unproven | high | critical | I4 live health 503; backup secrets empty; Vercel blocked | keep NO-GO until health 200 + restore rehearsal + one SHA | any GO claim / owner+release | ACTIVE — I4 verdict NO-GO |
 | R-040 | Supabase Data API restricted by spend/quota | high | critical | Production anon JWT → Auth/REST HTTP 402 `exceed_egress_quota` (2026-08-19) | owner: upgrade plan or remove spend cap on `uooxrypocahomoqzdvzy`; health maps to `dependency_quota` | any 402 / owner+billing | BLOCKED_EXTERNAL P0 |
 | R-041 | Direct Postgres hostname is IPv6-only | high | critical | `db.uooxrypocahomoqzdvzy.supabase.co` AAAA-only; IPv4 TCP ENETUNREACH; Vercel health uses verified NON_POOLING direct | add same-ref session pooler URL; resolver prefers verified pooler | Vercel PG ENETUNREACH / ops | BLOCKED_EXTERNAL P0 |
 | R-038 | Dormant shop/forum APIs still accept traffic while UI is launch-clamped | medium | medium | Quarantine used raw CMS; fixed to launch-guarded control plane + fail-closed on settings outage | retain rejectIfPublicModuleQuarantined(control plane) on forum/shop public APIs | unexpected 200 from /api/forum\|/api/shop while unpublished / security | MITIGATED_CODE |

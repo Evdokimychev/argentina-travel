@@ -2,6 +2,9 @@
 
 Краткий чек-лист перед выкладкой в production.
 
+Канонический инцидент/релиз: [`docs/project-governance/RELEASE_RUNBOOK.md`](./project-governance/RELEASE_RUNBOOK.md).
+Итерация 4: production **не готов** (`NO-GO`), пока `/api/health` не 200 и SHA не совпадает с выкладываемым кандидатом.
+
 ## 1. Миграции
 
 ```bash
