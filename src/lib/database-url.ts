@@ -106,15 +106,34 @@ function resolveDatabaseConnectionState(): DatabaseConnectionResolution {
   const fromParts = buildDatabaseUrlFromParts();
   if (fromParts) candidates.push(["POSTGRES_PARTS", fromParts]);
 
+  const verified: Array<{ connectionString: string; diagnostics: DatabaseConnectionDiagnostics }> =
+    [];
+
   for (const [source, value] of candidates) {
     if (!isUsableDatabaseUrl(value)) continue;
 
     const connectionString = value;
     const diagnostics = diagnosticsFor(source, connectionString, expectedProjectRef);
     if (diagnostics.targetStatus === "verified") {
-      return { connectionString, diagnostics };
+      verified.push({ connectionString, diagnostics });
+      continue;
     }
     firstRejected ??= diagnostics;
+  }
+
+  if (verified.length) {
+    const modeRank: Record<DatabaseConnectionDiagnostics["mode"], number> = {
+      // IPv4-reachable serverless path first. Direct `db.<ref>.supabase.co` is
+      // often IPv6-only and returns ENETUNREACH from Vercel.
+      supabase_session_pooler: 0,
+      supabase_transaction_pooler: 1,
+      supabase_direct: 2,
+      other: 3,
+    };
+    verified.sort(
+      (left, right) => modeRank[left.diagnostics.mode] - modeRank[right.diagnostics.mode],
+    );
+    return verified[0]!;
   }
 
   return { connectionString: null, diagnostics: firstRejected };
