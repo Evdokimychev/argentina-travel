@@ -16,6 +16,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { NotificationScope } from "@/types/notifications-hub";
 import { parseUnifiedInboxId } from "@/types/notifications-hub";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { userHasAccountRole } from "@/types/user";
 
 function parseScope(value: string | null, sessionRoles: { roles: string[] }): NotificationScope {
@@ -52,11 +53,8 @@ export async function GET(request: Request) {
     ]);
 
     return NextResponse.json({ items, unreadCount, preferences, scope });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -134,10 +132,7 @@ export async function PATCH(request: Request) {
     }
 
     return NextResponse.json({ error: "Укажите id, itemKey или markAll" }, { status: 400 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

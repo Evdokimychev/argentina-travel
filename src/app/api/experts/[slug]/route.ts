@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchExpertBySlug } from "@/lib/local-experts-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(
   _request: Request,
@@ -16,10 +17,7 @@ export async function GET(
     }
 
     return NextResponse.json(expert);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

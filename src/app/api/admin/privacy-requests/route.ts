@@ -3,6 +3,7 @@ import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { writeCriticalAdminAuditLog, clientIpFromRequest } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database, Json } from "@/types/database";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import type { PrivacyRequestStatus } from "@/types/privacy";
 
 const VALID_STATUSES: PrivacyRequestStatus[] = [
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
   const { data, error } = await query;
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 
   const userIds = Array.from(new Set((data ?? []).map((row) => row.user_id)));
@@ -238,7 +239,7 @@ export async function PATCH(request: Request) {
     .maybeSingle();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 
   if (!data) {

@@ -7,6 +7,7 @@ import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type LinkSuggestionsBody = {
   text?: string;
@@ -65,10 +66,7 @@ export async function POST(request: Request) {
       aiSuggestions,
       aiEnabled: Boolean(process.env.OPENAI_API_KEY?.trim()),
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

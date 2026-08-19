@@ -11,6 +11,7 @@ import {
 } from "@/lib/local-experts-server";
 import type { ExpertInquiryStatus, ExpertStatus } from "@/types/local-experts";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "marketplace.moderation");
@@ -36,11 +37,8 @@ export async function GET(request: Request) {
 
     const experts = await fetchExpertsForAdmin(supabase, { status, limit: 200 });
     return NextResponse.json({ experts });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Query failed" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -119,10 +117,7 @@ export async function PATCH(request: Request) {
     });
 
     return NextResponse.json({ ok: true, status: nextStatus });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Update failed" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

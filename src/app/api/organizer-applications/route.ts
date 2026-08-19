@@ -4,6 +4,7 @@ import { notifyLeadCaptured } from "@/lib/leads-notify";
 import { escapeHtml } from "@/lib/notifications/email-templates";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type OrganizerApplicationBody = {
@@ -180,10 +181,7 @@ export async function POST(request: Request) {
       applicationId: application.id,
       checklist: ["Создайте первый тур"],
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error." },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { fetchOrganizerBookings } from "@/lib/bookings-server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { userHasAccountRole } from "@/types/user";
 
 export async function GET() {
@@ -23,10 +24,7 @@ export async function GET() {
     const bookings = await fetchOrganizerBookings(supabase, sessionUser.id, slugs);
 
     return NextResponse.json({ bookings });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

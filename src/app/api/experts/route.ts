@@ -4,6 +4,7 @@ import {
   parseExpertCatalogFilters,
 } from "@/lib/local-experts-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   try {
@@ -11,10 +12,7 @@ export async function GET(request: Request) {
     const filters = parseExpertCatalogFilters(new URL(request.url).searchParams);
     const experts = await fetchPublishedExperts(supabase, filters);
     return NextResponse.json({ items: experts, total: experts.length });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

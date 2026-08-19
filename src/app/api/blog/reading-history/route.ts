@@ -3,6 +3,7 @@ import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import {
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
   listUserBlogReadingHistoryRows,
   parseBlogReadingHistoryInput,
   recordBlogReadInteraction,
@@ -24,11 +25,8 @@ export async function GET() {
 
     const rows = await listUserBlogReadingHistoryRows(supabase, sessionUser.id);
     return NextResponse.json({ entries: rowsToBlogReadingHistory(rows) });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -54,10 +52,7 @@ export async function POST(request: Request) {
     await recordBlogReadInteraction(supabase, sessionUser.id, entry.slug);
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

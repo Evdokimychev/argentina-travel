@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { NotificationPreferenceItem, NotificationScope } from "@/types/notifications-hub";
 import { userHasAccountRole } from "@/types/user";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 function parseScope(value: unknown): NotificationScope | null {
   return value === "organizer" || value === "tourist" ? value : null;
@@ -37,11 +38,8 @@ export async function GET(request: Request) {
 
     const preferences = await fetchNotificationPreferences(supabase, sessionUser.id, scope);
     return NextResponse.json({ preferences, scope });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -84,10 +82,7 @@ export async function PATCH(request: Request) {
     );
 
     return NextResponse.json({ ok: true, preferences, scope });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

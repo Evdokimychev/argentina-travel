@@ -7,6 +7,7 @@ import { checkSecurityRateLimit, getClientIp, rateLimitErrorResponse } from "@/l
 import { hashRateLimitIdentifier } from "@/lib/rate-limit-identifier";
 import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
 import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -176,10 +177,7 @@ export async function POST(request: Request, context: RouteContext) {
         slotDate: inserted.slot_date,
       },
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

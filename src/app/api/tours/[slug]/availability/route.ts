@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchTourAvailabilityBySlug } from "@/lib/tour-availability-server";
 
@@ -23,10 +24,7 @@ export async function GET(_request: Request, context: RouteContext) {
       slots: availability.slots,
       fallbackFromSeed: availability.slots.some((slot) => slot.source === "seed"),
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

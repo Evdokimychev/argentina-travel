@@ -27,6 +27,11 @@ export function publicApiError(code: PublicApiErrorCode): PublicApiErrorPayload 
   return { code, error: PUBLIC_API_ERROR_MESSAGES[code] };
 }
 
+/** Unexpected catch — never serialize Error.message to the client. */
+export function unexpectedPublicApiError(): PublicApiErrorPayload {
+  return publicApiError("SERVICE_UNAVAILABLE");
+}
+
 export function resolvePublicApiErrorMessage(code: string | null | undefined): string {
   if (code && code in PUBLIC_API_ERROR_MESSAGES) {
     return PUBLIC_API_ERROR_MESSAGES[code as PublicApiErrorCode];

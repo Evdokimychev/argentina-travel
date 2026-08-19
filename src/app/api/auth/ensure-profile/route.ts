@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { profileToSessionUser } from "@/lib/profile-mapper";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 /** Создаёт профиль для текущей auth-сессии, если триггер signup его не создал. */
@@ -55,21 +56,15 @@ async function postEnsureProfile() {
       .single();
 
     if (insertError || !created) {
-      return NextResponse.json(
-        { error: insertError?.message ?? "Не удалось создать профиль" },
-        { status: 500 }
-      );
+      return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
     }
 
     return NextResponse.json({
       ok: true,
       user: profileToSessionUser(created),
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 

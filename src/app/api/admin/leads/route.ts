@@ -3,6 +3,7 @@ import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { assertContactStatusTransition } from "@/lib/admin/lead-crm-transitions";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import type { ContactSubmissionStatus } from "@/types/database";
 
 const STATUSES: ContactSubmissionStatus[] = ["new", "in_progress", "waiting", "resolved", "spam"];
@@ -128,7 +129,7 @@ export async function PATCH(request: Request) {
     .eq("id", body.id)
     .select("id, status, admin_notes, next_action_at, updated_at")
     .maybeSingle();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   if (!data) return NextResponse.json({ error: "Обращение не найдено" }, { status: 404 });
 
   await writeAdminAuditLog({
