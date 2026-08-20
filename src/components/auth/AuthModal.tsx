@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Eye, EyeOff, Mail, Phone, X } from "lucide-react";
@@ -86,6 +86,7 @@ export default function AuthModal() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
+  const submitInFlightRef = useRef(false);
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
@@ -103,6 +104,18 @@ export default function AuthModal() {
     }
     setErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
+
+  function beginAuthSubmit(): boolean {
+    if (submitInFlightRef.current || loading) return false;
+    submitInFlightRef.current = true;
+    setLoading(true);
+    return true;
+  }
+
+  function endAuthSubmit() {
+    submitInFlightRef.current = false;
+    setLoading(false);
+  }
 
   function completeAuthSuccess(
     destination: "/profile" | "/organizer" | "/join#join-application",
@@ -132,6 +145,7 @@ export default function AuthModal() {
 
     setError(null);
     setLoading(false);
+    submitInFlightRef.current = false;
     setDuplicateRegistration(false);
     setResetSent(false);
     setConfirmationEmail(null);
@@ -187,30 +201,33 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
+    if (!beginAuthSubmit()) return;
     setError(null);
 
-    const result = await loginByPhone(phone, targetRole, password.trim());
-    setLoading(false);
+    try {
+      const result = await loginByPhone(phone, targetRole, password.trim());
 
-    if (result.ok) {
-      completeAuthSuccess(
-        targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
-        result.user
-      );
-      return;
+      if (result.ok) {
+        completeAuthSuccess(
+          targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
+          result.user
+        );
+        return;
+      }
+
+      if (result.roleNotConnected && (isOrganizerFlow || targetRole === "organizer")) {
+        setMode("email");
+        setPhoneAuthStep("phone");
+        setOrganizerTab("sign-in");
+        setLoginCredential(formatInternationalPhone(phone));
+        setError(normalizeSiteError("ROLE_NOT_CONNECTED"));
+        return;
+      }
+
+      setError(normalizeSiteError(result.error));
+    } finally {
+      endAuthSubmit();
     }
-
-    if (result.roleNotConnected && (isOrganizerFlow || targetRole === "organizer")) {
-      setMode("email");
-      setPhoneAuthStep("phone");
-      setOrganizerTab("sign-in");
-      setLoginCredential(formatInternationalPhone(phone));
-      setError(normalizeSiteError("ROLE_NOT_CONNECTED"));
-      return;
-    }
-
-    setError(normalizeSiteError(result.error));
   }
 
   async function handleOrganizerUpgradeFromCredentials(
@@ -232,29 +249,32 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
+    if (!beginAuthSubmit()) return;
     setError(null);
     setResetSent(false);
 
-    const result = await requestPasswordReset(targetEmail);
-    setLoading(false);
+    try {
+      const result = await requestPasswordReset(targetEmail);
 
-    if (!result.ok) {
-      if (result.code === "AUTH_RESET_RATE_LIMITED") {
-        const retryAfter = result.retryAfter ?? 60;
-        setResetCooldown(retryAfter);
-        setError({
-          title: "Письмо уже запрошено",
-          description: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
-        });
+      if (!result.ok) {
+        if (result.code === "AUTH_RESET_RATE_LIMITED") {
+          const retryAfter = result.retryAfter ?? 60;
+          setResetCooldown(retryAfter);
+          setError({
+            title: "Письмо уже запрошено",
+            description: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
+          });
+          return;
+        }
+        setError(normalizeSiteError(result.error));
         return;
       }
-      setError(normalizeSiteError(result.error));
-      return;
-    }
 
-    setResetSent(true);
-    setError(passwordResetSentMessage());
+      setResetSent(true);
+      setError(passwordResetSentMessage());
+    } finally {
+      endAuthSubmit();
+    }
   }
 
   async function handleEmailContinue(targetRole = role) {
@@ -275,31 +295,34 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
+    if (!beginAuthSubmit()) return;
     setError(null);
 
-    const result = await loginByEmail(email, password, targetRole);
-    setLoading(false);
+    try {
+      const result = await loginByEmail(email, password, targetRole);
 
-    if (result.ok) {
-      completeAuthSuccess(
-        targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
-        result.user
-      );
-      return;
+      if (result.ok) {
+        completeAuthSuccess(
+          targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
+          result.user
+        );
+        return;
+      }
+
+      if (result.roleNotConnected && targetRole === "organizer") {
+        await handleOrganizerUpgradeFromCredentials(email, password);
+        return;
+      }
+
+      if (result.roleNotConnected && isOrganizerFlow) {
+        await handleOrganizerUpgradeFromCredentials(email, password);
+        return;
+      }
+
+      setError(normalizeSiteError(result.error));
+    } finally {
+      endAuthSubmit();
     }
-
-    if (result.roleNotConnected && targetRole === "organizer") {
-      await handleOrganizerUpgradeFromCredentials(email, password);
-      return;
-    }
-
-    if (result.roleNotConnected && isOrganizerFlow) {
-      await handleOrganizerUpgradeFromCredentials(email, password);
-      return;
-    }
-
-    setError(normalizeSiteError(result.error));
   }
 
   async function handleOrganizerCredentialLogin() {
@@ -314,56 +337,55 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
+    if (!beginAuthSubmit()) return;
     setError(null);
 
-    if (credential.includes("@")) {
-      const login = await loginByEmail(credential, password, "organizer");
-      if (login.ok) {
-        setLoading(false);
-        completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", login.user);
+    try {
+      if (credential.includes("@")) {
+        const login = await loginByEmail(credential, password, "organizer");
+        if (login.ok) {
+          completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", login.user);
+          return;
+        }
+
+        if (login.roleNotConnected) {
+          await handleOrganizerUpgradeFromCredentials(credential, password);
+          return;
+        }
+
+        setError(normalizeSiteError(login.error));
         return;
       }
 
-      if (login.roleNotConnected) {
-        setLoading(false);
-        await handleOrganizerUpgradeFromCredentials(credential, password);
+      const normalized = normalizePhone(credential);
+      if (!normalized) {
+        setError("Введите корректный email или телефон");
         return;
       }
 
-      setLoading(false);
-      setError(normalizeSiteError(login.error));
-      return;
+      const result = await loginByPhone(credential, "organizer", password.trim() || undefined);
+
+      if (result.ok) {
+        completeAuthSuccess("/organizer", result.user);
+        return;
+      }
+
+      if (result.roleNotConnected) {
+        setError("Аккаунт найден. Для подключения роли организатора войдите по email и паролю.");
+        return;
+      }
+
+      if (result.notFound) {
+        setOrganizerTab("register");
+        setPhone(credential);
+        setError(null);
+        return;
+      }
+
+      setError(normalizeSiteError(result.error));
+    } finally {
+      endAuthSubmit();
     }
-
-    const normalized = normalizePhone(credential);
-    if (!normalized) {
-      setLoading(false);
-      setError("Введите корректный email или телефон");
-      return;
-    }
-
-    const result = await loginByPhone(credential, "organizer", password.trim() || undefined);
-    setLoading(false);
-
-    if (result.ok) {
-      completeAuthSuccess("/organizer", result.user);
-      return;
-    }
-
-    if (result.roleNotConnected) {
-      setError("Аккаунт найден. Для подключения роли организатора войдите по email и паролю.");
-      return;
-    }
-
-    if (result.notFound) {
-      setOrganizerTab("register");
-      setPhone(credential);
-      setError(null);
-      return;
-    }
-
-    setError(normalizeSiteError(result.error));
   }
 
   async function handleRegister() {
@@ -388,43 +410,45 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
+    if (!beginAuthSubmit()) return;
     setError(null);
     setDuplicateRegistration(false);
 
-    const result = await register({
-      role: isOrganizerFlow ? "organizer" : role,
-      fullName: registrationName,
-      phone,
-      email,
-      password: nextPassword,
-    });
+    try {
+      const result = await register({
+        role: isOrganizerFlow ? "organizer" : role,
+        fullName: registrationName,
+        phone,
+        email,
+        password: nextPassword,
+      });
 
-    setLoading(false);
-
-    if (result.ok) {
-      completeAuthSuccess(
-        isOrganizerFlow ? "/join#join-application" : "/profile",
-        result.user,
-      );
-      return;
-    }
-
-    if ("confirmationRequired" in result) {
-      setConfirmationEmail(result.email);
-      return;
-    }
-
-    if (result.duplicatePhone || result.duplicateEmail) {
-      setDuplicateRegistration(true);
-      if (isOrganizerFlow) {
-        setOrganizerTab("sign-in");
-      } else {
-        setStep("sign-in");
+      if (result.ok) {
+        completeAuthSuccess(
+          isOrganizerFlow ? "/join#join-application" : "/profile",
+          result.user,
+        );
+        return;
       }
-    }
 
-    setError(normalizeSiteError(result.error));
+      if ("confirmationRequired" in result) {
+        setConfirmationEmail(result.email);
+        return;
+      }
+
+      if (result.duplicatePhone || result.duplicateEmail) {
+        setDuplicateRegistration(true);
+        if (isOrganizerFlow) {
+          setOrganizerTab("sign-in");
+        } else {
+          setStep("sign-in");
+        }
+      }
+
+      setError(normalizeSiteError(result.error));
+    } finally {
+      endAuthSubmit();
+    }
   }
 
   function renderAuthenticatedView() {
