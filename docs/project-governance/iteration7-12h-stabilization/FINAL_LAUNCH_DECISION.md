@@ -5,7 +5,7 @@ Generated: 2026-08-20
 ## DECISION: NO-GO
 
 Candidate branch: `cursor/iteration7-12h-stabilization-5475` (PR #36).  
-Candidate SHA: *(updated on each push; see latest commit on branch)*.
+Candidate SHA: `c46dd7d785de333b8dbc3259b37bdfe8a145fd9c`.
 
 Status lifecycle: **CANDIDATE** (not FINAL production certification).
 
