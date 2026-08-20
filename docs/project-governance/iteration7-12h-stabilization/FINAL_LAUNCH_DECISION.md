@@ -4,6 +4,8 @@ Generated: 2026-08-20
 
 ## DECISION: NO-GO
 
+Candidate SHA: `49636a731fc7d19a1a4921f29c8a20628660457d`
+
 Candidate SHA: 
 
 Status lifecycle: **CANDIDATE** (not FINAL production certification).
