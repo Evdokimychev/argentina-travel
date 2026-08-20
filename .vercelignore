@@ -26,3 +26,6 @@ coverage
 *.tar
 *.tar.gz
 .DS_Store
+
+# Competitor research captures — local only
+research

@@ -3,6 +3,7 @@ import { isSupabaseForumEnabled } from "@/lib/auth-mode";
 import { fetchForumThreadDetail } from "@/lib/forum/forum-server";
 import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(
   request: Request,
@@ -31,10 +32,7 @@ export async function GET(
     }
 
     return NextResponse.json({ thread });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

@@ -21,6 +21,7 @@ import {
   isTravelModulePathEnabled,
 } from "@/lib/public-module-visibility";
 import { matchUrlRedirectEdge } from "@/lib/redirects/url-redirect-edge";
+import { matchLegacyTourPrefixRedirect } from "@/lib/seo/legacy-tour-redirects";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import { getAppRuntimeMode } from "@/lib/runtime-mode";
 import {
@@ -188,6 +189,15 @@ export async function middleware(request: NextRequest) {
         "X-Robots-Tag": "noindex, nofollow",
       },
     });
+  }
+
+  if (request.method === "GET" || request.method === "HEAD") {
+    const legacyTourDestination = matchLegacyTourPrefixRedirect(routePathname);
+    if (legacyTourDestination) {
+      const target = new URL(legacyTourDestination, request.url);
+      target.search = request.nextUrl.search;
+      return NextResponse.redirect(target, 308);
+    }
   }
 
   const redirectLookup =

@@ -97,6 +97,9 @@ jobs:
       - name: Prepare release gate evidence workspace
         run: node scripts/prepare-release-gate-evidence.mjs
 
+      - name: Prepare performance evidence workspace
+        run: node scripts/stage-performance-artifact.mjs --prepare
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
@@ -139,14 +142,17 @@ jobs:
           LIGHTHOUSE_MANAGE_SERVER: "1"
         run: node scripts/lighthouse-phase2-ci.mjs
 
+      - name: Stage performance evidence
+        if: always()
+        run: node scripts/stage-performance-artifact.mjs --stage
+
       - name: Upload performance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: performance-budgets-${{ github.sha }}
           path: |
-            var/ops/lighthouse-phase2-sample-last.json
-            var/ops/lh-*.json
+            var/ops/ci/${{ github.run_id }}/${{ github.sha }}/
           if-no-files-found: error
 
       - name: E2E UX audit

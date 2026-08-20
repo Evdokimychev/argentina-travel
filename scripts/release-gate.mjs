@@ -44,6 +44,7 @@ const groups = {
         "scripts/lib/migration-journal.test.mjs",
         "scripts/lib/ops-report-evidence.test.mjs",
         "scripts/lib/release-gate-artifact.test.mjs",
+        "scripts/lib/redirect-path-patterns.test.mjs",
         "scripts/kb-source-health.test.mjs",
         "scripts/lib/release-gate-content-contract.test.mjs",
         "scripts/lib/release-gate-env.test.mjs",

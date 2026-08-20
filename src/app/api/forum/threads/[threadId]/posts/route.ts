@@ -4,6 +4,7 @@ import { createForumPost } from "@/lib/forum/forum-server";
 import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type PostBody = {
   body?: string;
@@ -64,10 +65,7 @@ export async function POST(
       { post: result.post, categorySlug: result.categorySlug },
       { status: 201 }
     );
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

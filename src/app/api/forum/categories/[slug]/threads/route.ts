@@ -7,6 +7,7 @@ import {
 import { rejectIfPublicModuleQuarantined } from "@/lib/modules/dormant-quarantine";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(
   _request: Request,
@@ -30,11 +31,8 @@ export async function GET(
     }
 
     return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -96,10 +94,7 @@ export async function POST(
     }
 
     return NextResponse.json({ thread: result.thread }, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

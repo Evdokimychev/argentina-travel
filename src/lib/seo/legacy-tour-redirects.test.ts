@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { LEGACY_WP_TOUR_REDIRECTS } from "@/lib/seo/legacy-tour-redirects";
+import {
+  LEGACY_WP_TOUR_REDIRECTS,
+  matchLegacyTourPrefixRedirect,
+} from "@/lib/seo/legacy-tour-redirects";
 
 describe("legacy WordPress tour redirects", () => {
   it("maps known iguazu legacy URLs to the iguazu region landing", () => {
@@ -18,5 +21,15 @@ describe("legacy WordPress tour redirects", () => {
     expect(new Set(sources).size).toBe(sources.length);
     expect(sources).toContain("/st_tour/iguazu-1-day");
     expect(sources).toContain("/st_tour/iguazu-argentina-2-days");
+    expect(sources.every((source) => !/-:path\*/.test(source))).toBe(true);
+  });
+
+  it("matches hyphenated and nested prefix variants in middleware", () => {
+    expect(matchLegacyTourPrefixRedirect("/st_tour/patagonia-10-days")).toBe(
+      "/tours/region/patagonia",
+    );
+    expect(matchLegacyTourPrefixRedirect("/st_tour/buenos-aires-city-tour")).toBe("/tours");
+    expect(matchLegacyTourPrefixRedirect("/st_tour/iguazu-1-day")).toBe("/tours/region/iguazu");
+    expect(matchLegacyTourPrefixRedirect("/st_tour/unknown-tour")).toBeNull();
   });
 });

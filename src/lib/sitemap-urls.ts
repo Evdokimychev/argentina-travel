@@ -46,10 +46,15 @@ import {
   isIndexableInternalPath,
   STABLE_TOUR_LANDING_PATHS,
 } from "@/lib/seo/sitemap-indexability";
+import { withBudgetFallback } from "@/lib/async-budget";
 import type { BlogPost } from "@/types";
 import type { SiteModulesGlobal, SiteNavigationGlobal } from "@/types/site-globals";
 
 export { isIndexableInternalPath, STABLE_TOUR_LANDING_PATHS };
+
+/** Hard ceiling for live sitemap assembly under DB/provider degradation. */
+const SITEMAP_TOTAL_BUDGET_MS = 20_000;
+const SITEMAP_COLLECTOR_BUDGET_MS = 8_000;
 
 function uniquePaths(paths: string[]): string[] {
   return [...new Set(paths)];
@@ -80,74 +85,97 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
 }
 
 export async function collectTourSitemapPaths(): Promise<string[]> {
-  try {
-    const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
-    const slugs = await fetchCutoverPublishedTourSlugs();
-    return uniquePaths([...STABLE_TOUR_LANDING_PATHS, ...slugs.map((slug) => `/tours/${slug}`)]);
-  } catch {
-    return uniquePaths([
-      ...STABLE_TOUR_LANDING_PATHS,
-      ...marketplaceTours.map((tour) => `/tours/${tour.slug}`),
-    ]);
-  }
+  const staticFallback = uniquePaths([
+    ...STABLE_TOUR_LANDING_PATHS,
+    ...marketplaceTours.map((tour) => `/tours/${tour.slug}`),
+  ]);
+
+  return withBudgetFallback(
+    "collectTourSitemapPaths",
+    SITEMAP_COLLECTOR_BUDGET_MS,
+    async () => {
+      try {
+        const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
+        const slugs = await fetchCutoverPublishedTourSlugs();
+        return uniquePaths([...STABLE_TOUR_LANDING_PATHS, ...slugs.map((slug) => `/tours/${slug}`)]);
+      } catch {
+        return staticFallback;
+      }
+    },
+    uniquePaths([...STABLE_TOUR_LANDING_PATHS]),
+  );
 }
 
 export async function collectExcursionSitemapPaths(): Promise<string[]> {
-  const paths = ["/excursions"];
+  const staticFallback = ["/excursions"];
 
-  try {
-    const {
-      fetchExcursionCityServer,
-      fetchExcursionSlugsServer,
-      fetchExcursionsServer,
-    } = await import("@/lib/tripster/excursion-server");
-    const [{ cities, items }, slugs] = await Promise.all([
-      fetchExcursionsServer({ pageSize: 500 }),
-      fetchExcursionSlugsServer(),
-    ]);
+  return withBudgetFallback(
+    "collectExcursionSitemapPaths",
+    SITEMAP_COLLECTOR_BUDGET_MS,
+    async () => {
+      const paths = ["/excursions"];
 
-    const citySlugsWithPublishedExcursions = new Set(
-      items.map((item) => normalizeExcursionCitySlug(item.citySlug, item.cityName).toLowerCase()),
-    );
-    const indexableCities = await Promise.all(
-      cities.map(async (city) => {
-        if (findRuUrlDecision(`/excursions/city/${city.slug}`)) return null;
-        if (!citySlugsWithPublishedExcursions.has(city.slug.toLowerCase())) return null;
-        return (await fetchExcursionCityServer(city.slug)) ? city : null;
-      }),
-    );
+      try {
+        const {
+          fetchExcursionCityServer,
+          fetchExcursionSlugsServer,
+          fetchExcursionsServer,
+        } = await import("@/lib/tripster/excursion-server");
+        const [{ cities, items }, slugs] = await Promise.all([
+          fetchExcursionsServer({ pageSize: 500 }),
+          fetchExcursionSlugsServer(),
+        ]);
 
-    // Partners can expose the same city twice: once with a readable slug and
-    // once with a technical `city-123` alias. Only the readable canonical page
-    // belongs in sitemap, otherwise both pages compete for the same query.
-    const uniqueIndexableCities = new Map<
-      string,
-      NonNullable<(typeof indexableCities)[number]>
-    >();
-    for (const city of indexableCities) {
-      if (!city) continue;
-      const identity = city.name.trim().toLocaleLowerCase("ru-RU");
-      const current = uniqueIndexableCities.get(identity);
-      const isReadableSlug = !/^city-\d+$/i.test(city.slug);
-      const currentIsTechnical = current ? /^city-\d+$/i.test(current.slug) : false;
-      if (!current || (currentIsTechnical && isReadableSlug)) {
-        uniqueIndexableCities.set(identity, city);
+        const citySlugsWithPublishedExcursions = new Set(
+          items.map((item) =>
+            normalizeExcursionCitySlug(item.citySlug, item.cityName).toLowerCase(),
+          ),
+        );
+
+        // Avoid unbounded N+1 under DB degradation: only verify cities that already
+        // appear in the published excursion feed, and cap concurrent lookups.
+        const candidateCities = cities.filter(
+          (city) =>
+            !findRuUrlDecision(`/excursions/city/${city.slug}`) &&
+            citySlugsWithPublishedExcursions.has(city.slug.toLowerCase()),
+        );
+
+        const verifiedCities: typeof candidateCities = [];
+        const concurrency = 8;
+        for (let i = 0; i < candidateCities.length; i += concurrency) {
+          const batch = candidateCities.slice(i, i + concurrency);
+          const settled = await Promise.all(
+            batch.map(async (city) => ((await fetchExcursionCityServer(city.slug)) ? city : null)),
+          );
+          for (const city of settled) {
+            if (city) verifiedCities.push(city);
+          }
+        }
+
+        const uniqueIndexableCities = new Map<string, (typeof verifiedCities)[number]>();
+        for (const city of verifiedCities) {
+          const identity = city.name.trim().toLocaleLowerCase("ru-RU");
+          const current = uniqueIndexableCities.get(identity);
+          const isReadableSlug = !/^city-\d+$/i.test(city.slug);
+          const currentIsTechnical = current ? /^city-\d+$/i.test(current.slug) : false;
+          if (!current || (currentIsTechnical && isReadableSlug)) {
+            uniqueIndexableCities.set(identity, city);
+          }
+        }
+        for (const city of uniqueIndexableCities.values()) {
+          paths.push(`/excursions/city/${city.slug}`);
+        }
+        for (const slug of slugs) {
+          paths.push(`/excursions/${slug}`);
+        }
+      } catch {
+        return staticFallback;
       }
-    }
-    for (const city of uniqueIndexableCities.values()) {
-      paths.push(`/excursions/city/${city.slug}`);
-    }
-    for (const slug of slugs) {
-      paths.push(`/excursions/${slug}`);
-    }
 
-    // Partner guide IDs currently resolve inconsistently and previously added
-    // stable 404s to sitemap. Re-enable only from a publication-aware detail source.
-  } catch {
-    // static /excursions only
-  }
-
-  return uniquePaths(paths);
+      return uniquePaths(paths);
+    },
+    staticFallback,
+  );
 }
 
 export async function collectApartmentSitemapPaths(): Promise<string[]> {
@@ -312,28 +340,55 @@ export function filterSitemapPathsByPublicSettings(
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
-  const contentUpdatedAt = new Map(
-    getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt])
-  );
-  const blogCatalog = await collectBlogSitemapCatalog();
-  const blogUpdatedAt = new Map(blogCatalog.map((post) => [`/blog/${post.slug}`, post.date]));
-  const blogPostsBySlug = new Map(blogCatalog.map((post) => [post.slug, post]));
-  const legalUpdatedAt = new Map(
-    Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
-  );
+  const staticCorePaths = uniquePaths([
+    ...YANDEX_PRIORITY_HUB_PATHS,
+    ...STABLE_TOUR_LANDING_PATHS,
+    "/excursions",
+    "/blog",
+    "/places",
+    "/guide",
+    "/baza-znaniy",
+    "/contacts",
+  ]).filter(isIndexableInternalPath);
 
-  const controlPlane = await fetchSiteControlPlaneEdge();
-  const visiblePaths = filterSitemapPathsByPublicSettings(
-    await collectSitemapPaths({ blogCatalog }),
-    controlPlane.navigation,
-    controlPlane.modules,
-  );
-  const paths = expandI18nSitemapPaths(visiblePaths);
+  return withBudgetFallback(
+    "buildSitemapEntries",
+    SITEMAP_TOTAL_BUDGET_MS,
+    async () => {
+      const contentUpdatedAt = new Map(
+        getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt]),
+      );
+      const blogCatalog = await collectBlogSitemapCatalog();
+      const blogUpdatedAt = new Map(blogCatalog.map((post) => [`/blog/${post.slug}`, post.date]));
+      const blogPostsBySlug = new Map(blogCatalog.map((post) => [post.slug, post]));
+      const legalUpdatedAt = new Map(
+        Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt]),
+      );
 
-  return paths.map((path) => {
-    const lastModified =
-      contentUpdatedAt.get(path) ?? blogUpdatedAt.get(path) ?? legalUpdatedAt.get(path);
-    const priority = getBlogSitemapPriority(path, blogPostsBySlug);
-    return toSitemapEntry(path, lastModified, priority);
-  });
+      const controlPlane = await withBudgetFallback(
+        "sitemap.controlPlane",
+        4_000,
+        () => fetchSiteControlPlaneEdge(),
+        null,
+      );
+
+      const collected = await collectSitemapPaths({ blogCatalog });
+      const visiblePaths = controlPlane
+        ? filterSitemapPathsByPublicSettings(
+            collected,
+            controlPlane.navigation,
+            controlPlane.modules,
+          )
+        : filterRuSitemapPaths(collected).filter(isIndexableInternalPath);
+      const paths = expandI18nSitemapPaths(visiblePaths);
+
+      return paths.map((path) => {
+        const lastModified =
+          contentUpdatedAt.get(path) ?? blogUpdatedAt.get(path) ?? legalUpdatedAt.get(path);
+        const priority = getBlogSitemapPriority(path, blogPostsBySlug);
+        return toSitemapEntry(path, lastModified, priority);
+      });
+    },
+    staticCorePaths.map((path) => toSitemapEntry(path)),
+  );
 }

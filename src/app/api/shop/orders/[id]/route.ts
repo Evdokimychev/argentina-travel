@@ -3,6 +3,7 @@ import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import { canAccessShopOrder, fetchShopOrderById } from "@/lib/shop-order-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -38,10 +39,7 @@ export async function GET(_request: Request, context: RouteContext) {
     }
 
     return NextResponse.json({ order });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
