@@ -9,7 +9,7 @@
 | Launch verdict | **NO-GO** — `docs/project-governance/iteration7-12h-stabilization/FINAL_LAUNCH_DECISION.md` |
 | `origin/main` tip | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production `gitSha` | `81055b13` (matches main; not I7 candidate) |
-| I7 candidate | `cursor/iteration7-12h-stabilization-5475` (I5+I6 cumulative + I7 fixes) |
+| I7 candidate |  @ `cursor/iteration7-12h-stabilization-5475` (I5+I6 cumulative + I7 fixes) |
 | Prior I6 PR | `#35` — contracts PASS; release FAIL on invalid `:path*` (fixed in I7) |
 | `audit:quick` on I7 | 504 files / 2464 tests PASS |
 | Local clean `next build` | PASS (CI placeholder env) |

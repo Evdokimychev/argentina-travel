@@ -4,6 +4,8 @@ Generated: 2026-08-20
 
 ## DECISION: NO-GO
 
+Candidate SHA: 
+
 Status lifecycle: **CANDIDATE** (not FINAL production certification).
 
 Internal release blockers from I6 CI are fixed in this branch. Live data plane / production cutover remain blocked externally.
