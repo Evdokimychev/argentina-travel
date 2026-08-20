@@ -5,6 +5,8 @@ question: "Безопасно ли путешествовать по Арген�
 short_answer: "Большинство поездок проходит без серьёзных инцидентов, но обещать «безопасную страну» нельзя. Актуальные официальные рекомендации предупреждают о кражах, выхватывании телефонов и сумок, вооружённых ограблениях и отдельных городских зонах риска; в природных районах добавляются погода, высота и удалённость."
 topic: bezopasnost
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [безопасность, кражи, экстренные контакты]
 related: [bezopasnost-argentina]

@@ -5,7 +5,8 @@ subtype: finance
 title: "Как рассчитать стоимость жизни в Буэнос-Айресе"
 summary: "Методика личного бюджета с официальной базой по аренде и инфляции, без универсальной долларовой суммы."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 seo_slug: "stoimost-zhizni-buenos-aires"
 site_sections: [finansy-i-ekonomika, zhizn-v-strane, goroda-i-regiony]
 applies_to: both

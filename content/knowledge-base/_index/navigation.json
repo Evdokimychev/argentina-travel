@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17 00:00",
+  "generated_at": "2026-08-19 00:00",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -3517,6 +3517,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Въезд в Аргентину для граждан России"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
         },
         {
           "id": "viza-v-braziliyu-dlya-iguasu",
@@ -7660,6 +7666,12 @@
           "title": "Статус цифрового кочевника — не автоматический путь к ВНЖ"
         },
         {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
+        },
+        {
           "id": "vnzh-argentina",
           "type": "guide",
           "subtype": "immigration",
@@ -8071,6 +8083,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Въезд в Аргентину для граждан России"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
         },
         {
           "id": "vnzh-argentina",

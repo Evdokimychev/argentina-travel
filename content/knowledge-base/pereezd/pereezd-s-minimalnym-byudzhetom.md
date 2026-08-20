@@ -7,7 +7,8 @@ title_es: "Mudanza con presupuesto limitado"
 aliases: ["переезд с маленьким бюджетом", "минимальный бюджет переезда", "сколько нужно чтобы переехать одному", "переезд студента", "финансовый запас на переезд"]
 summary: "Методика личного расчёта: жильё, базовые расходы, страховка, стартовые платежи и резерв на выезд. Без обещания, что одной фиксированной суммы хватит каждому."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [pereezd-v-argentinu, finansy-i-ekonomika]
 applies_to: relocant
 tags: [бюджет, переезд, работа, риски, экономия]

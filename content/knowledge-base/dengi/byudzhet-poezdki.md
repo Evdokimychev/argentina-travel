@@ -5,7 +5,8 @@ subtype: finance
 title: "Бюджет поездки по Аргентине"
 summary: "Воспроизводимая методика сметы: маршрут по дням, жильё, внутренний транспорт, парки, экскурсии, еда, платёжные комиссии и резерв — без быстро устаревающих сумм «на человека»."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 provenance:
   schema_version: 1
   mode: strict

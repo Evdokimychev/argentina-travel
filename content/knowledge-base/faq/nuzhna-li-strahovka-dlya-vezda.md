@@ -5,6 +5,8 @@ question: "Нужна ли медицинская страховка для по
 short_answer: "Да: после DNU 366/2025 закон требует от иностранца при въезде заявить, что у него есть медицинская страховка. Единый обязательный лимит покрытия в долларах в опубликованной норме не указан; полис и способ его проверки нужно сверять перед вылетом."
 topic: medicina
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine, pereezd-v-argentinu]
 tags: [здоровье, документы, страховка]
 related: [medicina-i-strahovka, kak-dobratsya-iz-rossii, bezopasnost-argentina, viza-i-granica-dlya-rossiyan]

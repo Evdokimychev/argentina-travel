@@ -5,6 +5,8 @@ question: "Что такое dólar MEP в Аргентине и зачем он
 short_answer: "Dólar MEP — не отдельная валюта и не обменный пункт, а подразумеваемый курс операций с ценными бумагами, которые покупают за песо и продают с расчётом в долларах внутри Аргентины. Для него нужен счёт у зарегистрированного участника рынка, а итог зависит от цены бумаг, комиссий и действующих правил."
 topic: dengi
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 tags: [деньги, валюта, MEP, инвестиции]
 related: [kak-menyat-valyutu, bankovskij-schet]

@@ -5,6 +5,8 @@ question: "Можно ли иностранцу открыть банковск�
 short_answer: "Да, постоянная резиденция и пластиковый DNI не всегда обязательны: официальная cuenta para migrantes доступна с действующей precaria, transitoria, temporaria или permanente и подходящим документом личности. Но обычный турист без миграционного сертификата под этот официальный продукт не подпадает."
 topic: dengi
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 tags: [деньги, банковский счёт, мигранты, документы]
 related: [bankovskij-schet, dni-cuil]

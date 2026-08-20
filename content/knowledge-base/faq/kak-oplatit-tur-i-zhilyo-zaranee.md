@@ -5,6 +5,8 @@ question: "Как оплатить тур, отель или экскурсию 
 short_answer: "Запросите у продавца официальный договор или подтверждение брони и доступные способы оплаты именно для вашего заказа. Обычно нужен законно оформленный иностранный платёжный инструмент, официальный посредник или вариант оплаты на месте; перевод частному лицу и обещание «оплаты в рублях» нельзя считать универсальным решением."
 topic: dengi
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [деньги, оплата, бронирование, карты РФ, тур]
 related: [kak-menyat-valyutu, kak-platit-esli-karta-rf-ne-rabotaet, banki-i-perevody, stoit-li-ehat-v-argentinu]

@@ -5,6 +5,8 @@ question: "Что делать, если в Аргентине «полицей�
 short_answer: "Не передавайте наличные, карту, PIN-код или телефон для «проверки» и не идите к банкомату. Не сопротивляйтесь физически: держите руки на виду, спокойно попросите удостоверение и объяснение, перейдите в людное место и, если это безопасно, самостоятельно позвоните 911 для проверки и помощи."
 topic: bezopasnost
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [безопасность, мошенничество, полиция, наличные]
 related: [bezopasnost-argentina]

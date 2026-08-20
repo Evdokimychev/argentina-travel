@@ -15,6 +15,8 @@ Lifecycle: **CANDIDATE** (pre-production)
 4. **platform-maintenance** failed closed on first subtask error / non-JSON.
 5. **~1 GiB research screenshots** tracked despite docs saying ignored.
 6. **Dormant forum/shop** still leaked `error.message` on unexpected failures.
+7. **Knowledge strict-provenance calendar debt** (64/90) — I4 refreshed three BNA FAQs; 26 other sensitive candidates drifted past 30 days.
+8. **Vercel account-level deploy block** — distinct from app build TypeError; must not be reported as “Vercel OK”.
 
 ## Fixes shipped
 
@@ -25,7 +27,9 @@ Lifecycle: **CANDIDATE** (pre-production)
 - Cron orchestrator isolation + TTL documentation
 - Research dump untrack + ignore guards
 - Safe errors on forum/shop + admin experts DB path
-- Inventory refresh; `audit:quick` **504 files / 2464 tests PASS**
+- Honest KB quarantine of 26 stale sensitive candidates (`site_ready: false`, no fake date bump)
+- Product-surface inventory regenerate
+- Inventory refresh; `audit:quick` previously **504 files / 2464 tests PASS**
 - Local clean `next build` PASS with CI placeholder env
 
 ## Metrics
@@ -36,9 +40,10 @@ Lifecycle: **CANDIDATE** (pre-production)
 | API handlers | 309 |
 | Cron routes / schedules | 22 / 4 |
 | Migrations | 111 |
-| Tests (audit:quick) | 2464 pass |
-| Issues found (I7) | P0×2, P1×3, P2×2 (fixed in candidate) |
-| Remaining external | Supabase, live RLS, backup, deploy |
+| Tests (audit:quick) | 2464 pass (pre-quarantine revision) |
+| Issues found (I7) | P0×4, P1×4, P2×2 (fixed or documented in candidate) |
+| Remaining external | Supabase, Vercel account, live RLS, backup, deploy |
+| Strict provenance | 64/64 after quarantine |
 
 ## Evidence index
 
@@ -46,5 +51,6 @@ Lifecycle: **CANDIDATE** (pre-production)
 - `CI_EVIDENCE_INTEGRITY.md`
 - `CRON_SLA_MATRIX.md`
 - `REPO_BUILD_EFFICIENCY.md`
+- `PROVENANCE_QUARANTINE.md`
 - `FINAL_LAUNCH_DECISION.md`
 - `FINAL_REAUDIT.md`
