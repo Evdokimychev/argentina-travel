@@ -7,7 +7,8 @@ title_es: "Trabajo remoto: cómo cobrar del exterior"
 aliases: ["удалённая работа оплата", "получать зарплату из-за рубежа", "Payoneer Аргентина", "Deel Wise Аргентина", "factura E", "cobrar en dolares", "фриланс оплата Аргентина"]
 summary: "Безопасная рамка для получения зарубежного дохода: сначала определить вид договора и налоговый статус, затем выбрать доступного провайдера, оформить счёт и провести валютную операцию через разрешённый канал."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 applies_to: relocant
 tags: [удалёнка, оплата, налоги, монотрибуто, курс]

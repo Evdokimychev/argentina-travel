@@ -77,6 +77,7 @@ export default function OrganizerBookingsView() {
   const [waitlistActiveCount, setWaitlistActiveCount] = useState(0);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookingsLoadError, setBookingsLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>(
     BOOKING_STATUSES_ACTIVE.includes(initialStatus as BookingStatusActive)
@@ -94,8 +95,15 @@ export default function OrganizerBookingsView() {
     function refresh() {
       if (isRemoteBookingsMode()) {
         void apiFetchOrganizerBookings()
-          .then(setBookings)
-          .catch(() => setBookings([]));
+          .then((rows) => {
+            setBookingsLoadError(null);
+            setBookings(rows);
+          })
+          .catch(() => {
+            setBookingsLoadError(
+              "Не удалось загрузить заявки. Показанный список может быть неполным.",
+            );
+          });
         return;
       }
       setBookings(getOrganizerBookingsForCabinet(user!.id));
@@ -194,6 +202,14 @@ export default function OrganizerBookingsView() {
             <p className="mt-1 text-sm text-slate">
               Бронирования и лист ожидания по вашим турам и экскурсиям
             </p>
+            {bookingsLoadError ? (
+              <p
+                role="alert"
+                className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+              >
+                {bookingsLoadError}
+              </p>
+            ) : null}
           </div>
           {inboxTab === "bookings" && !isRemoteBookingsMode() ? (
             <OrganizerCreateExternalBookingButton />

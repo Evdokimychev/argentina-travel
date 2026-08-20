@@ -105,24 +105,34 @@ export async function PATCH(
   }
 
   const afterCommitTasks: Promise<unknown>[] = [];
-  if (body.action === "approve") {
-    afterCommitTasks.push(
-      emitNotificationEvent(supabase, {
-        userId: decision.applicant_user_id,
-        dedupeKey: `organizer:application-approved:${decision.application_id}`,
-        eventType: "organizer_application_approved",
-        category: "system",
-        title: "Заявка организатора одобрена",
-        body: "Чек-лист: Создайте первый тур и отправьте его на модерацию.",
-        href: "/organizer/tours?welcome=1",
-        metadata: {
-          application_id: decision.application_id,
-          checklist: ["Создайте первый тур"],
-        } as Json,
-        channels: ["in_app"],
-      }),
-    );
-  }
+  afterCommitTasks.push(
+    emitNotificationEvent(supabase, {
+      userId: decision.applicant_user_id,
+      dedupeKey: `organizer:application-${body.action}:${decision.application_id}`,
+      eventType:
+        body.action === "approve"
+          ? "organizer_application_approved"
+          : "organizer_application_rejected",
+      category: "system",
+      title:
+        body.action === "approve"
+          ? "Заявка организатора одобрена"
+          : "Заявка организатора отклонена",
+      body:
+        body.action === "approve"
+          ? "Чек-лист: Создайте первый тур и отправьте его на модерацию."
+          : reviewNote
+            ? `Заявку пока нельзя одобрить. ${reviewNote}`
+            : "Заявку пока нельзя одобрить. Дополните сведения и подайте заявку снова.",
+      href: body.action === "approve" ? "/organizer/tours?welcome=1" : "/join",
+      metadata: {
+        application_id: decision.application_id,
+        decision: body.action,
+        ...(body.action === "approve" ? { checklist: ["Создайте первый тур"] } : {}),
+      } as Json,
+      channels: ["in_app"],
+    }),
+  );
 
   afterCommitTasks.push(
     notifyOrganizerApplicationReview({

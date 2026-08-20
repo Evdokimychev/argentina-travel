@@ -10,6 +10,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { WaitlistStatus } from "@/types/waitlist";
 import { userHasAccountRole } from "@/types/user";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -33,11 +34,8 @@ export async function GET(_request: Request, context: RouteContext) {
     const entry = await fetchOrganizerWaitlistEntry(auth.admin, auth.user.id, id);
     if (!entry) return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
     return NextResponse.json({ entry });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Не удалось загрузить заявку" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
 
@@ -77,7 +75,10 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (!entry) return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
     return NextResponse.json({ entry });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Не удалось обновить заявку";
-    return NextResponse.json({ error: message }, { status: message === "Недопустимый переход статуса" ? 409 : 500 });
+    const message = error instanceof Error ? error.message : "";
+    if (message === "Недопустимый переход статуса") {
+      return NextResponse.json({ error: message }, { status: 409 });
+    }
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

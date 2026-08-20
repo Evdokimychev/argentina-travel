@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { MessageSenderRole } from "@/types/messages";
 import { userHasAccountRole } from "@/types/user";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 function parseRole(raw: string | null, defaultRole: MessageSenderRole): MessageSenderRole {
   if (raw === "organizer" || raw === "tourist") return raw;
@@ -58,10 +59,7 @@ export async function GET(request: Request) {
       limit,
     });
     return NextResponse.json(summary);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

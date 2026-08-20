@@ -6,6 +6,7 @@ import {
 } from "@/lib/messaging/conversation-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type PostBody = {
   messageIds?: string[];
@@ -47,10 +48,7 @@ export async function POST(
     }
 
     return NextResponse.json({ marked: result.marked });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

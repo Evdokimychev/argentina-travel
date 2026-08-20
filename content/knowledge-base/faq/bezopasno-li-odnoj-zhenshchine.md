@@ -5,6 +5,8 @@ question: "Безопасно ли путешествовать по Арген�
 short_answer: "Сольная поездка возможна, но ответ не должен сводиться к «да, всё безопасно». Нужны проверенное жильё и транспорт, план вечернего возвращения, защита напитка и контакты помощи: 911 при непосредственной угрозе и круглосуточная бесплатная линия 144 для консультации при гендерном насилии."
 topic: bezopasnost
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine]
 tags: [безопасность, соло-путешествие, женщины]
 related: [bezopasnost-argentina]

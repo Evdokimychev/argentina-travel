@@ -17,4 +17,5 @@ export const POST = withRateLimit(postLookupEmail, {
   keyPrefix: "auth:lookup-email",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток. Попробуйте позже.",
+  policy: "security_critical",
 });

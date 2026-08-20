@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-08-19T04:07:49.810Z",
+  "pageTemplates": 159,
+  "counts": {
+    "CORE_INDEXABLE": 53,
+    "CORE_NON_INDEXABLE": 96,
+    "POST_LAUNCH": 2,
+    "DORMANT": 7,
+    "LEGACY_REDIRECT": 1
+  }
+}

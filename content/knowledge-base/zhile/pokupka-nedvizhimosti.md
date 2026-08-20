@@ -7,7 +7,8 @@ title_es: "Compra de inmuebles"
 aliases: ["покупка недвижимости Аргентина", "купить квартиру", "недвижимость для иностранцев", "escritura", "escribano", "boleto de compraventa"]
 summary: "Право иностранца купить недвижимость, роль escribano, CDI, escritura pública и отдельные ограничения для сельской земли. Без универсальных процентов и схемы расчёта наличными."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [zhizn-v-strane, finansy-i-ekonomika]
 applies_to: relocant
 tags: [недвижимость, инвестиции, документы, деньги, релокация]

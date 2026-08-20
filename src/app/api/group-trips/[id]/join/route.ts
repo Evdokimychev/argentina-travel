@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { joinGroupTripListing } from "@/lib/group-trips-server";
 import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -34,10 +35,7 @@ export async function POST(_request: Request, context: RouteContext) {
     }
 
     return NextResponse.json({ listing: result.listing });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

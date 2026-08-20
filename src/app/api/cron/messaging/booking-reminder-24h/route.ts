@@ -41,6 +41,12 @@ function formatDateInBuenosAires(date: Date): string {
   }).format(date);
 }
 
+/**
+ * Product semantics under Vercel Hobby daily scheduling:
+ * selects bookings whose start_date equals "tomorrow" in America/Argentina/Buenos_Aires.
+ * This is a calendar-day reminder, not an exact wall-clock T-24h notification.
+ * Exact-hour reminders require a higher-frequency scheduler than Hobby allows.
+ */
 async function runBookingReminderCron(): Promise<NextResponse> {
   const startedAt = Date.now();
   const ranAt = new Date().toISOString();

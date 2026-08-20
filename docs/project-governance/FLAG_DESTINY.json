@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-18",
+  "flags": [
+    {
+      "id": "cmsBlogCutover",
+      "class": "MIGRATION",
+      "default": false,
+      "owner": "content-os",
+      "removalTrigger": "CMS canonical blog proven; delete dual runtime branch"
+    },
+    {
+      "id": "cmsGuideCutover",
+      "class": "MIGRATION",
+      "default": false,
+      "owner": "content-os",
+      "removalTrigger": "Guide CMS canonical proven"
+    },
+    {
+      "id": "cmsDestinationCutover",
+      "class": "MIGRATION",
+      "default": false,
+      "owner": "content-os",
+      "removalTrigger": "Destination CMS parity proven"
+    },
+    {
+      "id": "cmsPlaceCutover",
+      "class": "MIGRATION",
+      "default": false,
+      "owner": "geography",
+      "removalTrigger": "Place ownership ADR + single path"
+    },
+    {
+      "id": "PUBLIC_LAUNCH_SHOW_UNFINISHED",
+      "class": "ROLLBACK_SWITCH",
+      "default": "unset",
+      "owner": "release",
+      "removalTrigger": "Keep permanent for preview; document only"
+    },
+    {
+      "id": "own_payment.productionEnabled",
+      "class": "PERMANENT_CONFIGURATION",
+      "default": false,
+      "owner": "commerce",
+      "removalTrigger": "Flip when payment provider chosen — not a migration flag"
+    },
+    {
+      "id": "DARK_THEME_ENABLED",
+      "class": "EXPERIMENT",
+      "default": false,
+      "owner": "ux",
+      "removalTrigger": "Remove code path if still false after public launch"
+    },
+    {
+      "id": "homepage_recommendations_v2",
+      "class": "EXPERIMENT",
+      "default": "db feature_flags",
+      "owner": "discovery",
+      "removalTrigger": "Delete unused DB rows / code if never activated"
+    },
+    {
+      "id": "api.podbor.narrative",
+      "class": "DEAD_FLAG",
+      "default": "frozen_410",
+      "owner": "discovery",
+      "removalTrigger": "Delete route file after 90d with zero legitimate callers"
+    }
+  ]
+}

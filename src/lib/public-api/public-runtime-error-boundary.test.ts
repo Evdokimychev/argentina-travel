@@ -33,4 +33,39 @@ describe("public runtime error boundary", () => {
     expect(route).not.toContain("Unexpected error");
     expect(route).toContain('publicApiError("SERVICE_UNAVAILABLE")');
   });
+
+  it("keeps unexpected CORE route errors on the allowlisted public payload", () => {
+    const clientLeak = "{ error: error instanceof Error ? error.message";
+    const coreRoutes = [
+      "src/app/api/tours/route.ts",
+      "src/app/api/tours/[slug]/route.ts",
+      "src/app/api/tours/[slug]/availability/route.ts",
+      "src/app/api/tours/[slug]/waitlist/route.ts",
+      "src/app/api/auth/lookup-phone/route.ts",
+      "src/app/api/auth/ensure-profile/route.ts",
+      "src/app/api/organizer-applications/route.ts",
+      "src/app/api/organizer/bookings/route.ts",
+      "src/app/api/organizer/inbox/route.ts",
+      "src/app/api/bookings/route.ts",
+      "src/app/api/bookings/[id]/route.ts",
+      "src/app/api/map/objects/route.ts",
+      "src/app/api/map/layers/route.ts",
+      "src/app/api/notifications/route.ts",
+      "src/app/api/privacy/export/route.ts",
+      "src/app/api/privacy/delete-request/route.ts",
+      "src/app/api/saved-articles/route.ts",
+      "src/app/api/favorites/route.ts",
+      "src/lib/public-api/handlers.ts",
+    ];
+
+    for (const path of coreRoutes) {
+      expect(source(path), path).not.toContain(clientLeak);
+    }
+  });
+
+  it("does not collapse a search catalogue outage into an empty confirmed set", () => {
+    const route = source("src/app/api/search/route.ts");
+    expect(route).not.toContain(".catch(() => ({ items: [], cities: [] }))");
+    expect(route).toContain('status: "unavailable" as const');
+  });
 });

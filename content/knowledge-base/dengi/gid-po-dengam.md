@@ -7,7 +7,8 @@ title_es: "Dinero en Argentina: guía temática"
 aliases: ["всё про деньги Аргентина", "финансы гид", "деньги для туриста и релоканта", "точка входа деньги", "как устроены финансы"]
 summary: "Финансовая карта для туриста и резидента: безопасный обмен, резервные способы оплаты, местный счёт, бюджет, налоги и защита от мошенничества."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika]
 applies_to: both
 tags: [навигация, деньги, финансы, точка входа]

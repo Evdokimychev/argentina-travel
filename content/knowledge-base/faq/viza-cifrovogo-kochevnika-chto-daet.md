@@ -5,6 +5,8 @@ question: "Что даёт статус цифрового кочевника в
 short_answer: "Это residencia transitoria до 180 дней с возможностью продления на такой же срок для удалённой работы в пользу лиц или организаций за пределами Аргентины. Она не превращается в ПМЖ автоматически; как именно этот период учитывается в другом миграционном или гражданском процессе, нужно подтверждать отдельно."
 topic: visa
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, цифровые кочевники]
 related: [viza-cifrovogo-kochevnika, vnzh-argentina, nuzhna-li-viza-cifrovomu-kochevniku]

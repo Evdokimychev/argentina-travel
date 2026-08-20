@@ -1,0 +1,43 @@
+{
+  "before": {
+    "pages": 159,
+    "routeHandlers": 307,
+    "npmScripts": 177,
+    "topLevelAppDomains": 46,
+    "topLevelApiDomains": 55,
+    "useClientFiles": 779,
+    "dependencies": 41,
+    "devDependencies": 20
+  },
+  "after": {
+    "pages": 159,
+    "routeHandlers": 307,
+    "npmScripts": 177,
+    "topLevelAppDomains": 46,
+    "topLevelApiDomains": 55,
+    "useClientFiles": 779,
+    "dependencies": 41,
+    "devDependencies": 20
+  },
+  "deltas": {
+    "pages": 0,
+    "routeHandlers": 0,
+    "npmScripts": 0,
+    "topLevelAppDomains": 0,
+    "topLevelApiDomains": 0
+  },
+  "operationalSurfaceReductions": [
+    "Dormant forum/shop APIs fail-closed against launch clamp (control plane), not raw CMS",
+    "Own-payment new checkout issuance and provider sessions blocked while productionEnabled=false",
+    "Unused /api/podbor/narrative returns 410 (no marketplace/LLM work)",
+    "Sandbox payment probe no longer advertises env when own payment disabled",
+    "Removed 4 dead npm aliases (crawl/fix/sync:instagram*)",
+    "CI wall-clock: contracts || release parallel; Playwright cache",
+    "Agent entry cost: CURRENT_STATE + GOLDEN_PATH + lifecycle registry"
+  ],
+  "intentionallyUnchanged": [
+    "Page/handler counts — no catch-all collapse",
+    "Partner adapter public contracts",
+    "Sprint 1–6 evidence gates (same groups, reorganized for wall-clock)"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-18T00:39:50.409Z",
+  "mainShaHint": "81055b1387e0062301ca9c0ae7468cbf782e2511",
+  "moduleLifecycleCounts": {
+    "CORE": 10,
+    "DORMANT": 4,
+    "POST_LAUNCH": 3,
+    "EXPERIMENTAL": 3,
+    "SUPPORTING": 3
+  },
+  "source": "src/lib/modules/business-lifecycle.ts",
+  "productContract": {
+    "coreNow": [
+      "portal",
+      "destinations",
+      "places",
+      "guide",
+      "knowledge-base",
+      "blog",
+      "tours",
+      "excursions",
+      "map",
+      "booking",
+      "affiliate-handoff",
+      "organizer-cabinet",
+      "admin-operations",
+      "contacts-leads",
+      "analytics-plumbing"
+    ],
+    "frozenPostLaunch": [
+      "shop",
+      "forum",
+      "hotels",
+      "own_payment",
+      "apartments-native"
+    ],
+    "dormantLaunchClamped": [
+      "car-rental",
+      "transfers",
+      "shop",
+      "forum"
+    ],
+    "experimental": [
+      "podbor",
+      "ai-tour-match",
+      "recommendations",
+      "group-trips"
+    ]
+  }
+}

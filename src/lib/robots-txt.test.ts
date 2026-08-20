@@ -16,6 +16,8 @@ describe("robots-txt", () => {
   it("includes disallow paths, sitemap and Yandex Clean-param when indexing enabled", () => {
     const body = buildRobotsTxtBody(true);
     expect(body).toContain("Disallow: /admin/");
+    expect(body).toContain("Disallow: /baza-znaniy/poisk");
+    expect(body).toContain("Disallow: /api/");
     expect(body).toContain("User-agent: Yandex");
     expect(body).toContain(`Clean-param: ${YANDEX_CLEAN_PARAMS}`);
     expect(body).toContain("Sitemap: https://www.goargentina.ru/sitemap.xml");

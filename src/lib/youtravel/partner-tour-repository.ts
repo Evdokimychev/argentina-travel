@@ -41,6 +41,7 @@ import {
 import { resolveYouTravelGroupSize } from "@/lib/youtravel/partner-tour-group-size";
 import { resolveYouTravelThematicTags } from "@/lib/youtravel/partner-tour-tags";
 import { filterFutureTourDates, isFutureOrTodayYmd } from "@/lib/partner-tours/offer-quality";
+import { resolvePartnerPublicCardText } from "@/lib/partner-tours/content-quality";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -138,7 +139,9 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     resolveYouTravelMediaUrl(row.cover_image) ??
     photos[0] ??
     PARTNER_TOUR_FALLBACK_IMAGE;
-  const destination = row.city?.trim() || row.region?.trim() || row.country?.trim() || "Аргентина";
+  const resolvedCountry = row.country?.trim() || undefined;
+  const destination =
+    row.city?.trim() || row.region?.trim() || resolvedCountry || "Аргентина";
   const listingId = youtravelTourListingId(row.id);
   const rawPriceValue =
     row.price_value ??
@@ -184,18 +187,20 @@ export function rowToListing(row: YouTravelTourRow): TourListing {
     slug: row.slug,
     title: row.title,
     shortDescription:
-      plainTextFromRichContent(
-        payload.preview_text ||
-          payload.previewText ||
-          payload.shortDescription ||
-          payload.subtitle ||
-          payload.annotation,
+      resolvePartnerPublicCardText(
+        plainTextFromRichContent(
+          payload.preview_text ||
+            payload.previewText ||
+            payload.shortDescription ||
+            payload.subtitle ||
+            payload.annotation,
+        ),
       ) || row.title,
     image,
     gallery: photos.length ? photos : [image],
     destination,
-    region: row.region?.trim() || row.country?.trim() || "Аргентина",
-    country: row.country?.trim() || undefined,
+    region: row.region?.trim() || resolvedCountry || destination,
+    country: resolvedCountry,
     activityType: resolveActivityType(row),
     durationDays,
     durationNights,

@@ -9,6 +9,12 @@ export const maxDuration = 60;
 
 const CRON_ROUTE = "/api/cron/cms/publish-scheduled";
 
+/**
+ * Publishes CMS documents whose scheduled_at <= now.
+ * Under Vercel Hobby this route is invoked via daily platform-maintenance,
+ * so editorial "exact minute" schedules may publish with up to ~24h latency.
+ * Editors should treat scheduled_at as a day-bucket, not a precise wall clock.
+ */
 export async function GET(request: Request) {
   const auth = authorizeCronRequest(request);
   if (!auth.ok) return auth.response;

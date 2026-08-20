@@ -22,11 +22,8 @@ export async function assertOrganizerTourOwnership(
   if (error) {
     return { ok: false, response: NextResponse.json({ error: error.message }, { status: 500 }) };
   }
-  if (!row) {
-    return { ok: false, response: NextResponse.json({ error: "Тур не найден" }, { status: 404 }) };
-  }
-  if (row.owner_user_id !== organizerId) {
-    return { ok: false, response: NextResponse.json({ error: "Доступ запрещён" }, { status: 403 }) };
+  if (!row || row.owner_user_id !== organizerId) {
+    return { ok: false, response: NextResponse.json({ error: "Предложение не найдено" }, { status: 404 }) };
   }
 
   return { ok: true };

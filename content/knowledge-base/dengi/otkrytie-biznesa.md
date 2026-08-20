@@ -7,7 +7,8 @@ title_es: "Abrir un negocio"
 aliases: ["открыть бизнес Аргентина", "самозанятость", "SAS", "SRL", "регистрация компании"]
 summary: "Безопасный порядок выбора между личной деятельностью и компанией, с учётом юрисдикции регистрации, миграционного статуса, налогов и банковской проверки."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 applies_to: relocant
 tags: [бизнес, самозанятость, налоги, документы]

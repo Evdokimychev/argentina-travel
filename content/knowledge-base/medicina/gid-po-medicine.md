@@ -7,7 +7,8 @@ title_es: "Salud en Argentina: guía temática"
 aliases: ["всё про медицину Аргентина", "здоровье гид", "страховка prepaga", "точка входа медицина", "как лечиться"]
 summary: "Практическая карта медицинской помощи: экстренный маршрут, публичная система, obra social и prepaga, страховка на въезд, лекарства и подготовка хронического пациента."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [zhizn-v-strane]
 applies_to: both
 tags: [навигация, медицина, здоровье, страховка, точка входа]

@@ -4,6 +4,7 @@ import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { attachGuestBookingsToCurrentUser } from "@/lib/bookings-server";
 import { attachGuestShopOrdersByEmail } from "@/lib/shop-order-server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function POST() {
   if (!isSupabaseBookingsEnabled()) {
@@ -34,10 +35,7 @@ export async function POST() {
     );
 
     return NextResponse.json({ attached: attachedBookings, attachedShopOrders });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

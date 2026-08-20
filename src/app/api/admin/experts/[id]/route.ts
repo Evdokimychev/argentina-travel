@@ -5,6 +5,7 @@ import { fetchExpertByIdAdmin } from "@/lib/local-experts-server";
 import type { LocalExpertUpdate } from "@/types/database";
 import type { ExpertCategory } from "@/types/local-experts";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 const VALID_CATEGORIES: ExpertCategory[] = [
   "guide",
@@ -99,10 +100,7 @@ export async function PATCH(
     });
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Update failed" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

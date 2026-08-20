@@ -42,7 +42,7 @@ describe("Sprint 3 performance budgets", () => {
     expect(worker).toContain("disableFullPageScreenshot: true");
   });
 
-  it("keeps the CI budget job blocking and uploads evidence", () => {
+  it("keeps the CI budget job blocking and uploads SHA-bound evidence", () => {
     const workflow = fs.readFileSync(
       path.join(process.cwd(), ".github/workflows/ci.yml"),
       "utf8",
@@ -59,6 +59,10 @@ describe("Sprint 3 performance budgets", () => {
     expect(budgetStep.split("- name: Upload performance evidence")[0]).not.toContain(
       "LIGHTHOUSE_LCP_BUDGET_MS",
     );
-    expect(budgetStep).toContain("lighthouse-phase2-sample-last.json");
+    expect(budgetStep).toContain("stage-performance-artifact.mjs --stage");
+    expect(budgetStep).toContain("var/ops/ci/${{ github.run_id }}/${{ github.sha }}/");
+    expect(budgetStep).not.toMatch(
+      /Upload performance evidence[\s\S]*lighthouse-phase2-sample-last\.json/,
+    );
   });
 });

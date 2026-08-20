@@ -7,7 +7,8 @@ title_es: "Trabajo y búsqueda de empleo"
 aliases: ["работа в Аргентине", "поиск работы", "где искать работу", "зарплаты Аргентина", "резюме", "Bumeran", "Computrabajo", "работа без испанского"]
 summary: "Проверяемая основа поиска работы: право работать с residencia precaria и CUIL, отдельный маршрут trabajador migrante с RENURE и корректная проверка зарплаты без выдуманных долларов и рейтингов профессий."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [pereezd-v-argentinu, finansy-i-ekonomika]
 applies_to: relocant
 tags: [работа, рынок труда, зарплаты, релокация, карьера]

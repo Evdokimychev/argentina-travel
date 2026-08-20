@@ -5,6 +5,8 @@ question: "Сколько стоит оформить резиденцию ил�
 short_answer: "Фиксированной суммы «под ключ» нет. Государственная пошлина зависит от категории и гражданства и публикуется в UMSM или консульских единицах; отдельно оплачиваются документы, апостиль, перевод, страховка и, по желанию, помощь специалиста. Старый ориентир 250 долларов для digital nomad не подтверждается текущим тарифом."
 topic: visa
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, пошлины, бюджет]
 related: [viza-cifrovogo-kochevnika, vnzh-argentina, apostil-i-perevod-dokumentov]

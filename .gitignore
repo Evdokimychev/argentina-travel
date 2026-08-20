@@ -66,3 +66,6 @@ next-env.d.ts
 
 # Local Vercel account migration artifacts (secrets)
 .vercel-migration/
+
+# Local competitor capture dumps (not required for build/runtime)
+/research/third-party/

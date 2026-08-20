@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchPendingOrganizerApplications } from "@/lib/admin/organizer-applications-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "marketplace.moderation");
@@ -14,10 +15,7 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({ applications });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Query failed" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

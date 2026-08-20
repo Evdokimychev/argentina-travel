@@ -182,10 +182,9 @@ export async function GET() {
     return NextResponse.json({
       bookings: byUserId,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), {
+      status: 503,
+    });
   }
 }

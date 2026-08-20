@@ -7,6 +7,7 @@ import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
+import PartnerFeedHealthPanel from "@/components/admin/cms/PartnerFeedHealthPanel";
 import type { AdminOperationsSummary } from "@/types/admin";
 
 type OperationsSummaryResponse = {
@@ -104,6 +105,30 @@ export default function OperationsCommandView() {
           </article>
 
           <article className={cabinetStatCardClass}>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate">CMS</p>
+            <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
+              {loading ? "…" : (summary?.cms.draftCount ?? 0)}
+            </p>
+            <p className="mt-1 text-sm text-slate">
+              Черновики · запланировано: {loading ? "…" : (summary?.cms.scheduledCount ?? 0)}
+            </p>
+            <Link href="/admin/content/documents" className="mt-3 inline-block text-sm text-sky hover:underline">
+              Открыть материалы
+            </Link>
+          </article>
+
+          <article className={cabinetStatCardClass}>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate">Партнёрские ленты</p>
+            <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
+              {loading ? "…" : (summary?.partners.staleOrDownCount ?? 0)}
+            </p>
+            <p className="mt-1 text-sm text-slate">Ленты со сбоем или устаревшим sync</p>
+            <Link href="/admin/system/settings" className="mt-3 inline-block text-sm text-sky hover:underline">
+              Здоровье партнёров
+            </Link>
+          </article>
+
+          <article className={cabinetStatCardClass}>
             <p className="text-xs font-medium uppercase tracking-wide text-slate">Заявки организаторов</p>
             <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
               {loading ? "…" : (summary?.organizerApplications.pendingCount ?? 0)}
@@ -133,6 +158,8 @@ export default function OperationsCommandView() {
             </Link>
           </article>
         </section>
+
+        <PartnerFeedHealthPanel />
 
         <section className={`${cabinetCardClass} p-5`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Быстрые действия</h2>
@@ -169,6 +196,18 @@ export default function OperationsCommandView() {
               className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
             >
               Лиды
+            </Link>
+            <Link
+              href="/admin/content/documents"
+              className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+            >
+              CMS
+            </Link>
+            <Link
+              href="/admin/system/settings"
+              className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+            >
+              Партнёры
             </Link>
             <Link
               href="/admin/operations/email"
