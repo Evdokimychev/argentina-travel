@@ -6,6 +6,7 @@ import {
   getCommissionRuleForBooking,
   listCommissionSnapshotsForBooking,
 } from "@/lib/payments/commission-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { userHasAccountRole } from "@/types/user";
@@ -44,13 +45,7 @@ export async function GET(
     ]);
 
     return NextResponse.json({ snapshots, rule });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Unexpected error while loading commission data",
-      },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
