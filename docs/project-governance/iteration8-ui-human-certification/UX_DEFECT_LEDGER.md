@@ -43,3 +43,6 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 
 | P3-I8-006 | P3 | Share button | Web Share failure left no clipboard feedback | **fixed** AbortError quiet; else copy URL | pass10 |
 | P2-I8-008 | P2 | `/podbor` | Draft selection lost on refresh before «Продолжить» | **fixed** session `draftSelection` | pass12 |
+
+| P1-I8-006 | P1 | `/blog/[slug]` | CMS outage threw hard «Не удалось загрузить блог» for missing-seed paths | **fixed** catch → catalog/seed soft path | pass14 |
+| P2-I8-009 | P2 | `/organizers` | SEO path existed but index 404 | **fixed** public organizers index | pass14 |
