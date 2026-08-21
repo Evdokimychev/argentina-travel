@@ -4,9 +4,10 @@
 
 | Field | Value |
 |-------|--------|
-| Generated | 2026-08-20 (Iteration 7) |
+| Generated | 2026-08-21 (Iteration 8 active; I7 candidate still open) |
 | Certification | **NOT CERTIFIED** — I7 candidate |
-| Launch verdict | **NO-GO** — `docs/project-governance/iteration7-12h-stabilization/FINAL_LAUNCH_DECISION.md` |
+| Launch verdict | **NO-GO / NOT UI CERTIFIED** — I8 `FINAL_DECISION.md` + I7 launch decision |
+| I8 candidate | PR `#37` @ `cursor/iteration8-ui-human-certification-5475` |
 | `origin/main` tip | `81055b1387e0062301ca9c0ae7468cbf782e2511` |
 | Production `gitSha` | `81055b13` (matches main; not I7 candidate) |
 | I7 candidate | PR `#36` @ `cursor/iteration7-12h-stabilization-5475` (I5+I6 cumulative + I7 fixes) |
