@@ -8,7 +8,7 @@ describe("booking lookup outage honesty", () => {
       path.join(process.cwd(), "src/app/api/bookings/lookup/route.ts"),
       "utf8",
     );
-    expect(route).toContain("Booking lookup secret is not configured");
+    expect(route).toContain("Booking lookup secret");
     expect(route).toContain("status: 503");
     expect(route).toContain("Поиск заявок временно недоступен");
     expect(route).toContain("unexpectedPublicApiError");

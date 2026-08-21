@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (
-      message.includes("Booking lookup secret is not configured") ||
+      message.includes("Booking lookup secret") ||
       message.includes("supabase") ||
       message.includes("fetch failed") ||
       message.includes("ECONNREFUSED")
