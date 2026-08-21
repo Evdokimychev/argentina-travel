@@ -22,15 +22,21 @@ export default function SharePageLinkButton({
     const shareTitle = title ?? document.title;
 
     try {
-      if (navigator.share) {
+      if (typeof navigator.share === "function") {
         await navigator.share({ title: shareTitle, url });
         return;
       }
+    } catch (error) {
+      // User cancelled the system sheet — do not fall through with a confusing state.
+      if (error instanceof DOMException && error.name === "AbortError") return;
+    }
+
+    try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* пользователь отменил или буфер недоступен */
+      // Clipboard may be blocked; keep the button label so the user can retry.
     }
   }
 
