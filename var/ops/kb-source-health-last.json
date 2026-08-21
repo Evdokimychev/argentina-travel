@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "evidenceScope": "invalid-candidate",
   "candidateTree": null,
-  "evidenceRunId": "f6a6d4eb-3893-4531-92ff-d3984d3f6c50",
-  "evidenceStartedAt": "2026-08-21T01:56:21.343Z",
-  "evidenceGeneratedAt": "2026-08-21T01:57:13.474Z",
+  "evidenceRunId": "38463246-77c4-4e3b-acb9-43caa55ee3eb",
+  "evidenceStartedAt": "2026-08-21T02:44:39.253Z",
+  "evidenceGeneratedAt": "2026-08-21T02:45:31.736Z",
   "evidenceEnvironment": "source-health-network",
   "evidenceBaseUrl": null,
   "evidenceIntegrity": {
@@ -14,18 +14,16 @@
       "dirty-candidate-at-end"
     ],
     "dirtyPaths": [
-      "docs/knowledge-base/CURRENT_STATS.md",
-      "docs/knowledge-base/QUARANTINE_REPORT.md",
-      "var/audit/editorial-design-system/editorial-audit.json"
+      "docs/audit/product-architecture-audit-2026-07-14.md"
     ]
   },
-  "generatedAt": "2026-08-21T01:57:13.474Z",
+  "generatedAt": "2026-08-21T02:45:31.736Z",
   "scope": "migrated-provenance-sources",
   "sourceIndexGeneratedAt": "2026-08-21 00:00",
   "summary": {
     "urls": 324,
-    "passed": 303,
-    "failed": 21
+    "passed": 304,
+    "failed": 20
   },
   "results": [
     {
@@ -68,7 +66,7 @@
           "sourceId": "arca-service-exports-monotributo",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -230,7 +228,7 @@
           "sourceId": "caba-crime-map-office",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
@@ -730,14 +728,14 @@
           "sourceId": "canada-argentina-safety-advice",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "skam-s-falshivoj-policiej",
           "sourceId": "canada-argentina-cash-safety",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -845,10 +843,10 @@
           "sourceId": "caba-tourist-security",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud?page=1",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -884,7 +882,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/atractivo/la-boca",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -920,7 +918,7 @@
           "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/otros-establecimientos/cementerio-de-la-recoleta",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -935,7 +933,7 @@
           "sourceId": "buenos-aires-health-security",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "mify-ob-argentine",
@@ -1136,7 +1134,7 @@
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "esim-i-svyaz",
@@ -1164,14 +1162,14 @@
           "sourceId": "visa-russia-suspension-prepay",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
           "sourceId": "visa-russia-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -1213,10 +1211,10 @@
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html",
       "contentType": "text/html;charset=utf-8",
       "ok": true,
@@ -1353,7 +1351,7 @@
           "sourceId": "wise-russia-availability",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -1370,7 +1368,7 @@
           "entryId": "skolko-deneg-brat-na-poezdku",
           "sourceId": "aerolineas-live-search-budget",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-08-11"
         },
         {
@@ -1499,7 +1497,7 @@
           "entryId": "pokupka-nedvizhimosti",
           "sourceId": "caba-stamp-tax-benefit-2026",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-07-20"
         }
       ],
@@ -1834,7 +1832,7 @@
           "sourceId": "cnv-virtual-assets-warning",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -1931,7 +1929,7 @@
           "sourceId": "argentina-migrant-account-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -1992,7 +1990,7 @@
           "sourceId": "argentina-national-parks-fees",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-11"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2308,7 +2306,7 @@
           "sourceId": "argentina-line-144",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2437,7 +2435,7 @@
           "sourceId": "dnm-current-fee-table-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2509,7 +2507,7 @@
           "sourceId": "dnm-residence-faq-fees",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2630,7 +2628,7 @@
           "sourceId": "argentina-national-parks-tariffs-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2959,14 +2957,14 @@
           "sourceId": "argentina-prescriptions-2214",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "medicina-i-strahovka",
           "sourceId": "anmat-prescription-rules-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3350,7 +3348,7 @@
           "sourceId": "argentina-constitution-article-20",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3458,7 +3456,7 @@
           "sourceId": "argentina-rural-land-law-26737",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3475,7 +3473,7 @@
           "entryId": "pokupka-nedvizhimosti",
           "sourceId": "argentina-civil-code-public-deed",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-07-20"
         }
       ],
@@ -3601,7 +3599,7 @@
           "sourceId": "dnm-digital-nomad-disposition-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3763,7 +3761,7 @@
           "sourceId": "cnv-mep-local-settlement",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4122,7 +4120,7 @@
           "sourceId": "argentina-parks-safety-advice",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "bezopasnost-argentina",
@@ -4165,7 +4163,7 @@
           "sourceId": "cnv-faq-custody",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4219,7 +4217,7 @@
           "sourceId": "migrant-work-with-precaria",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -4233,7 +4231,7 @@
           "sourceId": "argentina-foreign-workers-guidance",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4251,7 +4249,7 @@
           "sourceId": "sube-amba-tariffs-july-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4287,7 +4285,7 @@
           "sourceId": "argentina-provincial-medical-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4351,7 +4349,7 @@
           "sourceId": "argentina-911-fake-police",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4534,7 +4532,7 @@
           "sourceId": "argentina-rural-land-authorization",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4606,7 +4604,7 @@
           "sourceId": "cnv-qualified-advisers-register",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4649,7 +4647,7 @@
           "sourceId": "anses-obtain-cuil",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4692,7 +4690,7 @@
           "sourceId": "arca-cdi-registrable-assets",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4753,7 +4751,7 @@
           "sourceId": "dnm-rentista-income-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "vnzh-rantye",
@@ -4799,7 +4797,7 @@
           "sourceId": "dnm-temporary-residence-migrant-worker",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -4907,7 +4905,7 @@
           "sourceId": "cnv-investor-protection-guide",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
@@ -5201,7 +5199,7 @@
           "sourceId": "argentina-ripte-methodology",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5835,7 +5833,7 @@
           "sourceId": "bcra-cbu-cvu-alias-prepay",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
@@ -5871,7 +5869,7 @@
           "sourceId": "bcra-uva-deposits",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5895,14 +5893,14 @@
           "entryId": "skolko-deneg-brat-na-poezdku",
           "sourceId": "bna-live-exchange-budget",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-08-11"
         },
         {
           "entryId": "skolko-stoit-zhizn-v-buenos-ajrese",
           "sourceId": "bna-exchange-reference-living",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-08-11"
         }
       ],
@@ -6120,7 +6118,7 @@
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "esim-i-svyaz",
@@ -6176,7 +6174,7 @@
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -6247,7 +6245,7 @@
           "entryId": "zashchita-nakoplenij-ot-inflyacii",
           "sourceId": "cnv-cedear-regulation",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-07-20"
         }
       ],
@@ -6266,7 +6264,7 @@
           "sourceId": "caba-notaries-property-purchase",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -6356,7 +6354,7 @@
           "sourceId": "caba-consumption-baskets",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-11"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -6374,7 +6372,7 @@
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoimost-zhizni-ba",
@@ -6388,7 +6386,7 @@
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
@@ -6455,7 +6453,7 @@
           "entryId": "viza-v-braziliyu-dlya-iguasu",
           "sourceId": "brazil-mre-russia-visa-list",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-07-20"
         }
       ],
@@ -6474,14 +6472,14 @@
           "sourceId": "uk-argentina-safety-women",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "bezopasno-li-v-argentine",
           "sourceId": "uk-argentina-safety-advice",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kaminito-la-boka",
@@ -6552,7 +6550,7 @@
           "sourceId": "indec-consumer-price-index",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-11"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -6563,18 +6561,18 @@
       "error": null
     },
     {
-      "url": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf",
+      "url": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf",
       "references": [
         {
           "entryId": "pereezd-s-minimalnym-byudzhetom",
-          "sourceId": "indec-basic-basket-may-2026",
+          "sourceId": "indec-basic-basket-jul-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
-      "finalUrl": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf",
+      "finalUrl": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf",
       "contentType": "application/pdf",
       "ok": true,
       "attempt": 1,
@@ -6588,7 +6586,7 @@
           "sourceId": "indec-income-distribution-q1-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
@@ -6633,31 +6631,6 @@
       "ok": false,
       "attempt": 2,
       "error": "fetch failed"
-    },
-    {
-      "url": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
-      "references": [
-        {
-          "entryId": "kak-oplatit-tur-i-zhilyo-zaranee",
-          "sourceId": "mastercard-russia-suspension-prepay",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        },
-        {
-          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
-          "sourceId": "mastercard-russia-suspension",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        }
-      ],
-      "status": 403,
-      "finalUrl": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
-      "contentType": "text/html",
-      "ok": false,
-      "attempt": 1,
-      "error": "HTTP 403"
     },
     {
       "url": "https://www.migraciones.gob.ar/accesible/consultaTramiteCiudadania/ConsultaCiudadania.php",
@@ -6793,7 +6766,7 @@
           "sourceId": "brazil-russia-visa-waiver-decree",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": null,
@@ -6835,6 +6808,31 @@
       "status": 200,
       "finalUrl": "https://www.sanjuan.tur.ar/experiencias/que-hago/recorridos-de-fe",
       "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm",
+      "references": [
+        {
+          "entryId": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "sourceId": "mastercard-russia-suspension-prepay",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-21"
+        },
+        {
+          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "sourceId": "mastercard-russia-suspension",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-21"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm",
+      "contentType": "text/html",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -6998,7 +6996,7 @@
           "sourceId": "western-union-argentina-quote",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,

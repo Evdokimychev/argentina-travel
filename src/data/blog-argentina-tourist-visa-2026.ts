@@ -15,7 +15,7 @@ export const ARGENTINA_TOURIST_VISA_2026_SEO_DESCRIPTION =
   "Въезд туриста в Аргентину: проверка правил для своего паспорта, срок пребывания и документы перед вылетом.";
 
 export const ARGENTINA_TOURIST_VISA_2026_SOURCES_BODY =
-  "Проверено 21.08.2026. Правила зависят от гражданства и могут меняться; перед вылетом сверяйте их с Migraciones и консульством.\n\n* [Migraciones — статус туриста и продление пребывания](https://www.argentina.gob.ar/migraciones/turistas)\n* [МИД Аргентины — туристическая виза](https://www.cancilleria.gob.ar/es/servicios/visas/visa-para-turismo)\n* [МИД Аргентины — соглашение о безвизовых поездках с Россией](https://www.cancilleria.gob.ar/es/actualidad/comunicados/argentina-rusia-hoy-entra-en-vigencia-la-supresion-de-visas)";
+  "Проверено 17.07.2026. Правила зависят от гражданства и могут меняться; перед вылетом сверяйте их с Migraciones и консульством.\n\n* [Migraciones — статус туриста и продление пребывания](https://www.argentina.gob.ar/migraciones/turistas)\n* [МИД Аргентины — туристическая виза](https://www.cancilleria.gob.ar/es/servicios/visas/visa-para-turismo)\n* [МИД Аргентины — соглашение о безвизовых поездках с Россией](https://www.cancilleria.gob.ar/es/actualidad/comunicados/argentina-rusia-hoy-entra-en-vigencia-la-supresion-de-visas)";
 
 const READ_TIME_MINUTES = 12;
 
