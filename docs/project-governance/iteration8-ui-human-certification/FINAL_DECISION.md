@@ -5,7 +5,7 @@ Generated: 2026-08-21 (continuous UI pass)
 ## UI CERTIFICATION: NOT CERTIFIED
 
 Candidate branch: `cursor/iteration8-ui-human-certification-5475` (PR #37)  
-Candidate SHA: see latest commit on branch (includes search/destination/excursions/contacts/share/podbor draft persistence)  
+Candidate SHA: `5bf56c5a`  
 Environment tested: local demo (`NEXT_PUBLIC_APP_MODE=demo`) + production read-only smoke  
 Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 
@@ -20,24 +20,20 @@ Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 
 ## What I8 already proved and fixed as a user
 
-- Public content (KB, blog, guide, nav, footer, FAQ) largely usable.
-- Misleading tours empty-state during outage → fixed.
-- `/podbor` crash on outage → fixed; mid-quiz draft now persists across refresh.
-- Search stale-hit UX + infinite «Идём…» → fixed (client timeout + server budgets).
-- Systemic catalog crash class across sibling pages → fixed.
-- `/destinations/[slug]` hard error on marketplace deadline → fixed.
-- `/booking/find` opaque 500 + misleading «Готово» → fixed.
-- `/excursions` soft-degrade honesty → fixed.
-- Contacts form client validation before network → fixed.
-- Share button clipboard fallback → fixed.
-- Mobile menu contacts reachability → improved.
-- `npm run audit:quick` green on candidate after inventory sync.
+- Public content (KB, blog, guide, services, immigration, gallery, legal, FAQ) largely usable.
+- Catalog outage honesty: tours, excursions, destinations, podbor.
+- SiteSearch hang + stale hits fixed.
+- Booking find: Russian 503; no misleading field «Готово»; release-audit-clean wording.
+- Contacts form validates before network.
+- Share clipboard fallback; podbor draft persistence across refresh.
+- Mobile contacts + join FAQ keyboard/ARIA.
+- `npm run audit:quick` green locally after inventory sync.
 
 ## Remaining BLOCKED_EXTERNAL
 
 - Supabase / DB connectivity for demo mutations, auth, CRM, CMS writes.
 - Live bookable partner inventory when marketplace sources are down.
-- Vercel account blocked → cannot ship I8 HEAD to preview/production from this environment.
+- Vercel account blocked → cannot ship I8 HEAD to preview/production from this run.
 
 ## Verdict rule reminder
 

@@ -2,47 +2,47 @@
 
 ## UI CERTIFICATION: NOT CERTIFIED
 
-Candidate: `cursor/iteration8-ui-human-certification-5475` @ `6ab8a5fc` (+ follow-up commits)
+Candidate: `cursor/iteration8-ui-human-certification-5475` @ `5bf56c5a`
 
 ### Personas tested
-Visitor, content reader, mobile visitor, prospective organizer, would-be client (mutations blocked), keyboard user (smoke).
+Visitor, content reader, mobile visitor, tablet visitor, prospective organizer, would-be client (mutations blocked), keyboard user (smoke), production read-only visitor.
 
 ### UI areas tested
-Home, nav (desktop+mobile), search, tours, excursions, destinations, podbor, KB/guide, blog, map, join, auth modal, contacts, booking/find, footer.
+Home, nav, search, tours, excursions, destinations, places, podbor, KB/guide, blog, map, join, auth walls, contacts, booking/find, services, immigration, gallery, legal, FAQ, footer.
 
 ### Journeys completed
-Public discovery + content reading + organizer landing + outage UX paths + destination editorial read + booking lookup degraded path + mobile search/nav.
+Public discovery + content reading + organizer landing + outage UX + destination editorial + booking lookup degraded path + mobile/tablet samples + production read-only smoke + adversarial form/search/edge cases.
 
 ### Entities created/edited/deleted
-None persisted (auth/DB blocked). Demo prefix reserved; no live CRM pollution.
+None persisted (auth/DB blocked).
 
 ### P0/P1 fixed (UI-proven)
 - P0 `/podbor` crash on catalog outage
-- P1 `/tours` misleading empty state
-- P1 sibling catalog pages crash class
-- P1 SiteSearch hang on stalled API
-- P1 `/destinations/[slug]` crash on marketplace deadline
+- P1 `/tours` misleading empty state + sibling catalog crash class
+- P1 SiteSearch hang
+- P1 `/destinations/[slug]` crash
 - P1 `/booking/find` opaque 500 → Russian 503
 
 ### P2/P3 fixed
-- Search stale hits; join empty images; HTML5 English tooltips
-- Booking lookup misleading «Готово»
-- Excursions soft-degrade honesty
-- Mobile menu Контакты
+- Search stale hits; join images; HTML5 English tooltips
+- Booking «Готово»; contacts pre-network validation
+- Excursions soft-degrade; share clipboard fallback
+- Podbor draft persistence; mobile contacts; join FAQ ARIA
+- Release-text audit clean for booking lookup
 
 ### Remaining BLOCKED_EXTERNAL
-Supabase/DB, auth mutations, bookable inventory, full CRM/CMS, reliable Vercel preview redeploy.
+Supabase/DB, auth mutations, bookable inventory, Vercel deploy block, full CRM/CMS.
 
 ### What looked implemented in code but failed as a user
-1. Homepage CTA → `/podbor` crashed on catalog outage.
-2. `/tours` lied with filter empty-state during outage.
-3. Destination pages looked like ordinary CMS pages but died on marketplace fetch.
-4. Search dialog looked live but could hang forever on «Идём…».
-5. Auth/booking/organizer UIs look complete but cannot finish without data plane.
+1. `/podbor` / destinations crashed on marketplace outage.
+2. `/tours` lied with filter empty-state.
+3. Search could hang forever on «Идём…».
+4. Auth/booking/organizer UIs look complete but cannot finish without data plane.
+5. Podbor appeared to autosave answers but dropped unanswered draft selections on refresh (fixed).
 
-### What worked but was too confusing to ship (before fix)
-- Tours/home inconsistency on outage copy.
-- Booking email field «Готово» before any server response.
+### What worked but was too confusing
+- Booking email field «Готово» before server response (fixed).
+- Contacts generic network error for empty fields (fixed).
 
 ### What previous technical audits missed
-Outage UX that unit tests treated as empty arrays / caught errors, while real users hit hard error shells, infinite loaders, or misleading empties.
+Outage UX that tests treated as empty arrays / caught errors, while users hit hard error shells, infinite loaders, or misleading empties.
