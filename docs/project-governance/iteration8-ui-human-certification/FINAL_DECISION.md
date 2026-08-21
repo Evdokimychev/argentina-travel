@@ -35,6 +35,7 @@ Data plane: **DOWN** (`/api/health` 503 on local demo and production; preview ca
 
 - Supabase / DB connectivity for demo mutations, auth, CRM, CMS writes.
 - Live bookable partner inventory when marketplace sources are down.
+- Vercel account intermittently **blocked** (`Account is blocked`) — preview redeploys may fail even when GitHub Actions gates pass.
 
 ## Verdict rule reminder
 

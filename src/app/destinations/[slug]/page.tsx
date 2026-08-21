@@ -61,7 +61,7 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   const cmsMetadata = getCmsResolverMetadata(destination);
 
   const [{ tours: marketplaceTours, catalogUnavailable }, flightTeasers] = await Promise.all([
-    fetchMarketplaceToursSafely("destination_detail_marketplace"),
+    fetchMarketplaceToursSafely("destination_detail_marketplace", { deadlineMs: 1_200 }),
     getDestinationFlightTeasers(destination.id, locale),
   ]);
   const tourCandidates = matchToursForDestination(marketplaceTours, destination).slice(0, 6);
