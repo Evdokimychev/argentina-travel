@@ -38,3 +38,5 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | P2-I8-005 | P2 | `/booking/find` | SmartInput «Готово» looked like request success before submit | **fixed** `showValidationSuccess={false}` | `i8-pass6-booking-find-after.png` |
 | P2-I8-006 | P2 | `/excursions` | Catalog outage used route error shell instead of in-page honesty | **fixed** `fetchExcursionsResultServer` + empty copy | pass7→fix |
 | P3-I8-005 | P3 | Mobile menu | Контакты only in desktop utility bar | **fixed** utility CTA in mobile menu footer | pass6 |
+
+| P2-I8-007 | P2 | `/contacts` form | Empty/invalid submit hit network and showed generic «Не удалось отправить» | **fixed** submit-time field validation | `i8-pass9-contacts-validation-fixed.png` |
