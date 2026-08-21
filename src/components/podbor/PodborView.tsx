@@ -65,10 +65,13 @@ export default function PodborView({
       const match = buildPodborMatchResult(saved.answers, tours);
       setResult(match);
       setPhase("results");
-    } else if (saved?.answers && Object.keys(saved.answers).length > 0) {
-      setAnswers(saved.answers);
+    } else if (
+      (saved?.answers && Object.keys(saved.answers).length > 0) ||
+      (saved?.draftSelection?.length ?? 0) > 0
+    ) {
+      setAnswers(saved?.answers ?? {});
       setPhase("quiz");
-      if (saved.draftSelection?.length) {
+      if (saved?.draftSelection?.length) {
         restoredDraftRef.current = saved.draftSelection;
       }
     }
@@ -76,21 +79,25 @@ export default function PodborView({
   }, [tours]);
 
   useEffect(() => {
-    if (!activeQuestionId) return;
-    const question = getQuestionForDisplay(activeQuestionId, answers);
+    if (!hydrated || !activeQuestionId) return;
     if (restoredDraftRef.current) {
       setDraftSelection(restoredDraftRef.current);
       restoredDraftRef.current = null;
       return;
     }
+    const question = getQuestionForDisplay(activeQuestionId, answers);
     setDraftSelection(
       answers[activeQuestionId] ??
         (question.numericInput ? [String(question.numericInput.defaultValue)] : [])
     );
-  }, [activeQuestionId, answers]);
+    // Only re-seed when the active question changes — not on every answers write.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional question-scoped sync
+  }, [activeQuestionId, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
+    // Avoid overwriting a restored draft with [] before the restore effect runs.
+    if (restoredDraftRef.current) return;
     savePodborSession({
       answers,
       currentQuestionId: activeQuestionId,

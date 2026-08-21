@@ -40,3 +40,6 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | P3-I8-005 | P3 | Mobile menu | Контакты only in desktop utility bar | **fixed** utility CTA in mobile menu footer | pass6 |
 
 | P2-I8-007 | P2 | `/contacts` form | Empty/invalid submit hit network and showed generic «Не удалось отправить» | **fixed** submit-time field validation | `i8-pass9-contacts-validation-fixed.png` |
+
+| P3-I8-006 | P3 | Share button | Web Share failure left no clipboard feedback | **fixed** AbortError quiet; else copy URL | pass10 |
+| P2-I8-008 | P2 | `/podbor` | Draft selection lost on refresh before «Продолжить» | **fixed** session `draftSelection` | pass12 |
