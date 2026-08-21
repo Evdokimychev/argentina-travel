@@ -256,13 +256,27 @@ export async function apiRequestBookingLookup(email: string): Promise<{
   requestId?: string;
   message: string;
 }> {
-  return parseJson(
-    await fetch("/api/bookings/lookup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    })
-  );
+  const response = await fetch("/api/bookings/lookup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const body = (await response.json()) as {
+    requestId?: string;
+    message?: string;
+    error?: string;
+  };
+  if (!response.ok) {
+    throw new Error(
+      body.message ??
+        body.error ??
+        "Не удалось отправить код. Проверьте email или попробуйте немного позже.",
+    );
+  }
+  return {
+    requestId: body.requestId,
+    message: body.message ?? "Если для этого адреса есть заявки, мы отправили код доступа.",
+  };
 }
 
 export async function apiVerifyBookingLookup(requestId: string, code: string): Promise<void> {

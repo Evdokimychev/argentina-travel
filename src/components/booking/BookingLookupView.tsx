@@ -47,8 +47,11 @@ export default function BookingLookupView() {
       setMessage(response.message);
       setStep("code");
       setResendCooldown(60);
-    } catch {
-      const message = "Не удалось отправить код. Проверьте email или попробуйте немного позже.";
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message.trim()
+          ? error.message
+          : "Не удалось отправить код. Проверьте email или попробуйте немного позже.";
       if (step === "code") setCodeError(message);
       else setEmailError(message);
     } finally {
