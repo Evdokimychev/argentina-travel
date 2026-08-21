@@ -5,7 +5,7 @@ Generated: 2026-08-21 (updated during continuous UI pass)
 ## UI CERTIFICATION: NOT CERTIFIED
 
 Candidate branch: `cursor/iteration8-ui-human-certification-5475` (PR #37)  
-Candidate SHA: `6ab8a5fcd03d41f9385d41a3667de2e3f6fe1dbe` (+ pending follow-up commits on same branch)  
+Candidate SHA: `c2fb6b7b0bea1a60f6f1f7bd2a8463eec5a061fb`  
 Environment tested: local demo (`NEXT_PUBLIC_APP_MODE=demo`) + prior Vercel preview/production read-only context  
 Data plane: **DOWN** (`/api/health` 503)
 
