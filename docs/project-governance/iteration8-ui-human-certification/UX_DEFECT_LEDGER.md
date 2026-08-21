@@ -32,3 +32,9 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | P3-I8-004 | P3 | Footer newsletter | English HTML5 empty-field tooltip | **fixed** (`noValidate`) | i8-pass3 |
 
 | P1-I8-003 | P1 | `/booking/find` | Opaque 500 when lookup secret missing | **fixed** → 503 Russian message | pass4 |
+
+| P1-I8-004 | P1 | SiteSearch | Infinite «Идём…» when `/api/search` stalls (reindex/CMS collectors) | **fixed** client 6s timeout + server budgets + offline static fallback | `i8-search-timeout-*.png` |
+| P1-I8-005 | P1 | `/destinations/[slug]` | Marketplace deadline threw → «Не удалось загрузить раздел» | **fixed** `fetchMarketplaceToursSafely` + honest tour empty | `i8-pass6-destination-ba-fixed.png` |
+| P2-I8-005 | P2 | `/booking/find` | SmartInput «Готово» looked like request success before submit | **fixed** `showValidationSuccess={false}` | `i8-pass6-booking-find-after.png` |
+| P2-I8-006 | P2 | `/excursions` | Catalog outage used route error shell instead of in-page honesty | **fixed** `fetchExcursionsResultServer` + empty copy | pass7→fix |
+| P3-I8-005 | P3 | Mobile menu | Контакты only in desktop utility bar | **fixed** utility CTA in mobile menu footer | pass6 |

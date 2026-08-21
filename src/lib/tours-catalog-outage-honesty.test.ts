@@ -64,5 +64,19 @@ describe("tours catalog outage honesty", () => {
     );
     expect(destinationView).toContain("catalogUnavailable");
     expect(destinationView).toContain("Каталог туров временно недоступен");
+
+    const excursionsPage = fs.readFileSync(
+      path.join(process.cwd(), "src/app/excursions/page.tsx"),
+      "utf8",
+    );
+    expect(excursionsPage).toContain("fetchExcursionsResultServer");
+    expect(excursionsPage).toContain("catalogUnavailable={catalogUnavailable}");
+    expect(excursionsPage).not.toMatch(/await fetchExcursionsServer\(/);
+
+    const excursionsCatalog = fs.readFileSync(
+      path.join(process.cwd(), "src/components/excursions/ExcursionsCatalog.tsx"),
+      "utf8",
+    );
+    expect(excursionsCatalog).toContain("Каталог экскурсий временно недоступен");
   });
 });

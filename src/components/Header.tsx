@@ -223,9 +223,28 @@ export default function Header({
   );
 
   const mobileMenuFooter = (
-    <div className="flex items-center justify-center gap-3">
-      {showThemeToggle ? <ThemeToggle /> : null}
-      <LocaleCurrencySwitcher />
+    <div className="flex flex-col items-center gap-3">
+      {utilityCtaLink ? (
+        <Link
+          href={utilityCtaLink.href}
+          onClick={() => setMobileMenuOpen(false)}
+          className="text-sm font-medium text-sky-ink hover:underline"
+        >
+          {resolveNavLabel(utilityCtaLink, t)}
+        </Link>
+      ) : (
+        <Link
+          href="/contacts"
+          onClick={() => setMobileMenuOpen(false)}
+          className="text-sm font-medium text-sky-ink hover:underline"
+        >
+          {t("nav.contacts")}
+        </Link>
+      )}
+      <div className="flex items-center justify-center gap-3">
+        {showThemeToggle ? <ThemeToggle /> : null}
+        <LocaleCurrencySwitcher />
+      </div>
     </div>
   );
 

@@ -4,13 +4,16 @@
 |---------|---------|:-------:|:------:|:--------:|:-----------:|--------|
 | Visitor | Homepage first impression | ✓ | ✓ | — | — | PASS (brand clear) |
 | Visitor | Header/footer nav | ✓ | ✓ | — | — | PASS |
-| Visitor | Global search Игуасу/виза/Патагония | ✓ | pending | empty query | — | PASS with catalog notice |
+| Visitor | Global search Игуасу/виза/Патагония | ✓ | ✓ | empty / nonsense | — | PASS; hang→fixed P1-I8-004 |
 | Visitor | Search stale-hit while typing | ✓ | — | mid-type | — | FAIL→fixed P2-I8-001 |
-| Visitor | Tours browse | ✓ | pending | outage | — | FAIL misleading empty→fixed P1-I8-001 |
-| Visitor | Excursions | ✓ | pending | outage | — | PASS honest error |
-| Visitor | Knowledge base hub→article | ✓ | pending | — | — | PASS |
+| Visitor | Tours browse | ✓ | ✓ | outage | — | FAIL misleading empty→fixed P1-I8-001 |
+| Visitor | Excursions | ✓ | ✓ | outage | — | PASS soft-degrade honesty (P2-I8-006) |
+| Visitor | Destination BA | ✓ | ✓ | catalog outage | — | FAIL crash→fixed P1-I8-005 |
+| Visitor | Knowledge base hub→article | ✓ | ✓ | — | — | PASS |
 | Visitor | Blog index→article | ✓ | pending | — | — | PASS |
-| Visitor | Map | ✓ | pending | — | — | PASS (58 places) |
+| Visitor | Map | ✓ | pending | WebGL local | — | PASS product; local env fail |
+| Visitor | Booking find | ✓ | ✓ | unavailable / fake email | — | PASS degraded UX (P1-I8-003, P2-I8-005) |
+| Visitor | Mobile menu → Контакты | — | ✓ | missing link | — | FAIL→fixed P3-I8-005 |
 | Visitor | Legacy `/st_tour/*` | ✓ | — | — | — | PASS redirect |
 | Visitor | Auth modal open | ✓ | pending | — | — | PASS open only |
 | Client | Booking request | blocked | blocked | — | — | BLOCKED_EXTERNAL (DB) |

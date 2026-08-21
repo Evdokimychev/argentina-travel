@@ -10,7 +10,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
-import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
+import { fetchExcursionsResultServer } from "@/lib/tripster/excursion-server";
 import { buildExcursionsCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
 import { EXCURSIONS_CATALOG_SEO } from "@/lib/commercial-catalog-seo";
 
@@ -69,7 +69,10 @@ export async function generateMetadata({ searchParams }: ExcursionsPageProps): P
 
 export default async function ExcursionsPage() {
   const locale = await getServerI18nLocale();
-  const { items, cities } = await fetchExcursionsServer({ pageSize: 500 });
+  const excursionsResult = await fetchExcursionsResultServer({ pageSize: 500 });
+  const catalogUnavailable = excursionsResult.status === "unavailable";
+  const items = catalogUnavailable ? [] : excursionsResult.data.items;
+  const cities = catalogUnavailable ? [] : excursionsResult.data.cities;
   const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
     { labelKey: "nav.home", path: "/", fallback: "Главная" },
     {
@@ -91,6 +94,7 @@ export default async function ExcursionsPage() {
         <ExcursionsCatalog
           excursions={items}
           cities={cities}
+          catalogUnavailable={catalogUnavailable}
           title="Экскурсии по Аргентине с местными гидами"
           subtitle="Городские прогулки, природные маршруты и активности с понятными условиями"
         />
