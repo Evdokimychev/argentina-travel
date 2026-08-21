@@ -24,3 +24,7 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 ## WHAT WORKED BUT WAS TOO CONFUSING
 
 - Tours page showed both «Туры не найдены» and (elsewhere on home) honest catalog copy — inconsistent mental model.
+
+| P2-I8-004 | P2 | `/join` authors | Empty `image: ""` → Next/Image console errors | **fixed** | destination covers assigned |
+| P3-I8-003 | P3 | `/contacts` | English HTML5 required tooltip | **fixed** (`noValidate`) | local adversarial pass |
+| NOTE | — | `/mapa-argentina` local | WebGL fail on agent VM (llvmpipe); preview map loads | env limitation | preview OK earlier |

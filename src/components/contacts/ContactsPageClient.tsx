@@ -172,7 +172,7 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
           className="mt-8"
         />
       ) : (
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
           <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
             Компания
             <input name="company" tabIndex={-1} autoComplete="off" />
