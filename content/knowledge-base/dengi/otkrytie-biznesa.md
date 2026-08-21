@@ -18,7 +18,7 @@ warnings:
 recommendations:
   - "До оплаты услуг письменно определите деятельность, собственников, управление, юрисдикцию, налоги и банковский маршрут."
   - "Проверяйте полномочия посредника и просите официальный номер процедуры."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 seo_slug: "otkrytie-biznesa-v-argentine"
 provenance:
@@ -33,8 +33,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Официальные требования IGJ к органам и процедуре SAS в её юрисдикции."
   - id: igj-urgent-company-registration
     title: "IGJ — срочная регистрация SA, SAU и SRL"
@@ -43,9 +43,9 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
-    note: "Описывает отдельный срочный режим IGJ и условие отсутствия замечаний."
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Описывает отдельный срочный режим IGJ и условие отсутствия замечаний. Страница сама помечена IGJ как «в процессе обновления» — это не делает текущие тарифы и сроки недействительными, но стоит перепроверять чаще обычного."
   - id: arca-monotributo-categories-2026
     title: "ARCA — действующие категории monotributo"
     url: "https://arca.gob.ar/monotributo/categorias.asp"
@@ -61,19 +61,19 @@ claims:
     text: "Официальная инструкция IGJ для SAS требует заранее определить участников, администратора, юридический адрес и иные данные процедуры."
     sensitive: true
     source_ids: [igj-sas-preparation]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: igj-urgent-process-is-conditional
     text: "Срочная процедура IGJ для SA, SAU и SRL применяется в её юрисдикции и зависит от отсутствия замечаний к документам."
     sensitive: true
     source_ids: [igj-urgent-company-registration]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: monotributo-current-table
     text: "ARCA публикует действующие категории и компоненты monotributo; соответствие режиму зависит от параметров деятельности, а не только от желания предпринимателя."
     sensitive: true
     source_ids: [arca-monotributo-categories-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

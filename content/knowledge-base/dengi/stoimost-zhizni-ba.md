@@ -20,7 +20,7 @@ recommendations:
   - "Собирать бюджет в песо на одну дату и отдельно фиксировать использованный законный валютный курс."
   - "Запрашивать полную стоимость аренды вместе с expensas, коммунальными платежами, депозитом и комиссией."
   - "Получать персональное предложение медицинского плана, а не переносить чужой тариф в свой бюджет."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -34,20 +34,20 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
-    note: "Публикует средние цены объявлений подержанных квартир в CABA: 1, 2 и 3 ambientes; показатели не описывают временную меблированную аренду."
-  - id: indec-consumer-prices-may-2026
-    title: "INDEC — индекс потребительских цен, май 2026"
-    url: "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf"
+    note: "Публикует средние цены объявлений подержанных квартир в CABA: 1, 2 и 3 ambientes; показатели не описывают временную меблированную аренду. Более новый квартальный отчёт IDECBA на дату проверки не найден — это самый свежий официальный релиз."
+  - id: indec-consumer-prices-jul-2026
+    title: "INDEC — индекс потребительских цен, июль 2026"
+    url: "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf"
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
-    note: "Национальный IPC за май 2026: 2,1% за месяц и 33,2% год к году; это показатель динамики цен, а не готовый бюджет домохозяйства."
+    note: "Национальный IPC за июль 2026 (опубликован 13.08.2026): 2,1% за месяц, 19,3% накопленно за 7 месяцев года, 33,8% год к году. Заменяет более раннюю майскую сводку (2,1%/33,2%) — годовой показатель ускорился."
   - id: argentina-health-access-dnu-366-2025
     title: "Аргентина — DNU 366/2025, доступ иностранцев к медицине"
     url: "https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto"
@@ -63,19 +63,19 @@ claims:
     text: "IDECBA приводит за I квартал 2026 средние цены предложений 538 595 ARS для 1 ambiente, 721 267 ARS для 2 и 1 091 451 ARS для 3 ambientes в наблюдаемом сегменте CABA."
     sensitive: true
     source_ids: [caba-rental-market-first-quarter-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
-  - id: indec-ipc-may-2026
-    text: "INDEC сообщил за май 2026 рост национального IPC на 2,1% за месяц и 33,2% год к году."
+  - id: indec-ipc-jul-2026
+    text: "INDEC сообщил за июль 2026 рост национального IPC на 2,1% за месяц, 19,3% накопленно за семь месяцев и 33,8% год к году."
     sensitive: true
-    source_ids: [indec-consumer-prices-may-2026]
-    verified_at: "2026-07-20"
+    source_ids: [indec-consumer-prices-jul-2026]
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: foreigner-health-access
     text: "DNU 366/2025 гарантирует экстренную помощь всем иностранцам, равный доступ к публичной системе постоянным резидентам и отдельные условия обычной помощи другим иностранцам в федеральных учреждениях."
     sensitive: true
     source_ids: [argentina-health-access-dnu-366-2025]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -105,7 +105,7 @@ claims:
 
 ## Как учитывать инфляцию
 
-INDEC сообщил за май 2026 года рост национального IPC на 2,1% за месяц и на 33,2% год к году. Этот показатель объясняет, почему старую смету нельзя использовать без пересчёта, но он не заменяет актуальные цены конкретной квартиры, страхового плана или продуктовой корзины.
+INDEC сообщил за июль 2026 года (отчёт опубликован 13 августа) рост национального IPC на 2,1% за месяц, 19,3% накопленно за первые семь месяцев года и 33,8% год к году — ускорение по сравнению с более ранней майской сводкой. Этот показатель объясняет, почему старую смету нельзя использовать без пересчёта, но он не заменяет актуальные цены конкретной квартиры, страхового плана или продуктовой корзины.
 
 ## Медицина
 
@@ -149,7 +149,7 @@ DNU 366/2025 сохраняет экстренную помощь независ
 ## Источники
 
 - [IDECBA — рынок аренды CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf)
-- [INDEC — IPC, май 2026](https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf)
+- [INDEC — IPC, июль 2026](https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf)
 - [DNU 366/2025 — доступ иностранцев к медицине](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)
 
 ## Связанные материалы

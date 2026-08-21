@@ -33,7 +33,7 @@ avistaje-de-aves-en-santa-cruz,attraction,,Наблюдение за птица�
 ba-rajony-realnyj-vybor,author_tip,observation,«Все едут в Палермо» — не всегда лучший совет туристу или релоканту,archived,,medium,2026-07-20,False,2026-10-18,False,176,,,lichnyy-opyt/ba-rajony-realnyj-vybor.md
 bahia-blanca,city,,Баия-Бланка,published,buenos-aires-province,medium,2026-07-20,False,2026-10-18,False,500,,,goroda/bahia-blanca.md
 banado-la-estrella,national_park,,Баньядо-ла-Эстрелья,published,litoral,high,2026-07-02,False,2026-12-29,False,654,,,natsionalnye-parki/banado-la-estrella.md
-banki-i-perevody,guide,finance,Перевод денег в Аргентину: безопасная проверка каналов,published,,high,2026-07-20,True,2026-09-03,True,694,False,7,dengi/banki-i-perevody.md
+banki-i-perevody,guide,finance,Перевод денег в Аргентину: безопасная проверка каналов,published,,high,2026-08-21,True,2026-10-05,False,694,True,0,dengi/banki-i-perevody.md
 bankovskij-schet,guide,finance,Банковский счёт для мигранта в Аргентине,archived,,high,2026-07-17,True,2026-08-31,False,209,True,0,dengi/bankovskij-schet.md
 bariloche,city,,Барилоче,published,patagonia,high,2026-07-07,False,2027-01-03,False,513,,,goroda/bariloche.md
 bariloche-tihie-smotrovye,author_tip,hidden_gem,Барилоче: смотровые и берега озера Науэль-Уапи в обход толпы у Кампанарио,archived,,medium,2026-07-20,False,2026-10-18,False,192,,,lichnyy-opyt/bariloche-tihie-smotrovye.md
@@ -205,7 +205,7 @@ gastronomia-en-santiago-del-estero,attraction,,Food in Santiago del Estero,archi
 gastronomia-portena,attraction,,Кухня Буэнос-Айреса,archived,caba,medium,2026-07-07,False,2026-10-05,False,163,,,dostoprimechatelnosti/gastronomia-portena.md
 gde-luchshiy-karnaval-v-argentine,faq,,,published,,medium,2026-07-01,False,2026-09-29,False,237,,,faq/gde-luchshiy-karnaval-v-argentine.md
 general-acha,attraction,,General Acha,archived,pampa,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/general-acha.md
-gid-po-dengam,guide,finance,"Деньги в Аргентине: обмен, карты, банки и бюджет",published,,high,2026-07-20,True,2026-09-03,True,701,False,8,dengi/gid-po-dengam.md
+gid-po-dengam,guide,finance,"Деньги в Аргентине: обмен, карты, банки и бюджет",published,,high,2026-08-21,True,2026-10-05,False,701,True,0,dengi/gid-po-dengam.md
 gid-po-dokumentam,guide,immigration,Документы для въезда и переезда в Аргентину,published,,high,2026-07-20,True,2026-09-03,False,741,True,0,pereezd/gid-po-dokumentam.md
 gid-po-kulture,guide,culture,"Культура Аргентины: традиции, еда и повседневная жизнь",published,,high,2026-07-20,False,2027-01-16,False,619,,,kultura/gid-po-kulture.md
 gid-po-medicine,guide,health,Медицина и страховка в Аргентине: путеводитель,published,,high,2026-07-20,True,2026-09-03,True,678,False,8,medicina/gid-po-medicine.md
@@ -219,7 +219,7 @@ golf-en-mendoza,attraction,,Golf en Мендоса,archived,cuyo,medium,2026-07-
 golf-en-tierra-del-fuego,attraction,,Golf en Огненная Земля,archived,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,62,,,dostoprimechatelnosti/golf-en-tierra-del-fuego.md
 gosudarstvennye-prilozheniya,guide,communication,Mi Argentina: государственные цифровые документы,published,,high,2026-07-20,True,2026-09-03,False,636,True,0,svyaz/gosudarstvennye-prilozheniya.md
 govoryat-li-v-argentine-po-anglijski,faq,,,published,,high,2026-07-17,True,2026-08-31,False,131,True,0,faq/govoryat-li-v-argentine-po-anglijski.md
-grazhdanstvo,guide,immigration,Гражданство Аргентины: условия и действующая процедура,published,,medium,2026-08-21,True,2026-10-05,True,784,False,1,pereezd/grazhdanstvo.md
+grazhdanstvo,guide,immigration,Гражданство Аргентины: условия и действующая процедура,published,,medium,2026-08-21,True,2026-10-05,False,784,True,0,pereezd/grazhdanstvo.md
 gualeguaychu,city,,Gualeguaychú,archived,litoral,medium,2026-07-07,False,2026-10-05,False,60,,,goroda/gualeguaychu.md
 herradura,attraction,,Herradura,archived,litoral,medium,2026-07-07,False,2026-10-05,False,58,,,dostoprimechatelnosti/herradura.md
 hornocal,attraction,,Серрания-де-Орнокаль (Гора 14 цветов),published,noa,medium,2026-07-20,False,2026-10-18,False,514,,,dostoprimechatelnosti/hornocal.md
@@ -255,7 +255,7 @@ kak-menyat-valyutu,guide,finance,"Как менять валюту в Арген
 kak-oplatit-tur-i-zhilyo-zaranee,faq,,,published,,high,2026-07-20,True,2026-09-03,True,315,False,7,faq/kak-oplatit-tur-i-zhilyo-zaranee.md
 kak-perevezti-kota-ili-sobaku,faq,,,published,,high,2026-07-17,True,2026-08-31,False,163,True,0,faq/kak-perevezti-kota-ili-sobaku.md
 kak-platit-esli-karta-rf-ne-rabotaet,faq,,,published,,high,2026-07-20,True,2026-09-03,True,336,False,10,faq/kak-platit-esli-karta-rf-ne-rabotaet.md
-kak-poluchit-grazhdanstvo-za-2-goda,faq,,,published,,medium,2026-08-21,True,2026-10-05,True,280,False,1,faq/kak-poluchit-grazhdanstvo-za-2-goda.md
+kak-poluchit-grazhdanstvo-za-2-goda,faq,,,published,,medium,2026-08-21,True,2026-10-05,False,264,True,0,faq/kak-poluchit-grazhdanstvo-za-2-goda.md
 kak-poluchit-prava-v-argentine,guide,immigration,"Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля",published,,high,2026-07-20,True,2026-09-03,False,615,True,0,transport/kak-poluchit-prava-v-argentine.md
 kak-snyat-kvartiru-bez-garanta,faq,,,published,,high,2026-07-17,True,2026-08-31,False,136,True,0,faq/kak-snyat-kvartiru-bez-garanta.md
 kakie-dokumenty-vezti-s-soboj,faq,,,published,,high,2026-07-17,True,2026-08-31,False,134,True,0,faq/kakie-dokumenty-vezti-s-soboj.md
@@ -369,17 +369,17 @@ noa-kolco,route,,"Кольцо по Северо-Западу (NOA): Сальт�
 nueva-cordoba,attraction,,Nueva Córdoba,archived,pampa,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/nueva-cordoba.md
 nuzhen-li-4x4-ruta-40,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,81,,,faq/nuzhen-li-4x4-ruta-40.md
 nuzhen-li-permit-na-akonkagua,faq,,,published,,medium,2026-07-01,False,2026-09-29,False,228,,,faq/nuzhen-li-permit-na-akonkagua.md
-nuzhna-li-strahovka-dlya-vezda,faq,,,published,,high,2026-07-20,True,2026-09-03,True,248,False,3,faq/nuzhna-li-strahovka-dlya-vezda.md
+nuzhna-li-strahovka-dlya-vezda,faq,,,published,,high,2026-08-21,True,2026-10-05,False,248,True,0,faq/nuzhna-li-strahovka-dlya-vezda.md
 nuzhna-li-viza-cifrovomu-kochevniku,faq,,,published,,high,2026-07-20,True,2026-09-03,False,254,True,0,faq/nuzhna-li-viza-cifrovomu-kochevniku.md
 nuzhno-li-ostavlyat-chaevye,faq,,,published,,high,2026-07-20,False,2027-01-16,False,226,,,faq/nuzhno-li-ostavlyat-chaevye.md
-nuzhno-li-otkazyvatsya-ot-grazhdanstva,faq,,,published,,high,2026-07-20,True,2026-09-03,True,279,False,1,faq/nuzhno-li-otkazyvatsya-ot-grazhdanstva.md
+nuzhno-li-otkazyvatsya-ot-grazhdanstva,faq,,,published,,high,2026-08-21,True,2026-10-05,False,293,True,0,faq/nuzhno-li-otkazyvatsya-ot-grazhdanstva.md
 obera,attraction,,Oberá,archived,litoral,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/obera.md
 obzornaya-loma-pliege-tumbado,author_tip,hidden_gem,Недооценённая смотровая Эль-Чальтена в обход очереди на Лагуна-де-лос-Трес,archived,,medium,2026-07-20,False,2026-10-18,False,124,,,lichnyy-opyt/obzornaya-loma-pliege-tumbado.md
 ognennaya-zemlya,national_park,,Национальный парк Огненная Земля,published,tierra-del-fuego,high,2026-07-02,False,2026-12-29,False,1495,,,natsionalnye-parki/ognennaya-zemlya.md
 ognennaya-zemlya-serro-guanako,author_tip,hidden_gem,"Огненная Земля: вид сверху, который видят немногие, и торфяники, мимо которых все проходят",archived,,medium,2026-07-20,False,2026-10-18,False,151,,,lichnyy-opyt/ognennaya-zemlya-serro-guanako.md
-oshibka-s-dokumentami,author_tip,mistake,Как я выбрал судебный путь к гражданству — и почему отказался от него,published,,high,2026-07-20,True,2026-09-03,True,576,False,1,lichnyy-opyt/oshibka-s-dokumentami.md
+oshibka-s-dokumentami,author_tip,mistake,Как я выбрал судебный путь к гражданству — и почему отказался от него,published,,high,2026-07-20,True,2026-09-03,False,576,True,0,lichnyy-opyt/oshibka-s-dokumentami.md
 oshibka-s-zhilyom,author_tip,mistake,Как я переплатил за первую квартиру в Буэнос-Айресе,published,,high,2026-07-20,False,2027-01-16,False,507,False,0,lichnyy-opyt/oshibka-s-zhilyom.md
-otkrytie-biznesa,guide,finance,Открытие бизнеса в Аргентине: выбор формы и проверка требований,published,,high,2026-07-20,True,2026-09-03,True,732,False,7,dengi/otkrytie-biznesa.md
+otkrytie-biznesa,guide,finance,Открытие бизнеса в Аргентине: выбор формы и проверка требований,published,,high,2026-08-21,True,2026-10-05,False,732,True,0,dengi/otkrytie-biznesa.md
 pampa,region,,Центр (Пампа),published,,high,2026-07-20,False,2027-01-16,False,885,,,regiony/pampa.md
 parana,city,,Парана,published,litoral,high,2026-07-07,False,2027-01-03,False,505,,,goroda/parana.md
 parapente-en-cerro-san-javier,attraction,,Paragliding in Cerro San Javier,archived,noa,medium,2026-07-07,False,2026-10-05,False,61,,,dostoprimechatelnosti/parapente-en-cerro-san-javier.md
@@ -584,7 +584,7 @@ skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-08-11,True,2026-09
 sladkoe-dulce-de-leche,guide,culture,"Сладкое: дульсе-де-лече, альфахорес и фактурас",published,,high,2026-07-20,False,2027-01-16,False,731,,,kultura/sladkoe-dulce-de-leche.md
 soobshestvo-i-adaptaciya,guide,immigration,Где найти своих и как устроить адаптацию в Аргентине,archived,,medium,2026-07-17,True,2026-08-31,True,304,False,3,pereezd/soobshestvo-i-adaptaciya.md
 status-expediente-migraciones,guide,immigration,Как проверить статус дела в Migraciones,published,,high,2026-07-20,True,2026-09-03,False,681,True,0,pereezd/status-expediente-migraciones.md
-stoimost-zhizni-ba,guide,finance,Как рассчитать стоимость жизни в Буэнос-Айресе,published,,high,2026-07-20,True,2026-09-03,True,715,False,7,dengi/stoimost-zhizni-ba.md
+stoimost-zhizni-ba,guide,finance,Как рассчитать стоимость жизни в Буэнос-Айресе,published,,high,2026-08-21,True,2026-10-05,False,734,True,0,dengi/stoimost-zhizni-ba.md
 stoimost-zhizni-semya-i-para,guide,finance,Стоимость жизни для пары и семьи: как собрать свой сценарий,published,,high,2026-07-20,True,2026-09-03,True,747,False,4,dengi/stoimost-zhizni-semya-i-para.md
 stoit-li-ehat-na-poezde-v-oblaka,faq,,,published,,medium,2026-07-01,False,2026-09-29,False,218,,,faq/stoit-li-ehat-na-poezde-v-oblaka.md
 stoit-li-ehat-v-argentinu,guide,planning,"Стоит ли ехать в Аргентину: далеко, дорого, опасно?",published,,medium,2026-07-20,True,2026-09-03,False,975,True,0,puteshestvie/stoit-li-ehat-v-argentinu.md
@@ -669,7 +669,7 @@ viza-cifrovogo-kochevnika,guide,immigration,Статус цифрового ко
 viza-cifrovogo-kochevnika-chto-daet,faq,,,published,,high,2026-07-20,True,2026-09-03,True,238,False,5,faq/viza-cifrovogo-kochevnika-chto-daet.md
 viza-i-granica-dlya-rossiyan,guide,immigration,Въезд в Аргентину для граждан России,published,,high,2026-07-20,True,2026-09-03,False,612,True,0,puteshestvie/viza-i-granica-dlya-rossiyan.md
 viza-kochevnika-ne-vnzh,author_tip,mistake,Статус цифрового кочевника — не автоматический путь к ВНЖ,archived,,high,2026-07-20,True,2026-09-03,False,207,True,0,lichnyy-opyt/viza-kochevnika-ne-vnzh.md
-viza-rf-v-argentinu,faq,,,published,,high,2026-07-20,True,2026-09-03,True,264,False,6,faq/viza-rf-v-argentinu.md
+viza-rf-v-argentinu,faq,,,published,,high,2026-08-21,True,2026-10-05,False,264,True,0,faq/viza-rf-v-argentinu.md
 viza-v-braziliyu-dlya-iguasu,faq,,,published,,high,2026-07-20,True,2026-09-03,True,255,False,6,faq/viza-v-braziliyu-dlya-iguasu.md
 vnutrennie-aviabilety,transport,,Внутренние авиабилеты по Аргентине,published,,medium,2026-07-20,True,2026-09-03,False,618,True,0,transport/vnutrennie-aviabilety.md
 vnzh-argentina,guide,immigration,Резиденция в Аргентине: как выбрать основание,published,,high,2026-07-20,True,2026-09-03,False,632,True,0,pereezd/vnzh-argentina.md

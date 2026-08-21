@@ -24,39 +24,39 @@ sources:
     url_status: verified
     checked_at: "2026-08-21"
     expires_at: "2026-09-03"
-  - id: argentina-citizenship-service
-    title: "Argentina.gob.ar — получение гражданства Аргентины (страница недоступна на 2026-08-21)"
-    url: "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina"
+  - id: dnm-citizenship-self-service
+    title: "Migraciones — Ciudadanía por naturalización, RaDEX"
+    url: "https://www.argentina.gob.ar/migraciones/ciudadania-autogestion"
     lang: es
     type: official
     authority: primary
-    url_status: unreachable
+    url_status: verified
     checked_at: "2026-08-21"
-    expires_at: "2026-09-04"
+    expires_at: "2026-09-20"
 claims:
   - id: two-years-is-eligibility-threshold
     text: "Два года проживания — условие для обращения по общему основанию, а не гарантированный срок завершения натурализации."
     sensitive: true
-    source_ids: [argentina-dnu-366-2025-citizenship, argentina-citizenship-service]
-    verified_at: "2026-07-20"
+    source_ids: [argentina-dnu-366-2025-citizenship]
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: dnu-continuity-rule
     text: "DNU 366/2025 определяет непрерывность как пребывание в Аргентине весь двухлетний период без выездов и требует легальной резиденции."
     sensitive: true
     source_ids: [argentina-dnu-366-2025-citizenship]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
-  - id: official-process-conflict
-    text: "На 2026-07-20 DNU передавал волеизъявление в DNM, тогда как официальная страница услуги продолжала описывать судебную подачу; на 2026-08-21 та страница уже недоступна, и достоверно судить, отменён ли судебный маршрут официально, по этому одному признаку нельзя."
+  - id: dnm-digital-route-live
+    text: "DNM с октября 2025 года принимает заявления о натурализации цифровым маршрутом через RaDEX; прежняя государственная страница с описанием судебной подачи на проверке 2026-08-21 недоступна и больше не используется как источник."
     sensitive: true
-    source_ids: [argentina-dnu-366-2025-citizenship, argentina-citizenship-service]
+    source_ids: [dnm-citizenship-self-service]
     verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: pending-cases-transition
     text: "Заявления, начатые до вступления DNU в силу, продолжаются в соответствующем суде по прежним основаниям."
     sensitive: true
     source_ids: [argentina-dnu-366-2025-citizenship]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -74,4 +74,3 @@ DNU 366/2025 сформулировал более жёсткое правило
 
 - [Decreto DNU 366/2025 — текст изменений](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).
 - [Migraciones — Ciudadanía por naturalización, RaDEX](https://www.argentina.gob.ar/migraciones/ciudadania-autogestion).
-- Прежняя страница Argentina.gob.ar с судебным маршрутом недоступна на 2026-08-21; ссылку не приводим.

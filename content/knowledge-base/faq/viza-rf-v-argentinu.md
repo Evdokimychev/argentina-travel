@@ -8,7 +8,7 @@ status: published
 site_sections: [pereezd-v-argentinu, puteshestviya-po-argentine, dokumenty-i-legalizatsiya]
 tags: [визы, документы, граждане России]
 related: [kak-dobratsya-iz-rossii, vnzh-argentina, viza-i-granica-dlya-rossiyan]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -21,10 +21,10 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: unchecked
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
-    note: "Повторная проверка 2026-08-21: прямой PDF-эндпоинт МИД не проверен независимо в этом проходе (сетевые ограничения инструмента). Требуется ручная перепроверка перед следующим циклом."
+    url_status: verified
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Повторно подтверждено 2026-08-21: PDF-документ открывается, статья 1 текста соглашения (Буэнос-Айрес, 11.03.2009) прямо устанавливает 90 дней в каждом периоде 180 дней с даты первого въезда."
   - id: dnm-tourist-entry-documents-russia
     title: "Dirección Nacional de Migraciones — документы для въезда туриста"
     url: "https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista"
@@ -49,19 +49,19 @@ claims:
     text: "Владельцы действительного обычного российского загранпаспорта могут въезжать в Аргентину без визы на срок до 90 дней в каждом 180-дневном периоде."
     sensitive: true
     source_ids: [argentina-russia-visa-waiver-agreement]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: tourist-no-paid-work
     text: "Туристическая категория не разрешает оплачиваемую работу в Аргентине."
     sensitive: true
     source_ids: [dnm-tourist-entry-documents-russia]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: entry-purpose-and-insurance-declaration
     text: "Закон требует при въезде заявить цель поездки и наличие медицинской страховки; пограничный орган может отказать, если фактическая цель не соответствует туристической."
     sensitive: true
     source_ids: [argentina-dnu-366-entry-russia]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

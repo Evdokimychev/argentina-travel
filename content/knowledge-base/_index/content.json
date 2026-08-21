@@ -6,13 +6,13 @@
     "validation_mode": "diagnostic",
     "published_sensitive_count": 91,
     "release_candidate_sensitive_count": 91,
-    "strict_ready_release_candidate_count": 57,
+    "strict_ready_release_candidate_count": 67,
     "strict_ready": false,
     "issue_counts": {
-      "expired_source": 29,
-      "stale_sensitive_claim": 27,
-      "stale_source_url_check": 26,
-      "unhealthy_source_url": 6
+      "expired_source": 24,
+      "stale_sensitive_claim": 21,
+      "stale_source_url_check": 21,
+      "unhealthy_source_url": 1
     }
   },
   "entities": [
@@ -3701,8 +3701,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальный интерфейс провайдера для проверки доступности, курса, комиссии и способа получения по конкретной операции."
         },
         {
@@ -3713,8 +3713,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Определяет реквизиты банковских и виртуальных счетов Аргентины."
         },
         {
@@ -3738,7 +3738,7 @@
           "source_ids": [
             "bcra-cbu-cvu-education"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -3751,7 +3751,7 @@
           "source_ids": [
             "western-union-send-to-argentina"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -3764,7 +3764,7 @@
           "source_ids": [
             "bcra-authorized-foreign-exchange"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -3779,30 +3779,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "kak-zavesti-i-perevesti-dengi-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 694,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -21821,8 +21817,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "bcra-migrant-account",
@@ -21854,8 +21850,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -21866,7 +21862,7 @@
           "source_ids": [
             "bcra-authorized-fx"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -21879,7 +21875,7 @@
           "source_ids": [
             "visa-russia-suspension"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -21892,7 +21888,7 @@
           "source_ids": [
             "bcra-migrant-account"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -21905,7 +21901,7 @@
           "source_ids": [
             "arca-monotributo-categories"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -21920,30 +21916,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "gid-po-dengam-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
         "word_count": 701,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 8,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 4,
@@ -23522,17 +23514,6 @@
           "url_status": "verified",
           "checked_at": "2026-07-20",
           "expires_at": "2026-09-03"
-        },
-        {
-          "id": "argentina-citizenship-service",
-          "title": "Argentina.gob.ar — obtener la ciudadanía argentina (страница недоступна на 2026-08-21)",
-          "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
-          "lang": "es",
-          "type": "official",
-          "authority": "primary",
-          "url_status": "unreachable",
-          "checked_at": "2026-08-21",
-          "expires_at": "2026-09-04"
         }
       ],
       "claims": [
@@ -23579,11 +23560,10 @@
         },
         {
           "id": "official-instructions-conflict",
-          "text": "На 2026-07-20 общая страница Argentina.gob.ar параллельно с маршрутом DNM описывала подачу в федеральный суд. На повторной проверке 2026-08-21 эта страница возвращает «страница недоступна»: вероятно, она снята после перехода на DNM/RaDEX, но техническая недоступность тоже возможна — однозначного вывода без официального подтверждения делать нельзя.",
+          "text": "DNM опубликовала работающий цифровой маршрут натурализации через RaDEX. Ранее параллельно действовала общая страница Argentina.gob.ar с описанием судебной подачи; на проверке 2026-08-21 та страница возвращает «страница недоступна» и больше не используется как источник, поскольку не может считаться verifiable.",
           "sensitive": true,
           "source_ids": [
-            "dnm-citizenship-self-service",
-            "argentina-citizenship-service"
+            "dnm-citizenship-self-service"
           ],
           "verified_at": "2026-08-21",
           "reviewer": {
@@ -23622,21 +23602,19 @@
         "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
-        "source_count": 5,
+        "source_count": 4,
         "word_count": 784,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 1,
-          "issue_codes": [
-            "unhealthy_source_url"
-          ],
-          "source_count": 5,
-          "identified_source_count": 5,
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
+          "source_count": 4,
+          "identified_source_count": 4,
           "claim_count": 5,
           "sensitive_claim_count": 5,
           "stale_after_days": 45
@@ -27344,15 +27322,15 @@
           "expires_at": "2026-09-03"
         },
         {
-          "id": "argentina-citizenship-service",
-          "title": "Argentina.gob.ar — получение гражданства Аргентины (страница недоступна на 2026-08-21)",
-          "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
+          "id": "dnm-citizenship-self-service",
+          "title": "Migraciones — Ciudadanía por naturalización, RaDEX",
+          "url": "https://www.argentina.gob.ar/migraciones/ciudadania-autogestion",
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "unreachable",
+          "url_status": "verified",
           "checked_at": "2026-08-21",
-          "expires_at": "2026-09-04"
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -27361,10 +27339,9 @@
           "text": "Два года проживания — условие для обращения по общему основанию, а не гарантированный срок завершения натурализации.",
           "sensitive": true,
           "source_ids": [
-            "argentina-dnu-366-2025-citizenship",
-            "argentina-citizenship-service"
+            "argentina-dnu-366-2025-citizenship"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27377,19 +27354,18 @@
           "source_ids": [
             "argentina-dnu-366-2025-citizenship"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
           }
         },
         {
-          "id": "official-process-conflict",
-          "text": "На 2026-07-20 DNU передавал волеизъявление в DNM, тогда как официальная страница услуги продолжала описывать судебную подачу; на 2026-08-21 та страница уже недоступна, и достоверно судить, отменён ли судебный маршрут официально, по этому одному признаку нельзя.",
+          "id": "dnm-digital-route-live",
+          "text": "DNM с октября 2025 года принимает заявления о натурализации цифровым маршрутом через RaDEX; прежняя государственная страница с описанием судебной подачи на проверке 2026-08-21 недоступна и больше не используется как источник.",
           "sensitive": true,
           "source_ids": [
-            "argentina-dnu-366-2025-citizenship",
-            "argentina-citizenship-service"
+            "dnm-citizenship-self-service"
           ],
           "verified_at": "2026-08-21",
           "reviewer": {
@@ -27404,7 +27380,7 @@
           "source_ids": [
             "argentina-dnu-366-2025-citizenship"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27429,18 +27405,16 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 280,
-        "needs_attention": true,
+        "word_count": 264,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 1,
-          "issue_codes": [
-            "unhealthy_source_url"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 2,
           "identified_source_count": 2,
           "claim_count": 4,
@@ -27455,7 +27429,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Ответ\n\nНе совсем. **Два года — минимальный порог проживания для обращения по общему основанию, а не срок, через который автоматически выдают гражданство или паспорт.** После возникновения права на подачу остаются проверка документов, рассмотрение заявления, оформление гражданства и затем DNI.\n\nDNU 366/2025 сформулировал более жёсткое правило: заявитель старше 18 лет должен подтвердить два года легального и непрерывного проживания непосредственно перед обращением. В тексте декрета «непрерывно» означает находиться в Аргентине весь этот период без выездов. Поэтому даже короткую поездку нельзя заранее считать безвредной для подсчёта срока.\n\nЕсть процессуальная тонкость. DNU указывает Dirección Nacional de Migraciones как орган, перед которым заявитель выражает волю натурализоваться, и с октября 2025 года эта подача идёт цифрово через RaDEX. Прежняя государственная страница, описывавшая обращение в федеральный суд, на проверке 21 августа 2026 года уже недоступна — это говорит в пользу RaDEX как единственного актуального маршрута, но не является официальным подтверждением отмены судебного пути. Старые заявления, начатые до вступления DNU в силу, сам декрет оставляет в судах по прежним правилам.\n\nПеред подачей запросите актуальную письменную инструкцию у DNM и проверьте порядок в федеральном суде по месту жительства. Подготовьте доказательства миграционного статуса, всех въездов и выездов, личности, адреса, несудимости и средств к существованию, но окончательный список берите у органа, который подтвердит компетенцию по вашему делу. Для важного иммиграционного решения разумно получить заключение независимого аргентинского адвоката: эта статья показывает опубликованные правила, но не заменяет разбор конкретной истории поездок и резиденций.\n\n## Источники\n\n- [Decreto DNU 366/2025 — текст изменений](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).\n- [Migraciones — Ciudadanía por naturalización, RaDEX](https://www.argentina.gob.ar/migraciones/ciudadania-autogestion).\n- Прежняя страница Argentina.gob.ar с судебным маршрутом недоступна на 2026-08-21; ссылку не приводим."
+      "body": "## Ответ\n\nНе совсем. **Два года — минимальный порог проживания для обращения по общему основанию, а не срок, через который автоматически выдают гражданство или паспорт.** После возникновения права на подачу остаются проверка документов, рассмотрение заявления, оформление гражданства и затем DNI.\n\nDNU 366/2025 сформулировал более жёсткое правило: заявитель старше 18 лет должен подтвердить два года легального и непрерывного проживания непосредственно перед обращением. В тексте декрета «непрерывно» означает находиться в Аргентине весь этот период без выездов. Поэтому даже короткую поездку нельзя заранее считать безвредной для подсчёта срока.\n\nЕсть процессуальная тонкость. DNU указывает Dirección Nacional de Migraciones как орган, перед которым заявитель выражает волю натурализоваться, и с октября 2025 года эта подача идёт цифрово через RaDEX. Прежняя государственная страница, описывавшая обращение в федеральный суд, на проверке 21 августа 2026 года уже недоступна — это говорит в пользу RaDEX как единственного актуального маршрута, но не является официальным подтверждением отмены судебного пути. Старые заявления, начатые до вступления DNU в силу, сам декрет оставляет в судах по прежним правилам.\n\nПеред подачей запросите актуальную письменную инструкцию у DNM и проверьте порядок в федеральном суде по месту жительства. Подготовьте доказательства миграционного статуса, всех въездов и выездов, личности, адреса, несудимости и средств к существованию, но окончательный список берите у органа, который подтвердит компетенцию по вашему делу. Для важного иммиграционного решения разумно получить заключение независимого аргентинского адвоката: эта статья показывает опубликованные правила, но не заменяет разбор конкретной истории поездок и резиденций.\n\n## Источники\n\n- [Decreto DNU 366/2025 — текст изменений](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).\n- [Migraciones — Ciudadanía por naturalización, RaDEX](https://www.argentina.gob.ar/migraciones/ciudadania-autogestion)."
     },
     {
       "id": "kak-poluchit-prava-v-argentine",
@@ -39399,7 +39373,7 @@
             "argentina-dnu-366-health-insurance-entry",
             "argentina-migration-law-health-current"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -39413,7 +39387,7 @@
             "argentina-dnu-366-health-insurance-entry",
             "argentina-migration-law-health-current"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -39427,7 +39401,7 @@
             "argentina-dnu-366-health-insurance-entry",
             "argentina-migration-law-health-current"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -39442,28 +39416,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
         "word_count": 248,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 3,
-          "issue_codes": [
-            "stale_sensitive_claim"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 2,
           "identified_source_count": 2,
           "claim_count": 3,
@@ -39717,15 +39689,16 @@
       "recommendations": [],
       "sources": [
         {
-          "id": "argentina-citizenship-service-multiple",
-          "title": "Argentina.gob.ar — получение гражданства и несколько национальностей (страница недоступна на 2026-08-21)",
-          "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
+          "id": "argentina-citizenship-law-346",
+          "title": "Ley 346 — Ley de Ciudadanía, texto actualizado",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/ley-346-48854/actualizacion",
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "unreachable",
+          "url_status": "verified",
           "checked_at": "2026-08-21",
-          "expires_at": "2026-09-04"
+          "expires_at": "2026-09-20",
+          "note": "Действующий текст натурализации (ст. 2, с изменениями DNU 366/2025) требует только 2 года непрерывного легального проживания или значимую инвестицию; отказ от прежнего гражданства как условие не упомянут ни в одной из этих статей."
         },
         {
           "id": "russia-citizenship-law-138",
@@ -39753,12 +39726,12 @@
       "claims": [
         {
           "id": "argentina-no-renunciation-condition",
-          "text": "Аргентина не считает наличие другой национальности препятствием для получения аргентинского гражданства.",
+          "text": "Действующий текст Ley 346 (натурализация по ст. 2, с изменениями DNU 366/2025) требует только 2 года непрерывного легального проживания или значимую инвестицию; отказ от прежнего гражданства как отдельное условие в законе не установлен.",
           "sensitive": true,
           "source_ids": [
-            "argentina-citizenship-service-multiple"
+            "argentina-citizenship-law-346"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -39766,12 +39739,12 @@
         },
         {
           "id": "argentina-nationality-nonrenounceable",
-          "text": "Официальная аргентинская инструкция указывает, что аргентинская национальность не подлежит отказу.",
+          "text": "У аргентинской национальности по рождению и по натурализации нет закреплённой в законе процедуры добровольного отказа: доктрина и судебная практика считают гражданство по рождению неотказным, а натурализованное может быть аннулировано государством по установленным основаниям, но не отозвано самим человеком по заявлению.",
           "sensitive": true,
           "source_ids": [
-            "argentina-citizenship-service-multiple"
+            "argentina-citizenship-law-346"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -39800,28 +39773,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 279,
-        "needs_attention": true,
+        "word_count": 293,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 1,
-          "issue_codes": [
-            "unhealthy_source_url"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -39836,7 +39807,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Ответ\n\n**Для аргентинской процедуры отказываться от российского гражданства не требуется.** Официальная страница Argentina.gob.ar (проверена 2026-07-20; на повторной проверке 2026-08-21 временно недоступна, статус уточняется) прямо указывала, что наличие одной или нескольких других национальностей не мешает получить аргентинскую и что сама аргентинская национальность не является отказной. Ley 346 с изменениями DNU 366/2025 это правило не отменяет.\n\nОднако выражение «двойное гражданство» часто используют слишком широко. В бытовом смысле у человека могут одновременно быть два паспорта, но правила использования документов, консульской защиты и въезда зависят от законодательства каждой страны и наличия международного соглашения. На территории Аргентины аргентинские органы могут рассматривать такого человека прежде всего как аргентинца; поездки после натурализации нужно планировать с учётом требований к аргентинским документам.\n\nРоссийское гражданство не следует считать автоматически прекращённым только потому, что вы получили аргентинское. При этом российское законодательство предусматривает уведомление о приобретении иностранного гражданства и устанавливает порядок его подачи. Конкретный срок и способ зависят, в частности, от того, где человек находится и когда въезжает в Россию, поэтому перед натурализацией проверьте актуальную редакцию закона и инструкцию МВД применительно к своей ситуации.\n\nПрактический чек-лист: сохраните решение о натурализации и даты получения документов, проверьте обязанность уведомления в РФ, оформите аргентинский DNI и паспорт, а перед первой поездкой уточните, каким документом въезжать и выезжать из каждой страны. Если есть воинские, налоговые, семейные или санкционные вопросы, закажите отдельную консультацию в соответствующей юрисдикции: наличие двух гражданств само по себе их не решает.\n\n## Источники\n\n- Argentina.gob.ar — страница о получении гражданства недоступна на 2026-08-21; ссылку не приводим, статус будет перепроверен.\n- [Федеральный закон РФ № 138-ФЗ](https://publication.pravo.gov.ru/Document/View/0001202304280013).\n- [Приказ МВД России № 689](https://publication.pravo.gov.ru/document/0001202310190054)."
+      "body": "## Ответ\n\n**Для аргентинской процедуры отказываться от российского гражданства не требуется.** Действующий текст Ley 346 (натурализация — статья 2, с изменениями DNU 366/2025) требует только два года непрерывного легального проживания или значимую инвестицию; отказ от прежнего гражданства как условие в законе не упомянут. Отдельно у аргентинской национальности нет установленной законом процедуры добровольного отказа: по рождению она считается доктринально неотказной, а натурализованная может быть аннулирована государством при определённых основаниях, но не сложена по собственному заявлению человека.\n\nОднако выражение «двойное гражданство» часто используют слишком широко. В бытовом смысле у человека могут одновременно быть два паспорта, но правила использования документов, консульской защиты и въезда зависят от законодательства каждой страны и наличия международного соглашения. На территории Аргентины аргентинские органы могут рассматривать такого человека прежде всего как аргентинца; поездки после натурализации нужно планировать с учётом требований к аргентинским документам.\n\nРоссийское гражданство не следует считать автоматически прекращённым только потому, что вы получили аргентинское. При этом российское законодательство предусматривает уведомление о приобретении иностранного гражданства и устанавливает порядок его подачи. Конкретный срок и способ зависят, в частности, от того, где человек находится и когда въезжает в Россию, поэтому перед натурализацией проверьте актуальную редакцию закона и инструкцию МВД применительно к своей ситуации.\n\nПрактический чек-лист: сохраните решение о натурализации и даты получения документов, проверьте обязанность уведомления в РФ, оформите аргентинский DNI и паспорт, а перед первой поездкой уточните, каким документом въезжать и выезжать из каждой страны. Если есть воинские, налоговые, семейные или санкционные вопросы, закажите отдельную консультацию в соответствующей юрисдикции: наличие двух гражданств само по себе их не решает.\n\n## Источники\n\n- [Ley 346 — Ley de Ciudadanía, действующий текст](https://www.argentina.gob.ar/normativa/nacional/ley-346-48854/actualizacion).\n- [Федеральный закон РФ № 138-ФЗ](https://publication.pravo.gov.ru/Document/View/0001202304280013).\n- [Приказ МВД России № 689](https://publication.pravo.gov.ru/document/0001202310190054)."
     },
     {
       "id": "obera",
@@ -40256,17 +40227,6 @@
           "url_status": "verified",
           "checked_at": "2026-07-20",
           "expires_at": "2026-09-03"
-        },
-        {
-          "id": "argentina-citizenship-service",
-          "title": "Argentina.gob.ar — obtener la ciudadanía argentina (страница недоступна на 2026-08-21)",
-          "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
-          "lang": "es",
-          "type": "official",
-          "authority": "primary",
-          "url_status": "unreachable",
-          "checked_at": "2026-08-21",
-          "expires_at": "2026-09-04"
         }
       ],
       "claims": [
@@ -40285,11 +40245,10 @@
         },
         {
           "id": "published-process-conflict",
-          "text": "На 2026-07-20 DNM публиковала цифровой маршрут натурализации, а другая государственная страница продолжала описывать судебную подачу; на повторной проверке 2026-08-21 эта вторая страница уже недоступна, что может означать её отмену, но требует подтверждения.",
+          "text": "DNM опубликовала работающий цифровой маршрут натурализации через RaDEX. Ранее параллельно действовала государственная страница с описанием судебной подачи; на проверке 2026-08-21 та страница уже недоступна и больше не используется как источник.",
           "sensitive": true,
           "source_ids": [
-            "dnm-citizenship-self-service",
-            "argentina-citizenship-service"
+            "dnm-citizenship-self-service"
           ],
           "verified_at": "2026-08-21",
           "reviewer": {
@@ -40333,21 +40292,19 @@
         "review_due_at": "2026-09-03",
         "review_due": false,
         "missing_sources": false,
-        "source_count": 3,
+        "source_count": 2,
         "word_count": 576,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 1,
-          "issue_codes": [
-            "unhealthy_source_url"
-          ],
-          "source_count": 3,
-          "identified_source_count": 3,
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
+          "source_count": 2,
+          "identified_source_count": 2,
           "claim_count": 3,
           "sensitive_claim_count": 3,
           "stale_after_days": 45
@@ -40543,8 +40500,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальные требования IGJ к органам и процедуре SAS в её юрисдикции."
         },
         {
@@ -40555,9 +40512,9 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
-          "note": "Описывает отдельный срочный режим IGJ и условие отсутствия замечаний."
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Описывает отдельный срочный режим IGJ и условие отсутствия замечаний. Страница сама помечена IGJ как «в процессе обновления» — это не делает текущие тарифы и сроки недействительными, но стоит перепроверять чаще обычного."
         },
         {
           "id": "arca-monotributo-categories-2026",
@@ -40580,7 +40537,7 @@
           "source_ids": [
             "igj-sas-preparation"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -40593,7 +40550,7 @@
           "source_ids": [
             "igj-urgent-company-registration"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -40606,7 +40563,7 @@
           "source_ids": [
             "arca-monotributo-categories-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -40621,30 +40578,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "otkrytie-biznesa-v-argentine",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 732,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -62986,22 +62939,22 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
-          "note": "Публикует средние цены объявлений подержанных квартир в CABA: 1, 2 и 3 ambientes; показатели не описывают временную меблированную аренду."
+          "note": "Публикует средние цены объявлений подержанных квартир в CABA: 1, 2 и 3 ambientes; показатели не описывают временную меблированную аренду. Более новый квартальный отчёт IDECBA на дату проверки не найден — это самый свежий официальный релиз."
         },
         {
-          "id": "indec-consumer-prices-may-2026",
-          "title": "INDEC — индекс потребительских цен, май 2026",
-          "url": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf",
+          "id": "indec-consumer-prices-jul-2026",
+          "title": "INDEC — индекс потребительских цен, июль 2026",
+          "url": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf",
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
-          "note": "Национальный IPC за май 2026: 2,1% за месяц и 33,2% год к году; это показатель динамики цен, а не готовый бюджет домохозяйства."
+          "note": "Национальный IPC за июль 2026 (опубликован 13.08.2026): 2,1% за месяц, 19,3% накопленно за 7 месяцев года, 33,8% год к году. Заменяет более раннюю майскую сводку (2,1%/33,2%) — годовой показатель ускорился."
         },
         {
           "id": "argentina-health-access-dnu-366-2025",
@@ -63024,20 +62977,20 @@
           "source_ids": [
             "caba-rental-market-first-quarter-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
           }
         },
         {
-          "id": "indec-ipc-may-2026",
-          "text": "INDEC сообщил за май 2026 рост национального IPC на 2,1% за месяц и 33,2% год к году.",
+          "id": "indec-ipc-jul-2026",
+          "text": "INDEC сообщил за июль 2026 рост национального IPC на 2,1% за месяц, 19,3% накопленно за семь месяцев и 33,8% год к году.",
           "sensitive": true,
           "source_ids": [
-            "indec-consumer-prices-may-2026"
+            "indec-consumer-prices-jul-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -63050,7 +63003,7 @@
           "source_ids": [
             "argentina-health-access-dnu-366-2025"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -63065,30 +63018,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "stoimost-zhizni-buenos-aires",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 715,
-        "needs_attention": true,
+        "word_count": 734,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -63106,7 +63055,7 @@
         "details": "Бюджет зависит от района, типа договора, состава семьи, медицины и даты расчёта"
       },
       "duration": null,
-      "body": "## Почему нет одной правильной суммы\n\nДва человека в одном городе могут тратить очень разные суммы из-за типа аренды, района, медицины, питания и поездок. Поэтому полезнее собирать личную корзину в песо на одну дату, чем переносить на себя усреднённый долларовый бюджет.\n\n## Аренда как отправная точка\n\nОфициальный обзор CABA за первый квартал 2026 года приводит средние цены объявлений подержанных квартир: 538 595 ARS для одного ambiente, 721 267 ARS для двух и 1 091 451 ARS для трёх. Это статистическая база для долгосрочного рынка, а не обещанная цена квартиры и не ориентир для меблированной временной аренды.\n\nК арендной ставке добавляются expensas, коммунальные услуги, интернет, депозит, возможная комиссия и расходы на оформление гарантии. Сравнение районов имеет смысл только при одинаковом типе квартиры и договора.\n\n## Личная корзина расходов\n\nДля расчёта достаточно одной таблицы:\n\n| Блок | Что зафиксировать |\n|---|---|\n| Жильё | аренда, expensas, коммунальные услуги, депозит |\n| Питание | четыре недели покупок и отдельный лимит на кафе |\n| Транспорт | реальные рабочие маршруты и частота поездок |\n| Связь | домашний интернет и мобильный тариф |\n| Медицина | персональное предложение с покрытием и возрастной группой |\n| Досуг | регулярные занятия и поездки |\n| Резерв | непредвиденные бытовые и медицинские расходы |\n\n## Как учитывать инфляцию\n\nINDEC сообщил за май 2026 года рост национального IPC на 2,1% за месяц и на 33,2% год к году. Этот показатель объясняет, почему старую смету нельзя использовать без пересчёта, но он не заменяет актуальные цены конкретной квартиры, страхового плана или продуктовой корзины.\n\n## Медицина\n\nDNU 366/2025 сохраняет экстренную помощь независимо от миграционного статуса. Постоянные резиденты получают доступ к государственной системе наравне с гражданами. Для обычной помощи в учреждениях, которыми управляет федеральное государство, другим иностранцам нужна страховка либо предварительная оплата. Условия в городской и провинциальной системах требуют отдельного уточнения; конкретный продукт prepaga не является единственным возможным ответом на федеральную норму.\n\n## Как получить рабочий итог\n\nИтоговая сумма считается в песо на одну дату. Если доход приходит в другой валюте, рядом фиксируются источник и дата законного курса. Через месяц меняются только фактические строки, а не вся логика бюджета.\n\n## Первый месяц и обычный месяц\n\nНе смешивайте регулярную жизнь со стартом. В первом месяце могут появиться временное жильё, депозит, переезд, покупка базовых вещей, документы и подключение услуг. Создайте две колонки:\n\n- **разовые расходы** — оплачиваются на старте или редко;\n- **регулярные расходы** — повторяются каждый месяц.\n\nЕсли депозит возвращаемый, он всё равно требует ликвидных денег при заселении. Не вычитайте его из стартового капитала только потому, что теоретически получите обратно.\n\n## Район и транспорт как одна система\n\nБолее дешёвая квартира не всегда уменьшает бюджет, если ежедневные поездки требуют такси или нескольких пересадок. Для каждого варианта жилья постройте реальные маршруты до работы, школы, врача и мест регулярных дел. Умножьте стоимость поездки на частоту и добавьте время.\n\nСравнивайте одинаковый тип договора. Меблированная временная аренда, долгосрочная квартира и комната включают разные услуги и риски. Среднее объявление IDECBA не описывает каждую из этих категорий.\n\n## Питание и бытовая корзина\n\nСоберите собственную недельную корзину по двум-трём магазинам рядом с предполагаемым жильём: продукты, питьевая вода при необходимости, бытовая химия и средства гигиены. Умножайте на 4,3 недели, а кафе и доставку ведите отдельной строкой. Так привычка готовить дома не смешивается с досугом.\n\nНе обновляйте старую смету простым умножением на IPC. Индекс показывает общую динамику выбранной корзины, а конкретные категории меняются неравномерно. Перепроверьте аренду, медицину и связь отдельными предложениями.\n\n## Резерв и стресс-сценарий\n\nПосле основной сметы создайте стресс-версию: рост аренды или expensas, медицинский расход, временная потеря дохода и срочный переезд. Резерв должен быть доступен независимо от одного телефона, банка или платёжного приложения.\n\nДля дохода в другой валюте считайте, сколько песо реально поступит после комиссии и законной конвертации. Не используйте лучший курс из агрегатора без доступного вам канала операции.\n\n## Ежемесячное обновление\n\nВ конце месяца заменяйте оценки фактическими расходами и отмечайте отклонения. Если одна категория стабильно выше плана, меняйте базовую смету, а не покрывайте разницу «непредвиденными» расходами. Датированный бюджет полезнее любой универсальной суммы в долларах.\n\n## Источники\n\n- [IDECBA — рынок аренды CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf)\n- [INDEC — IPC, май 2026](https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf)\n- [DNU 366/2025 — доступ иностранцев к медицине](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)\n\n## Связанные материалы\n\n- [[stoimost-zhizni-semya-i-para|Стоимость жизни для пары и семьи]]\n- [[zhile-i-arenda|Жильё и аренда в Аргентине]]\n- [[medicina-i-strahovka|Медицина и страховка в Аргентине]]\n- [[banki-i-perevody|Банки и переводы в Аргентине]]"
+      "body": "## Почему нет одной правильной суммы\n\nДва человека в одном городе могут тратить очень разные суммы из-за типа аренды, района, медицины, питания и поездок. Поэтому полезнее собирать личную корзину в песо на одну дату, чем переносить на себя усреднённый долларовый бюджет.\n\n## Аренда как отправная точка\n\nОфициальный обзор CABA за первый квартал 2026 года приводит средние цены объявлений подержанных квартир: 538 595 ARS для одного ambiente, 721 267 ARS для двух и 1 091 451 ARS для трёх. Это статистическая база для долгосрочного рынка, а не обещанная цена квартиры и не ориентир для меблированной временной аренды.\n\nК арендной ставке добавляются expensas, коммунальные услуги, интернет, депозит, возможная комиссия и расходы на оформление гарантии. Сравнение районов имеет смысл только при одинаковом типе квартиры и договора.\n\n## Личная корзина расходов\n\nДля расчёта достаточно одной таблицы:\n\n| Блок | Что зафиксировать |\n|---|---|\n| Жильё | аренда, expensas, коммунальные услуги, депозит |\n| Питание | четыре недели покупок и отдельный лимит на кафе |\n| Транспорт | реальные рабочие маршруты и частота поездок |\n| Связь | домашний интернет и мобильный тариф |\n| Медицина | персональное предложение с покрытием и возрастной группой |\n| Досуг | регулярные занятия и поездки |\n| Резерв | непредвиденные бытовые и медицинские расходы |\n\n## Как учитывать инфляцию\n\nINDEC сообщил за июль 2026 года (отчёт опубликован 13 августа) рост национального IPC на 2,1% за месяц, 19,3% накопленно за первые семь месяцев года и 33,8% год к году — ускорение по сравнению с более ранней майской сводкой. Этот показатель объясняет, почему старую смету нельзя использовать без пересчёта, но он не заменяет актуальные цены конкретной квартиры, страхового плана или продуктовой корзины.\n\n## Медицина\n\nDNU 366/2025 сохраняет экстренную помощь независимо от миграционного статуса. Постоянные резиденты получают доступ к государственной системе наравне с гражданами. Для обычной помощи в учреждениях, которыми управляет федеральное государство, другим иностранцам нужна страховка либо предварительная оплата. Условия в городской и провинциальной системах требуют отдельного уточнения; конкретный продукт prepaga не является единственным возможным ответом на федеральную норму.\n\n## Как получить рабочий итог\n\nИтоговая сумма считается в песо на одну дату. Если доход приходит в другой валюте, рядом фиксируются источник и дата законного курса. Через месяц меняются только фактические строки, а не вся логика бюджета.\n\n## Первый месяц и обычный месяц\n\nНе смешивайте регулярную жизнь со стартом. В первом месяце могут появиться временное жильё, депозит, переезд, покупка базовых вещей, документы и подключение услуг. Создайте две колонки:\n\n- **разовые расходы** — оплачиваются на старте или редко;\n- **регулярные расходы** — повторяются каждый месяц.\n\nЕсли депозит возвращаемый, он всё равно требует ликвидных денег при заселении. Не вычитайте его из стартового капитала только потому, что теоретически получите обратно.\n\n## Район и транспорт как одна система\n\nБолее дешёвая квартира не всегда уменьшает бюджет, если ежедневные поездки требуют такси или нескольких пересадок. Для каждого варианта жилья постройте реальные маршруты до работы, школы, врача и мест регулярных дел. Умножьте стоимость поездки на частоту и добавьте время.\n\nСравнивайте одинаковый тип договора. Меблированная временная аренда, долгосрочная квартира и комната включают разные услуги и риски. Среднее объявление IDECBA не описывает каждую из этих категорий.\n\n## Питание и бытовая корзина\n\nСоберите собственную недельную корзину по двум-трём магазинам рядом с предполагаемым жильём: продукты, питьевая вода при необходимости, бытовая химия и средства гигиены. Умножайте на 4,3 недели, а кафе и доставку ведите отдельной строкой. Так привычка готовить дома не смешивается с досугом.\n\nНе обновляйте старую смету простым умножением на IPC. Индекс показывает общую динамику выбранной корзины, а конкретные категории меняются неравномерно. Перепроверьте аренду, медицину и связь отдельными предложениями.\n\n## Резерв и стресс-сценарий\n\nПосле основной сметы создайте стресс-версию: рост аренды или expensas, медицинский расход, временная потеря дохода и срочный переезд. Резерв должен быть доступен независимо от одного телефона, банка или платёжного приложения.\n\nДля дохода в другой валюте считайте, сколько песо реально поступит после комиссии и законной конвертации. Не используйте лучший курс из агрегатора без доступного вам канала операции.\n\n## Ежемесячное обновление\n\nВ конце месяца заменяйте оценки фактическими расходами и отмечайте отклонения. Если одна категория стабильно выше плана, меняйте базовую смету, а не покрывайте разницу «непредвиденными» расходами. Датированный бюджет полезнее любой универсальной суммы в долларах.\n\n## Источники\n\n- [IDECBA — рынок аренды CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf)\n- [INDEC — IPC, июль 2026](https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf)\n- [DNU 366/2025 — доступ иностранцев к медицине](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)\n\n## Связанные материалы\n\n- [[stoimost-zhizni-semya-i-para|Стоимость жизни для пары и семьи]]\n- [[zhile-i-arenda|Жильё и аренда в Аргентине]]\n- [[medicina-i-strahovka|Медицина и страховка в Аргентине]]\n- [[banki-i-perevody|Банки и переводы в Аргентине]]"
     },
     {
       "id": "stoimost-zhizni-semya-i-para",
@@ -71930,10 +71879,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "unchecked",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20",
-          "note": "Повторная проверка 2026-08-21: прямой PDF-эндпоинт МИД не проверен независимо в этом проходе (сетевые ограничения инструмента). Требуется ручная перепроверка перед следующим циклом."
+          "url_status": "verified",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Повторно подтверждено 2026-08-21: PDF-документ открывается, статья 1 текста соглашения (Буэнос-Айрес, 11.03.2009) прямо устанавливает 90 дней в каждом периоде 180 дней с даты первого въезда."
         },
         {
           "id": "dnm-tourist-entry-documents-russia",
@@ -71967,7 +71916,7 @@
           "source_ids": [
             "argentina-russia-visa-waiver-agreement"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -71980,7 +71929,7 @@
           "source_ids": [
             "dnm-tourist-entry-documents-russia"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -71993,7 +71942,7 @@
           "source_ids": [
             "argentina-dnu-366-entry-russia"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72008,31 +71957,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 264,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 6,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check",
-            "unhealthy_source_url"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,

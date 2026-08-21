@@ -8,7 +8,7 @@ status: published
 site_sections: [puteshestviya-po-argentine, pereezd-v-argentinu]
 tags: [здоровье, документы, страховка]
 related: [medicina-i-strahovka, kak-dobratsya-iz-rossii, bezopasnost-argentina, viza-i-granica-dlya-rossiyan]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -38,19 +38,19 @@ claims:
     text: "Иностранец при въезде должен заявить, что располагает медицинской страховкой для своих медицинских потребностей."
     sensitive: true
     source_ids: [argentina-dnu-366-health-insurance-entry, argentina-migration-law-health-current]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: emergency-care-cannot-be-denied
     text: "Неотложную медицинскую помощь нельзя отказать иностранцу из-за его миграционного статуса."
     sensitive: true
     source_ids: [argentina-dnu-366-health-insurance-entry, argentina-migration-law-health-current]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: routine-national-care-conditions
     text: "В учреждениях национального подчинения обычная помощь иностранцу без постоянной резиденции может предоставляться по страховке или после предварительной оплаты."
     sensitive: true
     source_ids: [argentina-dnu-366-health-insurance-entry, argentina-migration-law-health-current]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

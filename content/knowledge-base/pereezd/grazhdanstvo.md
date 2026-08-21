@@ -58,15 +58,10 @@ sources:
     url_status: verified
     checked_at: "2026-07-20"
     expires_at: "2026-09-03"
-  - id: argentina-citizenship-service
-    title: "Argentina.gob.ar — obtener la ciudadanía argentina (страница недоступна на 2026-08-21)"
-    url: "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina"
-    lang: es
-    type: official
-    authority: primary
-    url_status: unreachable
-    checked_at: "2026-08-21"
-    expires_at: "2026-09-04"
+# argentina-citizenship-service (Argentina.gob.ar — obtener la ciudadanía argentina) удалён
+# из активных источников 2026-08-21: страница возвращает "página no disponible" и не может
+# считаться verifiable primary source. Историческое расхождение описано в тексте статьи;
+# см. `docs/content-rebuild/CONTENT_OVERHAUL_PROGRESS.md` для деталей находки.
 claims:
   - id: two-years-not-result-deadline
     text: "Два года легального непрерывного проживания по общему основанию — порог для обращения, а не гарантированный срок получения гражданства или паспорта."
@@ -87,9 +82,9 @@ claims:
     verified_at: "2026-07-20"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: official-instructions-conflict
-    text: "На 2026-07-20 общая страница Argentina.gob.ar параллельно с маршрутом DNM описывала подачу в федеральный суд. На повторной проверке 2026-08-21 эта страница возвращает «страница недоступна»: вероятно, она снята после перехода на DNM/RaDEX, но техническая недоступность тоже возможна — однозначного вывода без официального подтверждения делать нельзя."
+    text: "DNM опубликовала работающий цифровой маршрут натурализации через RaDEX. Ранее параллельно действовала общая страница Argentina.gob.ar с описанием судебной подачи; на проверке 2026-08-21 та страница возвращает «страница недоступна» и больше не используется как источник, поскольку не может считаться verifiable."
     sensitive: true
-    source_ids: [dnm-citizenship-self-service, argentina-citizenship-service]
+    source_ids: [dnm-citizenship-self-service]
     verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: old-cases-stay-in-court

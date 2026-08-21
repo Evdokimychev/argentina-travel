@@ -45,15 +45,9 @@ sources:
     url_status: verified
     checked_at: "2026-07-20"
     expires_at: "2026-09-03"
-  - id: argentina-citizenship-service
-    title: "Argentina.gob.ar — obtener la ciudadanía argentina (страница недоступна на 2026-08-21)"
-    url: "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina"
-    lang: es
-    type: official
-    authority: primary
-    url_status: unreachable
-    checked_at: "2026-08-21"
-    expires_at: "2026-09-04"
+# argentina-citizenship-service (Argentina.gob.ar — obtener la ciudadanía argentina) удалён
+# из активных источников 2026-08-21: страница возвращает "página no disponible" и не может
+# считаться verifiable primary source. Историческое расхождение описано в тексте статьи.
 claims:
   - id: dnu-two-years-continuous
     text: "DNU 366/2025 требует по общему основанию два года легального непрерывного проживания и определяет непрерывность как отсутствие выездов в этот период."
@@ -62,9 +56,9 @@ claims:
     verified_at: "2026-07-20"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: published-process-conflict
-    text: "На 2026-07-20 DNM публиковала цифровой маршрут натурализации, а другая государственная страница продолжала описывать судебную подачу; на повторной проверке 2026-08-21 эта вторая страница уже недоступна, что может означать её отмену, но требует подтверждения."
+    text: "DNM опубликовала работающий цифровой маршрут натурализации через RaDEX. Ранее параллельно действовала государственная страница с описанием судебной подачи; на проверке 2026-08-21 та страница уже недоступна и больше не используется как источник."
     sensitive: true
-    source_ids: [dnm-citizenship-self-service, argentina-citizenship-service]
+    source_ids: [dnm-citizenship-self-service]
     verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: old-cases-transition
