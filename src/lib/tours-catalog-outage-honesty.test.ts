@@ -28,6 +28,9 @@ describe("tours catalog outage honesty", () => {
       "utf8",
     );
     expect(source).toMatch(/setApiHits\(null\);\s*setSearchNotice\(null\);\s*setLoading\(true\);/);
+    expect(source).toContain(
+      "if (live.length === 0 && fallbackResults.length > 0) return fallbackResults;",
+    );
   });
 
   it("keeps /podbor and sibling catalog pages usable when marketplace fetch fails", () => {

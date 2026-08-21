@@ -312,7 +312,13 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
 
   const results: SearchResultGroup[] = useMemo(() => {
     if (!hasQuery) return [];
-    if (apiHits !== null) return groupHitsByKind(dedupeSearchHits(apiHits));
+    if (apiHits !== null) {
+      const live = groupHitsByKind(dedupeSearchHits(apiHits));
+      // Live search can return an empty catalogue-filtered set while the local
+      // index still has useful editorial hits for the same query.
+      if (live.length === 0 && fallbackResults.length > 0) return fallbackResults;
+      return live;
+    }
     return fallbackResults;
   }, [apiHits, fallbackResults, hasQuery]);
 
