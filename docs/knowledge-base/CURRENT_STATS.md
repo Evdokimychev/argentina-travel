@@ -1,7 +1,7 @@
 # KB current stats (generated)
 
-Generated: `2026-08-21T01:13:08.331Z`  
-Manifest `generated_at`: `2026-08-17 00:00`
+Generated: `2026-08-21T01:55:20.349Z`  
+Manifest `generated_at`: `2026-08-21 00:00`
 
 | Metric | Value |
 |--------|------:|
@@ -13,6 +13,6 @@ Manifest `generated_at`: `2026-08-17 00:00`
 | status=archived | 448 |
 | site_id_map place↔kb | 92 |
 
-`strict_ready` (editorial_readiness): **true**
+`strict_ready` (editorial_readiness): **false**
 
 Rebuild: `node scripts/kb-manifest-stats.mjs` (also via `npm run content:quality`).

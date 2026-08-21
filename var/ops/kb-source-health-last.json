@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "evidenceScope": "invalid-candidate",
   "candidateTree": null,
-  "evidenceRunId": "3c93ed23-b74f-4d7f-9169-4159f2cff098",
-  "evidenceStartedAt": "2026-08-21T01:15:38.241Z",
-  "evidenceGeneratedAt": "2026-08-21T01:16:53.025Z",
+  "evidenceRunId": "f6a6d4eb-3893-4531-92ff-d3984d3f6c50",
+  "evidenceStartedAt": "2026-08-21T01:56:21.343Z",
+  "evidenceGeneratedAt": "2026-08-21T01:57:13.474Z",
   "evidenceEnvironment": "source-health-network",
   "evidenceBaseUrl": null,
   "evidenceIntegrity": {
@@ -19,13 +19,13 @@
       "var/audit/editorial-design-system/editorial-audit.json"
     ]
   },
-  "generatedAt": "2026-08-21T01:16:53.025Z",
+  "generatedAt": "2026-08-21T01:57:13.474Z",
   "scope": "migrated-provenance-sources",
-  "sourceIndexGeneratedAt": "2026-08-17 00:00",
+  "sourceIndexGeneratedAt": "2026-08-21 00:00",
   "summary": {
-    "urls": 325,
-    "passed": 301,
-    "failed": 24
+    "urls": 324,
+    "passed": 303,
+    "failed": 21
   },
   "results": [
     {
@@ -36,21 +36,21 @@
           "sourceId": "arca-monotributo-categories",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "nalogi-i-monotributo",
           "sourceId": "arca-monotributo-categories-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "otkrytie-biznesa",
           "sourceId": "arca-monotributo-categories-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -125,7 +125,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://buenosaires.gob.ar/gcaba_historico/noticias/abrio-un-nuevo-periodo-de-inscripcion-escolar-para-el-ciclo-lectivo-2026",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
@@ -607,7 +607,7 @@
           "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://rosario.tur.ar/donde-ir/noche/noche/un-infinito-abanico-de-opciones?lang=es",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
@@ -712,7 +712,7 @@
           "sourceId": "argentina-russia-visa-waiver-agreement",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -776,7 +776,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/en/article/buenos-aires-its-people",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -794,7 +794,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/7-cosas-que-aprender%C3%A1s-amar-de-buenos-aires",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -830,7 +830,7 @@
           "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -848,7 +848,7 @@
           "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud?page=1",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -866,7 +866,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/atractivo/1530-h-caminito",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -902,7 +902,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/informacion-qr-guias",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -1150,7 +1150,7 @@
           "sourceId": "visa-russia-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kak-menyat-valyutu",
@@ -2063,12 +2063,12 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": null,
-      "finalUrl": null,
-      "contentType": null,
-      "ok": false,
-      "attempt": 2,
-      "error": "The operation was aborted due to timeout"
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/interior/migraciones/museo/el-estado-y-la-inmigracion/la-inmigracion-en-el-proyecto-de-organizacion-nacional",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
     },
     {
       "url": "https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales",
@@ -2254,7 +2254,7 @@
           "sourceId": "igj-sas-preparation",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2272,7 +2272,7 @@
           "sourceId": "igj-urgent-company-registration",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2408,6 +2408,13 @@
           "declaredCheckedAt": "2026-07-20"
         },
         {
+          "entryId": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "sourceId": "dnm-citizenship-self-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-21"
+        },
+        {
           "entryId": "oshibka-s-dokumentami",
           "sourceId": "dnm-citizenship-self-service",
           "authority": "primary",
@@ -2466,7 +2473,7 @@
           "sourceId": "dnm-tourist-entry-documents-russia",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -2834,14 +2841,14 @@
           "sourceId": "dnm-digital-nomad-residence",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "skolko-stoit-oformit-vnzh",
           "sourceId": "dnm-digital-nomad-cost-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "viza-cifrovogo-kochevnika",
@@ -2855,7 +2862,7 @@
           "sourceId": "dnm-digital-nomad-status-faq",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3020,7 +3027,7 @@
           "sourceId": "argentina-dnu-366-2025-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "bezopasnost-argentina",
@@ -3041,133 +3048,133 @@
           "sourceId": "argentina-dnu-366-2025-precaria",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-po-dokumentam",
           "sourceId": "argentina-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-po-medicine",
           "sourceId": "argentina-dnu-366-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-relokanta",
           "sourceId": "argentina-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "grazhdanstvo",
           "sourceId": "dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kak-poluchit-grazhdanstvo-za-2-goda",
           "sourceId": "argentina-dnu-366-2025-citizenship",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
           "sourceId": "argentina-dnu-366-2025-work-status",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "mozhno-li-uchitsya-v-universitete-besplatno",
           "sourceId": "argentina-dnu-366-2025-university",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "nuzhna-li-strahovka-dlya-vezda",
           "sourceId": "argentina-dnu-366-health-insurance-entry",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "oshibka-s-dokumentami",
           "sourceId": "dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "rody-v-argentine",
           "sourceId": "argentina-dnu-366-2025-family",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "rossiya-vs-argentina",
           "sourceId": "argentina-health-insurance-entry-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoimost-zhizni-ba",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoimost-zhizni-semya-i-para",
           "sourceId": "argentina-basic-education-and-health-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoit-li-ehat-v-argentinu",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoit-li-pereezzhat",
           "sourceId": "argentina-citizenship-and-migration-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "viza-kochevnika-ne-vnzh",
           "sourceId": "argentina-migration-category-change-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "viza-rf-v-argentinu",
           "sourceId": "argentina-dnu-366-entry-russia",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "zhizn-na-pensii",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3192,7 +3199,7 @@
       "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/decreto-437-2011-181142/actualizacion",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
-      "attempt": 2,
+      "attempt": 1,
       "error": null
     },
     {
@@ -3379,7 +3386,7 @@
           "sourceId": "argentina-migration-law-health-current",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -3495,6 +3502,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "sourceId": "argentina-citizenship-law-346",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "rody-i-beremennost",
@@ -3720,7 +3734,7 @@
       "finalUrl": "https://www.argentina.gob.ar/noticias/9-de-julio-de-1816-declaracion-de-la-independencia-de-la-argentina",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
-      "attempt": 2,
+      "attempt": 1,
       "error": null
     },
     {
@@ -4664,45 +4678,6 @@
       "error": null
     },
     {
-      "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
-      "references": [
-        {
-          "entryId": "grazhdanstvo",
-          "sourceId": "argentina-citizenship-service",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        },
-        {
-          "entryId": "kak-poluchit-grazhdanstvo-za-2-goda",
-          "sourceId": "argentina-citizenship-service",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        },
-        {
-          "entryId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
-          "sourceId": "argentina-citizenship-service-multiple",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        },
-        {
-          "entryId": "oshibka-s-dokumentami",
-          "sourceId": "argentina-citizenship-service",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
-        }
-      ],
-      "status": 403,
-      "finalUrl": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
-      "contentType": "text/html",
-      "ok": false,
-      "attempt": 1,
-      "error": "HTTP 403"
-    },
-    {
       "url": "https://www.argentina.gob.ar/servicio/obtener-la-clave-de-identificacion-cdi",
       "references": [
         {
@@ -5119,42 +5094,42 @@
           "sourceId": "argentina-emergency-contacts-women",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "bezopasno-li-v-argentine",
           "sourceId": "argentina-emergency-contacts",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-po-medicine",
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "medicina-i-strahovka",
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "motochorros-telefon-na-ulitse",
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "sistema-zdravoohraneniya",
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-17"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5690,14 +5665,14 @@
           "sourceId": "bcra-exterior-and-exchange-rules",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "zashchita-nakoplenij-ot-inflyacii",
           "sourceId": "bcra-exterior-and-exchange-rules",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5708,29 +5683,29 @@
       "error": null
     },
     {
-      "url": "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp",
+      "url": "https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/",
       "references": [
         {
           "entryId": "gid-po-dengam",
           "sourceId": "bcra-migrant-account",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-relokanta",
           "sourceId": "bcra-migrant-account",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
-      "status": 404,
-      "finalUrl": "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp",
-      "contentType": "text/html",
-      "ok": false,
+      "status": 200,
+      "finalUrl": "https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
       "attempt": 1,
-      "error": "HTTP 404"
+      "error": null
     },
     {
       "url": "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/",
@@ -5740,35 +5715,35 @@
           "sourceId": "bcra-authorized-currency-entities",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-11"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "banki-i-perevody",
           "sourceId": "bcra-authorized-foreign-exchange",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "falshivye-policejskie-i-obmenniki",
           "sourceId": "bcra-authorized-exchange-entities",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "gid-po-dengam",
           "sourceId": "bcra-authorized-fx",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "inflyatsiya-i-ekonomika",
           "sourceId": "bcra-authorized-foreign-exchange",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kak-menyat-valyutu",
@@ -5782,35 +5757,35 @@
           "sourceId": "bcra-authorized-fx-channels",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pereezd-s-minimalnym-byudzhetom",
           "sourceId": "bcra-authorized-foreign-exchange",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pervyj-mesyac-plan",
           "sourceId": "bcra-authorized-fx-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "podgotovka-k-poezdke",
           "sourceId": "bcra-authorized-fx-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "skam-s-falshivoj-policiej",
           "sourceId": "bcra-authorized-exchange-fake-police",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5828,7 +5803,7 @@
           "sourceId": "bcra-phase-3-currency-liberalization",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-11"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -5846,7 +5821,7 @@
           "sourceId": "bcra-cbu-cvu-education",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "bankovskij-schet",
@@ -5913,7 +5888,7 @@
           "entryId": "aktualen-li-blue-dollar",
           "sourceId": "bna-current-exchange-reference",
           "authority": "primary",
-          "declaredStatus": "verified",
+          "declaredStatus": "unchecked",
           "declaredCheckedAt": "2026-08-11"
         },
         {
@@ -5964,56 +5939,56 @@
           "sourceId": "argentina-decree-366-2025-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pereezd-s-minimalnym-byudzhetom",
           "sourceId": "argentina-decree-366-2025-health-insurance",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "pervyj-mesyac-plan",
           "sourceId": "argentina-health-insurance-entry-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "plan-podgotovki-6-mesyacev",
           "sourceId": "argentina-health-insurance-entry-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "podgotovka-k-poezdke",
           "sourceId": "argentina-health-insurance-entry-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "rody-i-beremennost",
           "sourceId": "argentina-decree-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "sistema-zdravoohraneniya",
           "sourceId": "argentina-decree-366-2025-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-08-17"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "viza-i-granica-dlya-rossiyan",
           "sourceId": "argentina-decree-366-2025-insurance",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 200,
@@ -6406,7 +6381,7 @@
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "stoimost-zhizni-semya-i-para",
@@ -6563,7 +6538,7 @@
           "sourceId": "indec-ipc",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "inflyatsiya-i-ekonomika",
@@ -6624,18 +6599,18 @@
       "error": null
     },
     {
-      "url": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf",
+      "url": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf",
       "references": [
         {
           "entryId": "stoimost-zhizni-ba",
-          "sourceId": "indec-consumer-prices-may-2026",
+          "sourceId": "indec-consumer-prices-jul-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         }
       ],
       "status": 206,
-      "finalUrl": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf",
+      "finalUrl": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_08_2642C82F62AE.pdf",
       "contentType": "application/pdf",
       "ok": true,
       "attempt": 1,
@@ -7016,7 +6991,7 @@
           "sourceId": "western-union-send-to-argentina",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-20"
+          "declaredCheckedAt": "2026-08-21"
         },
         {
           "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",

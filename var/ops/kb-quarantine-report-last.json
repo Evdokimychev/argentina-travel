@@ -1,14 +1,27 @@
 {
-  "generatedAt": "2026-08-21T01:13:08.912Z",
+  "generatedAt": "2026-08-21T01:55:20.938Z",
   "total": 691,
-  "publicReady": 243,
-  "quarantined": 0,
+  "publicReady": 219,
+  "quarantined": 24,
   "archived": 448,
   "backlog": 0,
   "staleReview": 0,
-  "sensitiveReviewDue": 0,
+  "sensitiveReviewDue": 24,
   "missingSources": 0,
-  "missingClaims": 0,
-  "reasonCounts": {},
-  "samples": {}
+  "missingClaims": 24,
+  "reasonCounts": {
+    "sensitive_provenance_not_ready": 24
+  },
+  "samples": {
+    "sensitive_provenance_not_ready": [
+      "aktualen-li-blue-dollar",
+      "bezopasno-li-odnoj-zhenshchine",
+      "bezopasno-li-v-argentine",
+      "byudzhet-poezdki",
+      "chto-takoe-mep",
+      "gid-po-medicine",
+      "kak-oplatit-tur-i-zhilyo-zaranee",
+      "kak-platit-esli-karta-rf-ne-rabotaet"
+    ]
+  }
 }

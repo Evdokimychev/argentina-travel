@@ -1,7 +1,7 @@
 {
-  "at": "2026-08-21T01:16:54.097Z",
-  "strict": false,
-  "pass": true,
+  "at": "2026-08-21T01:57:14.483Z",
+  "strict": true,
+  "pass": false,
   "results": [
     {
       "id": "ownership-contract-present",
@@ -47,26 +47,26 @@
     },
     {
       "id": "content-lint",
-      "ok": true,
-      "blocking": false,
-      "status": 0
+      "ok": false,
+      "blocking": true,
+      "status": 1
     },
     {
       "id": "content-governance",
       "ok": true,
-      "blocking": false,
+      "blocking": true,
       "status": 0
     },
     {
       "id": "content-links",
       "ok": true,
-      "blocking": false,
+      "blocking": true,
       "status": 0
     },
     {
       "id": "kb-source-health",
       "ok": false,
-      "blocking": false,
+      "blocking": true,
       "status": 1
     },
     {

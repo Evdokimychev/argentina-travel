@@ -1,3 +1,3 @@
 "source_id","source_url","link_kind","target","status","action","owner","evidence"
 "all-kb-entries","/baza-znaniy","kb_internal","all current related IDs and wikilinks","closed_no_broken_links","KEEP","Content editor","current content IDs"
-"audit-scope:published-external-http","/baza-znaniy","source_markdown_and_media_external_http","910 unique published URLs","verified_no_public_breakage","KEEP","Content editor + operations","var/ops/kb-link-check.json; brokenPublic=0; generatedAt=2026-08-21T01:15:38.076Z"
+"audit-scope:published-external-http","/baza-znaniy","source_markdown_and_media_external_http","909 unique published URLs","verified_no_public_breakage","KEEP","Content editor + operations","var/ops/kb-link-check.json; brokenPublic=0; generatedAt=2026-08-21T01:56:21.136Z"
