@@ -28,3 +28,5 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | P2-I8-004 | P2 | `/join` authors | Empty `image: ""` → Next/Image console errors | **fixed** | destination covers assigned |
 | P3-I8-003 | P3 | `/contacts` | English HTML5 required tooltip | **fixed** (`noValidate`) | local adversarial pass |
 | NOTE | — | `/mapa-argentina` local | WebGL fail on agent VM (llvmpipe); preview map loads | env limitation | preview OK earlier |
+
+| P3-I8-004 | P3 | Footer newsletter | English HTML5 empty-field tooltip | **fixed** (`noValidate`) | i8-pass3 |
