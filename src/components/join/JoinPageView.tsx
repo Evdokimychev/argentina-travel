@@ -589,7 +589,7 @@ export default function JoinPageView({
                       ? "Расскажите о вашем проекте. Проверка обычно занимает 1–2 рабочих дня."
                       : "Войдите в аккаунт туриста, чтобы отправить анкету на проверку."}
                   </p>
-                  <form onSubmit={handleApplicationSubmit} className="mt-6 space-y-5">
+                  <form onSubmit={handleApplicationSubmit} noValidate className="mt-6 space-y-5">
                     {submitError ? (
                       <InlineFeedback
                         variant="error"

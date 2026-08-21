@@ -122,7 +122,7 @@ export default function BlogNewsletterBlock({
             className="mt-3"
           />
         ) : null}
-        <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+        <form onSubmit={handleSubmit} noValidate className="mt-4 space-y-3">
           <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
             Компания
             <input name="company" tabIndex={-1} autoComplete="off" />
