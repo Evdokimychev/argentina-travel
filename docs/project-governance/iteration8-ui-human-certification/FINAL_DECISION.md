@@ -5,8 +5,8 @@ Generated: 2026-08-21 (continuous UI pass)
 ## UI CERTIFICATION: NOT CERTIFIED
 
 Candidate branch: `cursor/iteration8-ui-human-certification-5475` (PR #37)  
-Candidate SHA: `5bf56c5a`  
-Environment tested: local demo (`NEXT_PUBLIC_APP_MODE=demo`) + production read-only smoke  
+Candidate SHA: `8f7384ab`  
+Environment tested: local demo + production read-only smoke  
 Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 
 ## Why not certified
