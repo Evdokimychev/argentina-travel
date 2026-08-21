@@ -30,3 +30,5 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | NOTE | — | `/mapa-argentina` local | WebGL fail on agent VM (llvmpipe); preview map loads | env limitation | preview OK earlier |
 
 | P3-I8-004 | P3 | Footer newsletter | English HTML5 empty-field tooltip | **fixed** (`noValidate`) | i8-pass3 |
+
+| P1-I8-003 | P1 | `/booking/find` | Opaque 500 when lookup secret missing | **fixed** → 503 Russian message | pass4 |
