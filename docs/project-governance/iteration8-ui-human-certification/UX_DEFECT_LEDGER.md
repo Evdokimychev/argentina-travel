@@ -46,3 +46,6 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 
 | P1-I8-006 | P1 | `/blog/[slug]` | CMS outage threw hard «Не удалось загрузить блог» for missing-seed paths | **fixed** catch → catalog/seed soft path | pass14 |
 | P2-I8-009 | P2 | `/organizers` | SEO path existed but index 404 | **fixed** public organizers index | pass14 |
+
+| P2-I8-010 | P2 | SiteSearch | Empty live hits hid local index matches (blank / endless «Ищем…» feel) | **fixed** prefer fallbackResults when live empty | pass15 |
+| P3-I8-007 | P3 | `/booking/find` | Native English HTML5 empty-field tooltip | **fixed** `noValidate` | pass15 |
