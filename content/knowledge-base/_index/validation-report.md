@@ -16,11 +16,11 @@
 Чувствительных опубликованных материалов: **91**
 Чувствительных материалов без источников: **0**
 Чувствительных кандидатов публичного gate: **91**
-Кандидатов, готовых по строгой claim-level проверке: **67/91**
+Кандидатов, готовых по строгой claim-level проверке: **80/91**
 Строгий сигнал редакционной готовности: **FAIL**
 Материалов с наступившей плановой перепроверкой: **0**
 Материалов с низкой уверенностью: **0**
-Материалов, требующих редакционного внимания: **24**
+Материалов, требующих редакционного внимания: **11**
 
 ## По типам
 
@@ -38,29 +38,16 @@
 
 Снимок корпуса диагностический: публичный набор не снимается с публикации автоматически. Релизный gate: `python3 content/knowledge-base/_index/build_manifest.py --strict-provenance` (завершится ошибкой при редакционном долге).
 
-- `expired_source`: 24
-- `stale_sensitive_claim`: 21
-- `stale_source_url_check`: 21
-- `unhealthy_source_url`: 1
+- `expired_source`: 11
+- `stale_sensitive_claim`: 7
+- `stale_source_url_check`: 8
+- `unhealthy_source_url`: 2
 
 ### Чувствительные материалы, не готовые к строгой публикации
 
 - `aktualen-li-blue-dollar` — expired_source, unhealthy_source_url
-- `bezopasno-li-odnoj-zhenshchine` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `bezopasno-li-v-argentine` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `byudzhet-poezdki` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `chto-takoe-mep` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `gid-po-medicine` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `kak-oplatit-tur-i-zhilyo-zaranee` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `kak-platit-esli-karta-rf-ne-rabotaet` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `kakie-rajony-ba-izbegat` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `kakoj-dohod-nuzhen-dlya-rantye` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `medicina-i-strahovka` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `mozhno-li-otkryt-schet-nerezidentu` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `pereezd-s-minimalnym-byudzhetom` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `pokupka-nedvizhimosti` — expired_source, stale_sensitive_claim, stale_source_url_check
+- `pokupka-nedvizhimosti` — expired_source, stale_source_url_check, unhealthy_source_url
 - `rabota-i-poisk-raboty` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `skam-s-falshivoj-policiej` — expired_source, stale_sensitive_claim, stale_source_url_check
 - `skolko-deneg-brat-na-poezdku` — expired_source
 - `skolko-stoit-oformit-vnzh` — expired_source, stale_sensitive_claim, stale_source_url_check
 - `skolko-stoit-zhizn-v-buenos-ajrese` — expired_source

@@ -6,13 +6,13 @@
     "validation_mode": "diagnostic",
     "published_sensitive_count": 91,
     "release_candidate_sensitive_count": 91,
-    "strict_ready_release_candidate_count": 67,
+    "strict_ready_release_candidate_count": 80,
     "strict_ready": false,
     "issue_counts": {
-      "expired_source": 24,
-      "stale_sensitive_claim": 21,
-      "stale_source_url_check": 21,
-      "unhealthy_source_url": 1
+      "expired_source": 11,
+      "stale_sensitive_claim": 7,
+      "stale_source_url_check": 8,
+      "unhealthy_source_url": 2
     }
   },
   "entities": [
@@ -4561,8 +4561,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "argentina-emergency-contacts-women",
@@ -4583,8 +4583,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -4595,7 +4595,7 @@
           "source_ids": [
             "argentina-line-144"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4608,7 +4608,7 @@
           "source_ids": [
             "argentina-emergency-contacts-women"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4621,7 +4621,7 @@
           "source_ids": [
             "uk-argentina-safety-women"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4636,30 +4636,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 276,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -4709,8 +4705,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "canada-argentina-safety-advice",
@@ -4720,8 +4716,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "argentina-emergency-contacts",
@@ -4742,8 +4738,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -4755,7 +4751,7 @@
             "uk-argentina-safety-advice",
             "canada-argentina-safety-advice"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4768,7 +4764,7 @@
           "source_ids": [
             "argentina-emergency-contacts"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4781,7 +4777,7 @@
           "source_ids": [
             "argentina-parks-safety-advice"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -4796,30 +4792,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
         "word_count": 275,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 9,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 4,
           "identified_source_count": 4,
           "claim_count": 3,
@@ -6065,8 +6057,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         },
         {
@@ -6076,8 +6068,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         },
         {
@@ -6087,8 +6079,8 @@
           "lang": "en",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         },
         {
@@ -6098,8 +6090,8 @@
           "lang": "ru",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         }
       ],
@@ -6111,7 +6103,7 @@
           "source_ids": [
             "argentina-national-parks-tariffs-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -6124,7 +6116,7 @@
           "source_ids": [
             "sube-amba-tariffs-july-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -6138,7 +6130,7 @@
             "visa-russia-operations-suspension",
             "bank-of-russia-cross-border-card-operations"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -6153,30 +6145,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "byudzhet-poezdki-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
         "word_count": 752,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 11,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 4,
           "identified_source_count": 4,
           "claim_count": 3,
@@ -10934,8 +10922,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "cnv-mep-local-settlement",
@@ -10945,8 +10933,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "cnv-faq-custody",
@@ -10956,8 +10944,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -10968,7 +10956,7 @@
           "source_ids": [
             "cnv-mep-local-settlement"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -10982,7 +10970,7 @@
             "cnv-investor-protection-guide",
             "cnv-faq-custody"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -10996,7 +10984,7 @@
             "cnv-investor-protection-guide",
             "cnv-faq-custody"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -11011,30 +10999,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 289,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 9,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -22275,8 +22259,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "argentina-prescriptions-2214",
@@ -22286,8 +22270,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -22298,7 +22282,7 @@
           "source_ids": [
             "argentina-dnu-366-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -22311,7 +22295,7 @@
           "source_ids": [
             "argentina-dnu-366-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -22324,7 +22308,7 @@
           "source_ids": [
             "argentina-dnu-366-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -22332,13 +22316,13 @@
         },
         {
           "id": "emergency-numbers-vary",
-          "text": "911 указан как центральный экстренный номер, а медицинские номера различаются по территории; 107 не следует считать универсальным для всей страны.",
+          "text": "Официальные страницы государства расходятся в описании покрытия 107: общая страница экстренных служб указывает его только для CABA и части провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице — для CABA и почти всех остальных провинций, отдельно называя 911 номером именно провинции Буэнос-Айрес и 106 — Неукена. Мы не выбираем одну версию как безусловно верную и советуем в любом случае звонить 911, а по прибытии на место сверять местный номер.",
           "sensitive": true,
           "source_ids": [
             "argentina-emergency-numbers",
             "argentina-provincial-medical-numbers"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -22353,30 +22337,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "gid-po-medicine-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 678,
-        "needs_attention": true,
+        "word_count": 741,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 8,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 4,
           "identified_source_count": 4,
           "claim_count": 4,
@@ -22391,7 +22371,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Если помощь нужна сейчас\n\nПри угрозе жизни, нарушении дыхания, потере сознания, сильном кровотечении, признаках инсульта или инфаркта вызывайте экстренную помощь. Национальный портал указывает **911** как центральный номер; медицинские номера зависят от территории. **107** работает во многих городах и отдельно указан для CABA, но не является гарантированно единым номером всей Аргентины. До поездки сохраните местный номер провинции или города.\n\nDNU 366/2025 прямо устанавливает: экстренную медицинскую помощь нельзя отказать или ограничить иностранцу независимо от миграционного статуса. В неотложной ситуации сначала обращайтесь за помощью, а вопросы оплаты и страхового возмещения решайте после стабилизации.\n\n## Как устроена система\n\nПодробная схема — в [[sistema-zdravoohraneniya|гиде по системе здравоохранения]]. Практически вы встретите три контура:\n\n- **público** — государственные больницы и центры здоровья;\n- **obra social** — медицинское покрытие, обычно связанное с формальной занятостью или взносами;\n- **prepaga** — частный план медицинского обслуживания.\n\nЭто не три одинаковых «страховки». У них различаются основания доступа, сеть, запись, согласования и расходы. Даже внутри одной prepaga конкретный план может не включать нужную клинику или иметь периоды ожидания и доплаты.\n\nDNU 366/2025 различает экстренную и обычную помощь. Постоянные резиденты получают доступ к публичной системе на равных условиях с аргентинскими гражданами. Для других иностранцев в учреждениях федерального подчинения обычная помощь связана с предъявлением страховки или предварительной оплатой по правилам Минздрава. Аргентина федеративна, поэтому условия конкретной провинции, CABA и учреждения нужно уточнять непосредственно там; некорректно обещать одну модель всей стране.\n\n## Страховка для поездки\n\nПосле реформы при въезде предусмотрена декларация о наличии медицинской страховки. Практический разбор — [[nuzhna-li-strahovka-dlya-vezda|в отдельном FAQ]]. Государственный акт не устанавливает универсальный рекламный лимит в долларах, поэтому сравнивайте содержание полиса:\n\n- территорию и весь срок поездки;\n- экстренную помощь и госпитализацию;\n- хронические и ранее существовавшие состояния;\n- беременность;\n- активный спорт, треккинг, высоту и вождение;\n- эвакуацию и репатриацию;\n- франшизу, исключения и порядок согласования;\n- оплату клинике напрямую или возмещение после оплаты.\n\nСохраните номер полиса, контакты assistance и инструкцию офлайн. Узнайте, нужно ли звонить до визита, кроме очевидной экстренной ситуации.\n\n## Покрытие для жизни\n\nВыбор разбирает [[medicina-i-strahovka|гид по страховке и prepaga]]. Сравнивайте не только месячную цену. Запросите *cartilla* — сеть врачей и клиник — для своего города, условия госпитализации, анализов, стоматологии, психического здоровья, лекарств, доплат и повышения тарифа.\n\nЕсли вы работаете официально или платите monotributo, наличие взноса obra social не означает мгновенного доступа к любой выбранной организации. Проверьте оформление и фактическую активацию. Precaria или временная резиденция не равны постоянной резиденции для всех правил доступа.\n\n## Хронические заболевания и лекарства\n\nДо переезда подготовьте медицинскую выписку с диагнозом, историей лечения, аллергиями и **действующими веществами** препаратов. Торговое название в России и Аргентине может отличаться. Возьмите запас на переходный период только в рамках правил перевозки; см. [[provoz-lekarstv|гид по лекарствам]].\n\nНе предполагайте, что рецептурный препарат продадут по российскому назначению. Аргентинские правила различают свободную продажу, рецепт и специальные режимы отпуска. Для продолжения лечения заранее найдите профильного врача и уточните местную форму рецепта. Храните лекарства в оригинальной упаковке и перевозите температурно-чувствительные препараты по инструкции производителя.\n\n## Особые ситуации\n\n- Беременность и роды: [[rody-i-beremennost|план наблюдения, клиника и документы]].\n- Пожилой возраст: [[zhizn-na-pensii|медицинская стратегия пенсионера]], включая сеть и хроническую терапию.\n- Инвалидность: [[dostupnaya-sreda-i-invalidnost|доступность и CUD]], без обещания одинаковой инфраструктуры в каждом регионе.\n- Вакцинация: [[kakie-privivki-nuzhny-dlya-argentiny|актуальные рекомендации]], которые зависят от маршрута и здоровья.\n- Вода: [[mozhno-li-pit-vodu-iz-krana|локальная проверка качества воды]], а не одно правило для всей страны.\n\n## Медицинская папка\n\nХраните офлайн: паспорт и DNI при наличии, полис, контакты assistance, список диагнозов и аллергий на испанском, назначения, действующие вещества и дозировки, экстренный контакт, адрес ближайшей guardia и локальные номера помощи. Не отправляйте полную медицинскую историю незнакомому посреднику.\n\nЭта карта помогает выбрать маршрут, но не ставит диагноз и не заменяет врача. При симптомах ориентируйтесь на клиническую срочность, а не на удобство страхового приложения.\n\n## Источники\n\n- [Decreto DNU 366/2025 — правила доступа к помощи и страховки](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)\n- [Argentina.gob.ar — экстренные номера](https://www.argentina.gob.ar/tema/emergencias)\n- [Минздрав — номера медицинской помощи по территориям](https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica)\n- [Resolución 2214/2025 — рецепты и отпуск лекарств](https://www.argentina.gob.ar/normativa/nacional/415349/texto)"
+      "body": "## Если помощь нужна сейчас\n\nПри угрозе жизни, нарушении дыхания, потере сознания, сильном кровотечении, признаках инсульта или инфаркта вызывайте экстренную помощь. Здесь у официальных источников на 2026-08-21 нет единой картины: общая страница экстренных служб называет **911** центральным номером и указывает **107** только для CABA и части провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице называет **107** номером почти для всех провинций и отдельно указывает **911** именно для провинции Буэнос-Айрес и **106** для Неукена. Это расхождение между двумя официальными страницами государства, а не наша ошибка или устаревшая память: звоните **911** в любом случае (это единственный номер, который повторяется на обоих ресурсах для дозвона), а по прибытии в конкретный город уточните местный медицинский номер у отеля, хостела или ресепшена.\n\nDNU 366/2025 прямо устанавливает: экстренную медицинскую помощь нельзя отказать или ограничить иностранцу независимо от миграционного статуса. В неотложной ситуации сначала обращайтесь за помощью, а вопросы оплаты и страхового возмещения решайте после стабилизации.\n\n## Как устроена система\n\nПодробная схема — в [[sistema-zdravoohraneniya|гиде по системе здравоохранения]]. Практически вы встретите три контура:\n\n- **público** — государственные больницы и центры здоровья;\n- **obra social** — медицинское покрытие, обычно связанное с формальной занятостью или взносами;\n- **prepaga** — частный план медицинского обслуживания.\n\nЭто не три одинаковых «страховки». У них различаются основания доступа, сеть, запись, согласования и расходы. Даже внутри одной prepaga конкретный план может не включать нужную клинику или иметь периоды ожидания и доплаты.\n\nDNU 366/2025 различает экстренную и обычную помощь. Постоянные резиденты получают доступ к публичной системе на равных условиях с аргентинскими гражданами. Для других иностранцев в учреждениях федерального подчинения обычная помощь связана с предъявлением страховки или предварительной оплатой по правилам Минздрава. Аргентина федеративна, поэтому условия конкретной провинции, CABA и учреждения нужно уточнять непосредственно там; некорректно обещать одну модель всей стране.\n\n## Страховка для поездки\n\nПосле реформы при въезде предусмотрена декларация о наличии медицинской страховки. Практический разбор — [[nuzhna-li-strahovka-dlya-vezda|в отдельном FAQ]]. Государственный акт не устанавливает универсальный рекламный лимит в долларах, поэтому сравнивайте содержание полиса:\n\n- территорию и весь срок поездки;\n- экстренную помощь и госпитализацию;\n- хронические и ранее существовавшие состояния;\n- беременность;\n- активный спорт, треккинг, высоту и вождение;\n- эвакуацию и репатриацию;\n- франшизу, исключения и порядок согласования;\n- оплату клинике напрямую или возмещение после оплаты.\n\nСохраните номер полиса, контакты assistance и инструкцию офлайн. Узнайте, нужно ли звонить до визита, кроме очевидной экстренной ситуации.\n\n## Покрытие для жизни\n\nВыбор разбирает [[medicina-i-strahovka|гид по страховке и prepaga]]. Сравнивайте не только месячную цену. Запросите *cartilla* — сеть врачей и клиник — для своего города, условия госпитализации, анализов, стоматологии, психического здоровья, лекарств, доплат и повышения тарифа.\n\nЕсли вы работаете официально или платите monotributo, наличие взноса obra social не означает мгновенного доступа к любой выбранной организации. Проверьте оформление и фактическую активацию. Precaria или временная резиденция не равны постоянной резиденции для всех правил доступа.\n\n## Хронические заболевания и лекарства\n\nДо переезда подготовьте медицинскую выписку с диагнозом, историей лечения, аллергиями и **действующими веществами** препаратов. Торговое название в России и Аргентине может отличаться. Возьмите запас на переходный период только в рамках правил перевозки; см. [[provoz-lekarstv|гид по лекарствам]].\n\nНе предполагайте, что рецептурный препарат продадут по российскому назначению. Аргентинские правила различают свободную продажу, рецепт и специальные режимы отпуска. Для продолжения лечения заранее найдите профильного врача и уточните местную форму рецепта. Храните лекарства в оригинальной упаковке и перевозите температурно-чувствительные препараты по инструкции производителя.\n\n## Особые ситуации\n\n- Беременность и роды: [[rody-i-beremennost|план наблюдения, клиника и документы]].\n- Пожилой возраст: [[zhizn-na-pensii|медицинская стратегия пенсионера]], включая сеть и хроническую терапию.\n- Инвалидность: [[dostupnaya-sreda-i-invalidnost|доступность и CUD]], без обещания одинаковой инфраструктуры в каждом регионе.\n- Вакцинация: [[kakie-privivki-nuzhny-dlya-argentiny|актуальные рекомендации]], которые зависят от маршрута и здоровья.\n- Вода: [[mozhno-li-pit-vodu-iz-krana|локальная проверка качества воды]], а не одно правило для всей страны.\n\n## Медицинская папка\n\nХраните офлайн: паспорт и DNI при наличии, полис, контакты assistance, список диагнозов и аллергий на испанском, назначения, действующие вещества и дозировки, экстренный контакт, адрес ближайшей guardia и локальные номера помощи. Не отправляйте полную медицинскую историю незнакомому посреднику.\n\nЭта карта помогает выбрать маршрут, но не ставит диагноз и не заменяет врача. При симптомах ориентируйтесь на клиническую срочность, а не на удобство страхового приложения.\n\n## Источники\n\n- [Decreto DNU 366/2025 — правила доступа к помощи и страховки](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)\n- [Argentina.gob.ar — экстренные номера](https://www.argentina.gob.ar/tema/emergencias)\n- [Минздрав — номера медицинской помощи по территориям](https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica)\n- [Resolución 2214/2025 — рецепты и отпуск лекарств](https://www.argentina.gob.ar/normativa/nacional/415349/texto)"
     },
     {
       "id": "gid-po-transportu",
@@ -26882,19 +26862,20 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "mastercard-russia-suspension-prepay",
-          "title": "Mastercard — приостановка операций в России",
-          "url": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
+          "title": "Mastercard — приостановка операций в России (архивная копия SEC EDGAR)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm",
           "lang": "en",
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Прямые страницы mastercard.com/*/en/news-and-trends/... заблокированы для автоматического запроса из этой среды (403/timeout); содержание идентично, подтверждено также investor.mastercard.com и businesswire.com."
         },
         {
           "id": "bcra-cbu-cvu-alias-prepay",
@@ -26904,8 +26885,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2027-01-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -26917,7 +26898,7 @@
             "visa-russia-suspension-prepay",
             "mastercard-russia-suspension-prepay"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -26930,7 +26911,7 @@
           "source_ids": [
             "bcra-cbu-cvu-alias-prepay"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -26945,30 +26926,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 315,
-        "needs_attention": true,
+        "word_count": 307,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 2,
@@ -26983,7 +26960,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Ответ\n\nНачните не с поиска «обхода», а с письменного запроса продавцу. Укажите страну выпуска карты и попросите перечислить способы оплаты именно для выбранного тарифа: платёжная ссылка, банковский перевод, официальный посредник, депозит и остаток на месте либо полностью возвратная бронь без предоплаты. Российские Visa и Mastercard на зарубежную оплату не рассчитывайте.\n\nПеред переводом получите документ, где совпадают юридическое имя продавца, услуга, даты, валюта, полная цена, размер депозита, условия отмены и возврата. Если дают аргентинские реквизиты CBU/CVU или alias, проверьте имя владельца до подтверждения. Перевод на личный счёт менеджера, гида или «знакомого кассира» не равен оплате компании и усложняет возврат.\n\nРабочие сценарии зависят от продавца:\n\n- оплатить собственной картой банка другой страны, если эмитент и продавец разрешают операцию;\n- забронировать через известную платформу, которая принимает ваш законный способ оплаты и выдаёт подтверждение;\n- согласовать депозит официальному оператору и остаток в кассе или на месте;\n- выбрать тариф без предоплаты, если он действительно фиксирует номер или услугу и условия не допускают внезапной отмены.\n\nНе утверждайте заранее, что «любой русскоязычный тур можно оплатить рублями»: это коммерческое условие конкретного юридического лица, которое может измениться. Криптовалюта тоже не является знаком надёжности. Если продавец её принимает, в договоре всё равно должны быть сумма и валюта расчёта, сеть, адрес, момент фиксации курса, комиссия, порядок возврата и идентификация получателя.\n\nДля дорогой покупки сначала проведите небольшую тестовую операцию либо позвоните продавцу по контакту с официального сайта. Сохраните счёт, переписку, подтверждение платежа и правила тарифа офлайн. При несовпадении имени получателя, давлении «оплатить за десять минут» или просьбе разбить перевод между несколькими людьми остановитесь и перепроверьте бронь.\n\n## Источники\n\n- [Visa — ограничения для карт российских банков](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).\n- [Mastercard — ограничения для карт российских банков](https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html).\n- [BCRA — реквизиты CBU, CVU и alias](https://www.bcra.gob.ar/Pdfs/BCRAyVos/Educ.%20Financiera_agosto_2023.pdf)."
+      "body": "## Ответ\n\nНачните не с поиска «обхода», а с письменного запроса продавцу. Укажите страну выпуска карты и попросите перечислить способы оплаты именно для выбранного тарифа: платёжная ссылка, банковский перевод, официальный посредник, депозит и остаток на месте либо полностью возвратная бронь без предоплаты. Российские Visa и Mastercard на зарубежную оплату не рассчитывайте.\n\nПеред переводом получите документ, где совпадают юридическое имя продавца, услуга, даты, валюта, полная цена, размер депозита, условия отмены и возврата. Если дают аргентинские реквизиты CBU/CVU или alias, проверьте имя владельца до подтверждения. Перевод на личный счёт менеджера, гида или «знакомого кассира» не равен оплате компании и усложняет возврат.\n\nРабочие сценарии зависят от продавца:\n\n- оплатить собственной картой банка другой страны, если эмитент и продавец разрешают операцию;\n- забронировать через известную платформу, которая принимает ваш законный способ оплаты и выдаёт подтверждение;\n- согласовать депозит официальному оператору и остаток в кассе или на месте;\n- выбрать тариф без предоплаты, если он действительно фиксирует номер или услугу и условия не допускают внезапной отмены.\n\nНе утверждайте заранее, что «любой русскоязычный тур можно оплатить рублями»: это коммерческое условие конкретного юридического лица, которое может измениться. Криптовалюта тоже не является знаком надёжности. Если продавец её принимает, в договоре всё равно должны быть сумма и валюта расчёта, сеть, адрес, момент фиксации курса, комиссия, порядок возврата и идентификация получателя.\n\nДля дорогой покупки сначала проведите небольшую тестовую операцию либо позвоните продавцу по контакту с официального сайта. Сохраните счёт, переписку, подтверждение платежа и правила тарифа офлайн. При несовпадении имени получателя, давлении «оплатить за десять минут» или просьбе разбить перевод между несколькими людьми остановитесь и перепроверьте бронь.\n\n## Источники\n\n- [Visa — ограничения для карт российских банков](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).\n- [Mastercard — ограничения для карт российских банков](https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm).\n- [BCRA — реквизиты CBU, CVU и alias](https://www.bcra.gob.ar/Pdfs/BCRAyVos/Educ.%20Financiera_agosto_2023.pdf)."
     },
     {
       "id": "kak-perevezti-kota-ili-sobaku",
@@ -27146,19 +27123,20 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "mastercard-russia-suspension",
-          "title": "Mastercard — приостановка операций в России",
-          "url": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
+          "title": "Mastercard — приостановка операций в России (архивная копия SEC EDGAR)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm",
           "lang": "en",
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Прямые страницы mastercard.com/*/en/news-and-trends/... заблокированы для автоматического запроса из этой среды (403/timeout); содержание идентично, подтверждено также investor.mastercard.com и businesswire.com."
         },
         {
           "id": "bcra-authorized-fx-channels",
@@ -27179,8 +27157,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -27191,7 +27169,7 @@
           "source_ids": [
             "visa-russia-suspension"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27204,7 +27182,7 @@
           "source_ids": [
             "mastercard-russia-suspension"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27217,7 +27195,7 @@
           "source_ids": [
             "bcra-authorized-fx-channels"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27230,7 +27208,7 @@
           "source_ids": [
             "western-union-argentina-quote"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -27245,30 +27223,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 336,
-        "needs_attention": true,
+        "word_count": 328,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 10,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 4,
           "identified_source_count": 4,
           "claim_count": 4,
@@ -27283,7 +27257,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Ответ\n\nКарты Visa и Mastercard, выпущенные российскими банками, не следует считать резервом для Аргентины: сами платёжные системы прекратили их зарубежное обслуживание. Проверка баланса или работа карты внутри России этого не меняет.\n\nСоберите платёжный план из независимых каналов:\n\n1. **Иностранная карта**, если она законно оформлена на вас и её банк разрешает операции в Аргентине. До поездки проверьте интернет-покупку, лимиты, конвертацию, комиссию и способ подтверждения без российской SIM-карты.\n2. **Наличные**, разделённые между безопасными местами. Меняйте валюту в банке или уполномоченном обменном доме и заранее спрашивайте итоговую сумму после комиссии. Не передавайте деньги уличному посреднику ради обещанного курса.\n3. **Денежный перевод самому себе** через провайдера, который реально принимает отправление из вашей страны и выдаёт его в выбранном городе. Рассчитайте тестовую операцию в официальном интерфейсе: доступность Western Union, например, нельзя переносить с американского или европейского маршрута на российский автоматически.\n4. **Предоплаченные брони** для ключевых расходов. Оплатите международный и внутренние перелёты, первые ночи и обязательные экскурсии до выезда только через проверяемого продавца и с понятными условиями возврата.\n\nКарта «Мир», криптовалюта, P2P и «помощь обменника в Telegram» не должны быть единственным планом. Приём «Мир» нужно подтверждать у конкретного банка и продавца; криптооперации требуют отдельной проверки законности, комиссии, налоговых последствий и контрагента. Мы не рекомендуем переводить активы незнакомому человеку в обмен на наличные.\n\nПеред вылетом проведите малую тестовую оплату каждым цифровым способом, сохраните контакты эмитента карты и провайдера перевода, запишите аварийный бюджет отдельно от телефона и не храните весь запас в одном кошельке. Так отказ одного канала не остановит поездку.\n\n## Источники\n\n- [Visa — приостановка операций по российским картам](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).\n- [Mastercard — приостановка операций в России](https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html).\n- [BCRA — уполномоченные каналы обмена валюты](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).\n- [Western Union — расчёт конкретного перевода](https://www.westernunion.com/us/en/send-money-to-argentina.html)."
+      "body": "## Ответ\n\nКарты Visa и Mastercard, выпущенные российскими банками, не следует считать резервом для Аргентины: сами платёжные системы прекратили их зарубежное обслуживание. Проверка баланса или работа карты внутри России этого не меняет.\n\nСоберите платёжный план из независимых каналов:\n\n1. **Иностранная карта**, если она законно оформлена на вас и её банк разрешает операции в Аргентине. До поездки проверьте интернет-покупку, лимиты, конвертацию, комиссию и способ подтверждения без российской SIM-карты.\n2. **Наличные**, разделённые между безопасными местами. Меняйте валюту в банке или уполномоченном обменном доме и заранее спрашивайте итоговую сумму после комиссии. Не передавайте деньги уличному посреднику ради обещанного курса.\n3. **Денежный перевод самому себе** через провайдера, который реально принимает отправление из вашей страны и выдаёт его в выбранном городе. Рассчитайте тестовую операцию в официальном интерфейсе: доступность Western Union, например, нельзя переносить с американского или европейского маршрута на российский автоматически.\n4. **Предоплаченные брони** для ключевых расходов. Оплатите международный и внутренние перелёты, первые ночи и обязательные экскурсии до выезда только через проверяемого продавца и с понятными условиями возврата.\n\nКарта «Мир», криптовалюта, P2P и «помощь обменника в Telegram» не должны быть единственным планом. Приём «Мир» нужно подтверждать у конкретного банка и продавца; криптооперации требуют отдельной проверки законности, комиссии, налоговых последствий и контрагента. Мы не рекомендуем переводить активы незнакомому человеку в обмен на наличные.\n\nПеред вылетом проведите малую тестовую оплату каждым цифровым способом, сохраните контакты эмитента карты и провайдера перевода, запишите аварийный бюджет отдельно от телефона и не храните весь запас в одном кошельке. Так отказ одного канала не остановит поездку.\n\n## Источники\n\n- [Visa — приостановка операций по российским картам](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).\n- [Mastercard — приостановка операций в России](https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm).\n- [BCRA — уполномоченные каналы обмена валюты](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).\n- [Western Union — расчёт конкретного перевода](https://www.westernunion.com/us/en/send-money-to-argentina.html)."
     },
     {
       "id": "kak-poluchit-grazhdanstvo-za-2-goda",
@@ -28006,8 +27980,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         },
         {
@@ -28017,8 +27991,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified"
         }
       ],
@@ -28030,7 +28004,7 @@
           "source_ids": [
             "caba-tourist-security"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -28045,30 +28019,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
         "word_count": 213,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 5,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 2,
           "identified_source_count": 2,
           "claim_count": 1,
@@ -28188,8 +28158,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -28200,7 +28170,7 @@
           "source_ids": [
             "dnm-rentista-income-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -28213,7 +28183,7 @@
           "source_ids": [
             "dnm-rentista-income-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -28226,7 +28196,7 @@
           "source_ids": [
             "dnm-rentista-income-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -28239,7 +28209,7 @@
           "source_ids": [
             "dnm-rentista-income-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -28254,30 +28224,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
         "word_count": 232,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 6,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 1,
           "identified_source_count": 1,
           "claim_count": 4,
@@ -34230,8 +34196,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальные категории отпуска лекарств и правила электронных рецептов."
         },
         {
@@ -34242,8 +34208,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Контакты медицинской помощи и туристической полиции в CABA; сведения относятся к городской юрисдикции."
         }
       ],
@@ -34255,7 +34221,7 @@
           "source_ids": [
             "argentina-decree-366-2025-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -34268,7 +34234,7 @@
           "source_ids": [
             "argentina-decree-366-2025-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -34281,7 +34247,7 @@
           "source_ids": [
             "argentina-decree-366-2025-health"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -34289,13 +34255,13 @@
         },
         {
           "id": "emergency-numbers-territorial",
-          "text": "911 указан как центральный экстренный номер, а медицинский 107 имеет территориальные ограничения.",
+          "text": "911 указан как центральный экстренный номер по всей стране; медицинский 107 подтверждён официально для CABA, но официальные страницы государства расходятся в описании его покрытия в остальных провинциях — общая страница экстренных служб ограничивает 107 частью провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице распространяет его почти на все провинции.",
           "sensitive": true,
           "source_ids": [
             "argentina-emergency-numbers",
             "buenos-aires-health-security"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -34308,7 +34274,7 @@
           "source_ids": [
             "anmat-prescription-rules-2025"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -34323,30 +34289,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 620,
-        "needs_attention": true,
+        "word_count": 661,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 9,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 4,
           "identified_source_count": 4,
           "claim_count": 5,
@@ -34361,7 +34323,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Что гарантировано\n\nПосле Decreto 366/2025 **неотложную медицинскую помощь нельзя отказать иностранцу**, независимо от его миграционного статуса. Если ситуация угрожает жизни или здоровью, обращайтесь за помощью и звоните 911 либо по медицинскому номеру своей территории.\n\nНомер **107** используется во многих городах, но не является одинаково доступным во всей стране. Национальный портал отдельно указывает его для CABA и ряда территорий; перед поездкой сохраните местный номер скорой помощи.\n\n## Плановое лечение\n\nDecreto 366/2025 различает экстренную и обычную помощь. Постоянные резиденты могут пользоваться государственной системой на равных условиях с гражданами. В учреждениях федерального подчинения для других иностранцев обычное лечение предоставляется при предъявлении страховки или после предварительной оплаты в порядке, который определяет Министерство здравоохранения.\n\nЭто не позволяет дать одну формулу для всех больниц страны: Аргентина — федерация, и правила конкретной провинции, CABA и учреждения могут отличаться. Перед плановым обращением уточняйте условия непосредственно в клинике.\n\n## Страховка при въезде\n\nСтатья 34 миграционного закона в редакции Decreto 366/2025 требует от иностранца при въезде заявить, что у него есть медицинская страховка. Практические формы контроля могут меняться, поэтому перед вылетом проверьте актуальные инструкции Migraciones, консульства и перевозчика.\n\nГосударственный акт не устанавливает универсальное покрытие в долларах. Сравнивайте не только лимит, но и исключения: активный спорт, высоту, хронические состояния, госпитализацию, эвакуацию, франшизу и порядок согласования расходов.\n\n## Как выбрать полис туристу\n\nПопросите полные условия, а не только карточку тарифа. Проверьте территорию, даты, возраст, госпитализацию, амбулаторную помощь, эвакуацию, репатриацию, беременность, хронические состояния, стоматологическую экстренную помощь и активный отдых. Для Патагонии и высокогорья отдельно смотрите ограничения по треккингу и высоте.\n\nУточните, как оплачивается лечение: страховая платит клинике напрямую или вы сначала платите сами. Сохраните номер полиса, assistance и инструкцию офлайн. При обычной ситуации свяжитесь с assistance до визита, если это требуется договором; при угрозе жизни сначала вызывайте помощь.\n\n## Precaria и временная резиденция\n\nPrecaria позволяет находиться, въезжать, выезжать, работать и учиться в период действия, но **не делает человека постоянным резидентом**. Поэтому нельзя обещать одинаковый бесплатный доступ к плановой помощи владельцам precaria, временной резиденции и постоянной резиденции.\n\n## Prepaga и obra social\n\nДля долгой жизни сравнивайте конкретный медицинский план и его сеть. Запросите *cartilla* для вашего города, условия guardia, анализов, госпитализации, стоматологии, психического здоровья, лекарств и доплат. Название компании не означает одинаковое покрытие во всех тарифах.\n\nObra social обычно связана с трудовыми или обязательными взносами, prepaga — с частным планом, но реальные маршруты могут пересекаться. Наличие взноса не гарантирует автоматическую активацию выбранной сети. Проверяйте оформление и дату начала покрытия.\n\nТариф зависит от возраста, состава семьи и плана. Не переносите чужую сумму в свой бюджет. Получите персональное письменное предложение и узнайте правила повышения, ожидания и прекращения.\n\n## Лекарства\n\nВ Аргентине есть лекарства свободной продажи, по рецепту, по архивируемому рецепту и с ограниченным отпуском. Категорию устанавливает ANMAT. Не ориентируйтесь на то, как тот же препарат продаётся в России: проверяйте аргентинское действующее вещество и режим отпуска, а рецептурные лекарства получайте по назначению врача.\n\nДо переезда подготовьте выписку с диагнозами, аллергиями, действующими веществами и дозировками. Торговые названия могут отличаться. Запас перевозите в оригинальной упаковке в рамках правил, а температурно-чувствительный препарат — по инструкции производителя.\n\nНе меняйте дозировку и не покупайте рецептурный препарат по совету из чата. Для постоянной терапии заранее найдите профильного врача и уточните, какой местный рецепт нужен.\n\n## Медицинская папка\n\nДержите офлайн:\n\n- паспорт, DNI и полис;\n- контакты assistance;\n- диагнозы и аллергии на испанском;\n- список препаратов по действующему веществу;\n- экстренный контакт;\n- адрес ближайшей guardia;\n- 911 и местный медицинский номер.\n\nДля ребёнка, беременности, хронического заболевания или инвалидности составьте отдельный план регулярной помощи. Общий гид не заменяет врача и индивидуальную оценку полиса.\n\n## Источники\n\n- [Decreto 366/2025](https://www.boletinoficial.gob.ar/detalleAviso/primera/326096/1).\n- [Экстренные номера Аргентины](https://www.argentina.gob.ar/tema/emergencias).\n- [Resolución 2214/2025 о рецептах](https://www.argentina.gob.ar/normativa/nacional/415349/texto).\n- [Медицинская информация для посетителей CABA](https://turismo.buenosaires.gob.ar/es/visit/salud-seguridad-en)."
+      "body": "## Что гарантировано\n\nПосле Decreto 366/2025 **неотложную медицинскую помощь нельзя отказать иностранцу**, независимо от его миграционного статуса. Если ситуация угрожает жизни или здоровью, обращайтесь за помощью и звоните 911 либо по медицинскому номеру своей территории.\n\nНомер **107** используется во многих городах, но не является одинаково доступным во всей стране, и официальные источники сами не полностью согласованы о том, где именно: общая страница экстренных служб называет его номером CABA и части провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице — почти всех провинций (а провинцию Буэнос-Айрес относит к 911, Неукен — к 106). Перед поездкой сохраните местный номер скорой помощи и в любой непонятной ситуации звоните **911**.\n\n## Плановое лечение\n\nDecreto 366/2025 различает экстренную и обычную помощь. Постоянные резиденты могут пользоваться государственной системой на равных условиях с гражданами. В учреждениях федерального подчинения для других иностранцев обычное лечение предоставляется при предъявлении страховки или после предварительной оплаты в порядке, который определяет Министерство здравоохранения.\n\nЭто не позволяет дать одну формулу для всех больниц страны: Аргентина — федерация, и правила конкретной провинции, CABA и учреждения могут отличаться. Перед плановым обращением уточняйте условия непосредственно в клинике.\n\n## Страховка при въезде\n\nСтатья 34 миграционного закона в редакции Decreto 366/2025 требует от иностранца при въезде заявить, что у него есть медицинская страховка. Практические формы контроля могут меняться, поэтому перед вылетом проверьте актуальные инструкции Migraciones, консульства и перевозчика.\n\nГосударственный акт не устанавливает универсальное покрытие в долларах. Сравнивайте не только лимит, но и исключения: активный спорт, высоту, хронические состояния, госпитализацию, эвакуацию, франшизу и порядок согласования расходов.\n\n## Как выбрать полис туристу\n\nПопросите полные условия, а не только карточку тарифа. Проверьте территорию, даты, возраст, госпитализацию, амбулаторную помощь, эвакуацию, репатриацию, беременность, хронические состояния, стоматологическую экстренную помощь и активный отдых. Для Патагонии и высокогорья отдельно смотрите ограничения по треккингу и высоте.\n\nУточните, как оплачивается лечение: страховая платит клинике напрямую или вы сначала платите сами. Сохраните номер полиса, assistance и инструкцию офлайн. При обычной ситуации свяжитесь с assistance до визита, если это требуется договором; при угрозе жизни сначала вызывайте помощь.\n\n## Precaria и временная резиденция\n\nPrecaria позволяет находиться, въезжать, выезжать, работать и учиться в период действия, но **не делает человека постоянным резидентом**. Поэтому нельзя обещать одинаковый бесплатный доступ к плановой помощи владельцам precaria, временной резиденции и постоянной резиденции.\n\n## Prepaga и obra social\n\nДля долгой жизни сравнивайте конкретный медицинский план и его сеть. Запросите *cartilla* для вашего города, условия guardia, анализов, госпитализации, стоматологии, психического здоровья, лекарств и доплат. Название компании не означает одинаковое покрытие во всех тарифах.\n\nObra social обычно связана с трудовыми или обязательными взносами, prepaga — с частным планом, но реальные маршруты могут пересекаться. Наличие взноса не гарантирует автоматическую активацию выбранной сети. Проверяйте оформление и дату начала покрытия.\n\nТариф зависит от возраста, состава семьи и плана. Не переносите чужую сумму в свой бюджет. Получите персональное письменное предложение и узнайте правила повышения, ожидания и прекращения.\n\n## Лекарства\n\nВ Аргентине есть лекарства свободной продажи, по рецепту, по архивируемому рецепту и с ограниченным отпуском. Категорию устанавливает ANMAT. Не ориентируйтесь на то, как тот же препарат продаётся в России: проверяйте аргентинское действующее вещество и режим отпуска, а рецептурные лекарства получайте по назначению врача.\n\nДо переезда подготовьте выписку с диагнозами, аллергиями, действующими веществами и дозировками. Торговые названия могут отличаться. Запас перевозите в оригинальной упаковке в рамках правил, а температурно-чувствительный препарат — по инструкции производителя.\n\nНе меняйте дозировку и не покупайте рецептурный препарат по совету из чата. Для постоянной терапии заранее найдите профильного врача и уточните, какой местный рецепт нужен.\n\n## Медицинская папка\n\nДержите офлайн:\n\n- паспорт, DNI и полис;\n- контакты assistance;\n- диагнозы и аллергии на испанском;\n- список препаратов по действующему веществу;\n- экстренный контакт;\n- адрес ближайшей guardia;\n- 911 и местный медицинский номер.\n\nДля ребёнка, беременности, хронического заболевания или инвалидности составьте отдельный план регулярной помощи. Общий гид не заменяет врача и индивидуальную оценку полиса.\n\n## Источники\n\n- [Decreto 366/2025](https://www.boletinoficial.gob.ar/detalleAviso/primera/326096/1).\n- [Экстренные номера Аргентины](https://www.argentina.gob.ar/tema/emergencias).\n- [Resolución 2214/2025 о рецептах](https://www.argentina.gob.ar/normativa/nacional/415349/texto).\n- [Медицинская информация для посетителей CABA](https://turismo.buenosaires.gob.ar/es/visit/salud-seguridad-en)."
     },
     {
       "id": "mendoza",
@@ -36448,8 +36410,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -36460,7 +36422,7 @@
           "source_ids": [
             "argentina-migrant-account-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -36473,7 +36435,7 @@
           "source_ids": [
             "argentina-migrant-account-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -36486,7 +36448,7 @@
           "source_ids": [
             "argentina-migrant-account-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -36501,30 +36463,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
         "word_count": 246,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 5,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 1,
           "identified_source_count": 1,
           "claim_count": 3,
@@ -45925,16 +45883,16 @@
       ],
       "sources": [
         {
-          "id": "indec-basic-basket-may-2026",
-          "title": "INDEC — Canasta básica alimentaria y total, mayo de 2026",
-          "url": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf",
+          "id": "indec-basic-basket-jul-2026",
+          "title": "INDEC — Canasta básica alimentaria y total, julio de 2026",
+          "url": "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf",
           "lang": "es",
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
-          "note": "Официальная стоимость базовой корзины в GBA; это нижний социально-статистический ориентир, а не готовый бюджет релоканта."
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Официальная стоимость базовой корзины в GBA (отчёт за июль 2026, опубликован 13.08.2026: CBA 708 016 ARS и CBT 1 564 716 ARS для семьи из 4 человек); это нижний социально-статистический ориентир, а не готовый бюджет релоканта."
         },
         {
           "id": "caba-rental-market-first-quarter-2026",
@@ -45944,8 +45902,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Датированные средние цены объявлений по типам квартир и районам CABA; отчёт использует данные предложений Argenprop."
         },
         {
@@ -45968,8 +45926,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Подтверждает, что действующая precaria вместе с CUIL позволяет работать."
         },
         {
@@ -45991,9 +45949,9 @@
           "text": "Canasta básica INDEC — социально-статистический показатель для GBA, а не готовый бюджет переезда или аренды.",
           "sensitive": true,
           "source_ids": [
-            "indec-basic-basket-may-2026"
+            "indec-basic-basket-jul-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -46006,7 +45964,7 @@
           "source_ids": [
             "caba-rental-market-first-quarter-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -46019,7 +45977,7 @@
           "source_ids": [
             "bcra-authorized-foreign-exchange"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -46032,7 +45990,7 @@
           "source_ids": [
             "migrant-work-with-precaria"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -46045,7 +46003,7 @@
           "source_ids": [
             "argentina-decree-366-2025-health-insurance"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -46060,30 +46018,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "pereezd-s-ogranichennym-byudzhetom-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
         "word_count": 747,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 11,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 5,
@@ -46098,7 +46052,7 @@
       "best_time": null,
       "cost": null,
       "duration": null,
-      "body": "## Почему нельзя назвать одну минимальную сумму\n\nФраза «на переезд достаточно $6–8 тысяч» выглядит удобно, но скрывает слишком много переменных. Один человек снимает комнату, другой — временную квартиру; один приезжает с доходом, другой только начинает искать работу. Даже при одинаковой сумме запас заканчивается в разные сроки.\n\nПоэтому считать нужно не чужой месячный бюджет, а свой **финансовый запас** — число месяцев, которые вы сможете прожить без нового дохода.\n\n## Шаг 1. Регулярный месяц\n\nСоставьте таблицу в аргентинских песо:\n\n- жильё и коммунальные платежи;\n- питание и бытовые покупки;\n- транспорт и связь;\n- медицинская страховка и лекарства;\n- документы, переводы и профессиональные услуги;\n- обязательные платежи в России;\n- небольшой запас на непредвиденные расходы.\n\nОфициальная базовая корзина INDEC помогает понять общий уровень цен, но не заменяет личную смету. Она не учитывает все особенности жилья и переезда. Для аренды используйте свежие объявления и датированные отчёты по выбранному городу и району.\n\n## Шаг 2. Первый месяц\n\nПервый месяц обычно отличается от регулярного. Отдельно добавьте:\n\n- временное жильё до выбора района;\n- залог и иные согласованные платежи по аренде;\n- транспорт из аэропорта и переезд;\n- минимальное обустройство;\n- связь, документы и переводы;\n- страховой полис на первый период.\n\nНе смешивайте эти разовые расходы с обычным месяцем: иначе запас получится завышенным.\n\n## Шаг 3. Неприкосновенный резерв\n\nРезерв не участвует в расчёте повседневной жизни. В него входят билет на выезд, медицинская ситуация, потеря жилья или дохода. Если после вычета резерва остаётся запас только на короткий срок, переезд без подтверждённого дохода становится особенно рискованным.\n\n## Шаг 4. Посчитать срок автономности\n\nИспользуйте формулу:\n\n`(доступные деньги − первый месяц − неприкосновенный резерв) / регулярный месяц`\n\nРезультат — число месяцев без нового дохода. Не включайте кредитный лимит, обещанную зарплату, ещё не проданную вещь или деньги, доступ к которым зависит от одного заблокированного сервиса.\n\nСделайте три сценария:\n\n- **базовый** — текущие проверенные цены;\n- **стрессовый** — жильё и медицина дороже, доход задерживается;\n- **аварийный** — нужно быстро сменить жильё или уехать.\n\nЕсли стрессовый сценарий разрушает план за несколько недель, сначала уменьшите фиксированные расходы или увеличьте резерв.\n\n## Жильё: считать полную стартовую цену\n\nIDECBA даёт датированную картину предложений в CABA, но конкретная квартира может отличаться. Сравнивайте одинаковый тип, район и состояние. В стартовую сумму добавляйте не только первый месяц, но и согласованный депозит, временное жильё до подписания договора, переезд, expensas и необходимые покупки.\n\nДо оплаты получите письменный договор и проверьте получателя. Не переводите крупную сумму незнакомому посреднику из-за обещания «цена только сегодня». Ограниченный бюджет делает потерю депозита особенно опасной.\n\n## Медицина и страховка\n\nDNU 366/2025 предусматривает декларацию о наличии медицинской страховки при въезде. Для бюджета важны не только месячная цена, но и франшиза, исключения, лекарства и порядок согласования. Человеку с хроническим заболеванием нужен отдельный запас на переходный период и поиск врача.\n\nНе считайте экстренную доступность государственной помощи заменой планового медицинского бюджета. Условия зависят от статуса, территории и учреждения.\n\n## Работа и документы\n\nНе считайте будущую зарплату гарантированной. Для официальной работы важны миграционный статус, разрешающий работать, и CUIL. Действующая precaria вместе с CUIL позволяет работать, но само начало заявления в RADEX ещё не равно готовому разрешению.\n\nРазрешение работать не означает, что работа найдётся к выбранной дате. Считайте доход только после подписанного договора или нескольких месяцев подтверждённой удалённой выручки. Для нестабильного дохода используйте нижнее значение, а не лучший месяц.\n\nДокументальные расходы ведите отдельной строкой: справки, апостили, переводы, сборы, поездки и профессиональные консультации. Итог берите со страницы конкретной процедуры; универсальной цены «оформить все документы» нет.\n\n## Обмен валюты\n\nСравнивайте курс банка и уполномоченной обменной организации. Не пользуйтесь услугами случайных валютных посредников: BCRA требует проводить операции через разрешённых участников.\n\nПодготовьте два независимых законных канала доступа к деньгам. Проведите малую тестовую операцию до переезда и храните аварийный резерв отдельно от телефона. Не считайте USDT, P2P или перевод через знакомого гарантированным способом: проверяйте контрагента, комиссии, законность и налоговые последствия.\n\n## Когда план лучше отложить\n\nПауза разумна, если после первого месяца и резерва деньги заканчиваются до ожидаемого дохода; жильё можно оплатить только невозвратным переводом неизвестному человеку; медицинская потребность не покрыта; или весь капитал доступен через один сервис. Это не запрет на переезд, а сигнал сначала снизить риск.\n\nХороший ограниченный бюджет — не самый маленький. Это бюджет, в котором понятны обязательные расходы, срок автономности и безопасный выход из неудачного сценария.\n\n## Источники\n\n- [INDEC — базовая корзина, май 2026](https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf).\n- [IDECBA — аренда в CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf).\n- [BCRA — правила валютных операций](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).\n- [Работа иностранца с precaria и CUIL](https://www.argentina.gob.ar/recibir-orientacion-laboral-para-trabajadores-extranjeros-y-sus-empleadores)."
+      "body": "## Почему нельзя назвать одну минимальную сумму\n\nФраза «на переезд достаточно $6–8 тысяч» выглядит удобно, но скрывает слишком много переменных. Один человек снимает комнату, другой — временную квартиру; один приезжает с доходом, другой только начинает искать работу. Даже при одинаковой сумме запас заканчивается в разные сроки.\n\nПоэтому считать нужно не чужой месячный бюджет, а свой **финансовый запас** — число месяцев, которые вы сможете прожить без нового дохода.\n\n## Шаг 1. Регулярный месяц\n\nСоставьте таблицу в аргентинских песо:\n\n- жильё и коммунальные платежи;\n- питание и бытовые покупки;\n- транспорт и связь;\n- медицинская страховка и лекарства;\n- документы, переводы и профессиональные услуги;\n- обязательные платежи в России;\n- небольшой запас на непредвиденные расходы.\n\nОфициальная базовая корзина INDEC помогает понять общий уровень цен, но не заменяет личную смету. Она не учитывает все особенности жилья и переезда. Для аренды используйте свежие объявления и датированные отчёты по выбранному городу и району.\n\n## Шаг 2. Первый месяц\n\nПервый месяц обычно отличается от регулярного. Отдельно добавьте:\n\n- временное жильё до выбора района;\n- залог и иные согласованные платежи по аренде;\n- транспорт из аэропорта и переезд;\n- минимальное обустройство;\n- связь, документы и переводы;\n- страховой полис на первый период.\n\nНе смешивайте эти разовые расходы с обычным месяцем: иначе запас получится завышенным.\n\n## Шаг 3. Неприкосновенный резерв\n\nРезерв не участвует в расчёте повседневной жизни. В него входят билет на выезд, медицинская ситуация, потеря жилья или дохода. Если после вычета резерва остаётся запас только на короткий срок, переезд без подтверждённого дохода становится особенно рискованным.\n\n## Шаг 4. Посчитать срок автономности\n\nИспользуйте формулу:\n\n`(доступные деньги − первый месяц − неприкосновенный резерв) / регулярный месяц`\n\nРезультат — число месяцев без нового дохода. Не включайте кредитный лимит, обещанную зарплату, ещё не проданную вещь или деньги, доступ к которым зависит от одного заблокированного сервиса.\n\nСделайте три сценария:\n\n- **базовый** — текущие проверенные цены;\n- **стрессовый** — жильё и медицина дороже, доход задерживается;\n- **аварийный** — нужно быстро сменить жильё или уехать.\n\nЕсли стрессовый сценарий разрушает план за несколько недель, сначала уменьшите фиксированные расходы или увеличьте резерв.\n\n## Жильё: считать полную стартовую цену\n\nIDECBA даёт датированную картину предложений в CABA, но конкретная квартира может отличаться. Сравнивайте одинаковый тип, район и состояние. В стартовую сумму добавляйте не только первый месяц, но и согласованный депозит, временное жильё до подписания договора, переезд, expensas и необходимые покупки.\n\nДо оплаты получите письменный договор и проверьте получателя. Не переводите крупную сумму незнакомому посреднику из-за обещания «цена только сегодня». Ограниченный бюджет делает потерю депозита особенно опасной.\n\n## Медицина и страховка\n\nDNU 366/2025 предусматривает декларацию о наличии медицинской страховки при въезде. Для бюджета важны не только месячная цена, но и франшиза, исключения, лекарства и порядок согласования. Человеку с хроническим заболеванием нужен отдельный запас на переходный период и поиск врача.\n\nНе считайте экстренную доступность государственной помощи заменой планового медицинского бюджета. Условия зависят от статуса, территории и учреждения.\n\n## Работа и документы\n\nНе считайте будущую зарплату гарантированной. Для официальной работы важны миграционный статус, разрешающий работать, и CUIL. Действующая precaria вместе с CUIL позволяет работать, но само начало заявления в RADEX ещё не равно готовому разрешению.\n\nРазрешение работать не означает, что работа найдётся к выбранной дате. Считайте доход только после подписанного договора или нескольких месяцев подтверждённой удалённой выручки. Для нестабильного дохода используйте нижнее значение, а не лучший месяц.\n\nДокументальные расходы ведите отдельной строкой: справки, апостили, переводы, сборы, поездки и профессиональные консультации. Итог берите со страницы конкретной процедуры; универсальной цены «оформить все документы» нет.\n\n## Обмен валюты\n\nСравнивайте курс банка и уполномоченной обменной организации. Не пользуйтесь услугами случайных валютных посредников: BCRA требует проводить операции через разрешённых участников.\n\nПодготовьте два независимых законных канала доступа к деньгам. Проведите малую тестовую операцию до переезда и храните аварийный резерв отдельно от телефона. Не считайте USDT, P2P или перевод через знакомого гарантированным способом: проверяйте контрагента, комиссии, законность и налоговые последствия.\n\n## Когда план лучше отложить\n\nПауза разумна, если после первого месяца и резерва деньги заканчиваются до ожидаемого дохода; жильё можно оплатить только невозвратным переводом неизвестному человеку; медицинская потребность не покрыта; или весь капитал доступен через один сервис. Это не запрет на переезд, а сигнал сначала снизить риск.\n\nХороший ограниченный бюджет — не самый маленький. Это бюджет, в котором понятны обязательные расходы, срок автономности и безопасный выход из неудачного сценария.\n\n## Источники\n\n- [INDEC — базовая корзина, июль 2026](https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf).\n- [IDECBA — аренда в CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf).\n- [BCRA — правила валютных операций](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).\n- [Работа иностранца с precaria и CUIL](https://www.argentina.gob.ar/recibir-orientacion-laboral-para-trabajadores-extranjeros-y-sus-empleadores)."
     },
     {
       "id": "perevoz-veshchey-i-pitomtsev",
@@ -48813,8 +48767,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Закрепляет право иностранцев владеть, покупать и отчуждать недвижимость согласно закону."
         },
         {
@@ -48824,10 +48778,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-07-20",
           "expires_at": "2026-08-19",
-          "note": "Устанавливает escritura pública для договоров о приобретении, изменении или прекращении вещных прав на недвижимость."
+          "note": "Устанавливает escritura pública для договоров о приобретении, изменении или прекращении вещных прав на недвижимость. Повторная проверка 2026-08-21: документ (полный Código Civil) слишком велик и не открылся за отведённое время инструмента — это не признак недоступности страницы, но требует ручной или отдельной технической перепроверки, а не считается подтверждённым автоматически."
         },
         {
           "id": "argentina-rural-land-law-26737",
@@ -48837,8 +48791,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Определяет сельские земли и ограничения иностранного владения."
         },
         {
@@ -48849,8 +48803,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальная процедура предварительного разрешения иностранцу на приобретение сельской земли."
         },
         {
@@ -48861,8 +48815,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "CDI для лица без CUIT/CUIL, которому нужно приобрести регистрируемый актив; описывает документы и очную подачу."
         },
         {
@@ -48873,8 +48827,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Роль escribano, проверка титула и правила выбора специалиста с исключениями для отдельных сделок."
         },
         {
@@ -48884,10 +48838,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-07-20",
           "expires_at": "2026-08-19",
-          "note": "Показывает, что ставка и льгота привязаны к конкретной юрисдикции, назначению жилья и порогу 2026 года."
+          "note": "Показывает, что ставка и льгота привязаны к конкретной юрисдикции, назначению жилья и порогу 2026 года. Повторная проверка 2026-08-21: сама страница AGIP не открылась за отведённое время инструмента, но независимый источник — Colegio de Escribanos CABA (проверен в этой же сессии) — называет тот же порог 2026 года ($205 332 000 для единственного жилья постоянного проживания в CABA) и ставку 3,5%, что косвенно подтверждает актуальность цифры."
         }
       ],
       "claims": [
@@ -48898,7 +48852,7 @@
           "source_ids": [
             "argentina-constitution-article-20"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -48911,7 +48865,7 @@
           "source_ids": [
             "argentina-civil-code-public-deed"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -48925,7 +48879,7 @@
             "argentina-rural-land-law-26737",
             "argentina-rural-land-authorization"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -48938,7 +48892,7 @@
           "source_ids": [
             "arca-cdi-registrable-assets"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -48951,7 +48905,7 @@
           "source_ids": [
             "caba-notaries-property-purchase"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -48966,13 +48920,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "pokupka-nedvizhimosti-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 7,
@@ -48984,11 +48938,11 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 19,
+          "issue_count": 6,
           "issue_codes": [
             "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
+            "stale_source_url_check",
+            "unhealthy_source_url"
           ],
           "source_count": 7,
           "identified_source_count": 7,
@@ -61636,8 +61590,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "bcra-authorized-exchange-fake-police",
@@ -61658,8 +61612,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -61670,7 +61624,7 @@
           "source_ids": [
             "argentina-911-fake-police"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61683,7 +61637,7 @@
           "source_ids": [
             "bcra-authorized-exchange-fake-police"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61696,7 +61650,7 @@
           "source_ids": [
             "canada-argentina-cash-safety"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61711,30 +61665,26 @@
       "media": null,
       "status": "published",
       "confidence": "medium",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 288,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,

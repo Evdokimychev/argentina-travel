@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 tags: [деньги, банковский счёт, мигранты, документы]
 related: [bankovskij-schet, dni-cuil]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,26 +22,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: migrant-account-with-residence-certificates
     text: "Официальная программа допускает мигрантов с сертификатом residencia precaria, transitoria, temporaria или permanente."
     sensitive: true
     source_ids: [argentina-migrant-account-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: non-mercosur-migrant-documents
     text: "Для граждан стран вне MERCOSUR перечень предусматривает DNI digital или паспорт, при необходимости с аргентинской консульской визой."
     sensitive: true
     source_ids: [argentina-migrant-account-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: free-peso-savings-account
     text: "Cuenta para migrantes представляет собой бесплатную caja de ahorro en pesos с дебетовой картой и базовыми операциями."
     sensitive: true
     source_ids: [argentina-migrant-account-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

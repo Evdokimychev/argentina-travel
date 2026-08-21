@@ -8,7 +8,7 @@ status: published
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, rentista, доход]
 related: [vnzh-argentina, vnzh-rantye]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,32 +22,32 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: rentista-five-smvm-faq
     text: "Минимальная рента должна быть эквивалентна как минимум пяти действующим SMVM."
     sensitive: true
     source_ids: [dnm-rentista-income-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: rentista-assets-not-work-faq
     text: "Рента должна происходить из зарубежных активов заявителя; вознаграждение за личный труд в категорию rentista не входит."
     sensitive: true
     source_ids: [dnm-rentista-income-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: rentista-authorized-funds-entry
     text: "Заявитель должен показать поступление средств через банковские или финансовые организации, уполномоченные BCRA."
     sensitive: true
     source_ids: [dnm-rentista-income-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: rentista-one-year-faq
     text: "Категория предоставляет временную резиденцию на один год с возможностью продления."
     sensitive: true
     source_ids: [dnm-rentista-income-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

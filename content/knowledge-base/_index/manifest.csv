@@ -41,8 +41,8 @@ barreal,attraction,,Барреаль и Эль-Леонсито,archived,cuyo,me
 bebidas-y-gastronomia-en-cordoba,attraction,,Food and Drink in Córdoba,archived,pampa,medium,2026-07-07,False,2026-10-05,False,54,,,dostoprimechatelnosti/bebidas-y-gastronomia-en-cordoba.md
 belen,attraction,,Belén,archived,noa,medium,2026-07-07,False,2026-10-05,False,56,,,dostoprimechatelnosti/belen.md
 besplatna-li-medicina-dlya-turista,faq,,,published,,high,2026-07-17,True,2026-08-31,False,122,True,0,faq/besplatna-li-medicina-dlya-turista.md
-bezopasno-li-odnoj-zhenshchine,faq,,,published,,high,2026-07-20,True,2026-09-03,True,276,False,7,faq/bezopasno-li-odnoj-zhenshchine.md
-bezopasno-li-v-argentine,faq,,,published,,high,2026-07-20,True,2026-09-03,True,275,False,9,faq/bezopasno-li-v-argentine.md
+bezopasno-li-odnoj-zhenshchine,faq,,,published,,high,2026-08-21,True,2026-10-05,False,276,True,0,faq/bezopasno-li-odnoj-zhenshchine.md
+bezopasno-li-v-argentine,faq,,,published,,high,2026-08-21,True,2026-10-05,False,275,True,0,faq/bezopasno-li-v-argentine.md
 bezopasnost-argentina,guide,safety,Безопасность в Аргентине: реальные риски,published,,medium,2026-07-17,True,2026-08-31,False,900,True,0,bezopasnost/bezopasnost-argentina.md
 bienal-internacional-de-esculturas-en-resistencia,attraction,,Биеннале скульптуры в Ресистенсии,published,litoral,high,2026-07-20,False,2027-01-16,False,531,False,8,dostoprimechatelnosti/bienal-internacional-de-esculturas-en-resistencia.md
 bodega-submarina-en-las-grutas,attraction,,An underwater winery in Las Grutas,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,76,,,dostoprimechatelnosti/bodega-submarina-en-las-grutas.md
@@ -53,7 +53,7 @@ buenos-aires,city,,Буэнос-Айрес,published,caba,high,2026-07-01,False,
 buenos-aires-province,region,,Провинция Буэнос-Айрес,published,,high,2026-07-04,False,2026-12-31,False,801,,,regiony/buenos-aires-province.md
 buenos-aires-tradicional,attraction,,Традиционный Буэнос-Айрес,archived,caba,medium,2026-07-07,False,2026-10-05,False,170,,,dostoprimechatelnosti/buenos-aires-tradicional.md
 byt-i-zhilyo,guide,daily_life,"Быт в Аргентине: квартиры, отопление, коммуналка",published,,high,2026-07-20,True,2026-09-03,False,654,True,0,byt/byt-i-zhilyo.md
-byudzhet-poezdki,guide,finance,Бюджет поездки по Аргентине,published,,high,2026-07-20,True,2026-09-03,True,752,False,11,dengi/byudzhet-poezdki.md
+byudzhet-poezdki,guide,finance,Бюджет поездки по Аргентине,published,,high,2026-08-21,True,2026-10-05,False,752,True,0,dengi/byudzhet-poezdki.md
 caba,region,,Буэнос-Айрес (CABA),published,,high,2026-07-04,False,2026-12-31,False,806,,,regiony/caba.md
 cabalgata-en-el-lago-roca,attraction,,Horseback riding in the Roca lake,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,66,,,dostoprimechatelnosti/cabalgata-en-el-lago-roca.md
 cabalgata-en-los-molles,attraction,,Horseback riding in Los Molles,archived,cuyo,medium,2026-07-07,False,2026-10-05,False,60,,,dostoprimechatelnosti/cabalgata-en-los-molles.md
@@ -100,7 +100,7 @@ chto-delat-krome-dostoprimechatelnostej,faq,,,published,,high,2026-07-20,False,2
 chto-est-vegetariancu,faq,,,published,,high,2026-07-20,False,2027-01-16,False,281,,,faq/chto-est-vegetariancu.md
 chto-stoit-deneg-prioritety,guide,planning,Что реально стоит ваших денег и дней: приоритеты по Аргентине,published,,medium,2026-07-20,False,2026-10-18,False,1076,,,puteshestvie/chto-stoit-deneg-prioritety.md
 chto-takoe-dni-i-cuil,faq,,,published,,high,2026-07-20,True,2026-09-03,False,275,True,0,faq/chto-takoe-dni-i-cuil.md
-chto-takoe-mep,faq,,,published,,high,2026-07-20,True,2026-09-03,True,289,False,9,faq/chto-takoe-mep.md
+chto-takoe-mep,faq,,,published,,high,2026-08-21,True,2026-10-05,False,289,True,0,faq/chto-takoe-mep.md
 chto-takoe-prekariya,faq,,,published,,high,2026-07-17,True,2026-08-31,False,139,True,0,faq/chto-takoe-prekariya.md
 chto-takoe-sube,faq,,,published,,high,2026-07-17,False,2027-01-13,False,131,False,0,faq/chto-takoe-sube.md
 circuito-callejero-de-potrero-de-los-funes,attraction,,Озеро и кольцевая дорога Потреро-де-лос-Фунес,published,cuyo,high,2026-07-20,False,2027-01-16,False,571,False,0,dostoprimechatelnosti/circuito-callejero-de-potrero-de-los-funes.md
@@ -208,7 +208,7 @@ general-acha,attraction,,General Acha,archived,pampa,medium,2026-07-07,False,202
 gid-po-dengam,guide,finance,"Деньги в Аргентине: обмен, карты, банки и бюджет",published,,high,2026-08-21,True,2026-10-05,False,701,True,0,dengi/gid-po-dengam.md
 gid-po-dokumentam,guide,immigration,Документы для въезда и переезда в Аргентину,published,,high,2026-07-20,True,2026-09-03,False,741,True,0,pereezd/gid-po-dokumentam.md
 gid-po-kulture,guide,culture,"Культура Аргентины: традиции, еда и повседневная жизнь",published,,high,2026-07-20,False,2027-01-16,False,619,,,kultura/gid-po-kulture.md
-gid-po-medicine,guide,health,Медицина и страховка в Аргентине: путеводитель,published,,high,2026-07-20,True,2026-09-03,True,678,False,8,medicina/gid-po-medicine.md
+gid-po-medicine,guide,health,Медицина и страховка в Аргентине: путеводитель,published,,high,2026-08-21,True,2026-10-05,False,741,True,0,medicina/gid-po-medicine.md
 gid-po-transportu,transport,,"Транспорт в Аргентине: перелёты, автобусы и аренда авто",published,,high,2026-07-20,False,2027-01-16,False,629,,,transport/gid-po-transportu.md
 gid-po-zhilyu,guide,accommodation,"Жильё в Аргентине: аренда, районы и покупка недвижимости",published,,high,2026-07-20,False,2027-01-16,False,617,,,zhile/gid-po-zhilyu.md
 gid-puteshestvennika,guide,planning,Поездка в Аргентину: как спланировать путешествие,published,,high,2026-07-20,False,2027-01-16,False,703,,,puteshestvie/gid-puteshestvennika.md
@@ -252,17 +252,17 @@ kachi,attraction,,Качи,published,noa,high,2026-07-20,False,2027-01-16,False,
 kak-dobratsya-iz-rossii,transport,,Как добраться из России и стран СНГ в Аргентину,archived,,high,2026-07-17,True,2026-08-31,False,321,True,0,transport/kak-dobratsya-iz-rossii.md
 kak-kupit-aviabilety-deshevle,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,99,,,faq/kak-kupit-aviabilety-deshevle.md
 kak-menyat-valyutu,guide,finance,"Как менять валюту в Аргентине: курс, blue, MEP, карты",published,,high,2026-07-17,True,2026-08-31,False,767,True,0,dengi/kak-menyat-valyutu.md
-kak-oplatit-tur-i-zhilyo-zaranee,faq,,,published,,high,2026-07-20,True,2026-09-03,True,315,False,7,faq/kak-oplatit-tur-i-zhilyo-zaranee.md
+kak-oplatit-tur-i-zhilyo-zaranee,faq,,,published,,high,2026-08-21,True,2026-10-05,False,307,True,0,faq/kak-oplatit-tur-i-zhilyo-zaranee.md
 kak-perevezti-kota-ili-sobaku,faq,,,published,,high,2026-07-17,True,2026-08-31,False,163,True,0,faq/kak-perevezti-kota-ili-sobaku.md
-kak-platit-esli-karta-rf-ne-rabotaet,faq,,,published,,high,2026-07-20,True,2026-09-03,True,336,False,10,faq/kak-platit-esli-karta-rf-ne-rabotaet.md
+kak-platit-esli-karta-rf-ne-rabotaet,faq,,,published,,high,2026-08-21,True,2026-10-05,False,328,True,0,faq/kak-platit-esli-karta-rf-ne-rabotaet.md
 kak-poluchit-grazhdanstvo-za-2-goda,faq,,,published,,medium,2026-08-21,True,2026-10-05,False,264,True,0,faq/kak-poluchit-grazhdanstvo-za-2-goda.md
 kak-poluchit-prava-v-argentine,guide,immigration,"Как получить водительские права в Аргентине: иностранные, обмен и получение с нуля",published,,high,2026-07-20,True,2026-09-03,False,615,True,0,transport/kak-poluchit-prava-v-argentine.md
 kak-snyat-kvartiru-bez-garanta,faq,,,published,,high,2026-07-17,True,2026-08-31,False,136,True,0,faq/kak-snyat-kvartiru-bez-garanta.md
 kakie-dokumenty-vezti-s-soboj,faq,,,published,,high,2026-07-17,True,2026-08-31,False,134,True,0,faq/kakie-dokumenty-vezti-s-soboj.md
 kakie-privivki-nuzhny-dlya-argentiny,faq,,,published,,high,2026-07-01,False,2026-12-28,False,217,,,faq/kakie-privivki-nuzhny-dlya-argentiny.md
-kakie-rajony-ba-izbegat,faq,,,published,,high,2026-07-20,True,2026-09-03,True,213,False,5,faq/kakie-rajony-ba-izbegat.md
+kakie-rajony-ba-izbegat,faq,,,published,,high,2026-08-21,True,2026-10-05,False,213,True,0,faq/kakie-rajony-ba-izbegat.md
 kakie-rozetki-v-argentine,faq,,,published,,high,2026-07-20,False,2027-01-16,False,199,,,faq/kakie-rozetki-v-argentine.md
-kakoj-dohod-nuzhen-dlya-rantye,faq,,,published,,high,2026-07-20,True,2026-09-03,True,232,False,6,faq/kakoj-dohod-nuzhen-dlya-rantye.md
+kakoj-dohod-nuzhen-dlya-rantye,faq,,,published,,high,2026-08-21,True,2026-10-05,False,232,True,0,faq/kakoj-dohod-nuzhen-dlya-rantye.md
 kakoj-mesyats-kuda-ehat,faq,,,published,,medium,2026-07-20,False,2026-10-18,False,358,,,faq/kakoj-mesyats-kuda-ehat.md
 kakoj-otrub-steika-zakazat,faq,,,archived,,high,2026-07-20,False,2027-01-16,False,69,,,faq/kakoj-otrub-steika-zakazat.md
 kaminito-la-boka,attraction,,Каминито и квартал Ла-Бока,published,caba,high,2026-07-17,True,2026-08-31,False,505,True,0,dostoprimechatelnosti/kaminito-la-boka.md
@@ -320,7 +320,7 @@ marshrut-vyhodnogo-dnya-ivana,author_tip,route,Авторский маршрут
 mate,guide,culture,Мате: национальный напиток и его этикет,published,,high,2026-07-20,False,2027-01-16,False,703,,,kultura/mate.md
 mate-en-la-laguna-capri,attraction,,Have some mate by the Capri lagoon,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,62,,,dostoprimechatelnosti/mate-en-la-laguna-capri.md
 mate-etiket-spasibo-lovushka,author_tip,observation,«Спасибо» в кругу мате значит «больше не наливайте» — типичная ловушка для гостя,archived,,medium,2026-07-20,False,2026-10-18,False,154,,,lichnyy-opyt/mate-etiket-spasibo-lovushka.md
-medicina-i-strahovka,guide,health,Медицина и медицинская страховка в Аргентине,published,,high,2026-07-20,True,2026-09-03,True,620,False,9,medicina/medicina-i-strahovka.md
+medicina-i-strahovka,guide,health,Медицина и медицинская страховка в Аргентине,published,,high,2026-08-21,True,2026-10-05,False,661,True,0,medicina/medicina-i-strahovka.md
 mendoza,city,,Мендоса,published,cuyo,high,2026-07-07,False,2027-01-03,False,616,,,goroda/mendoza.md
 mendoza-best-of-wine-tourism,attraction,,"Мендоса, Best of wine tourism",archived,cuyo,medium,2026-07-07,False,2026-10-05,False,63,,,dostoprimechatelnosti/mendoza-best-of-wine-tourism.md
 mendoza-odna-zona-v-den,author_tip,mistake,Мендоса: главная ошибка — смешать винные зоны за один день,archived,,medium,2026-07-20,False,2026-10-18,False,152,,,lichnyy-opyt/mendoza-odna-zona-v-den.md
@@ -340,7 +340,7 @@ mountain-bike-en-piedra-del-aguila,attraction,,Mountain biking in Piedra del Ág
 mozhno-li-delat-vizaran,faq,,,published,,high,2026-07-17,True,2026-08-31,False,163,True,0,faq/mozhno-li-delat-vizaran.md
 mozhno-li-doehat-do-ushuaji-na-mashine,faq,,,published,,high,2026-07-01,False,2026-12-28,False,222,,,faq/mozhno-li-doehat-do-ushuaji-na-mashine.md
 mozhno-li-ezdit-po-inostrannym-pravam,faq,,,published,,high,2026-07-17,True,2026-08-31,False,132,True,0,faq/mozhno-li-ezdit-po-inostrannym-pravam.md
-mozhno-li-otkryt-schet-nerezidentu,faq,,,published,,high,2026-07-20,True,2026-09-03,True,246,False,5,faq/mozhno-li-otkryt-schet-nerezidentu.md
+mozhno-li-otkryt-schet-nerezidentu,faq,,,published,,high,2026-08-21,True,2026-10-05,False,246,True,0,faq/mozhno-li-otkryt-schet-nerezidentu.md
 mozhno-li-pit-vodu-iz-krana,faq,,,published,,high,2026-07-17,True,2026-08-31,False,190,True,0,faq/mozhno-li-pit-vodu-iz-krana.md
 mozhno-li-rabotat-na-mestnuyu-kompaniyu,faq,,,published,,high,2026-07-17,True,2026-08-31,False,145,True,0,faq/mozhno-li-rabotat-na-mestnuyu-kompaniyu.md
 mozhno-li-snimat-dronom,faq,,,published,,medium,2026-07-05,False,2026-10-03,False,176,,,faq/mozhno-li-snimat-dronom.md
@@ -430,7 +430,7 @@ patinaje-en-bahia-redonda,attraction,,Ice-skating in Bahía Redonda,archived,pat
 penas-folkloricas-en-salta,attraction,,Folk peñas in Salta,archived,noa,medium,2026-07-07,False,2026-10-05,False,68,,,dostoprimechatelnosti/penas-folkloricas-en-salta.md
 peninsula-valdes,national_park,,Полуостров Вальдес,published,patagonia,high,2026-07-20,False,2027-01-16,False,509,False,11,natsionalnye-parki/peninsula-valdes.md
 peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco,attraction,,Архив: полуостров Вальдес — объект ЮНЕСКО,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,77,,,dostoprimechatelnosti/peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco.md
-pereezd-s-minimalnym-byudzhetom,guide,immigration,Переезд в Аргентину с ограниченным бюджетом: как посчитать запас,published,,high,2026-07-20,True,2026-09-03,True,747,False,11,pereezd/pereezd-s-minimalnym-byudzhetom.md
+pereezd-s-minimalnym-byudzhetom,guide,immigration,Переезд в Аргентину с ограниченным бюджетом: как посчитать запас,published,,high,2026-08-21,True,2026-10-05,False,747,True,0,pereezd/pereezd-s-minimalnym-byudzhetom.md
 perevoz-veshchey-i-pitomtsev,guide,immigration,Переезд с вещами и домашними животными,archived,,high,2026-07-17,True,2026-08-31,False,208,True,0,pereezd/perevoz-veshchey-i-pitomtsev.md
 perito-moreno,attraction,,Ледник Перито-Морено,published,patagonia,high,2026-07-07,False,2027-01-03,False,559,,,dostoprimechatelnosti/perito-moreno.md
 pervye-tramites,guide,immigration,Первые административные действия после переезда в Аргентину,published,,high,2026-07-20,True,2026-09-03,False,691,True,0,pereezd/pervye-tramites.md
@@ -453,7 +453,7 @@ pochemu-net-pryamyh-reisov,transport,,Почему нет прямых рейс�
 podgotovka-k-poezdke,guide,planning,Подготовка к поездке в Аргентину: проверенный чек-лист,archived,,high,2026-07-17,True,2026-08-31,False,458,True,0,puteshestvie/podgotovka-k-poezdke.md
 poezda,transport,,Поезда дальнего следования в Аргентине,archived,,medium,2026-07-04,False,2026-10-02,False,461,,,transport/poezda.md
 pokupka-avtomobilya,transport,,Покупка автомобиля в Аргентине,published,,high,2026-07-20,True,2026-09-03,False,647,True,0,transport/pokupka-avtomobilya.md
-pokupka-nedvizhimosti,guide,accommodation,Покупка недвижимости в Аргентине для иностранца,published,,high,2026-07-20,True,2026-09-03,True,705,False,19,zhile/pokupka-nedvizhimosti.md
+pokupka-nedvizhimosti,guide,accommodation,Покупка недвижимости в Аргентине для иностранца,published,,high,2026-08-21,True,2026-10-05,True,705,False,6,zhile/pokupka-nedvizhimosti.md
 pokupki-i-tax-free,guide,shopping,Tax free в Аргентине: как оформить возврат,archived,,high,2026-07-17,False,2027-01-13,False,124,False,0,pokupki/pokupki-i-tax-free.md
 poleznye-prilozheniya,guide,communication,Полезные приложения и сервисы в Аргентине,published,,high,2026-07-20,False,2027-01-16,False,617,,,svyaz/poleznye-prilozheniya.md
 posadas,city,,Posadas,archived,litoral,medium,2026-07-07,False,2026-10-05,False,58,,,goroda/posadas.md
@@ -573,7 +573,7 @@ sierras-cordobesas,attraction,,Сьерры Кордовы,archived,pampa,medium
 sierras-de-la-provincia-de-buenos-aires,attraction,,Сьерры провинции Буэнос-Айрес,archived,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,82,,,dostoprimechatelnosti/sierras-de-la-provincia-de-buenos-aires.md
 sierras-de-sumampa,attraction,,Сьерры Сумампа,archived,noa,medium,2026-07-07,False,2026-10-05,False,76,,,dostoprimechatelnosti/sierras-de-sumampa.md
 sistema-zdravoohraneniya,guide,health,"Система здравоохранения Аргентины: público, obra social и prepaga",published,,high,2026-08-17,True,2026-10-01,False,826,True,0,medicina/sistema-zdravoohraneniya.md
-skam-s-falshivoj-policiej,faq,,,published,,medium,2026-07-20,True,2026-09-03,True,288,False,7,faq/skam-s-falshivoj-policiej.md
+skam-s-falshivoj-policiej,faq,,,published,,medium,2026-08-21,True,2026-10-05,False,288,True,0,faq/skam-s-falshivoj-policiej.md
 skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-08-11,True,2026-09-25,True,293,False,1,faq/skolko-deneg-brat-na-poezdku.md
 skolko-dnej-na-marshrut-2-nedeli,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,90,,,faq/skolko-dnej-na-marshrut-2-nedeli.md
 skolko-dnej-nuzhno-na-iguasu,faq,,,archived,,high,2026-07-20,False,2027-01-16,False,74,,,faq/skolko-dnej-nuzhno-na-iguasu.md

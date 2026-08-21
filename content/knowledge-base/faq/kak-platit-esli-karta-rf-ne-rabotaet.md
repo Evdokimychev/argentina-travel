@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine, pereezd-v-argentinu]
 tags: [деньги, карты РФ, наличные, переводы]
 related: [kak-menyat-valyutu, bankovskij-schet, vnutrennie-aviabilety, kak-oplatit-tur-i-zhilyo-zaranee]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,17 +22,18 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: mastercard-russia-suspension
-    title: "Mastercard — приостановка операций в России"
-    url: "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html"
+    title: "Mastercard — приостановка операций в России (архивная копия SEC EDGAR)"
+    url: "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm"
     lang: en
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Прямые страницы mastercard.com/*/en/news-and-trends/... заблокированы для автоматического запроса из этой среды (403/timeout); содержание идентично, подтверждено также investor.mastercard.com и businesswire.com."
   - id: bcra-authorized-fx-channels
     title: "BCRA — валютные операции через уполномоченные организации"
     url: "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/"
@@ -49,32 +50,32 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: russian-visa-cards-blocked-abroad
     text: "Операции по картам Visa, выпущенным российскими финансовыми организациями, не работают за пределами России."
     sensitive: true
     source_ids: [visa-russia-suspension]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: russian-mastercard-cards-unsupported
     text: "Карты Mastercard, выпущенные российскими банками, не поддерживаются сетью Mastercard."
     sensitive: true
     source_ids: [mastercard-russia-suspension]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: official-fx-channels
     text: "BCRA направляет покупку и продажу валюты через банки и уполномоченные обменные организации, а не через неформальных посредников."
     sensitive: true
     source_ids: [bcra-authorized-fx-channels]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: remittance-availability-is-route-specific
     text: "Доступность, комиссия, курс и способ выдачи денежного перевода зависят от страны отправления, способа оплаты и конкретной операции."
     sensitive: true
     source_ids: [western-union-argentina-quote]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -96,6 +97,6 @@ claims:
 ## Источники
 
 - [Visa — приостановка операций по российским картам](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).
-- [Mastercard — приостановка операций в России](https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html).
+- [Mastercard — приостановка операций в России](https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm).
 - [BCRA — уполномоченные каналы обмена валюты](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).
 - [Western Union — расчёт конкретного перевода](https://www.westernunion.com/us/en/send-money-to-argentina.html).
