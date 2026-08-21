@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-migration-law-health-current
     title: "Ley de Migraciones 25.871 — актуальный текст"
     url: "https://www.argentina.gob.ar/normativa/nacional/ley-25871-92016/actualizacion"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: insurance-declaration-required-at-entry
     text: "Иностранец при въезде должен заявить, что располагает медицинской страховкой для своих медицинских потребностей."

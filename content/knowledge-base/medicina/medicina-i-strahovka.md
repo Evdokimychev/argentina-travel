@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Статьи 3, 4 и 9: неотложная помощь, условия обычного лечения, права постоянных резидентов, precaria и декларация страховки при въезде."
   - id: argentina-emergency-numbers
     title: "Argentina.gob.ar — экстренные номера"
@@ -42,8 +42,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Национальный номер 911, пожарная служба 100 и территориальные ограничения медицинского номера 107."
   - id: anmat-prescription-rules-2025
     title: "Ministerio de Salud — Resolución 2214/2025"

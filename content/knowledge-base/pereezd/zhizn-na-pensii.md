@@ -61,7 +61,7 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     url_status: verified
     note: "Различает экстренную помощь, права постоянных резидентов и обычную помощь другим иностранцам в федеральных учреждениях."
   - id: argentina-prepaid-health-law-26682

@@ -53,8 +53,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Текущие параметры упрощённого режима для сравнения с корпоративной формой."
 claims:
   - id: igj-sas-requires-defined-roles

@@ -54,8 +54,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Различает экстренную помощь, права постоянных резидентов и обычную помощь непостоянным резидентам в федеральных государственных учреждениях."
 claims:

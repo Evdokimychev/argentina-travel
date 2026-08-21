@@ -30,7 +30,7 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-03"
     url_status: verified
   - id: argentina-911-emergencies

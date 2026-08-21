@@ -41,7 +41,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-03"
   - id: renaper-dni-foreigners
     title: "Argentina.gob.ar — DNI para extranjeros"
@@ -53,14 +53,14 @@ sources:
     checked_at: "2026-07-20"
     expires_at: "2026-09-03"
   - id: bcra-migrant-account
-    title: "BCRA — Cuenta gratuita para inmigrantes"
-    url: "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp"
+    title: "BCRA — Cuenta bancaria para inmigrantes"
+    url: "https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/"
     lang: es
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-09-03"
+    checked_at: "2026-08-21"
+    expires_at: "2026-10-05"
 claims:
   - id: three-residence-types
     text: "DNM различает transitoria, temporaria и permanente; основание и канал подачи определяют требования конкретного дела."
@@ -159,4 +159,4 @@ claims:
 - [Migraciones — виды резиденций и маршруты подачи](https://www.argentina.gob.ar/migraciones/residencias)
 - [Decreto DNU 366/2025](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto)
 - [Argentina.gob.ar — DNI для иностранцев](https://www.argentina.gob.ar/node/25373)
-- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp)
+- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/)

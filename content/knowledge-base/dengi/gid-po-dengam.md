@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: visa-russia-suspension
     title: "Visa — suspension of Russia operations"
     url: "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html"
@@ -44,14 +44,14 @@ sources:
     checked_at: "2026-07-20"
     expires_at: "2026-08-19"
   - id: bcra-migrant-account
-    title: "BCRA — Cuenta gratuita para inmigrantes"
-    url: "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp"
+    title: "BCRA — Cuenta bancaria para inmigrantes"
+    url: "https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/"
     lang: es
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-10-05"
   - id: arca-monotributo-categories
     title: "ARCA — categorías de monotributo"
     url: "https://arca.gob.ar/monotributo/categorias.asp"
@@ -59,8 +59,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: indec-ipc
     title: "INDEC — Índice de precios al consumidor"
     url: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
@@ -160,6 +160,6 @@ Visa официально приостановила российские опе
 
 - [BCRA — уполномоченные валютные каналы](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/)
 - [Visa — приостановка российских операций](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html)
-- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp)
+- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/)
 - [ARCA — категории monotributo](https://arca.gob.ar/monotributo/categorias.asp)
 - [INDEC — индекс потребительских цен](https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31)

@@ -54,8 +54,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает доступ физических лиц к MLC и запрет проводить валютные операции через неуполномоченных посредников."
   - id: migrant-work-with-precaria
     title: "Argentina.gob.ar — работа иностранца с precaria и CUIL"
@@ -74,8 +74,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает декларацию медицинской страховки при въезде и различия в доступе к обычному лечению."
 claims:
   - id: basic-basket-not-relocation-budget

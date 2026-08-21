@@ -54,8 +54,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает допустимые официальные каналы валютных операций."
 claims:
   - id: argentina-accounts-use-cbu-cvu-alias

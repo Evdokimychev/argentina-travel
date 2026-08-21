@@ -36,7 +36,7 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     url_status: verified
     expires_at: "2026-10-17"
     note: "Статья 20 относит решение о допустимости смены категории или подкатегории к DNM."

@@ -21,9 +21,10 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-07-20"
     expires_at: "2026-08-20"
+    note: "Повторная проверка 2026-08-21: прямой PDF-эндпоинт МИД не проверен независимо в этом проходе (сетевые ограничения инструмента). Требуется ручная перепроверка перед следующим циклом."
   - id: dnm-tourist-entry-documents-russia
     title: "Dirección Nacional de Migraciones — документы для въезда туриста"
     url: "https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista"
@@ -31,8 +32,9 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Повторно подтверждено 2026-08-21: страница живая, формулировка «hasta TRES (3) MESES PRORROGABLE POR OTRO PERÍODO SIMILAR» соответствует тексту статьи."
   - id: argentina-dnu-366-entry-russia
     title: "Decreto DNU 366/2025 — требования при въезде"
     url: "https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto"
@@ -40,8 +42,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: russian-tourist-visa-waiver
     text: "Владельцы действительного обычного российского загранпаспорта могут въезжать в Аргентину без визы на срок до 90 дней в каждом 180-дневном периоде."

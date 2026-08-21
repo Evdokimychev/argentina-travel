@@ -1,6 +1,6 @@
 # KB quarantine report (generated)
 
-Generated: `2026-08-17T10:43:53.481Z`
+Generated: `2026-08-21T01:13:08.912Z`
 
 | Metric | Count |
 |--------|------:|

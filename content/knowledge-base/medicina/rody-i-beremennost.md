@@ -51,7 +51,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-16"
     note: "Актуальные правила доступа иностранцев к экстренной и плановой медицинской помощи и миграционные изменения."
   - id: argentina-prenatal-control

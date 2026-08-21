@@ -44,8 +44,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Гарантирует доступ иностранцев к начальному, первичному и среднему образованию; отдельно регулирует доступ к государственной медицине."
 claims:

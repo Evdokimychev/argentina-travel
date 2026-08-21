@@ -1,29 +1,43 @@
 {
   "schemaVersion": 1,
-  "evidenceScope": "candidate",
-  "candidateTree": "0d7d5c49f8e5095b9147cdf15c76a3315c27cba6",
-  "evidenceRunId": "075f6209-754b-4b5a-948a-b5b46829b8a3",
-  "evidenceStartedAt": "2026-07-17T12:03:06.972Z",
-  "evidenceGeneratedAt": "2026-07-17T12:03:12.852Z",
+  "evidenceScope": "invalid-candidate",
+  "candidateTree": null,
+  "evidenceRunId": "3c93ed23-b74f-4d7f-9169-4159f2cff098",
+  "evidenceStartedAt": "2026-08-21T01:15:38.241Z",
+  "evidenceGeneratedAt": "2026-08-21T01:16:53.025Z",
   "evidenceEnvironment": "source-health-network",
   "evidenceBaseUrl": null,
   "evidenceIntegrity": {
-    "status": "passed",
-    "reasons": [],
-    "dirtyPaths": []
+    "status": "rejected",
+    "reasons": [
+      "dirty-candidate-at-start",
+      "dirty-candidate-at-end"
+    ],
+    "dirtyPaths": [
+      "docs/knowledge-base/CURRENT_STATS.md",
+      "docs/knowledge-base/QUARANTINE_REPORT.md",
+      "var/audit/editorial-design-system/editorial-audit.json"
+    ]
   },
-  "generatedAt": "2026-07-17T12:03:12.852Z",
+  "generatedAt": "2026-08-21T01:16:53.025Z",
   "scope": "migrated-provenance-sources",
-  "sourceIndexGeneratedAt": "2026-07-17 08:29",
+  "sourceIndexGeneratedAt": "2026-08-17 00:00",
   "summary": {
-    "urls": 169,
-    "passed": 169,
-    "failed": 0
+    "urls": 325,
+    "passed": 301,
+    "failed": 24
   },
   "results": [
     {
       "url": "https://arca.gob.ar/monotributo/categorias.asp",
       "references": [
+        {
+          "entryId": "gid-po-dengam",
+          "sourceId": "arca-monotributo-categories",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "nalogi-i-monotributo",
           "sourceId": "arca-monotributo-categories-2026",
@@ -36,7 +50,7 @@
           "sourceId": "arca-monotributo-categories-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -54,7 +68,7 @@
           "sourceId": "arca-service-exports-monotributo",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -78,6 +92,24 @@
       "status": 206,
       "finalUrl": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7630.pdf",
       "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://bienaldelchaco.org/2026/",
+      "references": [
+        {
+          "entryId": "bienal-internacional-de-esculturas-en-resistencia",
+          "sourceId": "bienal-chaco-2026-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://bienaldelchaco.org/2026/",
+      "contentType": "text/html; charset=UTF-8",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -113,6 +145,24 @@
       ],
       "status": 206,
       "finalUrl": "https://buenosaires.gob.ar/gcaba_historico/noticias/historias-de-mi-comuna-caminito",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://buenosaires.gob.ar/gcaba_historico/subte/mapa-del-subte-y-combinaciones",
+      "references": [
+        {
+          "entryId": "dostupnaya-sreda-i-invalidnost",
+          "sourceId": "buenos-aires-subte-accessibility-map",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://buenosaires.gob.ar/gcaba_historico/subte/mapa-del-subte-y-combinaciones",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
       "attempt": 1,
@@ -173,6 +223,24 @@
       "error": null
     },
     {
+      "url": "https://buenosaires.gob.ar/perfil_institucional/direccion-general-de-estadistica-criminal-y-mapa-del-delito",
+      "references": [
+        {
+          "entryId": "kakie-rajony-ba-izbegat",
+          "sourceId": "caba-crime-map-office",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://buenosaires.gob.ar/perfil_institucional/direccion-general-de-estadistica-criminal-y-mapa-del-delito",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://buenosaires.gob.ar/tramites/otorgamiento-de-licencia-de-conducir",
       "references": [
         {
@@ -192,7 +260,7 @@
       ],
       "status": 206,
       "finalUrl": "https://buenosaires.gob.ar/tramites/otorgamiento-de-licencia-de-conducir",
-      "contentType": "text/html; charset=UTF-8",
+      "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -234,6 +302,355 @@
       "error": null
     },
     {
+      "url": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/diccio_ele/diccionario/voseo.htm",
+      "references": [
+        {
+          "entryId": "ispanskij-dlya-puteshestvennika",
+          "sourceId": "cervantes-voseo",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/diccio_ele/diccionario/voseo.htm",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://datosabiertos.rosario.gob.ar/sites/default/files/uploaded_resources/red_geodesica_rosario.pdf",
+      "references": [
+        {
+          "entryId": "circuito-de-cervecerias-en-rosario",
+          "sourceId": "rosario-geodetic-network",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://datosabiertos.rosario.gob.ar/sites/default/files/uploaded_resources/red_geodesica_rosario.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://flybondi.com/ar",
+      "references": [
+        {
+          "entryId": "vnutrennie-aviabilety",
+          "sourceId": "flybondi-argentina-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "HTTP 500"
+    },
+    {
+      "url": "https://indicadores.enacom.gob.ar/DatosAbiertos/Internet/velocidad-media-provincias/download/Internet",
+      "references": [
+        {
+          "entryId": "kovorkingi-i-rabota-nomada",
+          "sourceId": "enacom-internet-speed-provinces",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://indicadores.enacom.gob.ar/Mapas/conectividad",
+      "references": [
+        {
+          "entryId": "kovorkingi-i-rabota-nomada",
+          "sourceId": "enacom-connectivity-map",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://jetsmart.com/ar/es/",
+      "references": [
+        {
+          "entryId": "vnutrennie-aviabilety",
+          "sourceId": "jetsmart-argentina-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://jetsmart.com/ar/es/",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://museoboquense.com/preguntas-frecuentes/",
+      "references": [
+        {
+          "entryId": "futbol",
+          "sourceId": "boca-official-museum-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://museoboquense.com/preguntas-frecuentes/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://peninsulavaldes.org.ar/descubri-peninsula/calendario-de-fauna/",
+      "references": [
+        {
+          "entryId": "peninsula-valdes",
+          "sourceId": "valdes-official-fauna-calendar",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://peninsulavaldes.org.ar/descubri-peninsula/calendario-de-fauna/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://peninsulavaldes.org.ar/visita-peninsula/como-llegar/",
+      "references": [
+        {
+          "entryId": "peninsula-valdes",
+          "sourceId": "valdes-official-access",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://peninsulavaldes.org.ar/visita-peninsula/como-llegar/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://peninsulavaldes.org.ar/visita-peninsula/valor-de-ingreso/",
+      "references": [
+        {
+          "entryId": "peninsula-valdes",
+          "sourceId": "valdes-official-fees",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://peninsulavaldes.org.ar/visita-peninsula/valor-de-ingreso/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://potrerodelosfunes.gob.ar/turismo/",
+      "references": [
+        {
+          "entryId": "circuito-callejero-de-potrero-de-los-funes",
+          "sourceId": "potrero-municipal-tourism",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://potrerodelosfunes.gob.ar/turismo/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://publication.pravo.gov.ru/document/0001202310190054",
+      "references": [
+        {
+          "entryId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "sourceId": "russia-mvd-notification-order-689",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://publication.pravo.gov.ru/Document/View/0001202304280013",
+      "references": [
+        {
+          "entryId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "sourceId": "russia-citizenship-law-138",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://repositorio.smn.gob.ar/handle/20.500.12160/2986",
+      "references": [
+        {
+          "entryId": "kakoj-mesyats-kuda-ehat",
+          "sourceId": "smn-climate-atlas-1991-2020",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "smn-climate-atlas-1991-2020",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://rosario.tur.ar/donde-ir/gastronomia/gastronomia/las-claves-del-sabor-local?lang=es",
+      "references": [
+        {
+          "entryId": "circuito-gastronomico-en-el-rio-parana",
+          "sourceId": "rosario-local-flavors",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://rosario.tur.ar/donde-ir/gastronomia/gastronomia/las-claves-del-sabor-local?lang=es",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://rosario.tur.ar/donde-ir/gastronomia/sabores-de-la-costa?lang=es",
+      "references": [
+        {
+          "entryId": "circuito-gastronomico-en-el-rio-parana",
+          "sourceId": "rosario-coast-flavors",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://rosario.tur.ar/donde-ir/gastronomia/sabores-de-la-costa?lang=es",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://rosario.tur.ar/donde-ir/noche/noche/un-infinito-abanico-de-opciones?lang=es",
+      "references": [
+        {
+          "entryId": "circuito-de-cervecerias-en-rosario",
+          "sourceId": "rosario-nightlife-zones",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://rosario.tur.ar/donde-ir/noche/noche/un-infinito-abanico-de-opciones?lang=es",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://rosario.tur.ar/donde-ir/rio-y-naturaleza/parque-alem?lang=es",
+      "references": [
+        {
+          "entryId": "circuito-gastronomico-en-el-rio-parana",
+          "sourceId": "rosario-parque-alem",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://rosario.tur.ar/donde-ir/rio-y-naturaleza/parque-alem?lang=es",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://santafeciudad.gov.ar/secretaria-de-produccion-y-empleo/turismo/mi-ciudad-como-turista/",
+      "references": [
+        {
+          "entryId": "santa-fe",
+          "sourceId": "santa-fe-official-audioguides",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://santafeciudad.gov.ar/secretaria-de-produccion-y-empleo/turismo/mi-ciudad-como-turista/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
       "url": "https://t.me/RuArgentina",
       "references": [
         {
@@ -246,6 +663,85 @@
       ],
       "status": 200,
       "finalUrl": "https://t.me/RuArgentina",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://teatrocolon.org.ar/",
+      "references": [
+        {
+          "entryId": "teatr-kolon",
+          "sourceId": "teatro-colon-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://teatrocolon.org.ar/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://teatrocolon.org.ar/guided-tours/",
+      "references": [
+        {
+          "entryId": "teatr-kolon",
+          "sourceId": "teatro-colon-guided-tours",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://teatrocolon.org.ar/guided-tours/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://tratados.cancilleria.gob.ar/tratado_archivo.php?caso=pdf&id=mqGkng%3D%3D&tipo=kg%3D%3D&tratados_id=kp2mmpo%3D",
+      "references": [
+        {
+          "entryId": "viza-rf-v-argentinu",
+          "sourceId": "argentina-russia-visa-waiver-agreement",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://tratados.cancilleria.gob.ar/tratado_archivo.php?caso=pdf&id=mqGkng%3D%3D&tipo=kg%3D%3D&tratados_id=kp2mmpo%3D",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://travel.gc.ca/destinations/argentina",
+      "references": [
+        {
+          "entryId": "bezopasno-li-v-argentine",
+          "sourceId": "canada-argentina-safety-advice",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "skam-s-falshivoj-policiej",
+          "sourceId": "canada-argentina-cash-safety",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://travel.gc.ca/destinations/argentina",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -298,8 +794,26 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/7-cosas-que-aprender%C3%A1s-amar-de-buenos-aires",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.buenosaires.gob.ar/es/article/clima?page=3",
+      "references": [
+        {
+          "entryId": "kakoj-mesyats-kuda-ehat",
+          "sourceId": "buenos-aires-official-climate",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/clima?page=3",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -313,11 +827,29 @@
           "sourceId": "buenos-aires-official-safety-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud?page=1",
+      "references": [
+        {
+          "entryId": "kakie-rajony-ba-izbegat",
+          "sourceId": "caba-tourist-security",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud?page=1",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -352,7 +884,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/atractivo/la-boca",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
@@ -370,8 +902,26 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 206,
       "finalUrl": "https://turismo.buenosaires.gob.ar/es/informacion-qr-guias",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.buenosaires.gob.ar/es/otros-establecimientos/cementerio-de-la-recoleta",
+      "references": [
+        {
+          "entryId": "dostupnaya-sreda-i-invalidnost",
+          "sourceId": "recoleta-cemetery-accessibility",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://turismo.buenosaires.gob.ar/es/otros-establecimientos/cementerio-de-la-recoleta",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -385,7 +935,14 @@
           "sourceId": "buenos-aires-health-security",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "buenos-aires-tourist-safety",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "motochorros-telefon-na-ulitse",
@@ -410,6 +967,168 @@
       "error": null
     },
     {
+      "url": "https://turismo.buenosaires.gob.ar/sites/turismo/files/guia_turismo_de_reuniones_0915_es.pdf",
+      "references": [
+        {
+          "entryId": "mentalitet-i-etiket",
+          "sourceId": "buenos-aires-meeting-tourism-guide",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://turismo.buenosaires.gob.ar/sites/turismo/files/guia_turismo_de_reuniones_0915_es.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.chaco.gob.ar/destinations/campo-del-cielo/",
+      "references": [
+        {
+          "entryId": "campo-del-cielo",
+          "sourceId": "chaco-tourism-campo-cielo",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismo.chaco.gob.ar/destinations/campo-del-cielo/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.chaco.gob.ar/tour-item/sabores-del-chaco/",
+      "references": [
+        {
+          "entryId": "gastronomia-de-chaco",
+          "sourceId": "chaco-tourism-flavors",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismo.chaco.gob.ar/tour-item/sabores-del-chaco/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.chaco.gob.ar/tour-item/universo-y-meteoritos/",
+      "references": [
+        {
+          "entryId": "campo-del-cielo",
+          "sourceId": "chaco-tourism-meteorites",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismo.chaco.gob.ar/tour-item/universo-y-meteoritos/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismo.gba.gob.ar/",
+      "references": [
+        {
+          "entryId": "sierra-de-la-ventana",
+          "sourceId": "buenos-aires-turismo",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://turismo.santafeciudad.gov.ar/descubri-santa-fe-capital/",
+      "references": [
+        {
+          "entryId": "santa-fe",
+          "sourceId": "santa-fe-official-tourism",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://turismo.santafeciudad.gov.ar/descubri-santa-fe-capital/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
+      "url": "https://turismo.santafeciudad.gov.ar/visitas-y-excursiones/",
+      "references": [
+        {
+          "entryId": "santa-fe",
+          "sourceId": "santa-fe-official-visits",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://turismo.santafeciudad.gov.ar/visitas-y-excursiones/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
+      "url": "https://turismosantiago.gob.ar/destinos/termas-de-rio-hondo/",
+      "references": [
+        {
+          "entryId": "termas-de-rio-hondo",
+          "sourceId": "santiago-turismo-termas",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismosantiago.gob.ar/destinos/termas-de-rio-hondo/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://turismosantiago.gob.ar/informacion-util/centros-de-informacion/",
+      "references": [
+        {
+          "entryId": "termas-de-rio-hondo",
+          "sourceId": "santiago-turismo-info",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://turismosantiago.gob.ar/informacion-util/centros-de-informacion/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html",
       "references": [
         {
@@ -417,7 +1136,7 @@
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "esim-i-svyaz",
@@ -427,11 +1146,32 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "gid-po-dengam",
+          "sourceId": "visa-russia-suspension",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "kak-menyat-valyutu",
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "sourceId": "visa-russia-suspension-prepay",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "sourceId": "visa-russia-suspension",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -459,26 +1199,148 @@
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoit-li-ehat-v-argentinu",
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "udalyonnaya-rabota-i-oplata",
           "sourceId": "visa-russia-operations-suspension",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html",
+      "contentType": "text/html;charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://visit.turismosalta.gov.ar/post/ciudad-de-salta/",
+      "references": [
+        {
+          "entryId": "salta",
+          "sourceId": "salta-official-city",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://visit.turismosalta.gov.ar/post/museos-y-centros-de-interpretacion/",
+      "references": [
+        {
+          "entryId": "salta",
+          "sourceId": "salta-official-museums",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://visit.turismosalta.gov.ar/valles-calchaquies.html/cachi/",
+      "references": [
+        {
+          "entryId": "kachi",
+          "sourceId": "visit-salta-cachi",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://vivienda.buenosaires.gob.ar/ley-27551",
+      "references": [
+        {
+          "entryId": "oshibka-s-zhilyom",
+          "sourceId": "caba-rental-commission",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
-      "finalUrl": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html",
-      "contentType": "text/html;charset=utf-8",
+      "finalUrl": "https://vivienda.buenosaires.gob.ar/ley-27551",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://whc.unesco.org/en/list/1116/",
+      "references": [
+        {
+          "entryId": "noa-kolco",
+          "sourceId": "unesco-quebrada",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "purmamarka",
+          "sourceId": "unesco-quebrada",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "quebrada-de-humahuaca",
+          "sourceId": "unesco-quebrada",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://whc.unesco.org/en/list/1116/",
+      "contentType": "text/html;charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://whc.unesco.org/en/list/937/",
+      "references": [
+        {
+          "entryId": "peninsula-valdes",
+          "sourceId": "unesco-peninsula-valdes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://whc.unesco.org/en/list/937/",
+      "contentType": "text/html;charset=UTF-8",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -491,12 +1353,105 @@
           "sourceId": "wise-russia-availability",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://wise.com/ru/availability/",
       "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.aerolineas.com/",
+      "references": [
+        {
+          "entryId": "skolko-deneg-brat-na-poezdku",
+          "sourceId": "aerolineas-live-search-budget",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        },
+        {
+          "entryId": "vnutrennie-aviabilety",
+          "sourceId": "aerolineas-argentina-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.aerolineas.com.ar/Welcome",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.aeropuertosargentina.com/es/AEP/servicios/como-llego",
+      "references": [
+        {
+          "entryId": "aeroporty",
+          "sourceId": "aeropuertos-argentina-aep-transport",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.aeropuertosargentina.com/es/AEP/servicios/como-llego",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.aeropuertosargentina.com/es/EZE/servicios/como-llego",
+      "references": [
+        {
+          "entryId": "aeroporty",
+          "sourceId": "aeropuertos-argentina-eze-transport",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.aeropuertosargentina.com/es/EZE/servicios/como-llego",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.aeropuertosargentina.com/es/nuestros-aeropuertos",
+      "references": [
+        {
+          "entryId": "argentina-10-dney",
+          "sourceId": "aeropuertos-argentina-route-planning",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "argentina-2-nedeli",
+          "sourceId": "aeropuertos-argentina-route-planning",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "vnutrennie-aviabilety",
+          "sourceId": "aeropuertos-argentina-directory",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.aeropuertosargentina.com/es/nuestros-aeropuertos",
+      "contentType": "text/html",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -520,6 +1475,24 @@
       "error": null
     },
     {
+      "url": "https://www.afa.com.ar/en/posts/agenda-para-la-temporada-2026-de-la-liga-profesional",
+      "references": [
+        {
+          "entryId": "futbol",
+          "sourceId": "afa-liga-profesional-2026-calendar",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.afa.com.ar/en/posts/agenda-para-la-temporada-2026-de-la-liga-profesional",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.agip.gob.ar/beneficios/64",
       "references": [
         {
@@ -527,7 +1500,7 @@
           "sourceId": "caba-stamp-tax-benefit-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -555,6 +1528,13 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "gid-po-dokumentam",
+          "sourceId": "anses-cuil-unification",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "raskhozhdeniya-dni-cuit-cuil",
           "sourceId": "anses-cuil-unification",
           "authority": "primary",
@@ -562,12 +1542,12 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 403,
       "finalUrl": "https://www.anses.gob.ar/generacion-de-cuil-solicitud-de-unificacion",
       "contentType": "text/html",
-      "ok": true,
+      "ok": false,
       "attempt": 1,
-      "error": null
+      "error": "HTTP 403"
     },
     {
       "url": "https://www.anses.gob.ar/noticias/como-obtener-la-constancia-de-cuil-en-anses-2",
@@ -580,12 +1560,12 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 403,
       "finalUrl": "https://www.anses.gob.ar/noticias/como-obtener-la-constancia-de-cuil-en-anses-2",
       "contentType": "text/html",
-      "ok": true,
+      "ok": false,
       "attempt": 1,
-      "error": null
+      "error": "HTTP 403"
     },
     {
       "url": "https://www.anses.gob.ar/tramite/acreditacion-de-datos-personales-y-familiares",
@@ -598,12 +1578,12 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
+      "status": 403,
       "finalUrl": "https://www.anses.gob.ar/tramite/acreditacion-de-datos-personales-y-familiares",
       "contentType": "text/html",
-      "ok": true,
+      "ok": false,
       "attempt": 1,
-      "error": null
+      "error": "HTTP 403"
     },
     {
       "url": "https://www.arca.gob.ar/inmuebles/alquileres/propietarios/inscripcion.asp",
@@ -618,6 +1598,24 @@
       ],
       "status": 200,
       "finalUrl": "https://www.arca.gob.ar/inmuebles/alquileres/propietarios/inscripcion.asp",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.arca.gob.ar/inscripcion/cuit-cdi/residentes-pais-dni-argentino.asp",
+      "references": [
+        {
+          "entryId": "chto-takoe-dni-i-cuil",
+          "sourceId": "arca-cuit-registration",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.arca.gob.ar/inscripcion/cuit-cdi/residentes-pais-dni-argentino.asp",
       "contentType": "text/html",
       "ok": true,
       "attempt": 1,
@@ -655,6 +1653,24 @@
       "status": 206,
       "finalUrl": "https://www.arca.gob.ar/presentaciones-digitales/documentos/actualizacion-y-correccion-de-datos-registrales.pdf",
       "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.arca.gob.ar/USAduaneros/importacion-de-medicamentos-para-uso-personal/",
+      "references": [
+        {
+          "entryId": "provoz-lekarstv",
+          "sourceId": "arca-personal-medicine-import",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.arca.gob.ar/USAduaneros/importacion-de-medicamentos-para-uso-personal/",
+      "contentType": "text/html",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -708,6 +1724,31 @@
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/anmat/comunidad/importacion-de-medicamentos-disposicion-ndeg-461619",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/anmat/regulados/alimentos/atributo-vegano",
+      "references": [
+        {
+          "entryId": "chto-est-vegetariancu",
+          "sourceId": "anmat-vegan-label",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "anmat-vegan-label",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/anmat/regulados/alimentos/atributo-vegano",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -793,7 +1834,7 @@
           "sourceId": "cnv-virtual-assets-warning",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -822,6 +1863,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/cultura",
+      "references": [
+        {
+          "entryId": "gid-po-kulture",
+          "sourceId": "argentina-culture-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/cultura",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/cultura/manifestaciones-del-patrimonio-cultural-inmaterial/entre-rios/mate",
       "references": [
         {
@@ -840,6 +1899,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/derechoshumanos/parto-respetado-ley-ndeg-25929",
+      "references": [
+        {
+          "entryId": "rody-i-beremennost",
+          "sourceId": "argentina-respected-birth",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/derechoshumanos/parto-respetado-ley-ndeg-25929",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/economia/inclusion-financiera/cuenta-para-migrantes",
       "references": [
         {
@@ -848,6 +1925,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "mozhno-li-otkryt-schet-nerezidentu",
+          "sourceId": "argentina-migrant-account-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -901,6 +1985,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/interior/ambiente/parquesnacionales/tarifas",
+      "references": [
+        {
+          "entryId": "skolko-deneg-brat-na-poezdku",
+          "sourceId": "argentina-national-parks-fees",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/tarifas",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/interior/dni/extranjeros",
       "references": [
         {
@@ -909,6 +2011,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "chto-takoe-dni-i-cuil",
+          "sourceId": "renaper-dni-foreign-residents",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "dni-cuil-cuit-putanitsa",
@@ -926,6 +2035,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/interior/migraciones",
+      "references": [
+        {
+          "entryId": "pervye-tramites",
+          "sourceId": "migraciones-turnos",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/interior/migraciones/museo/el-estado-y-la-inmigracion/la-inmigracion-en-el-proyecto-de-organizacion-nacional",
       "references": [
         {
@@ -936,30 +2063,12 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 200,
-      "finalUrl": "https://www.argentina.gob.ar/interior/migraciones/museo/el-estado-y-la-inmigracion/la-inmigracion-en-el-proyecto-de-organizacion-nacional",
-      "contentType": "text/html; charset=utf-8",
-      "ok": true,
-      "attempt": 1,
-      "error": null
-    },
-    {
-      "url": "https://www.argentina.gob.ar/interior/migraciones/nuevos%20canales%20de%20atenci%C3%B3n%20no%20presenciales",
-      "references": [
-        {
-          "entryId": "status-expediente-migraciones",
-          "sourceId": "dnm-non-presential-channels",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
-        }
-      ],
-      "status": 200,
-      "finalUrl": "https://www.argentina.gob.ar/interior/migraciones/nuevos%20canales%20de%20atenci%C3%B3n%20no%20presenciales",
-      "contentType": "text/html; charset=utf-8",
-      "ok": true,
-      "attempt": 1,
-      "error": null
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "The operation was aborted due to timeout"
     },
     {
       "url": "https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales",
@@ -974,6 +2083,24 @@
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/interior/renaper/certificaciones-digitales",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/jefatura/turismo-y-ambiente/turismo/best-tourism-villages-argentina/cachi-salta",
+      "references": [
+        {
+          "entryId": "kachi",
+          "sourceId": "argentina-cachi-btv",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/jefatura/turismo-y-ambiente/turismo/best-tourism-villages-argentina/cachi-salta",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1001,6 +2128,20 @@
       "url": "https://www.argentina.gob.ar/jefatura/turismo/viaja-por-argentina/avistar-ballenas-en-peninsula-valdes",
       "references": [
         {
+          "entryId": "chto-stoit-deneg-prioritety",
+          "sourceId": "argentina-peninsula-valdes-whales",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kakoj-mesyats-kuda-ehat",
+          "sourceId": "argentina-peninsula-valdes-whales",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "podgotovka-k-poezdke",
           "sourceId": "peninsula-valdes-whale-season",
           "authority": "primary",
@@ -1023,11 +2164,29 @@
           "sourceId": "argentina-tourism-salinas-grandes",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/jefatura/turismo/viaja-por-argentina/caminar-por-un-desierto-de-sal",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/jefatura/turismo/viaja-por-argentina/descansar-en-potrero-de-los-funes",
+      "references": [
+        {
+          "entryId": "circuito-callejero-de-potrero-de-los-funes",
+          "sourceId": "argentina-potrero-destination",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/jefatura/turismo/viaja-por-argentina/descansar-en-potrero-de-los-funes",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1095,7 +2254,7 @@
           "sourceId": "igj-sas-preparation",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1113,11 +2272,72 @@
           "sourceId": "igj-urgent-company-registration",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/justicia/igj/sociedades-urgentes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/justicia/reincidencia/antecedentespenales",
+      "references": [
+        {
+          "entryId": "pervye-tramites",
+          "sourceId": "rnr-antecedentes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/justicia/reincidencia/antecedentespenales",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/linea-144",
+      "references": [
+        {
+          "entryId": "bezopasno-li-odnoj-zhenshchine",
+          "sourceId": "argentina-line-144",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/linea-144",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/mendoza",
+      "references": [
+        {
+          "entryId": "chto-delat-krome-dostoprimechatelnostej",
+          "sourceId": "argentina-mendoza",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "chto-stoit-deneg-prioritety",
+          "sourceId": "argentina-mendoza",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/mendoza",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1160,6 +2380,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/migraciones/autorizacion-de-salida-del-pais-para-menores-de-edad",
+      "references": [
+        {
+          "entryId": "s-detmi-po-argentine",
+          "sourceId": "argentina-migraciones-minors",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones/autorizacion-de-salida-del-pais-para-menores-de-edad",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/migraciones/ciudadania-autogestion",
       "references": [
         {
@@ -1167,11 +2405,36 @@
           "sourceId": "dnm-citizenship-self-service",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "oshibka-s-dokumentami",
+          "sourceId": "dnm-citizenship-self-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/migraciones/ciudadania-autogestion",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/migraciones/cuadro-tasas-migratorias",
+      "references": [
+        {
+          "entryId": "skolko-stoit-oformit-vnzh",
+          "sourceId": "dnm-current-fee-table-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones/cuadro-tasas-migratorias",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1196,6 +2459,60 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
+      "references": [
+        {
+          "entryId": "viza-rf-v-argentinu",
+          "sourceId": "dnm-tourist-entry-documents-russia",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/migraciones/obtener-una-prorroga-residencia",
+      "references": [
+        {
+          "entryId": "nuzhna-li-viza-cifrovomu-kochevniku",
+          "sourceId": "dnm-transitory-extension",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones/obtener-una-prorroga-residencia",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/migraciones/preguntas-frecuentes-residencias",
+      "references": [
+        {
+          "entryId": "skolko-stoit-oformit-vnzh",
+          "sourceId": "dnm-residence-faq-fees",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/migraciones/preguntas-frecuentes-residencias",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/migraciones/radicaciones-residencia-temporaria",
       "references": [
         {
@@ -1203,7 +2520,7 @@
           "sourceId": "dnm-temporary-residences",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1217,11 +2534,18 @@
       "url": "https://www.argentina.gob.ar/migraciones/residencias",
       "references": [
         {
-          "entryId": "status-expediente-migraciones",
+          "entryId": "gid-po-dokumentam",
           "sourceId": "dnm-residences-hub",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-relokanta",
+          "sourceId": "dnm-residences-hub",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoit-li-pereezzhat",
@@ -1242,14 +2566,14 @@
           "sourceId": "dnm-residences-hub",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "voinskij-uchet-i-voennyj-bilet",
           "sourceId": "dnm-residences-hub",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-11"
         },
         {
           "entryId": "zhizn-bez-ispanskogo",
@@ -1299,11 +2623,29 @@
           "sourceId": "argentina-national-parks-tariffs-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/node/131189",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/node/152616",
+      "references": [
+        {
+          "entryId": "zhizn-na-pensii",
+          "sourceId": "dnm-pensionado-residence",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/node/152616",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1318,6 +2660,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "oshibka-s-zhilyom",
+          "sourceId": "argentina-rental-simple-law",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "zhile-i-arenda",
@@ -1379,6 +2728,20 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "gid-po-dokumentam",
+          "sourceId": "renaper-dni-foreigners",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-relokanta",
+          "sourceId": "renaper-dni-foreigners",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1410,6 +2773,13 @@
       "url": "https://www.argentina.gob.ar/node/377747",
       "references": [
         {
+          "entryId": "arenda-avto-i-vozhdenie",
+          "sourceId": "argentina-foreign-driving-licences",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "dokumenty-dlya-poezdki-na-avto",
           "sourceId": "ansv-foreign-driving-licences",
           "authority": "primary",
@@ -1439,18 +2809,75 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/node/404356",
+      "references": [
+        {
+          "entryId": "kachi",
+          "sourceId": "argentina-cachi-heritage",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/node/404356",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/node/408747",
       "references": [
+        {
+          "entryId": "nuzhna-li-viza-cifrovomu-kochevniku",
+          "sourceId": "dnm-digital-nomad-residence",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "skolko-stoit-oformit-vnzh",
+          "sourceId": "dnm-digital-nomad-cost-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "viza-cifrovogo-kochevnika",
           "sourceId": "dnm-digital-nomad-service",
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "viza-cifrovogo-kochevnika-chto-daet",
+          "sourceId": "dnm-digital-nomad-status-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/node/408747",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/node/423540",
+      "references": [
+        {
+          "entryId": "sistema-zdravoohraneniya",
+          "sourceId": "argentina-prepagas",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/node/423540",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1469,6 +2896,24 @@
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/node/424871",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/node/459607",
+      "references": [
+        {
+          "entryId": "chto-delat-krome-dostoprimechatelnostej",
+          "sourceId": "argentina-bares-notables",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/node/459607",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1503,15 +2948,40 @@
       "url": "https://www.argentina.gob.ar/normativa/nacional/415349/texto",
       "references": [
         {
+          "entryId": "gid-po-medicine",
+          "sourceId": "argentina-prescriptions-2214",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "medicina-i-strahovka",
           "sourceId": "anmat-prescription-rules-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/415349/texto",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/normativa/nacional/818/actualizacion",
+      "references": [
+        {
+          "entryId": "arenda-avto-i-vozhdenie",
+          "sourceId": "argentina-national-traffic-law",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/818/actualizacion",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1525,7 +2995,7 @@
           "sourceId": "argentina-migration-law-pensionado",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1574,11 +3044,39 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "gid-po-dokumentam",
+          "sourceId": "argentina-dnu-366-2025",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-po-medicine",
+          "sourceId": "argentina-dnu-366-health",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-relokanta",
+          "sourceId": "argentina-dnu-366-2025",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "grazhdanstvo",
           "sourceId": "dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "sourceId": "argentina-dnu-366-2025-citizenship",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
@@ -1595,6 +3093,20 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "nuzhna-li-strahovka-dlya-vezda",
+          "sourceId": "argentina-dnu-366-health-insurance-entry",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "oshibka-s-dokumentami",
+          "sourceId": "dnu-366-2025",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "rody-v-argentine",
           "sourceId": "argentina-dnu-366-2025-family",
           "authority": "primary",
@@ -1602,25 +3114,32 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "rossiya-vs-argentina",
+          "sourceId": "argentina-health-insurance-entry-2025",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "stoimost-zhizni-ba",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoimost-zhizni-semya-i-para",
           "sourceId": "argentina-basic-education-and-health-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoit-li-ehat-v-argentinu",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoit-li-pereezzhat",
@@ -1637,11 +3156,18 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "viza-rf-v-argentinu",
+          "sourceId": "argentina-dnu-366-entry-russia",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "zhizn-na-pensii",
           "sourceId": "argentina-health-access-dnu-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1666,7 +3192,7 @@
       "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/decreto-437-2011-181142/actualizacion",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
-      "attempt": 1,
+      "attempt": 2,
       "error": null
     },
     {
@@ -1817,11 +3343,47 @@
           "sourceId": "argentina-constitution-article-20",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/ley-24430-804/texto",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-24521-25394/actualizacion",
+      "references": [
+        {
+          "entryId": "studencheskaya-zhizn",
+          "sourceId": "argentina-higher-education-law-current",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/ley-24521-25394/actualizacion",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-25871-92016/actualizacion",
+      "references": [
+        {
+          "entryId": "nuzhna-li-strahovka-dlya-vezda",
+          "sourceId": "argentina-migration-law-health-current",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/ley-25871-92016/actualizacion",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -1871,7 +3433,7 @@
           "sourceId": "argentina-prepaid-health-law-26682",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1889,7 +3451,7 @@
           "sourceId": "argentina-rural-land-law-26737",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1907,7 +3469,7 @@
           "sourceId": "argentina-civil-code-public-deed",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -1932,14 +3494,14 @@
           "sourceId": "argentina-citizenship-law-current",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "rody-i-beremennost",
           "sourceId": "argentina-citizenship-law-346",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         }
       ],
       "status": 200,
@@ -2007,11 +3569,25 @@
       "url": "https://www.argentina.gob.ar/normativa/nacional/norma-364601",
       "references": [
         {
+          "entryId": "kovorkingi-i-rabota-nomada",
+          "sourceId": "dnm-digital-nomad-disposition",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "viza-cifrovogo-kochevnika",
           "sourceId": "digital-nomad-disposition",
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "viza-cifrovogo-kochevnika-chto-daet",
+          "sourceId": "dnm-digital-nomad-disposition-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2029,11 +3605,29 @@
           "sourceId": "sssalud-prepaga-age-rules-2407-2023",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-2407-2023-393961/texto",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-5-2022-369054/texto",
+      "references": [
+        {
+          "entryId": "chto-est-vegetariancu",
+          "sourceId": "argentina-caa-resolution-5-2022",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-5-2022-369054/texto",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2126,6 +3720,60 @@
       "finalUrl": "https://www.argentina.gob.ar/noticias/9-de-julio-de-1816-declaracion-de-la-independencia-de-la-argentina",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
+      "attempt": 2,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/noticias/anmat-actualiza-el-listado-de-sustancias-sujetas-fiscalizacion-especial",
+      "references": [
+        {
+          "entryId": "provoz-lekarstv",
+          "sourceId": "anmat-controlled-substances-2026",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/noticias/anmat-actualiza-el-listado-de-sustancias-sujetas-fiscalizacion-especial",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/noticias/eliminacion-del-parking-y-otras-trabas-regulatorias-operaciones-en-el-marco-de-creditos",
+      "references": [
+        {
+          "entryId": "chto-takoe-mep",
+          "sourceId": "cnv-mep-local-settlement",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/noticias/eliminacion-del-parking-y-otras-trabas-regulatorias-operaciones-en-el-marco-de-creditos",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/noticias/telepase-permite-la-adhesion-de-personas-y-empresas-extranjeras-para-circular-por-rutas-y",
+      "references": [
+        {
+          "entryId": "arenda-avto-i-vozhdenie",
+          "sourceId": "telepase-foreign-users-2026",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/noticias/telepase-permite-la-adhesion-de-personas-y-empresas-extranjeras-para-circular-por-rutas-y",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
       "attempt": 1,
       "error": null
     },
@@ -2148,6 +3796,31 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/parquesnacionales",
+      "references": [
+        {
+          "entryId": "argentina-10-dney",
+          "sourceId": "argentina-national-parks-route-planning",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "argentina-2-nedeli",
+          "sourceId": "argentina-national-parks-route-planning",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/parquesnacionales/experiencias-del-turismo-de-naturaleza/campamentos",
       "references": [
         {
@@ -2160,6 +3833,153 @@
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/experiencias-del-turismo-de-naturaleza/campamentos",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/loscardones",
+      "references": [
+        {
+          "entryId": "noa-kolco",
+          "sourceId": "apn-los-cardones",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/region-noroeste/parque-nacional-los-cardones",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/losglaciares",
+      "references": [
+        {
+          "entryId": "patagonia-yug",
+          "sourceId": "apn-los-glaciares",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable",
+      "references": [
+        {
+          "entryId": "aves-del-chaco",
+          "sourceId": "apn-impenetrable-profile",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "turismo-aventura-en-chaco",
+          "sourceId": "apn-impenetrable-overview",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable/horarios-como-llegar",
+      "references": [
+        {
+          "entryId": "aves-del-chaco",
+          "sourceId": "apn-impenetrable-access",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "turismo-aventura-en-chaco",
+          "sourceId": "apn-impenetrable-hours-access",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable/horarios-como-llegar",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable/mapa-del-area-protegida",
+      "references": [
+        {
+          "entryId": "turismo-aventura-en-chaco",
+          "sourceId": "apn-impenetrable-map",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-el-impenetrable/mapa-del-area-protegida",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-iguazu/actividades",
+      "references": [
+        {
+          "entryId": "chto-stoit-deneg-prioritety",
+          "sourceId": "apn-iguazu-activities",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "dostupnaya-sreda-i-invalidnost",
+          "sourceId": "iguazu-park-accessibility-routes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-iguazu/actividades",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-iguazu/servicios",
+      "references": [
+        {
+          "entryId": "dostupnaya-sreda-i-invalidnost",
+          "sourceId": "iguazu-park-accessibility-services",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/nea/parque-nacional-iguazu/servicios",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2202,6 +4022,67 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/actividades",
+      "references": [
+        {
+          "entryId": "chto-delat-krome-dostoprimechatelnostej",
+          "sourceId": "apn-los-glaciares-activities",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "chto-stoit-deneg-prioritety",
+          "sourceId": "apn-los-glaciares-activities",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/actividades",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/biodiversidad",
+      "references": [
+        {
+          "entryId": "kakoj-mesyats-kuda-ehat",
+          "sourceId": "apn-los-glaciares-climate",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/biodiversidad",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/planea-tu-visita",
+      "references": [
+        {
+          "entryId": "stoit-li-ehat-v-argentinu",
+          "sourceId": "apn-los-glaciares-planning",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-los-glaciares/planea-tu-visita",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/parquesnacionales/prevencion-de-incendios-en-parques-nacionales",
       "references": [
         {
@@ -2223,6 +4104,13 @@
       "url": "https://www.argentina.gob.ar/parquesnacionales/recomendaciones-para-tu-visita",
       "references": [
         {
+          "entryId": "bezopasno-li-v-argentine",
+          "sourceId": "argentina-parks-safety-advice",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "bezopasnost-argentina",
           "sourceId": "argentina-national-parks-visitor-safety",
           "authority": "primary",
@@ -2232,6 +4120,60 @@
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/recomendaciones-para-tu-visita",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/parquesnacionales/tierradelfuego",
+      "references": [
+        {
+          "entryId": "patagonia-yug",
+          "sourceId": "apn-tierra-del-fuego",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/parquesnacionales/patagonia-austral/parque-nacional-tierra-del-fuego",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/preguntas-frecuentes-cnv",
+      "references": [
+        {
+          "entryId": "chto-takoe-mep",
+          "sourceId": "cnv-faq-custody",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/preguntas-frecuentes-cnv",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/produccion/defensadelconsumidor",
+      "references": [
+        {
+          "entryId": "gid-po-zhilyu",
+          "sourceId": "defensa-consumidor-alquileres",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/economia/industria-y-comercio/defensadelconsumidor",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2263,7 +4205,7 @@
           "sourceId": "migrant-work-with-precaria",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -2277,7 +4219,7 @@
           "sourceId": "argentina-foreign-workers-guidance",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2295,11 +4237,47 @@
           "sourceId": "sube-amba-tariffs-july-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/redsube/tarifas-de-transporte-publico-amba",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/salud/crecerconsalud/embarazo-parto-puerperio/embarazo/control",
+      "references": [
+        {
+          "entryId": "rody-i-beremennost",
+          "sourceId": "argentina-prenatal-control",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/salud/crecerconsalud/embarazo-parto-puerperio/embarazo/control",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica",
+      "references": [
+        {
+          "entryId": "gid-po-medicine",
+          "sourceId": "argentina-provincial-medical-numbers",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2338,7 +4316,7 @@
           "sourceId": "argentina-911-emergencies",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "posle-dtp",
@@ -2346,10 +4324,78 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "s-detmi-po-argentine",
+          "sourceId": "argentina-emergency-911",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "skam-s-falshivoj-policiej",
+          "sourceId": "argentina-911-fake-police",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/seguridad/911emergencias",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/rio/70/Puerto-Formosa-Puerto-Alberdi",
+      "references": [
+        {
+          "entryId": "formosa",
+          "sourceId": "argentina-formosa-alberdi-border",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/seguridad/pasosinternacionales/detalle/rio/70/Puerto-Formosa-Puerto-Alberdi",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/seguridad/recomendaciones-para-viajar-por-el-pais-de-manera-segura",
+      "references": [
+        {
+          "entryId": "arenda-avto-i-vozhdenie",
+          "sourceId": "argentina-road-safety-recommendations",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/seguridad/recomendaciones-para-viajar-por-el-pais-de-manera-segura",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/seguridad/recomendaciones-para-viajar-por-el-pais-de-manera-segura/recomendaciones-para-pasajeros-en",
+      "references": [
+        {
+          "entryId": "provoz-lekarstv",
+          "sourceId": "argentina-airport-medication-hand-luggage",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/seguridad/recomendaciones-para-viajar-por-el-pais-de-manera-segura/recomendaciones-para-pasajeros-en",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2399,6 +4445,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/seguridadvial/observatoriovialnacional/movilidad-segura-de-ninos-y-ninas-en-el-espacio-publico",
+      "references": [
+        {
+          "entryId": "s-detmi-po-argentine",
+          "sourceId": "argentina-road-safety-child-seats",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/seguridadvial/observatoriovialnacional/movilidad-segura-de-ninos-y-ninas-en-el-espacio-publico",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/senasa/informacion-al-viajero/ingresar-o-regresar-al-pais/ingresos-con-perros-yo-gatos",
       "references": [
         {
@@ -2432,6 +4496,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "pervye-tramites",
+          "sourceId": "argentina-domicilio-certificate",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2449,11 +4520,29 @@
           "sourceId": "argentina-rural-land-authorization",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/servicio/certificado-de-habilitacion-para-la-adquisicion-de-tierras",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/servicio/como-obtener-el-certificado-unico-de-discapacidad-cud",
+      "references": [
+        {
+          "entryId": "dostupnaya-sreda-i-invalidnost",
+          "sourceId": "argentina-cud-official-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/servicio/como-obtener-el-certificado-unico-de-discapacidad-cud",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2478,6 +4567,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/servicio/ingresar-al-pais-medicamentos-para-uso-personal",
+      "references": [
+        {
+          "entryId": "provoz-lekarstv",
+          "sourceId": "argentina-raem-current-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://www.argentina.gob.ar/servicio/ingresar-al-pais-medicamentos-para-uso-personal",
+      "contentType": "text/html",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
       "url": "https://www.argentina.gob.ar/servicio/inscripcion-en-el-registro-de-idoneos",
       "references": [
         {
@@ -2485,7 +4592,7 @@
           "sourceId": "cnv-qualified-advisers-register",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2517,11 +4624,18 @@
       "url": "https://www.argentina.gob.ar/servicio/obtener-cuil",
       "references": [
         {
+          "entryId": "chto-takoe-dni-i-cuil",
+          "sourceId": "anses-obtain-cuil",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "rabota-i-poisk-raboty",
           "sourceId": "anses-obtain-cuil",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2550,14 +4664,60 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
+      "references": [
+        {
+          "entryId": "grazhdanstvo",
+          "sourceId": "argentina-citizenship-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "sourceId": "argentina-citizenship-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "sourceId": "argentina-citizenship-service-multiple",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "oshibka-s-dokumentami",
+          "sourceId": "argentina-citizenship-service",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina",
+      "contentType": "text/html",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
       "url": "https://www.argentina.gob.ar/servicio/obtener-la-clave-de-identificacion-cdi",
       "references": [
+        {
+          "entryId": "chto-takoe-dni-i-cuil",
+          "sourceId": "arca-obtain-cdi",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "pokupka-nedvizhimosti",
           "sourceId": "arca-cdi-registrable-assets",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2575,7 +4735,7 @@
           "sourceId": "dnm-pensionado-entry-permit",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2588,6 +4748,13 @@
     {
       "url": "https://www.argentina.gob.ar/servicio/obtener-una-residencia-temporaria-como-estudiante",
       "references": [
+        {
+          "entryId": "studencheskaya-zhizn",
+          "sourceId": "dnm-student-temporary-residence",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "vnzh-po-uchebe",
           "sourceId": "dnm-student-residence",
@@ -2606,6 +4773,13 @@
     {
       "url": "https://www.argentina.gob.ar/servicio/obtener-una-residencia-temporaria-como-rentista",
       "references": [
+        {
+          "entryId": "kakoj-dohod-nuzhen-dlya-rantye",
+          "sourceId": "dnm-rentista-income-faq",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "vnzh-rantye",
           "sourceId": "dnm-rentista-residence",
@@ -2650,7 +4824,7 @@
           "sourceId": "dnm-temporary-residence-migrant-worker",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2686,11 +4860,29 @@
           "sourceId": "dnm-digital-nomad-residence",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/servicio/obtener-una-residencia-transitoria-como-nomada-digital",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/servicio/radicaciones-residencia-permanente",
+      "references": [
+        {
+          "entryId": "rody-i-beremennost",
+          "sourceId": "argentina-permanent-residence-current",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/servicio/radicaciones-residencia-permanente",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2733,6 +4925,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/sites/default/files/2024.09.06_actualizacion_guia_de_proteccion_al_inversor_-_vf_09.09.24.cleaned.pdf",
+      "references": [
+        {
+          "entryId": "chto-takoe-mep",
+          "sourceId": "cnv-investor-protection-guide",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.argentina.gob.ar/sites/default/files/2024.09.06_actualizacion_guia_de_proteccion_al_inversor_-_vf_09.09.24.cleaned.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/sites/default/files/ficha_-_pn_rio_pilcomayo.pdf",
       "references": [
         {
@@ -2769,6 +4979,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/sites/default/files/t001_a_049_1/T008.pdf",
+      "references": [
+        {
+          "entryId": "aeroporty",
+          "sourceId": "argentina-linea-8-route",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.argentina.gob.ar/sites/default/files/t001_a_049_1/T008.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/sssalud",
       "references": [
         {
@@ -2776,11 +5004,65 @@
           "sourceId": "argentina-health-services-regulator",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/sssalud",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/sssalud/que-son-las-obras-sociales-nacionales",
+      "references": [
+        {
+          "entryId": "sistema-zdravoohraneniya",
+          "sourceId": "argentina-national-obras-sociales",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/sssalud/que-son-las-obras-sociales-nacionales",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/sssalud/usuarios",
+      "references": [
+        {
+          "entryId": "sistema-zdravoohraneniya",
+          "sourceId": "argentina-health-user-claims",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-17"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/sssalud/usuarios",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/sube",
+      "references": [
+        {
+          "entryId": "gid-po-transportu",
+          "sourceId": "sube-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/sube",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2813,6 +5095,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "studencheskaya-zhizn",
+          "sourceId": "argentina-foreign-studies-validation-guide",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2826,11 +5115,32 @@
       "url": "https://www.argentina.gob.ar/tema/emergencias",
       "references": [
         {
+          "entryId": "bezopasno-li-odnoj-zhenshchine",
+          "sourceId": "argentina-emergency-contacts-women",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "bezopasno-li-v-argentine",
+          "sourceId": "argentina-emergency-contacts",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-po-medicine",
+          "sourceId": "argentina-emergency-numbers",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "medicina-i-strahovka",
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "motochorros-telefon-na-ulitse",
@@ -2844,7 +5154,7 @@
           "sourceId": "argentina-emergency-numbers",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         }
       ],
       "status": 200,
@@ -2862,11 +5172,11 @@
           "sourceId": "argentina-study-foreigners",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
-      "finalUrl": "https://www.argentina.gob.ar/tema/extranjeros/estudiar",
+      "finalUrl": "https://www.argentina.gob.ar/tema/extranjeros",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2884,7 +5194,7 @@
         }
       ],
       "status": 200,
-      "finalUrl": "https://www.argentina.gob.ar/tema/extranjeros/radicacion",
+      "finalUrl": "https://www.argentina.gob.ar/tema/extranjeros",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2898,11 +5208,11 @@
           "sourceId": "argentina-newborn-registration",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         }
       ],
       "status": 200,
-      "finalUrl": "https://www.argentina.gob.ar/tema/hogar/hijo/nacimiento",
+      "finalUrl": "https://www.argentina.gob.ar/tema/parejayfamilia",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2916,7 +5226,7 @@
           "sourceId": "argentina-ripte-methodology",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2945,6 +5255,24 @@
       "error": null
     },
     {
+      "url": "https://www.argentina.gob.ar/transporte/trenes",
+      "references": [
+        {
+          "entryId": "gid-po-transportu",
+          "sourceId": "transport-trains-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/transporte/trenes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.argentina.gob.ar/transporte/vialidad-nacional/estado-de-rutas",
       "references": [
         {
@@ -2952,7 +5280,7 @@
           "sourceId": "vialidad-national-road-status",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -2970,11 +5298,385 @@
           "sourceId": "argentina-tourism-rn51-puna",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.argentina.gob.ar/viaja-por-argentina/que-hacer/ascender-la-puna",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.gob.ar/viaja-por-argentina/que-hacer/vivir-la-cultura-del-tango",
+      "references": [
+        {
+          "entryId": "chto-delat-krome-dostoprimechatelnostej",
+          "sourceId": "argentina-tango-culture",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "argentina-tango-culture",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.gob.ar/viaja-por-argentina/que-hacer/vivir-la-cultura-del-tango",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/",
+      "references": [
+        {
+          "entryId": "gid-puteshestvennika",
+          "sourceId": "argentina-travel-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "zhile-dlya-turistov",
+          "sourceId": "argentina-travel-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
+      "references": [
+        {
+          "entryId": "amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
+          "sourceId": "visit-argentina-amaicha-quilmes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/aves-del-chaco",
+      "references": [
+        {
+          "entryId": "aves-del-chaco",
+          "sourceId": "visit-argentina-chaco-birds",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/aves-del-chaco",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/bienal-internacional-de-esculturas-en-resistencia",
+      "references": [
+        {
+          "entryId": "bienal-internacional-de-esculturas-en-resistencia",
+          "sourceId": "visit-argentina-chaco-biennial",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/bienal-internacional-de-esculturas-en-resistencia",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/campo-del-cielo",
+      "references": [
+        {
+          "entryId": "campo-del-cielo",
+          "sourceId": "visit-argentina-campo-cielo",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/campo-del-cielo",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/caucete-san-juan",
+      "references": [
+        {
+          "entryId": "caucete-san-juan",
+          "sourceId": "visit-argentina-caucete",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/caucete-san-juan",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/circuito-callejero-de-potrero-de-los-funes",
+      "references": [
+        {
+          "entryId": "circuito-callejero-de-potrero-de-los-funes",
+          "sourceId": "visit-argentina-potrero-circuit",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/circuito-callejero-de-potrero-de-los-funes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/circuito-cultural-en-formosa",
+      "references": [
+        {
+          "entryId": "circuito-cultural-en-formosa",
+          "sourceId": "visit-argentina-formosa-cultural",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/circuito-cultural-en-formosa",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/circuito-de-cervecerias-en-rosario",
+      "references": [
+        {
+          "entryId": "circuito-de-cervecerias-en-rosario",
+          "sourceId": "visit-argentina-rosario-beer",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/circuito-de-cervecerias-en-rosario",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/circuito-gastronomico-en-el-rio-parana",
+      "references": [
+        {
+          "entryId": "circuito-gastronomico-en-el-rio-parana",
+          "sourceId": "visit-argentina-parana-food",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/circuito-gastronomico-en-el-rio-parana",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/costa-atlantica-bonaerense",
+      "references": [
+        {
+          "entryId": "mar-de-las-pampas",
+          "sourceId": "visit-argentina-atlantic-coast",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/costa-atlantica-bonaerense",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/gastronomia-de-chaco",
+      "references": [
+        {
+          "entryId": "gastronomia-de-chaco",
+          "sourceId": "visit-argentina-chaco-food",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/gastronomia-de-chaco",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/peninsula-valdes",
+      "references": [
+        {
+          "entryId": "peninsula-valdes",
+          "sourceId": "visit-argentina-peninsula-valdes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/peninsula-valdes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/ruinas-de-quilmes",
+      "references": [
+        {
+          "entryId": "ruinas-de-quilmes",
+          "sourceId": "visit-argentina-quilmes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/ruinas-de-quilmes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/salinas-grandes",
+      "references": [
+        {
+          "entryId": "salinas-grandes",
+          "sourceId": "visit-argentina-salinas",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/salinas-grandes",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/sierras-de-la-provincia-de-buenos-aires",
+      "references": [
+        {
+          "entryId": "sierra-de-la-ventana",
+          "sourceId": "visit-argentina-sierras",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/sierras-de-la-provincia-de-buenos-aires",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/actividades/turismo-aventura-en-chaco",
+      "references": [
+        {
+          "entryId": "turismo-aventura-en-chaco",
+          "sourceId": "visit-argentina-chaco-adventure",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/actividades/turismo-aventura-en-chaco",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/novedades/ocho-pueblos-argentinos-postulados-entre-los-mejores-destinos-turisticos-rurales-del-mundo",
+      "references": [
+        {
+          "entryId": "mar-de-las-pampas",
+          "sourceId": "visit-argentina-mar-de-las-pampas",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/novedades/ocho-pueblos-argentinos-postulados-entre-los-mejores-destinos-turisticos-rurales-del-mundo",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.argentina.travel/pt/novidades/o-que-levar-para-uma-viagem-a-neve-na-argentina-guia-pratico-para-turistas",
+      "references": [
+        {
+          "entryId": "las-lenas",
+          "sourceId": "visit-argentina-snow",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.argentina.travel/pt/novidades/o-que-levar-para-uma-viagem-a-neve-na-argentina-guia-pratico-para-turistas",
       "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
@@ -2988,17 +5690,17 @@
           "sourceId": "bcra-exterior-and-exchange-rules",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "zashchita-nakoplenij-ot-inflyacii",
           "sourceId": "bcra-exterior-and-exchange-rules",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://www.bcra.gob.ar/normativa-de-exterior-y-cambios/",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
@@ -3006,21 +5708,60 @@
       "error": null
     },
     {
+      "url": "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp",
+      "references": [
+        {
+          "entryId": "gid-po-dengam",
+          "sourceId": "bcra-migrant-account",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-relokanta",
+          "sourceId": "bcra-migrant-account",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 404,
+      "finalUrl": "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp",
+      "contentType": "text/html",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 404"
+    },
+    {
       "url": "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/",
       "references": [
+        {
+          "entryId": "aktualen-li-blue-dollar",
+          "sourceId": "bcra-authorized-currency-entities",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        },
         {
           "entryId": "banki-i-perevody",
           "sourceId": "bcra-authorized-foreign-exchange",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "falshivye-policejskie-i-obmenniki",
           "sourceId": "bcra-authorized-exchange-entities",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "gid-po-dengam",
+          "sourceId": "bcra-authorized-fx",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "inflyatsiya-i-ekonomika",
@@ -3037,11 +5778,18 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "sourceId": "bcra-authorized-fx-channels",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "pereezd-s-minimalnym-byudzhetom",
           "sourceId": "bcra-authorized-foreign-exchange",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -3056,10 +5804,35 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "skam-s-falshivoj-policiej",
+          "sourceId": "bcra-authorized-exchange-fake-police",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.bcra.gob.ar/noticias/inicio-de-la-fase-3-del-programa-economico/",
+      "references": [
+        {
+          "entryId": "aktualen-li-blue-dollar",
+          "sourceId": "bcra-phase-3-currency-liberalization",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.bcra.gob.ar/noticias/inicio-de-la-fase-3-del-programa-economico/",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
       "attempt": 1,
@@ -3073,7 +5846,7 @@
           "sourceId": "bcra-cbu-cvu-education",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "bankovskij-schet",
@@ -3081,6 +5854,13 @@
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "sourceId": "bcra-cbu-cvu-alias-prepay",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -3101,7 +5881,7 @@
           "declaredCheckedAt": "2026-07-17"
         }
       ],
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://www.bcra.gob.ar/publicaciones/informe-monetario-mensual-abril-de-2025/",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
@@ -3116,12 +5896,44 @@
           "sourceId": "bcra-uva-deposits",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
-      "status": 206,
-      "finalUrl": "https://www.bcra.gob.ar/sistema-financiero/los-plazos-fijos-uva-volvieron-a-alcanzar-su-maximo-historico/",
+      "status": 200,
+      "finalUrl": "https://www.bcra.gob.ar/noticias/los-plazos-fijos-uva-volvieron-a-alcanzar-su-maximo-historico/",
       "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.bna.com.ar/Personas",
+      "references": [
+        {
+          "entryId": "aktualen-li-blue-dollar",
+          "sourceId": "bna-current-exchange-reference",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        },
+        {
+          "entryId": "skolko-deneg-brat-na-poezdku",
+          "sourceId": "bna-live-exchange-budget",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        },
+        {
+          "entryId": "skolko-stoit-zhizn-v-buenos-ajrese",
+          "sourceId": "bna-exchange-reference-living",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.bna.com.ar/Personas",
+      "contentType": "text/html; charset=utf-8",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -3152,14 +5964,14 @@
           "sourceId": "argentina-decree-366-2025-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pereezd-s-minimalnym-byudzhetom",
           "sourceId": "argentina-decree-366-2025-health-insurance",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "pervyj-mesyac-plan",
@@ -3187,21 +5999,14 @@
           "sourceId": "argentina-decree-366-2025",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
-        },
-        {
-          "entryId": "rossiya-vs-argentina",
-          "sourceId": "argentina-health-insurance-entry-2025",
-          "authority": "primary",
-          "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         },
         {
           "entryId": "sistema-zdravoohraneniya",
           "sourceId": "argentina-decree-366-2025-health",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-08-17"
         },
         {
           "entryId": "viza-i-granica-dlya-rossiyan",
@@ -3236,6 +6041,13 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "argentina-russia-visa-waiver",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "podgotovka-k-poezdke",
           "sourceId": "argentina-embassy-russia-tourist-visa",
           "authority": "primary",
@@ -3265,6 +6077,49 @@
       "error": null
     },
     {
+      "url": "https://www.cariverplate.com.ar/museo",
+      "references": [
+        {
+          "entryId": "futbol",
+          "sourceId": "river-official-museum",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.riverplate.com/museo",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.cariverplate.com.ar/venta-de-entradas/como-comprar-entradas",
+      "references": [
+        {
+          "entryId": "futbol",
+          "sourceId": "river-official-ticket-guide",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "futbol-kak-popast-bez-skama",
+          "sourceId": "river-official-ticket-guide",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.riverplate.com/venta-de-entradas/como-comprar-entradas",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.cbr.ru/analytics/dkp/dinamic/CPD_2026-6/",
       "references": [
         {
@@ -3272,7 +6127,7 @@
           "sourceId": "bank-of-russia-inflation-june-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -3290,7 +6145,7 @@
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "esim-i-svyaz",
@@ -3332,26 +6187,62 @@
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoit-li-ehat-v-argentinu",
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "udalyonnaya-rabota-i-oplata",
           "sourceId": "bank-of-russia-cross-border-card-operations",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.cbr.ru/press/event/?id=12735",
       "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html",
+      "references": [
+        {
+          "entryId": "vysokogorye-na-avto",
+          "sourceId": "cdc-high-altitude-travel",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.chaco.gov.ar/noticia-bienal-2026-resistencia-celebra-el-encuentro-mundial-del-arte-a-cielo-abierto-2026-07-18-13-16",
+      "references": [
+        {
+          "entryId": "bienal-internacional-de-esculturas-en-resistencia",
+          "sourceId": "chaco-government-biennial-2026",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.chaco.gov.ar/noticia-bienal-2026-resistencia-celebra-el-encuentro-mundial-del-arte-a-cielo-abierto-2026-07-18-13-16",
+      "contentType": "text/html; charset=UTF-8",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -3382,7 +6273,7 @@
           "sourceId": "cnv-cedear-regulation",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -3400,11 +6291,65 @@
           "sourceId": "caba-notaries-property-purchase",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
       "finalUrl": "https://www.colegio-escribanos.org.ar/2020/04/24/compraventa/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_18260/40ce7bd4fa6a13314586ee258eb86d644cc63ff2/",
+      "references": [
+        {
+          "entryId": "voinskij-uchet-i-voennyj-bilet",
+          "sourceId": "rf-law-53-article-10",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.consultant.ru/document/cons_doc_LAW_18260/40ce7bd4fa6a13314586ee258eb86d644cc63ff2/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_18260/dc940acbd42ce7edc1bdb8be8fcb13e3bd02820d/",
+      "references": [
+        {
+          "entryId": "voinskij-uchet-i-voennyj-bilet",
+          "sourceId": "rf-law-53-article-7-1",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.consultant.ru/document/cons_doc_LAW_18260/dc940acbd42ce7edc1bdb8be8fcb13e3bd02820d/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_64215/c7f1745fcd71700e47f519dcd477fae2dd8a7712/",
+      "references": [
+        {
+          "entryId": "voinskij-uchet-i-voennyj-bilet",
+          "sourceId": "rf-military-registration-regulation",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.consultant.ru/document/cons_doc_LAW_64215/c7f1745fcd71700e47f519dcd477fae2dd8a7712/",
       "contentType": "text/html; charset=UTF-8",
       "ok": true,
       "attempt": 1,
@@ -3429,6 +6374,24 @@
       "error": null
     },
     {
+      "url": "https://www.estadisticaciudad.gob.ar/eyc/categoria-banco-datos/valor-de-las-canastas/",
+      "references": [
+        {
+          "entryId": "skolko-stoit-zhizn-v-buenos-ajrese",
+          "sourceId": "caba-consumption-baskets",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.estadisticaciudad.gob.ar/eyc/categoria-banco-datos/valor-de-las-canastas/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf",
       "references": [
         {
@@ -3436,21 +6399,21 @@
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoimost-zhizni-ba",
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         },
         {
           "entryId": "stoimost-zhizni-semya-i-para",
           "sourceId": "caba-rental-market-first-quarter-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -3461,8 +6424,90 @@
       "error": null
     },
     {
+      "url": "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/",
+      "references": [
+        {
+          "entryId": "circuito-cultural-en-formosa",
+          "sourceId": "formosa-city-access",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "formosa",
+          "sourceId": "formosa-official-city",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/que-hacer/",
+      "references": [
+        {
+          "entryId": "circuito-cultural-en-formosa",
+          "sourceId": "formosa-city-things-to-do",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "formosa",
+          "sourceId": "formosa-official-things-to-do",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.formosahermosa.gob.ar/circuito-formosa-y-herradura/ciudad-de-formosa/que-hacer/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.gov.br/mre/pt-br/embaixada-singapura/setor-consular/visas/types-of-visa/vivis-visit-visa/auditing-or-consultancy-vivis",
+      "references": [
+        {
+          "entryId": "viza-v-braziliyu-dlya-iguasu",
+          "sourceId": "brazil-mre-russia-visa-list",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.gov.br/mre/pt-br/embaixada-singapura/setor-consular/visas/types-of-visa/vivis-visit-visa/auditing-or-consultancy-vivis",
+      "contentType": "text/html;charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
       "url": "https://www.gov.uk/foreign-travel-advice/argentina/safety-and-security",
       "references": [
+        {
+          "entryId": "bezopasno-li-odnoj-zhenshchine",
+          "sourceId": "uk-argentina-safety-women",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "bezopasno-li-v-argentine",
+          "sourceId": "uk-argentina-safety-advice",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
         {
           "entryId": "kaminito-la-boka",
           "sourceId": "uk-argentina-la-boca-safety",
@@ -3482,11 +6527,18 @@
       "url": "https://www.indec.gob.ar/indec",
       "references": [
         {
+          "entryId": "mify-ob-argentine",
+          "sourceId": "indec-consumer-prices",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "rossiya-vs-argentina",
           "sourceId": "indec-consumer-price-index",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,
@@ -3507,11 +6559,25 @@
           "declaredCheckedAt": "2026-07-17"
         },
         {
+          "entryId": "gid-po-dengam",
+          "sourceId": "indec-ipc",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
           "entryId": "inflyatsiya-i-ekonomika",
           "sourceId": "indec-consumer-price-index",
           "authority": "primary",
           "declaredStatus": "verified",
           "declaredCheckedAt": "2026-07-17"
+        },
+        {
+          "entryId": "skolko-stoit-zhizn-v-buenos-ajrese",
+          "sourceId": "indec-consumer-price-index",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
         }
       ],
       "status": 200,
@@ -3529,7 +6595,7 @@
           "sourceId": "indec-basic-basket-may-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -3547,7 +6613,7 @@
           "sourceId": "indec-income-distribution-q1-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
@@ -3565,12 +6631,127 @@
           "sourceId": "indec-consumer-prices-may-2026",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
       "finalUrl": "https://www.indec.gob.ar/uploads/informesdeprensa/ipc_06_26C132AEE4E9.pdf",
       "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.laslenas.com/",
+      "references": [
+        {
+          "entryId": "las-lenas",
+          "sourceId": "las-lenas-official",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
+      "references": [
+        {
+          "entryId": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "sourceId": "mastercard-russia-suspension-prepay",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "sourceId": "mastercard-russia-suspension",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 403,
+      "finalUrl": "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html",
+      "contentType": "text/html",
+      "ok": false,
+      "attempt": 1,
+      "error": "HTTP 403"
+    },
+    {
+      "url": "https://www.migraciones.gob.ar/accesible/consultaTramiteCiudadania/ConsultaCiudadania.php",
+      "references": [
+        {
+          "entryId": "status-expediente-migraciones",
+          "sourceId": "dnm-citizenship-status",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.migraciones.gob.ar/accesible/consultaTramiteCiudadania/ConsultaCiudadania.php",
+      "contentType": "text/html; charset=iso-8859-1",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.migraciones.gob.ar/accesible/consultaTramitePrecaria/ConsultaUnificada.php",
+      "references": [
+        {
+          "entryId": "status-expediente-migraciones",
+          "sourceId": "dnm-residence-status",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.migraciones.gob.ar/accesible/consultaTramitePrecaria/ConsultaUnificada.php",
+      "contentType": "text/html; charset=iso-8859-1",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.migraciones.gob.ar/contacto/",
+      "references": [
+        {
+          "entryId": "status-expediente-migraciones",
+          "sourceId": "dnm-contact",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.migraciones.gob.ar/contacto/",
+      "contentType": "text/html; charset=iso-8859-1",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.migraciones.gob.ar/radex/inicio-pasos-ciudadania.html",
+      "references": [
+        {
+          "entryId": "grazhdanstvo",
+          "sourceId": "dnm-citizenship-radex",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.migraciones.gob.ar/radex/inicio-pasos-ciudadania.html",
+      "contentType": "text/html",
       "ok": true,
       "attempt": 1,
       "error": null
@@ -3630,22 +6811,202 @@
       "error": null
     },
     {
-      "url": "https://www.riverplate.com/venta-de-entradas/como-comprar-entradas",
+      "url": "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/decreto/d7271.htm",
       "references": [
         {
-          "entryId": "futbol-kak-popast-bez-skama",
-          "sourceId": "river-official-ticket-guide",
+          "entryId": "viza-v-braziliyu-dlya-iguasu",
+          "sourceId": "brazil-russia-visa-waiver-decree",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "fetch failed"
+    },
+    {
+      "url": "https://www.rosario.gob.ar/mr/normativa/codigo-de-transito/ordenanza-no-6543-1998",
+      "references": [
+        {
+          "entryId": "circuito-de-cervecerias-en-rosario",
+          "sourceId": "rosario-zero-alcohol-driving",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.rosario.gob.ar/mr/normativa/codigo-de-transito/ordenanza-no-6543-1998",
+      "contentType": "text/html;charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.sanjuan.tur.ar/experiencias/que-hago/recorridos-de-fe",
+      "references": [
+        {
+          "entryId": "caucete-san-juan",
+          "sourceId": "san-juan-faith-route",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.sanjuan.tur.ar/experiencias/que-hago/recorridos-de-fe",
+      "contentType": "text/html; charset=utf-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.tucumanturismo.gob.ar/articulos/articulo/721/tafi-del-valle",
+      "references": [
+        {
+          "entryId": "tafi-del-valle",
+          "sourceId": "tucuman-tafi",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 206,
-      "finalUrl": "https://www.riverplate.com/venta-de-entradas/como-comprar-entradas",
+      "finalUrl": "https://www.tucumanturismo.gob.ar/articulos/articulo/721/tafi-del-valle",
       "contentType": "text/html",
       "ok": true,
       "attempt": 1,
       "error": null
+    },
+    {
+      "url": "https://www.tucumanturismo.gob.ar/articulos/articulo/735/ciudad-sagrada-de-quilmes",
+      "references": [
+        {
+          "entryId": "amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes",
+          "sourceId": "tucuman-ciudad-sagrada-quilmes",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.tucumanturismo.gob.ar/articulos/articulo/735/ciudad-sagrada-de-quilmes",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.tucumanturismo.gob.ar/public/files/Mapa%20-%20%20Taf%C3%AD%20del%20Valle_57bnd9yf_22-08-2024.pdf",
+      "references": [
+        {
+          "entryId": "tafi-del-valle",
+          "sourceId": "tucuman-tafi-map",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.tucumanturismo.gob.ar/public/files/Mapa%20-%20%20Taf%C3%AD%20del%20Valle_57bnd9yf_22-08-2024.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.tucumanturismo.gob.ar/subsecciones/lista/163/arqueologia",
+      "references": [
+        {
+          "entryId": "ruinas-de-quilmes",
+          "sourceId": "tucuman-archeology",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.tucumanturismo.gob.ar/subsecciones/lista/163/arqueologia",
+      "contentType": "text/html",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.turismo.jujuy.gob.ar/",
+      "references": [
+        {
+          "entryId": "quebrada-de-humahuaca",
+          "sourceId": "jujuy-quebrada",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 200,
+      "finalUrl": "https://www.turismo.jujuy.gob.ar/",
+      "contentType": "text/html; charset=UTF-8",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.turismo.jujuy.gob.ar/wp-content/uploads/Manual-para-Guias-Idoneos_QUEBRADA_v5.pdf",
+      "references": [
+        {
+          "entryId": "purmamarka",
+          "sourceId": "jujuy-guides-quebrada",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.turismo.jujuy.gob.ar/wp-content/uploads/Manual-para-Guias-Idoneos_QUEBRADA_v5.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.turismo.jujuy.gob.ar/wp-content/uploads/Manual-para-Guias-Idoneos_v5.pdf",
+      "references": [
+        {
+          "entryId": "salinas-grandes",
+          "sourceId": "jujuy-guides-salinas",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
+        }
+      ],
+      "status": 206,
+      "finalUrl": "https://www.turismo.jujuy.gob.ar/wp-content/uploads/Manual-para-Guias-Idoneos_v5.pdf",
+      "contentType": "application/pdf",
+      "ok": true,
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "url": "https://www.turkishairlines.com/ru/flights-from-moscow-to-buenos-aires",
+      "references": [
+        {
+          "entryId": "skolko-letet-iz-rossii",
+          "sourceId": "turkish-moscow-buenos-aires",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-08-11"
+        }
+      ],
+      "status": null,
+      "finalUrl": null,
+      "contentType": null,
+      "ok": false,
+      "attempt": 2,
+      "error": "The operation was aborted due to timeout"
     },
     {
       "url": "https://www.westernunion.com/us/en/send-money-to-argentina.html",
@@ -3655,7 +7016,14 @@
           "sourceId": "western-union-send-to-argentina",
           "authority": "primary",
           "declaredStatus": "verified",
-          "declaredCheckedAt": "2026-07-17"
+          "declaredCheckedAt": "2026-07-20"
+        },
+        {
+          "entryId": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "sourceId": "western-union-argentina-quote",
+          "authority": "primary",
+          "declaredStatus": "verified",
+          "declaredCheckedAt": "2026-07-20"
         }
       ],
       "status": 200,

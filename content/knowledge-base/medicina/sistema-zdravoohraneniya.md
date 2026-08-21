@@ -31,7 +31,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-16"
     note: "Различает экстренную и плановую помощь иностранцам и положение постоянных резидентов."
   - id: argentina-health-services-regulator
@@ -51,7 +51,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-16"
     note: "Национальный 911 и территориальные пояснения к медицинскому номеру 107."
   - id: argentina-national-obras-sociales

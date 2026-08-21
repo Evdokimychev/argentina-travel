@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T20:04:51.906Z",
+  "generatedAt": "2026-08-21T01:13:10.325Z",
   "ok": true,
   "structuralErrors": [],
   "counts": {
@@ -12,7 +12,7 @@
     "sensitiveClaims": 91,
     "verifiedClaims": 322,
     "claimsNeedingReview": 0,
-    "mediaRightsRecords": 664,
+    "mediaRightsRecords": 677,
     "verifiedMediaRights": 0,
     "missingMedia": 13,
     "dynamicFacts": 7,

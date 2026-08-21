@@ -23,7 +23,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-10-17"
     note: "Статья 35: бесплатность grado для граждан и постоянных резидентов, возможность платы и стипендий для остальных."
 claims:

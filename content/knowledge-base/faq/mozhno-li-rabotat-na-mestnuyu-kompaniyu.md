@@ -33,7 +33,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-10-17"
     note: "Запрещает оплачиваемую работу при нерегулярном статусе или без соответствующего разрешения."
 claims:

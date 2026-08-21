@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: dnm-digital-nomad-disposition-faq
     title: "Disposición DNM 758/2022"
     url: "https://www.argentina.gob.ar/normativa/nacional/norma-364601"

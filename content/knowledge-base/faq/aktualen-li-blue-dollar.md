@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-09-10"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает снятие ограничений на покупку валюты физическими лицами с апреля 2025 года."
   - id: bcra-authorized-currency-entities
     title: "BCRA — покупка долларов физическими лицами через уполномоченные организации"
@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-09-10"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "BCRA указывает, что операции проводят банки и уполномоченные обменные дома и что их нельзя передавать посредникам."
   - id: bna-current-exchange-reference
     title: "Banco de la Nación Argentina — текущие котировки валют"
@@ -41,10 +41,10 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-08-11"
     expires_at: "2026-08-18"
-    note: "Официальная ежедневная точка сравнения; конкретная котировка намеренно не зашита в текст."
+    note: "Официальная ежедневная точка сравнения; конкретная котировка намеренно не зашита в текст. Повторная проверка 2026-08-21 заблокирована защитой сайта (WAF отклонил автоматический запрос) — нужна ручная проверка человеком, а не автоматическим агентом."
 claims:
   - id: currency-restrictions-for-individuals-relaxed
     text: "В апреле 2025 года BCRA снял ограничения на покупку иностранной валюты физическими лицами."

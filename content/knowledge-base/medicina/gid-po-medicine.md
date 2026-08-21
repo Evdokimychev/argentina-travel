@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-emergency-numbers
     title: "Argentina.gob.ar — Emergencias"
     url: "https://www.argentina.gob.ar/tema/emergencias"
@@ -41,8 +41,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-provincial-medical-numbers
     title: "Ministerio de Salud — emergencias en la vía pública"
     url: "https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica"

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-11T05:35:21.097Z",
+  "generatedAt": "2026-08-21T01:15:33.244Z",
   "scope": "public-indexable-blog",
   "status": "passed",
   "summary": {
-    "total": 76,
-    "passed": 76,
+    "total": 67,
+    "passed": 67,
     "failed": 0,
     "sensitive": 9,
     "sensitivePassed": 9
@@ -48,6 +48,42 @@
       "issues": []
     },
     {
+      "slug": "el-chalten-i-fitts-roy",
+      "title": "Эль-Чальтен: маршруты к Фицрою и первый треккинг",
+      "category": "Горы и треккинг",
+      "sensitive": false,
+      "dateModified": "2026-07-17",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "slug": "salta-i-severo-zapad-marshrut",
+      "title": "Сальта и северо-запад: маршрут на 5–7 дней",
+      "category": "Север Аргентины",
+      "sensitive": false,
+      "dateModified": "2026-07-17",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "slug": "argentina-tourist-visa-2026",
+      "title": "Въезд туриста в Аргентину: виза, сроки и документы",
+      "category": "Путеводитель",
+      "sensitive": true,
+      "dateModified": "2026-07-17",
+      "status": "passed",
+      "issues": []
+    },
+    {
+      "slug": "patagoniya-marshrut-14-dney",
+      "title": "Патагония за 14 дней: ледники, Фицрой и Ушуая",
+      "category": "Патагония",
+      "sensitive": false,
+      "dateModified": "2026-07-17",
+      "status": "passed",
+      "issues": []
+    },
+    {
       "slug": "patagonia-авиабилеты",
       "title": "Патагония: как долететь и купить внутренние рейсы",
       "category": "Патагония",
@@ -84,45 +120,9 @@
       "issues": []
     },
     {
-      "slug": "argentina-tourist-visa-2026",
-      "title": "Въезд туриста в Аргентину: виза, сроки и документы",
-      "category": "Путеводитель",
-      "sensitive": true,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "salta-i-severo-zapad-marshrut",
-      "title": "Сальта и северо-запад: маршрут на 5–7 дней",
-      "category": "Север Аргентины",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
       "slug": "uco-valley-vino-i-gory",
       "title": "Долина Уко: вино, Аконкагуа и дегустации",
       "category": "Винодельни",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "el-chalten-i-fitts-roy",
-      "title": "Эль-Чальтен: маршруты к Фицрою и первый треккинг",
-      "category": "Горы и треккинг",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagoniya-marshrut-14-dney",
-      "title": "Патагония за 14 дней: ледники, Фицрой и Ушуая",
-      "category": "Патагония",
       "sensitive": false,
       "dateModified": "2026-07-17",
       "status": "passed",
@@ -489,15 +489,6 @@
       "issues": []
     },
     {
-      "slug": "patagonia-чек-лист",
-      "title": "Патагония: чек-лист перед поездкой",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
       "slug": "patagonia-ошибки",
       "title": "Патагония: 10 типичных ошибок туристов",
       "category": "Патагония",
@@ -509,51 +500,6 @@
     {
       "slug": "patagonia-фото",
       "title": "Патагония: Фотосъёмка — практический гид",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-за-3-дня",
-      "title": "Патагония за 3 дня: готовый маршрут по дням",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-за-5-дней",
-      "title": "Патагония за 5 дней: готовый маршрут по дням",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-за-7-дней",
-      "title": "Патагония за 7 дней: готовый маршрут по дням",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-за-10-дней",
-      "title": "Патагония за 10 дней: готовый маршрут по дням",
-      "category": "Патагония",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "patagonia-за-14-дней",
-      "title": "Патагония за 14 дней: готовый маршрут по дням",
       "category": "Патагония",
       "sensitive": false,
       "dateModified": "2026-07-17",
@@ -645,33 +591,6 @@
       "slug": "buenos-aires-за-3-дня",
       "title": "Буэнос-Айрес за 3 дня: готовый маршрут по дням",
       "category": "Буэнос-Айрес",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "northwest-самостоятельно",
-      "title": "Северо-запад Аргентины самостоятельно: пошаговый план",
-      "category": "Север Аргентины",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "northwest-за-5-дней",
-      "title": "Северо-запад Аргентины за 5 дней: готовый маршрут по дням",
-      "category": "Север Аргентины",
-      "sensitive": false,
-      "dateModified": "2026-07-17",
-      "status": "passed",
-      "issues": []
-    },
-    {
-      "slug": "northwest-сезон-дождей",
-      "title": "Северо-запад Аргентины: Сезон дождей — практический гид",
-      "category": "Север Аргентины",
       "sensitive": false,
       "dateModified": "2026-07-17",
       "status": "passed",

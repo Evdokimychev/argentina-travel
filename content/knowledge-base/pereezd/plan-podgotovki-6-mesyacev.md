@@ -66,7 +66,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2027-07-17"
     note: "Устанавливает декларацию о наличии медицинской страховки при въезде и актуальные правила доступа иностранцев к медицинской помощи."
 claims:

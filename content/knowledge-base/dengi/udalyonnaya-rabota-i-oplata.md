@@ -43,8 +43,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Описывает обязательность уполномоченного валютного канала, подтверждающих документов и правил ввода экспортной выручки."
   - id: wise-russia-availability
