@@ -52,3 +52,4 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 | P1-I8-007 | P1 | CI a11y mobile `/destinations/patagonia` | `scrollable-region-focusable` on HubQuickFactsGrid carousel | **fixed** `scrollRegionLabel` + tabIndex | CI verify-release |
 | P1-I8-008 | P1 | `/excursions` | Catalog fetch could hang past SEO/UI budgets under partner outage | **fixed** `fetchExcursionsResultSafely` 2.5s deadline | CI + prod hang |
 | CI | — | verify-contracts | Stale `interaction-inventory.csv` after BookingLookup `noValidate` | **fixed** `inventory:generate` | CI |
+| P2-I8-011 | P2 | `/api/excursions/search-index` + SiteSearch | Outage threw 500; client fallback index empty → false «Ничего не найдено» for «Буэнос» | **fixed** safely + empty JSON; wait for index before empty copy | pass17 |

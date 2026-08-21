@@ -221,13 +221,16 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
   }, [open]);
 
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>(() => getDefaultSearchIndex());
+  const [searchIndexReady, setSearchIndexReady] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
 
     void loadSearchIndex().then((index) => {
-      if (!cancelled) setSearchIndex(index);
+      if (cancelled) return;
+      setSearchIndex(index);
+      setSearchIndexReady(true);
     });
 
     return () => {
@@ -485,7 +488,7 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
               <div className="px-3 py-8 text-center text-sm text-muted">
                 Начните вводить запрос — туры, блог, FAQ, документы и направления
               </div>
-            ) : loading && results.length === 0 ? (
+            ) : (loading || !searchIndexReady) && results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm text-muted">Ищем…</div>
             ) : results.length === 0 ? (
               <div className="px-3 py-7 text-center text-sm text-muted">

@@ -4,7 +4,7 @@ import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
 import { fetchSiteControlPlaneEdge } from "@/lib/site-settings-edge";
 import { isPublicPathIncludedInSearch } from "@/lib/public-module-visibility";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
+import { fetchExcursionsResultSafely } from "@/lib/tripster/excursion-server";
 import { filterSearchHitsByPublicCatalog } from "@/lib/search/public-catalog-results";
 import { withBudget } from "@/lib/async-budget";
 
@@ -58,11 +58,17 @@ export async function GET(request: Request) {
       };
     }),
     loadCatalogPathSlice("search_excursions_slice", async () => {
-      const excursionsResult = await fetchExcursionsServer({ pageSize: 500 });
+      const excursionsResult = await fetchExcursionsResultSafely(
+        { pageSize: 500 },
+        "search_excursions_slice",
+      );
+      if (excursionsResult.status === "unavailable") {
+        return { status: "unavailable" as const };
+      }
       return {
         status: "ok" as const,
         paths: new Set(
-          excursionsResult.items.map((excursion) => `/excursions/${excursion.slug}`),
+          excursionsResult.data.items.map((excursion) => `/excursions/${excursion.slug}`),
         ),
       };
     }),
