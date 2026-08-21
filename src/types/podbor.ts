@@ -107,6 +107,8 @@ export interface PodborAiNarrativeRequest {
 export interface PodborSession {
   answers: PodborAnswers;
   currentQuestionId: PodborQuestionId | null;
+  /** In-progress choice on the current question before «Продолжить». */
+  draftSelection?: string[];
   completedAt: string | null;
   updatedAt: string;
 }

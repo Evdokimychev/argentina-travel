@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Compass, Sparkles } from "lucide-react";
 import type { TourListing } from "@/types";
@@ -42,6 +42,7 @@ export default function PodborView({
   const [result, setResult] = useState<PodborMatchResult | null>(null);
   const [excursions, setExcursions] = useState<ExcursionListing[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const restoredDraftRef = useRef<string[] | null>(null);
 
   const activeQuestionId = useMemo(
     () => resolveActiveQuestion(answers),
@@ -67,6 +68,9 @@ export default function PodborView({
     } else if (saved?.answers && Object.keys(saved.answers).length > 0) {
       setAnswers(saved.answers);
       setPhase("quiz");
+      if (saved.draftSelection?.length) {
+        restoredDraftRef.current = saved.draftSelection;
+      }
     }
     setHydrated(true);
   }, [tours]);
@@ -74,6 +78,11 @@ export default function PodborView({
   useEffect(() => {
     if (!activeQuestionId) return;
     const question = getQuestionForDisplay(activeQuestionId, answers);
+    if (restoredDraftRef.current) {
+      setDraftSelection(restoredDraftRef.current);
+      restoredDraftRef.current = null;
+      return;
+    }
     setDraftSelection(
       answers[activeQuestionId] ??
         (question.numericInput ? [String(question.numericInput.defaultValue)] : [])
@@ -85,10 +94,11 @@ export default function PodborView({
     savePodborSession({
       answers,
       currentQuestionId: activeQuestionId,
+      draftSelection,
       completedAt: phase === "results" ? new Date().toISOString() : null,
       updatedAt: new Date().toISOString(),
     });
-  }, [answers, activeQuestionId, phase, hydrated]);
+  }, [answers, activeQuestionId, draftSelection, phase, hydrated]);
 
   useEffect(() => {
     if (phase !== "results") return;
