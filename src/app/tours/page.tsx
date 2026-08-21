@@ -21,31 +21,36 @@ type ToursPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
+type ToursCatalogLoadResult = {
+  tours: TourListing[];
+  catalogUnavailable: boolean;
+};
+
 /** Catalog outage must not strip metadata or replace /tours with an error shell. */
-async function loadToursCatalogSafely(): Promise<TourListing[]> {
+async function loadToursCatalogSafely(): Promise<ToursCatalogLoadResult> {
   try {
-    return await fetchMarketplaceTours();
+    return { tours: await fetchMarketplaceTours(), catalogUnavailable: false };
   } catch (error) {
     console.error("[tours_catalog_unavailable]", {
       message: error instanceof Error ? error.message : String(error),
     });
-    return [];
+    return { tours: [], catalogUnavailable: true };
   }
 }
 
 export async function generateMetadata({ searchParams }: ToursPageProps): Promise<Metadata> {
   const params = await searchParams;
-  const tours = await loadToursCatalogSafely();
+  const { tours } = await loadToursCatalogSafely();
   return buildCatalogMetadata(params, tours);
 }
 
 export default async function ToursPage({ searchParams }: ToursPageProps) {
   const locale = await getServerI18nLocale();
   const params = await searchParams;
-  const tours = await loadToursCatalogSafely();
+  const { tours, catalogUnavailable } = await loadToursCatalogSafely();
   const platformStats = getPlatformStatsFromMarketplace(tours);
   const view = getServerCatalogView(params, tours);
-  const indexable = !hasActiveCatalogFilters(params, tours);
+  const indexable = !hasActiveCatalogFilters(params, tours) && !catalogUnavailable;
   const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
     { labelKey: "nav.home", path: "/", fallback: "Главная" },
     {
@@ -63,7 +68,11 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       ) : null}
       <CatalogSeoLinks tours={view.filtered} />
       <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог туров…" />}>
-        <ToursCatalog tours={tours} platformStats={platformStats} />
+        <ToursCatalog
+          tours={tours}
+          platformStats={platformStats}
+          catalogUnavailable={catalogUnavailable}
+        />
       </Suspense>
       <CommercialSeoSection copy={TOURS_CATALOG_SEO} />
     </>

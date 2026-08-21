@@ -252,6 +252,9 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
+      // Drop previous hits immediately so the UI never shows results for another query.
+      setApiHits(null);
+      setSearchNotice(null);
       setLoading(true);
 
       void fetchSiteSearch(trimmedQuery, {
