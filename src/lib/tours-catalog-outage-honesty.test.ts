@@ -41,6 +41,7 @@ describe("tours catalog outage honesty", () => {
       "src/app/podbor/page.tsx",
       "src/app/about/page.tsx",
       "src/app/places/[slug]/page.tsx",
+      "src/app/destinations/[slug]/page.tsx",
       "src/app/tours/region/patagonia/page.tsx",
       "src/app/tours/region/iguazu/page.tsx",
       "src/app/organizers/[slug]/page.tsx",
@@ -56,5 +57,12 @@ describe("tours catalog outage honesty", () => {
       "utf8",
     );
     expect(view).toContain("Каталог туров временно недоступен");
+
+    const destinationView = fs.readFileSync(
+      path.join(process.cwd(), "src/components/destinations/DestinationDetailView.tsx"),
+      "utf8",
+    );
+    expect(destinationView).toContain("catalogUnavailable");
+    expect(destinationView).toContain("Каталог туров временно недоступен");
   });
 });

@@ -34,6 +34,10 @@ function mergeSearchItems(...groups: SearchIndexItem[][]): SearchIndexItem[] {
   return [...byHref.values()];
 }
 
+export function buildOfflineStaticSearchIndex(): SearchIndexItem[] {
+  return mergeSearchItems(buildStaticSearchIndex(), buildKnowledgeBaseSearchItems());
+}
+
 export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]> {
   try {
     const [{ resolveBlogCatalog }, { resolveDestinationCatalog }, { resolvePlaceCatalog }, { resolveGuideCatalog }] =
@@ -62,7 +66,7 @@ export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]>
       buildKnowledgeBaseSearchItems()
     );
   } catch {
-    return mergeSearchItems(buildStaticSearchIndex(), buildKnowledgeBaseSearchItems());
+    return buildOfflineStaticSearchIndex();
   }
 }
 

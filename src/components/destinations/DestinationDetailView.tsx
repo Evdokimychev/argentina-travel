@@ -43,6 +43,8 @@ import type { TourListing } from "@/types";
 interface DestinationDetailViewProps {
   destination: DestinationPage;
   initialTours: TourListing[];
+  /** When marketplace catalog cannot be read, keep the editorial page and avoid silent empty tours. */
+  catalogUnavailable?: boolean;
   knowledgeLinks?: KnowledgeLinksBundle;
   flightSidebar?: React.ReactNode;
   /** Server-rendered CMS page-builder sections. */
@@ -96,6 +98,7 @@ function buildDestinationTocItems(destination: DestinationPage): ContentTocItem[
 export default function DestinationDetailView({
   destination,
   initialTours,
+  catalogUnavailable = false,
   knowledgeLinks,
   flightSidebar,
   cmsSections,
@@ -412,16 +415,24 @@ export default function DestinationDetailView({
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры по направлению</h2>
-                  <p className="mt-2 text-slate">Пока нет точных совпадений — откройте полный каталог</p>
+                  <p className="mt-2 text-slate">
+                    {catalogUnavailable
+                      ? "Каталог туров временно недоступен — направление всё равно можно изучить по тексту выше"
+                      : "Пока нет точных совпадений — откройте полный каталог"}
+                  </p>
                 </div>
                 <Link href={catalogHref} className="text-sm font-medium text-sky-ink hover:underline">
                   Смотреть все в каталоге →
                 </Link>
               </div>
               <div className="mt-8 rounded-card border border-dashed border-border-default bg-surface-elevated px-6 py-12 text-center">
-                <p className="font-medium text-charcoal">В каталоге нет точных совпадений</p>
+                <p className="font-medium text-charcoal">
+                  {catalogUnavailable ? "Каталог туров временно недоступен" : "В каталоге нет точных совпадений"}
+                </p>
                 <p className="mx-auto mt-2 max-w-md text-sm text-slate">
-                  Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
+                  {catalogUnavailable
+                    ? "Попробуйте обновить страницу позже или откройте каталог — если он снова доступен, предложения появятся здесь."
+                    : "Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут."}
                 </p>
                 <Link href={catalogHref} className="mt-6 inline-block">
                   <Button variant="outline">Перейти в каталог</Button>

@@ -15,7 +15,7 @@ import {
 } from "@/lib/cms/destination-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
@@ -60,8 +60,8 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   if (!destination) notFound();
   const cmsMetadata = getCmsResolverMetadata(destination);
 
-  const [marketplaceTours, flightTeasers] = await Promise.all([
-    fetchMarketplaceTours(),
+  const [{ tours: marketplaceTours, catalogUnavailable }, flightTeasers] = await Promise.all([
+    fetchMarketplaceToursSafely("destination_detail_marketplace"),
     getDestinationFlightTeasers(destination.id, locale),
   ]);
   const tourCandidates = matchToursForDestination(marketplaceTours, destination).slice(0, 6);
@@ -86,6 +86,7 @@ export default async function DestinationDetailPage({ params }: PageProps) {
       <DestinationDetailView
         destination={destination}
         initialTours={tours}
+        catalogUnavailable={catalogUnavailable}
         knowledgeLinks={knowledgeLinks}
         flightSidebar={
           <DestinationFlightSidebar

@@ -104,7 +104,7 @@ export default function BookingLookupView() {
 
         {step === "email" ? (
           <form onSubmit={requestCode} className="mt-6 space-y-4">
-            <SmartInput id="booking-email" label="Email из заявки" type="email" inputMode="email" enterKeyHint="send" autoComplete="email" value={email} onValueChange={(value) => { setEmail(value); setEmailError(null); }} error={emailError} validate={validateEmail} leadingIcon={<Mail className="h-4 w-4" />} clearable required />
+            <SmartInput id="booking-email" label="Email из заявки" type="email" inputMode="email" enterKeyHint="send" autoComplete="email" value={email} onValueChange={(value) => { setEmail(value); setEmailError(null); }} error={emailError} validate={validateEmail} leadingIcon={<Mail className="h-4 w-4" />} clearable required showValidationSuccess={false} />
             <Button type="submit" loading={loading} loadingLabel="Отправляем код…" className="w-full sm:w-auto">
               <Mail className="h-4 w-4" aria-hidden />
               Получить код

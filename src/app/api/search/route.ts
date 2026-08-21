@@ -6,6 +6,28 @@ import { isPublicPathIncludedInSearch } from "@/lib/public-module-visibility";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 import { filterSearchHitsByPublicCatalog } from "@/lib/search/public-catalog-results";
+import { withBudget } from "@/lib/async-budget";
+
+const SEARCH_CATALOG_SLICE_BUDGET_MS = 2_500;
+
+type CatalogPathSlice =
+  | { status: "ok"; paths: Set<string> }
+  | { status: "unavailable" };
+
+async function loadCatalogPathSlice(
+  label: string,
+  work: () => Promise<CatalogPathSlice>,
+): Promise<CatalogPathSlice> {
+  try {
+    return await withBudget(label, SEARCH_CATALOG_SLICE_BUDGET_MS, work);
+  } catch (error) {
+    console.error("[search_catalog_slice_budget]", {
+      label,
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return { status: "unavailable" };
+  }
+}
 
 export async function GET(request: Request) {
   const startedAt = Date.now();
@@ -28,20 +50,22 @@ export async function GET(request: Request) {
       limit: Number.isFinite(limit) ? limit : undefined,
     }),
     fetchSiteControlPlaneEdge(),
-    fetchMarketplaceTours()
-      .then((tours) => ({
+    loadCatalogPathSlice("search_marketplace_slice", async () => {
+      const tours = await fetchMarketplaceTours();
+      return {
         status: "ok" as const,
         paths: new Set(tours.map((tour) => `/tours/${tour.slug}`)),
-      }))
-      .catch(() => ({ status: "unavailable" as const })),
-    fetchExcursionsServer({ pageSize: 500 })
-      .then((excursionsResult) => ({
+      };
+    }),
+    loadCatalogPathSlice("search_excursions_slice", async () => {
+      const excursionsResult = await fetchExcursionsServer({ pageSize: 500 });
+      return {
         status: "ok" as const,
         paths: new Set(
           excursionsResult.items.map((excursion) => `/excursions/${excursion.slug}`),
         ),
-      }))
-      .catch(() => ({ status: "unavailable" as const })),
+      };
+    }),
   ]);
   const currentCatalogResults = filterSearchHitsByPublicCatalog(payload.results, {
     tours: toursSlice,
