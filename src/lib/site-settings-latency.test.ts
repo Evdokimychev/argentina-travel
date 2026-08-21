@@ -207,7 +207,10 @@ describe("public site settings latency guard", () => {
       "utf8",
     );
 
-    expect(destinationPage).toContain("const [marketplaceTours, flightTeasers] = await Promise.all([");
+    expect(destinationPage).toContain(
+      "const [{ tours: marketplaceTours, catalogUnavailable }, flightTeasers] = await Promise.all([",
+    );
+    expect(destinationPage).toContain("fetchMarketplaceToursSafely");
     expect(destinationPage).toContain("matchToursForDestination(marketplaceTours, destination).slice(0, 6)");
     expect(destinationPage).toContain("filterToursWithResolvedPublicDetail(tourCandidates)");
     expect(placePage).toContain("resolveRelatedToursForPlace(place, marketplaceTours)");

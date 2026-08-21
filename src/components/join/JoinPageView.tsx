@@ -482,8 +482,11 @@ export default function JoinPageView({
                 <div key={item.id}>
                   <button
                     type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={`join-faq-panel-${item.id}`}
+                    id={`join-faq-trigger-${item.id}`}
                     onClick={() => setOpenFaqId(isOpen ? null : item.id)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/70"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-inset"
                   >
                     <span className="font-medium text-charcoal">{item.question}</span>
                     <ChevronDown
@@ -495,7 +498,14 @@ export default function JoinPageView({
                     />
                   </button>
                   {isOpen ? (
-                    <div className="px-5 pb-4 text-sm leading-relaxed text-slate">{item.answer}</div>
+                    <div
+                      id={`join-faq-panel-${item.id}`}
+                      role="region"
+                      aria-labelledby={`join-faq-trigger-${item.id}`}
+                      className="px-5 pb-4 text-sm leading-relaxed text-slate"
+                    >
+                      {item.answer}
+                    </div>
                   ) : null}
                 </div>
               );

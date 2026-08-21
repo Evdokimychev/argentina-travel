@@ -66,6 +66,7 @@ describe("public runtime error boundary", () => {
   it("does not collapse a search catalogue outage into an empty confirmed set", () => {
     const route = source("src/app/api/search/route.ts");
     expect(route).not.toContain(".catch(() => ({ items: [], cities: [] }))");
-    expect(route).toContain('status: "unavailable" as const');
+    expect(route).toContain('return { status: "unavailable" }');
+    expect(route).toContain("loadCatalogPathSlice");
   });
 });
