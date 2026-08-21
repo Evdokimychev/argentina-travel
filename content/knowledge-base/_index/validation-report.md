@@ -16,11 +16,11 @@
 Чувствительных опубликованных материалов: **91**
 Чувствительных материалов без источников: **0**
 Чувствительных кандидатов публичного gate: **91**
-Кандидатов, готовых по строгой claim-level проверке: **80/91**
+Кандидатов, готовых по строгой claim-level проверке: **85/91**
 Строгий сигнал редакционной готовности: **FAIL**
 Материалов с наступившей плановой перепроверкой: **0**
 Материалов с низкой уверенностью: **0**
-Материалов, требующих редакционного внимания: **11**
+Материалов, требующих редакционного внимания: **6**
 
 ## По типам
 
@@ -38,21 +38,15 @@
 
 Снимок корпуса диагностический: публичный набор не снимается с публикации автоматически. Релизный gate: `python3 content/knowledge-base/_index/build_manifest.py --strict-provenance` (завершится ошибкой при редакционном долге).
 
-- `expired_source`: 11
-- `stale_sensitive_claim`: 7
-- `stale_source_url_check`: 8
-- `unhealthy_source_url`: 2
+- `expired_source`: 6
+- `stale_source_url_check`: 3
+- `unhealthy_source_url`: 6
 
 ### Чувствительные материалы, не готовые к строгой публикации
 
 - `aktualen-li-blue-dollar` — expired_source, unhealthy_source_url
 - `pokupka-nedvizhimosti` — expired_source, stale_source_url_check, unhealthy_source_url
-- `rabota-i-poisk-raboty` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `skolko-deneg-brat-na-poezdku` — expired_source
-- `skolko-stoit-oformit-vnzh` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `skolko-stoit-zhizn-v-buenos-ajrese` — expired_source
-- `stoimost-zhizni-semya-i-para` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `udalyonnaya-rabota-i-oplata` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `viza-cifrovogo-kochevnika-chto-daet` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `viza-v-braziliyu-dlya-iguasu` — expired_source, stale_sensitive_claim, stale_source_url_check
-- `zashchita-nakoplenij-ot-inflyacii` — expired_source, stale_sensitive_claim, stale_source_url_check
+- `skolko-deneg-brat-na-poezdku` — expired_source, unhealthy_source_url
+- `skolko-stoit-zhizn-v-buenos-ajrese` — expired_source, unhealthy_source_url
+- `viza-v-braziliyu-dlya-iguasu` — expired_source, stale_source_url_check, unhealthy_source_url
+- `zashchita-nakoplenij-ot-inflyacii` — expired_source, stale_source_url_check, unhealthy_source_url

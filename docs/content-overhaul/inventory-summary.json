@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-08-21T02:20:50.440Z",
+  "generatedAt": "2026-08-21T02:27:46.490Z",
   "kbRaw": 691,
-  "kbPublic": 232,
-  "kbQuarantined": 459,
+  "kbPublic": 237,
+  "kbQuarantined": 454,
   "kbArchived": 448,
-  "kbQualityBlocked": 11,
+  "kbQualityBlocked": 6,
   "sitemapPages": "not_measured",
   "inventoryRows": 699,
-  "openIssueRows": 27,
+  "openIssueRows": 22,
   "createdKnowledgeArticles": 0,
-  "rewrittenKnowledgeArticles": 14,
+  "rewrittenKnowledgeArticles": 9,
   "archivedKnowledgeArticles": 0,
   "requiredTopicGaps": 0
 }

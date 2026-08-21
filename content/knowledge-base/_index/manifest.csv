@@ -481,7 +481,7 @@ quebrada-de-humahuaca,attraction,,Кебрада-де-Умауака,published,n
 quebrada-de-las-flechas,attraction,,Кебрада-де-лас-Флечас,archived,noa,medium,2026-07-07,False,2026-10-05,False,72,,,dostoprimechatelnosti/quebrada-de-las-flechas.md
 quitilipi,attraction,,Quitilipi,archived,litoral,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/quitilipi.md
 rabochaya-viza,guide,immigration,Резиденция по работе в Аргентине,archived,,high,2026-07-17,True,2026-08-31,False,168,True,0,pereezd/rabochaya-viza.md
-rabota-i-poisk-raboty,guide,immigration,"Работа в Аргентине: статус, CUIL и поиск вакансий",published,,high,2026-07-20,True,2026-09-03,True,688,False,14,pereezd/rabota-i-poisk-raboty.md
+rabota-i-poisk-raboty,guide,immigration,"Работа в Аргентине: статус, CUIL и поиск вакансий",published,,high,2026-08-21,True,2026-10-05,False,688,True,0,pereezd/rabota-i-poisk-raboty.md
 rafaela,attraction,,Rafaela,archived,litoral,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/rafaela.md
 rafting-en-el-rio-chimehuin,attraction,,Rafting in the Chimehuin River,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,62,,,dostoprimechatelnosti/rafting-en-el-rio-chimehuin.md
 rafting-en-el-rio-corcovado,attraction,,Rafting in the Corcovado River,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,64,,,dostoprimechatelnosti/rafting-en-el-rio-corcovado.md
@@ -574,18 +574,18 @@ sierras-de-la-provincia-de-buenos-aires,attraction,,Сьерры провинц�
 sierras-de-sumampa,attraction,,Сьерры Сумампа,archived,noa,medium,2026-07-07,False,2026-10-05,False,76,,,dostoprimechatelnosti/sierras-de-sumampa.md
 sistema-zdravoohraneniya,guide,health,"Система здравоохранения Аргентины: público, obra social и prepaga",published,,high,2026-08-17,True,2026-10-01,False,826,True,0,medicina/sistema-zdravoohraneniya.md
 skam-s-falshivoj-policiej,faq,,,published,,medium,2026-08-21,True,2026-10-05,False,288,True,0,faq/skam-s-falshivoj-policiej.md
-skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-08-11,True,2026-09-25,True,293,False,1,faq/skolko-deneg-brat-na-poezdku.md
+skolko-deneg-brat-na-poezdku,faq,,,published,,high,2026-08-21,True,2026-10-05,True,293,False,3,faq/skolko-deneg-brat-na-poezdku.md
 skolko-dnej-na-marshrut-2-nedeli,faq,,,archived,,medium,2026-07-20,False,2026-10-18,False,90,,,faq/skolko-dnej-na-marshrut-2-nedeli.md
 skolko-dnej-nuzhno-na-iguasu,faq,,,archived,,high,2026-07-20,False,2027-01-16,False,74,,,faq/skolko-dnej-nuzhno-na-iguasu.md
 skolko-letet-iz-rossii,faq,,,published,,high,2026-08-11,True,2026-09-25,False,236,True,0,faq/skolko-letet-iz-rossii.md
 skolko-nalichnyh-mozhno-vvezti,faq,,,published,,high,2026-07-17,True,2026-08-31,False,128,True,0,faq/skolko-nalichnyh-mozhno-vvezti.md
-skolko-stoit-oformit-vnzh,faq,,,published,,high,2026-07-20,True,2026-09-03,True,251,False,7,faq/skolko-stoit-oformit-vnzh.md
-skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-08-11,True,2026-09-25,True,282,False,1,faq/skolko-stoit-zhizn-v-buenos-ajrese.md
+skolko-stoit-oformit-vnzh,faq,,,published,,high,2026-08-21,True,2026-10-05,False,251,True,0,faq/skolko-stoit-oformit-vnzh.md
+skolko-stoit-zhizn-v-buenos-ajrese,faq,,,published,,high,2026-08-21,True,2026-10-05,True,282,False,2,faq/skolko-stoit-zhizn-v-buenos-ajrese.md
 sladkoe-dulce-de-leche,guide,culture,"Сладкое: дульсе-де-лече, альфахорес и фактурас",published,,high,2026-07-20,False,2027-01-16,False,731,,,kultura/sladkoe-dulce-de-leche.md
 soobshestvo-i-adaptaciya,guide,immigration,Где найти своих и как устроить адаптацию в Аргентине,archived,,medium,2026-07-17,True,2026-08-31,True,304,False,3,pereezd/soobshestvo-i-adaptaciya.md
 status-expediente-migraciones,guide,immigration,Как проверить статус дела в Migraciones,published,,high,2026-07-20,True,2026-09-03,False,681,True,0,pereezd/status-expediente-migraciones.md
 stoimost-zhizni-ba,guide,finance,Как рассчитать стоимость жизни в Буэнос-Айресе,published,,high,2026-08-21,True,2026-10-05,False,734,True,0,dengi/stoimost-zhizni-ba.md
-stoimost-zhizni-semya-i-para,guide,finance,Стоимость жизни для пары и семьи: как собрать свой сценарий,published,,high,2026-07-20,True,2026-09-03,True,747,False,4,dengi/stoimost-zhizni-semya-i-para.md
+stoimost-zhizni-semya-i-para,guide,finance,Стоимость жизни для пары и семьи: как собрать свой сценарий,published,,high,2026-08-21,True,2026-10-05,False,747,True,0,dengi/stoimost-zhizni-semya-i-para.md
 stoit-li-ehat-na-poezde-v-oblaka,faq,,,published,,medium,2026-07-01,False,2026-09-29,False,218,,,faq/stoit-li-ehat-na-poezde-v-oblaka.md
 stoit-li-ehat-v-argentinu,guide,planning,"Стоит ли ехать в Аргентину: далеко, дорого, опасно?",published,,medium,2026-07-20,True,2026-09-03,False,975,True,0,puteshestvie/stoit-li-ehat-v-argentinu.md
 stoit-li-pereezzhat,guide,immigration,Стоит ли переезжать в Аргентину: рамка честного решения,archived,,high,2026-07-17,True,2026-08-31,False,361,True,0,pereezd/stoit-li-pereezzhat.md
@@ -631,7 +631,7 @@ turismo-religioso-en-salta,attraction,,Religious Tourism in Salta,archived,noa,m
 turismo-rural-comunitario,attraction,,Rural community tourism,archived,patagonia,medium,2026-07-07,False,2026-10-05,False,56,,,dostoprimechatelnosti/turismo-rural-comunitario.md
 turismo-rural-en-la-pampa,attraction,,Rural tourism in La Pampa,archived,pampa,medium,2026-07-07,False,2026-10-05,False,61,,,dostoprimechatelnosti/turismo-rural-en-la-pampa.md
 turismo-rural-en-salta,attraction,,Rural Tourism in Salta,archived,noa,medium,2026-07-07,False,2026-10-05,False,59,,,dostoprimechatelnosti/turismo-rural-en-salta.md
-udalyonnaya-rabota-i-oplata,guide,finance,"Удалённая работа в Аргентине: оплата, документы и законный маршрут денег",published,,high,2026-07-20,True,2026-09-03,True,714,False,12,dengi/udalyonnaya-rabota-i-oplata.md
+udalyonnaya-rabota-i-oplata,guide,finance,"Удалённая работа в Аргентине: оплата, документы и законный маршрут денег",published,,high,2026-08-21,True,2026-10-05,False,714,True,0,dengi/udalyonnaya-rabota-i-oplata.md
 ushuaia,city,,Ушуайя,published,tierra-del-fuego,high,2026-07-20,False,2027-01-16,False,751,,,goroda/ushuaia.md
 ushuaia-la-ciudad-y-el-tren,attraction,,Ушуайя: la ciudad y el tren,archived,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,71,,,dostoprimechatelnosti/ushuaia-la-ciudad-y-el-tren.md
 valle-de-la-luna-de-cusi-cusi,attraction,,Лунная долина Куси-Куси,archived,noa,medium,2026-07-07,False,2026-10-05,False,78,,,dostoprimechatelnosti/valle-de-la-luna-de-cusi-cusi.md
@@ -666,11 +666,11 @@ vinos-de-san-juan,attraction,,San Juan wines,archived,cuyo,medium,2026-07-07,Fal
 vinos-de-tolombon,attraction,,Tolombón Wines,archived,noa,medium,2026-07-07,False,2026-10-05,False,62,,,dostoprimechatelnosti/vinos-de-tolombon.md
 vinos-del-valle-patagonico,attraction,,Вина патагонских долин,archived,pampa,medium,2026-07-07,False,2026-10-05,False,64,,,dostoprimechatelnosti/vinos-del-valle-patagonico.md
 viza-cifrovogo-kochevnika,guide,immigration,Статус цифрового кочевника в Аргентине,archived,,high,2026-07-17,True,2026-08-31,False,171,True,0,pereezd/viza-cifrovogo-kochevnika.md
-viza-cifrovogo-kochevnika-chto-daet,faq,,,published,,high,2026-07-20,True,2026-09-03,True,238,False,5,faq/viza-cifrovogo-kochevnika-chto-daet.md
+viza-cifrovogo-kochevnika-chto-daet,faq,,,published,,high,2026-08-21,True,2026-10-05,False,238,True,0,faq/viza-cifrovogo-kochevnika-chto-daet.md
 viza-i-granica-dlya-rossiyan,guide,immigration,Въезд в Аргентину для граждан России,published,,high,2026-07-20,True,2026-09-03,False,612,True,0,puteshestvie/viza-i-granica-dlya-rossiyan.md
 viza-kochevnika-ne-vnzh,author_tip,mistake,Статус цифрового кочевника — не автоматический путь к ВНЖ,archived,,high,2026-07-20,True,2026-09-03,False,207,True,0,lichnyy-opyt/viza-kochevnika-ne-vnzh.md
 viza-rf-v-argentinu,faq,,,published,,high,2026-08-21,True,2026-10-05,False,264,True,0,faq/viza-rf-v-argentinu.md
-viza-v-braziliyu-dlya-iguasu,faq,,,published,,high,2026-07-20,True,2026-09-03,True,255,False,6,faq/viza-v-braziliyu-dlya-iguasu.md
+viza-v-braziliyu-dlya-iguasu,faq,,,published,,high,2026-08-21,True,2026-10-05,True,255,False,3,faq/viza-v-braziliyu-dlya-iguasu.md
 vnutrennie-aviabilety,transport,,Внутренние авиабилеты по Аргентине,published,,medium,2026-07-20,True,2026-09-03,False,618,True,0,transport/vnutrennie-aviabilety.md
 vnzh-argentina,guide,immigration,Резиденция в Аргентине: как выбрать основание,published,,high,2026-07-20,True,2026-09-03,False,632,True,0,pereezd/vnzh-argentina.md
 vnzh-po-uchebe,guide,immigration,Временная резиденция по учёбе,archived,,high,2026-07-17,True,2026-08-31,False,144,True,0,pereezd/vnzh-po-uchebe.md
@@ -684,7 +684,7 @@ vossoedinenie-semi,guide,immigration,Временная резиденция п�
 vysokogorye-na-avto,guide,transport,Путешествие на автомобиле в высокогорье: Пуна и перевалы,published,,high,2026-07-20,True,2026-09-03,False,829,True,0,transport/vysokogorye-na-avto.md
 yapeyu,attraction,,Yapeyú,archived,litoral,medium,2026-07-07,False,2026-10-05,False,62,,,dostoprimechatelnosti/yapeyu.md
 yungas-tucumanas,attraction,,Tucuman Yungas,archived,noa,medium,2026-07-07,True,2026-08-21,True,67,False,5,dostoprimechatelnosti/yungas-tucumanas.md
-zashchita-nakoplenij-ot-inflyacii,guide,finance,Как оценивать способы защиты накоплений от инфляции в Аргентине,published,,high,2026-07-20,True,2026-09-03,True,718,False,13,dengi/zashchita-nakoplenij-ot-inflyacii.md
+zashchita-nakoplenij-ot-inflyacii,guide,finance,Как оценивать способы защиты накоплений от инфляции в Аргентине,published,,high,2026-08-21,True,2026-10-05,True,718,False,3,dengi/zashchita-nakoplenij-ot-inflyacii.md
 zemletryaseniya-i-vulkany,guide,safety,"Землетрясения, вулканы и природные риски Аргентины",archived,,high,2026-07-17,True,2026-08-31,False,301,True,0,bezopasnost/zemletryaseniya-i-vulkany.md
 zhile-dlya-turistov,guide,accommodation,Где остановиться туристу в Аргентине,published,,high,2026-07-20,False,2027-01-16,False,638,,,zhile/zhile-dlya-turistov.md
 zhile-i-arenda,guide,immigration,Как безопасно арендовать жильё в Аргентине,published,,high,2026-07-20,True,2026-09-03,False,621,True,0,pereezd/zhile-i-arenda.md

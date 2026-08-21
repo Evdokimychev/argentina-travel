@@ -6,13 +6,12 @@
     "validation_mode": "diagnostic",
     "published_sensitive_count": 91,
     "release_candidate_sensitive_count": 91,
-    "strict_ready_release_candidate_count": 80,
+    "strict_ready_release_candidate_count": 85,
     "strict_ready": false,
     "issue_counts": {
-      "expired_source": 11,
-      "stale_sensitive_claim": 7,
-      "stale_source_url_check": 8,
-      "unhealthy_source_url": 2
+      "expired_source": 6,
+      "stale_source_url_check": 3,
+      "unhealthy_source_url": 6
     }
   },
   "entities": [
@@ -51902,8 +51901,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Подтверждает право работать с действующей residencia precaria и CUIL и описывает официальную консультацию для иностранных работников."
         },
         {
@@ -51914,8 +51913,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Описывает отдельный миграционный маршрут trabajador migrante и требования, связанные с RENURE и трудовым договором."
         },
         {
@@ -51926,8 +51925,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальная процедура получения CUIL, включая документы иностранцев."
         },
         {
@@ -51938,8 +51937,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Определяет RIPTE как показатель среднего налогооблагаемого вознаграждения стабильных зарегистрированных работников, а не зарплату любого работника."
         },
         {
@@ -51950,8 +51949,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "note": "Официальные данные по доходам обследуемого населения; полезны для контекста, но не заменяют отраслевую вилку конкретной вакансии."
         }
       ],
@@ -51963,7 +51962,7 @@
           "source_ids": [
             "argentina-foreign-workers-guidance"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -51976,7 +51975,7 @@
           "source_ids": [
             "dnm-temporary-residence-migrant-worker"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -51989,7 +51988,7 @@
           "source_ids": [
             "anses-obtain-cuil"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -52002,7 +52001,7 @@
           "source_ids": [
             "argentina-ripte-methodology"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -52017,30 +52016,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "rabota-v-argentine-poisk-i-cuil",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
         "word_count": 688,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 14,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 4,
@@ -61734,9 +61729,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-08-11",
-          "expires_at": "2026-08-18"
+          "expires_at": "2026-08-18",
+          "note": "Повторная проверка 2026-08-21: сайт отклоняет автоматический запрос («Request Rejected», защита WAF), а не подтверждённо недоступен — нужна ручная проверка человеком."
         },
         {
           "id": "argentina-national-parks-fees",
@@ -61746,8 +61742,9 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-08-11",
-          "expires_at": "2026-09-10"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Повторно подтверждено: тарифы действуют с 1 июня 2026 года (Resolución 132/2026 и 157/2026)."
         },
         {
           "id": "aerolineas-live-search-budget",
@@ -61756,9 +61753,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-08-11",
-          "expires_at": "2026-09-10"
+          "expires_at": "2026-09-10",
+          "note": "Повторная проверка 2026-08-21: запрос не завершился за отведённое время инструмента (типично для крупных коммерческих сайтов с защитой от автоматических запросов); сайт остаётся официальным перевозчиком, но требует ручной перепроверки."
         }
       ],
       "claims": [
@@ -61769,7 +61767,7 @@
           "source_ids": [
             "bna-live-exchange-budget"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61782,7 +61780,7 @@
           "source_ids": [
             "argentina-national-parks-fees"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61795,7 +61793,7 @@
           "source_ids": [
             "aerolineas-live-search-budget"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -61810,13 +61808,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-08-11",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-25",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -61828,9 +61826,10 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 1,
+          "issue_count": 3,
           "issue_codes": [
-            "expired_source"
+            "expired_source",
+            "unhealthy_source_url"
           ],
           "source_count": 3,
           "identified_source_count": 3,
@@ -62219,8 +62218,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "dnm-digital-nomad-cost-faq",
@@ -62241,8 +62240,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -62253,7 +62252,7 @@
           "source_ids": [
             "dnm-current-fee-table-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62266,7 +62265,7 @@
           "source_ids": [
             "dnm-current-fee-table-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62280,7 +62279,7 @@
             "dnm-digital-nomad-cost-faq",
             "dnm-residence-faq-fees"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62295,30 +62294,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
         "word_count": 251,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 7,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 3,
           "identified_source_count": 3,
           "claim_count": 3,
@@ -62369,8 +62364,9 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-08-11",
-          "expires_at": "2026-09-10"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Повторно подтверждено: страница обновлена данными по июль 2026."
         },
         {
           "id": "indec-consumer-price-index",
@@ -62380,8 +62376,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-08-11",
-          "expires_at": "2026-09-10"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         },
         {
           "id": "bna-exchange-reference-living",
@@ -62390,9 +62386,10 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-08-11",
-          "expires_at": "2026-08-18"
+          "expires_at": "2026-08-18",
+          "note": "Повторная проверка 2026-08-21: сайт отклоняет автоматический запрос («Request Rejected», защита WAF), а не подтверждённо недоступен — нужна ручная проверка человеком."
         }
       ],
       "claims": [
@@ -62403,7 +62400,7 @@
           "source_ids": [
             "caba-consumption-baskets"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62416,7 +62413,7 @@
           "source_ids": [
             "indec-consumer-price-index"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62429,7 +62426,7 @@
           "source_ids": [
             "bna-exchange-reference-living"
           ],
-          "verified_at": "2026-08-11",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -62444,13 +62441,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-08-11",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-25",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
@@ -62462,9 +62459,10 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 1,
+          "issue_count": 2,
           "issue_codes": [
-            "expired_source"
+            "expired_source",
+            "unhealthy_source_url"
           ],
           "source_count": 3,
           "identified_source_count": 3,
@@ -63055,8 +63053,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Официальная база средних цен объявлений для квартир с 1–3 ambientes в CABA; не включает временную меблированную аренду."
         },
@@ -63081,7 +63079,7 @@
           "source_ids": [
             "caba-rental-market-first-quarter-2026"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -63094,7 +63092,7 @@
           "source_ids": [
             "argentina-basic-education-and-health-dnu-366-2025"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -63109,30 +63107,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "stoimost-zhizni-para-semya-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
         "word_count": 747,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 4,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 2,
           "identified_source_count": 2,
           "claim_count": 2,
@@ -67815,8 +67809,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Определяет экспорт услуг и требует Factura E; для monotributo действует предел максимальной категории соответствующей деятельности."
         },
@@ -67839,8 +67833,8 @@
           "lang": "ru",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Personal Wise недоступен при проживании или нахождении в России; российское гражданство при подтверждённом зарубежном адресе оценивается отдельно."
         },
@@ -67851,8 +67845,8 @@
           "lang": "en",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Российские карты Visa не работают за пределами России."
         },
@@ -67863,8 +67857,8 @@
           "lang": "en",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Российские карты Mastercard не поддерживаются сетью за пределами России."
         }
@@ -67877,7 +67871,7 @@
           "source_ids": [
             "arca-service-exports-monotributo"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -67890,7 +67884,7 @@
           "source_ids": [
             "bcra-exterior-and-exchange-rules"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -67903,7 +67897,7 @@
           "source_ids": [
             "wise-russia-availability"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -67917,7 +67911,7 @@
             "visa-russia-operations-suspension",
             "bank-of-russia-cross-border-card-operations"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -67932,30 +67926,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "udalyonka-oplata-i-kurs-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
         "word_count": 714,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 12,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 5,
           "identified_source_count": 5,
           "claim_count": 4,
@@ -71362,8 +71352,8 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20"
         }
       ],
       "claims": [
@@ -71375,7 +71365,7 @@
             "dnm-digital-nomad-status-faq",
             "dnm-digital-nomad-disposition-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -71388,7 +71378,7 @@
           "source_ids": [
             "dnm-digital-nomad-status-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -71402,7 +71392,7 @@
             "dnm-digital-nomad-status-faq",
             "dnm-digital-nomad-disposition-faq"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -71417,30 +71407,26 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
         "word_count": 238,
-        "needs_attention": true,
+        "needs_attention": false,
         "provenance": {
           "schema_version": 1,
           "applicable": true,
           "declared": true,
           "mode": "strict",
-          "strict_ready": false,
-          "issue_count": 5,
-          "issue_codes": [
-            "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
-          ],
+          "strict_ready": true,
+          "issue_count": 0,
+          "issue_codes": [],
           "source_count": 2,
           "identified_source_count": 2,
           "claim_count": 3,
@@ -71978,8 +71964,9 @@
           "type": "official",
           "authority": "primary",
           "url_status": "verified",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
+          "note": "Повторно подтверждено: статья 1 текста соглашения (Рио-де-Жанейро, 26.11.2008) устанавливает 90 дней в каждом периоде 180 дней и явно исключает оплачиваемую деятельность, учёбу, стажировку и волонтёрство (статья 1, п.2)."
         },
         {
           "id": "brazil-mre-russia-visa-list",
@@ -71988,9 +71975,10 @@
           "lang": "en",
           "type": "official",
           "authority": "primary",
-          "url_status": "verified",
+          "url_status": "unchecked",
           "checked_at": "2026-07-20",
-          "expires_at": "2026-08-20"
+          "expires_at": "2026-08-20",
+          "note": "Повторная проверка 2026-08-21: запрос не завершился за отведённое время инструмента. Основной факт (90/180 дней) уже независимо подтверждён декретом 7271/2010 выше."
         }
       ],
       "claims": [
@@ -72002,7 +71990,7 @@
             "brazil-russia-visa-waiver-decree",
             "brazil-mre-russia-visa-list"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72015,7 +72003,7 @@
           "source_ids": [
             "brazil-russia-visa-waiver-decree"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -72030,13 +72018,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
@@ -72048,11 +72036,11 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 6,
+          "issue_count": 3,
           "issue_codes": [
             "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
+            "stale_source_url_check",
+            "unhealthy_source_url"
           ],
           "source_count": 2,
           "identified_source_count": 2,
@@ -73806,8 +73794,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Объясняет пересчёт вклада через UVA/CER и различие обычного и досрочно прекращаемого вклада."
         },
@@ -73820,8 +73808,8 @@
           "authority": "primary",
           "checked_at": "2026-07-20",
           "expires_at": "2026-08-19",
-          "url_status": "verified",
-          "note": "Определяет CEDEAR как сертификаты, представляющие депонированные ценные бумаги; доход и сохранность не гарантируются."
+          "url_status": "unchecked",
+          "note": "Определяет CEDEAR как сертификаты, представляющие депонированные ценные бумаги; доход и сохранность не гарантируются. Повторная проверка 2026-08-21: полный текст (Texto Ordenado de Normas de la CNV) не открылся за отведённое время инструмента из-за объёма документа — требует ручной перепроверки, а не считается подтверждённым автоматически."
         },
         {
           "id": "cnv-virtual-assets-warning",
@@ -73830,8 +73818,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Регулятор предупреждает о высокой волатильности, ограниченной защите и возможности полной потери средств."
         },
@@ -73842,8 +73830,8 @@
           "lang": "es",
           "type": "official",
           "authority": "primary",
-          "checked_at": "2026-07-20",
-          "expires_at": "2026-08-19",
+          "checked_at": "2026-08-21",
+          "expires_at": "2026-09-20",
           "url_status": "verified",
           "note": "Подтверждает требование квалификации для продажи, продвижения и инвестиционного консультирования через зарегистрированного агента."
         }
@@ -73856,7 +73844,7 @@
           "source_ids": [
             "bcra-exterior-and-exchange-rules"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -73869,7 +73857,7 @@
           "source_ids": [
             "bcra-uva-deposits"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -73882,7 +73870,7 @@
           "source_ids": [
             "cnv-cedear-regulation"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -73895,7 +73883,7 @@
           "source_ids": [
             "cnv-virtual-assets-warning"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -73908,7 +73896,7 @@
           "source_ids": [
             "cnv-qualified-advisers-register"
           ],
-          "verified_at": "2026-07-20",
+          "verified_at": "2026-08-21",
           "reviewer": {
             "id": "goargentina-editorial",
             "role": "Редакционная проверка источников"
@@ -73923,13 +73911,13 @@
       "media": null,
       "status": "published",
       "confidence": "high",
-      "last_verified": "2026-07-20",
+      "last_verified": "2026-08-21",
       "seo_slug": "zashchita-nakoplenij-ot-inflyacii-argentina",
       "site_ready": true,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-09-03",
+        "review_due_at": "2026-10-05",
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
@@ -73941,11 +73929,11 @@
           "declared": true,
           "mode": "strict",
           "strict_ready": false,
-          "issue_count": 13,
+          "issue_count": 3,
           "issue_codes": [
             "expired_source",
-            "stale_sensitive_claim",
-            "stale_source_url_check"
+            "stale_source_url_check",
+            "unhealthy_source_url"
           ],
           "source_count": 5,
           "identified_source_count": 5,

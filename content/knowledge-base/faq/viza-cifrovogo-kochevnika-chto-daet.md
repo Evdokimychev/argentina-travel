@@ -8,7 +8,7 @@ status: published
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, цифровые кочевники]
 related: [viza-cifrovogo-kochevnika, vnzh-argentina, nuzhna-li-viza-cifrovomu-kochevniku]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -31,26 +31,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: digital-nomad-is-transitory
     text: "Цифровому кочевнику предоставляется транзиторная резиденция, а не временная или постоянная."
     sensitive: true
     source_ids: [dnm-digital-nomad-status-faq, dnm-digital-nomad-disposition-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: digital-nomad-duration-faq
     text: "Статус выдаётся на срок до 180 дней и может быть продлён на такой же период."
     sensitive: true
     source_ids: [dnm-digital-nomad-status-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: digital-nomad-foreign-clients
     text: "Режим предназначен для удалённых услуг людям или организациям, находящимся за пределами Аргентины."
     sensitive: true
     source_ids: [dnm-digital-nomad-status-faq, dnm-digital-nomad-disposition-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

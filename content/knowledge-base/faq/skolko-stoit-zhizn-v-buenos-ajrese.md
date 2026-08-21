@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 tags: [бюджетно, аренда, стоимость жизни]
 related: [stoimost-zhizni-ba, bankovskij-schet]
-last_verified: "2026-08-11"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,9 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-09-10"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Повторно подтверждено: страница обновлена данными по июль 2026."
   - id: indec-consumer-price-index
     title: "INDEC — индекс потребительских цен"
     url: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
@@ -31,35 +32,36 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-09-10"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: bna-exchange-reference-living
     title: "Banco Nación — текущие валютные котировки"
     url: "https://www.bna.com.ar/Personas"
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-08-11"
     expires_at: "2026-08-18"
+    note: "Повторная проверка 2026-08-21: сайт отклоняет автоматический запрос («Request Rejected», защита WAF), а не подтверждённо недоступен — нужна ручная проверка человеком."
 claims:
   - id: caba-publishes-monthly-baskets
     text: "Статистическая служба CABA публикует ежемесячную стоимость потребительских корзин для нескольких типов домохозяйств."
     sensitive: true
     source_ids: [caba-consumption-baskets]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: prices-change-by-category
     text: "INDEC публикует изменение потребительских цен по категориям, поэтому статичный долларовый бюджет быстро теряет точность."
     sensitive: true
     source_ids: [indec-consumer-price-index]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: currency-conversion-needs-dated-rate
     text: "Перевод сметы из песо в иностранную валюту должен использовать текущую датированную котировку."
     sensitive: true
     source_ids: [bna-exchange-reference-living]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
