@@ -10,7 +10,7 @@ import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { getExcursionCityFlightRouteIds } from "@/lib/flights/destination-airports";
 import {
   fetchExcursionCityServer,
-  fetchExcursionsResultServer,
+  fetchExcursionsResultSafely,
 } from "@/lib/tripster/excursion-server";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildExcursionsCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
@@ -49,10 +49,13 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
   const city = await fetchExcursionCityServer(citySlug);
   if (!city) notFound();
 
-  const excursionsResult = await fetchExcursionsResultServer({
-    citySlug,
-    pageSize: 500,
-  });
+  const excursionsResult = await fetchExcursionsResultSafely(
+    {
+      citySlug,
+      pageSize: 500,
+    },
+    "excursions_city_catalog_unavailable",
+  );
   const catalogUnavailable = excursionsResult.status === "unavailable";
   const items = catalogUnavailable ? [] : excursionsResult.data.items;
   const cities = catalogUnavailable ? [] : excursionsResult.data.cities;

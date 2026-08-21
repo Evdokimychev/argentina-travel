@@ -72,9 +72,17 @@ describe("tours catalog outage honesty", () => {
       path.join(process.cwd(), "src/app/excursions/page.tsx"),
       "utf8",
     );
-    expect(excursionsPage).toContain("fetchExcursionsResultServer");
+    expect(excursionsPage).toContain("fetchExcursionsResultSafely");
     expect(excursionsPage).toContain("catalogUnavailable={catalogUnavailable}");
     expect(excursionsPage).not.toMatch(/await fetchExcursionsServer\(/);
+    expect(excursionsPage).not.toMatch(/await fetchExcursionsResultServer\(/);
+
+    const excursionServer = fs.readFileSync(
+      path.join(process.cwd(), "src/lib/excursion-server.ts"),
+      "utf8",
+    );
+    expect(excursionServer).toContain("export async function fetchExcursionsResultSafely");
+    expect(excursionServer).toContain("EXCURSION_CATALOG_DEADLINE_MS");
 
     const excursionsCatalog = fs.readFileSync(
       path.join(process.cwd(), "src/components/excursions/ExcursionsCatalog.tsx"),

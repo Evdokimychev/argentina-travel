@@ -49,3 +49,6 @@ Environments: Vercel preview (I7 SHA lineage) + candidate `cursor/iteration8-ui-
 
 | P2-I8-010 | P2 | SiteSearch | Empty live hits hid local index matches (blank / endless «Ищем…» feel) | **fixed** prefer fallbackResults when live empty | pass15 |
 | P3-I8-007 | P3 | `/booking/find` | Native English HTML5 empty-field tooltip | **fixed** `noValidate` | pass15 |
+| P1-I8-007 | P1 | CI a11y mobile `/destinations/patagonia` | `scrollable-region-focusable` on HubQuickFactsGrid carousel | **fixed** `scrollRegionLabel` + tabIndex | CI verify-release |
+| P1-I8-008 | P1 | `/excursions` | Catalog fetch could hang past SEO/UI budgets under partner outage | **fixed** `fetchExcursionsResultSafely` 2.5s deadline | CI + prod hang |
+| CI | — | verify-contracts | Stale `interaction-inventory.csv` after BookingLookup `noValidate` | **fixed** `inventory:generate` | CI |

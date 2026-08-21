@@ -5,7 +5,7 @@ Generated: 2026-08-21 (continuous UI pass)
 ## UI CERTIFICATION: NOT CERTIFIED
 
 Candidate branch: `cursor/iteration8-ui-human-certification-5475` (PR #37)  
-Candidate SHA: `a54784c6`  
+Candidate SHA: `(pending commit — inventory + a11y + excursions deadline)`  
 Environment tested: local demo + production read-only smoke  
 Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 

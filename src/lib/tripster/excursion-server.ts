@@ -1,6 +1,8 @@
 export {
   fetchExcursionsServer,
   fetchExcursionsResultServer,
+  fetchExcursionsResultSafely,
+  EXCURSION_CATALOG_DEADLINE_MS,
   fetchExcursionDetailServer,
   fetchExcursionDetailResultServer,
   fetchExcursionCityServer,

@@ -239,6 +239,7 @@ export default function DestinationDetailView({
           <HubQuickFactsGrid
             facts={buildDestinationQuickFacts(destination)}
             columns={3}
+            scrollRegionLabel={`Краткие факты: ${destination.name}`}
             className="max-sm:grid-flow-col max-sm:auto-cols-[82%] max-sm:snap-x max-sm:overflow-x-auto max-sm:pb-2 [&>article]:snap-start"
           />
         </div>

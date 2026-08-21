@@ -10,7 +10,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
-import { fetchExcursionsResultServer } from "@/lib/tripster/excursion-server";
+import { fetchExcursionsResultSafely } from "@/lib/tripster/excursion-server";
 import { buildExcursionsCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
 import { EXCURSIONS_CATALOG_SEO } from "@/lib/commercial-catalog-seo";
 
@@ -69,7 +69,10 @@ export async function generateMetadata({ searchParams }: ExcursionsPageProps): P
 
 export default async function ExcursionsPage() {
   const locale = await getServerI18nLocale();
-  const excursionsResult = await fetchExcursionsResultServer({ pageSize: 500 });
+  const excursionsResult = await fetchExcursionsResultSafely(
+    { pageSize: 500 },
+    "excursions_catalog_unavailable",
+  );
   const catalogUnavailable = excursionsResult.status === "unavailable";
   const items = catalogUnavailable ? [] : excursionsResult.data.items;
   const cities = catalogUnavailable ? [] : excursionsResult.data.cities;

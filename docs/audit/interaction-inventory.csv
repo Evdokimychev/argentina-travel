@@ -1026,7 +1026,7 @@
 "153a72ad272d715a","src/components/blog/BlogShareBar.tsx","75","9","ui_click","","","onClick={handleWhatsAppShare}","source_only","medium","/admin/content/documents/[id]/preview|/blog/[slug]|/blog/author/[slug]|/organizer/articles/[id]/preview","4"
 "2533172cd44d98f6","src/components/blog/BlogSidebar.tsx","78","19","ui_change","","","onChange={(event) => setHubScope(event.target.checked)}","source_only","medium","/admin/content/documents/[id]/preview|/blog|/blog/[slug]|/blog/author/[slug]|/organizer/articles/[id]/preview","5"
 "9f5cad606088332c","src/components/booking/BookingGuestLoginHint.tsx","31","11","ui_click","","","onClick={() => openAuth()}","source_only","medium","/excursions/[slug]","1"
-"2b7f7cd6459891b8","src/components/booking/BookingLookupView.tsx","106","11","form_submit","POST","handler","<form onSubmit={requestCode} className=""mt-6 space-y-4"">","source_only","medium","/booking/find","1"
+"2b7f7cd6459891b8","src/components/booking/BookingLookupView.tsx","106","11","form_submit","POST","handler","<form onSubmit={requestCode} className=""mt-6 space-y-4"" noValidate>","source_only","medium","/booking/find","1"
 "ec7443b9f261d7cf","src/components/booking/BookingLookupView.tsx","116","11","form_submit","POST","handler","<form onSubmit={verifyCode} className=""mt-6 space-y-4"">","source_only","medium","/booking/find","1"
 "de352269ae286b92","src/components/booking/BookingLookupView.tsx","126","55","ui_click","","","onClick={restart}","source_only","medium","/booking/find","1"
 "01c10e1dddb1e6f6","src/components/booking/BookingLookupView.tsx","127","94","ui_click","","","onClick={() => void sendCode()}","source_only","medium","/booking/find","1"
