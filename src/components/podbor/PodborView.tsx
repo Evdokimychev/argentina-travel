@@ -26,11 +26,16 @@ import {
 
 interface PodborViewProps {
   tours: TourListing[];
+  /** True when marketplace catalog failed to load — quiz still works, tour matches may be empty. */
+  catalogUnavailable?: boolean;
 }
 
 type Phase = "intro" | "quiz" | "results";
 
-export default function PodborView({ tours }: PodborViewProps) {
+export default function PodborView({
+  tours,
+  catalogUnavailable = false,
+}: PodborViewProps) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [answers, setAnswers] = useState<PodborAnswers>({});
   const [draftSelection, setDraftSelection] = useState<string[]>([]);
@@ -163,6 +168,15 @@ export default function PodborView({ tours }: PodborViewProps) {
             Ответьте на несколько вопросов — как с живым консультантом. Мы учтём цель поездки,
             интересы, бюджет и темп, а затем предложим регионы, туры и экскурсии.
           </p>
+          {catalogUnavailable ? (
+            <div
+              className="mt-6 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal"
+              role="status"
+            >
+              Каталог туров временно недоступен. Подбор регионов и советы по маршруту всё равно
+              работают; готовые предложения появятся после восстановления каталога.
+            </div>
+          ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
             <Button type="button" size="lg" onClick={() => setPhase("quiz")}>
               <Compass className="h-5 w-5" aria-hidden />

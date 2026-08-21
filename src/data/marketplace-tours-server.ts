@@ -207,3 +207,25 @@ export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
 
   return tours;
 });
+
+export type MarketplaceCatalogLoad = {
+  tours: TourListing[];
+  catalogUnavailable: boolean;
+};
+
+/**
+ * UI pages must not crash into the global error shell when marketplace sources
+ * are down. Prefer this helper for public surfaces that can degrade to empty.
+ */
+export async function fetchMarketplaceToursSafely(
+  logLabel = "marketplace_catalog_unavailable",
+): Promise<MarketplaceCatalogLoad> {
+  try {
+    return { tours: await fetchMarketplaceTours(), catalogUnavailable: false };
+  } catch (error) {
+    console.error(`[${logLabel}]`, {
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return { tours: [], catalogUnavailable: true };
+  }
+}

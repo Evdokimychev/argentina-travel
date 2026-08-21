@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { parseTourEmbedSearchParams } from "@/lib/tour-embed";
 import EmbedToursPageClient from "./EmbedToursPageClient";
 
@@ -15,7 +15,7 @@ type PageProps = {
 export default async function EmbedToursPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const config = parseTourEmbedSearchParams(params);
-  const tours = await fetchMarketplaceTours();
+  const tours = (await fetchMarketplaceToursSafely("embed_tours_catalog_unavailable")).tours;
 
   if (!config) {
     return (

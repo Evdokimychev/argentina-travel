@@ -6,7 +6,7 @@ import CatalogItemListJsonLd from "@/components/seo/CatalogItemListJsonLd";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
 import CommercialSeoSection from "@/components/seo/CommercialSeoSection";
 import { CatalogLoadingFallback } from "@/components/ui/skeleton";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildToursCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
 import {
   hasCommercialFilterParams,
@@ -54,7 +54,9 @@ export async function generateMetadata({
 export default async function IguazuToursPage() {
   const locale = await getServerI18nLocale();
   const destination = getDestinationBySlug("iguazu");
-  const marketplaceTours = await fetchMarketplaceTours();
+  const { tours: marketplaceTours, catalogUnavailable } = await fetchMarketplaceToursSafely(
+    "iguazu_catalog_unavailable",
+  );
   const tourCandidates = destination
     ? matchToursForDestination(marketplaceTours, destination)
     : [];
@@ -81,6 +83,7 @@ export default async function IguazuToursPage() {
         <ToursCatalog
           tours={tours}
           platformStats={platformStats}
+          catalogUnavailable={catalogUnavailable}
           catalogBasePath={PAGE_PATH}
           title="Туры на водопады Игуасу"
           subtitle="Сравните программы с аргентинской стороны парка, продолжительность и условия конкретной даты"

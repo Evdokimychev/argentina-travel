@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import OrganizerPublicView from "@/components/organizer-public/OrganizerPublicView";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import { PUBLIC_ORGANIZERS } from "@/data/public-organizers";
@@ -33,7 +33,8 @@ export default async function OrganizerPublicPage({ params }: OrganizerPageProps
   const profile = buildPublicOrganizerProfile(slug);
   if (!profile) notFound();
 
-  const allTours = await fetchMarketplaceTours();
+  const allTours = (await fetchMarketplaceToursSafely("organizer_public_catalog_unavailable"))
+    .tours;
   const tours = allTours.filter(
     (listing) => listing && resolveListingOwnerUserId(listing) === slug,
   );

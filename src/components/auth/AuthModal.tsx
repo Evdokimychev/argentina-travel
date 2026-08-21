@@ -1059,6 +1059,7 @@ export default function AuthModal() {
                 ) : (
                   <form
                     className="space-y-3"
+                    noValidate
                     onSubmit={(event) => {
                       event.preventDefault();
                       void handleEmailContinue();

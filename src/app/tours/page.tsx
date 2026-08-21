@@ -6,14 +6,13 @@ import CatalogItemListJsonLd from "@/components/seo/CatalogItemListJsonLd";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
 import CommercialSeoSection from "@/components/seo/CommercialSeoSection";
 import { CatalogLoadingFallback } from "@/components/ui/skeleton";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildToursCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
 import { buildCatalogMetadata, getServerCatalogView, hasActiveCatalogFilters } from "@/lib/catalog-seo";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 import { TOURS_CATALOG_SEO } from "@/lib/commercial-catalog-seo";
-import type { TourListing } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,33 +20,18 @@ type ToursPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-type ToursCatalogLoadResult = {
-  tours: TourListing[];
-  catalogUnavailable: boolean;
-};
-
-/** Catalog outage must not strip metadata or replace /tours with an error shell. */
-async function loadToursCatalogSafely(): Promise<ToursCatalogLoadResult> {
-  try {
-    return { tours: await fetchMarketplaceTours(), catalogUnavailable: false };
-  } catch (error) {
-    console.error("[tours_catalog_unavailable]", {
-      message: error instanceof Error ? error.message : String(error),
-    });
-    return { tours: [], catalogUnavailable: true };
-  }
-}
-
 export async function generateMetadata({ searchParams }: ToursPageProps): Promise<Metadata> {
   const params = await searchParams;
-  const { tours } = await loadToursCatalogSafely();
+  const { tours } = await fetchMarketplaceToursSafely("tours_catalog_unavailable");
   return buildCatalogMetadata(params, tours);
 }
 
 export default async function ToursPage({ searchParams }: ToursPageProps) {
   const locale = await getServerI18nLocale();
   const params = await searchParams;
-  const { tours, catalogUnavailable } = await loadToursCatalogSafely();
+  const { tours, catalogUnavailable } = await fetchMarketplaceToursSafely(
+    "tours_catalog_unavailable",
+  );
   const platformStats = getPlatformStatsFromMarketplace(tours);
   const view = getServerCatalogView(params, tours);
   const indexable = !hasActiveCatalogFilters(params, tours) && !catalogUnavailable;

@@ -3,7 +3,7 @@ import AboutPageView from "@/components/about/AboutPageView";
 import SocialFeed from "@/components/social-feed/SocialFeed";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const locale = await getServerI18nLocale();
-  const tours = await fetchMarketplaceTours();
+  const tours = (await fetchMarketplaceToursSafely("about_catalog_unavailable")).tours;
   const platformStats = getPlatformStatsFromMarketplace(tours);
   const pageTitle = resolveStaticPageCopy("about.meta.title", PAGE_TITLE_FALLBACK, locale);
   const pageDescription = resolveStaticPageCopy(

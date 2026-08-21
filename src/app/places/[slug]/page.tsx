@@ -9,7 +9,7 @@ import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { resolveKnowledgeLinksForPlace } from "@/lib/knowledge-internal-links";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { placeHref } from "@/lib/places-urls";
 import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
@@ -53,7 +53,9 @@ export default async function PlaceDetailPage({ params }: PageProps) {
   const cmsMetadata = getCmsResolverMetadata(place);
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
-  const marketplaceTours = await fetchMarketplaceTours();
+  const marketplaceTours = (
+    await fetchMarketplaceToursSafely("place_related_catalog_unavailable")
+  ).tours;
   const tourCandidates = resolveRelatedToursForPlace(place, marketplaceTours);
   const relatedTours = await filterToursWithResolvedPublicDetail(tourCandidates);
 

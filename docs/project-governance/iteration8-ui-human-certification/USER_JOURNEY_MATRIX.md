@@ -17,3 +17,7 @@
 | User | Register/login/delete | pending | pending | — | — | pending |
 | Organizer | Apply/create tour | pending | pending | — | — | pending |
 | Admin | CRM/CMS | pending | pending | — | — | pending |
+
+| Visitor | Podbor / matcher | ✓ fail→fixed | pending | outage | session | FAIL crash→fixed P0-I8-001 |
+| Visitor | Become organizer (/join) | ✓ | ✓ | validation | — | PASS UI (auth submit blocked) |
+| Client | Booking request | blocked | blocked | — | — | BLOCKED_EXTERNAL |
