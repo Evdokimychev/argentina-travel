@@ -17,25 +17,29 @@ import TangoGlossary from "@/components/travel/TangoGlossary";
 import TangoPhrasebook from "@/components/travel/TangoPhrasebook";
 import TangoRondaDiagram from "@/components/travel/TangoRondaDiagram";
 
-export type TravelWidgetKey =
-  | "season-matrix"
-  | "tourism-infographic"
-  | "tourism-timeline"
-  | "steak-cut-selector"
-  | "steak-doneness-phrases"
-  | "steak-cut-diagram"
-  | "steak-order-scenarios"
-  | "steak-bill-explainer"
-  | "packing-list"
-  | "layer-system"
-  | "trip-type-selector"
-  | "destination-packing-cards"
-  | "summer-winter-comparison"
-  | "what-not-to-pack"
-  | "carry-on-packing"
-  | "tango-glossary"
-  | "tango-phrasebook"
-  | "tango-ronda-diagram";
+/** Единственный источник истины для ключей встроенных редакционных виджетов. */
+export const TRAVEL_WIDGET_KEYS = [
+  "season-matrix",
+  "tourism-infographic",
+  "tourism-timeline",
+  "steak-cut-selector",
+  "steak-doneness-phrases",
+  "steak-cut-diagram",
+  "steak-order-scenarios",
+  "steak-bill-explainer",
+  "packing-list",
+  "layer-system",
+  "trip-type-selector",
+  "destination-packing-cards",
+  "summer-winter-comparison",
+  "what-not-to-pack",
+  "carry-on-packing",
+  "tango-glossary",
+  "tango-phrasebook",
+  "tango-ronda-diagram",
+] as const;
+
+export type TravelWidgetKey = (typeof TRAVEL_WIDGET_KEYS)[number];
 
 type Props = {
   widgetKey: string;

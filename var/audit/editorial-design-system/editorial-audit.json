@@ -1,16 +1,70 @@
 {
-  "generatedAt": "2026-07-25T21:56:05.025Z",
+  "generatedAt": "2026-08-21T01:28:31.197Z",
   "postsScanned": 290,
-  "registrySize": 42,
+  "registrySize": 44,
   "typedBlockSlugs": [
     "el-chalten-i-fitts-roy",
-    "best-time-to-visit-argentina",
     "argentinian-steak-guide",
     "dni-cuil-argentina"
   ],
   "errorCount": 0,
-  "warningCount": 2,
+  "warningCount": 9,
   "findings": [
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "best-time-to-visit-argentina",
+      "sectionTitle": "Когда ехать в разные регионы Аргентины",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "argentinian-steak-guide",
+      "sectionTitle": "🔪 Основные аргентинские отрубы",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "argentinian-steak-guide",
+      "sectionTitle": "🍽️ Как выбрать parrilla, аллергии и ограничения",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "argentinian-steak-guide",
+      "sectionTitle": "📚 Источники и дата проверки",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "tango-beginners-guide",
+      "sectionTitle": "💃 Сначала выберите формат: шоу, урок, практика или милонга",
+      "index": 0
+    },
+    {
+      "level": "warning",
+      "code": "too-many-callouts",
+      "message": "Слишком много выносок (9). Сократите до смысловых предупреждений",
+      "slug": "tango-beginners-guide",
+      "sectionTitle": "⚠️ Типичные ошибки новичков"
+    },
+    {
+      "level": "warning",
+      "code": "long-text-without-visual",
+      "message": "Длинный текстовый участок без визуального блока",
+      "slug": "patagonia-packing-list",
+      "sectionTitle": "Рюкзак, солнце, техника, документы и аптечка",
+      "index": 0
+    },
     {
       "level": "info",
       "code": "legacy-slug",
@@ -38,6 +92,42 @@
       "code": "legacy-slug",
       "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
       "slug": "patagonia-бюджет"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-чек-лист"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-за-3-дня"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-за-7-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-за-10-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "patagonia-за-14-дней"
     },
     {
       "level": "info",
@@ -229,6 +319,12 @@
       "level": "info",
       "code": "legacy-slug",
       "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-самостоятельно"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
       "slug": "northwest-чек-лист"
     },
     {
@@ -247,6 +343,12 @@
       "level": "info",
       "code": "legacy-slug",
       "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-за-5-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
       "slug": "northwest-за-7-дней"
     },
     {
@@ -254,6 +356,12 @@
       "code": "legacy-slug",
       "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
       "slug": "northwest-за-10-дней"
+    },
+    {
+      "level": "info",
+      "code": "legacy-slug",
+      "message": "Статья помечена как legacy/noIndex — проверьте override-слой",
+      "slug": "northwest-сезон-дождей"
     },
     {
       "level": "info",
