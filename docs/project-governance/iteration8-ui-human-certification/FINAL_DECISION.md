@@ -5,9 +5,9 @@ Generated: 2026-08-21 (continuous UI pass)
 ## UI CERTIFICATION: NOT CERTIFIED
 
 Candidate branch: `cursor/iteration8-ui-human-certification-5475` (PR #37)  
-Candidate SHA: `76927b7c`  
-Environment tested: local demo + production read-only smoke  
-Data plane: **DOWN** (`/api/health` 503 on local demo and production)
+Candidate SHA: `3254aa28`  
+Environment tested: local demo + Vercel preview (I8 HEAD) + production read-only smoke  
+Data plane: **DOWN** (`/api/health` 503 on local demo and production; preview catalogs empty/honest)
 
 ## Why not certified
 
@@ -16,7 +16,7 @@ Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 3. Organizer application submit / admin approve / publish tour not completed through UI.
 4. CMS/CRM mutation journeys not completed through UI.
 5. Core commercial inventory empty/unavailable while Supabase/partners are unreachable.
-6. Production still serves older SHA without I8 outage fixes (Vercel account blocked for preview redeploy).
+6. Production still serves older SHA without full I8 outage fixes (preview has I8 HEAD).
 
 ## What I8 already proved and fixed as a user
 
@@ -27,13 +27,14 @@ Data plane: **DOWN** (`/api/health` 503 on local demo and production)
 - Contacts form validates before network.
 - Share clipboard fallback; podbor draft persistence across refresh.
 - Mobile contacts + join FAQ keyboard/ARIA.
+- CI green on HEAD after inventory + mobile a11y + excursions deadline.
+- Preview pass16: excursions ~3s honest empty; patagonia desktop/mobile OK.
 - `npm run audit:quick` green locally after inventory sync.
 
 ## Remaining BLOCKED_EXTERNAL
 
 - Supabase / DB connectivity for demo mutations, auth, CRM, CMS writes.
 - Live bookable partner inventory when marketplace sources are down.
-- Vercel account blocked → cannot ship I8 HEAD to preview/production from this run.
 
 ## Verdict rule reminder
 
