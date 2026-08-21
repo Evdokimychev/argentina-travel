@@ -435,7 +435,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
     {
       title: "Безопасность и здоровье в Буэнос-Айресе",
       href: "https://turismo.buenosaires.gob.ar/es/article/seguridad-y-salud",
-      description: "Официальные номера, помощь туристу и питьевая вода; проверено 17.07.2026",
+      description: "Официальные номера, помощь туристу и питьевая вода; проверено 21.08.2026",
     },
     {
       title: "Экстренные медицинские номера по провинциям",
