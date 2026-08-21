@@ -19,7 +19,7 @@ recommendations:
   - "Считайте расходы в ARS по текущим ценам, а валютный эквивалент фиксируйте вместе с датой и источником курса."
   - "Отделяйте регулярный месяц от дорогого первого месяца: временное жильё, залог, переезд, документы и базовое обустройство."
   - "Не закладывайте будущий заработок как гарантированный, пока нет договора или стабильного подтверждённого дохода."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 seo_slug: "pereezd-s-ogranichennym-byudzhetom-argentina"
 confidence: high
 provenance:
@@ -27,16 +27,16 @@ provenance:
   mode: strict
   stale_after_days: 30
 sources:
-  - id: indec-basic-basket-may-2026
-    title: "INDEC — Canasta básica alimentaria y total, mayo de 2026"
-    url: "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf"
+  - id: indec-basic-basket-jul-2026
+    title: "INDEC — Canasta básica alimentaria y total, julio de 2026"
+    url: "https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf"
     lang: es
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
-    note: "Официальная стоимость базовой корзины в GBA; это нижний социально-статистический ориентир, а не готовый бюджет релоканта."
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Официальная стоимость базовой корзины в GBA (отчёт за июль 2026, опубликован 13.08.2026: CBA 708 016 ARS и CBT 1 564 716 ARS для семьи из 4 человек); это нижний социально-статистический ориентир, а не готовый бюджет релоканта."
   - id: caba-rental-market-first-quarter-2026
     title: "IDECBA — рынок аренды квартир, I квартал 2026"
     url: "https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf"
@@ -44,8 +44,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Датированные средние цены объявлений по типам квартир и районам CABA; отчёт использует данные предложений Argenprop."
   - id: bcra-authorized-foreign-exchange
     title: "BCRA — операции с валютой через уполномоченные организации"
@@ -54,8 +54,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает доступ физических лиц к MLC и запрет проводить валютные операции через неуполномоченных посредников."
   - id: migrant-work-with-precaria
     title: "Argentina.gob.ar — работа иностранца с precaria и CUIL"
@@ -64,8 +64,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает, что действующая precaria вместе с CUIL позволяет работать."
   - id: argentina-decree-366-2025-health-insurance
     title: "Boletín Oficial — Decreto 366/2025"
@@ -74,39 +74,39 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает декларацию медицинской страховки при въезде и различия в доступе к обычному лечению."
 claims:
   - id: basic-basket-not-relocation-budget
     text: "Canasta básica INDEC — социально-статистический показатель для GBA, а не готовый бюджет переезда или аренды."
     sensitive: true
-    source_ids: [indec-basic-basket-may-2026]
-    verified_at: "2026-07-20"
+    source_ids: [indec-basic-basket-jul-2026]
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: caba-rent-dated-source
     text: "IDECBA публикует датированный отчёт о ценах предложений аренды CABA по типам жилья и районам."
     sensitive: true
     source_ids: [caba-rental-market-first-quarter-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: official-fx-channels
     text: "BCRA указывает банки и уполномоченные обменные организации как легальные каналы валютных операций."
     sensitive: true
     source_ids: [bcra-authorized-foreign-exchange]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: precaria-cuil-work
     text: "Действующая precaria вместе с CUIL позволяет иностранцу работать, но не гарантирует наличие вакансии или доход."
     sensitive: true
     source_ids: [migrant-work-with-precaria]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: insurance-entry-rule
     text: "DNU 366/2025 предусматривает декларацию о наличии медицинской страховки при въезде иностранца."
     sensitive: true
     source_ids: [argentina-decree-366-2025-health-insurance]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -197,7 +197,7 @@ DNU 366/2025 предусматривает декларацию о наличи
 
 ## Источники
 
-- [INDEC — базовая корзина, май 2026](https://www.indec.gob.ar/uploads/informesdeprensa/canasta_06_263AD3144210.pdf).
+- [INDEC — базовая корзина, июль 2026](https://www.indec.gob.ar/uploads/informesdeprensa/canasta_08_26ED3042AA70.pdf).
 - [IDECBA — аренда в CABA, I квартал 2026](https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2026/05/ir_2026_2028.pdf).
 - [BCRA — правила валютных операций](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/).
 - [Работа иностранца с precaria и CUIL](https://www.argentina.gob.ar/recibir-orientacion-laboral-para-trabajadores-extranjeros-y-sus-empleadores).

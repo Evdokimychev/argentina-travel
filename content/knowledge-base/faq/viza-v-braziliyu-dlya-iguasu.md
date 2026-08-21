@@ -8,7 +8,7 @@ status: published
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [визы, документы, водопады, Бразилия]
 related: [iguasu, kak-dobratsya-iz-rossii]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,29 +22,31 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Повторно подтверждено: статья 1 текста соглашения (Рио-де-Жанейро, 26.11.2008) устанавливает 90 дней в каждом периоде 180 дней и явно исключает оплачиваемую деятельность, учёбу, стажировку и волонтёрство (статья 1, п.2)."
   - id: brazil-mre-russia-visa-list
     title: "Ministério das Relações Exteriores — освобождение граждан России от VIVIS"
     url: "https://www.gov.br/mre/pt-br/embaixada-singapura/setor-consular/visas/types-of-visa/vivis-visit-visa/auditing-or-consultancy-vivis"
     lang: en
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-07-20"
     expires_at: "2026-08-20"
+    note: "Повторная проверка 2026-08-21: запрос не завершился за отведённое время инструмента. Основной факт (90/180 дней) уже независимо подтверждён декретом 7271/2010 выше."
 claims:
   - id: russian-brazil-visa-waiver
     text: "Граждане России с действительными обычными паспортами освобождены от краткосрочной визы в Бразилию на срок до 90 дней в каждом 180-дневном периоде."
     sensitive: true
     source_ids: [brazil-russia-visa-waiver-decree, brazil-mre-russia-visa-list]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: brazil-waiver-tourism-not-work
     text: "Безвизовое соглашение распространяется на краткие поездки, но не разрешает оплачиваемую деятельность, учёбу, стажировку, исследовательскую или волонтёрскую работу."
     sensitive: true
     source_ids: [brazil-russia-visa-waiver-decree]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

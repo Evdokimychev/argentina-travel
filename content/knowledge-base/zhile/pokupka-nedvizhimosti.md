@@ -21,7 +21,7 @@ recommendations:
   - "До предложения цены закажите проверку титула, долгов, ограничений, кадастровых данных и налогового статуса объекта."
   - "Получите письменный расчёт всех расходов для конкретной сделки и юрисдикции."
   - "Согласуйте законный банковский или иной документируемый способ расчёта и подтверждение происхождения средств."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 seo_slug: "pokupka-nedvizhimosti-argentina"
 provenance:
@@ -36,8 +36,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Закрепляет право иностранцев владеть, покупать и отчуждать недвижимость согласно закону."
   - id: argentina-civil-code-public-deed
     title: "Código Civil y Comercial — artículo 1017"
@@ -45,10 +45,10 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-07-20"
     expires_at: "2026-08-19"
-    note: "Устанавливает escritura pública для договоров о приобретении, изменении или прекращении вещных прав на недвижимость."
+    note: "Устанавливает escritura pública для договоров о приобретении, изменении или прекращении вещных прав на недвижимость. Повторная проверка 2026-08-21: документ (полный Código Civil) слишком велик и не открылся за отведённое время инструмента — это не признак недоступности страницы, но требует ручной или отдельной технической перепроверки, а не считается подтверждённым автоматически."
   - id: argentina-rural-land-law-26737
     title: "Ley 26.737 — Tierras Rurales"
     url: "https://www.argentina.gob.ar/normativa/nacional/ley-26737-192150/actualizacion"
@@ -56,8 +56,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Определяет сельские земли и ограничения иностранного владения."
   - id: argentina-rural-land-authorization
     title: "Registro Nacional de Tierras Rurales — certificado de habilitación"
@@ -66,8 +66,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Официальная процедура предварительного разрешения иностранцу на приобретение сельской земли."
   - id: arca-cdi-registrable-assets
     title: "ARCA — получение CDI"
@@ -76,8 +76,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "CDI для лица без CUIT/CUIL, которому нужно приобрести регистрируемый актив; описывает документы и очную подачу."
   - id: caba-notaries-property-purchase
     title: "Colegio de Escribanos de la Ciudad de Buenos Aires — Compraventa"
@@ -86,8 +86,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Роль escribano, проверка титула и правила выбора специалиста с исключениями для отдельных сделок."
   - id: caba-stamp-tax-benefit-2026
     title: "AGIP — льгота по Impuesto de Sellos в 2026 году"
@@ -95,40 +95,40 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-07-20"
     expires_at: "2026-08-19"
-    note: "Показывает, что ставка и льгота привязаны к конкретной юрисдикции, назначению жилья и порогу 2026 года."
+    note: "Показывает, что ставка и льгота привязаны к конкретной юрисдикции, назначению жилья и порогу 2026 года. Повторная проверка 2026-08-21: сама страница AGIP не открылась за отведённое время инструмента, но независимый источник — Colegio de Escribanos CABA (проверен в этой же сессии) — называет тот же порог 2026 года ($205 332 000 для единственного жилья постоянного проживания в CABA) и ставку 3,5%, что косвенно подтверждает актуальность цифры."
 claims:
   - id: foreigners-property-right
     text: "Статья 20 Конституции Аргентины закрепляет за иностранцами право владеть, покупать и отчуждать недвижимость согласно закону."
     sensitive: true
     source_ids: [argentina-constitution-article-20]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: public-deed-required
     text: "Código Civil y Comercial требует escritura pública для договоров о приобретении, изменении или прекращении вещных прав на недвижимость."
     sensitive: true
     source_ids: [argentina-civil-code-public-deed]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: rural-land-restrictions
     text: "Для иностранного владения сельской землёй действует Ley 26.737 и в применимых случаях предварительный certificado de habilitación."
     sensitive: true
     source_ids: [argentina-rural-land-law-26737, argentina-rural-land-authorization]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: cdi-registrable-asset
     text: "Лицо без CUIT/CUIL может запросить CDI для приобретения регистрируемого актива по процедуре ARCA."
     sensitive: true
     source_ids: [arca-cdi-registrable-assets]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: notary-due-diligence
     text: "Colegio de Escribanos CABA описывает роль escribano и проверку титула при купле-продаже."
     sensitive: true
     source_ids: [caba-notaries-property-purchase]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

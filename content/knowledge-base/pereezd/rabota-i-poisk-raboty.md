@@ -20,7 +20,7 @@ recommendations:
   - "До отклика проверьте право работать, срок действия precaria, наличие CUIL и необходимость признания диплома или профессиональной регистрации."
   - "Сравнивайте зарплату по валюте выплаты, частоте индексации, типу договора, налогам, льготам и месту работы."
   - "Не отправляйте паспорт, банковские данные и деньги за обещание трудоустройства до проверки работодателя и условий."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 seo_slug: "rabota-v-argentine-poisk-i-cuil"
 provenance:
@@ -35,8 +35,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает право работать с действующей residencia precaria и CUIL и описывает официальную консультацию для иностранных работников."
   - id: dnm-temporary-residence-migrant-worker
     title: "Migraciones — residencia temporaria como trabajador migrante"
@@ -45,8 +45,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Описывает отдельный миграционный маршрут trabajador migrante и требования, связанные с RENURE и трудовым договором."
   - id: anses-obtain-cuil
     title: "ANSES — получение CUIL"
@@ -55,8 +55,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Официальная процедура получения CUIL, включая документы иностранцев."
   - id: argentina-ripte-methodology
     title: "Secretaría de Trabajo — RIPTE"
@@ -65,8 +65,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Определяет RIPTE как показатель среднего налогооблагаемого вознаграждения стабильных зарегистрированных работников, а не зарплату любого работника."
   - id: indec-income-distribution-q1-2026
     title: "INDEC — Evolución de la distribución del ingreso, primer trimestre de 2026"
@@ -75,33 +75,33 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Официальные данные по доходам обследуемого населения; полезны для контекста, но не заменяют отраслевую вилку конкретной вакансии."
 claims:
   - id: precaria-cuil-work-right
     text: "Иностранец с действующей residencia precaria и CUIL может работать с применимой трудовой защитой."
     sensitive: true
     source_ids: [argentina-foreign-workers-guidance]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: worker-residence-renure-route
     text: "Отдельный маршрут residencia temporaria como trabajador migrante связывает заявление с зарегистрированным приглашающим в RENURE и трудовым договором."
     sensitive: true
     source_ids: [dnm-temporary-residence-migrant-worker]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: cuil-separate-identifier
     text: "CUIL оформляется по процедуре ANSES и не заменяет миграционный статус или профессиональную лицензию."
     sensitive: true
     source_ids: [anses-obtain-cuil]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: ripte-limited-population
     text: "RIPTE измеряет среднее налогооблагаемое вознаграждение стабильных зарегистрированных работников по своей методологии, а не зарплату любого жителя."
     sensitive: true
     source_ids: [argentina-ripte-methodology]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

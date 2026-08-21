@@ -73,7 +73,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     note: "Актуальная правовая основа требования страховки при въезде и доступа иностранцев к медицинской помощи."
 claims:
   - id: inflation-indices-need-matched-periods

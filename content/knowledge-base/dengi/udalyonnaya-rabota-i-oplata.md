@@ -19,7 +19,7 @@ recommendations:
   - "До первого платежа согласовать с contador классификацию дохода, налоговый режим и вид счёта."
   - "Получить у банка письменное описание документов и валютного кода операции."
   - "Сравнивать провайдеров по полной комиссии, доступности вывода и условиям верификации на дату платежа."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 seo_slug: "udalyonka-oplata-i-kurs-argentina"
 confidence: high
 provenance:
@@ -33,8 +33,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Определяет экспорт услуг и требует Factura E; для monotributo действует предел максимальной категории соответствующей деятельности."
   - id: bcra-exterior-and-exchange-rules
@@ -43,8 +43,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Описывает обязательность уполномоченного валютного канала, подтверждающих документов и правил ввода экспортной выручки."
   - id: wise-russia-availability
@@ -53,8 +53,8 @@ sources:
     lang: ru
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Personal Wise недоступен при проживании или нахождении в России; российское гражданство при подтверждённом зарубежном адресе оценивается отдельно."
   - id: visa-russia-operations-suspension
@@ -63,8 +63,8 @@ sources:
     lang: en
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Российские карты Visa не работают за пределами России."
   - id: bank-of-russia-cross-border-card-operations
@@ -73,8 +73,8 @@ sources:
     lang: en
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Российские карты Mastercard не поддерживаются сетью за пределами России."
 claims:
@@ -82,25 +82,25 @@ claims:
     text: "ARCA определяет экспорт услуг через их экономическое использование за рубежом и для monotributo требует Factura E в пределах применимого лимита."
     sensitive: true
     source_ids: [arca-service-exports-monotributo]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: authorized-exchange-channel
     text: "Валютные операции и ввод экспортной выручки регулируются BCRA и проходят через уполномоченную организацию с подтверждающими документами."
     sensitive: true
     source_ids: [bcra-exterior-and-exchange-rules]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: wise-residence-dependent
     text: "Доступность Wise зависит от места проживания и нахождения клиента, а не только от гражданства."
     sensitive: true
     source_ids: [wise-russia-availability]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: russian-cards-disabled-abroad
     text: "Карты Visa и Mastercard российских банков не работают в международных сетях за пределами России."
     sensitive: true
     source_ids: [visa-russia-operations-suspension, bank-of-russia-cross-border-card-operations]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

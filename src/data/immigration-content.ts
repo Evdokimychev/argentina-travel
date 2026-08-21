@@ -1,6 +1,6 @@
 import type { ContentPage } from "@/types/content-page";
 
-const VERIFIED_AT = "2026-07-17";
+const VERIFIED_AT = "2026-08-21";
 
 export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
   "vizy-dlya-turistov": {
@@ -42,7 +42,7 @@ export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
       {
         heading: "Официальные источники",
         list: [
-          "Проверено 17.07.2026: https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
+          "Проверено 21.08.2026: https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
           "Decreto 366/2025: https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto",
           "Категории residencia: https://www.argentina.gob.ar/migraciones/residencias",
         ],
@@ -105,7 +105,7 @@ export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
       {
         heading: "Официальные источники",
         list: [
-          "Проверено 17.07.2026: https://www.argentina.gob.ar/migraciones/residencias",
+          "Проверено 21.08.2026: https://www.argentina.gob.ar/migraciones/residencias",
           "FAQ DNM: https://www.argentina.gob.ar/migraciones/preguntas-frecuentes-residencias",
           "Ley 25.871: https://www.argentina.gob.ar/normativa/nacional/92016/actualizacion",
           "Decreto 366/2025: https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto",
@@ -159,7 +159,7 @@ export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
       {
         heading: "Официальные источники",
         list: [
-          "Проверено 17.07.2026: https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
+          "Проверено 21.08.2026: https://www.argentina.gob.ar/migraciones/documentacion-para-ingresar-al-pais-como-turista",
           "Decreto 366/2025: https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto",
         ],
       },

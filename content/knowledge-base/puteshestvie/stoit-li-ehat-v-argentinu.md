@@ -44,7 +44,7 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     url_status: verified
     note: "Статья 8 сохраняет экстренную помощь для всех; обычная помощь в федеральных государственных учреждениях для непостоянных резидентов предоставляется по страховке или после оплаты."
   - id: visa-russia-operations-suspension

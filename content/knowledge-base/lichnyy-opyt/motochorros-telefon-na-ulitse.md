@@ -48,7 +48,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-10-31"
     note: "Подтверждает национальный номер экстренной помощи 911."
 claims:

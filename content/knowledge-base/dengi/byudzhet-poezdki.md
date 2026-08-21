@@ -22,7 +22,7 @@ warnings:
 recommendations:
   - "Фиксируйте каждую цену вместе с датой, валютой, продавцом, комиссией и условиями возврата."
   - "Отделяйте подтверждённые расходы от оценочных и держите резерв, не распределённый по программе."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 sources:
   - id: argentina-national-parks-tariffs-2026
@@ -31,8 +31,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
   - id: sube-amba-tariffs-july-2026
     title: "SUBE — tarifas de transporte público AMBA"
@@ -40,8 +40,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
   - id: visa-russia-operations-suspension
     title: "Visa — приостановка операций в России"
@@ -49,8 +49,8 @@ sources:
     lang: en
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
   - id: bank-of-russia-cross-border-card-operations
     title: "Банк России — трансграничные операции по Visa и Mastercard"
@@ -58,27 +58,27 @@ sources:
     lang: ru
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
 claims:
   - id: park-fees-official-table
     text: "Administración de Parques Nacionales публикует отдельные тарифы по паркам и категориям посетителей; их нужно брать из текущей таблицы."
     sensitive: true
     source_ids: [argentina-national-parks-tariffs-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: amba-fares-current-table
     text: "Тарифы транспорта AMBA публикуются в песо на официальной странице SUBE и зависят от вида транспорта и условий карты."
     sensitive: true
     source_ids: [sube-amba-tariffs-july-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: russian-cards-not-abroad
     text: "Российские Visa и Mastercard не обслуживаются международными сетями за пределами России."
     sensitive: true
     source_ids: [visa-russia-operations-suspension, bank-of-russia-cross-border-card-operations]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

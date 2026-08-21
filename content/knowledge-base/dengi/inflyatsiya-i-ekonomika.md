@@ -43,7 +43,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-30"
     note: "Подтверждает проведение валютных операций через уполномоченные банки и обменные учреждения."
 claims:

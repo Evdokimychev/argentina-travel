@@ -19,7 +19,7 @@ warnings:
 recommendations:
   - "Сравнивайте только каналы, которые легально доступны отправителю и получателю в их юрисдикциях."
   - "Сохраняйте договор, квитанцию, назначение платежа и подтверждение происхождения средств."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 seo_slug: "kak-zavesti-i-perevesti-dengi-argentina"
 provenance:
@@ -34,8 +34,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Официальный интерфейс провайдера для проверки доступности, курса, комиссии и способа получения по конкретной операции."
   - id: bcra-cbu-cvu-education
     title: "BCRA — CBU, CVU и alias"
@@ -44,8 +44,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Определяет реквизиты банковских и виртуальных счетов Аргентины."
   - id: bcra-authorized-foreign-exchange
     title: "BCRA — валютные операции через уполномоченные организации"
@@ -54,27 +54,27 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     note: "Подтверждает допустимые официальные каналы валютных операций."
 claims:
   - id: argentina-accounts-use-cbu-cvu-alias
     text: "Для идентификации аргентинского банковского или платёжного счёта используются CBU или CVU и связанный alias."
     sensitive: true
     source_ids: [bcra-cbu-cvu-education]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: transfer-quote-depends-on-transaction
     text: "Доступность, курс, комиссия и способ получения перевода должны проверяться в официальном расчёте провайдера для конкретной операции."
     sensitive: true
     source_ids: [western-union-send-to-argentina]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: authorized-fx-entities
     text: "BCRA указывает банки и уполномоченные обменные организации как легальные каналы валютных операций."
     sensitive: true
     source_ids: [bcra-authorized-foreign-exchange]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

@@ -8,7 +8,7 @@ status: published
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, пошлины, бюджет]
 related: [viza-cifrovogo-kochevnika, vnzh-argentina, apostil-i-perevod-dokumentov]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: dnm-digital-nomad-cost-faq
     title: "Migraciones — транзиторная резиденция цифрового кочевника"
     url: "https://www.argentina.gob.ar/node/408747"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: dnm-residence-faq-fees
     title: "Migraciones — вопросы по оформлению резиденций"
     url: "https://www.argentina.gob.ar/migraciones/preguntas-frecuentes-residencias"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: fees-vary-by-category-nationality
     text: "Таблица DNM различает пошлины по категории процедуры и по гражданству MERCOSUR либо extra-MERCOSUR."
     sensitive: true
     source_ids: [dnm-current-fee-table-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: fee-table-uses-umsm
     text: "Многие миграционные пошлины выражены в UMSM, а актуальная стоимость единицы публикуется в самой таблице."
     sensitive: true
     source_ids: [dnm-current-fee-table-faq]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: only-platform-generated-payments
     text: "Официальные страницы процедур указывают оплачивать только суммы, сформированные миграционной платформой или официальным каналом."
     sensitive: true
     source_ids: [dnm-digital-nomad-cost-faq, dnm-residence-faq-fees]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

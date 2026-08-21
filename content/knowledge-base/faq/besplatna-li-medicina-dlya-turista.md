@@ -23,7 +23,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-10-17"
     note: "Подтверждает доступ к экстренной помощи и правило полиса либо предварительной оплаты обычной помощи в учреждениях национального уровня."
 claims:

@@ -8,7 +8,7 @@ status: published
 site_sections: [puteshestviya-po-argentine]
 tags: [безопасность, соло-путешествие, женщины]
 related: [bezopasnost-argentina]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-emergency-contacts-women
     title: "Argentina.gob.ar — экстренные службы"
     url: "https://www.argentina.gob.ar/tema/emergencias"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: uk-argentina-safety-women
     title: "UK FCDO — безопасность и риски в Аргентине"
     url: "https://www.gov.uk/foreign-travel-advice/argentina/safety-and-security"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: line-144-support
     text: "Линия 144 бесплатно и круглосуточно предоставляет помощь, поддержку и консультации людям в ситуации насилия и риска."
     sensitive: true
     source_ids: [argentina-line-144]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: emergency-911-women
     text: "При непосредственной угрозе в Аргентине следует обращаться по национальному номеру 911."
     sensitive: true
     source_ids: [argentina-emergency-contacts-women]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: drink-spiking-risk
     text: "Официальные рекомендации путешественникам предупреждают о риске подмешивания веществ в напитки и советуют не оставлять еду и напитки без присмотра."
     sensitive: true
     source_ids: [uk-argentina-safety-women]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

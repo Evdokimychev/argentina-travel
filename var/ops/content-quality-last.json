@@ -1,0 +1,86 @@
+{
+  "at": "2026-08-21T01:57:14.483Z",
+  "strict": true,
+  "pass": false,
+  "results": [
+    {
+      "id": "ownership-contract-present",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "kb-manifest-stats",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "kb-quarantine-report",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "sync-rich-articles",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "sync-manual-posts",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "blog-editorial-readiness",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "guide-editorial-readiness",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "content-lint",
+      "ok": false,
+      "blocking": true,
+      "status": 1
+    },
+    {
+      "id": "content-governance",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "content-links",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "kb-source-health",
+      "ok": false,
+      "blocking": true,
+      "status": 1
+    },
+    {
+      "id": "media-integrity",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    },
+    {
+      "id": "media-rights-changed",
+      "ok": true,
+      "blocking": true,
+      "status": 0
+    }
+  ],
+  "ownershipContract": "docs/editorial/CONTENT_OWNERSHIP_CONTRACT.md"
+}

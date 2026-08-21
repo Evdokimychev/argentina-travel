@@ -9,7 +9,7 @@ site_ready: true
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [безопасность, Буэнос-Айрес, районы]
 related: [bezopasnost-argentina, buenos-aires]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
   - id: caba-crime-map-office
     title: "Buenos Aires Ciudad — Estadística Criminal y Mapa del Delito"
@@ -31,15 +31,15 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
 claims:
   - id: caba-official-tourist-safety-basics
     text: "Официальный туристический портал советует не оставлять сумки на спинках стульев и не ходить ночью по плохо освещённым улицам."
     sensitive: true
     source_ids: [caba-tourist-security]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: goargentina-editorial, role: "Редакционная проверка источников" }
 ---
 

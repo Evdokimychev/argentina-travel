@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-11T05:35:22.213Z",
+  "generatedAt": "2026-08-21T01:55:22.124Z",
   "scope": "knowledge-base",
   "counts": {
     "total": 691,
-    "critical": 0,
+    "critical": 25,
     "high": 0,
     "medium": 0,
     "low": 0,
-    "none": 691,
-    "notIndexable": 448
+    "none": 666,
+    "notIndexable": 472
   },
   "entries": [
     {
@@ -102,8 +102,8 @@
       "sourceUrl": null,
       "title": "Актуален ли blue dollar в Аргентине в 2026 году?",
       "summary": "Blue dollar остаётся заметным индикатором неофициального рынка, но больше не должен быть базовым советом туристу. После валютной либерализации физлица получили доступ к официальному рынку, а BCRA напоминает: законный обмен проводят банки и уполномоченные обменные дома, не уличные посредники.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -115,8 +115,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-08-11",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "alero-charcamata",
@@ -980,7 +985,7 @@
       "canonicalEntityId": "banki-i-perevody",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -1188,8 +1193,8 @@
       "sourceUrl": null,
       "title": "Безопасно ли путешествовать по Аргентине одной женщине?",
       "summary": "Сольная поездка возможна, но ответ не должен сводиться к «да, всё безопасно». Нужны проверенное жильё и транспорт, план вечернего возвращения, защита напитка и контакты помощи: 911 при непосредственной угрозе и круглосуточная бесплатная линия 144 для консультации при гендерном насилии.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1201,8 +1206,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "bezopasno-li-v-argentine",
@@ -1214,8 +1224,8 @@
       "sourceUrl": null,
       "title": "Безопасно ли путешествовать по Аргентине?",
       "summary": "Большинство поездок проходит без серьёзных инцидентов, но обещать «безопасную страну» нельзя. Актуальные официальные рекомендации предупреждают о кражах, выхватывании телефонов и сумок, вооружённых ограблениях и отдельных городских зонах риска; в природных районах добавляются погода, высота и удалённость.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1227,8 +1237,13 @@
       "duplicateGroup": null,
       "sourceCount": 4,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "bezopasnost-argentina",
@@ -1524,8 +1539,8 @@
       "sourceUrl": null,
       "title": "Бюджет поездки по Аргентине",
       "summary": "Воспроизводимая методика сметы: маршрут по дням, жильё, внутренний транспорт, парки, экскурсии, еда, платёжные комиссии и резерв — без быстро устаревающих сумм «на человека».",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1537,8 +1552,13 @@
       "duplicateGroup": null,
       "sourceCount": 4,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "caba",
@@ -2863,8 +2883,8 @@
       "sourceUrl": null,
       "title": "Что такое dólar MEP в Аргентине и зачем он нужен?",
       "summary": "Dólar MEP — не отдельная валюта и не обменный пункт, а подразумеваемый курс операций с ценными бумагами, которые покупают за песо и продают с расчётом в долларах внутри Аргентины. Для него нужен счёт у зарегистрированного участника рынка, а итог зависит от цены бумаг, комиссий и действующих правил.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -2876,8 +2896,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "chto-takoe-prekariya",
@@ -5869,7 +5894,7 @@
       "canonicalEntityId": "gid-po-dengam",
       "duplicateGroup": null,
       "sourceCount": 5,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -5935,8 +5960,8 @@
       "sourceUrl": null,
       "title": "Медицина и страховка в Аргентине: путеводитель",
       "summary": "Практическая карта медицинской помощи: экстренный маршрут, публичная система, obra social и prepaga, страховка на въезд, лекарства и подготовка хронического пациента.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -5948,8 +5973,13 @@
       "duplicateGroup": null,
       "sourceCount": 4,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "gid-po-transportu",
@@ -6232,7 +6262,7 @@
       "sourcePath": "content/knowledge-base/pereezd/grazhdanstvo.md",
       "sourceUrl": null,
       "title": "Гражданство Аргентины: условия и действующая процедура",
-      "summary": "Два года — порог права на натурализацию, а не обещанный срок. После DNU 366/2025 официальные страницы описывают разные процессуальные маршруты, и компетентный орган нужно подтверждать перед подачей.",
+      "summary": "Два года — порог права на натурализацию, а не обещанный срок. С октября 2025 года DNM ведёт натурализацию цифровым маршрутом через RaDEX; прежняя общая страница с описанием судебной подачи на дату проверки недоступна, поэтому компетентный маршрут всё равно стоит подтверждать перед подачей.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -6244,8 +6274,8 @@
       "coordinates": null,
       "canonicalEntityId": "grazhdanstvo",
       "duplicateGroup": null,
-      "sourceCount": 5,
-      "verifiedAt": "2026-07-20",
+      "sourceCount": 4,
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -7151,8 +7181,8 @@
       "sourceUrl": null,
       "title": "Как оплатить тур, отель или экскурсию заранее, если моя карта РФ не работает?",
       "summary": "Запросите у продавца официальный договор или подтверждение брони и доступные способы оплаты именно для вашего заказа. Обычно нужен законно оформленный иностранный платёжный инструмент, официальный посредник или вариант оплаты на месте; перевод частному лицу и обещание «оплаты в рублях» нельзя считать универсальным решением.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7164,8 +7194,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kak-perevezti-kota-ili-sobaku",
@@ -7203,8 +7238,8 @@
       "sourceUrl": null,
       "title": "Как платить в Аргентине, если карты российских банков не работают?",
       "summary": "Не рассчитывайте на выпущенные в России Visa и Mastercard: платёжные системы не обрабатывают их за рубежом. Соберите минимум два независимых законных канала — подходящую иностранную карту, наличные для обмена через уполномоченную организацию и/или заранее проверенный перевод самому себе.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7216,8 +7251,13 @@
       "duplicateGroup": null,
       "sourceCount": 4,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kak-poluchit-grazhdanstvo-za-2-goda",
@@ -7228,7 +7268,7 @@
       "sourcePath": "content/knowledge-base/faq/kak-poluchit-grazhdanstvo-za-2-goda.md",
       "sourceUrl": null,
       "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?",
-      "summary": "Два года — это порог для обращения, а не обещанный срок выдачи паспорта. DNU 366/2025 требует два года легального непрерывного проживания без выездов, но официальные инструкции о ведомстве и порядке подачи пока противоречат друг другу, поэтому маршрут нужно подтверждать перед подачей.",
+      "summary": "Два года — это порог для обращения, а не обещанный срок выдачи паспорта. DNU 366/2025 требует два года легального непрерывного проживания без выездов; с октября 2025 года подача идёт цифрово через DNM/RaDEX, а прежняя страница о судебном маршруте на дату проверки недоступна — маршрут всё равно стоит подтверждать перед подачей.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -7241,7 +7281,7 @@
       "canonicalEntityId": "kak-poluchit-grazhdanstvo-za-2-goda",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -7359,8 +7399,8 @@
       "sourceUrl": null,
       "title": "Какие районы Буэнос-Айреса стоит избегать?",
       "summary": "У Буэнос-Айреса нет честного постоянного списка «запрещённых районов»: риск меняется по кварталу, времени и ситуации. Для жилья оценивайте конкретный адрес вечером, освещение, путь от транспорта и свежие данные; в туристических местах берегите телефон и сумку независимо от названия района.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7372,8 +7412,13 @@
       "duplicateGroup": null,
       "sourceCount": 2,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kakie-rozetki-v-argentine",
@@ -7411,8 +7456,8 @@
       "sourceUrl": null,
       "title": "Какой доход нужен для временной резиденции rentista в Аргентине?",
       "summary": "Официальный минимум — не фиксированная сумма в долларах, а доход не ниже пяти действующих Salarios Mínimos, Vitales y Móviles. Это должна быть подтверждаемая зарубежная рента от ваших активов, а не оплата личного труда; старые эквиваленты вроде 1300 или 2000 долларов использовать нельзя.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7424,8 +7469,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "kakoj-mesyats-kuda-ehat",
@@ -9039,8 +9089,8 @@
       "sourceUrl": null,
       "title": "Медицина и медицинская страховка в Аргентине",
       "summary": "Что изменил Decreto 366/2025: страховка при въезде, гарантированная неотложная помощь и разные условия планового лечения для постоянных резидентов и других иностранцев.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -9052,8 +9102,13 @@
       "duplicateGroup": null,
       "sourceCount": 4,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "mendoza",
@@ -9592,8 +9647,8 @@
       "sourceUrl": null,
       "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без DNI или постоянной резиденции?",
       "summary": "Да, постоянная резиденция и пластиковый DNI не всегда обязательны: официальная cuenta para migrantes доступна с действующей precaria, transitoria, temporaria или permanente и подходящим документом личности. Но обычный турист без миграционного сертификата под этот официальный продукт не подпадает.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -9605,8 +9660,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "mozhno-li-pit-vodu-iz-krana",
@@ -10403,7 +10463,7 @@
       "canonicalEntityId": "nuzhna-li-strahovka-dlya-vezda",
       "duplicateGroup": null,
       "sourceCount": 2,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -10481,7 +10541,7 @@
       "canonicalEntityId": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -10616,7 +10676,7 @@
       "coordinates": null,
       "canonicalEntityId": "oshibka-s-dokumentami",
       "duplicateGroup": null,
-      "sourceCount": 3,
+      "sourceCount": 2,
       "verifiedAt": "2026-07-20",
       "severity": "none",
       "issues": []
@@ -10669,7 +10729,7 @@
       "canonicalEntityId": "otkrytie-biznesa",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -12130,8 +12190,8 @@
       "sourceUrl": null,
       "title": "Переезд в Аргентину с ограниченным бюджетом: как посчитать запас",
       "summary": "Методика личного расчёта: жильё, базовые расходы, страховка, стартовые платежи и резерв на выезд. Без обещания, что одной фиксированной суммы хватит каждому.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -12143,8 +12203,13 @@
       "duplicateGroup": null,
       "sourceCount": 5,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "perevoz-veshchey-i-pitomtsev",
@@ -12767,8 +12832,8 @@
       "sourceUrl": null,
       "title": "Покупка недвижимости в Аргентине для иностранца",
       "summary": "Право иностранца купить недвижимость, роль escribano, CDI, escritura pública и отдельные ограничения для сельской земли. Без универсальных процентов и схемы расчёта наличными.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -12780,8 +12845,13 @@
       "duplicateGroup": null,
       "sourceCount": 7,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "pokupki-i-tax-free",
@@ -13552,8 +13622,8 @@
       "sourceUrl": null,
       "title": "Работа в Аргентине: статус, CUIL и поиск вакансий",
       "summary": "Проверяемая основа поиска работы: право работать с residencia precaria и CUIL, отдельный маршрут trabajador migrante с RENURE и корректная проверка зарплаты без выдуманных долларов и рейтингов профессий.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -13565,8 +13635,13 @@
       "duplicateGroup": null,
       "sourceCount": 5,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "rafaela",
@@ -14451,7 +14526,7 @@
       "canonicalEntityId": "rody-i-beremennost",
       "duplicateGroup": null,
       "sourceCount": 6,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-17",
       "severity": "none",
       "issues": []
     },
@@ -16152,7 +16227,7 @@
       "canonicalEntityId": "sistema-zdravoohraneniya",
       "duplicateGroup": null,
       "sourceCount": 6,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-17",
       "severity": "none",
       "issues": []
     },
@@ -16166,8 +16241,8 @@
       "sourceUrl": null,
       "title": "Что делать, если в Аргентине «полицейский» просит показать деньги или пройти к банкомату?",
       "summary": "Не передавайте наличные, карту, PIN-код или телефон для «проверки» и не идите к банкомату. Не сопротивляйтесь физически: держите руки на виду, спокойно попросите удостоверение и объяснение, перейдите в людное место и, если это безопасно, самостоятельно позвоните 911 для проверки и помощи.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -16179,8 +16254,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "skolko-deneg-brat-na-poezdku",
@@ -16192,8 +16272,8 @@
       "sourceUrl": null,
       "title": "Сколько денег нужно брать на поездку в Аргентину?",
       "summary": "Универсальная сумма в долларах быстро вводит в заблуждение. Сложите живые цены жилья, внутренних переездов, обязательных билетов, питания и связи для своих дат, добавьте 15–20% резерва и держите аварийную сумму отдельно от основного кошелька.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -16205,8 +16285,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-08-11",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "skolko-dnej-na-marshrut-2-nedeli",
@@ -16322,8 +16407,8 @@
       "sourceUrl": null,
       "title": "Сколько стоит оформить резиденцию или статус цифрового кочевника в Аргентине?",
       "summary": "Фиксированной суммы «под ключ» нет. Государственная пошлина зависит от категории и гражданства и публикуется в UMSM или консульских единицах; отдельно оплачиваются документы, апостиль, перевод, страховка и, по желанию, помощь специалиста. Старый ориентир 250 долларов для digital nomad не подтверждается текущим тарифом.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -16335,8 +16420,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "skolko-stoit-zhizn-v-buenos-ajrese",
@@ -16348,8 +16438,8 @@
       "sourceUrl": null,
       "title": "Сколько денег нужно на жизнь в Буэнос-Айресе в месяц?",
       "summary": "Надёжнее считать личную смету, а не верить диапазону в долларах. Возьмите живую цену своего жилья, добавьте коммунальные платежи, питание, транспорт, связь и медицину, затем 10–15% резерва; официальные потребительские корзины CABA используйте как контроль, а не как бюджет экспата.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -16361,8 +16451,13 @@
       "duplicateGroup": null,
       "sourceCount": 3,
       "verifiedAt": "2026-08-11",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "sladkoe-dulce-de-leche",
@@ -16464,7 +16559,7 @@
       "canonicalEntityId": "stoimost-zhizni-ba",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -16478,8 +16573,8 @@
       "sourceUrl": null,
       "title": "Стоимость жизни для пары и семьи: как собрать свой сценарий",
       "summary": "Методика семейного бюджета: общие и личные расходы, аренда, школа и медицина без неподтверждённых универсальных сумм.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -16491,8 +16586,13 @@
       "duplicateGroup": null,
       "sourceCount": 2,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "stoit-li-ehat-na-poezde-v-oblaka",
@@ -17794,8 +17894,8 @@
       "sourceUrl": null,
       "title": "Удалённая работа в Аргентине: оплата, документы и законный маршрут денег",
       "summary": "Безопасная рамка для получения зарубежного дохода: сначала определить вид договора и налоговый статус, затем выбрать доступного провайдера, оформить счёт и провести валютную операцию через разрешённый канал.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -17807,8 +17907,13 @@
       "duplicateGroup": null,
       "sourceCount": 5,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "ushuaia",
@@ -18797,8 +18902,8 @@
       "sourceUrl": null,
       "title": "Что даёт статус цифрового кочевника в Аргентине и ведёт ли он к ПМЖ?",
       "summary": "Это residencia transitoria до 180 дней с возможностью продления на такой же срок для удалённой работы в пользу лиц или организаций за пределами Аргентины. Она не превращается в ПМЖ автоматически; как именно этот период учитывается в другом миграционном или гражданском процессе, нужно подтверждать отдельно.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -18810,8 +18915,13 @@
       "duplicateGroup": null,
       "sourceCount": 2,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "viza-i-granica-dlya-rossiyan",
@@ -18887,7 +18997,7 @@
       "canonicalEntityId": "viza-rf-v-argentinu",
       "duplicateGroup": null,
       "sourceCount": 3,
-      "verifiedAt": "2026-07-20",
+      "verifiedAt": "2026-08-21",
       "severity": "none",
       "issues": []
     },
@@ -18901,8 +19011,8 @@
       "sourceUrl": null,
       "title": "Нужна ли россиянину виза в Бразилию, чтобы посмотреть Игуасу с бразильской стороны?",
       "summary": "Для туристического визита по действующему обычному российскому загранпаспорту виза не нужна: соглашение разрешает до 90 дней в каждом 180-дневном периоде. Но поездка из Пуэрто-Игуасу в Фос-ду-Игуасу — полноценный выезд из Аргентины и въезд в Бразилию с двумя пограничными контролями.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -18914,8 +19024,13 @@
       "duplicateGroup": null,
       "sourceCount": 2,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "vnutrennie-aviabilety",
@@ -19005,7 +19120,7 @@
       "sourceUrl": null,
       "title": "Временная резиденция rentista",
       "summary": "Категория rentista предназначена для человека, который живёт на подтверждаемую зарубежную ренту от собственных активов, а не на оплату личного труда.",
-      "publicationStatus": "archived",
+      "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
         "title": "ru",
@@ -19018,8 +19133,14 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-17",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "archive_redirect_target_quarantined",
+          "severity": "critical",
+          "target": "kakoj-dohod-nuzhen-dlya-rantye"
+        }
+      ]
     },
     {
       "id": "vo-skolko-uzhinayut-v-argentine",
@@ -19277,8 +19398,8 @@
       "sourceUrl": null,
       "title": "Как оценивать способы защиты накоплений от инфляции в Аргентине",
       "summary": "Справочная рамка для сравнения валюты, вкладов UVA, CEDEAR, облигаций, виртуальных активов и недвижимости по риску, ликвидности и регулированию.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19290,8 +19411,13 @@
       "duplicateGroup": null,
       "sourceCount": 5,
       "verifiedAt": "2026-07-20",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "sensitive_provenance_not_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "zemletryaseniya-i-vulkany",

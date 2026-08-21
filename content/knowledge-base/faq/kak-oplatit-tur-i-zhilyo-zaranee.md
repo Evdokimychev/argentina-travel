@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [деньги, оплата, бронирование, карты РФ, тур]
 related: [kak-menyat-valyutu, kak-platit-esli-karta-rf-ne-rabotaet, banki-i-perevody, stoit-li-ehat-v-argentinu]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,17 +22,18 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: mastercard-russia-suspension-prepay
-    title: "Mastercard — приостановка операций в России"
-    url: "https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html"
+    title: "Mastercard — приостановка операций в России (архивная копия SEC EDGAR)"
+    url: "https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm"
     lang: en
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Прямые страницы mastercard.com/*/en/news-and-trends/... заблокированы для автоматического запроса из этой среды (403/timeout); содержание идентично, подтверждено также investor.mastercard.com и businesswire.com."
   - id: bcra-cbu-cvu-alias-prepay
     title: "BCRA — CBU, CVU и alias для аргентинских счетов"
     url: "https://www.bcra.gob.ar/Pdfs/BCRAyVos/Educ.%20Financiera_agosto_2023.pdf"
@@ -40,20 +41,20 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2027-01-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: russian-issued-card-limits-prepayment
     text: "Выпущенные российскими банками Visa и Mastercard не подходят для оплаты зарубежного сайта или аргентинского продавца."
     sensitive: true
     source_ids: [visa-russia-suspension-prepay, mastercard-russia-suspension-prepay]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: argentina-account-identifiers
     text: "Аргентинский банковский или платёжный счёт идентифицируется CBU или CVU и может иметь связанный alias; реквизиты не заменяют проверку получателя."
     sensitive: true
     source_ids: [bcra-cbu-cvu-alias-prepay]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -77,5 +78,5 @@ claims:
 ## Источники
 
 - [Visa — ограничения для карт российских банков](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html).
-- [Mastercard — ограничения для карт российских банков](https://www.mastercard.com/au/en/news-and-trends/press/2022/march/mastercard-statement-on-suspension-of-russian-operations.html).
+- [Mastercard — ограничения для карт российских банков](https://www.sec.gov/Archives/edgar/data/1141391/000114139122000062/ma03072022-statement.htm).
 - [BCRA — реквизиты CBU, CVU и alias](https://www.bcra.gob.ar/Pdfs/BCRAyVos/Educ.%20Financiera_agosto_2023.pdf).

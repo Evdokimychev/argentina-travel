@@ -17,7 +17,7 @@ warnings:
   - "107 не является единым номером для всей страны; сохраняйте национальный 911 и местный медицинский номер."
 recommendations:
   - "До поездки запишите диагнозы, действующие вещества лекарств, аллергии, контакты страховой и ближайший экстренный маршрут."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 seo_slug: "gid-po-medicine-argentina"
 confidence: high
 provenance:
@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-emergency-numbers
     title: "Argentina.gob.ar — Emergencias"
     url: "https://www.argentina.gob.ar/tema/emergencias"
@@ -41,8 +41,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-provincial-medical-numbers
     title: "Ministerio de Salud — emergencias en la vía pública"
     url: "https://www.argentina.gob.ar/salud/dinesa/recomendaciones/emergencias-via-publica"
@@ -50,8 +50,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-prescriptions-2214
     title: "Resolución 2214/2025 — prescripción y dispensa de medicamentos"
     url: "https://www.argentina.gob.ar/normativa/nacional/415349/texto"
@@ -59,38 +59,38 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: emergency-care-all-foreigners
     text: "Экстренная медицинская помощь не может быть отказана или ограничена иностранцу независимо от его миграционного статуса."
     sensitive: true
     source_ids: [argentina-dnu-366-health]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: routine-care-distinction
     text: "DNU 366/2025 отделяет экстренную помощь от обычного лечения и гарантирует постоянным резидентам равный с гражданами доступ к публичной системе."
     sensitive: true
     source_ids: [argentina-dnu-366-health]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: insurance-entry-declaration
     text: "При въезде иностранца DNU 366/2025 предусматривает декларацию о наличии медицинской страховки."
     sensitive: true
     source_ids: [argentina-dnu-366-health]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: emergency-numbers-vary
-    text: "911 указан как центральный экстренный номер, а медицинские номера различаются по территории; 107 не следует считать универсальным для всей страны."
+    text: "Официальные страницы государства расходятся в описании покрытия 107: общая страница экстренных служб указывает его только для CABA и части провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице — для CABA и почти всех остальных провинций, отдельно называя 911 номером именно провинции Буэнос-Айрес и 106 — Неукена. Мы не выбираем одну версию как безусловно верную и советуем в любом случае звонить 911, а по прибытии на место сверять местный номер."
     sensitive: true
     source_ids: [argentina-emergency-numbers, argentina-provincial-medical-numbers]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
 ## Если помощь нужна сейчас
 
-При угрозе жизни, нарушении дыхания, потере сознания, сильном кровотечении, признаках инсульта или инфаркта вызывайте экстренную помощь. Национальный портал указывает **911** как центральный номер; медицинские номера зависят от территории. **107** работает во многих городах и отдельно указан для CABA, но не является гарантированно единым номером всей Аргентины. До поездки сохраните местный номер провинции или города.
+При угрозе жизни, нарушении дыхания, потере сознания, сильном кровотечении, признаках инсульта или инфаркта вызывайте экстренную помощь. Здесь у официальных источников на 2026-08-21 нет единой картины: общая страница экстренных служб называет **911** центральным номером и указывает **107** только для CABA и части провинции Буэнос-Айрес, а таблица Минздрава по травмам на улице называет **107** номером почти для всех провинций и отдельно указывает **911** именно для провинции Буэнос-Айрес и **106** для Неукена. Это расхождение между двумя официальными страницами государства, а не наша ошибка или устаревшая память: звоните **911** в любом случае (это единственный номер, который повторяется на обоих ресурсах для дозвона), а по прибытии в конкретный город уточните местный медицинский номер у отеля, хостела или ресепшена.
 
 DNU 366/2025 прямо устанавливает: экстренную медицинскую помощь нельзя отказать или ограничить иностранцу независимо от миграционного статуса. В неотложной ситуации сначала обращайтесь за помощью, а вопросы оплаты и страхового возмещения решайте после стабилизации.
 

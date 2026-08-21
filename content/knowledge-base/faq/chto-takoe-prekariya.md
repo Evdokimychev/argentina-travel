@@ -23,7 +23,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-10-17"
     note: "Устанавливает срок до 90 дней, возможное продление и права на пребывание, работу, учёбу, выезд и въезд."
   - id: migraciones-precaria-border

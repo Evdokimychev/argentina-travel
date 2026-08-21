@@ -8,7 +8,7 @@ status: published
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [безопасность, кражи, экстренные контакты]
 related: [bezopasnost-argentina]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: canada-argentina-safety-advice
     title: "Government of Canada — рекомендации по безопасности в Аргентине"
     url: "https://travel.gc.ca/destinations/argentina"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-emergency-contacts
     title: "Argentina.gob.ar — экстренные службы"
     url: "https://www.argentina.gob.ar/tema/emergencias"
@@ -40,8 +40,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: argentina-parks-safety-advice
     title: "Administración de Parques Nacionales — рекомендации посетителям"
     url: "https://www.argentina.gob.ar/parquesnacionales/recomendaciones-para-tu-visita"
@@ -49,26 +49,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: argentina-street-crime-risks
     text: "Официальные рекомендации путешественникам предупреждают в Аргентине о карманных кражах, выхватывании телефонов и сумок, отвлекающих схемах и риске вооружённого ограбления."
     sensitive: true
     source_ids: [uk-argentina-safety-advice, canada-argentina-safety-advice]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: argentina-911-emergency
     text: "Национальный номер для экстренного вызова полиции или скорой помощи — 911."
     sensitive: true
     source_ids: [argentina-emergency-contacts]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: argentina-natural-area-risks
     text: "В национальных парках посетитель должен учитывать погоду, рельеф и другие природные риски и соблюдать правила конкретной территории."
     sensitive: true
     source_ids: [argentina-parks-safety-advice]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

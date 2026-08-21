@@ -17,7 +17,7 @@ warnings:
   - "Не используйте уличного посредника, Telegram-обменник или криптоперевод незнакомцу как единственный способ получить наличные."
 recommendations:
   - "Соберите минимум два независимых платёжных канала, проведите тестовые операции и держите аварийный резерв отдельно."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 seo_slug: "gid-po-dengam-argentina"
 confidence: high
 provenance:
@@ -32,8 +32,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: visa-russia-suspension
     title: "Visa — suspension of Russia operations"
     url: "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html"
@@ -41,17 +41,17 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: bcra-migrant-account
-    title: "BCRA — Cuenta gratuita para inmigrantes"
-    url: "https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp"
+    title: "BCRA — Cuenta bancaria para inmigrantes"
+    url: "https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/"
     lang: es
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-10-05"
   - id: arca-monotributo-categories
     title: "ARCA — categorías de monotributo"
     url: "https://arca.gob.ar/monotributo/categorias.asp"
@@ -59,8 +59,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: indec-ipc
     title: "INDEC — Índice de precios al consumidor"
     url: "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
@@ -68,32 +68,32 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: authorized-fx-channels
     text: "BCRA указывает банки и уполномоченные обменные организации как легальные каналы валютных операций."
     sensitive: true
     source_ids: [bcra-authorized-fx]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: russian-visa-abroad-disabled
     text: "Карты Visa, выпущенные в России, не работают за пределами страны после приостановки российских операций платёжной системой."
     sensitive: true
     source_ids: [visa-russia-suspension]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: migrant-basic-account
     text: "BCRA публикует возможность бесплатного базового счёта для мигрантов, включая заявителей с precaria при выполнении требований банка."
     sensitive: true
     source_ids: [bcra-migrant-account]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: monotributo-values-change
     text: "Категории и суммы monotributo публикует ARCA; их нужно проверять по действующей таблице, а не фиксировать бессрочно."
     sensitive: true
     source_ids: [arca-monotributo-categories]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -160,6 +160,6 @@ Visa официально приостановила российские опе
 
 - [BCRA — уполномоченные валютные каналы](https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/)
 - [Visa — приостановка российских операций](https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.18871.html)
-- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-gratuita-inmigrantes.asp)
+- [BCRA — бесплатный счёт для мигрантов](https://www.bcra.gob.ar/noticias/cuenta-bancaria-para-inmigrantes/)
 - [ARCA — категории monotributo](https://arca.gob.ar/monotributo/categorias.asp)
 - [INDEC — индекс потребительских цен](https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31)

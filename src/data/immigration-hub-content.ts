@@ -159,7 +159,7 @@ export const IMMIGRATION_HUB: Omit<ImmigrationHubContent, "heroImage"> = {
     "Решение по residencia или гражданству принимает DNM. Сайт не обещает одобрение и не заменяет консультацию по конкретному делу.",
     "Не используйте туристический статус для оплачиваемой деятельности; сначала проверьте категорию, которая разрешает вашу работу.",
     "Не считайте precaria уже одобренной residencia или стажем для permanente и натурализации.",
-    "Проверено 17.07.2026: https://www.argentina.gob.ar/migraciones/residencias и https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto",
+    "Проверено 21.08.2026: https://www.argentina.gob.ar/migraciones/residencias и https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto",
   ],
   faq: FAQ,
   disclaimer:

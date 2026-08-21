@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-17T10:43:53.614Z",
-  "manifestGeneratedAt": "2026-08-17 00:00",
+  "generatedAt": "2026-08-21T01:55:20.349Z",
+  "manifestGeneratedAt": "2026-08-21 00:00",
   "totalEntities": 691,
   "entitiesCounted": 691,
   "byStatus": {
@@ -17,9 +17,14 @@
     "validation_mode": "diagnostic",
     "published_sensitive_count": 91,
     "release_candidate_sensitive_count": 91,
-    "strict_ready_release_candidate_count": 91,
-    "strict_ready": true,
-    "issue_counts": {}
+    "strict_ready_release_candidate_count": 67,
+    "strict_ready": false,
+    "issue_counts": {
+      "expired_source": 24,
+      "stale_sensitive_claim": 21,
+      "stale_source_url_check": 21,
+      "unhealthy_source_url": 1
+    }
   },
   "siteIdMap": {
     "generated": "2026-07-07",

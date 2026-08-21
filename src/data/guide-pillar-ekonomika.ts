@@ -123,7 +123,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
           variant: "warning",
           title: "Правило BCRA",
           body:
-            "Операции на валютном рынке проходят через уполномоченную организацию: https://www.bcra.gob.ar/normativa-de-exterior-y-cambios/ — проверено 17 июля 2026 года.",
+            "Операции на валютном рынке проходят через уполномоченную организацию: https://www.bcra.gob.ar/normativa-de-exterior-y-cambios/ — проверено 21 августа 2026 года.",
         },
       ],
     },
@@ -167,7 +167,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
           variant: "info",
           title: "Статистика цен",
           body:
-            "IPC и методология: https://www.indec.gob.ar/Nivel4/Tema/3/5/31 — проверено 17 июля 2026 года.",
+            "IPC и методология: https://www.indec.gob.ar/Nivel4/Tema/3/5/31 — проверено 21 августа 2026 года.",
         },
       ],
     },
@@ -193,7 +193,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
           variant: "info",
           title: "Официальная инструкция",
           body:
-            "ARCA: https://www.arca.gob.ar/viajeros/ayuda/devolucion-a-turistas.asp — проверено 17 июля 2026 года.",
+            "ARCA: https://www.arca.gob.ar/viajeros/ayuda/devolucion-a-turistas.asp — проверено 21 августа 2026 года.",
         },
       ],
     },
@@ -219,7 +219,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
           variant: "info",
           title: "Счёт для мигрантов",
           body:
-            "Условия программы: https://www.argentina.gob.ar/economia/inclusion-financiera/cuenta-para-migrantes — проверено 17 июля 2026 года.",
+            "Условия программы: https://www.argentina.gob.ar/economia/inclusion-financiera/cuenta-para-migrantes — проверено 21 августа 2026 года.",
         },
       ],
     },

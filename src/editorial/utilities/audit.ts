@@ -4,12 +4,13 @@ import { getEditorialRegistryEntry } from "@/editorial/registry/definitions";
 import { checkEditorialRhythm } from "@/editorial/utilities/rhythm";
 import type { EditorialAuditFinding } from "@/editorial/types";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
+import { TRAVEL_WIDGET_KEYS } from "@/components/travel/TravelWidgetRenderer";
 
-const KNOWN_WIDGETS = new Set([
-  "season-matrix",
-  "tourism-infographic",
-  "tourism-timeline",
-]);
+// Список ключей берётся из TravelWidgetRenderer — единственного места, которое
+// на самом деле умеет рендерить виджет. Раньше здесь был отдельный ручной список,
+// который не обновлялся при добавлении новых виджетов и ложно помечал
+// steak-*/tango-*/packing-* виджеты как "неизвестные".
+const KNOWN_WIDGETS = new Set<string>(TRAVEL_WIDGET_KEYS);
 
 function collectBlocks(post: BlogPost): Array<{
   sectionTitle: string;

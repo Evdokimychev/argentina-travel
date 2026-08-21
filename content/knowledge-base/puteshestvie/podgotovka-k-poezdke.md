@@ -46,7 +46,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2027-07-17"
     note: "Устанавливает декларацию о наличии медицинской страховки при въезде."
   - id: bcra-authorized-fx-operations
@@ -56,7 +56,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-30"
     note: "Подтверждает допустимые каналы валютных операций и запрет операций за третьих лиц."
   - id: argentina-yellow-fever-recommendations

@@ -1,4 +1,5 @@
 "gap_id","scope","issue_type","count","severity","status","owner","evidence","next_action"
+"kb-sensitive_provenance_not_ready","knowledge_base_raw_corpus","sensitive_provenance_not_ready","6","P1","quarantined","Content editor","content.json + publication-quality.ts","Resolve issue and rerun gate"
 "topic-arrival-first-weeks","required_topic_coverage","Первые дни и недели после приезда","0","none","covered","Content architect","gid-relokanta","Keep canonical coverage current"
 "topic-residency","required_topic_coverage","Резиденция и легализация","0","none","covered","Content architect","vnzh-argentina","Keep canonical coverage current"
 "topic-documents","required_topic_coverage","Документы, апостиль и переводы","0","none","covered","Content architect","gid-po-dokumentam","Keep canonical coverage current"

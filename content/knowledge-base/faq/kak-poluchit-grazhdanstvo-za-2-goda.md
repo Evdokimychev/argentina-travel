@@ -2,13 +2,13 @@
 id: kak-poluchit-grazhdanstvo-za-2-goda
 type: faq
 question: "Правда ли, что гражданство Аргентины можно получить за 2 года?"
-short_answer: "Два года — это порог для обращения, а не обещанный срок выдачи паспорта. DNU 366/2025 требует два года легального непрерывного проживания без выездов, но официальные инструкции о ведомстве и порядке подачи пока противоречат друг другу, поэтому маршрут нужно подтверждать перед подачей."
+short_answer: "Два года — это порог для обращения, а не обещанный срок выдачи паспорта. DNU 366/2025 требует два года легального непрерывного проживания без выездов; с октября 2025 года подача идёт цифрово через DNM/RaDEX, а прежняя страница о судебном маршруте на дату проверки недоступна — маршрут всё равно стоит подтверждать перед подачей."
 topic: visa
 status: published
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы]
 related: [grazhdanstvo, vnzh-argentina]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: medium
 provenance:
   schema_version: 1
@@ -22,41 +22,41 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-03"
-  - id: argentina-citizenship-service
-    title: "Argentina.gob.ar — получение гражданства Аргентины"
-    url: "https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina"
+  - id: dnm-citizenship-self-service
+    title: "Migraciones — Ciudadanía por naturalización, RaDEX"
+    url: "https://www.argentina.gob.ar/migraciones/ciudadania-autogestion"
     lang: es
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-09-03"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: two-years-is-eligibility-threshold
     text: "Два года проживания — условие для обращения по общему основанию, а не гарантированный срок завершения натурализации."
     sensitive: true
-    source_ids: [argentina-dnu-366-2025-citizenship, argentina-citizenship-service]
-    verified_at: "2026-07-20"
+    source_ids: [argentina-dnu-366-2025-citizenship]
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: dnu-continuity-rule
     text: "DNU 366/2025 определяет непрерывность как пребывание в Аргентине весь двухлетний период без выездов и требует легальной резиденции."
     sensitive: true
     source_ids: [argentina-dnu-366-2025-citizenship]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
-  - id: official-process-conflict
-    text: "DNU передаёт волеизъявление в DNM, тогда как текущая официальная страница услуги продолжает описывать судебную подачу; редакция не выдаёт ни один маршрут за бесспорно действующий."
+  - id: dnm-digital-route-live
+    text: "DNM с октября 2025 года принимает заявления о натурализации цифровым маршрутом через RaDEX; прежняя государственная страница с описанием судебной подачи на проверке 2026-08-21 недоступна и больше не используется как источник."
     sensitive: true
-    source_ids: [argentina-dnu-366-2025-citizenship, argentina-citizenship-service]
-    verified_at: "2026-07-20"
+    source_ids: [dnm-citizenship-self-service]
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: pending-cases-transition
     text: "Заявления, начатые до вступления DNU в силу, продолжаются в соответствующем суде по прежним основаниям."
     sensitive: true
     source_ids: [argentina-dnu-366-2025-citizenship]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
@@ -66,11 +66,11 @@ claims:
 
 DNU 366/2025 сформулировал более жёсткое правило: заявитель старше 18 лет должен подтвердить два года легального и непрерывного проживания непосредственно перед обращением. В тексте декрета «непрерывно» означает находиться в Аргентине весь этот период без выездов. Поэтому даже короткую поездку нельзя заранее считать безвредной для подсчёта срока.
 
-Есть важная процессуальная неопределённость. DNU указывает Dirección Nacional de Migraciones как орган, перед которым заявитель выражает волю натурализоваться. Одновременно действующая страница государственной услуги всё ещё описывает судебный процесс и обращение в федеральный суд. Из этого нельзя честно сделать вывод, что для обычной натурализации уже работает универсальная подача через RaDEX. Старые заявления, начатые до вступления DNU в силу, сам декрет оставляет в судах по прежним правилам.
+Есть процессуальная тонкость. DNU указывает Dirección Nacional de Migraciones как орган, перед которым заявитель выражает волю натурализоваться, и с октября 2025 года эта подача идёт цифрово через RaDEX. Прежняя государственная страница, описывавшая обращение в федеральный суд, на проверке 21 августа 2026 года уже недоступна — это говорит в пользу RaDEX как единственного актуального маршрута, но не является официальным подтверждением отмены судебного пути. Старые заявления, начатые до вступления DNU в силу, сам декрет оставляет в судах по прежним правилам.
 
 Перед подачей запросите актуальную письменную инструкцию у DNM и проверьте порядок в федеральном суде по месту жительства. Подготовьте доказательства миграционного статуса, всех въездов и выездов, личности, адреса, несудимости и средств к существованию, но окончательный список берите у органа, который подтвердит компетенцию по вашему делу. Для важного иммиграционного решения разумно получить заключение независимого аргентинского адвоката: эта статья показывает опубликованные правила, но не заменяет разбор конкретной истории поездок и резиденций.
 
 ## Источники
 
 - [Decreto DNU 366/2025 — текст изменений](https://www.argentina.gob.ar/normativa/nacional/decreto-366-2025-413297/texto).
-- [Argentina.gob.ar — текущая инструкция по получению гражданства](https://www.argentina.gob.ar/servicio/obtener-la-ciudadania-argentina).
+- [Migraciones — Ciudadanía por naturalización, RaDEX](https://www.argentina.gob.ar/migraciones/ciudadania-autogestion).

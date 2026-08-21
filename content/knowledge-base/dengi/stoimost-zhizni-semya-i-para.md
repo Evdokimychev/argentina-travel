@@ -20,7 +20,7 @@ recommendations:
   - "Разделять общие расходы семьи и расходы на каждого человека."
   - "До выбора района запросить полную годовую стоимость школы и дорогу до неё."
   - "Считать медицину по индивидуальным предложениям, а не по среднему тарифу из обзора."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -34,8 +34,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Официальная база средних цен объявлений для квартир с 1–3 ambientes в CABA; не включает временную меблированную аренду."
   - id: argentina-basic-education-and-health-dnu-366-2025
@@ -44,8 +44,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Гарантирует доступ иностранцев к начальному, первичному и среднему образованию; отдельно регулирует доступ к государственной медицине."
 claims:
@@ -53,13 +53,13 @@ claims:
     text: "IDECBA публикует за I квартал 2026 средние цены предложений 1–3 ambientes в наблюдаемом сегменте CABA; это не цена конкретного семейного договора."
     sensitive: true
     source_ids: [caba-rental-market-first-quarter-2026]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: school-access-and-health-distinction
     text: "DNU 366/2025 сохраняет иностранцам доступ к начальному, первичному и среднему образованию независимо от статуса и отдельно регулирует экстренную и обычную медицинскую помощь."
     sensitive: true
     source_ids: [argentina-basic-education-and-health-dnu-366-2025]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

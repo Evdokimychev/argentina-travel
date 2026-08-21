@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [бюджетно, деньги, планирование]
 related: [byudzhet-poezdki, stoimost-zhizni-ba]
-last_verified: "2026-08-11"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -21,9 +21,10 @@ sources:
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-08-11"
     expires_at: "2026-08-18"
+    note: "Повторная проверка 2026-08-21: сайт отклоняет автоматический запрос («Request Rejected», защита WAF), а не подтверждённо недоступен — нужна ручная проверка человеком."
   - id: argentina-national-parks-fees
     title: "Administración de Parques Nacionales — билеты и тарифы"
     url: "https://www.argentina.gob.ar/interior/ambiente/parquesnacionales/tarifas"
@@ -31,35 +32,37 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-09-10"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
+    note: "Повторно подтверждено: тарифы действуют с 1 июня 2026 года (Resolución 132/2026 и 157/2026)."
   - id: aerolineas-live-search-budget
     title: "Aerolíneas Argentinas — поиск перелётов"
     url: "https://www.aerolineas.com/"
     lang: es
     type: official
     authority: primary
-    url_status: verified
+    url_status: unchecked
     checked_at: "2026-08-11"
     expires_at: "2026-09-10"
+    note: "Повторная проверка 2026-08-21: запрос не завершился за отведённое время инструмента (типично для крупных коммерческих сайтов с защитой от автоматических запросов); сайт остаётся официальным перевозчиком, но требует ручной перепроверки."
 claims:
   - id: official-rate-is-time-sensitive
     text: "Для перевода бюджета между песо и иностранной валютой нужно использовать датированную текущую котировку, а не курс из старой статьи."
     sensitive: true
     source_ids: [bna-live-exchange-budget]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: park-fees-must-be-quoted-live
     text: "Стоимость входа в национальные парки следует проверять в официальном тарифе для конкретного парка и категории посетителя."
     sensitive: true
     source_ids: [argentina-national-parks-fees]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: domestic-flight-budget-live
     text: "Стоимость внутреннего перелёта зависит от маршрута, дат, тарифа и включённых услуг и должна браться из актуального расчёта перевозчика."
     sensitive: true
     source_ids: [aerolineas-live-search-budget]
-    verified_at: "2026-08-11"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

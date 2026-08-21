@@ -37,7 +37,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2026-09-30"
     note: "Подтверждает, что валютные операции должны проводиться через уполномоченные банки и обменные учреждения и не могут выполняться за третьих лиц."
   - id: sube-for-foreign-visitors
@@ -97,7 +97,7 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-17"
+    checked_at: "2026-08-21"
     expires_at: "2027-07-17"
     note: "Устанавливает декларацию о наличии медицинской страховки при въезде и разграничивает экстренную и плановую помощь."
   - id: dnm-foreign-document-translations

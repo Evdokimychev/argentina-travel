@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, pereezd-v-argentinu]
 tags: [деньги, валюта, MEP, инвестиции]
 related: [kak-menyat-valyutu, bankovskij-schet]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: high
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: cnv-mep-local-settlement
     title: "CNV — операции с расчётом в иностранной валюте в Аргентине (MEP)"
     url: "https://www.argentina.gob.ar/noticias/eliminacion-del-parking-y-otras-trabas-regulatorias-operaciones-en-el-marco-de-creditos"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: cnv-faq-custody
     title: "CNV — вопросы об инвестиционном счёте и хранении активов"
     url: "https://www.argentina.gob.ar/preguntas-frecuentes-cnv"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: mep-is-securities-operation
     text: "Dólar MEP возникает при операциях с ценными бумагами с расчётом в иностранной валюте внутри Аргентины."
     sensitive: true
     source_ids: [cnv-mep-local-settlement]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: capital-market-account-required
     text: "Для операций на рынке капитала инвестор использует зарегистрированного агента и инвестиционный счёт; агент может взимать публично раскрываемую комиссию."
     sensitive: true
     source_ids: [cnv-investor-protection-guide, cnv-faq-custody]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: investor-should-verify-agent
     text: "CNV рекомендует проверять регистрацию агента и движения активов по счёту."
     sensitive: true
     source_ids: [cnv-investor-protection-guide, cnv-faq-custody]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

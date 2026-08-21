@@ -8,7 +8,7 @@ status: published
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 tags: [безопасность, мошенничество, полиция, наличные]
 related: [bezopasnost-argentina]
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 confidence: medium
 provenance:
   schema_version: 1
@@ -22,8 +22,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: bcra-authorized-exchange-fake-police
     title: "BCRA — валютные операции через уполномоченные организации"
     url: "https://www.bcra.gob.ar/noticias/el-bcra-aclara-que-no-hay-ningun-cambio-normativo-para-la-compra-de-dolares-por-parte-de-las-personas-humanas/"
@@ -31,8 +31,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
   - id: canada-argentina-cash-safety
     title: "Government of Canada — безопасность у банкоматов и обменных пунктов в Аргентине"
     url: "https://travel.gc.ca/destinations/argentina"
@@ -40,26 +40,26 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-20"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
 claims:
   - id: call-911-to-verify-emergency
     text: "Для сообщения об экстренной ситуации и запроса полиции в Аргентине используется номер 911."
     sensitive: true
     source_ids: [argentina-911-fake-police]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: authorized-currency-exchange-only
     text: "Официальные валютные операции проводят банки и уполномоченные обменные организации, а не человек на улице, предлагающий проверить или обменять купюры."
     sensitive: true
     source_ids: [bcra-authorized-exchange-fake-police]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: atm-and-exchange-following-risk
     text: "Канадская государственная рекомендация предупреждает, что преступники могут ждать у банкоматов и обменных пунктов или следовать за человеком после получения наличных."
     sensitive: true
     source_ids: [canada-argentina-cash-safety]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 

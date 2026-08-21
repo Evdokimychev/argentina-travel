@@ -20,7 +20,7 @@ recommendations:
   - "До решения определить горизонт, нужную ликвидность, допустимый убыток и юрисдикцию хранения."
   - "Работать только с уполномоченными валютными операторами, зарегистрированными агентами рынка и зарегистрированными поставщиками виртуальных активов."
   - "Индивидуальный портфель обсуждать с зарегистрированным специалистом с учётом налогового резидентства."
-last_verified: "2026-07-20"
+last_verified: "2026-08-21"
 seo_slug: "zashchita-nakoplenij-ot-inflyacii-argentina"
 confidence: high
 provenance:
@@ -34,8 +34,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Валютные операции должны проходить через уполномоченную организацию с документами, подтверждающими характер операции."
   - id: bcra-uva-deposits
@@ -44,8 +44,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Объясняет пересчёт вклада через UVA/CER и различие обычного и досрочно прекращаемого вклада."
   - id: cnv-cedear-regulation
@@ -56,16 +56,16 @@ sources:
     authority: primary
     checked_at: "2026-07-20"
     expires_at: "2026-08-19"
-    url_status: verified
-    note: "Определяет CEDEAR как сертификаты, представляющие депонированные ценные бумаги; доход и сохранность не гарантируются."
+    url_status: unchecked
+    note: "Определяет CEDEAR как сертификаты, представляющие депонированные ценные бумаги; доход и сохранность не гарантируются. Повторная проверка 2026-08-21: полный текст (Texto Ordenado de Normas de la CNV) не открылся за отведённое время инструмента из-за объёма документа — требует ручной перепроверки, а не считается подтверждённым автоматически."
   - id: cnv-virtual-assets-warning
     title: "CNV — предупреждение о рисках виртуальных активов"
     url: "https://www.argentina.gob.ar/cnv/advertencia-al-publico-sobre-inversiones-en-activos-virtuales"
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Регулятор предупреждает о высокой волатильности, ограниченной защите и возможности полной потери средств."
   - id: cnv-qualified-advisers-register
@@ -74,8 +74,8 @@ sources:
     lang: es
     type: official
     authority: primary
-    checked_at: "2026-07-20"
-    expires_at: "2026-08-19"
+    checked_at: "2026-08-21"
+    expires_at: "2026-09-20"
     url_status: verified
     note: "Подтверждает требование квалификации для продажи, продвижения и инвестиционного консультирования через зарегистрированного агента."
 claims:
@@ -83,31 +83,31 @@ claims:
     text: "Валютные операции в Аргентине подчиняются актуальным нормам BCRA и проводятся через уполномоченные организации."
     sensitive: true
     source_ids: [bcra-exterior-and-exchange-rules]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: uva-indexed-not-guaranteed-currency-return
     text: "Вклад UVA индексируется через UVA/CER, а условия срока и досрочного выхода зависят от продукта; это не гарантия результата в иностранной валюте."
     sensitive: true
     source_ids: [bcra-uva-deposits]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: cedear-is-security-certificate
     text: "CEDEAR представляет депонированную ценную бумагу и остаётся рыночным инструментом без гарантированной доходности."
     sensitive: true
     source_ids: [cnv-cedear-regulation]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: virtual-assets-total-loss-risk
     text: "CNV предупреждает о волатильности, ограниченной защите и возможности полной потери средств в виртуальных активах."
     sensitive: true
     source_ids: [cnv-virtual-assets-warning]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
   - id: verify-market-professional
     text: "CNV ведёт реестр квалифицированных специалистов рынка, который нужно проверять до персональной инвестиционной консультации."
     sensitive: true
     source_ids: [cnv-qualified-advisers-register]
-    verified_at: "2026-07-20"
+    verified_at: "2026-08-21"
     reviewer: { id: "goargentina-editorial", role: "Редакционная проверка источников" }
 ---
 
