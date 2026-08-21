@@ -36,6 +36,7 @@ import type {
 } from "@/types/site-globals";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 import { filterPublicLinks, filterSiteNavSections } from "@/lib/public-module-visibility";
+import { DEFAULT_SITE_NAVIGATION } from "@/lib/cms/site-globals/normalize";
 
 const SiteNavFullScreenOverlay = dynamic(
   () =>
@@ -150,18 +151,18 @@ export default function Header({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const effectiveNavigation = navigation ?? DEFAULT_SITE_NAVIGATION;
   const utilityLinks = useMemo(() => {
-    if (!navigation) return baseUtilityLinks;
     return filterPublicLinks([
-      { ...baseUtilityLinks[0], label: navigation.utilityToursLabel, labelKey: undefined, href: navigation.utilityToursUrl },
-      { ...baseUtilityLinks[1], label: navigation.utilityOrganizerLabel, labelKey: undefined, href: navigation.utilityOrganizerUrl },
-      { ...baseUtilityLinks[2], label: navigation.utilityContactLabel, labelKey: undefined, href: navigation.utilityContactUrl },
-    ], navigation, modules);
-  }, [baseUtilityLinks, modules, navigation]);
+      { ...baseUtilityLinks[0], label: effectiveNavigation.utilityToursLabel, labelKey: undefined, href: effectiveNavigation.utilityToursUrl },
+      { ...baseUtilityLinks[1], label: effectiveNavigation.utilityOrganizerLabel, labelKey: undefined, href: effectiveNavigation.utilityOrganizerUrl },
+      { ...baseUtilityLinks[2], label: effectiveNavigation.utilityContactLabel, labelKey: undefined, href: effectiveNavigation.utilityContactUrl },
+    ], effectiveNavigation, modules);
+  }, [baseUtilityLinks, modules, effectiveNavigation]);
   const utilityCtaLink = utilityLinks.at(-1);
   const navSections = useMemo(
-    () => navigation ? filterSiteNavSections(sections, navigation, modules) : sections,
-    [modules, navigation, sections],
+    () => filterSiteNavSections(sections, effectiveNavigation, modules),
+    [modules, effectiveNavigation, sections],
   );
   const mobileNavSections = useMemo(
     () => navSections.filter((section) => section.id !== "home"),
@@ -222,9 +223,28 @@ export default function Header({
   );
 
   const mobileMenuFooter = (
-    <div className="flex items-center justify-center gap-3">
-      {showThemeToggle ? <ThemeToggle /> : null}
-      <LocaleCurrencySwitcher />
+    <div className="flex flex-col items-center gap-3">
+      {utilityCtaLink ? (
+        <Link
+          href={utilityCtaLink.href}
+          onClick={() => setMobileMenuOpen(false)}
+          className="text-sm font-medium text-sky-ink hover:underline"
+        >
+          {resolveNavLabel(utilityCtaLink, t)}
+        </Link>
+      ) : (
+        <Link
+          href="/contacts"
+          onClick={() => setMobileMenuOpen(false)}
+          className="text-sm font-medium text-sky-ink hover:underline"
+        >
+          {t("nav.contacts")}
+        </Link>
+      )}
+      <div className="flex items-center justify-center gap-3">
+        {showThemeToggle ? <ThemeToggle /> : null}
+        <LocaleCurrencySwitcher />
+      </div>
     </div>
   );
 

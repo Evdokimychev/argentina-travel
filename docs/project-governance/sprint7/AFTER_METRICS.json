@@ -1,0 +1,26 @@
+{
+  "measuredAt": "2026-08-18T00:45:00Z",
+  "branch": "cursor/sprint7-architecture-simplify-5475",
+  "baseMainSha": "81055b1387e0062301ca9c0ae7468cbf782e2511",
+  "method": "same filesystem recount as BEFORE_METRICS + package.json",
+  "inventory": {
+    "pages": 159,
+    "apiRouteHandlers": 307,
+    "apiRouteHandlersNote": "src/app/api/**/route.ts only (excludes program.pdf/route.tsx)",
+    "topLevelAppDomains": 46,
+    "topLevelApiDomains": 55,
+    "npmScripts": 177,
+    "npmScriptsNote": "Net zero vs BEFORE: +4 Sprint 7 registries/checks, −4 dead aliases",
+    "dependencies": 41,
+    "devDependencies": 20,
+    "useClientFiles": 779
+  },
+  "qualitative": [
+    "Forum/shop quarantine uses launch-guarded control plane (fail closed)",
+    "Own-payment checkout gated; webhooks retained",
+    "podbor/narrative frozen 410",
+    "CI parallel verify-contracts || verify-release",
+    "CURRENT_STATE + module lifecycle + GOLDEN_PATH",
+    "architecture:check in static release group"
+  ]
+}

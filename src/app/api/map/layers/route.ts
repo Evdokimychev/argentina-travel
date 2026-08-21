@@ -6,6 +6,7 @@ import {
 } from "@/lib/map-layers-server";
 import { parseMapLayersParam } from "@/lib/map-url-state";
 import { captureException } from "@/lib/monitoring/sentry";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   try {
@@ -29,12 +30,6 @@ export async function GET(request: Request) {
     return NextResponse.json(payload, withCdnCacheHeaders(undefined, "map-layers"));
   } catch (error) {
     captureException(error, { tags: { route: "api/map/layers" } });
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Не удалось загрузить слои карты",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

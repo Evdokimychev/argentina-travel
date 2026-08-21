@@ -174,6 +174,7 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
   const [loading, setLoading] = useState(false);
   const [apiHits, setApiHits] = useState<SearchHit[] | null>(null);
   const [searchSource, setSearchSource] = useState<SearchSource | null>(null);
+  const [searchNotice, setSearchNotice] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -220,13 +221,16 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
   }, [open]);
 
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>(() => getDefaultSearchIndex());
+  const [searchIndexReady, setSearchIndexReady] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
 
     void loadSearchIndex().then((index) => {
-      if (!cancelled) setSearchIndex(index);
+      if (cancelled) return;
+      setSearchIndex(index);
+      setSearchIndexReady(true);
     });
 
     return () => {
@@ -242,6 +246,7 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
       abortRef.current?.abort();
       setApiHits(null);
       setSearchSource(null);
+      setSearchNotice(null);
       setLoading(false);
       return;
     }
@@ -250,6 +255,9 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
+      // Drop previous hits immediately so the UI never shows results for another query.
+      setApiHits(null);
+      setSearchNotice(null);
       setLoading(true);
 
       void fetchSiteSearch(trimmedQuery, {
@@ -260,6 +268,14 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
           if (controller.signal.aborted) return;
           setApiHits(payload.results);
           setSearchSource(payload.source);
+          const unavailable: string[] = [];
+          if (payload.catalog?.tours === "unavailable") unavailable.push("туры");
+          if (payload.catalog?.excursions === "unavailable") unavailable.push("экскурсии");
+          setSearchNotice(
+            unavailable.length > 0
+              ? `Каталог (${unavailable.join(" и ")}) временно недоступен. Показаны сохранённые ссылки.`
+              : null,
+          );
 
           const trackKey = `${trimmedQuery}|${kindFilter}|${payload.results.length}|${payload.source}`;
           if (lastTrackedSubmitRef.current !== trackKey) {
@@ -276,6 +292,7 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
           if (controller.signal.aborted) return;
           setApiHits(null);
           setSearchSource("static");
+          setSearchNotice("Живой поиск недоступен. Показан локальный индекс.");
         })
         .finally(() => {
           if (!controller.signal.aborted) setLoading(false);
@@ -298,7 +315,13 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
 
   const results: SearchResultGroup[] = useMemo(() => {
     if (!hasQuery) return [];
-    if (apiHits !== null) return groupHitsByKind(dedupeSearchHits(apiHits));
+    if (apiHits !== null) {
+      const live = groupHitsByKind(dedupeSearchHits(apiHits));
+      // Live search can return an empty catalogue-filtered set while the local
+      // index still has useful editorial hits for the same query.
+      if (live.length === 0 && fallbackResults.length > 0) return fallbackResults;
+      return live;
+    }
     return fallbackResults;
   }, [apiHits, fallbackResults, hasQuery]);
 
@@ -465,10 +488,15 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
               <div className="px-3 py-8 text-center text-sm text-muted">
                 Начните вводить запрос — туры, блог, FAQ, документы и направления
               </div>
-            ) : loading && results.length === 0 ? (
+            ) : (loading || !searchIndexReady) && results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm text-muted">Ищем…</div>
             ) : results.length === 0 ? (
               <div className="px-3 py-7 text-center text-sm text-muted">
+                {searchNotice ? (
+                  <p role="status" className="mb-3 text-amber-800">
+                    {searchNotice}
+                  </p>
+                ) : null}
                 <p>Ничего не найдено по запросу «{trimmedQuery}»</p>
                 {kindFilter !== "all" ? (
                   <button
@@ -570,7 +598,11 @@ export default function SiteSearch({ initialOpen = false }: { initialOpen?: bool
 
           {hasQuery && results.length > 0 ? (
             <div className="border-t border-border-subtle px-4 py-2.5 text-center text-xs text-muted sm:px-5">
-              {searchSource === "static" ? (
+              {searchNotice ? (
+                <p role="status" className="mb-1 text-amber-800">
+                  {searchNotice}
+                </p>
+              ) : searchSource === "static" ? (
                 <span className="mr-2 text-muted">Локальный индекс</span>
               ) : null}
               <Link

@@ -7,7 +7,8 @@ title_es: "Cómo evaluar alternativas frente a la inflación"
 aliases: ["защита накоплений", "инфляция сбережения", "доллар MEP", "CEDEAR", "plazo fijo UVA", "риски инвестиций"]
 summary: "Справочная рамка для сравнения валюты, вкладов UVA, CEDEAR, облигаций, виртуальных активов и недвижимости по риску, ликвидности и регулированию."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: relocant
 tags: [инфляция, накопления, инвестиции, риски]

@@ -69,13 +69,15 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
   const feedback = useSiteFeedback();
   const [message, setMessage] = useState(() => buildInitialMessage(formContext));
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [messageError, setMessageError] = useState<string | null>(null);
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
   const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitting(true);
     setSubmitError(null);
 
     const form = e.currentTarget;
@@ -85,6 +87,19 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
     const tourTitle = String(formData.get("tour") ?? "").trim();
     const bodyMessage = String(formData.get("message") ?? message).trim();
     const honeypot = String(formData.get("company") ?? "");
+
+    const nextNameError = requiredField("имя")(name);
+    const nextEmailError = validateEmail(email);
+    const nextMessageError =
+      bodyMessage.length < 10 ? "Расскажите немного подробнее — хотя бы 10 символов" : null;
+    setNameError(nextNameError);
+    setEmailError(nextEmailError);
+    setMessageError(nextMessageError);
+    if (nextNameError || nextEmailError || nextMessageError) {
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
       const response = await fetch("/api/contact", {
@@ -172,7 +187,7 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
           className="mt-8"
         />
       ) : (
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
           <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
             Компания
             <input name="company" tabIndex={-1} autoComplete="off" />
@@ -195,6 +210,8 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               autoComplete="name"
               enterKeyHint="next"
               validate={requiredField("имя")}
+              error={nameError}
+              onValueChange={() => setNameError(null)}
               placeholder="Ваше имя"
             />
           <SmartInput
@@ -207,6 +224,8 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               inputMode="email"
               enterKeyHint="next"
               validate={validateEmail}
+              error={emailError}
+              onValueChange={() => setEmailError(null)}
               placeholder="email@example.com"
             />
           <SmartInput
@@ -227,9 +246,13 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               rows={4}
               required
               value={message}
-              onValueChange={setMessage}
+              onValueChange={(value) => {
+                setMessage(value);
+                setMessageError(null);
+              }}
               minLength={10}
               maxLength={2000}
+              error={messageError}
               validate={(value) => value.trim().length < 10 ? "Расскажите немного подробнее — хотя бы 10 символов" : null}
               placeholder="Расскажите о ваших планах..."
             />

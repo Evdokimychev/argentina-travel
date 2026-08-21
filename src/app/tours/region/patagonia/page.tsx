@@ -6,7 +6,7 @@ import CatalogItemListJsonLd from "@/components/seo/CatalogItemListJsonLd";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
 import CommercialSeoSection from "@/components/seo/CommercialSeoSection";
 import { CatalogLoadingFallback } from "@/components/ui/skeleton";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildToursCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
 import {
   hasCommercialFilterParams,
@@ -53,7 +53,9 @@ export async function generateMetadata({
 export default async function PatagoniaToursPage() {
   const locale = await getServerI18nLocale();
   const destination = getDestinationBySlug("patagonia");
-  const allTours = await fetchMarketplaceTours();
+  const { tours: allTours, catalogUnavailable } = await fetchMarketplaceToursSafely(
+    "patagonia_catalog_unavailable",
+  );
   const tours = destination ? matchToursForDestination(allTours, destination) : [];
   const platformStats = getPlatformStatsFromMarketplace(tours);
 
@@ -77,6 +79,7 @@ export default async function PatagoniaToursPage() {
         <ToursCatalog
           tours={tours}
           platformStats={platformStats}
+          catalogUnavailable={catalogUnavailable}
           catalogBasePath={PAGE_PATH}
           title="Туры в Патагонию: ледники, горы и треккинг"
           subtitle="Сравните маршруты по аргентинской Патагонии, продолжительность, сложность и условия конкретной программы"

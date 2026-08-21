@@ -7,6 +7,7 @@ import {
 } from "@/data/tour-terms-defaults";
 import { buildCancellationTouristPreviewFull } from "@/lib/organizer-cancellation-preview";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
+import { isFutureOrTodayYmd } from "@/lib/partner-tours/calendar-date";
 import type { TourListing } from "@/types";
 import type { Tour } from "@/types/tour";
 
@@ -156,10 +157,14 @@ export type TourCardScheduleDisplay =
 
 /** Подпись под ценой в карточке каталога: даты набора или индивидуальный формат. */
 export function resolveTourCardScheduleDisplay(
-  tour: TourListing
+  tour: TourListing,
+  now: Date = new Date(),
 ): TourCardScheduleDisplay | null {
   const mode = tour.bookingMode ?? "scheduled";
-  const nextDate = tour.availableDates[0];
+  const bookableDates = tour.availableDates.filter((date) =>
+    isFutureOrTodayYmd(date.start, now),
+  );
+  const nextDate = bookableDates[0];
   const isPartner = Boolean(tour.partnerSource);
 
   if (mode === "on_request") {
@@ -174,7 +179,7 @@ export function resolveTourCardScheduleDisplay(
       type: "dates",
       start: nextDate.start,
       end: nextDate.end,
-      moreDates: Math.max(0, tour.availableDates.length - 1),
+      moreDates: Math.max(0, bookableDates.length - 1),
       spotsLeft: nextDate.spotsLeft,
     };
   }

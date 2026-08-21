@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { fetchTourDetailBySlugResultServer } from "@/lib/tour-content-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
@@ -29,10 +30,7 @@ export async function GET(_request: Request, context: RouteContext) {
     }
 
     return NextResponse.json({ tour });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

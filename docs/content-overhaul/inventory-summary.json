@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-20T20:02:20.825Z",
+  "generatedAt": "2026-08-20T23:54:19.887Z",
   "kbRaw": 691,
-  "kbPublic": 243,
-  "kbQuarantined": 448,
-  "kbArchived": 448,
-  "kbQualityBlocked": 0,
-  "sitemapPages": 585,
-  "inventoryRows": 1032,
-  "openIssueRows": 15,
-  "createdKnowledgeArticles": 2,
-  "rewrittenKnowledgeArticles": 200,
-  "archivedKnowledgeArticles": 448,
-  "requiredTopicGaps": 0
+  "kbPublic": 216,
+  "kbQuarantined": 475,
+  "kbArchived": 449,
+  "kbQualityBlocked": 26,
+  "sitemapPages": "not_measured",
+  "inventoryRows": 699,
+  "openIssueRows": 68,
+  "createdKnowledgeArticles": 0,
+  "rewrittenKnowledgeArticles": 0,
+  "archivedKnowledgeArticles": 0,
+  "requiredTopicGaps": 2
 }

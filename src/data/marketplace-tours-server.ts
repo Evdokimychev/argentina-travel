@@ -207,3 +207,43 @@ export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
 
   return tours;
 });
+
+export type MarketplaceCatalogLoad = {
+  tours: TourListing[];
+  catalogUnavailable: boolean;
+};
+
+/**
+ * UI pages must not crash into the global error shell when marketplace sources
+ * are down. Prefer this helper for public surfaces that can degrade to empty.
+ *
+ * Optional `deadlineMs` shortens the wait for below-fold embeds (e.g. destination
+ * related tours) so the hero can paint without the full catalog budget.
+ */
+export async function fetchMarketplaceToursSafely(
+  logLabel = "marketplace_catalog_unavailable",
+  options?: { deadlineMs?: number },
+): Promise<MarketplaceCatalogLoad> {
+  try {
+    if (options?.deadlineMs == null) {
+      return { tours: await fetchMarketplaceTours(), catalogUnavailable: false };
+    }
+
+    const catalogPromise = loadMarketplaceToursInBackground();
+    observeMarketplaceCatalogInBackground(catalogPromise);
+    const tours = await resolveMarketplaceCatalogWithinDeadline(
+      catalogPromise,
+      () => {
+        if (lastSuccessfulMarketplaceTours) return lastSuccessfulMarketplaceTours;
+        throw new Error("marketplace_catalog_deadline_exceeded_without_lkg");
+      },
+      options.deadlineMs,
+    );
+    return { tours, catalogUnavailable: false };
+  } catch (error) {
+    console.error(`[${logLabel}]`, {
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return { tours: [], catalogUnavailable: true };
+  }
+}

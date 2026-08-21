@@ -5,7 +5,8 @@ question: "Какие районы Буэнос-Айреса стоит избе
 short_answer: "У Буэнос-Айреса нет честного постоянного списка «запрещённых районов»: риск меняется по кварталу, времени и ситуации. Для жилья оценивайте конкретный адрес вечером, освещение, путь от транспорта и свежие данные; в туристических местах берегите телефон и сумку независимо от названия района."
 topic: bezopasnost
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [безопасность, Буэнос-Айрес, районы]
 related: [bezopasnost-argentina, buenos-aires]

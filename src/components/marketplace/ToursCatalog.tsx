@@ -92,6 +92,8 @@ const CatalogMapView = dynamic(
 interface ToursCatalogProps {
   tours: TourListing[];
   platformStats?: PlatformStats;
+  /** True when the server could not load the marketplace catalog (outage), not a confirmed empty set. */
+  catalogUnavailable?: boolean;
   catalogBasePath?: string;
   title?: string;
   subtitle?: string;
@@ -103,6 +105,7 @@ interface ToursCatalogProps {
 export default function ToursCatalog({
   tours: initialTours,
   platformStats,
+  catalogUnavailable = false,
   catalogBasePath = "/tours",
   title = "Туры в Аргентину: авторские маршруты по стране",
   subtitle = "Сравнивайте программы, даты и формат поездки — от Игуасу до ледников Патагонии.",
@@ -363,7 +366,11 @@ export default function ToursCatalog({
             <p className="mb-3 text-sm text-slate">{catalogBrowseHint}</p>
           ) : null}
           <CatalogToolbar
-            countLabel={formatToursFound(sorted.length)}
+            countLabel={
+              catalogUnavailable && tours.length === 0
+                ? "Каталог временно недоступен"
+                : formatToursFound(sorted.length)
+            }
             sort={sort}
             onSortChange={setSort}
             viewMode={viewMode}
@@ -376,6 +383,22 @@ export default function ToursCatalog({
           {showPartnerDateNotice ? <PartnerTourDateFilterNotice /> : null}
 
           {sorted.length === 0 ? (
+            catalogUnavailable && activeFilterCount === 0 ? (
+              <CatalogEmptyResults
+                icon={MapPin}
+                title="Каталог туров временно недоступен"
+                description="Мы не показываем непроверенный или неполный список предложений. Обновите страницу чуть позже или напишите нам, если нужна помощь с маршрутом."
+                action={{ label: "Связаться с нами", href: "/contacts" }}
+                secondaryAction={{ label: "Открыть путеводитель", href: "/guide" }}
+                suggestions={[
+                  { id: "kb", label: "База знаний", href: "/baza-znaniy" },
+                  { id: "blog", label: "Блог", href: "/blog" },
+                  { id: "map", label: "Карта", href: "/mapa-argentina" },
+                  { id: "excursions", label: "Экскурсии", href: "/excursions" },
+                ]}
+                suggestionsTitle="Пока доступно"
+              />
+            ) : (
             <CatalogEmptyResults
               icon={MapPin}
               title="Туры не найдены"
@@ -388,6 +411,7 @@ export default function ToursCatalog({
               secondaryAction={{ label: "Смотреть экскурсии", href: "/excursions" }}
               suggestions={emptySuggestions}
             />
+            )
           ) : viewMode === "map" ? (
             <CatalogMapView tours={sorted} />
           ) : (

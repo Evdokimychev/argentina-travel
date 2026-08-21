@@ -62,9 +62,17 @@ test("local route exceptions remain bounded while production stays strict", () =
   const localMap = lighthouseBudgetForPath(budget, "/mapa-argentina", { local: true });
   const prodMap = lighthouseBudgetForPath(budget, "/mapa-argentina", { local: false });
   const localPartner = lighthouseBudgetForPath(budget, "/tours/partner", { local: true });
+  const localDestination = lighthouseBudgetForPath(budget, "/destinations/patagonia", {
+    local: true,
+  });
+  const prodDestination = lighthouseBudgetForPath(budget, "/destinations/patagonia", {
+    local: false,
+  });
   assert.equal(localMap.accessibility, 85);
   assert.equal(localMap.tbtMs, 3_500);
   assert.equal(prodMap.accessibility, 95);
   assert.equal(localPartner.lcpMs, 10_000);
   assert.equal(localPartner.transferBytes, 1_800_000);
+  assert.equal(localDestination.performance, 50);
+  assert.equal(prodDestination.performance, 55);
 });

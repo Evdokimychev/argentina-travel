@@ -56,7 +56,7 @@
 
 - Новый cron endpoint:
   - `/api/cron/messaging/booking-reminder-24h`
-- Оркестратор `platform-maintenance` вызывает его каждый час (`minute < 5`).
+- Оркестратор `platform-maintenance` вызывает его ежедневно (`vercel.json`: `0 3 * * *` UTC). Часовой запуск на Hobby недоступен.
 - Авторизация как у остальных cron-маршрутов (`x-vercel-cron` или `CRON_SECRET`).
 
 ## Проверка после выката

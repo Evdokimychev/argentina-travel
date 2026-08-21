@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchMarketplaceToursSafely } from "@/data/marketplace-tours-server";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 const PodborView = dynamic(() => import("@/components/podbor/PodborView"), {
@@ -20,11 +20,13 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 export default async function PodborPage() {
-  const tours = await fetchMarketplaceTours();
+  const { tours, catalogUnavailable } = await fetchMarketplaceToursSafely(
+    "podbor_catalog_unavailable",
+  );
 
   return (
     <div className="pb-8">
-      <PodborView tours={tours} />
+      <PodborView tours={tours} catalogUnavailable={catalogUnavailable} />
     </div>
   );
 }

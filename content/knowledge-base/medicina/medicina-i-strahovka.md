@@ -5,7 +5,8 @@ subtype: health
 title: "Медицина и медицинская страховка в Аргентине"
 summary: "Что изменил Decreto 366/2025: страховка при въезде, гарантированная неотложная помощь и разные условия планового лечения для постоянных резидентов и других иностранцев."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [zhizn-v-strane, pereezd-v-argentinu, puteshestviya-po-argentine]
 applies_to: both
 tags: [здоровье, документы, релокация, туризм]

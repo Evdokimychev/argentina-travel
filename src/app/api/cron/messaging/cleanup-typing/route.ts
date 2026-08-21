@@ -2,16 +2,18 @@ import { NextResponse } from "next/server";
 import { authorizeCronRequest } from "@/lib/cron/authorize-cron";
 import { logCronResult } from "@/lib/cron/log-cron-result";
 import { writeCronRunStatus } from "@/lib/ops/ops-status";
+import { TYPING_PRESENCE_CLEANUP_TTL_SECONDS } from "@/lib/messaging/constants";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
-const TYPING_TTL_MINUTES = 15;
 const CRON_ROUTE = "/api/cron/messaging/cleanup-typing";
 
 async function cleanupTypingPresence(): Promise<NextResponse> {
   const ranAt = new Date().toISOString();
-  const cutoffIso = new Date(Date.now() - TYPING_TTL_MINUTES * 60 * 1000).toISOString();
+  const cutoffIso = new Date(
+    Date.now() - TYPING_PRESENCE_CLEANUP_TTL_SECONDS * 1000,
+  ).toISOString();
 
   try {
     const supabase = createSupabaseAdminClient();
@@ -36,7 +38,7 @@ async function cleanupTypingPresence(): Promise<NextResponse> {
     }
 
     const deletedCount = data?.length ?? 0;
-    const message = `Удалено устаревших записей typing_presence: ${deletedCount} (старше ${TYPING_TTL_MINUTES} мин)`;
+    const message = `Удалено устаревших записей typing_presence: ${deletedCount} (старше ${TYPING_PRESENCE_CLEANUP_TTL_SECONDS}s)`;
     console.log(`[cron:cleanup-typing] ${message}`);
 
     writeCronRunStatus("cleanupTyping", {

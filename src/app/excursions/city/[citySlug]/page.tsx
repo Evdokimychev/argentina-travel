@@ -10,7 +10,7 @@ import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { getExcursionCityFlightRouteIds } from "@/lib/flights/destination-airports";
 import {
   fetchExcursionCityServer,
-  fetchExcursionsServer,
+  fetchExcursionsResultSafely,
 } from "@/lib/tripster/excursion-server";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildExcursionsCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
@@ -49,10 +49,16 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
   const city = await fetchExcursionCityServer(citySlug);
   if (!city) notFound();
 
-  const { items, cities } = await fetchExcursionsServer({
-    citySlug,
-    pageSize: 500,
-  });
+  const excursionsResult = await fetchExcursionsResultSafely(
+    {
+      citySlug,
+      pageSize: 500,
+    },
+    "excursions_city_catalog_unavailable",
+  );
+  const catalogUnavailable = excursionsResult.status === "unavailable";
+  const items = catalogUnavailable ? [] : excursionsResult.data.items;
+  const cities = catalogUnavailable ? [] : excursionsResult.data.cities;
 
   const hasFlightRoutes = getExcursionCityFlightRouteIds(citySlug).length > 0;
   const searchCopy = getExcursionCitySearchCopy(citySlug, city.name);
@@ -83,6 +89,7 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
           excursions={items}
           cities={cities}
           initialCitySlug={citySlug}
+          catalogUnavailable={catalogUnavailable}
           title={searchCopy.heading}
           subtitle={`${searchCopy.subtitle}. Предложений в каталоге: ${city.experienceCount}`}
           flightSidebar={flightSidebar}

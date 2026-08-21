@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { fetchBookingById, organizerCanAccessBooking } from "@/lib/bookings-server";
+import { getOrganizerOwnedCatalogSlugs } from "@/lib/organizer/owned-catalog";
 import {
   getCommissionRuleForBooking,
   listCommissionSnapshotsForBooking,
 } from "@/lib/payments/commission-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { userHasAccountRole } from "@/types/user";
@@ -32,7 +34,8 @@ export async function GET(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    if (!organizerCanAccessBooking(booking, sessionUser.id)) {
+    const slugs = await getOrganizerOwnedCatalogSlugs(supabase, sessionUser.id);
+    if (!organizerCanAccessBooking(booking, sessionUser.id, slugs)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -42,13 +45,7 @@ export async function GET(
     ]);
 
     return NextResponse.json({ snapshots, rule });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Unexpected error while loading commission data",
-      },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

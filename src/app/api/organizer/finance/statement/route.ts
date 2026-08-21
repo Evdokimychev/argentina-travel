@@ -9,6 +9,7 @@ import { listPayoutRecords } from "@/lib/payments/payout-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { userHasAccountRole } from "@/types/user";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 export async function GET(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
@@ -37,10 +38,7 @@ export async function GET(request: Request) {
         "Content-Disposition": `attachment; filename="${organizerStatementFilename(period)}"`,
       },
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Неожиданная ошибка" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

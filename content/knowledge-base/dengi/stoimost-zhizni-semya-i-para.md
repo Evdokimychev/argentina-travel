@@ -7,7 +7,8 @@ title_es: "Costo de vida: pareja y familia"
 aliases: ["стоимость жизни пара", "бюджет семьи Аргентина", "сколько нужно семье", "жизнь с детьми Буэнос-Айрес", "бюджет пары", "семейный бюджет Аргентина"]
 summary: "Методика семейного бюджета: общие и личные расходы, аренда, школа и медицина без неподтверждённых универсальных сумм."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: relocant
 tags: [бюджет, семья, пара, дети, школы, аренда]

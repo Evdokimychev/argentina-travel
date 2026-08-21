@@ -24,8 +24,8 @@ describe("filterSearchHitsByPublicCatalog", () => {
         hit("blog", "/blog/mendoza"),
       ],
       {
-        tours: new Set(["/tours/live-tour"]),
-        excursions: new Set(["/excursions/live-excursion"]),
+        tours: { status: "ok", paths: new Set(["/tours/live-tour"]) },
+        excursions: { status: "ok", paths: new Set(["/excursions/live-excursion"]) },
       },
     );
 
@@ -34,6 +34,42 @@ describe("filterSearchHitsByPublicCatalog", () => {
       "/excursions/live-excursion?ref=search",
       "/blog/mendoza",
     ]);
+  });
+
+  it("keeps commercial hits when a catalogue slice is unavailable", () => {
+    const results = filterSearchHitsByPublicCatalog(
+      [
+        hit("tour", "/tours/indexed-tour"),
+        hit("excursion", "/excursions/indexed-excursion"),
+        hit("blog", "/blog/mendoza"),
+      ],
+      {
+        tours: { status: "unavailable" },
+        excursions: { status: "unavailable" },
+      },
+    );
+
+    expect(results.map((result) => result.url)).toEqual([
+      "/tours/indexed-tour",
+      "/excursions/indexed-excursion",
+      "/blog/mendoza",
+    ]);
+  });
+
+  it("hides commercial hits only after a confirmed-empty catalogue read", () => {
+    const results = filterSearchHitsByPublicCatalog(
+      [
+        hit("tour", "/tours/stale-tour"),
+        hit("excursion", "/excursions/stale-excursion"),
+        hit("place", "/places/ushuaia"),
+      ],
+      {
+        tours: { status: "ok", paths: new Set() },
+        excursions: { status: "ok", paths: new Set() },
+      },
+    );
+
+    expect(results.map((result) => result.url)).toEqual(["/places/ushuaia"]);
   });
 });
 

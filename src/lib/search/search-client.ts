@@ -1,10 +1,42 @@
 import type { SearchHit, SearchResponse, SearchSource } from "@/lib/search/types";
 
 const SEARCH_DEBOUNCE_MS = 200;
+/** Client-side budget so a stalled /api/search cannot leave the dialog on «Идём…» forever. */
+export const SEARCH_CLIENT_TIMEOUT_MS = 6_000;
+
+/**
+ * Abort the request when either the caller cancels or the client timeout elapses.
+ * Timeout must not mark the caller's AbortController as aborted — SiteSearch uses
+ * that flag to ignore superseded queries, and a timeout needs the static fallback.
+ */
+export function mergeSearchAbortSignals(
+  callerSignal: AbortSignal | undefined,
+  timeoutMs: number,
+): { signal: AbortSignal; cleanup: () => void } {
+  const timeoutController = new AbortController();
+  const timeoutId = setTimeout(() => timeoutController.abort(), timeoutMs);
+
+  const onCallerAbort = () => timeoutController.abort();
+  if (callerSignal) {
+    if (callerSignal.aborted) {
+      timeoutController.abort();
+    } else {
+      callerSignal.addEventListener("abort", onCallerAbort, { once: true });
+    }
+  }
+
+  return {
+    signal: timeoutController.signal,
+    cleanup: () => {
+      clearTimeout(timeoutId);
+      callerSignal?.removeEventListener("abort", onCallerAbort);
+    },
+  };
+}
 
 export async function fetchSiteSearch(
   query: string,
-  options?: { kind?: string; signal?: AbortSignal }
+  options?: { kind?: string; signal?: AbortSignal; timeoutMs?: number }
 ): Promise<SearchResponse> {
   const trimmed = query.trim();
   if (!trimmed) {
@@ -14,15 +46,20 @@ export async function fetchSiteSearch(
   const params = new URLSearchParams({ q: trimmed });
   if (options?.kind) params.set("kind", options.kind);
 
-  const response = await fetch(`/api/search?${params.toString()}`, {
-    signal: options?.signal,
-  });
+  const timeoutMs = options?.timeoutMs ?? SEARCH_CLIENT_TIMEOUT_MS;
+  const { signal, cleanup } = mergeSearchAbortSignals(options?.signal, timeoutMs);
 
-  if (!response.ok) {
-    throw new Error("Search request failed");
+  try {
+    const response = await fetch(`/api/search?${params.toString()}`, { signal });
+
+    if (!response.ok) {
+      throw new Error("Search request failed");
+    }
+
+    return (await response.json()) as SearchResponse;
+  } finally {
+    cleanup();
   }
-
-  return (await response.json()) as SearchResponse;
 }
 
 function normalizeResultIdentity(value: string): string {

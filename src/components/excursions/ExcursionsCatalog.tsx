@@ -63,6 +63,7 @@ type ExcursionsCatalogProps = {
   cities: ExcursionCity[];
   initialCitySlug?: string;
   catalogBasePath?: string;
+  catalogUnavailable?: boolean;
   title?: string;
   subtitle?: string;
   flightSidebar?: ReactNode;
@@ -73,6 +74,7 @@ export default function ExcursionsCatalog({
   cities,
   initialCitySlug,
   catalogBasePath,
+  catalogUnavailable = false,
   title,
   subtitle,
   flightSidebar,
@@ -280,26 +282,36 @@ export default function ExcursionsCatalog({
               <CatalogEmptyResults
                 icon={MapPin}
                 title={
-                  excursions.length === 0
-                    ? t("excursions.emptySoonTitle")
-                    : t("excursions.emptyFilterTitle")
+                  catalogUnavailable && activeFilterCount === 0
+                    ? "Каталог экскурсий временно недоступен"
+                    : excursions.length === 0
+                      ? t("excursions.emptySoonTitle")
+                      : t("excursions.emptyFilterTitle")
                 }
                 description={
-                  excursions.length === 0
-                    ? t("excursions.emptySoonDescription")
-                    : t("excursions.emptyFilterDescription")
+                  catalogUnavailable && activeFilterCount === 0
+                    ? "Мы не показываем непроверенный или неполный список предложений. Обновите страницу чуть позже или откройте каталог туров."
+                    : excursions.length === 0
+                      ? t("excursions.emptySoonDescription")
+                      : t("excursions.emptyFilterDescription")
                 }
                 action={
-                  excursions.length > 0 && activeFilterCount > 0
-                    ? { label: t("excursions.filters.reset"), onClick: resetFilters }
-                    : undefined
+                  catalogUnavailable && activeFilterCount === 0
+                    ? { label: "Связаться с нами", href: "/contacts" }
+                    : excursions.length > 0 && activeFilterCount > 0
+                      ? { label: t("excursions.filters.reset"), onClick: resetFilters }
+                      : undefined
                 }
                 secondaryAction={
-                  excursions.length > 0
-                    ? { label: t("excursions.allCities"), href: "/excursions" }
-                    : { label: t("nav.tours"), href: "/tours" }
+                  catalogUnavailable && activeFilterCount === 0
+                    ? { label: t("nav.tours"), href: "/tours" }
+                    : excursions.length > 0
+                      ? { label: t("excursions.allCities"), href: "/excursions" }
+                      : { label: t("nav.tours"), href: "/tours" }
                 }
-                suggestions={excursions.length > 0 ? emptySuggestions : undefined}
+                suggestions={
+                  catalogUnavailable || excursions.length === 0 ? undefined : emptySuggestions
+                }
               />
             ) : (
               <>

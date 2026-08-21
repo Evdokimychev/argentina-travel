@@ -7,7 +7,8 @@ title_es: "Transferencias y envío de dinero"
 aliases: ["перевести деньги в Аргентину", "Western Union Аргентина", "как завести деньги", "международный перевод"]
 summary: "Как сравнить официальный перевод, карту и банковские реквизиты без рекомендаций неофициального обмена, P2P-схем и неподтверждённых курсов."
 status: published
-site_ready: true
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, zhizn-v-strane]
 applies_to: both
 tags: [деньги, переводы, релокация, бюджетно]

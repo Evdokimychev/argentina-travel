@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp, checkSecurityRateLimit } from "@/lib/rate-limit";
 import { notifyLeadCaptured } from "@/lib/leads-notify";
 import { escapeHtml } from "@/lib/notifications/email-templates";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type OrganizerApplicationBody = {
@@ -15,9 +16,52 @@ function trimInput(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+export async function GET() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return NextResponse.json(
+      { error: "Войдите в аккаунт, чтобы увидеть статус заявки." },
+      { status: 401 }
+    );
+  }
+
+  const admin = createSupabaseAdminClient();
+  const { data: application, error } = await admin
+    .from("organizer_applications")
+    .select("id, status, company_name, created_at, reviewed_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    return NextResponse.json(
+      { error: "Не удалось загрузить заявку." },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({
+    application: application
+      ? {
+          id: application.id,
+          status: application.status,
+          companyName: application.company_name,
+          createdAt: application.created_at,
+          reviewedAt: application.reviewed_at,
+        }
+      : null,
+  });
+}
+
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = await checkRateLimit(`organizer-application:ip:${ip}`, 5, 60_000);
+  const limit = await checkSecurityRateLimit(`organizer-application:ip:${ip}`, 5, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте позже." },
@@ -110,8 +154,14 @@ export async function POST(request: Request) {
       .single();
 
     if (insertError || !application) {
+      if (insertError?.code === "23505") {
+        return NextResponse.json(
+          { error: "У вас уже есть заявка на рассмотрении." },
+          { status: 409 }
+        );
+      }
       return NextResponse.json(
-        { error: insertError?.message ?? "Не удалось отправить заявку." },
+        { error: "Не удалось отправить заявку." },
         { status: 500 }
       );
     }
@@ -131,10 +181,7 @@ export async function POST(request: Request) {
       applicationId: application.id,
       checklist: ["Создайте первый тур"],
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error." },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

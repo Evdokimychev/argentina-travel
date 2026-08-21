@@ -852,6 +852,15 @@ def main():
     out_dir = os.path.join(BASE_DIR, "_index")
     os.makedirs(out_dir, exist_ok=True)
 
+    # Release gate must not mutate committed indexes (Sprint 7 / Iteration 1).
+    # `--strict-provenance` is check-only: write belongs to explicit generate runs.
+    if strict_provenance_gate:
+        print(
+            "\n[strict-provenance] OK: claim-level gate passed; "
+            "indexes were not rewritten so the candidate tree stays clean."
+        )
+        return
+
     atomic_write_json(os.path.join(out_dir, "manifest.json"), {
         "generated_at": generated_at,
         "total_entities": len(manifest),
@@ -1137,11 +1146,6 @@ def main():
 
     print(report)
     print(f"\nmanifest.json и manifest.csv сохранены в {out_dir}")
-    if strict_provenance_gate:
-        print(
-            "\n[strict-provenance] OK: claim-level gate passed; "
-            "written indexes keep validation_mode=diagnostic so CI candidate trees stay clean."
-        )
 
 
 if __name__ == "__main__":

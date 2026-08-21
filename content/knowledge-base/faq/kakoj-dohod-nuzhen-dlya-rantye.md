@@ -5,6 +5,8 @@ question: "Какой доход нужен для временной резид
 short_answer: "Официальный минимум — не фиксированная сумма в долларах, а доход не ниже пяти действующих Salarios Mínimos, Vitales y Móviles. Это должна быть подтверждаемая зарубежная рента от ваших активов, а не оплата личного труда; старые эквиваленты вроде 1300 или 2000 долларов использовать нельзя."
 topic: visa
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [pereezd-v-argentinu, dokumenty-i-legalizatsiya]
 tags: [визы, документы, rentista, доход]
 related: [vnzh-argentina, vnzh-rantye]

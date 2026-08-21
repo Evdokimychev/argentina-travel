@@ -5,6 +5,8 @@ question: "Нужна ли россиянину виза в Бразилию, ч
 short_answer: "Для туристического визита по действующему обычному российскому загранпаспорту виза не нужна: соглашение разрешает до 90 дней в каждом 180-дневном периоде. Но поездка из Пуэрто-Игуасу в Фос-ду-Игуасу — полноценный выезд из Аргентины и въезд в Бразилию с двумя пограничными контролями."
 topic: visa
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
 tags: [визы, документы, водопады, Бразилия]
 related: [iguasu, kak-dobratsya-iz-rossii]

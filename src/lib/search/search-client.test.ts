@@ -1,5 +1,9 @@
-import { describe, expect, it } from "vitest";
-import { dedupeSearchHits } from "@/lib/search/search-client";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  dedupeSearchHits,
+  fetchSiteSearch,
+  mergeSearchAbortSignals,
+} from "@/lib/search/search-client";
 import type { SearchHit } from "@/lib/search/types";
 
 function hit(overrides: Partial<SearchHit>): SearchHit {
@@ -24,5 +28,61 @@ describe("dedupeSearchHits", () => {
     ]);
 
     expect(results.map((result) => result.id)).toEqual(["best", "unique"]);
+  });
+});
+
+describe("mergeSearchAbortSignals", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("aborts on timeout without marking the caller signal aborted", () => {
+    vi.useFakeTimers();
+    const caller = new AbortController();
+    const { signal, cleanup } = mergeSearchAbortSignals(caller.signal, 100);
+
+    expect(signal.aborted).toBe(false);
+    vi.advanceTimersByTime(100);
+    expect(signal.aborted).toBe(true);
+    expect(caller.signal.aborted).toBe(false);
+    cleanup();
+  });
+
+  it("propagates caller abort to the merged signal", () => {
+    const caller = new AbortController();
+    const { signal, cleanup } = mergeSearchAbortSignals(caller.signal, 60_000);
+    caller.abort();
+    expect(signal.aborted).toBe(true);
+    cleanup();
+  });
+});
+
+describe("fetchSiteSearch timeout", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it("rejects when the live search exceeds the client timeout", async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: string, init?: RequestInit) => {
+        return new Promise((_resolve, reject) => {
+          const signal = init?.signal;
+          if (!signal) return;
+          signal.addEventListener(
+            "abort",
+            () => reject(Object.assign(new Error("Aborted"), { name: "AbortError" })),
+            { once: true },
+          );
+        });
+      }),
+    );
+
+    const pending = fetchSiteSearch("Патагония", { timeoutMs: 50 });
+    const expectation = expect(pending).rejects.toMatchObject({ name: "AbortError" });
+    await vi.advanceTimersByTimeAsync(50);
+    await expectation;
   });
 });

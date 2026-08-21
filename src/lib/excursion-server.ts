@@ -280,6 +280,51 @@ export async function fetchExcursionsResultServer(
   return resolveExcursionCatalogSources(filters, { tripster, sputnik8, platform });
 }
 
+/** Public catalog pages must not hang when partner/DB reads stall. */
+export const EXCURSION_CATALOG_DEADLINE_MS = 2_500;
+
+function withExcursionCatalogDeadline<T>(
+  promise: Promise<T>,
+  fallback: T,
+  deadlineMs = EXCURSION_CATALOG_DEADLINE_MS,
+): Promise<T> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => resolve(fallback), deadlineMs);
+    promise.then(
+      (value) => {
+        clearTimeout(timeout);
+        resolve(value);
+      },
+      () => {
+        clearTimeout(timeout);
+        resolve(fallback);
+      },
+    );
+  });
+}
+
+/**
+ * UI catalog surfaces: return unavailable quickly under outage instead of
+ * waiting on hanging Tripster/Sputnik8/Supabase reads.
+ */
+export async function fetchExcursionsResultSafely(
+  filters: ExcursionListFilters = {},
+  logLabel = "excursions_catalog_unavailable",
+): Promise<ExcursionSourceResult<ExcursionListResult>> {
+  const deadlineFallback = partnerUnavailable(
+    "timeout",
+    "excursion_catalog_deadline_exceeded",
+  );
+  const result = await withExcursionCatalogDeadline(
+    fetchExcursionsResultServer(filters),
+    deadlineFallback,
+  );
+  if (result.status === "unavailable" && result.message === "excursion_catalog_deadline_exceeded") {
+    console.error(`[${logLabel}]`, { message: result.message, errorClass: result.errorClass });
+  }
+  return result;
+}
+
 export async function fetchExcursionsServer(
   filters: ExcursionListFilters = {}
 ): Promise<ExcursionListResult> {

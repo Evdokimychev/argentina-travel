@@ -3,7 +3,14 @@
 Реализован скользящий лимитер запросов в `src/lib/rate-limit/index.ts` с двумя режимами:
 
 - Upstash Redis через REST API (`fetch`, без зависимости на пакет Upstash).
-- Резервный in-memory режим, если `UPSTASH_REDIS_REST_URL` не задан или Redis временно недоступен.
+- Резервный in-memory режим, если `UPSTASH_REDIS_REST_URL` не задан.
+
+**Честная граница:** in-memory limiter is not production-global protection. На serverless/multi-instance он ограничивает только текущий процесс. Нельзя называть его распределённой защитой production.
+
+Политики:
+
+- `standard` — при сбое Upstash допускается in-memory fallback (чтение / низкий риск).
+- `security_critical` — если Upstash задан, но недоступен, лимитер **закрывается** (`429`). Auth, заявки, бронирования, лиды и создание заказа магазина используют эту политику.
 
 ## Переменные окружения
 
@@ -52,6 +59,7 @@ withRateLimit(handler, {
   keyPrefix: "bookings:create",
   key: (request) => `ip:${getClientIp(request)}`,
   message: "Слишком много попыток бронирования. Повторите позже.",
+  policy: "security_critical",
 });
 ```
 

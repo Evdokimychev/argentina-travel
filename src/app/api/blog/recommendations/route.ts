@@ -1,4 +1,5 @@
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
@@ -55,10 +56,7 @@ export async function POST(request: Request) {
         readTime: post.readTime,
       })),
     });
-  } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
-    );
+  } catch {
+    return Response.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

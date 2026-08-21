@@ -11,7 +11,9 @@ export type GeoCountryCode =
   | "AE"
   | "US"
   | "CL"
-  | "PE";
+  | "PE"
+  | "UY"
+  | "PY";
 
 export type GeoLocationType = "city" | "macro_region" | "province" | "country";
 

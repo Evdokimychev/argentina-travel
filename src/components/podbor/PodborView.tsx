@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Compass, Sparkles } from "lucide-react";
 import type { TourListing } from "@/types";
@@ -26,17 +26,23 @@ import {
 
 interface PodborViewProps {
   tours: TourListing[];
+  /** True when marketplace catalog failed to load — quiz still works, tour matches may be empty. */
+  catalogUnavailable?: boolean;
 }
 
 type Phase = "intro" | "quiz" | "results";
 
-export default function PodborView({ tours }: PodborViewProps) {
+export default function PodborView({
+  tours,
+  catalogUnavailable = false,
+}: PodborViewProps) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [answers, setAnswers] = useState<PodborAnswers>({});
   const [draftSelection, setDraftSelection] = useState<string[]>([]);
   const [result, setResult] = useState<PodborMatchResult | null>(null);
   const [excursions, setExcursions] = useState<ExcursionListing[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const restoredDraftRef = useRef<string[] | null>(null);
 
   const activeQuestionId = useMemo(
     () => resolveActiveQuestion(answers),
@@ -59,31 +65,47 @@ export default function PodborView({ tours }: PodborViewProps) {
       const match = buildPodborMatchResult(saved.answers, tours);
       setResult(match);
       setPhase("results");
-    } else if (saved?.answers && Object.keys(saved.answers).length > 0) {
-      setAnswers(saved.answers);
+    } else if (
+      (saved?.answers && Object.keys(saved.answers).length > 0) ||
+      (saved?.draftSelection?.length ?? 0) > 0
+    ) {
+      setAnswers(saved?.answers ?? {});
       setPhase("quiz");
+      if (saved?.draftSelection?.length) {
+        restoredDraftRef.current = saved.draftSelection;
+      }
     }
     setHydrated(true);
   }, [tours]);
 
   useEffect(() => {
-    if (!activeQuestionId) return;
+    if (!hydrated || !activeQuestionId) return;
+    if (restoredDraftRef.current) {
+      setDraftSelection(restoredDraftRef.current);
+      restoredDraftRef.current = null;
+      return;
+    }
     const question = getQuestionForDisplay(activeQuestionId, answers);
     setDraftSelection(
       answers[activeQuestionId] ??
         (question.numericInput ? [String(question.numericInput.defaultValue)] : [])
     );
-  }, [activeQuestionId, answers]);
+    // Only re-seed when the active question changes — not on every answers write.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional question-scoped sync
+  }, [activeQuestionId, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
+    // Avoid overwriting a restored draft with [] before the restore effect runs.
+    if (restoredDraftRef.current) return;
     savePodborSession({
       answers,
       currentQuestionId: activeQuestionId,
+      draftSelection,
       completedAt: phase === "results" ? new Date().toISOString() : null,
       updatedAt: new Date().toISOString(),
     });
-  }, [answers, activeQuestionId, phase, hydrated]);
+  }, [answers, activeQuestionId, draftSelection, phase, hydrated]);
 
   useEffect(() => {
     if (phase !== "results") return;
@@ -163,6 +185,15 @@ export default function PodborView({ tours }: PodborViewProps) {
             Ответьте на несколько вопросов — как с живым консультантом. Мы учтём цель поездки,
             интересы, бюджет и темп, а затем предложим регионы, туры и экскурсии.
           </p>
+          {catalogUnavailable ? (
+            <div
+              className="mt-6 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal"
+              role="status"
+            >
+              Каталог туров временно недоступен. Подбор регионов и советы по маршруту всё равно
+              работают; готовые предложения появятся после восстановления каталога.
+            </div>
+          ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
             <Button type="button" size="lg" onClick={() => setPhase("quiz")}>
               <Compass className="h-5 w-5" aria-hidden />

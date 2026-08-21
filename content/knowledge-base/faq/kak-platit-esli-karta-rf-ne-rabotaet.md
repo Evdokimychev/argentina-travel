@@ -5,6 +5,8 @@ question: "Как платить в Аргентине, если карты ро
 short_answer: "Не рассчитывайте на выпущенные в России Visa и Mastercard: платёжные системы не обрабатывают их за рубежом. Соберите минимум два независимых законных канала — подходящую иностранную карту, наличные для обмена через уполномоченную организацию и/или заранее проверенный перевод самому себе."
 topic: dengi
 status: published
+site_ready: false
+editorial_hold_reason: "I7 карантин: просрочена claim-level проверка (stale_sensitive_claim / stale_source_url_check / expired_source). Даты не обновлялись без фактчека; нужна повторная сверка источников."
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine, pereezd-v-argentinu]
 tags: [деньги, карты РФ, наличные, переводы]
 related: [kak-menyat-valyutu, bankovskij-schet, vnutrennie-aviabilety, kak-oplatit-tur-i-zhilyo-zaranee]

@@ -9,7 +9,7 @@ export const BOOKING_LOOKUP_MAX_ATTEMPTS = 5;
 
 function secret(): string {
   const value = process.env.BOOKING_LOOKUP_SECRET?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  if (!value) throw new Error("Booking lookup secret is not configured");
+  if (!value) throw new Error("Booking lookup secret missing");
   return value;
 }
 

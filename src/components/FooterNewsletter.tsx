@@ -93,6 +93,7 @@ export default function FooterNewsletter() {
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className={cn(
         "relative mt-6 overflow-hidden p-4 sm:p-5",
         tokenCardSurfaceClass,

@@ -16,6 +16,11 @@ type HubQuickFactsGridProps = {
   className?: string;
   /** Default 3; immigration hub uses 4 columns for 8 cards */
   columns?: 3 | 4;
+  /**
+   * When the grid is used as a horizontally scrollable region (e.g. mobile snap),
+   * expose keyboard access so axe `scrollable-region-focusable` passes.
+   */
+  scrollRegionLabel?: string;
 };
 
 function QuickFactCard({
@@ -59,14 +64,28 @@ function QuickFactCard({
   );
 }
 
-export default function HubQuickFactsGrid({ facts, className, columns = 3 }: HubQuickFactsGridProps) {
+export default function HubQuickFactsGrid({
+  facts,
+  className,
+  columns = 3,
+  scrollRegionLabel,
+}: HubQuickFactsGridProps) {
   const gridClass =
     columns === 4
       ? "grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
       : "grid gap-3 sm:grid-cols-2 xl:grid-cols-3";
 
   return (
-    <div className={cn(gridClass, className)}>
+    <div
+      className={cn(gridClass, className)}
+      {...(scrollRegionLabel
+        ? {
+            role: "region" as const,
+            "aria-label": scrollRegionLabel,
+            tabIndex: 0,
+          }
+        : {})}
+    >
       {facts.map((fact) => {
         const { headline, detail } = normalizeQuickFact(fact);
         return (

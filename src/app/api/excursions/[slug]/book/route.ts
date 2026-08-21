@@ -9,7 +9,7 @@ import {
   fingerprintPartnerBookingRequest,
   isValidBookingOperationKey,
 } from "@/lib/partner-booking/idempotency";
-import { checkRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
+import { checkSecurityRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
 import {
   createTripsterExternalOrder,
   TripsterBookingError,
@@ -42,7 +42,7 @@ function normalizeTimeForApi(time: string): string {
 }
 
 export async function POST(request: Request, context: RouteContext) {
-  const limit = await checkRateLimit(
+  const limit = await checkSecurityRateLimit(
     `excursions:partner-booking:ip:${getClientIp(request)}`,
     5,
     60_000,

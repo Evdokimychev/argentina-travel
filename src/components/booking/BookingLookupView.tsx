@@ -47,8 +47,11 @@ export default function BookingLookupView() {
       setMessage(response.message);
       setStep("code");
       setResendCooldown(60);
-    } catch {
-      const message = "Не удалось отправить код. Проверьте email или попробуйте немного позже.";
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message.trim()
+          ? error.message
+          : "Не удалось отправить код. Проверьте email или попробуйте немного позже.";
       if (step === "code") setCodeError(message);
       else setEmailError(message);
     } finally {
@@ -100,8 +103,8 @@ export default function BookingLookupView() {
         </p>
 
         {step === "email" ? (
-          <form onSubmit={requestCode} className="mt-6 space-y-4">
-            <SmartInput id="booking-email" label="Email из заявки" type="email" inputMode="email" enterKeyHint="send" autoComplete="email" value={email} onValueChange={(value) => { setEmail(value); setEmailError(null); }} error={emailError} validate={validateEmail} leadingIcon={<Mail className="h-4 w-4" />} clearable required />
+          <form onSubmit={requestCode} className="mt-6 space-y-4" noValidate>
+            <SmartInput id="booking-email" label="Email из заявки" type="email" inputMode="email" enterKeyHint="send" autoComplete="email" value={email} onValueChange={(value) => { setEmail(value); setEmailError(null); }} error={emailError} validate={validateEmail} leadingIcon={<Mail className="h-4 w-4" />} clearable required showValidationSuccess={false} />
             <Button type="submit" loading={loading} loadingLabel="Отправляем код…" className="w-full sm:w-auto">
               <Mail className="h-4 w-4" aria-hidden />
               Получить код

@@ -5,19 +5,22 @@ import {
   type SearchResultType,
 } from "@/lib/site-search-index";
 import { searchSiteIndex } from "@/lib/site-search";
-import { collectSearchIndexItems } from "@/lib/search/search-indexer";
 import {
   isMeilisearchConfigured,
   searchMeilisearchDocuments,
 } from "@/lib/search/meilisearch-client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { withBudget } from "@/lib/async-budget";
+import { buildOfflineStaticSearchIndex } from "@/lib/site-search-index-server";
 import type { Database } from "@/types/database";
 import type { SearchHit, SearchResponse } from "@/lib/search/types";
 
 type DbClient = SupabaseClient<Database>;
 
 const MAX_LIMIT = 20;
+/** Live backends must not stall the public search dialog when the data plane is down. */
+export const SEARCH_BACKEND_BUDGET_MS = 2_500;
 
 type RpcRow = {
   id: string;
@@ -90,7 +93,9 @@ async function searchPostgres(
 }
 
 async function searchStatic(query: string, kind: string | undefined, limit: number): Promise<SearchHit[]> {
-  const items = await collectSearchIndexItems();
+  // Interactive search must stay offline-fast when live backends hang. CMS/catalog
+  // enrichment belongs to cron reindex + Meilisearch/Postgres, not this fallback.
+  const items = buildOfflineStaticSearchIndex();
   const filtered =
     kind && isSearchResultType(kind) ? items.filter((item) => item.type === kind) : items;
   return flattenStaticResults(filtered, query, limit);
@@ -125,9 +130,15 @@ export async function executeSiteSearch(
     return { results: [], source: defaultSource, query: trimmed, kind, tookMs: tookMs() };
   }
 
-  const meiliResults = await searchMeilisearch(trimmed, kind, limit);
-  if (meiliResults.length > 0) {
-    return { results: meiliResults, source: "meilisearch", query: trimmed, kind, tookMs: tookMs() };
+  try {
+    const meiliResults = await withBudget("search_meilisearch", SEARCH_BACKEND_BUDGET_MS, () =>
+      searchMeilisearch(trimmed, kind, limit),
+    );
+    if (meiliResults.length > 0) {
+      return { results: meiliResults, source: "meilisearch", query: trimmed, kind, tookMs: tookMs() };
+    }
+  } catch {
+    // Fall through to postgres / static — never leave the dialog waiting on Meilisearch.
   }
 
   if (!isSupabaseConfigured()) {
@@ -137,38 +148,17 @@ export async function executeSiteSearch(
 
   try {
     const supabase = createSupabaseAdminClient();
-    let results = await searchPostgres(supabase, trimmed, kind, limit);
-
-    if (results.length === 0) {
-      const count = await supabase
-        .from("search_documents")
-        .select("id", { count: "exact", head: true })
-        .then((res) => res.count ?? 0);
-
-      if (count === 0) {
-        const { reindexSearchDocuments } = await import("@/lib/search/search-indexer");
-        await reindexSearchDocuments(supabase);
-        results = await searchPostgres(supabase, trimmed, kind, limit);
-
-        if (results.length === 0 && isMeilisearchConfigured()) {
-          const retryMeili = await searchMeilisearch(trimmed, kind, limit);
-          if (retryMeili.length > 0) {
-            return {
-              results: retryMeili,
-              source: "meilisearch",
-              query: trimmed,
-              kind,
-              tookMs: tookMs(),
-            };
-          }
-        }
-      }
-    }
+    const results = await withBudget("search_postgres", SEARCH_BACKEND_BUDGET_MS, () =>
+      searchPostgres(supabase, trimmed, kind, limit),
+    );
 
     if (results.length > 0) {
       return { results, source: "postgres", query: trimmed, kind, tookMs: tookMs() };
     }
 
+    // Empty index recovery belongs to cron (/api/cron/search/reindex), not the
+    // interactive search path — a down or empty data plane previously blocked
+    // the UI for ~15s while reindex + CMS collectors ran on every query.
     const fallback = await searchStatic(trimmed, kind, limit);
     return { results: fallback, source: "static", query: trimmed, kind, tookMs: tookMs() };
   } catch {

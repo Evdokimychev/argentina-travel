@@ -7,6 +7,7 @@ import { userHasAccountRole } from "@/types/user";
 import { patchOrganizerGroupTripListing } from "@/lib/group-trips-server";
 import type { OrganizerGroupTripPatchAction } from "@/types/group-trips";
 import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -49,10 +50,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     return NextResponse.json({ listing: result.listing });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }

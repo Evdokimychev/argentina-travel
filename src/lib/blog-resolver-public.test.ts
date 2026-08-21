@@ -34,6 +34,7 @@ describe("public blog catalog", () => {
     expect(resolver).toContain("preservesPublishedCatalog ? cutoverCatalog : fallback");
     expect(resolver).toContain("const publicCatalog = await resolveBlogCatalog(locale)");
     expect(resolver).toContain("areBlogSlugsEquivalent(slug, post.slug)");
+    expect(resolver).toContain("isCmsPublicContentUnavailableError");
     expect(contentResolver).toContain("CMS_CUTOVER_CATALOG_QUERY_TIMEOUT_MS = 8_000");
   });
 

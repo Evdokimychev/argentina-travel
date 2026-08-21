@@ -8,7 +8,7 @@ status: published
 site_sections: [finansy-i-ekonomika, puteshestviya-po-argentine]
 tags: [деньги, валюта, обмен, blue dollar]
 related: [kak-menyat-valyutu]
-last_verified: "2026-08-11"
+last_verified: "2026-08-19"
 confidence: high
 provenance:
   schema_version: 1
@@ -42,8 +42,8 @@ sources:
     type: official
     authority: primary
     url_status: verified
-    checked_at: "2026-08-11"
-    expires_at: "2026-08-18"
+    checked_at: "2026-08-19"
+    expires_at: "2026-08-26"
     note: "Официальная ежедневная точка сравнения; конкретная котировка намеренно не зашита в текст."
 claims:
   - id: currency-restrictions-for-individuals-relaxed

@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import type { ExpertCategory } from "@/types/local-experts";
+import { unexpectedPublicApiError } from "@/lib/public-api/safe-error";
 
 const VALID_CATEGORIES: ExpertCategory[] = [
   "guide",
@@ -107,10 +108,7 @@ export async function POST(request: Request) {
       slug: data.slug,
       status: data.status,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(unexpectedPublicApiError(), { status: 500 });
   }
 }
